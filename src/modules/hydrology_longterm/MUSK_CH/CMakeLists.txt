@@ -1,0 +1,8 @@
+INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
+SET(SRC_LIST ../../../base/util/SimulationModule.cpp MUSK_CH.cpp api.cpp)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
+ADD_LIBRARY(MUSK_CH SHARED ${SRC_LIST})
+#TARGET_LINK_LIBRARIES(MUSK_CH libutil.a)
+TARGET_LINK_LIBRARIES(MUSK_CH util module_setting)
+SET_TARGET_PROPERTIES( MUSK_CH PROPERTIES COMPILE_FLAGS "/openmp")
+SET_PROPERTY(TARGET MUSK_CH PROPERTY FOLDER "modules/hydrology_longterm")

@@ -1,0 +1,8 @@
+LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
+INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
+SET(SRC_LIST ../../../base/util/SimulationModule.cpp IUH_IF.cpp api.cpp)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
+ADD_LIBRARY(IUH_IF SHARED ${SRC_LIST})
+TARGET_LINK_LIBRARIES(IUH_IF util module_setting)
+SET_TARGET_PROPERTIES( IUH_IF PROPERTIES COMPILE_FLAGS "/openmp")
+SET_PROPERTY(TARGET IUH_IF PROPERTY FOLDER "modules/hydrology_longterm")

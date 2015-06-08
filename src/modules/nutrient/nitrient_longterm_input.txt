@@ -1,0 +1,44 @@
+AtmDep:
+	mdi.AddParameter("ConRainNitra", "mg N/L", "concentration of nitrate in the rain", "file.in", DT_Single); 
+	mdi.AddParameter("ConRainAmm", "mg N/L", "concentration of ammonia in the rain", "file.in", DT_Single); 
+取默认值
+
+NitVol:
+	mdi.AddParameter("MidZ", "mm", "depth from the soil surface to the middle of the layer", "ParameterDB_soil", DT_MapWindowRaster); 
+MidZ取根深的一半
+
+SorPho:
+	mdi.AddParameter("SloER", "d-1", "slow equilibration rate constant", "file.in", DT_Single); 
+	mdi.AddParameter("LayDep", "mm", "depth from the soil surface", "file.in", DT_Single); 
+	mdi.AddParameter("ConSoluP", "mg/kg", "concentration of solution phosphorus all layers", "file.in", DT_Single);
+SloER和ConSoluP取默认值，LayDep取rootdepth
+	
+MinDec:
+	mdi.AddParameter("DepZ", "mm", "depth from the soil surface", "file.in", DT_Single); 
+	mdi.AddParameter("LayDep", "mm", "depth from the soil surface", "file.in", DT_Single); 
+	
+	mdi.AddParameter("RateConst", "", "rate constant", "file.in", DT_Single); 
+	mdi.AddParameter("HumNF", "m", "fraction of humic nitrogen in the active pool", "file.in", DT_Single); 
+	mdi.AddParameter("RateCoeH", "", "rate coefficient for mineralization of the humus active organic nutrients", "file.in", DT_Single); 
+	mdi.AddParameter("RateCoeR", "", "rate coefficient for mineralization of the residue fresh organic nutrients", "file.in", DT_Single); 
+	mdi.AddParameter("ConSoluP", "mg/kg", "concentration of solution phosphorus all layers", "file.in", DT_Single);
+	
+	mdi.AddParameter("ResMat", "kg/ha", "material in the residue pool for the top 10 mm of soil","ParameterDB_soil", DT_MapWindowRaster);
+	mdi.AddParameter("Res", "kg/ha", "residue in layer ly", "ParameterDB_soil", DT_MapWindowRaster); 
+	mdi.AddParameter("Nitrate", "kg N/ha", "amount of nitrate", "ParameterDB_soil", DT_MapWindowRaster); 	
+	
+Denitri:
+	mdi.AddParameter("DepZ", "mm", "depth from the soil surface", "file.in", DT_Single); 
+	mdi.AddParameter("LayDep", "mm", "depth from the soil surface", "file.in", DT_Single); 
+	mdi.AddParameter("DenRC", "", "rate coefficient for denitrification", "file.in", DT_Single); 
+	
+	
+	mdi.AddParameter("Nitrate", "kg N/ha", "amount of nitrate", "ParameterDB_soil", DT_MapWindowRaster); 
+	mdi.AddParameter("OrgCar", "%", "amount of organic carbon in the layer", "ParameterDB_soil", DT_MapWindowRaster); 
+	mdi.AddParameter("DenWF", "", "threshold value of nutrient cycling water factor for denitrification to occur", "ParameterDB_soil", DT_MapWindowRaster); 
+
+
+
+
+
+

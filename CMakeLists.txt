@@ -1,0 +1,49 @@
+# This file is used for make Microsoft Visual Studio Project files and compile executable files in Linux/Unix.
+# First released : Liangjun Zhu
+# Date           : Jun. 4, 2015
+cmake_minimum_required(VERSION 2.6)
+IF(COMMAND CMAKE_POLICY)
+	CMAKE_POLICY(SET CMP0015 NEW)
+ENDIF(COMMAND CMAKE_POLICY)
+PROJECT (SEIMS)
+MESSAGE(STATUS "Making SEIMS...")
+#SET(SEIMS_VERSION "OPENMP")
+SET(SEIMS_VERSION "MPI")
+IF(SEIMS_VERSION STREQUAL "OPENMP")
+	MESSAGE(STATUS "   Version: OpenMP")
+	ADD_DEFINITIONS(-DMONGO_HAVE_STDINT -DUSE_MONGODB -DMODULE_EXPORTS -DMULTIPLY_REACHES)
+ELSE()
+	MESSAGE(STATUS "   Version: MPI")
+	ADD_DEFINITIONS(-DMONGO_HAVE_STDINT -DUSE_MONGODB -DMODULE_EXPORTS)
+ENDIF()
+#SET (CMAKE_BUILD_TYPE "Debug")
+SET (CMAKE_BUILD_TYPE "Release")
+
+IF(WIN32)
+	SET (GDAL_HOME ./include/gdal)
+	SET (MONGO_HOME ./include/mongo-c-driver)
+	SET (LIB_DIR ./lib)
+ELSE()
+	SET (CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -fopenmp -fPIC -g -ggdb")
+	SET (CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall -fopenmp -fPIC")
+	SET (MPI_HOME /usr/lib64/openmpi)
+	SET (GDAL_HOME /soft/share)
+	SET (LIB_DIR /usr/lib)
+ENDIF(WIN32)
+
+
+
+SET (BASE_HOME ./src/base)
+SET (MAIN_HOME ./src/main)
+SET (MODULE_HOME ./src/modules)
+
+IF(WIN32)## copy external dll libraries to Debug and Release folder
+	SET(EXTERNAL_DLLS "./lib/dlls/gdal15-vc9.dll" "./lib/dlls/libpng13-vc9.dll" "./lib/dlls/libexpat.dll" "./lib/dlls/mongoc.dll" "./lib/dlls/zlib1-vc9.dll" "./lib/dlls/bson.dll")
+	FILE(COPY ${EXTERNAL_DLLS} DESTINATION ${PROJECT_BINARY_DIR}/Debug)
+	FILE(COPY ${EXTERNAL_DLLS} DESTINATION ${PROJECT_BINARY_DIR}/Release)
+ENDIF(WIN32)
+ADD_SUBDIRECTORY(${BASE_HOME})
+ADD_SUBDIRECTORY(${MODULE_HOME})
+ADD_SUBDIRECTORY(${MAIN_HOME})
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+MESSAGE(STATUS "SEIMS is Ready for you!")

@@ -1,0 +1,6 @@
+LINK_DIRECTORIES(${OUTPUT_DIR})
+INCLUDE_DIRECTORIES(../../../util/src ../../../module_setting/src)
+SET(SRC_LIST ../../../util/src/SimulationModule.cpp SRD_MB.cpp api.cpp)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../modules)
+ADD_LIBRARY(SRD_MB SHARED ${SRC_LIST})
+TARGET_LINK_LIBRARIES(SRD_MB libutil.so)

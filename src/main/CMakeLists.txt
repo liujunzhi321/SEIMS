@@ -1,0 +1,5 @@
+MESSAGE(STATUS "Compiling folder: main...")
+ADD_SUBDIRECTORY(./main_omp)
+IF(SEIMS_VERSION STREQUAL "MPI")
+	ADD_SUBDIRECTORY(./main_mpi)
+ENDIF()

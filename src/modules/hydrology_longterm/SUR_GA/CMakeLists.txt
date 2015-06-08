@@ -1,0 +1,6 @@
+LINK_DIRECTORIES(${OUTPUT_DIR})
+INCLUDE_DIRECTORIES(../../../util/src ../../../module_setting/src)
+SET(SRC_LIST ../../../util/src/SimulationModule.cpp SUR_GA.cpp api.cpp)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../modules)
+ADD_LIBRARY(SUR_GA SHARED ${SRC_LIST})
+TARGET_LINK_LIBRARIES(SUR_GA libutil.so)

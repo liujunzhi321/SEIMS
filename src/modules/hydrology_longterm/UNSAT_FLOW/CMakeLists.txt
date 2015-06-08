@@ -1,0 +1,6 @@
+LINK_DIRECTORIES(${PROJECT_BINARY_DIR} /home/geohpc/watershed/storm_model/build/bin)
+INCLUDE_DIRECTORIES(../../../util/src ../../../module_setting/src)
+SET(SRC_LIST ../../../util/src/SimulationModule.cpp UNSAT_FLOW.cpp api.cpp)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../modules)
+ADD_LIBRARY(UNSAT_FLOW SHARED ${SRC_LIST})
+TARGET_LINK_LIBRARIES(UNSAT_FLOW libutil.so)

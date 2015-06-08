@@ -1,0 +1,5 @@
+OpenMP version example:
+E:\github-zlj\SEIMS_VS\Debug\seims_omp E:\github-zlj\SEIMS-2015\model_data\model_fenkeng_500m 6 0 192.168.6.55 27017
+
+MPI version example:
+mpiexec -n 4 E:\github-zlj\SEIMS_VS\Debug\seims E:\github-zlj\SEIMS-2015\model_data\cluster_model_fenkeng_90m\parallel.config 

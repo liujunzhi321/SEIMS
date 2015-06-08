@@ -1,0 +1,6 @@
+MESSAGE(STATUS "Compiling folder: modules...")
+ADD_SUBDIRECTORY(./erosion)
+ADD_SUBDIRECTORY(./hydrology)
+ADD_SUBDIRECTORY(./hydrology_longterm)
+ADD_SUBDIRECTORY(./growth)
+ADD_SUBDIRECTORY(./nutrient)
