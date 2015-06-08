@@ -10,8 +10,8 @@
 *
 */
 
-#ifndef NEW_WETSPA_SplashEro_Park_INCLUDE
-#define NEW_WETSPA_SplashEro_Park_INCLUDE
+#ifndef SEIMS_SplashEro_Park_INCLUDE
+#define SEIMS_SplashEro_Park_INCLUDE
 
 #include <string>
 #include <ctime>

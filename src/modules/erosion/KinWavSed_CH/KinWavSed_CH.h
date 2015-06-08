@@ -8,8 +8,8 @@
 *
 */
 
-#ifndef NEW_WETSPA_KinWavSed_CH_INCLUDE
-#define NEW_WETSPA_KinWavSed_CH_INCLUDE
+#ifndef SEIMS_KinWavSed_CH_INCLUDE
+#define SEIMS_KinWavSed_CH_INCLUDE
 
 #include "api.h"
 #include <string>

@@ -8,8 +8,8 @@
 *
 */
 
-#ifndef NEW_WETSPA_KinWavSed_OL_INCLUDE
-#define NEW_WETSPA_KinWavSed_OL_INCLUDE
+#ifndef SEIMS_KinWavSed_OL_INCLUDE
+#define SEIMS_KinWavSed_OL_INCLUDE
 
 #include <string>
 #include <ctime>

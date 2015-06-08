@@ -20,8 +20,7 @@ public:
 	/**
 	*	@brief constructor
 	*	@param projectPath The path of the project. This path contains cofig.fig, file.in and file.out.
-	*	@param databasePath The path of the database. This path constains HydroClimat.db3 and paramter.db3.
-	*	@param modulePath The path of the modules. This path constains all the dlls of Wetspa modules.
+	*	@param modulePath The path of the modules. This path contains all the *.dll(or *.so) of SEIMS modules.
 	*/
 	ModelMain(mongo* conn, string dbName, string projectPath, SettingsInput* input, 
 		ModuleFactory *factory, int subBasinID = 1, int scenarioID = 0, int numThread = 1, LayeringMethod layeringMethod = UP_DOWN);

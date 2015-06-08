@@ -3,7 +3,7 @@
 
 using namespace Module;
 
-WetSpaModule::WetSpaModule(void)
+SEIMSModule::SEIMSModule(void)
 {
 	m_StatusMsg = NULL;
 	m_date = (time_t)-1;
@@ -13,22 +13,22 @@ WetSpaModule::WetSpaModule(void)
 }
 
 
-WetSpaModule::~WetSpaModule(void)
+SEIMSModule::~SEIMSModule(void)
 {
 	if(m_metadataInfo != NULL) delete m_metadataInfo;
 }
 
-bool WetSpaModule::SetDate(time_t date)
+bool SEIMSModule::SetDate(time_t date)
 {
 	m_date = date;
 	return true;
 }
-void WetSpaModule::SetStatusCallback(pICStatusMessage cb)
+void SEIMSModule::SetStatusCallback(pICStatusMessage cb)
 {
 	m_StatusMsg = cb;
 }
 
-void WetSpaModule::StatusMsg(string msg)
+void SEIMSModule::StatusMsg(string msg)
 {
 	if (m_StatusMsg != NULL)
 	{
@@ -36,7 +36,7 @@ void WetSpaModule::StatusMsg(string msg)
 	}
 }
 
-void WetSpaModule::CreateBasicMetadataInfo(void)
+void SEIMSModule::CreateBasicMetadataInfo(void)
 {
 	if(m_metadataInfo == NULL)
 	{
@@ -54,7 +54,7 @@ void WetSpaModule::CreateBasicMetadataInfo(void)
 	}
 }
 
-string WetSpaModule::MetadataInformation(void)
+string SEIMSModule::MetadataInformation(void)
 {
 	if(m_metadataInfo == NULL)
 		throw ModelException("WetSpaModule","MetadataInformation",
@@ -62,7 +62,7 @@ string WetSpaModule::MetadataInformation(void)
 	return m_metadataInfo->GetXMLDocument();
 }
 
-bool WetSpaModule::CheckInputSize(const char* key,int sizeFromMain, int* sizeInModule)
+bool SEIMSModule::CheckInputSize(const char* key,int sizeFromMain, int* sizeInModule)
 {
 	if(sizeFromMain<=0)
 		throw ModelException("WetSpaModule","CheckInputSize",

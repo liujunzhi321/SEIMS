@@ -9,8 +9,8 @@
 *	Revision:
 *   Date:
 */
-#ifndef NEW_WETSPA_PET_PENMAN_MONTEITH_INCLUDE
-#define NEW_WETSPA_PET_PENMAN_MONTEITH_INCLUDE
+#ifndef SEIMS_PET_PENMAN_MONTEITH_INCLUDE
+#define SEIMS_PET_PENMAN_MONTEITH_INCLUDE
 
 #include <string>
 #include "api.h"
