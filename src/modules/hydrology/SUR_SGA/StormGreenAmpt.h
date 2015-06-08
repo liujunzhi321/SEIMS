@@ -8,8 +8,8 @@
 *
 */
 
-#ifndef NEW_WETSPA_STORM_GA_INCLUDE
-#define NEW_WETSPA_STORM_GA_INCLUDE
+#ifndef SEIMS_STORM_GA_INCLUDE
+#define SEIMS_STORM_GA_INCLUDE
 
 #include <string>
 #include "SimulationModule.h"

@@ -17,11 +17,11 @@ namespace Module
 	/*
 	** This is the basic class for all the modules. 
 	*/																																														
-	class WetSpaModule
+	class SEIMSModule
 	{
 	public:
-		WetSpaModule(void);
-		~WetSpaModule(void);
+		SEIMSModule(void);
+		~SEIMSModule(void);
 
 		//virtual functions
 		bool virtual SetValue (const char* key, float data){return true;}

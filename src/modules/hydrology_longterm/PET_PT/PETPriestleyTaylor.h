@@ -9,8 +9,8 @@
 *	Revision:
 *   Date:
 */
-#ifndef NEW_WETSPA_PET_PRIESTTAYLOR_INCLUDE
-#define NEW_WETSPA_PET_PRIESTTAYLOR_INCLUDE
+#ifndef SEIMS_PET_PRIESTTAYLOR_INCLUDE
+#define SEIMS_PET_PRIESTTAYLOR_INCLUDE
 
 #include <string>
 #include "api.h"
