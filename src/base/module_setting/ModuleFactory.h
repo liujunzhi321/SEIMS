@@ -51,7 +51,7 @@ private:
 #else
 	vector<void*> m_dllHandles;
 #endif
-	map<string, WetspaModuleSetting*> m_settings;
+	map<string, SEIMSModuleSetting*> m_settings;
 	map<string, const char*> m_metadata;
 	map<string, vector<ParamInfo> > m_parameters;
 	map<string, vector<ParamInfo> > m_inputs;
@@ -88,9 +88,9 @@ private:
 
 	dimensionTypes MatchType(string strType);
 	bool IsConstantInputFromName(string& name);
-	void ReadParameterSetting(string& moduleID, TiXmlDocument& doc, WetspaModuleSetting* setting);
-	void ReadInputSetting(string& moduleID, TiXmlDocument& doc, WetspaModuleSetting* setting);
-	void ReadOutputSetting(string& moduleID, TiXmlDocument& doc, WetspaModuleSetting* setting);
+	void ReadParameterSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting);
+	void ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting);
+	void ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting);
 
 	string GetComparableName(string& paraName);
 	ParamInfo* FindDependentParam(ParamInfo& paramInfo);
@@ -99,7 +99,7 @@ private:
 	void ReadParametersFromMongoDB();
 	void ReadParametersFromSQLite();
 
-	void SetData(string& dbName, int nSubbasin, WetspaModuleSetting* setting, ParamInfo* param, clsRasterData* templateRaster, 
+	void SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* setting, ParamInfo* param, clsRasterData* templateRaster, 
 		SettingsInput* settingsInput, SimulationModule* pModule, bool vertitalItp);
 	void SetValue(ParamInfo* param, clsRasterData* templateRaster, SettingsInput* settingsInput, SimulationModule* pModule);
 	void Set1DData(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule, SettingsInput* settingsInput, bool vertitalItp);

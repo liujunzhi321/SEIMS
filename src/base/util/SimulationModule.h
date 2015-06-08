@@ -25,9 +25,9 @@ public:
 	{
 		m_date = t;
 	};
-	virtual void SetTheadNumber(int thredNum)
+	virtual void SetTheadNumber(int threadNum)
 	{
-		omp_set_num_threads(thredNum);
+		omp_set_num_threads(threadNum);
 	};
 	virtual void SetDataType(float value)
 	{

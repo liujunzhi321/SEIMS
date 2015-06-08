@@ -4,11 +4,11 @@
 
 using namespace std;
 
-class WetspaModuleSetting
+class SEIMSModuleSetting
 {
 public:
-	WetspaModuleSetting(string moduleId,string setting);
-	~WetspaModuleSetting(void);
+	SEIMSModuleSetting(string moduleId,string setting);
+	~SEIMSModuleSetting(void);
 	
 	//climate data type for TSD and ITP
 	float dataType();

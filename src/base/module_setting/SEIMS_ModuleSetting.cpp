@@ -4,7 +4,7 @@
 #include "util.h"
 #include "text.h"
 
-WetspaModuleSetting::WetspaModuleSetting(string moduleId,string setting)
+SEIMSModuleSetting::SEIMSModuleSetting(string moduleId,string setting)
 {
 	m_moduleId = moduleId;
 	m_settingString = setting;
@@ -14,20 +14,20 @@ WetspaModuleSetting::WetspaModuleSetting(string moduleId,string setting)
 }
 
 
-WetspaModuleSetting::~WetspaModuleSetting(void)
+SEIMSModuleSetting::~SEIMSModuleSetting(void)
 {
 
 }
 
-void WetspaModuleSetting::getSettings()
+void SEIMSModuleSetting::getSettings()
 {
 	utils util;
 	m_settings = util.SplitString(m_settingString,'_');
 }
 
-string WetspaModuleSetting::dataTypeString(){return dataType2String(dataType());}
+string SEIMSModuleSetting::dataTypeString(){return dataType2String(dataType());}
 
-float WetspaModuleSetting::dataType()
+float SEIMSModuleSetting::dataType()
 {
 	if(m_moduleId.find("ITP") == string::npos && m_moduleId.find("TSD") == string::npos) 
 	{
@@ -35,52 +35,52 @@ float WetspaModuleSetting::dataType()
 	}
 	else
 	{
-		if(m_settings.size() < 2) throw ModelException("WetspaModuleSetting","dataType","Module "+ m_moduleId + " does not appoint data type in the second column.");
+		if(m_settings.size() < 2) throw ModelException("SEIMSModuleSetting","dataType","Module "+ m_moduleId + " does not appoint data type in the second column.");
 		float dataType = dataTypeString2Float(m_settings.at(1));
-		if(dataType == -1.0f) throw ModelException("WetspaModuleSetting","dataType","The data type of module "+ m_moduleId + " is not correct. It must be P, TMIN, TMAX or PET.");
+		if(dataType == -1.0f) throw ModelException("SEIMSModuleSetting","dataType","The data type of module "+ m_moduleId + " is not correct. It must be P, TMIN, TMAX or PET.");
 		return dataType;
 	}
 }
 
-bool WetspaModuleSetting::needDoVerticalInterpolation()
+bool SEIMSModuleSetting::needDoVerticalInterpolation()
 {
 	if(m_moduleId.find("ITP") == string::npos ) 
 		return false;
 	else
 	{
-		if(m_settings.size() < 3) throw ModelException("WetspaModuleSetting","needDoVerticalInterpolation","Module "+ m_moduleId + " does not appoint vertical interpolation in the third column.");
+		if(m_settings.size() < 3) throw ModelException("SEIMSModuleSetting","needDoVerticalInterpolation","Module "+ m_moduleId + " does not appoint vertical interpolation in the third column.");
 		int iIsDoVerticalInterpolation = atoi(m_settings.at(2).c_str());
 						
 		return iIsDoVerticalInterpolation == 0 ? false : true;
 	}
 }
 
-string  WetspaModuleSetting::channelRoutingMethod(int methodIndex)
+string  SEIMSModuleSetting::channelRoutingMethod(int methodIndex)
 {
 	if(!StringMatch(m_moduleId,"ChannelRouting")) return "";
 	else
 	{
 		if(int(m_settings.size()) < methodIndex + 1)
-			throw ModelException("WetspaModuleSetting","needDoVerticalInterpolation","Module "+ m_moduleId + " does not appoint vertical interpolation in the third column.");
+			throw ModelException("SEIMSModuleSetting","needDoVerticalInterpolation","Module "+ m_moduleId + " does not appoint vertical interpolation in the third column.");
 		
 		return m_settings.at(methodIndex);
 	}
 }
 
-string WetspaModuleSetting::channelFlowRoutingMethod()
+string SEIMSModuleSetting::channelFlowRoutingMethod()
 {
 	return channelRoutingMethod(1);
 }
-string WetspaModuleSetting::channelSedimentRoutingMethod()
+string SEIMSModuleSetting::channelSedimentRoutingMethod()
 {
 	return channelRoutingMethod(2);
 }
-string WetspaModuleSetting::channelNutrientRoutingMethod()
+string SEIMSModuleSetting::channelNutrientRoutingMethod()
 {
 	return channelRoutingMethod(3);
 }
 
-float WetspaModuleSetting::dataTypeString2Float(string dataType)
+float SEIMSModuleSetting::dataTypeString2Float(string dataType)
 {
 	if(StringMatch(dataType,DataType_Precipitation)) return 1.0f;
 	if(StringMatch(dataType,DataType_MinimumTemperature)) return 2.0f;
@@ -92,7 +92,7 @@ float WetspaModuleSetting::dataTypeString2Float(string dataType)
 	return -1.0f;
 }
 
-string WetspaModuleSetting::dataType2String(float dataType)
+string SEIMSModuleSetting::dataType2String(float dataType)
 {
 	switch((int)dataType)
 	{

@@ -21,7 +21,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	// set the information properties
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Snowmelt", "Calculate the amount of snow melt.");
-	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in the New WetSpa.");
+	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in the SEIMS.");
 	mdi.SetEmail("");
 	mdi.SetID("SNO_DD");
 	mdi.SetName("SNO_DD");

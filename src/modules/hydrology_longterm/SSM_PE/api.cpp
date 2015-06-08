@@ -21,7 +21,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	// set the information properties
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Snow sublimation", "Calculate the amount of snow sublimation .");
-	mdi.SetDescription("A simple method that used in the old WetSpa will be incorporated in the New WetSpa as the default method.");
+	mdi.SetDescription("A simple method that used in the old WetSpa will be incorporated in the SEIMS as the default method.");
 	mdi.SetEmail("");
 	mdi.SetID("SSM_PE");
 	mdi.SetName("SSM_PE");
