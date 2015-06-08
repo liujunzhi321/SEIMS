@@ -664,21 +664,21 @@ void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMS
 			if (param->Name.size() <= 0 )
 			{
 				delete param;
-				throw ModelException("WetSpaModule","readInputSetting","Some input variables have not name in metadata!");
+				throw ModelException("SEIMSModule","readInputSetting","Some input variables have not name in metadata!");
 			}
 
 			if (param->Source.size() <= 0)
 			{
 				string name = param->Name;
 				delete param;
-				throw ModelException("WetSpaModule","readInputSetting","Input variable "+ name + " does not have source!");
+				throw ModelException("SEIMSModule","readInputSetting","Input variable "+ name + " does not have source!");
 			}
 
 			if (param->Dimension == DT_Unknown)
 			{
 				string name = param->Name;
 				delete param;
-				throw ModelException("WetSpaModule","readInputSetting","Input variable "+ name + " does not have dimension!");
+				throw ModelException("SEIMSModule","readInputSetting","Input variable "+ name + " does not have dimension!");
 			}
 
 			vecPara.push_back(*param);
@@ -769,14 +769,14 @@ void ModuleFactory::ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIM
 			if (param->Name.size() <= 0 )
 			{
 				delete param;
-				throw ModelException("WetSpaModule","readOutputSetting","Some output variables have not name in metadata!");
+				throw ModelException("SEIMSModule","readOutputSetting","Some output variables have not name in metadata!");
 			}
 
 			if (param->Dimension == DT_Unknown)
 			{
 				string name = param->Name;
 				delete param;
-				throw ModelException("WetSpaModule","readInputSetting","Input variable "+ name + " does not have dimension!");
+				throw ModelException("SEIMSModule","readInputSetting","Input variable "+ name + " does not have dimension!");
 			}
 
 			vecPara.push_back(*param);

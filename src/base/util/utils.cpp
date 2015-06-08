@@ -81,7 +81,7 @@ void utils::Log(string msg)
 	//string timestamp = buffer;
 	//timestamp = timestamp.substr(0, timestamp.length() -1);
 
-	//ofstream fs = ofstream("WetSpaCore.log", ios::app);
+	//ofstream fs = ofstream("SEIMSCore.log", ios::app);
 	//if (fs != NULL)
 	//{
 	//	if (fs.is_open())

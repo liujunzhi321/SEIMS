@@ -9,21 +9,21 @@
 *	Revision:
 *   Date:
 */
-#ifndef NEW_WETSPA_INTERPOLATE_INCLUDE
-#define NEW_WETSPA_INTERPOLATE_INCLUDE
+#ifndef SEIMS_INTERPOLATE_INCLUDE
+#define SEIMS_INTERPOLATE_INCLUDE
 
 #include <string>
 #include <ctime>
 #include <fstream>
 #include "SimulationModule.h"
-//#include "WetspaModuleSetting.h"
+//#include "SEIMSModuleSetting.h"
 using namespace std;
 
 class Interpolate : public SimulationModule
 {
 public:
 	Interpolate();
-	//Interpolate(WetspaModuleSetting* setting);
+	//Interpolate(SEIMSModuleSetting* setting);
 	~Interpolate(void);
 
 	virtual void SetDataType(float value);
