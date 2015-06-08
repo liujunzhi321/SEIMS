@@ -10,19 +10,6 @@
 
 using namespace std;
 
-//Interpolate::Interpolate(WetspaModuleSetting* setting):m_nCells(-1), m_nStatioins(-1),
-//	m_month(-1), m_output(NULL), m_stationData(NULL), m_weights(NULL), 
-//	m_dem(NULL),m_hStations(NULL), m_lapseRate(NULL)
-//{
-//	this->m_vertical = setting->needDoVerticalInterpolation();
-//
-//	float value = setting->dataType();
-//	if(value == 1.0f) m_dataType = 0;
-//	if(value == 2.0f || value == 3.0f) m_dataType = 1;
-//	if(value == 4.0f) m_dataType = 2;
-//	
-//	omp_set_num_threads(1);
-//}
 
 Interpolate::Interpolate():m_nCells(-1), m_nStatioins(-1),
 	m_month(-1), m_output(NULL), m_stationData(NULL), m_weights(NULL), 

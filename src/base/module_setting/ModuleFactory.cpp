@@ -46,7 +46,7 @@ ModuleFactory::~ModuleFactory(void)
 	mongo_destroy(m_conn);
 #endif
 
-	for (map<string, WetspaModuleSetting*>::iterator it = m_settings.begin(); it != m_settings.end(); ++it)
+	for (map<string, SEIMSModuleSetting*>::iterator it = m_settings.begin(); it != m_settings.end(); ++it)
 		delete it->second;
 	
 	for (map<string, const char*>::iterator it = m_metadata.begin(); it != m_metadata.end(); ++it)
@@ -414,7 +414,7 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 	return typ;
 }
 
-void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, WetspaModuleSetting* setting)
+void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_parameters.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
 	vector<ParamInfo>& vecPara = m_parameters[moduleID];
@@ -573,7 +573,7 @@ bool ModuleFactory::IsConstantInputFromName(string& name)
 	return false;
 }
 
-void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, WetspaModuleSetting* setting)
+void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_inputs.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
 	vector<ParamInfo>& vecPara = m_inputs[moduleID];
@@ -690,7 +690,7 @@ void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, Wetsp
 	}
 }
 
-void ModuleFactory::ReadOutputSetting(string& moduleID, TiXmlDocument& doc, WetspaModuleSetting* setting)
+void ModuleFactory::ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_outputs.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
 	vector<ParamInfo>& vecPara = m_outputs[moduleID];
@@ -868,7 +868,7 @@ void ModuleFactory::ReadConfigFile(const char* configFileName)
 					module = "lib" + module;
 #endif
 					
-					WetspaModuleSetting* moduleSetting = new WetspaModuleSetting(module, settingString);
+					SEIMSModuleSetting* moduleSetting = new SEIMSModuleSetting(module, settingString);
 					if(moduleSetting->dataTypeString().length() > 0) 
 						module += "_" + moduleSetting->dataTypeString(); // make the module id unique
 
@@ -885,7 +885,7 @@ void ModuleFactory::ReadConfigFile(const char* configFileName)
 
 }
 
-void ModuleFactory::SetData(string& dbName, int nSubbasin, WetspaModuleSetting* setting, ParamInfo* param, clsRasterData* templateRaster,
+void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* setting, ParamInfo* param, clsRasterData* templateRaster,
 	SettingsInput* settingsInput, SimulationModule* pModule, bool vertitalItp)
 {
 	//set the paramter data to the module
