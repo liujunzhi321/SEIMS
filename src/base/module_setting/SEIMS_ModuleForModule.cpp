@@ -57,7 +57,7 @@ void SEIMSModule::CreateBasicMetadataInfo(void)
 string SEIMSModule::MetadataInformation(void)
 {
 	if(m_metadataInfo == NULL)
-		throw ModelException("WetSpaModule","MetadataInformation",
+		throw ModelException("SEIMSModule","MetadataInformation",
 		"The metadata info is null. Please call CreateMetadataInfo first!");
 	return m_metadataInfo->GetXMLDocument();
 }
@@ -65,7 +65,7 @@ string SEIMSModule::MetadataInformation(void)
 bool SEIMSModule::CheckInputSize(const char* key,int sizeFromMain, int* sizeInModule)
 {
 	if(sizeFromMain<=0)
-		throw ModelException("WetSpaModule","CheckInputSize",
+		throw ModelException("SEIMSModule","CheckInputSize",
 			"Input data for "+string(key) +" in module "+ModuleName()+
 			" is invalid. The size could not be less than zero.");
 
@@ -73,7 +73,7 @@ bool SEIMSModule::CheckInputSize(const char* key,int sizeFromMain, int* sizeInMo
 	{
 		if(*sizeInModule <=0) *sizeInModule = sizeFromMain;
 		else
-			throw ModelException("WetSpaModule","CheckInputSize",
+			throw ModelException("SEIMSModule","CheckInputSize",
 			"Input data for "+string(key) +" in module "+ModuleName()+
 			" is invalid. All the input data should have same size.");
 	}

@@ -32,7 +32,7 @@ namespace Module
 		bool virtual Get1DData(const char* key, int* nRows, float** data) {return true;}
 		bool virtual Get2DData(const char* key, int *nRows, int *nCols, float*** data){return true;}
 		bool virtual Execute(void) = 0;
-		//bool virtual InitModule(WetspaModuleSetting* setting) = 0;
+		//bool virtual InitModule(SEIMSModuleSetting* setting) = 0;
 		//bool virtual EndModule() = 0;
 
 		string virtual ModuleName(void) = 0;

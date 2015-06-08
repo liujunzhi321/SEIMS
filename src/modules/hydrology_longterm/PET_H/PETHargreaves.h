@@ -9,8 +9,8 @@
 *	Revision:
 *   Date:
 */
-#ifndef NEW_WETSPA_PET_HARGREAVES_INCLUDE
-#define NEW_WETSPA_PET_HARGREAVES_INCLUDE
+#ifndef SEIMS_PET_HARGREAVES_INCLUDE
+#define SEIMS_PET_HARGREAVES_INCLUDE
 
 #include <string>
 #include "api.h"

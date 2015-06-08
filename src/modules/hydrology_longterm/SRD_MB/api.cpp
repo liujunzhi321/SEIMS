@@ -8,20 +8,20 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" WETSPA_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new SRD_MB();
 }
 
 // function to return the XML Metadata document string
-extern "C" WETSPA_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	MetadataInfo mdi;
 
 	// set the information properties
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Snow redistribution", "Snow redistribution");
-	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in the New WetSpa.");
+	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in the SEIMS.");
 	mdi.SetEmail("");
 	mdi.SetID("SRD_MB");
 	mdi.SetName("SRD_MB");
