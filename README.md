@@ -18,7 +18,7 @@ Modules: Hydrology, Erosion, Nutrient, Plant Growth
 # Developer #
 ----------
 For helping developers to contribute to SEIMS smoothly and quickly, we prepared a detail manual.
-See [Mannual for Developers](Developers.md) for more information.
+See [Mannual for Developers](doc/Developers.md) for more information.
 
 # Contact #
 ----------
