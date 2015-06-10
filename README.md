@@ -31,4 +31,4 @@ Dr.Junzhi Liu (liujunzhi@njnu.edu.cn)
 
 Liangjun Zhu (zlj@lreis.ac.cn)
 
-[Go Home](#Welcome-to-SEIMS)
+[Go Home](#welcome-to-seims)
