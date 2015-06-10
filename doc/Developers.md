@@ -7,24 +7,40 @@ prepared by Liangjun Zhu
 
 # 目录
 [**前言**](#前言)
-[**Github使用说明**](#Github使用说明)
-1. [Windows下安装Git](#Windows下安装Git)
-2. [从Github中克隆代码库](#从Github中克隆代码库)
-3. [代码同步与更新](#代码同步与更新)
-[**SEIMS源码编译**](#SEIMS源码编译)
-1. [源码结构](#源码结构)
-2. [Windows下VS编译](#Windows下VS编译)
-3. [Linux下GNU编译](#Linux下GNU编译)
-[**运行SEIMS**](#运行SEIMS)
-1. [mongoDB](#mongoDB)
-2. [模型配置文件](#模型配置文件)
-3. [运行命令](#运行命令)
-[**SEIMS基本框架**](#SEIMS基本框架)
-[**SEIMS模块编写流程**](#SEIMS模块编写流程)
-[**编码规范**](#编码规范)
-1. [doxygen注释规则](#doxygen注释规则)
-2. [Markdown文件编辑](#Markdown文件编辑)
 
+[**Github使用说明**](#Github使用说明)
+
+1. [Windows下安装Git](#Windows下安装Git)
+
+2. [从Github中克隆代码库](#从Github中克隆代码库)
+
+3. [代码同步与更新](#代码同步与更新)
+
+[**SEIMS源码编译**](#SEIMS源码编译)
+
+1. [源码结构](#源码结构)
+
+2. [Windows下VS编译](#Windows下VS编译)
+
+3. [Linux下GNU编译](#Linux下GNU编译)
+
+[**运行SEIMS**](#运行SEIMS)
+
+1. [mongoDB](#mongoDB)
+
+2. [模型配置文件](#模型配置文件)
+
+3. [运行命令](#运行命令)
+
+[**SEIMS基本框架**](#SEIMS基本框架)
+
+[**SEIMS模块编写流程**](#SEIMS模块编写流程)
+
+[**编码规范**](#编码规范)
+
+1. [doxygen注释规则](#doxygen注释规则)
+
+2. [Markdown文件编辑](#Markdown文件编辑)
 
 
 # 前言
