@@ -60,8 +60,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("WAVP","kg*m*m/ha*MJ","rate of decline in rue per unit increase in vapor pressure deficit","ParameterDB_Crop",DT_Raster);
 
 
-	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster);									// from interpolation module
-	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster);									// from interpolation module
+	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster);									//! from interpolation module
+	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster);									//! from interpolation module
 	mdi.AddInput("D_SR","MJ/m2/d","Solar radiation","Module", DT_Raster);
 	mdi.AddInput("D_RM","","Relative humidity","Module", DT_Raster);
 

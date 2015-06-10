@@ -17,7 +17,14 @@
 #include "SimulationModule.h"
 
 using namespace std;
-
+/*!
+ * \class PETHargreaves
+ *
+ * \brief 
+ *
+ * 
+ *
+ */
 class PETHargreaves : public SimulationModule
 {
 public:
