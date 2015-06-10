@@ -1,3 +1,15 @@
+/*!
+ * \file ArealParameter.cpp
+ * \brief 
+ *
+ * 
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "ArealParameter.h"
 #include <stdlib.h>
 
