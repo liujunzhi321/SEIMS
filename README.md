@@ -26,7 +26,7 @@ For helping developers to contribute to SEIMS smoothly and quickly, we prepared 
 See [Mannual for Developers](doc/Developers.md) for more information.
 
 
-[Go Home](SEIMS#Welcome-to-SEIMS)
+[Go Home](#Welcome-to-SEIMS)
 
 Contact
 ----------
