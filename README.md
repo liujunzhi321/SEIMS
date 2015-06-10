@@ -1,4 +1,4 @@
-# Welcome to SEIMS #
+Welcome to SEIMS
 ==========
 ----------
 
@@ -12,15 +12,16 @@ Parallel: OpenMP and MPI
 Platform: Windows and linux cluster
 Modules: Hydrology, Erosion, Nutrient, Plant Growth
 
-# Installation #
+Installation
 ----------
 
-# Developer #
+Developer
 ----------
 For helping developers to contribute to SEIMS smoothly and quickly, we prepared a detail manual.
-See [Mannual for Developers](Developers.md) for more information.
+See [Mannual for Developers](doc/Developers.md) for more information.
 
-# Contact #
+Contact
 ----------
 Dr.Junzhi Liu (liujunzhi@njnu.edu.cn)
+
 Liangjun Zhu (zlj@lreis.ac.cn)
