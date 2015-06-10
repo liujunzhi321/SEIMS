@@ -25,10 +25,7 @@ cmake <SEIMS path>
 For helping developers to contribute to SEIMS smoothly and quickly, we prepared a detail manual.
 See [Mannual for Developers](doc/Developers.md) for more information.
 
-
-
-
-Contact
+# Contact
 ----------
 Dr.Junzhi Liu (liujunzhi@njnu.edu.cn)
 
