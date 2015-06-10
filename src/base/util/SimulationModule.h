@@ -1,3 +1,11 @@
+/*!
+ * \file SimulationModule.h
+ * \brief Parent class for all modules in SEIMS
+ *
+ * 
+ *
+ * 
+ */
 #pragma once
 #include <string>
 #include "ModelException.h"
@@ -5,30 +13,41 @@
 
 
 using namespace std;
-
+//! enumeration of time step
 enum TimeStepType
 {
-	TIMESTEP_HILLSLOPE,
-	TIMESTEP_CHANNEL,
-	TIMESTEP_ECOLOGY
+	TIMESTEP_HILLSLOPE,///< Hillslope scale
+	TIMESTEP_CHANNEL,  ///< Channel scale
+	TIMESTEP_ECOLOGY   ///< Ecology scle
 };
-
+/*!
+ * \class SimulationModule
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class SimulationModule
 {
 public:
+	//! Constructor
 	SimulationModule(void);
+	//! Destructor
 	virtual ~SimulationModule(void);
-
+	//! Execute the simulation
 	virtual int Execute() {return -1;};
-
+	//! Set date time
 	virtual void SetDate(time_t t)
 	{
 		m_date = t;
 	};
+	//! Set thread number for OpenMP 
 	virtual void SetTheadNumber(int threadNum)
 	{
 		omp_set_num_threads(threadNum);
 	};
+	//! Set data type among 
 	virtual void SetDataType(float value)
 	{
 		
@@ -85,6 +104,6 @@ protected:
 	time_t m_date;
 	//string m_id;
 
-	int m_tsCounter;  //sub-timestep counter
+	int m_tsCounter;  //! sub-timestep counter
 };
 

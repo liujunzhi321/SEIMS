@@ -1,3 +1,15 @@
+/*!
+ * \file clsLapseData.cpp
+ * \brief methods for clsLapseData class
+ *
+ * \deprecated This class is designed for Sqlite.
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #include "clsLapseData.h"
 #include "DBManager.h"
 #include "text.h"

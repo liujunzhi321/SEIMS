@@ -1,4 +1,16 @@
-//! Utility class 
+/*!
+ * \file utils.h
+ * \brief definition of utils class
+ *
+ * utils class to handle string, date time and file
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 29-July-2010
+ *
+ * 
+ */
+
 #pragma once
 
 #include <vector>
@@ -10,7 +22,14 @@
 #include <time.h>
 
 using namespace std;
-
+/*!
+ * \class utils
+ *
+ * \brief utils class to handle string, date time and file
+ *
+ *
+ *
+ */
 class utils
 {
 

@@ -1,11 +1,29 @@
+/*!
+ * \file clsInterpolationWeighData.h
+ * \brief
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #pragma once
-
 #include <string>
 #include <ostream>
 #include "gridfs.h"
 
 using namespace std;
-
+/*!
+ * \class clsInterpolationWeighData
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class clsInterpolationWeighData
 {
 public:
@@ -22,7 +40,6 @@ private:
 	int m_nRows, m_nCols;
 	
 private:
-	//void readWeightData(string weightFileName);
 	void ReadFromMongoDB(gridfs *gfs, const char* remoteFilename);
 };
 

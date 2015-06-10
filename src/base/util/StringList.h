@@ -1,11 +1,26 @@
-//! Utility class to store a list of strings
+/*!
+ * \file StringList.h
+ * \brief Utility class to store a list of strings
+ *
+ * 
+ *
+ * 
+ */
+
 #pragma once
 
 #include <string>
 #include <vector>
 
 using namespace std;
-
+/*!
+ * \class StringList
+ *
+ * \brief Common operation of string vector
+ *
+ *
+ *
+ */
 class StringList
 {
 private:

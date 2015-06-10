@@ -1,15 +1,33 @@
-//! Base class used to store input and output variable datasets
+/*!
+ * \file base_VariableData.h
+ * \brief Base class used to store input and output variable datasets
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 
+ * \date June 2010
+ *
+ * 
+ */
+
 #pragma once
 
 #include <string>
 #include "MetadataInfoConst.h"
-
 using namespace std;
-
+/*!
+ * \class base_VariableData
+ *
+ * \brief Base class for variable data
+ *
+ *
+ *
+ */
 class base_VariableData
 {
 protected:
-	// dimension type for the dataset
+	//! dimension type for the dataset, \a dimensionTypes
 	dimensionTypes m_Dimension;
 
 public:

@@ -1,3 +1,15 @@
+/*!
+ * \file clsHydroClimateData.cpp
+ * \brief Methods for clsHydroClimateData class
+ *
+ * Methods for Hydrological climate data class
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #include "clsHydroClimateData.h"
 #include "text.h"
 #include "DBManager.h"

@@ -1,13 +1,15 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Utility functions
-*
-*	Created:	Junzhi Liu
-*	Date:		29-July-2010
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
-
+/*!
+ * \file util.cpp
+ * \brief Utility functions to handle numeric, string and file
+ *
+ * Utility functions for all SEIMS modules
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 29-July-2010
+ *
+ * 
+ */
 #include <cmath>
 #include "util.h"
 #include "utils.h"
@@ -24,12 +26,20 @@
 #include <Windows.h>
 #include <direct.h>
 #endif
-
+/*!
 using namespace std;
 
 #define UTIL_ZERO 0.0000000001
 
-
+/*!
+ * \brief Find files in given paths
+ *
+ * 
+ *
+ * \param[in] lpPath, expression
+ * \param[out] vecFiles
+ * \return 0 means success
+ */
 int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFiles)
 {
 #ifndef linux
@@ -59,7 +69,15 @@ int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFil
 
 	return 0;
 }
-
+/*!
+ * \brief GetCoreFileName
+ *
+ * Return the file name from a given file's path
+ *
+ * \param[in] fullFileName 
+ * \param[out] CoreFileName
+ * \return CoreFileName
+ */
 string GetCoreFileName(const string& fullFileName)
 {
 	string::size_type start = fullFileName.find_last_of("\\");
@@ -78,7 +96,14 @@ string GetCoreFileName(const string& fullFileName)
 
 	return fullFileName.substr(start+1, end-start-1);
 }
-
+/*!
+ * \brief trim
+ *
+ * trim "\n,\t,\r" of given string's heading and tailing
+ *
+ * \param[in] string
+ * \return trimmed string
+ */
 string& trim(string& s)
 {
     if(s.empty())
@@ -87,7 +112,14 @@ string& trim(string& s)
     return s.erase(s.find_last_not_of(" \n\r\t") + 1);
 }
 
-
+/*!
+ * \brief GetUpper
+ *
+ * Get Uppercase of given string
+ *
+ * \param[in] string
+ * \return Uppercase string
+ */
 string GetUpper(string str)
 {
 	string strTmp1 = string(str);
@@ -95,6 +127,14 @@ string GetUpper(string str)
 	return strTmp1;
 }
 
+/*!
+ * \brief Match String
+ *
+ * whether string1 is as same as string2
+ *
+ * \param[in] string1, string2
+ * \return true or false
+ */
 bool StringMatch(string text1, string text2)
 {
 	// convert the key to UPPERCASE for comparison
@@ -106,7 +146,14 @@ bool StringMatch(string text1, string text2)
 
 	return (strTmp1 == strTmp2);
 }
-
+/*!
+ * \brief
+ *
+ * whether char*a equal to char*b when ignore case
+ *
+ * \param[in] char* a, char* b
+ * \return true or false
+ */
 bool StrEqualIgnoreCase(const char* a, const char* b)
 {
 #ifndef linux
@@ -116,7 +163,14 @@ bool StrEqualIgnoreCase(const char* a, const char* b)
 #endif 
 
 }
-
+/*!
+ * \brief DoubleEqual
+ *
+ * whether d1 is equal to d2
+ *
+ * \param[in] double d1, double d2
+ * \return true or false
+ */
 bool DoubleEqual(double d1, double d2)
 {
 	if (abs(d1 - d2) < UTIL_ZERO)
@@ -124,15 +178,29 @@ bool DoubleEqual(double d1, double d2)
 	else
 		return false;
 }
-
-bool FloatEqual(float d1, float d2)
+/*!
+ * \brief FloatEqual
+ *
+ *  whether f1 is equal to f2
+ *
+ * \param[in] float f1, float f2
+ * \return true or false
+ */
+bool FloatEqual(float f1, float f2)
 {
-	if (abs(d1 - d2) < UTIL_ZERO)
+	if (abs(f1 - f2) < UTIL_ZERO)
 		return true;
 	else
 		return false;
 }
-
+/*!
+ * \brief GetPathFromFullName
+ *
+ * Get Path From FullName string
+ *
+ * \param[in] fullFileName string
+ * \return filePath string
+ */
 string GetPathFromFullName(string& fullFileName)
 {
 	string::size_type i = fullFileName.find_last_of("\\");
@@ -147,13 +215,22 @@ string GetPathFromFullName(string& fullFileName)
 	return fullFileName.substr(0, i+1);
 }
 
-//! Output a status message
+//! Print a status message 
 void StatusMessage(const char* msg)
 {
 	//cout << msg;
 	//cout << endl;
 }
-
+/*!
+ * \brief Read 2D array from file
+ *
+ * The input file should follow the format:
+ *     a 2D array sized nRows * nRows
+ * The size of data is nRows * (nRows + 1), the first element of each row is the nRows.
+ *
+ * \param[in] filename, nRows
+ * \param[out] data
+ */
 void Read2DArray(const char* filename, int& nRows, float**& data)
 {
 	ifstream ifs(filename);
@@ -171,7 +248,16 @@ void Read2DArray(const char* filename, int& nRows, float**& data)
 	}
 	ifs.close();
 }
-
+/*!
+ * \brief Read 1D array from file
+ *
+ * The input file should follow the format:
+ *     a 1D array sized nRows * 1
+ * The size of data is nRows
+ *
+ * \param[in] filename, nRows
+ * \param[out] data
+ */
 void Read1DArray(const char* filename, int& nRows, float*& data)
 {
 	ifstream ifs(filename);
@@ -185,6 +271,16 @@ void Read1DArray(const char* filename, int& nRows, float*& data)
 	ifs.close();
 }
 
+/*!
+ * \brief Read 2D array from string
+ *
+ * The input string should follow the format:
+ *     float value, total number is nRows * nRows
+ * The size of data is nRows * (nRows + 1), the first element of each row is the nRows.
+ *
+ * \param[in] s, nRows
+ * \param[out] data
+ */
 void Read2DArrayFromString(const char* s, int& nRows, float**& data)
 {
 	istringstream ifs(s);
@@ -202,7 +298,13 @@ void Read2DArrayFromString(const char* s, int& nRows, float**& data)
 			ifs >> data[i][j];
 	}
 }
-
+/*!
+ * \brief Write 1D array to a file
+ *
+ * \sa Read1DArray(), Read2DArray(), Output2DArray()
+ *
+ * \param[in] n, data, filename
+ */
 void Output1DArray(int n, float* data, const char* filename)
 {
 	ofstream ofs(filename);
@@ -212,7 +314,13 @@ void Output1DArray(int n, float* data, const char* filename)
 
 	ofs.close();
 }
-
+/*!
+ * \brief Write 2D array to a file
+ *
+ * 
+ *
+ * \param[in] nRows, nCols, data, filename
+ */
 void Output2DArray(int nRows, int nCols, float** data, const char* filename)
 {
 	ofstream ofs(filename);
@@ -228,7 +336,7 @@ void Output2DArray(int nRows, int nCols, float** data, const char* filename)
 
 	ofs.close();
 }
-
+//! Get sum value of a double array with size n.
 double Sum(double *a, int n)
 {
 	double s = 0.0;
@@ -238,7 +346,7 @@ double Sum(double *a, int n)
 	}
 	return s;
 }
-
+//! Get maximum value in a double array with size n.
 double Max(double *a, int n)
 {
 	double m = a[0];
@@ -252,7 +360,7 @@ double Max(double *a, int n)
 	return m;
 }
 
-// gets the root path to the current executable.
+//! Get the root path of the current executable.
 string GetAppPath()
 {
 	string RootPath;
@@ -344,7 +452,7 @@ int copyfile_linux(const char* srcfile, const char* dstfile)
 }
 #endif
 
-
+//! Get local time
 void LocalTime(time_t date, struct tm *t)
 {
 #ifndef linux

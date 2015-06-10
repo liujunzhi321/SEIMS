@@ -1,10 +1,25 @@
+/*!
+ * \file ModelException.h
+ * \brief Define ModelException class
+ *
+ *
+ *
+ * 
+ */
 #pragma once
 
 #include <exception>
 #include <string>
 
 using namespace std;
-
+/*!
+ * \class ModelException
+ *
+ * \brief Print the exception message
+ *
+ *
+ *
+ */
 class ModelException :
 	public exception
 {

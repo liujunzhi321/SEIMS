@@ -1,12 +1,31 @@
+/*!
+ * \file clsHydroClimateData.h
+ * \brief Hydrological climate data class
+ *
+ * 
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #pragma once
-
 #include <string>
 #include <map>
 #include "bson.h"
 
 
 using namespace std;
-
+/*!
+ * \class clsHydroClimateData
+ *
+ * \brief Hydrological climate data class
+ *
+ * This class is for Sqlite. But currently SEIMS adopts MongoDB as data manager.
+ * \deprecated So, this was deprecated!
+ *
+ */
 class clsHydroClimateData
 {
 public:
@@ -22,7 +41,7 @@ public:
 
 	void dump(ostream* fs);
 
-	// for mongodb
+	//! Constructor for mongodb
 	clsHydroClimateData();
 	void appendData(time_t t, float value)
 	{

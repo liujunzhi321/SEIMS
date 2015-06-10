@@ -1,4 +1,16 @@
-//! Base class used to store various versions of the variable data
+/*!
+ * \file base_VariableData.cpp
+ * \brief Base class of variable data
+ *
+ * Base class used to store various versions of the variable data
+ *
+ * \author Junzhi Liu
+ * \version 
+ * \date June 2010
+ *
+ * 
+ */
+
 #include "base_VariableData.h"
 
 //! Constructor
