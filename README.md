@@ -26,10 +26,12 @@ For helping developers to contribute to SEIMS smoothly and quickly, we prepared 
 See [Mannual for Developers](doc/Developers.md) for more information.
 
 
-[Go Home](SEIMS#Welcome-to-SEIMS)
+
 
 Contact
 ----------
 Dr.Junzhi Liu (liujunzhi@njnu.edu.cn)
 
 Liangjun Zhu (zlj@lreis.ac.cn)
+
+[Go Home](#Welcome-to-SEIMS)
