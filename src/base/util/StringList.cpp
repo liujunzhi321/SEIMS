@@ -1,4 +1,12 @@
-//! Implementation fo the methods for the StringList utility class
+/*!
+ * \file StringList.cpp
+ * \brief methods for the StringList utility class
+ *
+ * Implementation of the methods for the StringList utility class
+ *
+ *
+ * 
+ */
 #include "StringList.h"
 #include "util.h"
 

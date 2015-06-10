@@ -1,9 +1,28 @@
+/*!
+ * \file clsLapseData.h
+ * \brief Define clsLapseData class
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #pragma once
 
 #include <string>
 
 using namespace std;
-
+/*!
+ * \class clsLapseData
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class clsLapseData
 {
 public:

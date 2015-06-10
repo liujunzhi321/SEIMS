@@ -1,3 +1,15 @@
+/*!
+ * \file clsRasterData.cpp
+ * \brief methods for clsRasterData class
+ *
+ * 
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #include "clsRasterData.h"
 #include <fstream>
 #include <vector>
@@ -13,7 +25,13 @@
 #include "cpl_string.h"
 #include <iomanip>
 #include "ogr_spatialref.h"
-
+/*!
+ * \brief Constructor of clsRasterData instance from ascFile
+ *
+ * \sa readASCFile()
+ *
+ * \param[in] ascFileName
+ */
 clsRasterData::clsRasterData(string ascFileName)
 {
 	m_rasterPositionData = NULL;
@@ -22,14 +40,20 @@ clsRasterData::clsRasterData(string ascFileName)
 	m_fileName = ascFileName;
 	readASCFile(ascFileName);
 }
-
+//! set \a m_rasterPositionData, \a m_rasterData, \a m_mask to NULL
 clsRasterData::clsRasterData()
 {
 	m_rasterPositionData = NULL;
 	m_rasterData = NULL;
 	m_mask = NULL;
 }
-
+/*!
+ * \brief Constructor of clsRasterData instance from mongoDB
+ *
+ * \sa ReadFromMongoDB()
+ *
+ * \param[in] gfs, romoteFilename, templateRaster
+ */
 clsRasterData::clsRasterData(gridfs* gfs, const char* remoteFilename, clsRasterData* templateRaster)
 {
 	m_rasterPositionData = NULL;
@@ -38,7 +62,13 @@ clsRasterData::clsRasterData(gridfs* gfs, const char* remoteFilename, clsRasterD
 	m_fileName = "";
 	ReadFromMongoDB(gfs, remoteFilename, templateRaster);
 }
-
+/*!
+ * \brief Constructor of clsRasterData instance from ascFile and mask
+ *
+ * \sa readASCFile()
+ *
+ * \param[in] ascFileName, mask
+ */
 clsRasterData::clsRasterData(string ascFileName,clsRasterData* mask)
 {
 	m_rasterPositionData = NULL;
@@ -47,7 +77,7 @@ clsRasterData::clsRasterData(string ascFileName,clsRasterData* mask)
 	m_fileName = ascFileName;
 	readASCFile(ascFileName,mask);
 }
-
+//! Destructor
 clsRasterData::~clsRasterData(void)
 {
 	if(m_rasterData!=NULL) delete [] m_rasterData;
@@ -63,7 +93,7 @@ clsRasterData::~clsRasterData(void)
 		delete [] m_rasterPositionData;
 	}
 }
-
+//! Read raster data from MongoDB
 int clsRasterData::ReadFromMongoDB(gridfs *gfs, const char* remoteFilename)
 {
 	gridfile gfile[1];
@@ -143,7 +173,7 @@ int clsRasterData::ReadFromMongoDB(gridfs *gfs, const char* remoteFilename)
 	return 0;
 }
 
-
+//! Read raster data from MongoDB and select by mask
 int clsRasterData::ReadFromMongoDB(gridfs *gfs, const char* remoteFilename,clsRasterData* mask)
 {
 	if(mask == NULL) ReadFromMongoDB(gfs, remoteFilename);
@@ -229,7 +259,7 @@ int clsRasterData::ReadFromMongoDB(gridfs *gfs, const char* remoteFilename,clsRa
 	}
 	return 0;
 }
-
+//! Get Ascii file headers information
 void clsRasterData::getASCHeaders(string databasePath,map<string,float>* headers)
 {
 	DBManager dbman;

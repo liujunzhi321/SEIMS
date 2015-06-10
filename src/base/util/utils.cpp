@@ -1,4 +1,16 @@
-//! Implementation of the methods for the utils class
+/*!
+ * \file utils.cpp
+ * \brief methods of utils class
+ *
+ * Implementation of the methods for the utils class
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 29-July-2010
+ *
+ * 
+ */
+
 #include "utils.h"
 #include <fstream>
 #include <cstdio>
@@ -12,9 +24,9 @@
 
 using namespace std;
 
-#define UTIL_ZERO 0.000001
+#define UTIL_ZERO 0.0000000001 
 
-//! Returns a flag indicating if the given file exists
+//! Return a flag indicating if the given file exists
 bool utils::FileExists( string FileName )
 {
 #ifndef linux
@@ -67,8 +79,7 @@ utils::~utils(void)
 {
 }
 
-//! Writes an entry to the log file.
-//! normally only used for debugging
+//! Writes an entry to the log file. Normally only used for debugging
 void utils::Log(string msg)
 {
 	//struct tm timeptr;
@@ -95,7 +106,7 @@ void utils::Log(string msg)
 	//}
 }
 
-// Trim Both leading and trailing spaces
+//! Trim Both leading and trailing spaces
 void utils::TrimSpaces( string& str)
 {
     size_t startpos = str.find_first_not_of(" \t"); // Find the first character position after excluding leading blank spaces
@@ -126,7 +137,7 @@ vector<string> utils::SplitString(string item, char delimiter)
 
 	return tokens;
 }
-
+//! Splits the given string by spaces
 vector<string> utils::SplitString(string item)
 {
 	istringstream iss(item); 
@@ -143,7 +154,7 @@ vector<string> utils::SplitString(string item)
 
 	return tokens;
 }
-
+//! Convert date time to string as the format of "YYYY-mm-dd"
 string utils::ConvertToString(const time_t *date)
 {
 	struct tm dateInfo;
@@ -163,6 +174,7 @@ string utils::ConvertToString(const time_t *date)
 
 static int daysOfMonth[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 #define LEAPYEAR(y) ((y % 4) == 0 && ((y % 100) != 0 || (y % 400) == 0))
+//! Convert date time to string as the format of "YYYY-mm-dd hh"
 string utils::ConvertToString2(const time_t *date)
 {
     struct tm dateInfo;
@@ -212,6 +224,7 @@ string utils::ConvertToString2(const time_t *date)
 // format string should indicate positions of year, month and day
 // Ex: strDate => 20000323, format=> %4d%2d%2d
 // Ex: strDate => 2000-03-23, format => %d-%d-%d
+//! Convert string to date time, string format could be %4d%2d%2d or %d-%d-%d
 time_t utils::ConvertToTime(string strDate, string format, bool includeHour)
 {
 	struct tm* timeinfo;
@@ -249,7 +262,7 @@ time_t utils::ConvertToTime(string strDate, string format, bool includeHour)
 
 	return t;
 }
-
+//! Convert string to date time, string format could be %4d%2d%2d or %d-%d-%d
 time_t utils::ConvertToTime2(const string& strDate, const char* format, bool includeHour)
 {
 	time_t t;
@@ -290,7 +303,14 @@ time_t utils::ConvertToTime2(const string& strDate, const char* format, bool inc
 
 	return t;
 }
-
+/*!
+ * \brief Get date information from time_t variable
+ *
+ * 
+ *
+ * \param[in] t
+ * \param[out] year, month, day
+ */
 int utils::GetDateInfoFromTimet(time_t* t, int* year, int* month, int* day)
 {
 	struct tm dateInfo;

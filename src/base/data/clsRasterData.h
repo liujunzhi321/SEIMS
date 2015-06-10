@@ -1,3 +1,15 @@
+/*!
+ * \file clsRasterData.h
+ * \brief Define clsRasterData class
+ *
+ * 
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date Apr. 2011
+ *
+ * 
+ */
 #pragma once
 
 #include <string>
@@ -6,7 +18,14 @@
 #include "gridfs.h"
 
 using namespace std;
-
+/*!
+ * \class clsRasterData
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class clsRasterData
 {
 public:
@@ -40,18 +59,18 @@ public:
 
 	//2011-4-11
 
-	//get value corresponding to specific row and column
+	//! Get value corresponding to specific row and column
 	static float getValue(clsRasterData* templateRasterData, float* rasterData, int row, int col);
 	
-	//get position in 1-d raster data array for specific row and column
+	//! Get position in 1-d raster data array for specific row and column
 	int getPosition(int row,int col);
 	int getPosition(float x,float y);
-
+	//! Get raster data pointer
 	float* getRasterDataPointer()
 	{
 		return m_rasterData;
 	}
-	// for mongodb
+	//! Constructor for using mongodb
 	clsRasterData(gridfs* gfs, const char* remoteFilename, clsRasterData* templateRaster = NULL);
 	
 private:

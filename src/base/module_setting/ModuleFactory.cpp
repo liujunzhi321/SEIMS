@@ -811,7 +811,7 @@ bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<st
 					{
 						// parse the line into separate items
 						// TODO - This class might be more general by adding a property to the class
-						//        allowing a suer to specify what character to use as a delimiter
+						//        allowing a user to specify what character to use as a delimiter
 						vector<string> tokens = utl.SplitString(line, '|');
 						// is there anything in the token list?
 						if (tokens.size() > 0)

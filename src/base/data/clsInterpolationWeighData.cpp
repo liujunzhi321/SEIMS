@@ -1,3 +1,15 @@
+/*!
+ * \file clsInterpolationWeighData.cpp
+ * \brief methods for clsInterpolationWeighData class
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #include "clsInterpolationWeighData.h"
 #include <fstream>
 #include "utils.h"

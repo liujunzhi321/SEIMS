@@ -1,12 +1,15 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Utility functions
-*
-*	Created:	Junzhi Liu
-*	Date:		29-July-2010
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file util.h
+ * \brief Definition of Utility functions
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 29-July-2010
+ *
+ * 
+ */
 
 #ifndef SEIM_UTIL_INCLUDE
 #define SEIM_UTIL_INCLUDE
@@ -19,11 +22,11 @@
 #include <stdio.h>
 
 using namespace std;
-
+//! grid layering method for parallel computing
 enum LayeringMethod
 {
-	UP_DOWN,
-	DOWN_UP
+	UP_DOWN, ///< the set of grid layers using the layering-from-source method
+	DOWN_UP  ///< the set of grid layers using the layering-from-outlet method
 };
 
 

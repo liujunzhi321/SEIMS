@@ -1,3 +1,15 @@
+/*!
+ * \file MetadataInfo.h
+ * \brief Define MetadataInfo class used by modules
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #pragma once
 
 #include <sstream>
@@ -8,15 +20,28 @@
 using namespace std;
 
 
-// the ModelClass
+/*!
+ * \class ModelClass
+ *
+ * \brief Class for model
+ *
+ *
+ *
+ */
 class ModelClass
 {
 public:
 	string Name;
 	string Description;
 };
-
-// the ModelParameter
+/*!
+ * \class Parameter
+ *
+ * \brief Model parameter information class
+ *
+ *
+ *
+ */
 class Parameter
 {
 public:
@@ -24,8 +49,16 @@ public:
 	string Units;
 	string Description;
 	string Source;
-	dimensionTypes Dimension;
+	dimensionTypes Dimension;///< \a dimensionTypes
 };
+/*!
+ * \class Information
+ *
+ * \brief Module development information class
+ *
+ *
+ *
+ */
 class Information
 {
 public:
@@ -38,6 +71,14 @@ public:
 	string Website;
 	string Helpfile;
 };
+/*!
+ * \class InputVariable
+ *
+ * \brief Input variable information class
+ *
+ *
+ *
+ */
 class InputVariable
 {
 public:
@@ -45,28 +86,43 @@ public:
 	string Units;
 	string Description;
 	string Source;
-	dimensionTypes Dimension;
+	dimensionTypes Dimension;///< \a dimensionTypes
 };
+/*!
+ * \class OutputVariable
+ *
+ * \brief Output variable information class
+ *
+ *
+ *
+ */
 class OutputVariable
 {
 public:
 	string Name;
 	string Units;
 	string Description;
-	dimensionTypes Dimension;
+	dimensionTypes Dimension;///< \a dimensionTypes
 };
-
+/*!
+ * \class MetadataInfo
+ *
+ * \brief Metadata information of module
+ *
+ *
+ *
+ */
 class MetadataInfo
 {
 private:
-	// private member variables
-	 string m_strSchemaVersion;			// latest XML schema version supported by this class
-	 ModelClass m_oClass;				// class name for the module
-	 Information m_Info;				// the general information for the module
-	 vector<InputVariable> m_vInputs;		// list of input parameters for the module
-	 vector<OutputVariable> m_vOutputs;	// list of output parameters for the module
-	 vector<ModelClass> m_vDependencies;	// list of dependency classes for the module
-	 vector<Parameter> m_vParameters;		// list of parameters for the module
+	//! private member variables
+	 string m_strSchemaVersion;			//! latest XML schema version supported by this class
+	 ModelClass m_oClass;				//! class name for the module
+	 Information m_Info;				//! the general information for the module
+	 vector<InputVariable> m_vInputs;		//! list of input parameters for the module
+	 vector<OutputVariable> m_vOutputs;	//! list of output parameters for the module
+	 vector<ModelClass> m_vDependencies;	//! list of dependency classes for the module
+	 vector<Parameter> m_vParameters;		//! list of parameters for the module
 
     void OpenTag(string name, string attributes, int indent, string* sb);
     void CloseTag(string name, int indent, string* sb);
