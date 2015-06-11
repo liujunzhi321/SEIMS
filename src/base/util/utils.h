@@ -1,11 +1,15 @@
 /*!
+ * \defgroup Base
+ * Base classes and functions of SEIMS 
+ */
+/*!
  * \file utils.h
  * \brief definition of utils class
  *
  * utils class to handle string, date time and file
  *
  * \author Junzhi Liu
- * \version 1.0
+ * \version 1.0	
  * \date 29-July-2010
  *
  * 
@@ -24,7 +28,7 @@
 using namespace std;
 /*!
  * \class utils
- *
+ * \ingroup Base
  * \brief utils class to handle string, date time and file
  *
  *
