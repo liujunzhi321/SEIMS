@@ -29,8 +29,7 @@ private:
 	void initalOutputs();
 
 	int m_nLayers;
-	// depth of the layer (mm)
-	float m_depth[2];
+
 	float *m_rootDepth;
 	// input
 	// size of array 
@@ -44,6 +43,8 @@ private:
 	float* m_P;
 	
 	// output
+	// depth of the layer (mm)
+	float **m_Depth;
 	// amount of nitrate in layer ly (kg N/ha)
 	float **m_Nitrate;
 	//amount of ammonium in layer ly (kg N/ha)

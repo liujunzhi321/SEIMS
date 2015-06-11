@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Denitrification::Denitrification(void):m_nLayers(3), m_size(-1), m_denRC(1.4f), m_Nitrate(NULL), m_TF(NULL), m_WF(NULL), m_orgCar(NULL), m_Density(NULL), m_denWF(NULL),  //input
+Denitrification::Denitrification(void):m_nLayers(3), m_size(-1), m_denRC(1.4f), m_Nitrate(NULL), m_TF(NULL), m_WF(NULL), m_orgCar(NULL), m_denWF(NULL),  //input
 	 m_denLostN(NULL)  //output
 {
 
@@ -18,7 +18,7 @@ Denitrification::~Denitrification(void)
 {
 	if(m_denLostN != NULL)
 	{
-		for(int i=0; i < m_size; i++)
+		for(int i=0; i < m_nLayers; i++)
 			delete [] m_denLostN;
 		delete [] m_denLostN;
 	}
@@ -30,6 +30,11 @@ bool Denitrification::CheckInputData(void)
 	if(m_size <= 0)
 	{
 		throw ModelException("Denitrification","CheckInputData","The cell number of the input can not be less than zero.");
+		return false;
+	}
+	if(m_nLayers <= 0)
+	{
+		throw ModelException("Denitrification","CheckInputData","The layers number of the input can not be less than zero.");
 		return false;
 	}
 	if(m_denRC <= 0)
@@ -45,8 +50,6 @@ bool Denitrification::CheckInputData(void)
 	if(m_orgCar == NULL)
 	{
 	}
-	if(m_Density == NULL)
-		throw ModelException("Denitrification","CheckInputData","You have not set the bulk density of the layer.");
 	if(m_TF == NULL)
 		throw ModelException("Denitrification","CheckInputData","You have not set the nutrient cycling temperature factor.");
 	if(m_WF == NULL)
@@ -72,14 +75,14 @@ void  Denitrification::initalOutputs()
 
 	if(m_denLostN == NULL)
 	{
-		m_denLostN = new float*[m_size];
+		m_denLostN = new float*[m_nLayers];
 	
 	#pragma omp parallel for
-		for (int i = 0; i < m_size; ++i)
+		for (int i = 0; i < m_nLayers; ++i)
 		{
-			m_denLostN[i] = new float[m_nLayers];
+			m_denLostN[i] = new float[m_size];
 			
-			for (int j = 0; j < m_nLayers; ++j)
+			for (int j = 0; j < m_size; ++j)
 				m_denLostN[i][j] = 0.0f;
 		}
 	}
@@ -129,7 +132,7 @@ void Denitrification::SetValue(const char* key, float data)
 void Denitrification::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	//check the input data
-	CheckInputSize(key, nrows);
+	CheckInputSize(key, ncols);
 
 	string sk(key);
 	if(StringMatch(sk, "D_Nitrate"))
@@ -138,8 +141,6 @@ void Denitrification::Set2DData(const char* key, int nrows, int ncols, float** d
 		m_TF = data;
 	else if (StringMatch(sk, "D_WF"))
 		m_WF = data;
-	else if(StringMatch(sk, "Density_2D"))
-		m_Density = data;
 	else if(StringMatch(sk, "DenWF"))
 		m_denWF = data;
 	else
@@ -150,8 +151,8 @@ void Denitrification::Set2DData(const char* key, int nrows, int ncols, float** d
 void Denitrification::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
 	string sk(key);
-	*nRows = m_size;
-	*nCols = m_nLayers;
+	*nRows = m_nLayers;
+	*nCols = m_size;
     if (StringMatch(sk, "DenLostN"))
 		*data = m_denLostN; 
 	else
@@ -167,9 +168,9 @@ int Denitrification::Execute()
 	initalOutputs();
 
 	#pragma omp parallel for
-	for(int i=0; i < m_size; i++)
+	for(int i=0; i < m_nLayers; i++)
     { 
-		for(int j=0; j < m_nLayers; j++)
+		for(int j=0; j < m_size; j++)
 		{
 			float denWF = 1.1f;
 			if (m_denWF != NULL)

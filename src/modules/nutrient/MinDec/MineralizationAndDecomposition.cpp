@@ -8,166 +8,164 @@
 
 using namespace std;
 
-MineralizationAndDecomposition::MineralizationAndDecomposition(void):m_nLayers(3), m_size(-1),m_RateConst(0.00001f), m_HumNF(0.02f), m_RateCoeH(0.015f),    //input
-	m_RateCoeR(0.05f), m_conSoluP(5.0f), m_rootDepth(NULL), m_Density(NULL), m_orgCar(NULL), m_SoilT(NULL), m_SOMO(NULL), m_FieldCap(NULL),
-	m_TF(NULL), m_WF(NULL), m_ActOrgN(NULL), m_StaOrgN(NULL), m_TraOrgN(NULL),                                                                //output
+MineralizationAndDecomposition::MineralizationAndDecomposition(void):m_nLayers(3), m_size(-1),m_RateConst(0.00001f), m_HumNF(0.02f), m_RateCoeH(0.002f),    //input
+	m_RateCoeR(0.05f), m_conSoluP(5.0f), m_Density(NULL), m_SoilT(NULL), m_SOMO(NULL), m_FieldCap(NULL), m_Depth(NULL), 
+	m_TF(NULL), m_WF(NULL), m_ActOrgN(NULL), m_StaOrgN(NULL), m_TraOrgN(NULL), m_orgCar(NULL),                                                              //output
 	m_MinHumN(NULL), m_Res(NULL), m_Nitrate(NULL), m_SoluP(NULL), m_CNRat(NULL), m_CPRat(NULL), m_RateConRD(NULL), m_ResComF(NULL),
 	m_MinFreOrgN(NULL), m_DecFreOrgN(NULL), m_actOrgP(NULL), m_conHumOrgN(NULL), m_conActOrgN(NULL), m_conStaOrgN(NULL), 
 	m_HumOrgN(NULL), m_FreOrgN(NULL), m_humOrgP(NULL), m_FreOrgP(NULL), m_staOrgP(NULL), m_minHumP(NULL), m_minFreOrgP(NULL), m_decFreOrgP(NULL)
 {
-    m_depth[0] = 10.f;
-	m_depth[1] = 100.f;
 }
 
 MineralizationAndDecomposition::~MineralizationAndDecomposition(void)
 {
 	if(m_TF != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_TF[i];
 		delete [] m_TF;
 	}
 	if(m_WF != NULL)
 	{	
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_WF;
 		delete [] m_WF;
 	}
 	if(m_conHumOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_conHumOrgN;
 		delete [] m_conHumOrgN;
 	}
 	if(m_conActOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_conActOrgN;
 		delete [] m_conActOrgN;
 	}
 	if(m_conStaOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_conStaOrgN;
 		delete [] m_conStaOrgN;
 	}
 	if(m_HumOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_HumOrgN;
 		delete [] m_HumOrgN;
 	}
 	if(m_ActOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
             delete [] m_ActOrgN;
 		delete [] m_ActOrgN;
 	}
 	if(m_StaOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_StaOrgN;
 		delete [] m_StaOrgN;
 	}
 	if(m_FreOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_FreOrgN;
 		delete [] m_FreOrgN;
 	}
 	if(m_TraOrgN != NULL)
 	{	
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 	        delete [] m_TraOrgN;
 	    delete [] m_TraOrgN;
 	}
 	if(m_MinHumN != NULL)
 	{	
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 	        delete [] m_MinHumN;
 	    delete [] m_MinHumN;
 	}
 	if(m_CNRat != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_CNRat;
 		delete [] m_CNRat;
 	}
 	if(m_CPRat != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_CPRat;
 		delete [] m_CPRat;
 	}
 	if(m_RateConRD != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_RateConRD;
 		delete [] m_RateConRD;
 	}
 	if(m_ResComF != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_ResComF;
 		delete [] m_ResComF;
 	}
 	if(m_MinFreOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)		
+		for (int i=0; i < m_nLayers; ++i)		
 		    delete [] m_MinFreOrgN;
 		delete [] m_MinFreOrgN;
 	}
 	if(m_DecFreOrgN != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_DecFreOrgN;
 		delete [] m_DecFreOrgN;
 	}
 	if(m_SoluP != NULL)
 	{	
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_SoluP;
 		delete [] m_SoluP;
 	}
 	if(m_humOrgP != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_humOrgP;
 		delete [] m_humOrgP;
 	}
 	if(m_FreOrgP != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_FreOrgP;
 		delete [] m_FreOrgP;
 	}
 	if(m_actOrgP != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_actOrgP;
 		delete [] m_actOrgP;
 	}
 	if(m_staOrgP != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_staOrgP;
 		delete [] m_staOrgP;
 	}
 	if(m_minHumP != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_minHumP;
 		delete [] m_minHumP;
 	}
 	if(m_minFreOrgP != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_minFreOrgP;
 		delete [] m_minFreOrgP;
 	}
 	if(m_decFreOrgP != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_decFreOrgP;
 		delete [] m_decFreOrgP;
 	}
@@ -204,8 +202,8 @@ bool MineralizationAndDecomposition::CheckInputData(void)
 		return false;
 	}
 	
-	if(m_rootDepth == NULL)
-		throw ModelException("MineralizationAndDecomposition","CheckInputData","You have not set the depth of the root.");
+	//if(m_rootDepth == NULL)
+	//	throw ModelException("MineralizationAndDecomposition","CheckInputData","You have not set the depth of the root.");
 	if(m_Density == NULL)
 		throw ModelException("MineralizationAndDecomposition","CheckInputData","You have not set the bulk density of the layer.");
 	//if(m_orgCar == NULL)
@@ -225,6 +223,10 @@ bool MineralizationAndDecomposition::CheckInputData(void)
 		throw ModelException("MineralizationAndDecomposition","CheckInputData","You have not set the water content on a given day.");
 	if(m_FieldCap == NULL)
 		throw ModelException("MineralizationAndDecomposition","CheckInputData","You have not set the water content at field capacity.");
+	if(m_Depth == NULL)
+		throw ModelException("MineralizationAndDecomposition","CheckInputData","You have not set the depth of the layer.");
+    //if(m_som == NULL)
+	//	throw ModelException("MineralizationAndDecomposition","CheckInputData","You have not set the amount of soil organic matter.");
 	//if(m_Res == NULL)
 	//{
 	//	m_Res = new float*[m_size];
@@ -249,69 +251,68 @@ void  MineralizationAndDecomposition::initalOutputs()
 
 	if(m_TF == NULL)
 	{
-		m_TF = new float*[m_size];
-		m_WF = new float*[m_size];
-		m_conHumOrgN = new float*[m_size];
-		m_conActOrgN = new float*[m_size];
-		m_conStaOrgN = new float*[m_size];
-		m_ActOrgN = new float*[m_size];
-		m_StaOrgN = new float*[m_size];
-		m_HumOrgN = new float*[m_size];
-		m_TraOrgN = new float*[m_size];
-		m_MinHumN = new float*[m_size];
-		m_CNRat = new float*[m_size];
-		m_CPRat = new float*[m_size];
-		m_RateConRD = new float*[m_size];
-		m_ResComF = new float*[m_size];
-		m_MinFreOrgN = new float*[m_size];
-		m_DecFreOrgN = new float*[m_size];
-		m_SoluP = new float*[m_size];
-		m_humOrgP = new float*[m_size];
-		m_FreOrgP = new float*[m_size];
-		m_actOrgP = new float*[m_size];
-		m_staOrgP = new float*[m_size];
-		m_FreOrgN = new float*[m_size];
-		m_minHumP = new float*[m_size];
-		m_minFreOrgP = new float*[m_size];
-		m_decFreOrgP = new float*[m_size];
-	
+		m_TF = new float*[m_nLayers];
+		m_WF = new float*[m_nLayers];
+		//m_orgCar = new float*[m_nLayers];
+		m_conHumOrgN = new float*[m_nLayers];
+		m_conActOrgN = new float*[m_nLayers];
+		m_conStaOrgN = new float*[m_nLayers];
+		m_ActOrgN = new float*[m_nLayers];
+		m_StaOrgN = new float*[m_nLayers];
+		m_HumOrgN = new float*[m_nLayers];
+		m_TraOrgN = new float*[m_nLayers];
+		m_MinHumN = new float*[m_nLayers];
+		m_CNRat = new float*[m_nLayers];
+		m_CPRat = new float*[m_nLayers];
+		m_RateConRD = new float*[m_nLayers];
+		m_ResComF = new float*[m_nLayers];
+		m_MinFreOrgN = new float*[m_nLayers];
+		m_DecFreOrgN = new float*[m_nLayers];
+		m_SoluP = new float*[m_nLayers];
+		m_humOrgP = new float*[m_nLayers];
+		m_FreOrgP = new float*[m_nLayers];
+		m_actOrgP = new float*[m_nLayers];
+		m_staOrgP = new float*[m_nLayers];
+		m_FreOrgN = new float*[m_nLayers];
+		m_minHumP = new float*[m_nLayers];
+		m_minFreOrgP = new float*[m_nLayers];
+		m_decFreOrgP = new float*[m_nLayers];
+
 	#pragma omp parallel for
-		for (int i = 0; i < m_size; ++i)
+		for (int i = 0; i < m_nLayers; ++i)
 		{
-			m_TF[i] = new float[m_nLayers];	
-			m_WF[i] = new float[m_nLayers];	
-			m_conHumOrgN[i] = new float[m_nLayers];	
-			m_conActOrgN[i] = new float[m_nLayers];	
-			m_conStaOrgN[i] = new float[m_nLayers];	
-			m_ActOrgN[i] = new float[m_nLayers];
-			m_StaOrgN[i] = new float[m_nLayers];
-			m_HumOrgN[i] = new float[m_nLayers];
-			m_TraOrgN[i] = new float[m_nLayers];	
-			m_MinHumN[i] = new float[m_nLayers];
-			m_CNRat[i] = new float[m_nLayers];
-			m_CPRat[i] = new float[m_nLayers];
-			m_RateConRD[i] = new float[m_nLayers];
-			m_ResComF[i] = new float[m_nLayers];
-			m_MinFreOrgN[i] = new float[m_nLayers];
-			m_DecFreOrgN[i] = new float[m_nLayers];
-			m_SoluP[i] = new float[m_nLayers]; 
-			m_humOrgP[i] = new float[m_nLayers];
-			m_FreOrgP[i] = new float[m_nLayers];
-			m_actOrgP[i] = new float[m_nLayers];
-			m_staOrgP[i] = new float[m_nLayers];
-			m_FreOrgN[i] = new float[m_nLayers];
-			m_minHumP[i] = new float[m_nLayers];
-			m_minFreOrgP[i] = new float[m_nLayers];
-			m_decFreOrgP[i] = new float[m_nLayers];
+			m_TF[i] = new float[m_size];	
+			m_WF[i] = new float[m_size];
+			//m_orgCar[i] = new float[m_size];
+			m_conHumOrgN[i] = new float[m_size];	
+			m_conActOrgN[i] = new float[m_size];	
+			m_conStaOrgN[i] = new float[m_size];	
+			m_ActOrgN[i] = new float[m_size];
+			m_StaOrgN[i] = new float[m_size];
+			m_HumOrgN[i] = new float[m_size];
+			m_TraOrgN[i] = new float[m_size];	
+			m_MinHumN[i] = new float[m_size];
+			m_CNRat[i] = new float[m_size];
+			m_CPRat[i] = new float[m_size];
+			m_RateConRD[i] = new float[m_size];
+			m_ResComF[i] = new float[m_size];
+			m_MinFreOrgN[i] = new float[m_size];
+			m_DecFreOrgN[i] = new float[m_size];
+			m_SoluP[i] = new float[m_size]; 
+			m_humOrgP[i] = new float[m_size];
+			m_FreOrgP[i] = new float[m_size];
+			m_actOrgP[i] = new float[m_size];
+			m_staOrgP[i] = new float[m_size];
+			m_FreOrgN[i] = new float[m_size];
+			m_minHumP[i] = new float[m_size];
+			m_minFreOrgP[i] = new float[m_size];
+			m_decFreOrgP[i] = new float[m_size];
 
-			m_SoluP[i][0] = m_conSoluP * m_Density[i][0] * m_depth[0] / 100;
-			m_SoluP[i][1] = m_conSoluP * m_Density[i][1] * m_depth[1] / 100;
-			m_SoluP[i][2] = m_conSoluP * m_Density[i][2] * m_rootDepth[i] / 100;
-
-			for (int j = 0; j < m_nLayers; j++)
+			for (int j = 0; j < m_size; j++)
 			{
 				m_TF[i][j] = 0.0f;
 			    m_WF[i][j] = 0.0f;
+				//m_orgCar[i][j] = 0.0f;
 				m_conHumOrgN[i][j] = 0.0f;
 				m_conActOrgN[i][j] = 0.0f;
 				m_conStaOrgN[i][j] = 0.0f;
@@ -326,6 +327,7 @@ void  MineralizationAndDecomposition::initalOutputs()
 				m_ResComF[i][j] = 0.0f;
 				m_MinFreOrgN[i][j] = 0.0f;
 				m_DecFreOrgN[i][j] = 0.0f;
+				m_SoluP[i][j] = 0.0f;
 				m_humOrgP[i][j] = 0.0f;
 				m_actOrgP[i][j] = 0.0f;
 				m_staOrgP[i][j] = 0.0f;
@@ -404,9 +406,9 @@ void MineralizationAndDecomposition::Set1DData(const char* key, int n, float* da
 	//check the input data
 	CheckInputSize(key,n);
 	string sk(key);
-	if (StringMatch(sk, "RootDepth"))
-		m_rootDepth = data;
-	else if(StringMatch(sk, "D_SOTE"))
+	//if (StringMatch(sk, "RootDepth"))
+	//	m_rootDepth = data;
+	if (StringMatch(sk, "D_SOTE"))
 		m_SoilT = data;
 	else
 		throw ModelException("MineralizationAndDecomposition", "Set1DData", "Parameter " + sk 
@@ -417,7 +419,7 @@ void MineralizationAndDecomposition::Set1DData(const char* key, int n, float* da
 void MineralizationAndDecomposition::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	//check the input data
-	CheckInputSize(key, nrows);
+	CheckInputSize(key, ncols);
 
 	string sk(key);
 	if(StringMatch(sk, "D_Nitrate"))
@@ -428,8 +430,10 @@ void MineralizationAndDecomposition::Set2DData(const char* key, int nrows, int n
 		m_FieldCap = data;
 	else if(StringMatch(sk, "Density_2D"))
 		m_Density = data;
-	else if(StringMatch(sk,"OrgCar"))		
-		m_orgCar = data;
+	else if(StringMatch(sk, "D_Depth"))
+		m_Depth = data;
+	//else if(StringMatch(sk,"SOM"))		
+	//	m_som = data;
 	else if(StringMatch(sk, "Res"))
 		m_Res = data;
 	else
@@ -440,12 +444,14 @@ void MineralizationAndDecomposition::Set2DData(const char* key, int nrows, int n
 void MineralizationAndDecomposition::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
 	string sk(key);
-	*nRows = m_size;
-	*nCols = m_nLayers;
+	*nRows = m_nLayers;
+	*nCols = m_size;
 	if (StringMatch(sk, "TF"))
 		*data = m_TF; 
 	else if (StringMatch(sk, "WF"))
 		*data = m_WF;
+	//else if (StringMatch(sk, "OrgCar"))
+		//*data = m_orgCar;
 	else if (StringMatch(sk, "ConHumOrgN"))
 		*data = m_conHumOrgN;
 	else if (StringMatch(sk, "ConActOrgN"))
@@ -506,54 +512,50 @@ int MineralizationAndDecomposition::Execute()
 	initalOutputs();
 
 	#pragma omp parallel for
-	for(int i=0; i < m_size; i++)
+	for(int i=0; i < m_nLayers; i++)
     {
-		float residual[3];
-		if (m_Res == NULL)
+		for(int j=0; j < m_size; j++)
 		{
-			residual[0] = 10.f;
-			residual[1] = 0.f;
-			residual[2] = 0.f;
-		}
-		else
-		{
-			residual[0] = m_Res[i][0];
-			residual[1] = m_Res[i][1];
-			residual[2] = m_Res[i][2];
-		}
-
-		for(int j=0; j < m_nLayers; j++)
-		{
-			if (m_SoilT[i] < 0)
+			float residual[3];
+		    if (m_Res == NULL)
+		    {
+			    residual[0] = 10.f;
+			    residual[1] = 0.f;
+			    residual[2] = 0.f;
+		    }
+		    else
+		    {
+			    residual[i] = m_Res[i][j];
+		    }
+		   	
+			if (m_SoilT[j] < 0)
 			continue;
 
+			int hydroIndex = max(0, i-1);
 			float m_NumNF = 0.02f;
 			float orgCar = 1.12f;
 			if (m_orgCar != NULL)
-				orgCar = m_orgCar[i][j];
+		    orgCar = m_orgCar[i][j];
+
 		    m_conHumOrgN[i][j] = 10000.f * orgCar / 14.f;
 			m_conActOrgN[i][j] = m_conHumOrgN[i][j] * m_NumNF;
 			m_conStaOrgN[i][j] = m_conHumOrgN[i][j] * (1 - m_NumNF);
 
-			m_HumOrgN[i][0] = m_conHumOrgN[i][0] * m_Density[i][0] * m_depth[0] / 100;
-			m_HumOrgN[i][1] = m_conHumOrgN[i][1] * m_Density[i][1] * m_depth[1] / 100;
-			m_HumOrgN[i][2] = m_conHumOrgN[i][2] * m_Density[i][2] * m_rootDepth[i] / 100;
-			m_ActOrgN[i][0] = m_conActOrgN[i][0] * m_Density[i][0] * m_depth[0] / 100;
-			m_ActOrgN[i][1] = m_conActOrgN[i][1] * m_Density[i][1] * m_depth[1] / 100;
-			m_ActOrgN[i][2] = m_conActOrgN[i][2] * m_Density[i][2] * m_rootDepth[i] / 100;
-			m_StaOrgN[i][0] = m_conStaOrgN[i][0] * m_Density[i][0] * m_depth[0] / 100;
-			m_StaOrgN[i][1] = m_conStaOrgN[i][1] * m_Density[i][1] * m_depth[1] / 100;
-			m_StaOrgN[i][2] = m_conStaOrgN[i][2] * m_Density[i][2] * m_rootDepth[i] / 100;
+			m_HumOrgN[i][j] = m_conHumOrgN[i][j] * m_Density[hydroIndex][j] * m_Depth[i][j] / 100;
+			m_ActOrgN[i][j] = m_conActOrgN[i][j] * m_Density[hydroIndex][j] * m_Depth[i][j] / 100;
+			m_StaOrgN[i][j] = m_conStaOrgN[i][j] * m_Density[hydroIndex][j] * m_Depth[i][j] / 100;
+			m_SoluP[i][j] = m_conSoluP * m_Density[hydroIndex][j] * m_Depth[i][j] / 100;
 
-			m_FreOrgN[i][j] = 0.0015f * residual[j];  
+			m_FreOrgN[i][j] = 0.0015f * residual[i];  
 
-			m_TF[i][j] = (0.9f * m_SoilT[i] / (m_SoilT[i] + exp(9.93f - 0.312f * m_SoilT[i])))+0.1f;
-		    m_WF[i][j] = m_SOMO[i][j] / m_FieldCap[i][j];
+			m_TF[i][j] = (0.9f * m_SoilT[j] / (m_SoilT[j] + exp(9.93f - 0.312f * m_SoilT[j])))+0.1f;
+		    m_WF[i][j] = m_SOMO[hydroIndex][j] / m_FieldCap[hydroIndex][j];
+
 			float m_RateConst = 0.00001f;
 			m_TraOrgN[i][j] = m_RateConst * m_ActOrgN[i][j] * (1 / m_NumNF - 1) - m_StaOrgN[i][j];
 			m_MinHumN[i][j] = m_RateCoeH * pow(m_TF[i][j] * m_WF[i][j], 0.5f) * m_ActOrgN[i][j];
-			m_CNRat[i][j] = 0.58f * residual[j] / (m_FreOrgN[i][j] + m_Nitrate[i][j]);
-			m_CPRat[i][j] = 0.58f * residual[j] / (m_FreOrgP[i][j] + m_SoluP[i][j]);
+			m_CNRat[i][j] = 0.58f * residual[i] / (m_FreOrgN[i][j] + m_Nitrate[i][j]);
+			m_CPRat[i][j] = 0.58f * residual[i] / (m_FreOrgP[i][j] + m_SoluP[i][j]);
 			float r1 = exp(-0.693f * (m_CNRat[i][j] - 25) / 25);
 			float r2 = exp(-0.693f * (m_CPRat[i][j] - 200) / 200);
 			float r = min(r1,r2);
@@ -565,18 +567,22 @@ int MineralizationAndDecomposition::Execute()
 			m_Nitrate[i][j] += m_MinFreOrgN[i][j] + m_MinHumN[i][j];
 			m_ActOrgN[i][j] += m_DecFreOrgN[i][j] - m_TraOrgN[i][j];
 			m_StaOrgN[i][j] += m_TraOrgN[i][j];
+			m_FreOrgN[i][j] -= m_MinFreOrgN[i][j] + m_DecFreOrgN[i][j];
 			
 			m_humOrgP[i][j] = 0.125f * m_HumOrgN[i][j];
-            m_FreOrgP[i][j] = 0.0003f * residual[j];
+            m_FreOrgP[i][j] = 0.0003f * residual[i];
 			
 			m_actOrgP[i][j] = m_humOrgP[i][j] * m_ActOrgN[i][j] / (m_ActOrgN[i][j] + m_StaOrgN[i][j]);
 			m_staOrgP[i][j] = m_humOrgP[i][j] * m_StaOrgN[i][j] / (m_ActOrgN[i][j] + m_StaOrgN[i][j]);
-			m_minHumP[i][j] = 1.4f * m_RateCoeH * pow(m_TF[i][j] * m_WF[i][j], 0.5f) * m_actOrgP[i][j];
+			m_minHumP[i][j]= 1.4f * m_RateCoeH * pow(m_TF[i][j] * m_WF[i][j], 0.5f) * m_actOrgP[i][j];
 			m_minFreOrgP[i][j] = 0.8f * m_RateConRD[i][j] * m_FreOrgP[i][j];
 			m_decFreOrgP[i][j] = 0.2f * m_RateConRD[i][j] * m_FreOrgP[i][j];
-			
+	
+			m_humOrgP[i][j] -= m_minHumP[i][j];
+			m_FreOrgP[i][j] -= (m_minFreOrgP[i][j] + m_decFreOrgP[i][j]);
 			m_SoluP[i][j] += m_minHumP[i][j] + m_minFreOrgP[i][j];
 			m_actOrgP[i][j] += m_decFreOrgP[i][j];
+
 		}
 	}
 

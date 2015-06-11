@@ -33,9 +33,7 @@ private:
 	int m_nLayers;
     
 	// input
-	// depth of the layer (mm)
-	float m_depth[2];
-	float *m_rootDepth;
+	//float *m_rootDepth;
 	// volatilization cation exchange factor
 	float m_catEF;
 
@@ -47,6 +45,8 @@ private:
 	float **m_Wiltingpoint;
 	// water content of layer ly at field capacity (mm H2O)
 	float **m_FieldCap;
+	// depth of the layer (mm)
+	float **m_Depth;
 	//amount of ammonium in layer ly (kg N/ha)
 	float **m_Ammon;
 	// amount of nitrate in layer ly (kg N/ha)
