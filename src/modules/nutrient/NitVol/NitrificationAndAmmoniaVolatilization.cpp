@@ -8,79 +8,78 @@
 
 using namespace std;
 
-NitrificationAndAmmoniaVolatilization::NitrificationAndAmmoniaVolatilization(void):m_size(-1), m_nLayers(3), m_catEF(0.15f), m_rootDepth(NULL), m_SoilT(NULL), m_SOMO(NULL),  //input
+NitrificationAndAmmoniaVolatilization::NitrificationAndAmmoniaVolatilization(void):m_size(-1), m_nLayers(3), m_catEF(0.15f), m_SoilT(NULL), m_SOMO(NULL), m_Depth(NULL), //input
 	m_Wiltingpoint(NULL), m_FieldCap(NULL), m_Ammon(NULL), m_Nitrate(NULL),      
 	m_midZ(NULL), m_nitvolTF(NULL), m_nitWF(NULL), m_volDF(NULL), m_nitR(NULL), m_volR(NULL), m_nitvolAmmon(NULL), m_nitLostF(NULL), m_volLostF(NULL), m_conNitra(NULL), m_conAmm(NULL) //output
 {
-	m_depth[0] = 10.f;
-	m_depth[1] = 100.f;
+
 }
 
 NitrificationAndAmmoniaVolatilization::~NitrificationAndAmmoniaVolatilization(void)
 {
 	if(m_midZ != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_midZ;
 		delete [] m_midZ;
 	}
 	if(m_nitvolTF != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_nitvolTF;
 		delete [] m_nitvolTF;
 	}
 	if(m_nitWF != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_nitWF;
 		delete [] m_nitWF;
 	}
 	if(m_volDF != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_volDF;
 		delete [] m_volDF;
 	}
 	if(m_nitR != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_nitR;
 		delete [] m_nitR;
 	}
 	if(m_volR != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_volR;
 		delete [] m_volR;
 	}
 	if(m_nitvolAmmon != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 		    delete [] m_nitvolAmmon;
 		delete [] m_nitvolAmmon;
 	}
 	if(m_nitLostF != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_nitLostF;
 		delete [] m_nitLostF;
 	}
 	if(m_volLostF != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_volLostF;
 		delete [] m_volLostF;
 	}
 	if(m_conNitra != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_conNitra;
 		delete [] m_conNitra;
 	}
 	if(m_conAmm != NULL)
 	{
-		for (int i=0; i < m_size; ++i)
+		for (int i=0; i < m_nLayers; ++i)
 			delete [] m_conAmm;
 		delete [] m_conAmm;
 	}
@@ -113,6 +112,8 @@ bool NitrificationAndAmmoniaVolatilization::CheckInputData(void)
 		throw ModelException("NitVol","CheckInputData","You have not set the amount of water held in the soil layer at wilting point water content.");
 	if(m_FieldCap == NULL)
 		throw ModelException("NitVol","CheckInputData","You have not set the water content at field capacity.");
+	if(m_Depth == NULL)
+		throw ModelException("NitVol","CheckInputData","You have not set the depth of the layer.");
 	
 	return true;
 }
@@ -123,34 +124,34 @@ void  NitrificationAndAmmoniaVolatilization::initalOutputs()
 
 	if(m_nitvolTF == NULL)
 	{
-		m_midZ = new float*[m_size];
-		m_nitvolTF = new float*[m_size];
-		m_nitWF = new float*[m_size];
-		m_volDF = new float*[m_size];
-		m_nitR = new float*[m_size];
-		m_volR = new float*[m_size];
-		m_nitvolAmmon = new float*[m_size];
-		m_nitLostF = new float*[m_size];
-		m_volLostF = new float*[m_size];
-		m_conNitra = new float*[m_size];
-		m_conAmm = new float*[m_size];
+		m_midZ = new float*[m_nLayers];
+		m_nitvolTF = new float*[m_nLayers];
+		m_nitWF = new float*[m_nLayers];
+		m_volDF = new float*[m_nLayers];
+		m_nitR = new float*[m_nLayers];
+		m_volR = new float*[m_nLayers];
+		m_nitvolAmmon = new float*[m_nLayers];
+		m_nitLostF = new float*[m_nLayers];
+		m_volLostF = new float*[m_nLayers];
+		m_conNitra = new float*[m_nLayers];
+		m_conAmm = new float*[m_nLayers];
 	
 	#pragma omp parallel for
-		for (int i = 0; i < m_size; ++i)
+		for (int i = 0; i < m_nLayers; ++i)
 		{
-			m_midZ[i] = new float[m_nLayers];
-			m_nitvolTF[i] = new float[m_nLayers];	
-			m_nitWF[i] = new float[m_nLayers];	
-			m_volDF[i] = new float[m_nLayers];	
-			m_nitR[i] = new float[m_nLayers];
-			m_volR[i] = new float[m_nLayers];
-			m_nitvolAmmon[i] = new float[m_nLayers];
-			m_nitLostF[i] = new float[m_nLayers];
-			m_volLostF[i] = new float[m_nLayers];
-			m_conNitra[i] = new float[m_nLayers];
-			m_conAmm[i] = new float[m_nLayers];
+			m_midZ[i] = new float[m_size];
+			m_nitvolTF[i] = new float[m_size];	
+			m_nitWF[i] = new float[m_size];	
+			m_volDF[i] = new float[m_size];	
+			m_nitR[i] = new float[m_size];
+			m_volR[i] = new float[m_size];
+			m_nitvolAmmon[i] = new float[m_size];
+			m_nitLostF[i] = new float[m_size];
+			m_volLostF[i] = new float[m_size];
+			m_conNitra[i] = new float[m_size];
+			m_conAmm[i] = new float[m_size];
 
-			for (int j = 0; j < m_nLayers; j++)
+			for (int j = 0; j < m_size; j++)
 			{
 				m_midZ[i][j] = 0.0f;
 				m_nitvolTF[i][j] = 0.0f;
@@ -214,9 +215,9 @@ void NitrificationAndAmmoniaVolatilization::Set1DData(const char* key, int n, fl
 	//check the input data
 	CheckInputSize(key,n);
 	string sk(key);
-	if (StringMatch(sk, "RootDepth"))
-		m_rootDepth = data;
-	else if(StringMatch(sk, "D_SOTE"))
+	//if (StringMatch(sk, "RootDepth"))
+	//	m_rootDepth = data;
+	if(StringMatch(sk, "D_SOTE"))
 		m_SoilT = data;
 	else
 		throw ModelException("NitVol", "Set1DData", "Parameter " + sk 
@@ -227,7 +228,7 @@ void NitrificationAndAmmoniaVolatilization::Set1DData(const char* key, int n, fl
 void NitrificationAndAmmoniaVolatilization::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	//check the input data
-	CheckInputSize(key, nrows);
+	CheckInputSize(key, ncols);
 
 	string sk(key);
 	if(StringMatch(sk, "D_Nitrate"))
@@ -240,6 +241,8 @@ void NitrificationAndAmmoniaVolatilization::Set2DData(const char* key, int nrows
 		m_Wiltingpoint = data;
 	else if (StringMatch(sk, "FieldCap_2D"))
 		m_FieldCap = data;
+	else if(StringMatch(sk, "D_Depth"))
+		m_Depth = data;
 	else
 		throw ModelException("DissolvedNutrient_OL", "Set2DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
@@ -248,8 +251,8 @@ void NitrificationAndAmmoniaVolatilization::Set2DData(const char* key, int nrows
 void NitrificationAndAmmoniaVolatilization::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
 	string sk(key);
-	*nRows = m_size;
-	*nCols = m_nLayers;
+	*nRows = m_nLayers;
+	*nCols = m_size;
 	if (StringMatch(sk, "NitvolTF"))
 		*data = m_nitvolTF; 
 	else if (StringMatch(sk, "MidZ"))
@@ -285,24 +288,25 @@ int NitrificationAndAmmoniaVolatilization::Execute()
 	initalOutputs();
 
 	#pragma omp parallel for
-	for(int i=0; i < m_size; i++)
+	for(int i=0; i < m_nLayers; i++)
     {
-		for(int j=0; j < m_nLayers; j++)
+		for(int j=0; j < m_size; j++)
 		{
-			if (m_SoilT[i] < 5)
+			if (m_SoilT[j] < 5)
 			continue;
 
-		    m_nitvolTF[i][j] = 0.41f * (m_SoilT[i] - 5) / 10;
+		    m_nitvolTF[i][j] = 0.41f * (m_SoilT[j] - 5) / 10;
 		 
-		    float r = 0.25f * m_FieldCap[i][j] - 0.75f * m_Wiltingpoint[i][j];
-		    if (m_SOMO[i][j] < r)
-				m_nitWF[i][j] = (m_SOMO[i][j]- m_Wiltingpoint[i][j]) / (0.25f * (m_FieldCap[i][j] - m_Wiltingpoint[i][j]));
+			int hydroIndex = max(0, i-1);
+		    float r = 0.25f * m_FieldCap[hydroIndex][j] - 0.75f * m_Wiltingpoint[hydroIndex][j];
+		    if (m_SOMO[hydroIndex][j] < r)
+				m_nitWF[i][j] = (m_SOMO[hydroIndex][j]- m_Wiltingpoint[hydroIndex][j]) / (0.25f * (m_FieldCap[hydroIndex][j] - m_Wiltingpoint[hydroIndex][j]));
 		    else
 			    m_nitWF[i][j] = 1.0f;
 		 
-		    m_midZ[i][0] = m_depth[0] / 2;
-			m_midZ[i][1] = (m_depth[1] - m_depth[0]) / 2;
-			m_midZ[i][2] = (m_rootDepth[i] - m_depth[1]) / 2;
+		    m_midZ[0][j] = m_Depth[0][j] / 2;
+			m_midZ[1][j] = (m_Depth[1][j] - m_Depth[0][j]) / 2;
+			m_midZ[2][j] = (m_Depth[2][j] - m_Depth[1][j]) / 2;
 		    
 			m_volDF[i][j] = 1 - m_midZ[i][j] / (m_midZ[i][j] + exp(4.706f - 0.0305f * m_midZ[i][j]));
 		    float m_catEF = 0.15f;

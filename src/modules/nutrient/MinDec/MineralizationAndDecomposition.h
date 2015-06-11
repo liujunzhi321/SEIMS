@@ -31,11 +31,10 @@ private:
 	// size of array 
 	int m_size;
 	int m_nLayers;
-	// depth of the layer (mm)
-	float m_depth[2];
+
     
 	//input
-	float *m_rootDepth;
+	//float *m_rootDepth;
 	
 	// rate constant(0.00001) 
 	float m_RateConst;
@@ -48,16 +47,21 @@ private:
 	// concentration of solution phosphorus all layers(5 mg/kg)
 	float m_conSoluP;
 
-    // bulk density of the layer (Mg/m3)
+    // soil temperature of layer ly(¡æ)
+    float *m_SoilT;
+	
+	// bulk density of the layer (Mg/m3)
 	float **m_Density;
+	// amount of soil organic matter in the layer(%)
+    //float **m_som;
 	// amount of organic carbon in the layer(%)
     float **m_orgCar;
-	// soil temperature of layer ly(¡æ)
-    float *m_SoilT;
 	// water content of layer ly on a given day(mm H2O)
 	float **m_SOMO;
 	// water content of layer ly at field capacity (mm H2O)
 	float **m_FieldCap;
+	// depth of the layer (mm)
+	float **m_Depth;
 	// the residue in layer ly (kg N/ha)
 	float **m_Res;
 	// amount of nitrate in layer ly (kg N/ha)

@@ -18,31 +18,31 @@ InorganicPSorption::~InorganicPSorption(void)
 {
 	if(m_pai != NULL)
 	{
-		for(int j=0; j < m_nLayers; j++)
+		for(int i=0; i < m_nLayers; i++)
 			delete [] m_pai;
 		delete [] m_pai;
 	}
 	if(m_actMinP != NULL)
 	{
-		for(int j=0; j < m_nLayers; j++)
+		for(int i=0; i < m_nLayers; i++)
 			delete [] m_actMinP;
 		delete [] m_actMinP;
 	}
 	if(m_staMinP != NULL)
 	{
-		for(int j=0; j < m_nLayers; j++)
+		for(int i=0; i < m_nLayers; i++)
 			delete [] m_staMinP;
 		delete [] m_staMinP;
 	}
 	if(m_tSolActP != NULL)
 	{
-		for(int j=0; j < m_nLayers; j++)
+		for(int i=0; i < m_nLayers; i++)
 			delete [] m_tSolActP;
 		delete [] m_tSolActP;
 	}
 	if(m_tStaActP != NULL)
 	{
-		for(int j=0; j < m_nLayers; j++)
+		for(int i=0; i < m_nLayers; i++)
 			delete [] m_tStaActP;
 		delete [] m_tStaActP;
 	}
@@ -77,21 +77,21 @@ void  InorganicPSorption::initalOutputs()
 
 	if(m_tSolActP == NULL)
 	{
-		m_pai = new float*[m_size];
-		m_actMinP = new float*[m_size];
-		m_staMinP = new float*[m_size];
-		m_tSolActP = new float*[m_size];
-		m_tStaActP = new float*[m_size];
+		m_pai = new float*[m_nLayers];
+		m_actMinP = new float*[m_nLayers];
+		m_staMinP = new float*[m_nLayers];
+		m_tSolActP = new float*[m_nLayers];
+		m_tStaActP = new float*[m_nLayers];
 	
 	#pragma omp parallel for
-		for (int i = 0; i < m_size; ++i)
+		for (int i = 0; i < m_nLayers; ++i)
 		{
-			m_pai[i] = new float[m_nLayers];
-			m_actMinP[i] = new float[m_nLayers];
-			m_staMinP[i] = new float[m_nLayers];
-			m_tSolActP[i] = new float[m_nLayers];
-			m_tStaActP[i] = new float[m_nLayers];
-			for (int j =0; j < m_nLayers; ++j)
+			m_pai[i] = new float[m_size];
+			m_actMinP[i] = new float[m_size];
+			m_staMinP[i] = new float[m_size];
+			m_tSolActP[i] = new float[m_size];
+			m_tStaActP[i] = new float[m_size];
+			for (int j =0; j < m_size; ++j)
 			{
 				m_pai[i][j] = 0.0f;
 				m_actMinP[i][j] = 0.0f;
@@ -148,7 +148,7 @@ void InorganicPSorption::SetValue(const char* key, float data)
 void InorganicPSorption::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	//check the input data
-	CheckInputSize(key, nrows);
+	CheckInputSize(key, ncols);
 
 	string sk(key);
 	if (StringMatch(sk, "D_SoluP"))
@@ -161,8 +161,8 @@ void InorganicPSorption::Set2DData(const char* key, int nrows, int ncols, float*
 void InorganicPSorption::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
 	string sk(key);
-	*nRows = m_size;
-	*nCols = m_nLayers;
+	*nRows = m_nLayers;
+	*nCols = m_size;
     if (StringMatch(sk, "Pai"))
 		*data = m_pai;
 	else if (StringMatch(sk, "ActMinP"))
@@ -186,11 +186,11 @@ int InorganicPSorption::Execute()
 	initalOutputs();
 
 	#pragma omp parallel for
-	for(int i=0; i < m_size; i++)
+	for(int i=0; i < m_nLayers; i++)
     {
-		for(int j=0; j < m_nLayers; j++)
+		for(int j=0; j < m_size; j++)
 		{
-			m_pai[i][j] = 0.4f;
+			m_pai[i][j] = 0.7f;
 		    m_actMinP[i][j] = m_SoluP[i][j] * (1 - m_pai[i][j]) / m_pai[i][j];
 			m_staMinP[i][j] = 4 * m_actMinP[i][j];
             float r = m_actMinP[i][j] * m_pai[i][j] / (1 - m_pai[i][j]);

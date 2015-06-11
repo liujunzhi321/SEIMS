@@ -39,8 +39,6 @@ private:
 
 	// amount of organic carbon in the layer(%)
 	float **m_orgCar;
-	// bulk density of the layer (Mg/m3)
-	float **m_Density;	
 	// amount of nitrate in layer ly (kg N/ha) 
 	float **m_Nitrate;
     // nutrient cycling temperature factor for layer ly 

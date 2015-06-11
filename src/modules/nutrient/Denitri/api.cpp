@@ -8,13 +8,13 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
+extern "C" WETSPA_MODULE_API SimulationModule* GetInstance()
 {
 	return new Denitrification();
 }
 
 // function to return the XML Metadata document string
-extern "C" SEIMS_MODULE_API const char* MetadataInformation()
+extern "C" WETSPA_MODULE_API const char* MetadataInformation()
 {
 	string res = "";
 	MetadataInfo mdi;
@@ -32,7 +32,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter("DenRC", "", "rate coefficient for denitrification", "file.in", DT_Single); 
 
-	mdi.AddParameter("Density_2D", "g/cm3", "Soil density", "ParameterDB_WaterBalance", DT_Array2D);
 	//mdi.AddParameter("OrgCar", "%", "amount of organic carbon in the layer", "ParameterDB_soil", DT_Array2D); 
 	//mdi.AddParameter("DenWF", "", "threshold value of nutrient cycling water factor for denitrification to occur", "ParameterDB_soil", DT_Array2D); 
 

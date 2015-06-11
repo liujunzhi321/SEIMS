@@ -8,13 +8,13 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
+extern "C" WETSPA_MODULE_API SimulationModule* GetInstance()
 {
 	return new NitrificationAndAmmoniaVolatilization();
 }
 
 // function to return the XML Metadata document string
-extern "C" SEIMS_MODULE_API const char* MetadataInformation()
+extern "C" WETSPA_MODULE_API const char* MetadataInformation()
 {
 	string res = "";
 	MetadataInfo mdi;
@@ -32,12 +32,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter("catEF", "", "volatilization cation exchange factor", "file.in", DT_Single); 
 
-	mdi.AddParameter("RootDepth","m","Root depth","ParameterDB_WaterBalance", DT_Raster);
+	//mdi.AddParameter("RootDepth","m","Root depth","ParameterDB_WaterBalance", DT_Raster);
 	mdi.AddParameter("Wiltingpoint_2D","m3/m3","Plant wilting point moisture","ParameterDB_WaterBalance", DT_Array2D);
 	mdi.AddParameter("FieldCap_2D", "%", "Field capacity","ParameterDB_WaterBalance", DT_Array2D);
 	
 	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);
 	mdi.AddInput("D_SOMO_2D", "%", "Soil Moisture", "Module", DT_Array2D);
+	mdi.AddInput("D_Depth","mm","depth of the layer","Module", DT_Array2D);
 	mdi.AddInput("D_Nitrate", "kg N/ha", "amount of nitrate", "Module", DT_Array2D);
 	mdi.AddInput("D_Ammon", "kg N/ha", "ammonium pool for soil nitrogen", "Module", DT_Array2D);
 	
