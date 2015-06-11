@@ -26,12 +26,13 @@
 #include <Windows.h>
 #include <direct.h>
 #endif
-/*!
+
 using namespace std;
 
 #define UTIL_ZERO 0.0000000001
 
 /*!
+ * \ingroup Base
  * \brief Find files in given paths
  *
  * 
@@ -70,6 +71,7 @@ int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFil
 	return 0;
 }
 /*!
+ * \ingroup Base
  * \brief GetCoreFileName
  *
  * Return the file name from a given file's path
@@ -97,6 +99,7 @@ string GetCoreFileName(const string& fullFileName)
 	return fullFileName.substr(start+1, end-start-1);
 }
 /*!
+ * \ingroup Base
  * \brief trim
  *
  * trim "\n,\t,\r" of given string's heading and tailing
@@ -113,6 +116,7 @@ string& trim(string& s)
 }
 
 /*!
+ * \ingroup Base
  * \brief GetUpper
  *
  * Get Uppercase of given string
@@ -128,6 +132,7 @@ string GetUpper(string str)
 }
 
 /*!
+ * \ingroup Base
  * \brief Match String
  *
  * whether string1 is as same as string2
@@ -147,6 +152,7 @@ bool StringMatch(string text1, string text2)
 	return (strTmp1 == strTmp2);
 }
 /*!
+ * \ingroup Base
  * \brief
  *
  * whether char*a equal to char*b when ignore case
@@ -164,6 +170,7 @@ bool StrEqualIgnoreCase(const char* a, const char* b)
 
 }
 /*!
+ * \ingroup Base
  * \brief DoubleEqual
  *
  * whether d1 is equal to d2
@@ -179,6 +186,7 @@ bool DoubleEqual(double d1, double d2)
 		return false;
 }
 /*!
+ * \ingroup Base
  * \brief FloatEqual
  *
  *  whether f1 is equal to f2
@@ -194,6 +202,7 @@ bool FloatEqual(float f1, float f2)
 		return false;
 }
 /*!
+ * \ingroup Base
  * \brief GetPathFromFullName
  *
  * Get Path From FullName string
@@ -222,6 +231,7 @@ void StatusMessage(const char* msg)
 	//cout << endl;
 }
 /*!
+ * \ingroup Base
  * \brief Read 2D array from file
  *
  * The input file should follow the format:
@@ -249,6 +259,7 @@ void Read2DArray(const char* filename, int& nRows, float**& data)
 	ifs.close();
 }
 /*!
+ * \ingroup Base
  * \brief Read 1D array from file
  *
  * The input file should follow the format:
@@ -272,6 +283,7 @@ void Read1DArray(const char* filename, int& nRows, float*& data)
 }
 
 /*!
+ * \ingroup Base
  * \brief Read 2D array from string
  *
  * The input string should follow the format:
@@ -299,6 +311,7 @@ void Read2DArrayFromString(const char* s, int& nRows, float**& data)
 	}
 }
 /*!
+ * \ingroup Base
  * \brief Write 1D array to a file
  *
  * \sa Read1DArray(), Read2DArray(), Output2DArray()
@@ -315,6 +328,7 @@ void Output1DArray(int n, float* data, const char* filename)
 	ofs.close();
 }
 /*!
+ * \ingroup Base
  * \brief Write 2D array to a file
  *
  * 
@@ -336,7 +350,16 @@ void Output2DArray(int nRows, int nCols, float** data, const char* filename)
 
 	ofs.close();
 }
-//! Get sum value of a double array with size n.
+/*!
+ * \ingroup Base
+ * \brief Sum of a double array
+ *
+ * Get sum value of a double array with size n.
+ *
+ * \param[in] a,n
+ * \return sum
+ */
+//! 
 double Sum(double *a, int n)
 {
 	double s = 0.0;
@@ -346,7 +369,16 @@ double Sum(double *a, int n)
 	}
 	return s;
 }
-//! Get maximum value in a double array with size n.
+/*!
+ * \ingroup Base
+ * \brief Max value of a double array
+ *
+ * Get maximum value in a double array with size n.
+ *
+ * \param[in] a, n
+ * \return max value
+ */
+//! 
 double Max(double *a, int n)
 {
 	double m = a[0];
@@ -359,7 +391,9 @@ double Max(double *a, int n)
 	}
 	return m;
 }
-
+/**
+ * \ingroup Base
+*/
 //! Get the root path of the current executable.
 string GetAppPath()
 {
@@ -451,7 +485,9 @@ int copyfile_linux(const char* srcfile, const char* dstfile)
     return 0;
 }
 #endif
-
+/**
+ * \ingroup Base
+*/
 //! Get local time
 void LocalTime(time_t date, struct tm *t)
 {

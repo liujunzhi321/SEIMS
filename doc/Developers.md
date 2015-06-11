@@ -335,6 +335,24 @@ Descrition: General Doxygen Commen Block
 Code:
 //! $end$
 /*!
+ * \ingroup 
+ *
+ */
+~~~
+
++ doxygen有三种机制用于将文档分组。`module`,`member groups`, `subpaging`. 我们将采用`module`方式，首先需要用`\defgroup`标签定义一个`module`，注意**只能定义一次**，然后在添加其他对象（类、函数、变量、枚举、宏定义、`typedef`等）注释的时候用`\ingroup`标签将其纳入`module`：
+~~~
+/*!
+ * \defgroup Base
+ * Base classes and functions of SEIMS 
+ */
+~~~
+在VA中设置
+~~~
+/** \defgroup
+ * \brief
+ *
+ *
  *
  */
 ~~~
@@ -368,6 +386,7 @@ void function3(int i);    //!< Some int. Correct - both function and parameter d
 在VA中设置：
 ~~~
 /*!
+ * \ingroup
  * \file $FILE_BASE$.$FILE_EXT$
  * \brief
  *
@@ -384,6 +403,7 @@ void function3(int i);    //!< Some int. Correct - both function and parameter d
 + 类定义的注释
 ~~~
 /*!
+ * \ingroup <group label>
  * \class [class name]
  *
  * \brief [brief description]
@@ -397,6 +417,7 @@ void function3(int i);    //!< Some int. Correct - both function and parameter d
 VA中的设置：
 ~~~
 /*!
+ * \ingroup
  * \class $end$
  *
  * \brief
@@ -410,6 +431,7 @@ VA中的设置：
 + 函数注释块
 ~~~
 /*!
+ * \ingroup <group label>
  * \brief [brief description]
  *
  * [detailed description]
@@ -425,6 +447,7 @@ VA中的设置：
 VA中设置：
 ~~~
 /*!
+ * \ingroup
  * \brief
  *
  * $end$
