@@ -1,3 +1,11 @@
+/** \defgroup data
+ * \ingroup Base
+ * \brief include classes related to data, eg. DBManager, HydroClimateData etc..
+ *
+ *
+ *
+ */
+
 /*!
  * \file base_VariableData.cpp
  * \brief Base class of variable data

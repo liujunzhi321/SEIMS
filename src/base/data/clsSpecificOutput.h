@@ -1,10 +1,31 @@
+/*!
+ * \file clsSpecificOutput.h
+ * \brief 
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
+
 #pragma once
 #include <string>
 #include "clsRasterData.h"
 #include <vector>
 
 using namespace std;
-
+/*!
+ * \ingroup data
+ * \class clsSpecificOutput
+ *
+ * \brief set SnowOutput? for what purpose?
+ *
+ * \deprecated set SnowOutput? for what purpose? Is it deprecated now?
+ *
+ */
 class clsSpecificOutput
 {
 public:

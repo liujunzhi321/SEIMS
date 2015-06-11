@@ -1,3 +1,15 @@
+/*!
+ * \file clsSiteData.cpp
+ * \brief Read hydrological or meteorological site data 
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #include "clsSiteData.h"
 #include "util.h"
 #include "utils.h"

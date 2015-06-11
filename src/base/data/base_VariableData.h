@@ -17,6 +17,7 @@
 #include "MetadataInfoConst.h"
 using namespace std;
 /*!
+ * \ingroup data
  * \class base_VariableData
  *
  * \brief Base class for variable data

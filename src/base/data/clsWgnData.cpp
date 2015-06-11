@@ -8,7 +8,7 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
-
+//! Constructor
 clsWgnData::clsWgnData(string databasePath,WgnType type)
 {
 	m_wgnData = NULL;
@@ -16,7 +16,7 @@ clsWgnData::clsWgnData(string databasePath,WgnType type)
 	readWgnData(databasePath,type);
 }
 
-
+//! Destructor
 clsWgnData::~clsWgnData(void)
 {
 	if (m_wgnData != NULL)
@@ -30,14 +30,14 @@ clsWgnData::~clsWgnData(void)
 		delete [] m_wgnData;
 	}
 }
-
+//! get wgn data, nRows is 12 (months), 
 void clsWgnData::getWgnData(int* nRows,int* nCols,float*** wgnData)
 {
 	*nRows = 12;
 	*nCols = m_columns.size();
 	*wgnData = m_wgnData;
 }
-
+//! show data
 void clsWgnData::show()
 {
 	int size = m_columns.size();
@@ -72,7 +72,7 @@ void clsWgnData::show()
 		StatusMessage(s.c_str());
 	}
 }
-
+//! read wgn data from Sqlite database. 
 void clsWgnData::readWgnData(string databasePath,WgnType type)
 {
 	m_wtgTableName = Table_WGN;

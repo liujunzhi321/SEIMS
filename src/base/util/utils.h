@@ -2,6 +2,10 @@
  * \defgroup Base
  * Base classes and functions of SEIMS 
  */
+/** \defgroup Util
+ * \ingroup Base
+ * \brief include classes of MetadataInfo, ModelException and SimulationModule et al.
+ */
 /*!
  * \file utils.h
  * \brief definition of utils class
@@ -28,7 +32,7 @@
 using namespace std;
 /*!
  * \class utils
- * \ingroup Base
+ * \ingroup Util
  * \brief utils class to handle string, date time and file
  *
  *

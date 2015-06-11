@@ -1,12 +1,23 @@
+/*!
+ * \file RegularMeasurement.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include <fstream>
-
 #include "RegularMeasurement.h"
 #include "utils.h"
 #include "bson.h"
 #include "text.h"
 #include "ModelException.h"
 #include "util.h"
-
+//! Constructor 
 RegularMeasurement::RegularMeasurement(mongo* conn, string hydroDBName, string sitesList, string siteType, time_t startTime, time_t endTime, time_t interval)
 	:Measurement(conn, hydroDBName, sitesList, siteType, startTime, endTime), m_interval(interval)
 {
@@ -132,13 +143,13 @@ RegularMeasurement::RegularMeasurement(mongo* conn, string hydroDBName, string s
 	mongo_cursor_destroy(cursor);
 }
 
-
+//! Destructor
 RegularMeasurement::~RegularMeasurement(void)
 {
 	for (int i = 0; i < m_siteData.size(); i++)
 		delete m_siteData[i];
 }
-
+//! Get site date by time
 float* RegularMeasurement::GetSiteDataByTime(time_t t)
 {
 	int index = (t - m_startTime)/m_interval;

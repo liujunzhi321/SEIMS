@@ -1,3 +1,15 @@
+/*!
+ * \file InputStation.h
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #pragma once
 
 #include <map>
@@ -7,7 +19,15 @@
 #include "Measurement.h"
 
 using namespace std;
-
+/*!
+ * \ingroup data
+ * \class InputStation
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class InputStation
 {
 public:

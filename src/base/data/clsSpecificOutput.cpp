@@ -1,3 +1,15 @@
+/*!
+ * \file clsSpecificOutput.cpp
+ * \brief
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #include "clsSpecificOutput.h"
 #include "DBManager.h"
 #include "text.h"
@@ -8,7 +20,7 @@
 #include <fstream>
 #include "clsRasterData.h"
 #include <math.h>
-
+//! if the outputID is SNAC, which means snowOutput
 string clsSpecificOutput::TableNameFromOutputID(string outputID)
 {
 	utils util;
@@ -17,7 +29,8 @@ string clsSpecificOutput::TableNameFromOutputID(string outputID)
 	if(StringMatch(name,"SNAC")) return "snowOutput";
 	return "";
 }
-
+//! Constructor for Sqlite
+//! \deprecated For now, this constructor is deprecated!
 clsSpecificOutput::clsSpecificOutput(string projectPath,string databasePath,clsRasterData* templateRasterData,string outputID)
 {
 	m_outputID = outputID;
@@ -42,7 +55,7 @@ clsSpecificOutput::clsSpecificOutput(string projectPath,string databasePath,clsR
 	DBManager dbman;
 	try
 	{
-		// open the hydrclimate database
+		// open the hydroclimate database
 		dbman.Open(path);
 		// if there is no error
 		if (!dbman.IsError())
@@ -73,7 +86,7 @@ clsSpecificOutput::clsSpecificOutput(string projectPath,string databasePath,clsR
 						m_landuse.push_back(-99.0f);
 						m_ids.push_back(tbl->FieldValue(idx,3));
 
-						//the measurement is added for conveninent comparation
+						//the measurement is added for convenient comparison
 						m_measurement.push_back((float)(atof(tbl->FieldValue(idx,4).c_str())));
 					}
 				}
@@ -95,11 +108,11 @@ clsSpecificOutput::clsSpecificOutput(string projectPath,string databasePath,clsR
 	}
 }
 
-
+//! Destructor
 clsSpecificOutput::~clsSpecificOutput(void)
 {
 }
-
+//! write output to fileName
 void clsSpecificOutput::dump(string fileName)
 {
 	
@@ -166,7 +179,7 @@ void clsSpecificOutput::dump(string fileName)
 		fs.close();
 	}
 }
-
+//! 
 void clsSpecificOutput::dump()
 {
 	cout << "Time"  
@@ -184,7 +197,7 @@ void clsSpecificOutput::dump()
 			<< endl;
 	}
 }
-
+//! set data
 void clsSpecificOutput::setData(time_t time,float* data)
 {
 	int size = (int)(m_positions.size());
@@ -196,7 +209,7 @@ void clsSpecificOutput::setData(time_t time,float* data)
 		}
 	}
 }
-
+//! set slope data (slope_wind.asc)
 void clsSpecificOutput::setSlope(string projectPath)
 {
 	clsRasterData* r = new clsRasterData(projectPath + "slope_wind.asc",m_templateRasterData);
@@ -212,7 +225,7 @@ void clsSpecificOutput::setSlope(string projectPath)
 
 	delete r;
 }
-
+//! set curvature data (curva_wind.asc)
 void clsSpecificOutput::setCurvature(string projectPath)
 {
 	clsRasterData* r = new clsRasterData(projectPath + "curva_wind.asc",m_templateRasterData);
@@ -228,7 +241,7 @@ void clsSpecificOutput::setCurvature(string projectPath)
 
 	delete r;
 }
-
+//! set landuse data (landuse2.asc)
 void clsSpecificOutput::setLanduse(string projectPath)
 {
 	clsRasterData* r = new clsRasterData(projectPath + "landuse2.asc",m_templateRasterData);

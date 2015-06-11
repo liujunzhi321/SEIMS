@@ -1,11 +1,22 @@
+/*!
+ * \file Measurement.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "Measurement.h"
 #include "utils.h"
 #include "bson.h"
 #include "text.h"
 #include "ModelException.h"
-
 #include <algorithm>
-
+//! Constructor
 Measurement::Measurement(mongo* conn, string hydroDBName, string sitesList, string siteType, time_t startTime, time_t endTime)
 	:m_conn(conn), m_startTime(startTime), m_endTime(endTime), pData(NULL)
 {
@@ -20,7 +31,7 @@ Measurement::Measurement(mongo* conn, string hydroDBName, string sitesList, stri
 
 }
 
-
+//! Destructor
 Measurement::~Measurement(void)
 {
 	delete pData;

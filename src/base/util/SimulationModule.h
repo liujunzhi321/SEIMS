@@ -21,6 +21,7 @@ enum TimeStepType
 	TIMESTEP_ECOLOGY   ///< Ecology scle
 };
 /*!
+ * \ingroup Util
  * \class SimulationModule
  *
  * \brief 

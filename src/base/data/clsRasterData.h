@@ -19,9 +19,10 @@
 
 using namespace std;
 /*!
+ * \ingroup data
  * \class clsRasterData
  *
- * \brief 
+ * \brief Raster data class to get access to raster data.
  *
  *
  *

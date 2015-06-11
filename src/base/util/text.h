@@ -1,3 +1,15 @@
+/*!
+ * \file text.h
+ * \brief Predefined of some const string names.
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #ifndef TEXT_H
 #define TEXT_H
 
