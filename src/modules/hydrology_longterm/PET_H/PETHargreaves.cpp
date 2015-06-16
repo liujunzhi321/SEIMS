@@ -119,7 +119,7 @@ int PETHargreaves::Execute()
 	}
 
 	int d = JulianDay(this->m_date);
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (int i = 0; i < m_size; ++i)
 	{	
 		float tMean = (m_tMax[i] + m_tMin[i])/2;

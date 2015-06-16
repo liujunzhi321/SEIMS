@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Snow sublimation", "Calculate the amount of snow sublimation .");
 	mdi.SetDescription("A simple method that used in the old WetSpa will be incorporated in the SEIMS as the default method.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("SSM_PE");
 	mdi.SetName("SSM_PE");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("SSM_PE.chm");
 
 	mdi.AddParameter("K_subli","-","Praction of PET for sublimation","ParameterDB_Snow",DT_Single);

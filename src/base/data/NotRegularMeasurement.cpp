@@ -1,9 +1,21 @@
+/*!
+ * \file NotRegularMeasurement.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "NotRegularMeasurement.h"
 #include "utils.h"
 #include "bson.h"
 #include "text.h"
 #include "ModelException.h"
-
+//! Constructor
 NotRegularMeasurement::NotRegularMeasurement(mongo* conn, string hydroDBName, string sitesList, string siteType, time_t startTime, time_t endTime)
 	:Measurement(conn, hydroDBName, sitesList, siteType, startTime, endTime)
 {
@@ -87,11 +99,11 @@ NotRegularMeasurement::NotRegularMeasurement(mongo* conn, string hydroDBName, st
 	}
 }
 
-
+//! Destructor
 NotRegularMeasurement::~NotRegularMeasurement(void)
 {
 }
-
+//! Get site data by time
 float* NotRegularMeasurement::GetSiteDataByTime(time_t t)
 {
 	for (int iSite = 0; iSite < m_siteIDList.size(); iSite++)

@@ -13,6 +13,7 @@
 
 using namespace std;
 /*!
+ * \ingroup Util
  * \class ModelException
  *
  * \brief Print the exception message

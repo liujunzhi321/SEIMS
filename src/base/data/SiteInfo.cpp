@@ -1,4 +1,15 @@
-//! Implementation of the methods for the SiteInfo class
+/*!
+ * \file SiteInfo.cpp
+ * \brief Implementation of the methods for the SiteInfo class
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "SiteInfo.h"
 #include "utils.h"
 
@@ -68,7 +79,7 @@ float SiteInfo::Elevation(void)
 	return m_Elevation;
 }
 
-//! Return the are for the site
+//! Return the area for the site
 float SiteInfo::Area(void)
 {
 	return m_Area;

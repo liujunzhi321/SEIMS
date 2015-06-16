@@ -1,3 +1,15 @@
+/*!
+ * \file InputStation.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include <fstream>
 #include <sstream>
 #include <ctime>
@@ -12,12 +24,12 @@
 #include "NotRegularMeasurement.h"
 
 using namespace std;
-
+//! Constructor
 InputStation::InputStation(mongo *conn, time_t dtHillslope, time_t dtChannel) : m_conn(conn), m_dtHs(dtHillslope), m_dtCh(dtChannel)
 {
 }
 
-
+//! Destructor
 InputStation::~InputStation(void)
 {
 	map<string, Measurement*>::iterator it;
@@ -40,7 +52,7 @@ InputStation::~InputStation(void)
 			delete it2->second;
 	}
 }
-
+//! build query bson object
 void InputStation::build_query_bson(int nSites, vector<int>& siteIDList, string& siteType,  bson *query)
 {
 	bson_init(query);
@@ -60,8 +72,8 @@ void InputStation::build_query_bson(int nSites, vector<int>& siteIDList, string&
         {
 	        bson_append_start_object(query, "Type");
 		    bson_append_start_array(query, "$in");
-              bson_append_string(query, "0", "P");
-              bson_append_string(query, "1", "M");
+            bson_append_string(query, "0", "P");
+            bson_append_string(query, "1", "M");
 		    bson_append_finish_object(query);
 		    bson_append_finish_object(query);
         }
@@ -78,7 +90,7 @@ void InputStation::build_query_bson(int nSites, vector<int>& siteIDList, string&
 	bson_finish(query);
 
 }
-
+//! Read site information
 void InputStation::ReadSitesInfo(string siteType, string hydroDBName, string sitesList)
 {
 	vector<string> vecSites = utils::SplitString(sitesList, ',');
@@ -137,7 +149,7 @@ void InputStation::ReadSitesInfo(string siteType, string hydroDBName, string sit
 	m_latitude[siteType] = pLat;
 	m_numSites[siteType] = nSites;
 }
-
+//! Read site data
 void InputStation::ReadSitesData(string hydroDBName, string sitesList, string siteType, time_t startDate, time_t endDate, bool stormMode)
 {
 	siteType = GetUpper(siteType);
@@ -166,7 +178,7 @@ void InputStation::ReadSitesData(string hydroDBName, string sitesList, string si
 	//end = clock();
 	//cout << "ReadSitesInfo " << siteType << " " << end - start << endl;
 }
-
+//! Get time series data
 void InputStation::GetTimeSeriesData(time_t time, string type, int* nRow, float** data)
 {
 	Measurement* m = m_measurement[type];

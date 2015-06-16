@@ -24,11 +24,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Hui Wu");
 	mdi.SetClass("Splash Erosion", "Calculate the amount soil detachment erosion.");
 	mdi.SetDescription("use Park equation to calculate sediment yield of each cell");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("SplashEro_Park");
 	mdi.SetName("SplashEro_Park");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("SplashEro_Park.chm");
 
 	mdi.AddParameter("cellwidth","m","the width (length) of cell","mask.asc",DT_Single);

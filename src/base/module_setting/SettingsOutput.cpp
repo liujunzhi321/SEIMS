@@ -1,15 +1,27 @@
+/*!
+ * \file SettingsOutput.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "SettingsOutput.h"
 #include "util.h"
 #include "utils.h"
 #include "text.h"
 #include "ModelException.h"
-
+//! Constructor
 SettingsOutput::SettingsOutput(int subBasinID, string fileName, mongo* conn, gridfs* gfs):m_conn(conn), m_outputGfs(gfs)
 {
 	LoadSettingsFromFile(subBasinID, fileName);
 }
 
-
+//! Destructor
 SettingsOutput::~SettingsOutput(void)
 {
 	StatusMessage("Start to release SettingsOutput ...");
@@ -22,14 +34,14 @@ SettingsOutput::~SettingsOutput(void)
 
 	StatusMessage("End to release SettingsOutput ...");
 }
-
+//! Load settings from file
 bool SettingsOutput::LoadSettingsFromFile(int subBasinID, string fileName)
 {
 	if(!Settings::LoadSettingsFromFile(fileName)) return false;
 	if(!ParseOutputSettings(subBasinID)) return false;
 	return true;
 }
-
+//! parse output settings for given subBasinID
 bool SettingsOutput::ParseOutputSettings(int subBasinID)
 {
 	PrintInfo* pi = NULL;
@@ -80,7 +92,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 			// set the OUTPUTID for the new PrintInfo
 			pi->setOutputID(m_Settings[i][1]);
 
-			// for QOUTLET
+			// for QOUTLET or QTotal or SEDOUTLET or DissovePOutlet or AmmoniumOutlet or NitrateOutlet
 			if (StringMatch(m_Settings[i][1], Tag_QOUTLET) || StringMatch(m_Settings[i][1], Tag_QTotal) || StringMatch(m_Settings[i][1], Tag_SEDOUTLET) 
 				|| StringMatch(m_Settings[i][1], Tag_DisPOutlet) || StringMatch(m_Settings[i][1], Tag_AmmoOutlet) 
 				|| StringMatch(m_Settings[i][1], Tag_NitrOutlet))
@@ -102,18 +114,19 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 					}
 					else if (StringMatch(m_Settings[i][0], Tag_StartTime))
 					{
-						// get the starttime
+						// get the start time
 						starttm = m_Settings[i][1];
 					}
 					else if (StringMatch(m_Settings[i][0], Tag_EndTime))
 					{
-						// get the endtime
+						// get the end time
 						endtm = m_Settings[i][1];
 					}
 					else if (StringMatch(m_Settings[i][0], Tag_FileName))
 					{
-						// get the filename
-						fname = strSubbasinID + m_Settings[i][1];
+						// get the filename, but not include the suffix.
+						// modified by ZhuLJ, 2015/6/16
+						fname = strSubbasinID + GetCoreFileName(m_Settings[i][1]);
 					}
 				}
 				pi->AddPrintItem(starttm, endtm, fname);
@@ -161,18 +174,18 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 					}
 					else if (StringMatch(m_Settings[i][0], Tag_StartTime))
 					{
-						// get the starttime
+						// get the start time
 						starttm = m_Settings[i][1];
 					}
 					else if (StringMatch(m_Settings[i][0], Tag_EndTime))
 					{
-						// get the endtime
+						// get the end time
 						endtm = m_Settings[i][1];
 					}
 					else if (StringMatch(m_Settings[i][0], Tag_FileName))
 					{
 						// get the filename
-						fname = strSubbasinID + m_Settings[i][1];
+						fname = strSubbasinID + GetCoreFileName(m_Settings[i][1]);
 					}
 				}
 
@@ -217,18 +230,18 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 					}
 					if (StringMatch(m_Settings[i][0], Tag_StartTime))
 					{
-						// get the starttime
+						// get the start time
 						starttm = m_Settings[i][1];
 					}
 					if (StringMatch(m_Settings[i][0], Tag_EndTime))
 					{
-						// get the endtime
+						// get the end time
 						endtm = m_Settings[i][1];
 					}
 					if (StringMatch(m_Settings[i][0], Tag_FileName))
 					{
 						// get the filename
-						fname = strSubbasinID + m_Settings[i][1];
+						fname = strSubbasinID + GetCoreFileName(m_Settings[i][1]);
 					}
 				}
 
@@ -262,23 +275,23 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 					i++;
 					if (StringMatch(m_Settings[i][0], Tag_Type))
 					{
-						// get the starttime
+						// get the type
 						type = m_Settings[i][1];
 					}
 					if (StringMatch(m_Settings[i][0], Tag_StartTime))
 					{
-						// get the starttime
+						// get the start time
 						starttm = m_Settings[i][1];
 					}
 					if (StringMatch(m_Settings[i][0], Tag_EndTime))
 					{
-						// get the endtime
+						// get the end time
 						endtm = m_Settings[i][1];
 					}
 					if (StringMatch(m_Settings[i][0], Tag_FileName))
 					{
 						// get the filename
-						fname = strSubbasinID + m_Settings[i][1];
+						fname = strSubbasinID + GetCoreFileName(m_Settings[i][1]);
 					}
 				}
 
@@ -302,7 +315,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 
 	return true;
 }
-
+//! check date
 void SettingsOutput::checkDate(time_t startTime, time_t endTime)
 {
 	utils util;
@@ -319,7 +332,7 @@ void SettingsOutput::checkDate(time_t startTime, time_t endTime)
 		}
 	}
 }
-
+//! output is ASCII file?
 bool SettingsOutput::isOutputASCFile()
 {
 	vector<PrintInfo*>::iterator it;
@@ -329,7 +342,7 @@ bool SettingsOutput::isOutputASCFile()
 	}
 	return false;
 }
-
+//! set specific cell raster output
 void SettingsOutput::setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData)
 {
 	vector<PrintInfo*>::iterator itInfo;
@@ -338,7 +351,7 @@ void SettingsOutput::setSpecificCellRasterOutput(string projectPath,string datab
 		(*itInfo)->setSpecificCellRasterOutput(projectPath,databasePath,templateRasterData);
 	}
 }
-
+//! dump
 void SettingsOutput::Dump(string fileName)
 {
 	ofstream fs;

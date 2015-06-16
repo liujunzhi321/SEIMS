@@ -1,3 +1,15 @@
+/*!
+ * \file ModuleFactory.h
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #pragma once
 #include <map>
 #include <string>
@@ -18,7 +30,15 @@
 
 
 using namespace std;
-
+/*!
+ * \ingroup module_setting
+ * \class ModuleFactory
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class ModuleFactory 
 {
 public:
@@ -26,8 +46,8 @@ public:
 	~ModuleFactory(void);
 
 	/// create a set of objects and set up the relationship among them
-	int CreateModuleList(string dbName, int subbasinID, int numThreads, LayeringMethod layeringMethod, clsRasterData* templateRaster, SettingsInput *settingsInput,
-		vector<SimulationModule*>& modules);
+	int CreateModuleList(string dbName, int subbasinID, int numThreads, LayeringMethod layeringMethod, 
+		clsRasterData* templateRaster, SettingsInput *settingsInput, vector<SimulationModule*>& modules);
 	void UpdateInput(vector<SimulationModule*>& modules, SettingsInput* input, time_t t);
 	void GetValueFromDependencyModule(int iModule, vector<SimulationModule*>& modules);
 	void FindOutputParameter(string& outputID, int& iModule, ParamInfo*& paraInfo);
@@ -59,7 +79,7 @@ private:
 
 	SettingsInput *m_setingsInput;
 
-	// for mongodb
+	//! for mongodb
 	string m_host;
 	int m_port;
 	string m_dbName;

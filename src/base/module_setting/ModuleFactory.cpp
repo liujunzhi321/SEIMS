@@ -1,3 +1,15 @@
+/*!
+ * \file ModuleFactory.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #ifndef linux
 #include <windows.h>
 #define DLL_EXT  ".dll"
@@ -28,7 +40,7 @@
 #include "MongoUtil.h"
 #include "DBManager.h"
 
-
+//! Constructor, by default the layering method is DOWN_UP
 ModuleFactory::ModuleFactory(const string& configFileName, const string& modulePath, mongo* conn, const string& dbName)
 	:m_modulePath(modulePath), m_conn(conn), m_dbName(dbName), m_layingMethod(DOWN_UP)
 {
@@ -38,7 +50,7 @@ ModuleFactory::ModuleFactory(const string& configFileName, const string& moduleP
 #endif
 	
 }
-
+//! Destructor
 ModuleFactory::~ModuleFactory(void)
 {
 #ifdef USE_MONGODB
@@ -83,7 +95,7 @@ ModuleFactory::~ModuleFactory(void)
 
 
 }
-
+//! Initialization
 void ModuleFactory::Init(const string& configFileName)
 {
 	ReadConfigFile(configFileName.c_str());
@@ -94,7 +106,7 @@ void ModuleFactory::Init(const string& configFileName)
 #endif
 
 	size_t n = m_moduleIDs.size();
-	// read all the dlls and create objects
+	// read all the .dll or .so and create objects
 	for (size_t i = 0; i < n; i++)
 	{
 		string id = m_moduleIDs[i];
@@ -125,7 +137,7 @@ void ModuleFactory::Init(const string& configFileName)
 		// load function pointers from DLL
 		ReadDLL(id, dllID);
 
-		// load meatadata
+		// load metadata
 		MetadataFunction metadataInfo = m_metadataFuncs[id];
 		const char* metadata = metadataInfo();
 		m_metadata[id] = metadata;
@@ -155,7 +167,8 @@ void ModuleFactory::Init(const string& configFileName)
 	}
 	
 }
-
+//! Read parameters from Sqlite database
+//! \deprecated For now, Sqlite is deprecated in SEIMS.
 void ModuleFactory::ReadParametersFromSQLite()
 {
 	DBManager dbman;
@@ -216,7 +229,7 @@ void ModuleFactory::ReadParametersFromSQLite()
 		throw;
 	}
 }
-
+//! Read parameters from mongodb
 void ModuleFactory::ReadParametersFromMongoDB()
 {
 	mongo_cursor cursor[1];
@@ -224,7 +237,7 @@ void ModuleFactory::ReadParametersFromMongoDB()
 	oss << m_dbName << "." << PARAMETERS_TABLE;
 	mongo_cursor_init(cursor, m_conn, oss.str().c_str());
 
-	// loop stations of one class of climate data, such as "P"
+	
 	while( mongo_cursor_next(cursor) == MONGO_OK ) 
 	{
 		const bson* info = mongo_cursor_bson(cursor);
@@ -257,7 +270,7 @@ void ModuleFactory::ReadParametersFromMongoDB()
 	mongo_cursor_destroy(cursor);
 
 }
-
+//! Get comparable name after underscore if necessary
 string ModuleFactory::GetComparableName(string& paraName)
 {
     if (paraName.length() <= 2)
@@ -274,7 +287,7 @@ string ModuleFactory::GetComparableName(string& paraName)
 	return compareName;
 }
 
-//return read data time
+//! Create module list. Return time-consuming of reading data
 int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThreads, LayeringMethod layeringMethod, 
 	clsRasterData* templateRaster, SettingsInput* settingsInput, vector<SimulationModule*>& modules)
 {
@@ -328,7 +341,7 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
 
 	return t2-t1;
 }
-
+//! Find dependent parameters 
 ParamInfo* ModuleFactory::FindDependentParam(ParamInfo& paramInfo)
 {
 	string paraName = GetComparableName(paramInfo.Name);
@@ -354,7 +367,7 @@ ParamInfo* ModuleFactory::FindDependentParam(ParamInfo& paramInfo)
 	//throw ModelException("ModuleFactory", "FindDependentParam", "Can not find input for " + paraName + ".\n");
 	return NULL;
 }
-
+//! Load function pointers from .DLL or .so
 void ModuleFactory::ReadDLL(string& id, string& dllID)
 {
 	// the dll file is already read, return
@@ -366,7 +379,7 @@ void ModuleFactory::ReadDLL(string& id, string& dllID)
 	utils util;
 	if(!util.FileExists(moduleFileName)) throw ModelException("ModuleFactory", "ReadDLL", moduleFileName + " does not exist or has no read permission!");
 
-	//load libraty
+	//load library
 #ifndef linux
 	HINSTANCE handle = LoadLibrary(TEXT(moduleFileName.c_str()));
 	if (handle == NULL) throw ModelException("ModuleFactory", "ReadDLL", "Could not load " + moduleFileName);
@@ -390,12 +403,12 @@ void ModuleFactory::ReadDLL(string& id, string& dllID)
 
 }
 
-
+//! Get instance
 SimulationModule* ModuleFactory::GetInstance(string& moduleID)
 {
 	return m_instanceFuncs[moduleID]();
 }
-
+//! Match type
 dimensionTypes ModuleFactory::MatchType(string strType)
 {
 	// default
@@ -413,7 +426,7 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 
 	return typ;
 }
-
+//! Read module's parameters setting from XML string
 void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_parameters.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
@@ -431,7 +444,7 @@ void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, S
 			// clear the object
 			ParamInfo *param = new ParamInfo();
 
-			// set the moduleid
+			// set the module id
 			param->ModuleID = moduleID;
 
 			// get the parameter name
@@ -537,14 +550,14 @@ void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, S
 			{
 				string name = param->Name;
 				delete param;
-				throw ModelException("ModuleFactory", "ReadParameterSetting", "paramter "+ name + " does not have source!");
+				throw ModelException("ModuleFactory", "ReadParameterSetting", "parameter "+ name + " does not have source!");
 			}
 
 			if (param->Dimension == DT_Unknown)
 			{
 				string name = param->Name;
 				delete param;
-				throw ModelException("ModuleFactory", "ReadParameterSetting", "paramter "+ name + " does not have dimension!");
+				throw ModelException("ModuleFactory", "ReadParameterSetting", "parameter "+ name + " does not have dimension!");
 			}
 
 			// add to the list
@@ -557,7 +570,7 @@ void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, S
 		} // while
 	}
 }
-
+//! is constant input?
 bool ModuleFactory::IsConstantInputFromName(string& name)
 {
 	if(	StringMatch(name,Contant_Input_Elevation) ||
@@ -572,7 +585,7 @@ bool ModuleFactory::IsConstantInputFromName(string& name)
 		return true;
 	return false;
 }
-
+//! Read module's input setting from XML string
 void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_inputs.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
@@ -588,7 +601,7 @@ void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMS
 		{
 			ParamInfo *param = new ParamInfo();
 
-			// set the moduleid
+			// set the module id
 			param->ModuleID = moduleID;
 			param->ClimateType = setting->dataTypeString();
 
@@ -689,7 +702,7 @@ void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMS
 		}
 	}
 }
-
+//! Read module's output from XML string
 void ModuleFactory::ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_outputs.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
@@ -705,7 +718,7 @@ void ModuleFactory::ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIM
 		{
 			ParamInfo *param = new ParamInfo();
 
-			// set the moduleid
+			// set the module id
 			param->ModuleID = moduleID;
 			param->ClimateType = setting->dataTypeString();
 			// get the output variable name
@@ -786,7 +799,7 @@ void ModuleFactory::ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIM
 		}
 	}
 }
-
+//! Load settings from file
 bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<string> >& settings)
 {
 	bool bStatus = false;
@@ -809,9 +822,7 @@ bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<st
 					line = trim(line);
 					if ((line.size() > 0) && (line[0] != '#')) // ignore comments and empty lines
 					{
-						// parse the line into separate items
-						// TODO - This class might be more general by adding a property to the class
-						//        allowing a user to specify what character to use as a delimiter
+						// parse the line into separate item
 						vector<string> tokens = utl.SplitString(line, '|');
 						// is there anything in the token list?
 						if (tokens.size() > 0)
@@ -848,7 +859,7 @@ bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<st
 
 	return bStatus;
 }
-
+//! Read configuration file 
 void ModuleFactory::ReadConfigFile(const char* configFileName)
 {
 	vector< vector<string> > settings;
@@ -884,11 +895,11 @@ void ModuleFactory::ReadConfigFile(const char* configFileName)
 	}
 
 }
-
+//! Set data
 void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* setting, ParamInfo* param, clsRasterData* templateRaster,
 	SettingsInput* settingsInput, SimulationModule* pModule, bool vertitalItp)
 {
-	//set the paramter data to the module
+	//set the parameter data to the module
 	string name = param->BasicName;
 	if(setting->dataTypeString().size() == 0 
 		&& !StringMatch(param->BasicName,"elevation") 
@@ -959,7 +970,7 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	//if(param->Dimension != DT_Single)
 	//	cout << name << "\t" << end-start << endl;
 }
-
+//! Set Value
 void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, SettingsInput* settingsInput, SimulationModule* pModule)
 {
 	//get parameter datas
@@ -996,7 +1007,7 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 
 	pModule->SetValue(param->Name.c_str(), param->Value);
 }
-
+//! Set 1D data
 void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, 
 	SimulationModule* pModule, SettingsInput* settingsInput, bool vertitalItp)
 {
@@ -1102,7 +1113,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 
 	pModule->Set1DData(paraName.c_str(), n, data);
 }
-
+//! Set 2D data
 void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule)
 {
 	int nRows = 0;
@@ -1225,7 +1236,7 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 	
 	pModule->Set2DData(paraName.c_str(), nRows, nCols, data);
 }
-
+//! Set raster data
 void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule)
 {
 	int n;
@@ -1277,7 +1288,7 @@ void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFi
 
 
 }
-
+//! Update input
 void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInput* inputSetting, time_t t)
 {
 	size_t n = m_moduleIDs.size();
@@ -1332,7 +1343,7 @@ void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInpu
 	}
 
 }
-
+//! Get value from dependency modules
 void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationModule*>& modules)
 {
 	size_t n = m_moduleIDs.size();
@@ -1380,7 +1391,7 @@ void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationM
 
 	}
 }
-
+//! Find outputID parameter's module. Return Module index iModule and its ParamInfo
 void ModuleFactory::FindOutputParameter(string& outputID, int& iModule, ParamInfo*& paraInfo)
 {
 	string compareName = outputID;
@@ -1403,7 +1414,7 @@ void ModuleFactory::FindOutputParameter(string& outputID, int& iModule, ParamInf
 		}
 	}
 }
-
+//! Read multiply reach information from file
 void ModuleFactory::ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nAttr, int& nReaches, float**& data)
 {
 	ifstream ifs(filename.c_str());
@@ -1434,7 +1445,7 @@ void ModuleFactory::ReadMultiReachInfo(const string &filename, LayeringMethod la
 	}
 	ifs.close();
 }
-
+//! Read single reach information 
 void ModuleFactory::ReadSingleReachInfo(int nSubbasin, const string &filename, LayeringMethod layeringMethod, int& nAttr, int& nReaches, float**& data)
 {
 	ifstream ifs(filename.c_str());

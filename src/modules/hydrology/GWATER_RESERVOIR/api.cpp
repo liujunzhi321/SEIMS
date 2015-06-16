@@ -28,7 +28,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetID("GWATER_RESERVOIR");
 	mdi.SetName("GWATER_RESERVOIR");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster); 
 	mdi.AddParameter("RchParam","","reach parameters", "reachparameters.txt",DT_Array2D);

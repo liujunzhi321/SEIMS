@@ -18,6 +18,7 @@
 
 using namespace std;
 /*!
+ * \ingroup data
  * \class clsHydroClimateData
  *
  * \brief Hydrological climate data class

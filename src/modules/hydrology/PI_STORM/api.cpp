@@ -24,11 +24,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Alex Storey, Junzhi Liu");
 	mdi.SetClass("Precipitation Interception", "Calculate precipitation interception.");
 	mdi.SetDescription("Module to calculate precipitation interception using the maximum storage method.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("PI_STORM");
 	mdi.SetName("PI_STORM");
 	mdi.SetVersion("0.4");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("PI_STORM.chm");
 
 	// set the input variables (time series)

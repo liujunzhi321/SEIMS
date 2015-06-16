@@ -2,15 +2,19 @@
 ==========
 ----------
 
-**SEIMS** is short for **Spatially Explicit Integrated Modeling System** and is originally developed by **Dr.** Junzhi Liu and **Prof.** A-Xing Zhu et al. since 2010 in Lreis Lab., IGSNRR Inst, CAS, China.
+**SEIMS** is short for **Spatially Explicit Integrated Modeling System** and is originally developed by **Dr.** Junzhi Liu and **Prof.** A-Xing Zhu et al. since 2010 in Lreis Lab., IGSNRR, CAS, China.
 
 Here are some brief information about SEIMS:
 
 Firstly hosted on Github in 2015/6/8.
+
 Language: C++, Python
+
 Parallel: OpenMP and MPI
+
 Platform: Windows and linux cluster
-Modules:  Hydrology, Erosion, Nutrient, Plant Growth
+
+Modules:  **Hydrology, Erosion, Nutrient, Plant Growth**
 
 # Installation
 ----------

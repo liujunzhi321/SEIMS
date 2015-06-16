@@ -22,12 +22,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wu Hui");
 	mdi.SetClass("Interflow", "Calculate interflow routing.");
 	mdi.SetDescription("IUH overland method to calculate interflow routing.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("IUH_IF.chm");
 	mdi.SetID("IUH_IF");
 	mdi.SetName("IUH_IF");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("TimeStep","hr","time step of the simulation","file.in",DT_Single); 
 	mdi.AddParameter("CellWidth","m","","file.in",DT_Single); 

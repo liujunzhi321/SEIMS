@@ -17,6 +17,7 @@
 
 using namespace std;
 /*!
+ * \ingroup data
  * \class clsInterpolationWeighData
  *
  * \brief 

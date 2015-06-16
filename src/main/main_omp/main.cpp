@@ -5,7 +5,7 @@
 #include "invoke.h"
 #include "util.h"
 #include "gdal_priv.h"
-//#include "omp.h"
+#include "omp.h"
 #define MAIN
 //#define TEST
 int main(int argc, const char* argv[])

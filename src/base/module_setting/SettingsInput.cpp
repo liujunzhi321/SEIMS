@@ -1,3 +1,15 @@
+/*!
+ * \file SettingsInput.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "SettingsInput.h"
 #include "text.h"
 #include "util.h"
@@ -11,7 +23,7 @@
 
 using namespace std;
 
-
+//! Constructor
 SettingsInput::SettingsInput(string fileName, mongo* conn, string dbName, int nSubbasin, int scenarioID):m_subbasinID(nSubbasin)
 {
 	size_t index = fileName.find_last_of(SEP);
@@ -24,7 +36,7 @@ SettingsInput::SettingsInput(string fileName, mongo* conn, string dbName, int nS
 	
 	LoadSettingsFromFile(fileName,dbName);
 }
-
+//! Destructor 
 SettingsInput::~SettingsInput(void)
 {
 	StatusMessage("Start to release SettingsInput ...");
@@ -45,7 +57,7 @@ SettingsInput::~SettingsInput(void)
 
 	StatusMessage("End to release SettingsInput ...");
 }
-
+//! Read start and end date, simulation mode and time interval
 bool SettingsInput::readDate()
 {
 	//read start and end time
@@ -74,7 +86,7 @@ bool SettingsInput::readDate()
 
 	if (StringMatch(m_mode, "Daily"))
 	{
-		m_dtHs = 86400;
+		m_dtHs = 86400; // 86400 secs is 1 day
 		m_dtCh = 86400;
 	}
 		// convert the time interval to seconds to conform to time_t struct
@@ -106,7 +118,7 @@ void SettingsInput::buildTimeQuery(time_t startTime, time_t endTime, bson* query
 	//bson_append_finish_object(query);
 	
 }
-
+//! build query for mongodb
 void SettingsInput::buildQuery(const set<int>& idSet, const string& type, bson* query)
 {
 	set<int>::iterator it;

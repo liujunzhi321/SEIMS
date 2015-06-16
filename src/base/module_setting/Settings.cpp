@@ -58,20 +58,16 @@ bool Settings::LoadSettingsFromFile(string filename)
 				if (myfile.good())
 				{
 					getline(myfile, line);
-					//utl.TrimSpaces(line);
                     line = trim(line);
 					if ((line.size() > 0) && (line[0] != '#')) // ignore comments and empty lines
 					{
 						// parse the line into separate items
-						// TODO - This class might be more general by adding a property to the class
-						//        allowing a suer to specify what character to use as a delimiter
 						vector<string> tokens = utl.SplitString(line, '|');
 						// is there anything in the token list?
 						if (tokens.size() > 0)
 						{
 							for (size_t i=0; i<tokens.size(); i++)
 							{
-								//utl.TrimSpaces(tokens[i]);
                                 tokens[i] = trim(tokens[i]);
 							}
 							// is there anything in the first item?

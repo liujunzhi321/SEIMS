@@ -1,4 +1,15 @@
-//! Implementation of the methods for the DBManager class
+/*!
+ * \file DBManager.cpp
+ * \brief Database manager for Sqlite
+ *
+ * Implementation of the methods for the DBManager class
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ * 
+ * 
+ */
 
 #include "DBManager.h"
 #include "ModelException.h"
@@ -113,7 +124,7 @@ slTable::slTable()
 	nRows = 0;
 	pData = NULL;
 }
-//! Desctructor
+//! Destructor
 slTable::~slTable()
 {
 	sqlite3_free_table(pData);
@@ -143,7 +154,7 @@ string slTable::FieldValue(int row, int col)
 	return res;
 }
 
-
+//! if the given table exists
 bool DBManager::IsTableExist(string databasePath,string tableName)
 {
 	utils util;

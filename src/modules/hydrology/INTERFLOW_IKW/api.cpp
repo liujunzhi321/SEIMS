@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("interflow routing", "interflow routing.");
 	mdi.SetDescription("interflow routing using the method of WetSpa model.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("INTERFLOW_IKW.chm");
 	mdi.SetID("INTERFLOW_IKW");
 	mdi.SetName("INTERFLOW_IKW");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
 	mdi.AddParameter("CellWidth", "m", "Cell size", "file.in", DT_Single); 

@@ -22,12 +22,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Surface runoff", "Calculate infiltration and excess precipitation.");
 	mdi.SetDescription("Modified rational method to calculate infiltration and excess precipitation.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("SUR_MR.chm");
 	mdi.SetID("SUR_MR");
 	mdi.SetName("SUR_MR");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
 	mdi.AddParameter("T_snow","degree Celsius","snowfall temperature","ParameterDB_Snow",DT_Single); 

@@ -1,3 +1,16 @@
+/*!
+ * \file MongoUtil.h
+ * \ingroup module_setting
+ * \brief Read data from MongoDB.
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #pragma once
 #include "mongo.h"
 #include <string>

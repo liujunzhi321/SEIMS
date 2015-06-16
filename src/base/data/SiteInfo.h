@@ -1,10 +1,30 @@
-//! Class to stroe the site niformation from th Hydroclimate database stations table
+/*!
+ * \file SiteInfo.h
+ * \brief Class to store the site information from the Hydroclimate database stations table
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
+//! 
 #pragma once
 
 #include <string>
 
 using namespace std;
-
+/*!
+ * \ingroup data
+ * \class SiteInfo
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class SiteInfo
 {
 protected:

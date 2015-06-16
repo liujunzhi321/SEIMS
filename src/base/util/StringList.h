@@ -14,6 +14,7 @@
 
 using namespace std;
 /*!
+ * \ingroup Util
  * \class StringList
  *
  * \brief Common operation of string vector

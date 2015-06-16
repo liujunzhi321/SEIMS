@@ -21,6 +21,7 @@ using namespace std;
 
 
 /*!
+ * \ingroup Util
  * \class ModelClass
  *
  * \brief Class for model
@@ -35,6 +36,7 @@ public:
 	string Description;
 };
 /*!
+ * \ingroup Util
  * \class Parameter
  *
  * \brief Model parameter information class
@@ -52,6 +54,7 @@ public:
 	dimensionTypes Dimension;///< \a dimensionTypes
 };
 /*!
+ * \ingroup Util
  * \class Information
  *
  * \brief Module development information class
@@ -72,6 +75,7 @@ public:
 	string Helpfile;
 };
 /*!
+ * \ingroup Util
  * \class InputVariable
  *
  * \brief Input variable information class
@@ -89,6 +93,7 @@ public:
 	dimensionTypes Dimension;///< \a dimensionTypes
 };
 /*!
+ * \ingroup Util
  * \class OutputVariable
  *
  * \brief Output variable information class
@@ -105,6 +110,7 @@ public:
 	dimensionTypes Dimension;///< \a dimensionTypes
 };
 /*!
+ * \ingroup Util
  * \class MetadataInfo
  *
  * \brief Metadata information of module

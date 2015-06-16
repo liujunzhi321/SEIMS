@@ -1,24 +1,35 @@
+/*!
+ * \file SEIMS_ModuleSetting.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "SEIMS_ModuleSetting.h"
 #include "utils.h"
 #include "ModelException.h"
 #include "util.h"
 #include "text.h"
-
+//! Constructor
 SEIMSModuleSetting::SEIMSModuleSetting(string moduleId,string setting)
 {
 	m_moduleId = moduleId;
 	m_settingString = setting;
 
 	getSettings();
-
 }
 
-
+//! Destructor
 SEIMSModuleSetting::~SEIMSModuleSetting(void)
 {
 
 }
-
+//! Get settings
 void SEIMSModuleSetting::getSettings()
 {
 	utils util;

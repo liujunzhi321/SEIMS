@@ -1,3 +1,15 @@
+/*!
+ * \file SettingsOutput.h
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #pragma once
 #include "Settings.h"
 #include "PrintInfo.h"
@@ -6,7 +18,15 @@
 
 #include "mongo.h"
 #include "gridfs.h"
-
+/*!
+ * \ingroup module_setting
+ * \class SettingsOutput
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class SettingsOutput :
 	public Settings
 {

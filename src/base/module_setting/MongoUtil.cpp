@@ -1,3 +1,15 @@
+/*!
+ * \file MongoUtil.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "MongoUtil.h"
 #include <sstream>
 #include "ModelException.h"
@@ -5,7 +17,7 @@
 #include "text.h"
 #include <fstream>
 using namespace std;
-
+//! Get collection names in mongoDB
 int GetCollectionNames(mongo* conn, string& dbName, set<string>& tableNameSet)
 {
 	//bson bsonTable[1];

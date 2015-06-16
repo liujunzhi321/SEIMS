@@ -16,11 +16,12 @@
 
 using namespace std;
 /*!
+ * \ingroup data
  * \class clsLapseData
  *
  * \brief 
  *
- *
+ * \deprecated Currently, this is no longer used.
  *
  */
 class clsLapseData

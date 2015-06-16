@@ -160,7 +160,7 @@ void  MUSK_CH::initalOutputs()
 		m_qgCh = new float[m_nreach+1];
 		m_chWTdepth = new float[m_nreach+1];
 
-		#pragma omp parallel for
+#pragma omp parallel for
 		for (int i=1; i<=m_nreach; i++)
 		{
 			float qiSub = 0.f;

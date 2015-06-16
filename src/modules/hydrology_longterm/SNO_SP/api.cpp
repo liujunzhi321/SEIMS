@@ -23,11 +23,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Zhiqiang Yu");
 	mdi.SetClass("Snowmelt", "Calculate the amount of snow melt.");
 	mdi.SetDescription("Snowpack Daily, SWAT p57-59");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("SNO_SP");
 	mdi.SetName("SNO_SP");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("SNO_SP.chm");
 
 	//mdi.AddParameter("c_snow","mm/oC/delta_t","temperature impact factor ","ParameterDB_Snow",DT_Single);

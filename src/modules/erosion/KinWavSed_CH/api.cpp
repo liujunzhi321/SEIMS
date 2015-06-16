@@ -25,11 +25,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Hui Wu");
 	mdi.SetClass("Channel Erosion", "Calculate the amount channel erosion.");
 	mdi.SetDescription("use Srinivasan & Galvao function to calculate sediment yield routing of each channel cell");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("KinWavSed_CH");
 	mdi.SetName("KinWavSed_CH");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("KinWavSed_CH.chm");
 
 	mdi.AddParameter("CellWidth","m","the width (length) of cell","mask.asc",DT_Single);

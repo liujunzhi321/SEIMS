@@ -8,13 +8,13 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" WETSPA_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new SedBonNutrient_CH();
 }
 
 // function to return the XML Metadata document string
-extern "C" WETSPA_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	string res = "";
 	MetadataInfo mdi;
@@ -23,12 +23,12 @@ extern "C" WETSPA_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("Sediment Bound Nutrient CH", "Channel Sediment Bound Nutrient.");
 	mdi.SetDescription("Sediment Bound Nutrient Channel transport method using KinematicWave Method.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("SedBonNutrient_CH.chm");
 	mdi.SetID("SedBonNutrient_CH");
 	mdi.SetName("SedBonNutrient_CH");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("STORM_DT", "second", "Time step of the simulation", "file.in", DT_Single); 
 	mdi.AddParameter("CellWidth", "m", "Cell size", "file.in", DT_Single); 

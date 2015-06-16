@@ -8,13 +8,13 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" WETSPA_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new NitrogenFixation();
 }
 
 // function to return the XML Metadata document string
-extern "C" WETSPA_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	string res = "";
 	MetadataInfo mdi;
@@ -23,12 +23,12 @@ extern "C" WETSPA_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("NitrogenFixation", "NitrogenFixation.");
 	mdi.SetDescription("NitrogenFixation.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("NitrogenFixation.chm");
 	mdi.SetID("NitrogenFixation");
 	mdi.SetName("NitrogenFixation");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	
 	mdi.AddParameter("FieldCap_2D", "%", "Field capacity","ParameterDB_WaterBalance", DT_Array2D);
 	

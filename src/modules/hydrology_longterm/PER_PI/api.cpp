@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Percolation", "Calculate the amount of water percolated out of the root zone within the time step.");
 	mdi.SetDescription("The method in DHSVM was adopted.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("PER_PI");
 	mdi.SetName("PER_PI");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("PER_PI.chm");
 
 

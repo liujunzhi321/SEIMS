@@ -15,22 +15,30 @@ using namespace std;
 //! Aggregation type enum 
 enum AggregationType
 {
-	AT_Unknown = 0,
-	AT_Sum = 1,
-	AT_Average = 2,
-	AT_Minimum = 3,
-	AT_Maximum = 4,
-	AT_SpecificCells = 5 //output values of specific cells
+	AT_Unknown = 0,  ///< unknown
+	AT_Sum = 1,      ///< sum
+	AT_Average = 2,  ///< ave
+	AT_Minimum = 3,  ///< min
+	AT_Maximum = 4,  ///< max
+	AT_SpecificCells = 5 ///< output values of specific cells
 };
 
-//! Class stores the information 
+/*!
+ * \ingroup module_setting
+ * \class PringInfoItem
+ *
+ * \brief Class stores the information 
+ *
+ *
+ *
+ */
 class PrintInfoItem
 {
 private:
 	int m_Counter;
 
 private:
-	clsSpecificOutput* m_specificOutput;		//values of specific cells
+	clsSpecificOutput* m_specificOutput;		///< values of specific cells
 public:
 	void setSpecificCellRasterOutput(string projectPath,string databasePath,
 		clsRasterData* templateRasterData,string outputID);
@@ -48,25 +56,25 @@ public:
 	float** Data;					
 	int Numrows;
 
-	float* RasterData;				//for asc file
-	float **m_2dData;	//for 2d array
+	float* RasterData;				///< for ascii file
+	float **m_2dData;	///< for 2d array
 	int ValidCellCount;
 	int m_nCols;
 
-	map<time_t,float> TimeSeriesData; //for time series data file
+	map<time_t,float> TimeSeriesData; ///< for time series data file
 
-	map<time_t,float*> TimeSeriesDataForSubbasin; //for time series data for subbasin
+	map<time_t,float*> TimeSeriesDataForSubbasin; ///< for time series data for subbasin
 	int TimeSeriesDataForSubbasinCount;
 	void add1DTimeSeriesResult(time_t, int n, float* data);
 
-	// used only by PET_TS
-	int SiteID;		//The site id
-	int SiteIndex;	//The site index in output array1D variable
+	//! used only by PET_TS
+	int SiteID;		///< The site id
+	int SiteIndex;	///< The site index in output array1D variable
 
-	int SubbasinID; //The subbasin id
-	int SubbasinIndex;	//The subbasin index
+	int SubbasinID; ///< The subbasin id
+	int SubbasinIndex;	///< The subbasin index
 	
-	// used by all PrintItems
+	//! used by all PrintItems
 	string StartTime;
 	time_t getStartTime();
 	string EndTime;
@@ -90,25 +98,33 @@ private:
 	AggregationType m_AggregationType;
 	
 };
-
+/*!
+ * \ingroup module_setting
+ * \class PrintInfo
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class PrintInfo
 {
 public:
-	// used only for the PET_TS output
+	//! used only for the PET_TS output
 	int m_Interval;
 	string m_IntervalUnits;
 	int m_moduleIndex;
 
-	// used by all outputs
+	//! used by all outputs
 	string m_OutputID;
-	ParamInfo* m_param; // The output variable corresponding to the output id
+	ParamInfo* m_param; ///< The output variable corresponding to the output id
 	vector<PrintInfoItem*> m_PrintItems;
 
 	
 	void setSpecificCellRasterOutput(string projectPath, string databasePath,
 	clsRasterData* templateRasterData);
 private:
-	//for subbasin time series data
+	//! for subbasin time series data
 	vector<int> m_subbasinSeleted;
 	float* m_subbasinSelectedArray;
 public:

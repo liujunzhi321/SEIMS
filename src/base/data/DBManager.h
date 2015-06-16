@@ -1,3 +1,15 @@
+/*!
+ * \file DBManager.h
+ * \brief Database manager for Sqlite
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 //! Classes to manage sqlite database access
 #pragma once
 
@@ -6,14 +18,21 @@
 #include "sqlite3.h"
 
 using namespace std;
-
-//! Table class for sqlite database tables
+/*!
+ * \ingroup data
+ * \class slTable
+ *
+ * \brief Table class for sqlite database tables
+ *
+ * \deprecated Currently, this is no longer used.
+ *
+ */
 class slTable
 {
 public:
-	int nRows;
-	int nCols;
-	char** pData;
+	int nRows; ///< rows
+	int nCols; ///< cols
+	char** pData; ///< data
 
 	slTable ();
 	virtual ~slTable();
@@ -21,8 +40,15 @@ public:
 	string FieldValue(int row, int col);
 };
 
-
-//! sqlite database management class
+/*!
+ * \ingroup data
+ * \class DBManager
+ *
+ * \brief sqlite database management class
+ *
+ * \deprecated Currently, this is no longer used.
+ *
+ */
 class DBManager
 {
 private:

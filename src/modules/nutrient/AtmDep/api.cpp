@@ -8,13 +8,13 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" WETSPA_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new AtmosphericDeposition();
 }
 
 // function to return the XML Metadata document string
-extern "C" WETSPA_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	string res = "";
 	MetadataInfo mdi;
@@ -23,12 +23,12 @@ extern "C" WETSPA_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("AtmosphericDeposition", "Atmospheric Deposition.");
 	mdi.SetDescription("Atmospheric Deposition.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("AtmosphericDeposition.chm");
 	mdi.SetID("AtmosphericDeposition");
 	mdi.SetName("AtmosphericDeposition");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("RootDepth", "mm", "Depth from the soil surface", "file.in", DT_Raster); 
 	mdi.AddParameter("ConRainNitra", "mg N/L", "concentration of nitrate in the rain", "file.in", DT_Single); 
