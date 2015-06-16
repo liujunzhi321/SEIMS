@@ -21,9 +21,9 @@ using namespace std;
  * \ingroup data
  * \class clsSpecificOutput
  *
- * \brief set SnowOutput? for what purpose?
+ * \brief 
  *
- * \deprecated set SnowOutput? for what purpose? Is it deprecated now?
+ * 
  *
  */
 class clsSpecificOutput

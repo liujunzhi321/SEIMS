@@ -22,12 +22,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Zhiqiang Yu");
 	mdi.SetClass("Time series data","read time series data from hydroclimate database.");
 	mdi.SetDescription("read time series data from hydroclimate database.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("");
 	mdi.SetID("TSD_RD");
 	mdi.SetName("TSD_RD");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("data_type","","climate data type","Config.fig",DT_Single);
 

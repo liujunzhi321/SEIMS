@@ -1,3 +1,27 @@
+/*!
+ * \file SEIMS_ModuleForModule.h
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
+/*!
+ * \file SEIMS_ModuleForModule.h
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #pragma once
 
 #include <time.h>
@@ -11,19 +35,25 @@ using namespace std;
 
 //typedef void __cdecl (*pICStatusMessage)(const char* );
 typedef void (*pICStatusMessage)(const char* );
-
+//! \namespace Module
 namespace Module
 {
-	/*
-	** This is the basic class for all the modules. 
-	*/																																														
+	/*!
+	 * \ingroup module_setting
+	 * \class SEIMSModule
+	 *
+	 * \brief This is the basic class for all the modules. 
+	 *
+	 *
+	 *
+	 */
 	class SEIMSModule
 	{
 	public:
 		SEIMSModule(void);
 		~SEIMSModule(void);
 
-		//virtual functions
+		//! virtual functions
 		bool virtual SetValue (const char* key, float data){return true;}
 		bool virtual Set1DData(const char* key, int nRows, float* data){return true;}
 		bool virtual Set2DData(const char* key, int nRows, int nCols, float** data){return true;}

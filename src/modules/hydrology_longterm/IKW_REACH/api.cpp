@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Liu Junzhi");
 	mdi.SetClass("Channelflow", "channel flow routing using kinermatic wave method.");
 	mdi.SetDescription("channel flow routing using variable storage method.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("IKW_REACH.chm");
 	mdi.SetID("IKW_REACH");
 	mdi.SetName("MUSK_CH");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("DT_CH","s","time step","file.in",DT_Single); 
 	mdi.AddParameter("K_chb","mm/h","hydraulic conductivity of the channel bed","ParameterDB_Discharge", DT_Single);

@@ -23,11 +23,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Evapotranspiration from soil", "Calculate the amount of the evapotranspiration from soil water reservoir within the time step.");
 	mdi.SetDescription("The method relating ET linearly with actual soil moisture used in the original WetSpa will be the default method to estimate actual ET from the soil water reservoir.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("SET_LM");
 	mdi.SetName("SET_LM");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("SET_LM.chm");
 
 	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance",DT_Raster);

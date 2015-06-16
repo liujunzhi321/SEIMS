@@ -21,11 +21,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Soil water balance", "Soil water balance calculation.");
 	mdi.SetDescription("Soil water balance.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("SOL_WB");
 	mdi.SetName("SOL_WB");
 	mdi.SetVersion("0.3");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("SOL_WB.chm");
 
 	//mdi.AddParameter("subbasinSelected","","The subbasion ids listed in file.out","file.out",DT_Array1D); //this list is used to contrain the output size. Its name must be subbasinSelected.

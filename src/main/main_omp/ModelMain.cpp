@@ -299,7 +299,7 @@ void ModelMain::Execute()
 	//}
 	clock_t t2 = clock();
 	//cout << "time(ms):  " << t2-t1 << endl;
-	cout << "[DEBUG][TIMESPAN][COMPUTING]\tALL\t" << (t2-t1)/1000. << endl;
+	cout << "[TIMESPAN][COMPUTING]\tALL\t" << (t2-t1)/1000. << endl;
 	OutputExecuteTime();
 
 }
@@ -348,7 +348,7 @@ void ModelMain::OutputExecuteTime()
 {
 	for (size_t i = 0; i < m_simulationModules.size(); i++)
 	{
-		cout << "[DEBUG][TIMESPAN][COMPUTING]\t" << m_factory->GetModuleID(i) << "\t" << m_executeTime[i]/1000. << endl;
+		cout << "[TIMESPAN][COMPUTING]\t" << m_factory->GetModuleID(i) << "\t" << m_executeTime[i]/1000. << endl;
 	}
 }
 

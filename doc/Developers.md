@@ -207,6 +207,14 @@ SEIMS的运行分为两个版本：`OpenMP`和`MPI`
 在每个模型的文件夹下包含三个主要的文件：
 
 + `config.fig`：包括模型运行所需的模块信息。模型运行时会按照顺序依次加载该文件中指定的各个模块（每行的最后一个以‘|’分隔的字符串），并顺序执行。
+
+通用格式为：
+~~~
+No. | SettingString | | ModuleName
+i.e.
+0 | TimeSeries_P | | TSD_RD
+if this, the corresponding module name should be TSD_RD_P so that the module name is unique.
+~~~
 + `file.in`：包括模型运行的:
   + MODE（`Daily`指定模型做日尺度的模拟；`Storm`指定模型做次降水的模拟）；
   + Interval（步长，如果为Daily模拟，步长默认为1天，不可修改；如果为Storm模拟，步长单位为秒，可以分别指定坡面过程和河道过程的模拟步长，如“60, 60”指定次降水模拟的坡面和河道过程步长都是60s）；
@@ -219,7 +227,38 @@ SEIMS的运行分为两个版本：`OpenMP`和`MPI`
   + STARTTIME|2009-12-30 00:00:00
   + ENDTIME|2010-12-31 00:00:00
   + FILENAME|T_PET_1.asc
+~~~
+可选标签有：
+OUTPUTID: 输出变量名
+INTERVAL: INTERVAL is used only for the PET_TS output
+SITECOUNT: is used only for the time series output for sites
+SITENAME:
+SITEID: 
+REACHNAME: 
+COUNT: 
+TYPE: 整合类型->
+   enum AggregationType
+   {
+	  AT_Unknown = 0,  ///< unknown
+	  AT_Sum = 1,      ///< sum
+	  AT_Average = 2,  ///< ave
+	  AT_Minimum = 3,  ///< min
+	  AT_Maximum = 4,  ///< max
+	  AT_SpecificCells = 5 ///< output values of specific cells
+   };
+DATA_TYPE: 
+WEIGHT: 
+VERTICALINTERPOLATION: 
+SUBBASINCOUNT:  is used only for the time series output for subbasins
+SUBBASINID: 
+RESERVOIRCOUNT: 
+RESERVOIRID: 
+STARTTIME: 开始时间
+ENDTIME: 结束时间
+FILENAME: 指定输出文件名及扩展名，如变量为Raster类型，则输出（.tif）文件
+~~~
 
+ + 如果输出变量为"QOUTLET"、"QTotal"、"SEDOUTLET"、"DissovePOutlet"、"AmmoniumOutlet"、"NitrateOutlet"，则需要有STARTTIME、ENDTIME、FILENAME
 
 [返回目录](#目录)
 ## 运行命令

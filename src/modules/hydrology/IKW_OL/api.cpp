@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Overland routing", "Overland routing.");
 	mdi.SetDescription("Overland routing using 4-point implicit finite difference method.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("IKW_OL.chm");
 	mdi.SetID("IKW_OL");
 	mdi.SetName("IKW_OL");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("DT_HS", "second", "Time step of overland flow simulation", "file.in", DT_Single); 
 	mdi.AddParameter("CellWidth", "m", "Cell size", "file.in", DT_Single); 

@@ -1,4 +1,4 @@
-//! Class to manage Print information from the FILE.OUT file
+//! Class to manage Print information from the file.out file
 #include "PrintInfo.h"
 #include "utils.h"
 #include "util.h"
@@ -14,7 +14,7 @@
     #include <sys/stat.h>
 #endif
 
-// define string constants used in the code
+//!  define string constants used in the code
 #define Tag_Unknown "UNKNOWN"
 #define Tag_Sum "SUM"
 #define Tag_Average "AVERAGE"
@@ -106,7 +106,7 @@ bool PrintInfoItem::IsDateInRange(time_t dt)
 
 	return bStatus;
 }
-
+//! get start time
 time_t PrintInfoItem::getStartTime()
 {
 	//utils utl;
@@ -114,7 +114,7 @@ time_t PrintInfoItem::getStartTime()
 	//return utl.ConvertToTime2(StartTime,"%d-%d-%d %d:%d:%d",true);
 	//return utl.ConvertToTime(StartTime, "%d/%d/%d/%d", true);
 }
-
+//! get end time
 time_t PrintInfoItem::getEndTime()
 {
 	return m_endTime;
@@ -122,7 +122,7 @@ time_t PrintInfoItem::getEndTime()
 	//return utl.ConvertToTime2(EndTime,"%d-%d-%d %d:%d:%d",true);
 	//return utl.ConvertToTime(EndTime, "%d/%d/%d/%d", true);
 }
-
+//! add 1D time series data result
 void PrintInfoItem::add1DTimeSeriesResult(time_t t,int n,float* data)
 {
 	float* temp = new float[n];
@@ -133,14 +133,9 @@ void PrintInfoItem::add1DTimeSeriesResult(time_t t,int n,float* data)
 	TimeSeriesDataForSubbasin[t] = temp;
 	TimeSeriesDataForSubbasinCount = n;
 }
-
+//! create "output" folder to store all results
 void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, string header)
 {
-	//-----------------------------------------------------------------------
-	//Create a folder named "output" to store all the result files
-	//This function uses the window functions to create the folder. May be needed
-	//modified if used in Unix/Linux.
-	//Zhiqiang Yu,2011-5-4
 #ifndef linux
 	projectPath = projectPath + "output\\";
 	if(::GetFileAttributes(projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
@@ -157,12 +152,13 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 #endif
 	
 	StatusMessage(("Creating output file " + Filename + "...").c_str());
+	// Don't forget add appropriate suffix to Filename... ZhuLJ, 2015/6/16 
 	if(m_AggregationType == AT_SpecificCells)
 	{
 		if(m_specificOutput != NULL)
 		{
-			m_specificOutput->dump(projectPath + Filename);
-			StatusMessage(("Creat " + projectPath + Filename + " successfully!").c_str());
+			m_specificOutput->dump(projectPath + Filename + ".txt");
+			StatusMessage(("Create " + projectPath + Filename + " successfully!").c_str());
 		}
 			
 		return;
@@ -171,7 +167,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	{
 		ofstream fs;
 		utils util;
-        string filename = projectPath + Filename;
+        string filename = projectPath + Filename + ".txt";
 		fs.open(filename.c_str(), ios::out);
 		if (fs.is_open())
 		{
@@ -183,7 +179,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			}		
 			
 			fs.close();
-			StatusMessage(("Create " + projectPath + Filename + " successfully!").c_str());
+			StatusMessage(("Create " + filename + " successfully!").c_str());
 		}
 		return;
 	}
@@ -191,7 +187,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	{
 		ofstream fs;
 		utils util;
-        string filename = projectPath + Filename;
+        string filename = projectPath + Filename+ ".txt";
 		fs.open(filename.c_str(), ios::out);
 		if (fs.is_open())
 		{
@@ -209,11 +205,11 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			}		
 			
 			fs.close();
-			StatusMessage(("Creat " + projectPath + Filename + " successfully!").c_str());
+			StatusMessage(("Create " + filename + " successfully!").c_str());
 		}
 		return;
 	}
-	if(RasterData != NULL && ValidCellCount > -1)	//asc file
+	if(RasterData != NULL && ValidCellCount > -1)	//GeoTIFF file
 	{
 		if(templateRaster == NULL) 
 			throw ModelException("PrintInfoItem", "Flush", "The templateRaster is NULL.");
@@ -221,7 +217,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
         //cout << projectPath << Filename << endl;
 		//clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
 		//clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename);
-		clsRasterData::outputGTiff(templateRaster, RasterData, projectPath + Filename);
+		clsRasterData::outputGTiff(templateRaster, RasterData, projectPath + Filename + ".tif");
 		return;
 	}
 
@@ -237,7 +233,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			for(int i = 0; i < ValidCellCount; i++)
 				tmpData[i] = m_2dData[i][j];
 			oss.str("");
-			oss << projectPath << Filename << j << ".tif";
+			oss << projectPath << Filename << "_L" << j << ".tif";  // Filename_L0.tif means layer 0
 			//clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
 			clsRasterData::outputGTiff(templateRaster, tmpData, oss.str());
 		}
@@ -250,7 +246,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	{
 		ofstream fs;
 		utils util;
-        string filename = projectPath + Filename;
+        string filename = projectPath + Filename + ".txt";
 		fs.open(filename.c_str(), ios::out);
 		if (fs.is_open())
 		{
@@ -262,7 +258,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			}		
 
 			fs.close();
-			StatusMessage(("Create " + projectPath + Filename + " successfully!").c_str());
+			StatusMessage(("Create " + filename + " successfully!").c_str());
 		}
 		return;
 	}
@@ -818,7 +814,7 @@ int PrintInfo::ItemCount(void)
 //! Return a reference to the Item located at the given index position
 PrintInfoItem* PrintInfo::getPrintInfoItem(int index)
 {
-	// default ot NULL
+	// default is NULL
 	PrintInfoItem* res = NULL;
 
 	// is the index in the valid range

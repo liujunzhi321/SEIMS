@@ -21,11 +21,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Zhiqiang Yu; Junzhi Liu");
 	mdi.SetClass("Subsurface Runoff", "");
 	mdi.SetDescription("Darcy's law and the kinematic approximation; Water is routed cell-to-cell according to D8 or Dinf flow direction");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("SSR_DA");
 	mdi.SetName("SSR_DA");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("SSR_DA.chm");
 
 	mdi.AddParameter("CellWidth","m","","file.in",DT_Single);

@@ -1,3 +1,15 @@
+/*!
+ * \file SettingsInput.h
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #pragma once
 #include "Settings.h"
 #include <map>
@@ -7,7 +19,15 @@
 #include <set>
 
 using namespace MainBMP;
-
+/*!
+ * \ingroup module_setting
+ * \class SettingsInput
+ *
+ * \brief inherited from Settings class
+ *
+ *
+ *
+ */
 class SettingsInput :
 	public Settings
 {
@@ -28,10 +48,10 @@ public:
 	InputStation* StationData();
 private:
 	//basic information
-	time_t			m_startDate;	//start date
-	time_t			m_endDate;		//end date
-	time_t			m_dtHs;		//time interval
-	time_t			m_dtCh;
+	time_t			m_startDate;	///< start date
+	time_t			m_endDate;		///< end date
+	time_t			m_dtHs;		///< time interval for hillslope
+	time_t			m_dtCh;     ///< time interval for channel
 
 	//data of stations and reaches
 	//InputReach*		m_inputReach; //This part is replaced by new scenario class. Zhiqiang,2011-5-31
@@ -45,7 +65,7 @@ private:
 
 	map<string, vector<int> > m_siteListMap;
 	int m_subbasinID;
-	string m_mode;
+	string m_mode; ///< simulation mode, can be DAILY or HOURLY
 private:
 	bool LoadSettingsFromFile(string,string);
 	bool readDate(void);

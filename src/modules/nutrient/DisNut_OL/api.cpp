@@ -8,13 +8,13 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" WETSPA_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new DissolvedNutrient_OL();
 }
 
 // function to return the XML Metadata document string
-extern "C" WETSPA_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	string res = "";
 	MetadataInfo mdi;
@@ -23,12 +23,12 @@ extern "C" WETSPA_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Hui Wu");
 	mdi.SetClass("Dissolved Nutrient OL", "Dissolved Nutrient Overland.");
 	mdi.SetDescription("Dissolved Nutrient Overland transport method using Knisel functions.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("DissolvedNutrient_OL.chm");
 	mdi.SetID("DissolvedNutrient_OL");
 	mdi.SetName("DissolvedNutrient_OL");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
 	mdi.AddParameter("CellWidth", "m", "Cell size", "file.in", DT_Single); 

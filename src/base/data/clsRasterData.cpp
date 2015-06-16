@@ -446,7 +446,7 @@ void clsRasterData::outputGTiff(map<string,float> header,int nValidCells,float**
 		}
 	}
 
-		const char *pszFormat = "GTiff";
+	const char *pszFormat = "GTiff";
 	GDALDriver *poDriver = GetGDALDriverManager()->GetDriverByName(pszFormat);
 
 	char **papszOptions = poDriver->GetMetadata();

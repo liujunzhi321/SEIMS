@@ -1,8 +1,20 @@
+/*!
+ * \file SEIMS_ModuleForModule.cpp
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include "SEIMS_ModuleForModule.h"
 #include "ModelException.h"
-
+//! \namespace Module
 using namespace Module;
-
+//! Constructor
 SEIMSModule::SEIMSModule(void)
 {
 	m_StatusMsg = NULL;
@@ -12,12 +24,12 @@ SEIMSModule::SEIMSModule(void)
 	//CreateMetadataInfo();
 }
 
-
+//! Destructor
 SEIMSModule::~SEIMSModule(void)
 {
 	if(m_metadataInfo != NULL) delete m_metadataInfo;
 }
-
+//! Set time
 bool SEIMSModule::SetDate(time_t date)
 {
 	m_date = date;
@@ -35,7 +47,7 @@ void SEIMSModule::StatusMsg(string msg)
 		m_StatusMsg(msg.c_str());
 	}
 }
-
+//! Create basic metadata information
 void SEIMSModule::CreateBasicMetadataInfo(void)
 {
 	if(m_metadataInfo == NULL)
@@ -50,10 +62,10 @@ void SEIMSModule::CreateBasicMetadataInfo(void)
 		m_metadataInfo->SetID(ModuleName());
 		m_metadataInfo->SetName(ModuleName());
 		m_metadataInfo->SetVersion(ModuleVersion());
-		m_metadataInfo->SetWebsite("http://www.website.com");
+		m_metadataInfo->SetWebsite("https://github.com/seims/SEIMS");
 	}
 }
-
+//! Get metadata information
 string SEIMSModule::MetadataInformation(void)
 {
 	if(m_metadataInfo == NULL)
@@ -61,7 +73,7 @@ string SEIMSModule::MetadataInformation(void)
 		"The metadata info is null. Please call CreateMetadataInfo first!");
 	return m_metadataInfo->GetXMLDocument();
 }
-
+//! Check input size
 bool SEIMSModule::CheckInputSize(const char* key,int sizeFromMain, int* sizeInModule)
 {
 	if(sizeFromMain<=0)

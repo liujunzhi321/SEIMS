@@ -24,11 +24,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Hui Wu");
 	mdi.SetClass("Overland Erosion", "Calculate the amount overland erosion.");
 	mdi.SetDescription("use energy function(Govers) method to calculate sediment yield routing of each hillslope cell");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("KinWavSed_OL");
 	mdi.SetName("KinWavSed_OL");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("KinWavSed_OL.chm");
 
 	mdi.AddParameter("CellWidth","m","the width (length) of cell","mask.asc",DT_Single);

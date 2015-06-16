@@ -89,7 +89,7 @@ string GetCoreFileName(const string& fullFileName)
 	}
 
 	if (start == string::npos)
-		start = 0;
+		start = -1; // old code: start = 0; Modified by ZhuLJ, 2015/6/16
 
 	string::size_type end = fullFileName.find_last_of(".");
 
@@ -224,11 +224,10 @@ string GetPathFromFullName(string& fullFileName)
 	return fullFileName.substr(0, i+1);
 }
 
-//! Print a status message 
+//! Print a status message, for Debugging. 
 void StatusMessage(const char* msg)
 {
-	//cout << msg;
-	//cout << endl;
+	//cout << msg << endl;
 }
 /*!
  * \ingroup Util

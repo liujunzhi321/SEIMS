@@ -22,12 +22,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Depression", "Calculate depression storage.");
 	mdi.SetDescription("A simple fill and spill method method to calculate depression storage.");
-	mdi.SetEmail("");
+	mdi.SetEmail("liujunzhi@njnu.edu.cn");
 	mdi.SetHelpfile("DEP_LINSLEY.chm");
 	mdi.SetID("DEP_LINSLEY");
 	mdi.SetName("DEP_LINSLEY");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("Depre_in","-","initial depression storage coefficient","ParameterDB_WaterBalance", DT_Single); 
 	mdi.AddParameter("Depression","mm","Depression storage capacity","ParameterDB_WaterBalance", DT_Raster);

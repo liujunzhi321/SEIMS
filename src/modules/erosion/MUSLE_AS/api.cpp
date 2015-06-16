@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Zhiqiang Yu");
 	mdi.SetClass("erosion", "Calculate the amount of sediment yield.");
 	mdi.SetDescription("use MUSLE method to calcualte sediment yield of each cell");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("MUSLE_AS");
 	mdi.SetName("MUSLE_AS");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("MUSLE_AS.chm");
 
 	//3 grid parameter

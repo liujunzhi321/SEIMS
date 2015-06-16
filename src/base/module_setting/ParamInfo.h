@@ -1,12 +1,30 @@
-//! Class to store parameter information
+/*!
+ * \file ParamInfo.h
+ * \brief Class to store parameter information
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #pragma once
 
 #include <string>
 #include "MetadataInfoConst.h"
 
 using namespace std;
-
-//! Class to store parameter information from the parameter database
+/*!
+* \ingroup module_setting
+ * \class ParamInfo
+ *
+ * \brief Class to store parameter information from the parameter database
+ *
+ *
+ *
+ */
 class ParamInfo
 {
 public:

@@ -22,12 +22,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wu Hui");
 	mdi.SetClass("Surface runoff", "Calculate infiltration and excess precipitation.");
 	mdi.SetDescription("SCS curve number method to calculate infiltration and excess precipitation.");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("SUR_CN.chm");
 	mdi.SetID("SUR_CN");
 	mdi.SetName("SUR_CN");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("T_snow","degree Celsius","snowfall temperature","ParameterDB_Snow",DT_Single); //Tsnow->T_snow
 	mdi.AddParameter("t_soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);

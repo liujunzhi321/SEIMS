@@ -1,6 +1,6 @@
 /** \defgroup data
  * \ingroup Base
- * \brief include classes related to data, eg. DBManager, HydroClimateData etc..
+ * \brief include classes related to data, eg. Measurement, HydroClimateData etc..
  *
  *
  *

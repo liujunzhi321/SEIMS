@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wu Hui");
 	mdi.SetClass("Sediment", "Sediment channel routing using variable channel dimention method.");
 	mdi.SetDescription("Sediment channel routing using variable channel dimention method as used in SWAT (in SWAT document, page 379).");
-	mdi.SetEmail("");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("SEDR_VCD.chm");
 	mdi.SetID("SEDR_VCD");
 	mdi.SetName("SEDR_VCD");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 #ifdef STORM_MODEL
 	mdi.AddParameter("DT_CH","s","time step","file.in",DT_Single);  //for long term model
 #else

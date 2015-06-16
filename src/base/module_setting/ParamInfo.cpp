@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-// define string constants used in the code
+//! define string constants used in the code
 #define Use_Y "Y"
 #define Use_RC "RC"
 #define Use_AC "AC"
@@ -44,7 +44,7 @@ float ParamInfo::GetAdjustedValue()
 
 	return res;
 }
-
+//! Adjust 1D array
 void ParamInfo::Adjust1DArray(int n, float* data)
 {
 	float res = Value;

@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Channel routing", "Channel routing.");
 	mdi.SetDescription("Channel routing using diffusive wave equation.");
-	mdi.SetEmail("");
+	mdi.SetEmail("liujunzhi@njnu.edu.cn");
 	mdi.SetHelpfile("CH_DW.chm");
 	mdi.SetID("CH_DW");
 	mdi.SetName("CH_DW");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
 	mdi.AddParameter("CellWidth", "m", "Cell width", "file.in", DT_Single); 
