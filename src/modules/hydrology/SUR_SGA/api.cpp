@@ -23,7 +23,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Surface runoff", "Calculate infiltration and excess precipitation.");
 	mdi.SetDescription("Modified rational method to calculate infiltration and excess precipitation.");
-	mdi.SetEmail("liujunzhi@njnu.edu.cn");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("SUR_SGA.chm");
 	mdi.SetID("SUR_SGA");
 	mdi.SetName("SUR_SGA");

@@ -1,3 +1,15 @@
+/*!
+ * \file api.cpp
+ * \brief Define MetadataInfo of MUSK_CH module.
+ *
+ * 
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 23-Febrary-2011
+ *
+ * 
+ */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -7,13 +19,29 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-
+/** \defgroup MUSKINGUM_CH
+ * \ingroup Hydrology_longterm
+ * \brief 
+ *
+ *
+ *
+ */
+//! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new MUSK_CH();
 }
 
-// function to return the XML Metadata document string
+/*!
+ * \ingroup MUSKINGUM_CH
+ * \brief function to return the XML Metadata document string
+ *
+ * 
+ *
+ * \param[in] 
+ * \param[out] 
+ * \return
+ */
 extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	string res = "";
@@ -42,12 +70,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("MSK_X","","muskingum weighing factor","ParameterDB_Discharge", DT_Single);
 	mdi.AddParameter("MSK_co1","","Weighting factor of bankful flow","ParameterDB_Discharge", DT_Single);
 	mdi.AddParameter("VelScaleFactor","","flow velocity scaling factor for calibration","ParameterDB_Discharge", DT_Single);
-
 	mdi.AddParameter("RchParam","","reach parameters", "reachparameters.txt",DT_Array2D);
 	//mdi.AddParameter("Vdiv","m3","diversion loss of the river reach", "diversionloss.txt",DT_Array1D);
 	//mdi.AddParameter("Vpoint","m3"," point source discharge", "diversionloss.txt",DT_Array1D);
-
 	mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Discharge", DT_Raster);
+
 	mdi.AddInput("D_SBOF","m3/s","overland flow to streams from each subbasin","Module", DT_Array1D);
 	mdi.AddInput("D_SBIF","m3/s","interflow to streams from each subbasin","Module", DT_Array1D);
 	mdi.AddInput("D_SBQG","m3/s","groundwater flow out of the subbasin","Module", DT_Array1D);

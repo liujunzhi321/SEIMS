@@ -1,3 +1,15 @@
+/*!
+ * \file api.cpp
+ * \brief 
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -7,13 +19,31 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-
+/** \defgroup Hydrology
+ * \brief Hydrology modules, mainly includes storm modules
+ *
+ *
+ *
+ */
+/** \defgroup CH_DW
+ * \ingroup Hydrology
+ * \brief 
+ *
+ *
+ *
+ */
+//! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new DiffusiveWave();
 }
-
-// function to return the XML Metadata document string
+/*!
+ * \ingroup CH_DW
+ * \brief function to return the XML Metadata document string
+ *
+ *   
+ * 
+ */
 extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	string res = "";
@@ -23,15 +53,15 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Channel routing", "Channel routing.");
 	mdi.SetDescription("Channel routing using diffusive wave equation.");
-	mdi.SetEmail("liujunzhi@njnu.edu.cn");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("CH_DW.chm");
 	mdi.SetID("CH_DW");
 	mdi.SetName("CH_DW");
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
-	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
-	mdi.AddParameter("CellWidth", "m", "Cell width", "file.in", DT_Single); 
+	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); /// \param[in] DT_HS "Time step of the simulation from file.in, DT_Single"
+	mdi.AddParameter("CellWidth", "m", "Cell width", "file.in", DT_Single); /// \param[in] CellWidth "Cell width from file.in, DT_Single"
 	
 	//mdi.AddParameter("ID_UPREACH", "", "the cell adjacent to channel of the upstream subbasin", "main", DT_Single);
 	//mdi.AddParameter("Q_UPREACH", "m2/s", "channel flow in discharge from the upstream subbasin", "main", DT_Single);	
@@ -58,7 +88,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput("D_P","mm","Precipitation","Module", DT_Raster);
 
 	// output
-	mdi.AddOutput("QCH", "m3/s", "Flux in the downslope boundary of cells", DT_Array2D);
+	mdi.AddOutput("QCH", "m3/s", "Flux in the downslope boundary of cells", DT_Array2D); /// \param[out] QCH "Flux in the downslope boundary of cells"
 	mdi.AddOutput("QOUTLET", "m3/s", "discharge at the watershed outlet", DT_Single);
 	mdi.AddOutput("QSUBBASIN", "m3/s", "discharge at the subbasin outlet", DT_Array1D);
 	mdi.AddOutput("HCH", "mm", "Water depth in the downslope boundary of cells", DT_Array2D);

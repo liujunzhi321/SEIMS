@@ -1,13 +1,16 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Overland routing using 4-point implicit finite difference method
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
-//#include "vld.h"
+/*!
+ * \file MUSK_CH.cpp
+ * \brief Overland routing using 4-point implicit finite difference method
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 23-Febrary-2011
+ *
+ * 
+ */
+
 #include "MUSK_CH.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
@@ -23,7 +26,7 @@
 #define MINI_SLOPE 0.0001f
 #define NODATA_VALUE -99
 using namespace std;
-
+//! Constructor
 MUSK_CH::MUSK_CH(void): m_dt(-1), m_nreach(-1), m_Kchb(NODATA), 
 	m_Kbank(NODATA), m_Epch(NODATA),m_Bnk0(NODATA), m_Chs0(NODATA), m_aBank(NODATA), m_bBank(NODATA), m_subbasin(NULL), m_qsSub(NULL),  
 	m_qiSub(NULL), m_qgSub(NULL),m_petCh(NULL),m_gwStorage(NULL), m_area(NULL), m_Vseep0(0.f),
@@ -35,7 +38,7 @@ MUSK_CH::MUSK_CH(void): m_dt(-1), m_nreach(-1), m_Kchb(NODATA),
 	//m_vScalingFactor(2.5f)
 }
 
-
+//! Destructor
 MUSK_CH::~MUSK_CH(void)
 {
 	if(m_area != NULL) delete [] m_area;
@@ -56,7 +59,7 @@ MUSK_CH::~MUSK_CH(void)
 	if (m_chWTdepth != NULL)
 		delete[] m_chWTdepth;
 }
-
+//! Check input data
 bool MUSK_CH::CheckInputData(void)
 {
 	if (m_dt < 0)
@@ -131,7 +134,7 @@ bool MUSK_CH::CheckInputData(void)
 	}
 	return true;
 }
-
+//! Initial ouputs
 void  MUSK_CH::initalOutputs()
 {
 	if(m_nreach <= 0) 
@@ -182,7 +185,7 @@ void  MUSK_CH::initalOutputs()
 		}
 	}
 }
-
+//! Execute function
 int MUSK_CH::Execute()
 {
 	initalOutputs();
@@ -204,7 +207,7 @@ int MUSK_CH::Execute()
 
 	return 0;
 }
-
+//! Check input size
 bool MUSK_CH::CheckInputSize(const char* key, int n)
 {
 	if(n <= 0)
@@ -277,7 +280,7 @@ bool MUSK_CH::CheckInputSize(const char* key, int n)
 //		//*value = m_qsSub[m_idOutlet] + m_qCh[reachId][iLastCell];
 //	}
 //}
-
+//! Set value of the module
 void MUSK_CH::SetValue(const char* key, float value)
 {
 	string sk(key);
@@ -339,7 +342,7 @@ void MUSK_CH::SetValue(const char* key, float value)
 		+ " does not exist. Please contact the module developer.");
 
 }
-
+//! Set 1D data
 void MUSK_CH::Set1DData(const char* key, int n, float* value)
 {
 	string sk(key);
@@ -379,7 +382,7 @@ void MUSK_CH::Set1DData(const char* key, int n, float* value)
 		+ " does not exist. Please contact the module developer.");
 	
 }
-
+//! Get value
 void MUSK_CH::GetValue(const char* key, float* value)
 {
 	string sk(key);
@@ -396,7 +399,7 @@ void MUSK_CH::GetValue(const char* key, float* value)
 	}
 
 }
-
+//! Get 1D data
 void MUSK_CH::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
@@ -447,7 +450,7 @@ void MUSK_CH::Get1DData(const char* key, int* n, float** data)
 		+ " does not exist in the MUSK_CH module. Please contact the module developer.");
 
 }
-
+//! Get 2D data
 void MUSK_CH::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
 	string sk(key);
@@ -455,7 +458,7 @@ void MUSK_CH::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 		+ " does not exist in the MUSK_CH module. Please contact the module developer.");
 
 }
-
+//! Set 2D data
 void MUSK_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
@@ -490,7 +493,7 @@ void MUSK_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 			+ " does not exist. Please contact the module developer.");
 	
 }
-
+//! Get date time
 void MUSK_CH::GetDt(float timeStep,float fmin, float fmax, float& dt, int& n)
 {
 	if(fmax >= timeStep) 
@@ -533,8 +536,8 @@ void MUSK_CH::GetDt(float timeStep,float fmin, float fmax, float& dt, int& n)
 	//	n = 1;
 	//}
 }
-
-void MUSK_CH::GetCofficients(float reachLength, float v0, MuskWeights& weights)
+//! Get coefficients
+void MUSK_CH::GetCoefficients(float reachLength, float v0, MuskWeights& weights)
 {
 	v0 = m_vScalingFactor * v0;
 	float K = (4.64f - 3.64f*m_co1) * reachLength / (5.f*v0/3.f);
@@ -566,7 +569,7 @@ void MUSK_CH::GetCofficients(float reachLength, float v0, MuskWeights& weights)
 		weights.c3 = 0.0f;
 	}
 }
-
+//! Channel flow
 void MUSK_CH::ChannelFlow(int i)
 {
 	float st0 = m_chStorage[i];
@@ -694,7 +697,7 @@ void MUSK_CH::ChannelFlow(int i)
 		m_chStorage[i] = st0;
 		// calculate coefficients
 		MuskWeights wt;
-		GetCofficients(m_chLen[i], m_chVel[i], wt);
+		GetCoefficients(m_chLen[i], m_chVel[i], wt);
 		int n = wt.n;
 		float q = 0.f;
 		for (int j = 0; j < n; j++)

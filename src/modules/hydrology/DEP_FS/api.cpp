@@ -23,7 +23,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Depression", "Calculate depression storage.");
 	mdi.SetDescription("A simple fill and spill method method to calculate depression storage.");
-	mdi.SetEmail("liujunzhi@njnu.edu.cn");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("DEP_FS.chm");
 	mdi.SetID("DEP_FS");
 	mdi.SetName("DEP_FS");
