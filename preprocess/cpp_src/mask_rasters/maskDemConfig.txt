@@ -1,0 +1,13 @@
+e:\data\dianbu\output\mask.tif
+11
+e:\data\dianbu\output\taudir\subbasinTau.tif	-9999	e:\data\dianbu\output\taudir\subbasinTauM.tif
+e:\data\dianbu\output\taudir\flowDirTau.tif	-9999	e:\data\dianbu\output\taudir\flowDirTauM.tif
+e:\data\dianbu\output\taudir\streamRasterTau.tif	-9999	e:\data\dianbu\output\taudir\streamRasterTauM.tif
+e:\data\dianbu\output\taudir\slopeTau.tif	-9999	e:\data\dianbu\output\slope.tif
+e:\data\dianbu\output\taudir\demFilledTau.tif	-9999	e:\data\dianbu\output\dem.tif
+e:\data\dianbu\output\taudir\accTau.tif	-9999	e:\data\dianbu\output\acc.tif
+e:\data\dianbu\output\taudir\streamOrderTau.tif	-9999	e:\data\dianbu\output\stream_order.tif
+e:\data\dianbu\output\taudir\flowDirDinfTau.tif	-9999	e:\data\dianbu\output\flow_dir_angle_dinf.tif
+e:\data\dianbu\output\taudir\dirCodeDinfTau.tif	-9999	e:\data\dianbu\output\flow_dir_dinf.tif
+e:\data\dianbu\output\taudir\slopeDinfTau.tif	-9999	e:\data\dianbu\output\slope_dinf.tif
+e:\data\dianbu\output\taudir\weightDinfTau.tif	-9999	e:\data\dianbu\output\weight_dinf.tif

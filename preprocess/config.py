@@ -5,8 +5,8 @@
 #  TODO, give more detailed description here.
 import os
 ## MongoDB related
-#hostname = '192.168.6.55'
-hostname = '127.0.0.1'
+hostname = '192.168.6.55'
+#hostname = '127.0.0.1'
 port = 27017
 climateDBName = 'climate_dianbu'
 ## Input
@@ -19,3 +19,6 @@ PrecDataYear = [2014]
 MeteoVarFile = dataprepareDir + os.sep + 'climate' + os.sep + 'Variables.txt'
 MeteoDailyFile = dataprepareDir + os.sep + 'climate' + os.sep + 'meteorology_dianbu_daily.txt'
 MetroSiteFile = dataprepareDir + os.sep + 'climate' + os.sep + 'sites_hefei.txt'
+
+DischargeExcelPrefix = dataprepareDir + os.sep + 'climate' + os.sep + 'discharge_by_day_'
+DischargeYear = [2014]

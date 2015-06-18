@@ -699,7 +699,7 @@ int NutrientTransport_OL::Execute()
 			if(i < m_nLayers-1)
 			    m_Nitrate[i+1][j] += m_perNit[i][j];
 
-			float K_NH4 = 0.083 * m_clayFrac[0][j] + 1.34f;   // Knisel et al. 1994
+			float K_NH4 = 0.083 * m_clayFrac[0][j] + 1.34f;   //! Knisel et al. 1994
 			float pk = m_porosity[hydroIndex][j] + 2.65f * (1 - m_porosity[hydroIndex][j]) * K_NH4;
 			float c_Amm = m_Ammon[i][j] * exp( - m_mobQ[i][j] * area * 0.001 / pk );
 
