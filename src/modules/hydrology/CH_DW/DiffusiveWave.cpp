@@ -1,13 +1,16 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Overland routing using implicit finite difference method (Diffusive wave method in Liuxihe model)
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
-//#include "vld.h"
+/*!
+ * \file DiffusiveWave.cpp
+ * \brief Overland routing using implicit finite difference method (Diffusive wave method in Liuxihe model)
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 23-Febrary-2011
+ *
+ * 
+ */
+
 #include "DiffusiveWave.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
@@ -25,22 +28,13 @@ const float _23 = 2.0f/3.0f;
 const float SQ2 = sqrt(2.f);
 
 using namespace std;
-
+//! Constructor
 DiffusiveWave::DiffusiveWave(void):m_size(-1), m_chNumber(-1), m_dt(-1.0f), m_dx(-1.0f),
 	m_s0(NULL), m_direction(NULL), m_reachDownStream(NULL), m_chWidth(NULL), 
 	m_qs(NULL), m_hCh(NULL), m_qCh(NULL), m_prec(NULL), m_qSubbasin(NULL), m_elevation(NULL),
 	m_flowLen(NULL), m_qi(NULL), m_streamLink(NULL), m_reachId(NULL), m_sourceCellIds(NULL),
 	m_idUpReach(-1), m_idOutlet(-1), m_qUpReach(0.f), m_manningScalingFactor(1.0f)
 {
-	//m_diagonal[1] = 0;
-	//m_diagonal[2] = 1;
-	//m_diagonal[4] = 0;
-	//m_diagonal[8] = 1;
-	//m_diagonal[16] = 0;
-	//m_diagonal[32] = 1;
-	//m_diagonal[64] = 0;
-	//m_diagonal[128] = 1;
-
 	m_diagonal[1] = 0;
 	m_diagonal[2] = 1;
 	m_diagonal[3] = 0;
@@ -51,7 +45,7 @@ DiffusiveWave::DiffusiveWave(void):m_size(-1), m_chNumber(-1), m_dt(-1.0f), m_dx
 	m_diagonal[8] = 1;
 }
 
-
+//! Destructor
 DiffusiveWave::~DiffusiveWave(void)
 {
 	if (m_hCh != NULL)
@@ -83,7 +77,7 @@ DiffusiveWave::~DiffusiveWave(void)
 	if (m_qSubbasin != NULL)
 		delete[] m_qSubbasin;
 }
-
+//! Check input data
 bool DiffusiveWave::CheckInputData(void)
 {
 	if(this->m_date <= 0)
@@ -127,7 +121,7 @@ bool DiffusiveWave::CheckInputData(void)
 
 	return true;
 }
-
+//! Initial outputs
 void  DiffusiveWave::initalOutputs()
 {
 	if(this->m_size <= 0) throw ModelException("IKW_CH","initalOutputs","The cell number of the input can not be less than zero.");
@@ -227,7 +221,7 @@ void  DiffusiveWave::initalOutputs()
 
 	}
 }
-
+//! Channel flow
 void DiffusiveWave::ChannelFlow(int iReach, int iCell, int id)
 {
 
@@ -323,7 +317,7 @@ void DiffusiveWave::ChannelFlow(int iReach, int iCell, int id)
 		//float hh = (qUp + qLat*dx - qNew)*m_dt/(m_chWidth[iReach]*dx) + m_hCh[iReach][iCell];
 	}
 }
-
+//! Main execute function
 int DiffusiveWave::Execute()
 {
 	//check the data
@@ -353,7 +347,7 @@ int DiffusiveWave::Execute()
 	}
 	return 0;
 }
-
+//! Check input size
 bool DiffusiveWave::CheckInputSize(const char* key, int n)
 {
 	if(n <= 0)
@@ -375,7 +369,7 @@ bool DiffusiveWave::CheckInputSize(const char* key, int n)
 
 	return true;
 }
-
+//! Check input size channel
 bool DiffusiveWave::CheckInputSizeChannel(const char* key, int n)
 {
 	if(n <= 0)
@@ -395,7 +389,7 @@ bool DiffusiveWave::CheckInputSizeChannel(const char* key, int n)
 
 	return true;
 }
-
+//! Get value of Qoutlet
 void DiffusiveWave::GetValue(const char* key, float* value)
 {
 	string sk(key);
@@ -412,7 +406,7 @@ void DiffusiveWave::GetValue(const char* key, float* value)
 		//*value = m_qs[m_idOutlet] + m_qCh[reachId][iLastCell];
 	}
 }
-
+//! Set value
 void DiffusiveWave::SetValue(const char* key, float data)
 {
 	string sk(key);
@@ -435,7 +429,7 @@ void DiffusiveWave::SetValue(const char* key, float data)
 		+ " does not exist. Please contact the module developer.");
 
 }
-
+//! Set 1D data
 void DiffusiveWave::Set1DData(const char* key, int n, float* data)
 {
 	string sk(key);
@@ -477,7 +471,7 @@ void DiffusiveWave::Set1DData(const char* key, int n, float* data)
 		+ " does not exist. Please contact the module developer.");
 	
 }
-
+//! Get 1D data
 void DiffusiveWave::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
@@ -500,7 +494,7 @@ void DiffusiveWave::Get1DData(const char* key, int* n, float** data)
 		+ " does not exist in the IKW_CH module. Please contact the module developer.");
 
 }
-
+//! Get 2D data
 void DiffusiveWave::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
 	string sk(key);
@@ -514,7 +508,7 @@ void DiffusiveWave::Get2DData(const char* key, int *nRows, int *nCols, float*** 
 		+ " does not exist in the IKW_CH module. Please contact the module developer.");
 
 }
-
+//! Set 2D data
 void DiffusiveWave::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);

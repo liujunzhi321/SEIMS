@@ -1,3 +1,15 @@
+/*!
+ * \file api.cpp
+ * \brief 
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -7,7 +19,20 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-
+/** \defgroup Hydrology_longterm
+ * \brief Hydrology modules, mainly includes longterm modules
+ *
+ *
+ *
+ */
+/** \defgroup DEP_LINSLEY
+ * \ingroup Hydrology_longterm
+ * \brief 
+ *
+ *
+ *
+ */
+//! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new DepressionFSDaily();
@@ -22,7 +47,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Depression", "Calculate depression storage.");
 	mdi.SetDescription("A simple fill and spill method method to calculate depression storage.");
-	mdi.SetEmail("liujunzhi@njnu.edu.cn");
+	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetHelpfile("DEP_LINSLEY.chm");
 	mdi.SetID("DEP_LINSLEY");
 	mdi.SetName("DEP_LINSLEY");

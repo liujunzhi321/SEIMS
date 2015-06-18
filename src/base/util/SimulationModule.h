@@ -13,18 +13,23 @@
 
 
 using namespace std;
-//! enumeration of time step
+
+/*!
+ * \ingroup Util
+ * \enum TimeStepType
+ *
+ */
 enum TimeStepType
 {
 	TIMESTEP_HILLSLOPE,///< Hillslope scale
 	TIMESTEP_CHANNEL,  ///< Channel scale
-	TIMESTEP_ECOLOGY   ///< Ecology scle
+	TIMESTEP_ECOLOGY   ///< Ecology scale
 };
 /*!
  * \ingroup Util
  * \class SimulationModule
  *
- * \brief 
+ * \brief Base module for all simulation modules in SEIMS
  *
  *
  *
@@ -54,39 +59,43 @@ public:
 		
 	};
 
-
+	//! Set data
 	virtual void SetValue(const char* key, float data)
 	{
 		throw ModelException("SimulationModule", "SetValue", "This function is not implemented.");
 	};
+	//! Set 1D data
 	virtual void Set1DData(const char* key, int n, float* data)
 	{
 		throw ModelException("SimulationModule", "Set1DData", "This function is not implemented.");
 	};
+	//! Set 2D data
 	virtual void Set2DData(const char* key, int nRows, int nCols, float** data)
 	{
 		throw ModelException("SimulationModule", "Set2DData", "This function is not implemented.");
 	};
 
-	
+	//! Get value
 	virtual void GetValue(const char* key, float* value)
 	{
 		throw ModelException("SimulationModule", "GetValue", "This function is not implemented.");
 	};
+	//! Get 1D data
 	virtual void Get1DData(const char* key, int* n, float** data)
 	{
 		throw ModelException("SimulationModule", "Get1DData", "This function is not implemented.");
 	};
+	//! Get 2D data
 	virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data)
 	{
 		throw ModelException("SimulationModule", "Get2DData", "This function is not implemented.");
 	};
-
+	//! Get time step type
 	virtual TimeStepType GetTimeStepType()
 	{
 		return  TIMESTEP_HILLSLOPE;
 	};
-
+	//! Reset subtime step
 	virtual void ResetSubTimeStep()
 	{
 		m_tsCounter = 1;
@@ -102,9 +111,9 @@ public:
 	//	return m_id;
 	//};
 protected:
-	time_t m_date;
+	time_t m_date; ///< date time
 	//string m_id;
 
-	int m_tsCounter;  //! sub-timestep counter
+	int m_tsCounter;  ///< sub-timestep counter
 };
 

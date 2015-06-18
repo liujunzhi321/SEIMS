@@ -1,12 +1,16 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Raster Data
-*
-*	Created:	Junzhi Liu
-*	Date:		29-July-2010
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file Raster.cpp
+ * \brief Raster data class
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 29-July-2010
+ *
+ * 
+ */
+#pragma once
 #ifndef SEIMS_RASTER_CPP_INCLUDE
 #define SEIMS_RASTER_CPP_INCLUDE
 

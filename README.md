@@ -16,12 +16,19 @@ Platform: Windows and linux cluster
 
 Modules:  **Hydrology, Erosion, Nutrient, Plant Growth**
 
-# Installation
+# Compile
 ----------
 ~~~
 cd <build path>
 cmake <SEIMS path>
 ~~~
+
+# Preprocessing
+----------
+
+See [Preprocessing](preprocess/Preprocess.md) for more detail.
+# Postprocessing
+----------
 
 
 # Developer

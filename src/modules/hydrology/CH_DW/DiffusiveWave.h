@@ -1,13 +1,15 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	routing in the channel cells using 4-point implicit finite difference method
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
-
+/*!
+ * \file DiffusiveWave.h
+ * \brief routing in the channel cells using 4-point implicit finite difference method
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 23-Febrary-2011
+ *
+ * 
+ */
 #pragma once
 
 #include <string>
@@ -18,6 +20,15 @@
 #include "SimulationModule.h"
 using namespace std;
 
+/*!
+ * \ingroup CH_DW
+ * \class DiffusiveWave
+ *
+ * \brief Routing in the channel
+ *
+ *
+ *
+ */
 class DiffusiveWave : public SimulationModule
 {
 public:
@@ -48,16 +59,16 @@ private:
 	}
 	void ChannelFlow(int iReach, int iCell, int id);
 	void initalOutputs();
-	/// size
-	int m_size;
+	
+	int m_size;///< size
 
-	/// cell width of the grid (m)
-	float m_dx;
-	/// time step (second)
-	float m_dt;
+	
+	float m_dx;///< cell width of the grid (m)
+	
+	float m_dt;///< time step (second)
 
-	/// slope (percent)
-	float *m_s0;
+	
+	float *m_s0;///< slope (percent)
 	/// channel width (raster type to keep consistent with the one in IKW_CH, zero for overland cells)
 	float *m_chWidth;
 	float *m_elevation;

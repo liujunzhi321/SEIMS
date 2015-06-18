@@ -43,7 +43,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput("D_Percolation_2D","mm", "Distribution of groundwater recharge (percolation)", "Module", DT_Array2D);  // from PER_PI
 
 	// Ammonium
-	mdi.AddParameter("Clay", "", "Clay fraction in soil", "ParameterDB_WaterBalance", DT_Raster); 
+	mdi.AddParameter("Clay_2D", "", "Clay fraction in soil", "ParameterDB_WaterBalance", DT_Raster); 
 	mdi.AddInput("D_Ammon", "kg N/ha", "ammonium pool for soil nitrogen", "Module", DT_Array2D);
 
 	// Organic N

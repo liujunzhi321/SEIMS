@@ -402,8 +402,8 @@ void NutrientTransport_OL::Set1DData(const char* key, int n, float* data)
 	string sk(key);
 	if (StringMatch(sk, "D_SURU"))
 		m_sr = data;
-	else if (StringMatch(sk, "Clay"))
-		m_clayFrac = data;
+	//else if (StringMatch(sk, "Clay"))
+	//	m_clayFrac = data;
 	else if (StringMatch(sk, "D_SOER"))
 		m_sedimentYield = data;
 	else if(StringMatch(sk, "CHWIDTH"))			
@@ -499,6 +499,12 @@ void NutrientTransport_OL::Set2DData(const char* key, int nrows, int ncols, floa
 		CheckInputSize(key, ncols);
 		m_nLayers = nrows;
 		m_porosity = data;
+	}
+	else if(StringMatch(sk,"Clay_2D"))
+	{
+		CheckInputSize(key,ncols);
+		m_nLayers = nrows;
+		m_clayFrac = data;
 	}
 	else if(StringMatch(sk, "D_SSRU_2D"))
 	{
@@ -693,7 +699,7 @@ int NutrientTransport_OL::Execute()
 			if(i < m_nLayers-1)
 			    m_Nitrate[i+1][j] += m_perNit[i][j];
 
-			float K_NH4 = 0.083 * m_clayFrac[j] + 1.34f;   // Knisel et al. 1994
+			float K_NH4 = 0.083 * m_clayFrac[0][j] + 1.34f;   //! Knisel et al. 1994
 			float pk = m_porosity[hydroIndex][j] + 2.65f * (1 - m_porosity[hydroIndex][j]) * K_NH4;
 			float c_Amm = m_Ammon[i][j] * exp( - m_mobQ[i][j] * area * 0.001 / pk );
 

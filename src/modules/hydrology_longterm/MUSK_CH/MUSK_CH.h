@@ -1,13 +1,15 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	channel flow routing using Muskingum method
-*
-*	Created:	Junzhi Liu
-*	Date:		26-Jule-2012
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
-
+/*!
+ * \file MUSK_CH.h
+ * \brief channel flow routing using Muskingum method
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 26-Jule-2012
+ *
+ * 
+ */
 #pragma once
 
 #include <string>
@@ -19,15 +21,29 @@
 
 using namespace std;
 
+/*!
+ * \ingroup MUSKINGUM_CH
+ * \struct MuskWeights
+ *
+ */
 struct MuskWeights{
 	float c1;
 	float c2;
 	float c3;
 	float c4;
 	float dt;
-	int n;  // number of division of the origin time step
+	int n;  ///< number of division of the origin time step
 };
 
+/*!
+ * \ingroup MUSKINGUM_CH
+ * \class MUSK_CH
+ *
+ * \brief channel flow routing using Muskingum method
+ *
+ *
+ *
+ */
 class MUSK_CH : public SimulationModule
 {
 public:
@@ -149,6 +165,6 @@ private:
 
 	void ChannelFlow(int i);
 	void GetDt(float timeStep,float fmin, float fmax, float& dt, int& n);
-	void GetCofficients(float reachLength, float v0, MuskWeights& weights);
+	void GetCoefficients(float reachLength, float v0, MuskWeights& weights);
 };
 

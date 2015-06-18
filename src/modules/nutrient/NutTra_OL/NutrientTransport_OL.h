@@ -54,7 +54,7 @@ private:
 
 	// Ammonium
 	/// clay fraction
-	float *m_clayFrac;
+	float **m_clayFrac;
 	//amount of ammonium in layer ly (kg N/ha)
 	float **m_Ammon;
 

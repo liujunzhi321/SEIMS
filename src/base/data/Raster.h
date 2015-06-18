@@ -1,17 +1,28 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Raster Data
-*
-*	Created:	Junzhi Liu
-*	Date:		29-July-2010
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file Raster.h
+ * \brief Raster data class
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date 29-July-2010
+ *
+ * 
+ */
 
 #ifndef SEIMS_RASTER_INCLUDE
 #define SEIMS_RASTER_INCLUDE
 #include "gridfs.h"
-
+/*!
+ * \ingroup Data
+ * \class Raster
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 template <typename T>
 class Raster
 {
