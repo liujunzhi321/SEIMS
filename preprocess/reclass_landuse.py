@@ -6,7 +6,7 @@
 from osgeo import gdal, osr
 import math, os, sys
 import sqlite3
-import numpy as np
+import numpy
 from time import time
 import util
 from util import WriteGTiffFile
@@ -65,7 +65,7 @@ def ReclassLanduse(landuseFile, dbname, dstdir):
         
         #t = time()
         
-        data_prop = np.zeros(n)
+        data_prop = numpy.zeros(n)
         dic = property_map[pname]
         
         for i in xrange(n):

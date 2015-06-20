@@ -264,7 +264,8 @@ def PostProcessTauDEM(dstdir):
     
     reachDir = dstdir + os.sep + "reaches"
     if not os.path.exists(reachDir):
-        os.mkdir(reachDir)    
+        os.mkdir(reachDir)   
+         
     outputReachFile = reachDir + os.sep + reachesOut
     outputSubbasinFile = dstdir + os.sep + subbasinOut
     outputFlowDirFile = dstdir + os.sep + flowDirOut
@@ -280,7 +281,7 @@ def PostProcessTauDEM(dstdir):
                         outputSubbasinFile, outputStreamLinkFile)
     ChangeFlowDir(flowDirFileTau, outputFlowDirFile)
     
-    accFile = tauDir + os.sep + accM
+    accFile = dstdir + os.sep + accM
     chwidthFile = dstdir + os.sep + chwidthName
     width = chwidth(accFile, chwidthFile)
     AddWidthToReach(outputReachFile, outputStreamLinkFile, width)

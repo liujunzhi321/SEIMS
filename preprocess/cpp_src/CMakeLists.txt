@@ -1,0 +1,7 @@
+MESSAGE(STATUS "Compiling Preprocessing Programe for SEIMS...")
+ADD_SUBDIRECTORY(./TauDEM)
+ADD_SUBDIRECTORY(./reclassify)
+ADD_SUBDIRECTORY(./mask_rasters)
+ADD_SUBDIRECTORY(./grid_layering)
+ADD_SUBDIRECTORY(./iuh)
+ADD_SUBDIRECTORY(./import_raster)

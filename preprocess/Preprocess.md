@@ -3,6 +3,10 @@
 prepared by Liangjun Zhu
 
 2015/6/17
+## 0 Prepared Data
+像所有的水文模型一样，我们的准备数据有气象、水文、空间数据等，下图先入为主，展示了输入数据的文件结构。
+![prepareddata](../doc/img/prepareddata.png)
+图1 模型数据准备
 
 ## 1 Climate Data
 Include **Precipitation** and **Meteorological** daily data. 
@@ -20,6 +24,9 @@ Include **Discharge** daily and storm date.
 ~~~
 ImportDailyDischargeData(hostname,port,climateDBName,DischargeExcelPrefix,DischargeYear)
 ~~~
-**TODO**: 流量日值数据的导入和气象数据存在问题一样，需组织成二维矩阵形式的excel表格，非常不方便。
+**TODO**: 
++ 流量日值数据的导入和气象数据存在问题一样，需组织成二维矩阵形式的excel表格，非常不方便。
++ 现在没将暴雨流量数据导入放进来，之后也需要对其进行统一格式整理
++ 我觉得最好是将流量测量的原始数据存入数据库，用的时候再读取出来，处理后使用
 
 ## 3 Spatial Data

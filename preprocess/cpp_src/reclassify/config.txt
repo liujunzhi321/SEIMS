@@ -1,6 +1,0 @@
-/data/hydro_preprocessing/fenkeng/landuse.tif 8
-/data/hydro_preprocessing/cpp_programs/reclassify/lookup
-/data/tmp
-2
-Manning
-Interc_max
