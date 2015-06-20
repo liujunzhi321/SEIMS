@@ -1,7 +1,19 @@
+MESSAGE(STATUS "    Compiling Grid Layering...")
 ADD_DEFINITIONS(-DMONGO_HAVE_STDINT -DUSE_MONGODB)
-INCLUDE_DIRECTORIES(/soft/share/include /soft/share/mongo-c-driver-f06669b/src ./)
-LINK_DIRECTORIES(/soft/share/lib /soft/share/mongo-c-driver-f06669b ./)
+IF(WIN32)
+	SET (GDAL_HOME ../../../include/gdal)
+	SET (MONGO_LIB_HOME ../../../lib)
+ENDIF()
+SET (MONGO_HOME ../../../include/mongo-c-driver)
+
+INCLUDE_DIRECTORIES(${GDAL_HOME}/include ${MONGO_HOME} ${PROJECT_BINARY_DIR})
+LINK_DIRECTORIES(${GDAL_HOME}/lib ${MONGO_LIB_HOME} ${PROJECT_BINARY_DIR})
 
 ADD_EXECUTABLE(grid_layering LayeringFromSource.cpp LayeringFromOutlet.cpp main.cpp Data.cpp CompressIndex.cpp FlowInOut.cpp)
-
-TARGET_LINK_LIBRARIES(grid_layering libgdal.so libmongoc.so libbson.so)
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
+IF(WIN32)
+	SET_PROPERTY(TARGET grid_layering PROPERTY FOLDER "Layering")
+	TARGET_LINK_LIBRARIES(grid_layering gdal_i.lib bson.lib mongoc.lib)
+ELSE()
+	TARGET_LINK_LIBRARIES(grid_layering libgdal.so libmongoc.so libbson.so)
+ENDIF()
