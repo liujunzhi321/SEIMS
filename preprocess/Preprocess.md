@@ -5,8 +5,10 @@ prepared by Liangjun Zhu
 2015/6/17
 ## 1 Prepared Data
 像所有的水文模型一样，我们的准备数据有气象、水文、空间数据等，下图先入为主，展示了输入数据的文件结构。
+
 ![prepareddata](../doc/img/prepareddata.png)
-图1 模型数据准备
+
+**图1 模型数据准备**
 
 ### 1.1 Climate Data
 Include **Precipitation** and **Meteorological** daily data. 
@@ -147,5 +149,7 @@ SOIL_ATTR_DB  = ["sand", "clay", "fc", "ks", "porosity","usle_k","wp",\
 ## 3 Running Preprocessing Program
 以上设置完成之后，直接运行`./preprocess/main.py`即可！
 如果一切顺利，在`mongoDB`中我们可以看到自动创建的气象数据库和空间数据库，如下图所示：
+
 ![databases](../doc/img/databases.png)
-图2 数据库列表
+
+**图2 数据库列表**
