@@ -150,7 +150,7 @@ def ExtractParameters(inputLanduse, sandList, clayList, orgList, dstdir, genCN=F
     print "[Output] %s, %s" % (dstdir, status) 
     f.write("%d,%s\n" % (70, status))
     f.flush()
-    #DepressionCap(dstdir, sqliteFile)
+    DepressionCap(dstdir, sqliteFile)
     
     if genCN:
         status = "Calculating CN numbers..."

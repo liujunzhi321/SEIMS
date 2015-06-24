@@ -28,7 +28,7 @@ HOSTNAME = '127.0.0.1'
 PORT = 27017
 ClimateDBName = 'climate_dianbu'
 SpatialDBName = 'model_dianbu_30m_longterm'
-forCluster = True 
+forCluster = False 
 stormMode = False
 if forCluster and 'cluster_' not in SpatialDBName.lower():
     SpatialDBName = 'cluster_' + SpatialDBName
@@ -81,10 +81,12 @@ CROP_ATTR_LIST  = ["IDC", "EXT_COEF",  "BMX_TREES", "BLAI", "HVSTI",\
 LANDUSE_ATTR_LIST = ["Manning", "Interc_max", "Interc_min", "RootDepth", \
                     "USLE_C", "SOIL_T10","USLE_P"]
 LANDUSE_ATTR_DB = ["manning","i_max","i_min", "root_depth", "usle_c", "SOIL_T10"]
-SOIL_ATTR_LIST = ["Sand", "Clay", "FieldCap", "Conductivity", "Porosity",\
-                "USLE_K", "WiltingPoint", "Poreindex", "Residual", "Density"]
-SOIL_ATTR_DB  = ["sand", "clay", "fc", "ks", "porosity","usle_k","wp",\
-                    "P_INDEX","rm","B_DENSITY"]
+## Be caution, the sequence from "Sand" to "Poreindex" if fixed because of soil_param.py.
+SOIL_ATTR_LIST = ["Sand", "Clay", "WiltingPoint", "FieldCap", "Porosity","Density",\
+                "Conductivity", "Poreindex", "USLE_K", "Residual", ]
+SOIL_ATTR_DB  = ["sand", "clay","wp", "fc", "porosity","B_DENSITY","ks", "P_INDEX",\
+                "usle_k", "rm"]
+
 ### There are 15 attributes in SoilLookup table now. 
 ### They are [SOILCODE], [SNAM], [KS](Conductivity), [POROSITY], [FC](field capacity), [P_INDEX](Poreindex), [RM],
 ### [WP](wiltingpoint), [B_DENSITY], [SAND], [CLAY], [SILT], [USLE_K], [TEXTURE], [HG]
@@ -131,9 +133,6 @@ flowDirDinfM = "flow_dir_angle_dinf.tif"
 dirCodeDinfM = "flow_dir_dinf.tif"
 slopeDinfM = "slope_dinf.tif"
 weightDinfM = "weight_dinf.tif"
-
-
-
 
 subbasinVec = "subbasin.shp"
 basinVec = "basin.shp"
