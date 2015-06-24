@@ -129,7 +129,7 @@ def GenerateSoilAttributes(outputFolder, layerNum, sandFile=None, clayFile=None,
             if dataSom is not None:
                 om = dataSom[i][j]
             else:
-                om = 2.5
+                om = defaultOrg  # om=2.5
                 if layerNum >= 1:
                     om = 1.0
 
@@ -151,7 +151,7 @@ def GenerateSoilAttributes(outputFolder, layerNum, sandFile=None, clayFile=None,
     attrList = []
     layerStr = str(layerNum) if layerNum > 1 else ''
     for i in range(n):
-        filename = outputFolder + os.sep + r"%s%s.tif" % (config.SOIL_ATTR_LIST[i+2], layerStr)
+        filename = outputFolder + os.sep + r"%s%s.tif" % (SOIL_ATTR_LIST[i+2], layerStr)
         WriteGTiffFile(filename, ySizeMask, xSizeMask, attrMapList[i], \
                                    geoMask, srs, NODATA, gdal.GDT_Float32)
         attrList.append(filename)
