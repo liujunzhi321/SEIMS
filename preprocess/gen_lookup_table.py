@@ -24,7 +24,10 @@ def CreateLookupTable(dbname, property_namelist, str_sql,dstdir):
             if pName == "USLE_P":
                 value_map[pName] = 1
             else:
-                value_map[pName] = row[i+1]
+                if pName == "Manning":
+                    value_map[pName] = row[i+1]*10
+                else:
+                    value_map[pName] = row[i+1]
         property_map[id] = value_map
    
     n = len(property_map)

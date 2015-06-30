@@ -61,7 +61,7 @@ SEIMS（Spatially Explicit Integrated Modeling System）模型是由刘军志等
 4. 为用户提供易用的Web界面，用户可选择在服务器端运行模型，也可以选择把模型和数据下载到本机运行。
 
 # Github使用说明
-为了便于模型开发的多人协作，计划采用Github平台进行版本控制。关于Git的详细教程，推荐阅读[廖学峰的网站](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/)这一节主要介绍我们需要用到的一些命令操作。
+为了便于模型开发的多人协作，计划采用Github平台进行版本控制。关于Git的详细教程，推荐阅读[廖学峰的网站](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/)这一节主要介绍我们需要用到的一些命令操作。快速记忆一些[常用的Git命令](http://www.codeceo.com/article/git-command-guide.html)吧！
 [返回目录](#目录)
 ## Windows下安装Git
 [msysgit](http://msysgit.github.io/)是windows版的Git，直接下载安装即可，安装完成后，打开“开始”菜单，找到Git->Git Bash，出现一个类似命令行的窗口，说明Git安装成功了。

@@ -56,6 +56,8 @@ void MainMongoDB(const char* modelStr, int nSubbasins, const char* host, int por
 
 		SubbasinIUHCalculator iuh(dt, rsMask, rsTime , rsDelta, gfs);
 		iuh.calCell(i);
+		
+
 	}
 
 	gridfs_destroy(gfs);

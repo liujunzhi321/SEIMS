@@ -37,7 +37,7 @@ def GenerateVelocity(filepath):
     Man_data = band.ReadAsArray()
     
     vel_max = 3.0
-    vel_min = 0.005
+    vel_min = 0.0005
     velocity = zeros((ysize, xsize))
     for i in range(0, ysize):
         for j in range(0, xsize):

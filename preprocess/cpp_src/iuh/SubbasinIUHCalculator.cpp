@@ -80,6 +80,12 @@ int SubbasinIUHCalculator::calCell(int id)
 	int nc = 0;                       //number of cell
 	maxtSub = 0;                  //maximum length of uhSub
 
+	//ofstream iuhf;
+	//char iuhfile[200];
+	//strcpy(iuhfile,"E:\\github-zlj\\model_data\\model_dianbu_30m_longterm\\output\\iuh.txt");
+	//iuhf.open(iuhfile,ios_base::app|ios_base::out);
+	//iuhf<<"SubbasinID: "<<id<<endl;
+
 	for (int i = 0; i < nRows; ++i)
 	{
 		for (int j = 0; j < nCols; ++j)
@@ -180,7 +186,12 @@ int SubbasinIUHCalculator::calCell(int id)
 				pTemp[index] = uh1[nc][k];
 				index++;
 			}
-			//cout<<pTemp[0]<<","<<pTemp[1]<<","<<pTemp[2]<<endl;
+			/*iuhf<<i<<","<<j<<",";
+			for (int k = 0; k < nTemp; k++)
+			{
+			iuhf<<pTemp[k]<<",";
+			}
+			iuhf<<endl;*/
 			gridfile_write_buffer(gfile, (const char*)pTemp, 4*nTemp);
 			delete pTemp;
 
@@ -195,6 +206,8 @@ int SubbasinIUHCalculator::calCell(int id)
 			nc += 1;
 		}
 	}
+	
+	//iuhf.close();
 
 	gridfile_set_metadata(gfile, p);
 	int flag = gridfile_writer_done(gfile);

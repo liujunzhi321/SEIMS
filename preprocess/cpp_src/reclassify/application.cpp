@@ -3,8 +3,7 @@
 GPRO::ProgramType GPRO::Application::_programType = Serial_Type;
 
 
-bool GPRO::Application::
-START(ProgramType programType, int argc, char *argv[])
+bool GPRO::Application::START(ProgramType programType, int argc, char *argv[])
 {
 	_programType = programType;
 
@@ -25,8 +24,7 @@ START(ProgramType programType, int argc, char *argv[])
 	return true;
 }
 
-bool GPRO::Application::
-END()
+bool GPRO::Application::END()
 {
 	if(_programType == MPI_Type || _programType == MPI_OpenMP_Type)
 	{

@@ -67,7 +67,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("Vseep0","m3/s","the initial volume of transmission loss to the deep aquifer over the time interval","ParameterDB_Discharge", DT_Single);
 	mdi.AddParameter("a_bnk","","bank flow recession constant","ParameterDB_Discharge", DT_Single);
 	mdi.AddParameter("b_bnk","","bank storage loss coefficient","ParameterDB_Discharge", DT_Single);
-	mdi.AddParameter("MSK_X","","muskingum weighing factor","ParameterDB_Discharge", DT_Single);
+	mdi.AddParameter("MSK_X","","muskingum weighting factor","ParameterDB_Discharge", DT_Single);
 	mdi.AddParameter("MSK_co1","","Weighting factor of bankful flow","ParameterDB_Discharge", DT_Single);
 	mdi.AddParameter("VelScaleFactor","","flow velocity scaling factor for calibration","ParameterDB_Discharge", DT_Single);
 	mdi.AddParameter("RchParam","","reach parameters", "reachparameters.txt",DT_Array2D);

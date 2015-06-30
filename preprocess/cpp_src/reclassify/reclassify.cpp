@@ -1,5 +1,5 @@
 /***************************************************************************
-* pAspect.cpp
+* reclassify.cpp
 *
 * Project: GPRO, v 1.0
 * Purpose: Perform reclassification. 
