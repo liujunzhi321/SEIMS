@@ -34,7 +34,7 @@ IKW_REACH::IKW_REACH(void): m_dt(-1), m_nreach(-1), m_Kchb(NODATA),
 	m_Kbank(NODATA), m_Epch(NODATA),m_Bnk0(NODATA), m_Chs0(NODATA), m_aBank(NODATA), m_bBank(NODATA), m_subbasin(NULL), m_qsSub(NULL),  
 	m_qiSub(NULL), m_qgSub(NULL),m_petCh(NULL),m_gwStorage(NULL), m_area(NULL), m_Vseep0(0.f),m_chManning(NULL), m_chSlope(NULL),
 	m_Vdiv(NULL), m_Vpoint(NULL), m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL), m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL),
-	m_x(0.2f), m_co1(0.7f), m_qIn(NULL), m_chStorage(NULL), m_manningScalingFactor(1.0f), m_qUpReach(0.f), m_deepGroudwater(0.f)  //90.f for fenkeng; 0 for Lyg
+	m_x(0.2f), m_co1(0.7f), m_qIn(NULL), m_chStorage(NULL), m_manningScalingFactor(1.0f), m_qUpReach(0.f), m_deepGroudwater(0.f)  //90.f for fenkeng; 0 for Lyg;
 {
 	m_chWTdepth = NULL;
 

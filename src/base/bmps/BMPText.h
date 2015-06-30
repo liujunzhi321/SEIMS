@@ -13,7 +13,7 @@
 #define TABLE_RESERVOIR		"reservoir"
 
 //bmp name
-//also the column name in reach_BMP table for reach BMPs
+//also the column name in Reach_BMP table for reach BMPs
 #define BMP_NAME_POINTSOURCE			"PointSource"
 #define BMP_NAME_FLOWDIVERSION_STREAM	"FlowDiversion"
 #define BMP_NAME_RESERVOIR				"Reservoir"

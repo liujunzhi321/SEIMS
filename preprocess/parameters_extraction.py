@@ -5,7 +5,7 @@
 #
 import os
 from gen_lookup_table import CreateLookupTable
-from reclass_landuse import ReclassLanduse
+#from reclass_landuse import ReclassLanduse
 from soil_param import GenerateSoilAttributes 
 from soil_texture import SoilTexture
 from init_moisture import InitMoisture
@@ -86,7 +86,7 @@ def landuse_parameters(dstdir, maskFile, inputLanduse, landuseFile, sqliteFile, 
 
     s = "%s/reclassify %s %s/cpp_src/reclassify/neigh.nbr" % (CPP_PROGRAM_DIR, reclassLuFile, PREPROC_SCRIPT_DIR)
     os.system(s)
-    ReclassLanduse(landuseFile, sqliteFile, dstdir)
+    #ReclassLanduse(landuseFile, sqliteFile, dstdir)
     
 def ExtractParameters(inputLanduse, sandList, clayList, orgList, dstdir, genCN=False, genRunoffCoef=False, genCrop=False, genIUH=False, defaultLanduse=8):
     
