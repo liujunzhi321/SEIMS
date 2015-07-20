@@ -28,7 +28,7 @@ ADD_SUBDIRECTORY(${PREPROCESS_HOME})
 IF(WIN32)
 	SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 ## copy external dll libraries to Debug and Release folder
-	SET(EXTERNAL_DLLS "../lib/dlls/gdal15-vc9.dll" "../lib/dlls/libpng13-vc9.dll"  "../lib/dlls/zlib1-vc9.dll" "../lib/dlls/mongoc.dll" "../lib/dlls/bson.dll")
+	SET(EXTERNAL_DLLS "../lib/dlls/gdal15-vc9.dll" "../lib/dlls/libpng13-vc9.dll" "../lib/dlls/libexpat.dll" "../lib/dlls/zlib1-vc9.dll" "../lib/dlls/mongoc.dll" "../lib/dlls/bson.dll")
 	FILE(COPY ${EXTERNAL_DLLS} DESTINATION ${PROJECT_BINARY_DIR}/Debug)
 	FILE(COPY ${EXTERNAL_DLLS} DESTINATION ${PROJECT_BINARY_DIR}/Release)
 ENDIF()

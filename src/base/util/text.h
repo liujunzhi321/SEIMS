@@ -18,9 +18,6 @@
 //        to make it easier to change them later 
 #define App_Config_File "app.config"
 
-#define Source_ParameterDB "ParameterDB"
-#define Source_File "File"
-
 //for contant input variables
 #define Contant_Input_Elevation						"Elevation"
 #define Contant_Input_Latitude						"Latitude"
@@ -91,8 +88,8 @@
 #define Tag_FLOWIN_INDEX "FLOWIN_INDEX_D8"
 #define Tag_FLOWOUT_INDEX "FLOWOUT_INDEX_D8"
 #define Tag_ROUTING_LAYERS "ROUTING_LAYERS"
-// TODO: Dinf, MFD, MFD-md integrated into SEIMS.
 
+// TODO: Dinf, MFD, MFD-md integrated into SEIMS.
 // D-infinity Flow model after Tarboton et al.(1991)
 #define Tag_FLOWIN_INDEX_DINF "FLOWIN_INDEX_DINF"
 #define Tag_FLOWIN_PERCENTAGE_DINF "FLOWIN_PERCENTAGE_DINF"
@@ -105,7 +102,7 @@
 #define Tag_FLOWOUT_INDEX_MFD "FLOWOUT_INDEX_MFD"
 #define Tag_FLOWOUT_PERCENTAGE_MFD "FLOWOUT_PERCENTAGE_MFD"
 #define Tag_ROUTING_LAYERS_MFD "ROUTING_LAYERS_MFD"
-//MFD-md flow model after Qin et al.files(2007)
+//MFD-md flow model after Qin et al.(2007) (md means maximum downslope)
 #define Tag_FLOWIN_INDEX_MFD_MD "FLOWIN_INDEX_MFD_MD"
 #define Tag_FLOWIN_PERCENTAGE_MFD_MD "FLOWIN_PERCENTAGE_MFD_MD"
 #define Tag_FLOWOUT_INDEX_MFD_MD "FLOWOUT_INDEX_MFD_MD"
@@ -150,13 +147,17 @@
 #define File_BMPDB "BMP.db3"
 #define Table_LapseRate "lapse_rate"
 #define Table_WGN "wgt"
-#define File_Config "config.fig"
-#define File_Input "file.in"
-#define File_Output "file.out"
+#define NAME_MASK "MASK"
 #define File_Mask "MASK.asc"
 #define File_DEM "dem.asc"
 
-#define NAME_MASK "MASK"
+#define File_Config "config.fig"
+#define File_Input "file.in"
+#define File_Output "file.out"
+#define Source_HydroClimateDB "HydroClimateDB"
+#define Source_ParameterDB "ParameterDB"
+#define Source_Module "Module"
+
 
 //! define string constants used in the code
 #define Tag_NoDataValue "NoDataValue"

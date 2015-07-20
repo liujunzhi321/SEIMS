@@ -414,7 +414,7 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 	// default
 	dimensionTypes typ = DT_Unknown;
 
-	if(StringMatch(strType,Type_Single)) typ = DT_Single;
+	if (StringMatch(strType,Type_Single)) typ = DT_Single;
 	if (StringMatch(strType,Type_Array1D)) typ = DT_Array1D;
 	if (StringMatch(strType,Type_Array2D)) typ = DT_Array2D;
 	if (StringMatch(strType,Type_Array3D)) typ = DT_Array3D;

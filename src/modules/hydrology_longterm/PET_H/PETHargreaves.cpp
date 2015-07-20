@@ -29,7 +29,7 @@ void PETHargreaves::SetValue(const char* key, float value)
 	string sk(key);
 	if (StringMatch(sk,"K_pet"))
 	{
-		m_petFactor = value;
+		m_petFactor  = value;
 	}
 	else if (StringMatch(sk, "ThreadNum"))
 	{
@@ -37,7 +37,7 @@ void PETHargreaves::SetValue(const char* key, float value)
 	}
 	else
 	{
-		throw ModelException("PET_PM","SetValue","Parameter " + sk + " does not exist in PETPenmanMonteith method. Please contact the module developer.");
+		throw ModelException("PET_PM","SetValue","Parameter " + sk + " does not exist in Hargreaves method. Please contact the module developer.");
 	}
 
 }
@@ -73,7 +73,7 @@ int PETHargreaves::JulianDay(time_t date)
 	return dateInfo.tm_yday + 1;
 }
 
-//The source code come from Junzhi's MaxRadiation project.
+///The source code come from Junzhi's MaxRadiation project.
 float PETHargreaves::MaxSolarRadiation(int day,float lat)
 {
 	  lat = lat*3.1415926/180;

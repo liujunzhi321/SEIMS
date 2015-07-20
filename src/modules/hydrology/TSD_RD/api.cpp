@@ -13,7 +13,7 @@ extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 	return new clsTSD_RD();
 }
 
-// function to return the XML Metadata document string
+/// function to return the XML Metadata document string
 extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	MetadataInfo mdi;
@@ -31,16 +31,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter("data_type","","climate data type","Config.fig",DT_Single);
 
-	// set the input variables (time series)
-	mdi.AddInput("T","", "the climate data of all the sites", "HydroClimateDB", DT_Array1D); //T means time series. D means distribution.
+	/// set the input variables (time series)
+	mdi.AddInput("T","", "the climate data of all the sites", "HydroClimateDB", DT_Array1D); ///T means time series. D means distribution.
 
-	// set the output variables
+	/// set the output variables
 	mdi.AddOutput("T","", "the climate data of all the sites", DT_Array1D);
 
-	// write out the XML file.
+	/// write out the XML file.
 	res = mdi.GetXMLDocument();
-
-	//return res;
 
 	char* tmp = new char[res.size()+1];
 	strprintf(tmp, res.size()+1, "%s", res.c_str());

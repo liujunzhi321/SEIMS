@@ -1,3 +1,15 @@
+/*!
+ * \file clsTSD_RD.cpp
+ * \brief 
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date July 2015
+ *
+ * 
+ */
 #include "api.h"
 #include "clsTSD_RD.h"
 #include "MetadataInfo.h"

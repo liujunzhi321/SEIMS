@@ -91,7 +91,7 @@ def SubbasinDelineation(np, workingDir, dem,outlet, threshold, mpiexeDir=None,ex
     status = "Generating stream raster..."
     fStatus.write("%d,%s\n" % (80, status))
     fStatus.flush()
-    print StreamRaster(np, tauDir, acc, streamRaster, threshold, mpiexeDir=mpiexeDir,exeDir=exeDir)
+    print StreamRaster(np, tauDir, acc, streamRaster, float(threshold), mpiexeDir=mpiexeDir,exeDir=exeDir)
     print "[Output], %s, %s" % (workingDir, status)
 
     status = "Generating stream net..."
