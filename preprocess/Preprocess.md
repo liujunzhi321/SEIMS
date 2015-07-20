@@ -59,7 +59,7 @@ e:
 cmake <SEIMS Folder>/preprocess
 mkdir metis
 cd .\metis
-cmake <SEIMS Folder>/preprocess/metis-5.1.0-pk
+cmake <SEIMS Folder>/preprocess/cpp_src/metis-5.1.0-pk
 ~~~
 + 用VS打开`e:\build`文件夹下的`SEIMS_Preprocess.sln`，并生成解决方案，此时，预处理程序目录为`CPP_PROGRAM_DIR = r'E:\build\Debug'`，或者`CPP_PROGRAM_DIR = r'E:\build\Release'`
 + 用VS打开`e:\build\metis`文件夹下的`METIS.sln`，并生成解决方案，此时，用于任务划分的`METIS`程序目录为`METIS_DIR = r'E:\build\metis\programs\Debug'`，或者`METIS_DIR = r'E:\build\metis\programs\Release'`

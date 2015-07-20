@@ -32,7 +32,7 @@ enum LayeringMethod
 
 extern bool DoubleEqual(double d1, double d2);
 extern bool FloatEqual(float d1, float d2);
-extern string GetPathFromFullName(string fullFileName);
+extern string GetPathFromFullName(string& fullFileName);
 extern bool StrEqualIgnoreCase(const char*, const char*);
 extern bool StringMatch(string text1, string text2);
 extern string GetUpper(string);

@@ -15,7 +15,7 @@
 #endif
 
 //!  define string constants used in the code
-#define Tag_Unknown "UNKNOWN"
+#define Tag_Unknown "UNKNOWN" 
 #define Tag_Sum "SUM"
 #define Tag_Average "AVERAGE"
 #define Tag_Average2 "AVE"
@@ -167,7 +167,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	{
 		ofstream fs;
 		utils util;
-        string filename = projectPath + Filename + ".txt";
+		string filename = projectPath + Filename + ".txt";
 		fs.open(filename.c_str(), ios::out);
 		if (fs.is_open())
 		{
@@ -177,7 +177,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			{
 				fs << util.ConvertToString2(&(it->first)) << " " << right << fixed << setw(15) << setfill(' ') << setprecision(8) << it->second <<  endl;
 			}		
-			
+
 			fs.close();
 			StatusMessage(("Create " + filename + " successfully!").c_str());
 		}
