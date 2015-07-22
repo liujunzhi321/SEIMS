@@ -86,7 +86,7 @@ private:
 
 	mongo *m_conn;
 	gridfs m_spatialData[1];
-	map<string, ParamInfo*> m_parametersInDB;
+	map<string, ParamInfo*> m_parametersInDB; ///< Store parameters from Database
 
 	// data management
 	map<string, float*> m_1DArrayMap;

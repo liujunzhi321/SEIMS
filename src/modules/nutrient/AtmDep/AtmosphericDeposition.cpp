@@ -1,3 +1,16 @@
+/*!
+ * \file AtmosphericDeposition.cpp
+ * \brief Inplementation of Atmospheric Deposition
+ *
+ *
+ *
+ * \author Lin Wang
+ * \revised by Liangjun Zhu
+ * \version 
+ * \date July 2015
+ *
+ * 
+ */
 #include "AtmosphericDeposition.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
@@ -8,6 +21,8 @@
 
 using namespace std;
 
+/// In nutrient modules, m_nLayers is 3, 0~10mm, 10~100mm, and 100~rootDepth. 
+/// In SEIMS, m_nLayers is 2, 0~100mm, 100~rootDepth.
 AtmosphericDeposition::AtmosphericDeposition(void):m_nLayers(3), m_size(-1),m_conRainNitra(-1.0f), m_conRainAmm(-1.0f), m_rootDepth(NULL), m_P(NULL), //input
 	 m_Depth(NULL), m_Nitrate(NULL), m_Ammon(NULL), m_addRainNitra(NULL), m_addRainAmm(NULL) //output
 {
@@ -47,13 +62,13 @@ bool AtmosphericDeposition::CheckInputData(void)
 		throw ModelException("AtmosphericDeposition","CheckInputData","The cell number of the input can not be less than zero.");
 		return false;
 	}
-	if(m_conRainNitra <= 0)
+	if(m_conRainNitra < 0)
 	{
-		m_conRainNitra = 1.f;
+		m_conRainNitra = 0.f;
 	}
-	if(m_conRainAmm <= 0)
+	if(m_conRainAmm < 0)
 	{
-		m_conRainAmm = 1.f;
+		m_conRainAmm = 0.f;
 	}
 
 	if(m_P == NULL)
@@ -96,11 +111,7 @@ void  AtmosphericDeposition::initalOutputs()
 			    m_Depth[i][j] = 0.0f;
 			}
 		}
-
-
-
 	}
-
 }
 
 bool AtmosphericDeposition::CheckInputSize(const char* key, int n)
@@ -125,7 +136,7 @@ bool AtmosphericDeposition::CheckInputSize(const char* key, int n)
 	return true;
 }
 
-void AtmosphericDeposition::SetValue(const char* key, float data)
+void AtmosphericDeposition::SetValue(const char* key, float data) ///< set Single value
 {
 	string sk(key);
 	if (StringMatch(sk, "ConRainNitra"))
@@ -137,17 +148,16 @@ void AtmosphericDeposition::SetValue(const char* key, float data)
 	else
 		throw ModelException("AtmosphericDeposition", "SetSingleData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
-	
 }
 
-void AtmosphericDeposition::Set1DData(const char* key, int n, float* data)
+void AtmosphericDeposition::Set1DData(const char* key, int n, float* data) ///< set 1D data (raster data)
 {
 	//check the input data
 	CheckInputSize(key,n);
 	string sk(key);
 	if(StringMatch(sk, "D_P"))
 		m_P = data;
-	else if(StringMatch(sk, "rootDepth"))
+	else if(StringMatch(sk, "RootDepth"))
 		m_rootDepth = data;
 	else
 		throw ModelException("AtmosphericDeposition", "Set1DData", "Parameter " + sk 
@@ -184,16 +194,13 @@ void AtmosphericDeposition::Get2DData(const char* key, int *nRows, int *nCols, f
 	else
 		throw ModelException("AtmosphericDeposition", "Get2DData", "Output " + sk 
 		+ " does not exist in the Atmospheric Deposition module. Please contact the module developer.");
-
 }
 
 int AtmosphericDeposition::Execute()
 {
 	//check the data
 	CheckInputData();	
-
 	initalOutputs();
-
 	#pragma omp parallel for
 	for(int i=0; i < m_nLayers; i++)
     {
@@ -212,6 +219,5 @@ int AtmosphericDeposition::Execute()
 		    m_Ammon[0][j] += m_addRainAmm[j];
 		}
 	}
-
 	return 0;
 }

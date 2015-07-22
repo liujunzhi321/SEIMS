@@ -141,6 +141,8 @@ void ModulesIOList::Init(const string& configFileName)
 		}
 	}
 	GenerateModulesInfoList();
+	GenerateParamsInfoList();
+	GenerateModuleParamsInfoList();
 }
 
 //! Get comparable name after underscore if necessary
@@ -192,32 +194,7 @@ bool ModulesIOList::IsConstantInputFromName(string& name)
 		return true;
 	return false;
 }
-//! Find dependent parameters 
-ParamInfo* ModulesIOList::FindDependentParam(ParamInfo& paramInfo)
-{
-	string paraName = GetComparableName(paramInfo.Name);
-	dimensionTypes paraType = paramInfo.Dimension;
 
-	size_t n = m_moduleIDs.size();
-	for (size_t i = 0; i < n; i++)
-	{
-		string id = m_moduleIDs[i];
-		vector<ParamInfo>& outputs = m_outputs[id];
-		for (size_t j = 0; j < outputs.size(); j++)
-		{
-			ParamInfo& param = outputs[j];
-			string compareName = GetComparableName(param.Name);
-
-			if (StringMatch(paraName, compareName) && param.Dimension == paraType)
-			{
-				param.OutputToOthers = true;
-				return &param;
-			}
-		}
-	}
-	//throw ModelException("ModulesIOList", "FindDependentParam", "Can not find input for " + paraName + ".\n");
-	return NULL;
-}
 //! Load function pointers from .DLL or .so
 void ModulesIOList::ReadDLL(string& id, string& dllID)
 {
@@ -701,68 +678,18 @@ void ModulesIOList::GenerateModulesInfoList()
 		{
 			curOutputsStr += iOutput->Name + ",";
 		}
-		tempModuleInfo.push_back(curParamsStr);
-		tempModuleInfo.push_back(curInputsStr);
-		tempModuleInfo.push_back(curOutputsStr);
+		tempModuleInfo.push_back(curParamsStr.substr(0,curParamsStr.find_last_of(",")));
+		tempModuleInfo.push_back(curInputsStr.substr(0,curInputsStr.find_last_of(",")));
+		tempModuleInfo.push_back(curOutputsStr.substr(0,curOutputsStr.find_last_of(",")));
 		moduleInfoList.push_back(tempModuleInfo);
 	}
 	
 }
-////! Get value from dependency modules
-//void ModulesIOList::GetValueFromDependencyModule(int iModule, vector<SimulationModule*>& modules)
-//{
-//	size_t n = m_moduleIDs.size();
-//	string id = m_moduleIDs[iModule];
-//	vector<ParamInfo>& inputs = m_inputs[id];
-//	for (size_t j = 0; j < inputs.size(); j++)
-//	{
-//		ParamInfo* dependParam = inputs[j].DependPara;
-//		if (dependParam == NULL)
-//			continue;
-//
-//		size_t k = 0;
-//		for (k = 0; k < n; k++)
-//		{
-//			if (m_moduleIDs[k] == dependParam->ModuleID)
-//				break;
-//		}
-//		string compareName = GetComparableName(dependParam->Name);
-//		int dataLen;
-//		if (dependParam->Dimension == DT_Array1D || dependParam->Dimension == DT_Raster)
-//		{
-//			float* data;
-//			modules[k]->Get1DData(compareName.c_str(), &dataLen, &data);
-//			modules[iModule]->Set1DData(inputs[j].Name.c_str(), dataLen, data);
-//		}
-//		else if (dependParam->Dimension == DT_Array2D)
-//		{
-//			int nCol;
-//			float** data;
-//			modules[k]->Get2DData(compareName.c_str(), &dataLen, &nCol, &data);
-//			modules[iModule]->Set2DData(inputs[j].Name.c_str(), dataLen, nCol, data);
-//		}
-//		else if (dependParam->Dimension == DT_Single)
-//		{
-//			float value;
-//			modules[k]->GetValue(compareName.c_str(), &value);
-//			modules[iModule]->SetValue(inputs[j].Name.c_str(), value);
-//		}
-//		else
-//		{
-//			ostringstream oss;
-//			oss << "Dimension type: " << dependParam->Dimension << " is currently not supported.";
-//			throw ModelException("ModulesIOList", "GetValueFromDependencyModule", oss.str());
-//		}
-//
-//	}
-//}
+
 //! Find outputID parameter's module. Return Module index iModule and its ParamInfo
 void ModulesIOList::FindOutputParameter(string& outputID, int& iModule, ParamInfo*& paraInfo)
 {
 	string compareName = outputID;
-	//if (!StringMatch(compareName, "D_P"))
-	//	compareName = GetComparableName(outputID);
-
 	size_t n = m_moduleIDs.size();
 	for (size_t i = 0; i < n; i++)
 	{
@@ -779,7 +706,206 @@ void ModulesIOList::FindOutputParameter(string& outputID, int& iModule, ParamInf
 		}
 	}
 }
+//! Find dependent parameters 
+ParamInfo* ModulesIOList::FindDependentParam(ParamInfo& paramInfo)
+{
+	string paraName = GetComparableName(paramInfo.Name);
+	dimensionTypes paraType = paramInfo.Dimension;
 
+	size_t n = m_moduleIDs.size();
+	for (size_t i = 0; i < n; i++)
+	{
+		string id = m_moduleIDs[i];
+		vector<ParamInfo>& outputs = m_outputs[id];
+		for (size_t j = 0; j < outputs.size(); j++)
+		{
+			ParamInfo& param = outputs[j];
+			string compareName = GetComparableName(param.Name);
+
+			if (StringMatch(paraName, compareName) && param.Dimension == paraType)
+			{
+				param.OutputToOthers = true;
+				return &param;
+			}
+		}
+	}
+	//throw ModelException("ModulesIOList", "FindDependentParam", "Can not find input for " + paraName + ".\n");
+	return NULL;
+}
+//! find the modules who invoke the parameter, and return the modules' ID separated by comma
+string ModulesIOList::GetInvokeModulesIDs(ParamInfo& paramIns)
+{
+	string paraName = GetComparableName(paramIns.Name);
+	dimensionTypes paraType = paramIns.Dimension;
+	vector<string> invokeModuleIDs;
+	string invokeModuleIDsStr = "";
+	size_t n = m_moduleIDs.size();
+	for (size_t i = 0; i < n; i++)
+	{
+		string id = m_moduleIDs[i];
+		vector<ParamInfo>& inputs = m_inputs[id];
+		for (size_t j = 0; j < inputs.size(); j++)
+		{
+			ParamInfo& param = inputs[j];
+			string compareName = GetComparableName(param.Name);
+
+			if (StringMatch(paraName, compareName) && param.Dimension == paraType)
+			{
+				invokeModuleIDs.push_back(id);
+				break;
+			}
+		}
+	}
+	for (size_t i = 0; i < invokeModuleIDs.size(); i++)
+	{
+		invokeModuleIDsStr += invokeModuleIDs[i] + ",";
+	}
+	int idx = invokeModuleIDsStr.find_last_of(",");
+	if (idx != -1)
+	{
+		return invokeModuleIDsStr.substr(0,idx);
+	}
+	else
+		return "None";
+}
+//! find the modules who invoke the parameter, and return the modules' ID separated by comma
+string ModulesIOList::GetDBParamsInvokeModulesIDs(ParamInfo& paramIns)
+{
+	string paraName = GetComparableName(paramIns.Name);
+	dimensionTypes paraType = paramIns.Dimension;
+	vector<string> invokeModuleIDs;
+	string invokeModuleIDsStr = "";
+	size_t n = m_moduleIDs.size();
+	for (size_t i = 0; i < n; i++)
+	{
+		string id = m_moduleIDs[i];
+		vector<ParamInfo>& params = m_parameters[id];
+		for (size_t j = 0; j < params.size(); j++)
+		{
+			ParamInfo& param = params[j];
+			string compareName = GetComparableName(param.Name);
+
+			if (StringMatch(paraName, compareName) && param.Dimension == paraType)
+			{
+				invokeModuleIDs.push_back(id);
+				break;
+			}
+		}
+	}
+	for (size_t i = 0; i < invokeModuleIDs.size(); i++)
+	{
+		invokeModuleIDsStr += invokeModuleIDs[i] + ",";
+	}
+	int idx = invokeModuleIDsStr.find_last_of(",");
+	if (idx != -1)
+	{
+		return invokeModuleIDsStr.substr(0,idx);
+	}
+	else
+		return "None";
+}
+//! find the modules who output the parameter, and return the modules' ID separated by comma
+string ModulesIOList::GetOutputModulesIDs(ParamInfo& paramIns)
+{
+	string paraName = GetComparableName(paramIns.Name);
+	dimensionTypes paraType = paramIns.Dimension;
+	vector<string> outputModuleIDs;
+	string outputModuleIDsStr = "";
+	size_t n = m_moduleIDs.size();
+	for (size_t i = 0; i < n; i++)
+	{
+		string id = m_moduleIDs[i];
+		vector<ParamInfo>& outputs = m_outputs[id];
+		for (size_t j = 0; j < outputs.size(); j++)
+		{
+			ParamInfo& param = outputs[j];
+			string compareName = GetComparableName(param.Name);
+
+			if (StringMatch(paraName, compareName) && param.Dimension == paraType)
+			{
+				outputModuleIDs.push_back(id);
+				break;
+			}
+		}
+	}
+	for (size_t i = 0; i < outputModuleIDs.size(); i++)
+	{
+		outputModuleIDsStr += outputModuleIDs[i] + ",";
+	}
+	int idx = outputModuleIDsStr.find_last_of(",");
+	if (idx != -1)
+	{
+		return outputModuleIDsStr.substr(0,idx);
+	}
+	else
+		return "None";
+}
+void ModulesIOList::GenerateModuleParamsInfoList()
+{
+	size_t n = m_moduleIDs.size();
+	for (size_t i = 0; i < n; i++)
+	{
+		string id = m_moduleIDs[i];
+		vector<ParamInfo>& curInputPara = m_inputs[id];
+		for (size_t j = 0; j < curInputPara.size(); j++)
+		{
+			string curInputParaID = curInputPara[j].Name;
+			map<string, vector<string> >::iterator it;
+			it = moduleParamsInfoList.find(curInputParaID);
+			if (it == moduleParamsInfoList.end())  /// curInputParaID is not in paramsInfoList
+			{
+				vector<string> curInputParaDescription;
+				curInputParaDescription.push_back(curInputPara[j].Units);
+				curInputParaDescription.push_back(curInputPara[j].Description);
+				curInputParaDescription.push_back(DimentionType2String(curInputPara[j].Dimension));
+				curInputParaDescription.push_back(GetInvokeModulesIDs(curInputPara[j]));
+				curInputParaDescription.push_back(GetOutputModulesIDs(curInputPara[j]));
+				moduleParamsInfoList.insert(map<string, vector<string> >::value_type(curInputParaID,curInputParaDescription));
+			}
+		}
+		vector<ParamInfo>& curOutputPara = m_outputs[id];
+		for (size_t j = 0; j < curOutputPara.size(); j++)
+		{
+			string curOutputParaID = curOutputPara[j].Name;
+			map<string, vector<string> >::iterator it;
+			it = moduleParamsInfoList.find(curOutputParaID);
+			if (it == moduleParamsInfoList.end())  /// curOutputParaID is not in paramsInfoList
+			{
+				vector<string> curOutputParaDescription;
+				curOutputParaDescription.push_back(curOutputPara[j].Units);
+				curOutputParaDescription.push_back(curOutputPara[j].Description);
+				curOutputParaDescription.push_back(DimentionType2String(curOutputPara[j].Dimension));
+				curOutputParaDescription.push_back(GetInvokeModulesIDs(curOutputPara[j]));
+				curOutputParaDescription.push_back(GetOutputModulesIDs(curOutputPara[j]));
+				moduleParamsInfoList.insert(map<string, vector<string> >::value_type(curOutputParaID,curOutputParaDescription));
+			}
+		}
+	}
+}
+void ModulesIOList::GenerateParamsInfoList()
+{
+	size_t n = m_moduleIDs.size();
+	for (size_t i = 0; i < n; i++)
+	{
+		string id = m_moduleIDs[i];
+		vector<ParamInfo>& curPara = m_parameters[id];
+		for (size_t j = 0; j < curPara.size(); j++)
+		{
+			string curParaID = curPara[j].Name;
+			map<string, vector<string> >::iterator it;
+			it = paramsInfoList.find(curParaID);
+			if (it == paramsInfoList.end())  /// curInputParaID is not in paramsInfoList
+			{
+				vector<string> curParaDescription;
+				curParaDescription.push_back(curPara[j].Units);
+				curParaDescription.push_back(curPara[j].Description);
+				curParaDescription.push_back(DimentionType2String(curPara[j].Dimension));
+				curParaDescription.push_back(GetDBParamsInvokeModulesIDs(curPara[j]));
+				paramsInfoList.insert(map<string, vector<string> >::value_type(curParaID,curParaDescription));
+			}
+		}
+	}
+}
 void writeText(string& filename, vector<vector<string> >& data)
 {
 	ofstream fs;
@@ -819,4 +945,60 @@ void writeText(string& filename, vector<string>& data)
 	fs.close();
 	StatusMessage(("Create " + filename + " successfully!").c_str());
 	return;
+}
+
+void writeText(string& filename, map<string, vector<string> >& data)
+{
+	ofstream fs;
+	fs.open(filename.c_str(), ios::out);
+	if (fs.is_open())
+	{
+		utils util;
+		map<string, vector<string> >::iterator it;
+		for(it=data.begin();it!=data.end();it++)
+		{
+			fs << it->first << "\t";
+			vector<string>::iterator it2;
+			for (it2 = it->second.begin(); it2 != it->second.end(); it2++)
+			{
+				fs << *it2 << "\t"; 
+			}
+			fs << endl;
+		}
+	}
+	fs.close();
+	StatusMessage(("Create " + filename + " successfully!").c_str());
+	return;
+}
+string DimentionType2String(dimensionTypes dimType)
+{
+	string strTmp = "";
+
+	switch (dimType)
+	{
+	case DT_Array1D:
+		strTmp = "Array1D";
+			break;
+		case DT_Array1DDateValue:
+			strTmp = "Array1DDateValue";
+			break;
+		case DT_Array2D:
+			strTmp = "Array2D";
+			break;
+		case DT_Array3D:
+			strTmp = "Array3D";
+			break;
+		case DT_Raster:
+			strTmp = "MapWindowRaster";
+			break;
+		case DT_Single:
+			strTmp = "Single";
+			break;
+		case DT_SiteInformation:
+			strTmp = "SiteInformation";
+			break;
+		default:
+			break;
+	}
+	return strTmp;
 }

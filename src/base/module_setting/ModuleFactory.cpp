@@ -902,10 +902,10 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	//set the parameter data to the module
 	string name = param->BasicName;
 	if(setting->dataTypeString().size() == 0 
-		&& !StringMatch(param->BasicName,"elevation") 
-		&& !StringMatch(param->BasicName,"latitude") 
-		&& !StringMatch(param->BasicName,"xpr") 
-		&& !StringMatch(param->BasicName,"ypr"))
+		&& !StringMatch(param->BasicName,Contant_Input_Elevation) 
+		&& !StringMatch(param->BasicName,Contant_Input_latitude) 
+		&& !StringMatch(param->BasicName,Contant_Input_Xpr)
+		&& !StringMatch(param->BasicName,Contant_Input_Ypr))
 	{
 		name = param->Name;
 		//cout << param->Name << " " << param->BasicName << endl;
@@ -983,7 +983,7 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 	{
 		param->Value = float(templateRaster->Size());
 	}
-	else if(StringMatch(param->Name, Tag_CellWidth))  //cell size
+	else if(StringMatch(param->Name, Tag_CellWidth))  //cell width
 	{
 		param->Value = float(templateRaster->getCellWidth());
 	}
@@ -1307,16 +1307,16 @@ void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInpu
 			if(param.DependPara != NULL) 
 				continue;	//the input which comes from other modules will not change when the date is change.
 #ifdef linux
-			if(strcasecmp(param.Name.c_str(), "elevation") == 0 
-				|| strcasecmp(param.Name.c_str(),"latitude") == 0
-				|| strcasecmp(param.Name.c_str(),"xpr") == 0
-				|| strcasecmp(param.Name.c_str(),"ypr") == 0) 
+			if(strcasecmp(param.Name.c_str(), Contant_Input_Elevation) == 0 
+				|| strcasecmp(param.Name.c_str(),Contant_Input_Latitude) == 0
+				|| strcasecmp(param.Name.c_str(),Contant_Input_Xpr) == 0
+				|| strcasecmp(param.Name.c_str(),Contant_Input_Ypr) == 0) 
 				continue;
 #else
-			if(_stricmp(param.Name.c_str(), "elevation") == 0
-				|| _stricmp(param.Name.c_str(),"latitude") == 0
-				|| _stricmp(param.Name.c_str(),"xpr") == 0
-				|| _stricmp(param.Name.c_str(),"ypr") == 0) 
+			if(_stricmp(param.Name.c_str(), Contant_Input_Elevation) == 0
+				|| _stricmp(param.Name.c_str(),Contant_Input_Latitude) == 0
+				|| _stricmp(param.Name.c_str(),Contant_Input_Xpr) == 0
+				|| _stricmp(param.Name.c_str(),Contant_Input_Ypr) == 0) 
 				continue;
 #endif
 			if (dataType.length() > 0)

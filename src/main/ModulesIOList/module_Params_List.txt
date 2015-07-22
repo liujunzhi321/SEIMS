@@ -1,0 +1,281 @@
+ACCUMUINFIL	mm	accumulative infiltration	MapWindowRaster	IKW_OL	SUR_SGA	
+ACTMINP	kg P/ha	amount of phosphorus in the active mineral pool	Array2D	NUTTRA_OL	SORPHO	
+ACTORGN	kg N/ha	amount of nitrogen in the active organic pool in layer ly	Array2D	NUTTRA_OL	MINDEC	
+ACTORGP	kg P/ha	amount of phosphorus in the active organic pool	Array2D	None	MINDEC	
+ADDRAINAMM	kg N/ha	ammonium added by rainfall	MapWindowRaster	None	ATMDEP	
+ADDRAINNITRA	kg N/ha	nitrate added by rainfall	MapWindowRaster	None	ATMDEP	
+AMMON	kg N/ha	ammonium pool for soil nitrogen	Array2D	NITVOL,NUTTRA_OL	ATMDEP	
+AMMONIUM	kg/s	distribution of nutrient, ammonium	MapWindowRaster	None	DISNUT_OL	
+AMMONIUMOUTLET	mg/s	ammonium flows to outlet	Single	None	DISNUT_CH	
+AMMONIUMTOCH	kg	ammonium flow to channel	MapWindowRaster	DISNUT_CH	DISNUT_OL	
+AMMOUTLET	kg	ammonium concentration at the watershed outlet	Array1D	None	NUTTRA_CH	
+ATTPOUTLET	kg	phosphorus attached to sediment concentration at the watershed outlet	Array1D	None	NUTTRA_CH	
+ATTPTOCH	kg	the amount of phosphorus attached to sediment transported to channel in surface runoff	Array1D	NUTTRA_CH	NUTTRA_OL	
+ATTPTOCH_T	kg	Total phosphorus attached to sediment transported to channel in surface runoff	Single	None	NUTTRA_OL	
+BIOMASS	kg/ha	total biomass	MapWindowRaster	UPTAKEGROWTH,YIELD	POTENTIALBIOMASS	
+BIOMASS_AG	kg/ha	aboveground biomass on the day of harvest	MapWindowRaster	YIELD	UPTAKEGROWTH	
+BIOMASS_DELTA	kg/ha	biomass increase on a given day	MapWindowRaster	UPTAKEGROWTH	POTENTIALBIOMASS	
+BIOMASS_N	kg/ha	actual biomass N	MapWindowRaster	YIELD	UPTAKEGROWTH	
+BIOMASS_NOPT	kg/ha	potential biomass N	MapWindowRaster	UPTAKEGROWTH	POTENTIALBIOMASS	
+BIOMASS_P	kg/ha	actual biomass P	MapWindowRaster	YIELD	UPTAKEGROWTH	
+BIOMASS_POPT	kg/ha	potential biomass P	MapWindowRaster	UPTAKEGROWTH	POTENTIALBIOMASS	
+BIOMASS_ROOT	kg/ha	biomass root	MapWindowRaster	YIELD	UPTAKEGROWTH	
+BKST	m3	bank storage	Array1D	None	IKW_REACH,MUSK_CH	
+CAP	kg	distribution of channel flow capacity	MapWindowRaster	None	KINWAVSED_CH	
+CHANV	kg	distribution of channel flow capacity	MapWindowRaster	None	KINWAVSED_CH	
+CHANVOL	kg	distribution of channel flow capacity	MapWindowRaster	None	KINWAVSED_CH	
+CHQCH	m3/s	Flux in the downslope boundary of cells	MapWindowRaster	None	CH_DW,IKW_CH	
+CHST	m3	channel storage	Array1D	SEDR_VCD,NUTTRA_CH	IKW_REACH,MUSK_CH	
+CHWATH	mm	Water depth in the downslope boundary of cells	MapWindowRaster	None	CH_DW,IKW_CH	
+CHWIDTH	m	Flow length of overland plane	MapWindowRaster	None	IKW_OL	
+CHWTDEPTH	m	channel water depth	Array1D	SEDR_VCD,NUTTRA_CH	IKW_REACH,MUSK_CH	
+CNRAT		C:N ratio of the residue in the soil layer	Array2D	None	MINDEC	
+CONACTORGN	mg/kg	concentration of nitrogen in the active organic pool	Array2D	None	MINDEC	
+CONAMM	kg N/ha	amount of nitrogen converted from NH4 to NH3 in layer ly	Array2D	None	NITVOL,NUTTRA_OL	
+CONATTP	g P/ metric ton soil	the concentration of phosphorus attached to sediment in the top 10 mm	MapWindowRaster	None	NUTTRA_OL	
+CONHUMORGN	mg/kg	concentration of humic organic nitrogen in the layer	Array2D	None	MINDEC	
+CONNIT	kg N/mm H2O	the concentration of nitrate in the mobile water for a given layer	Array2D	None	NUTTRA_OL	
+CONNITRA	kg N/ha	amount of nitrogen converted from NH4 to NO3 in layer ly	Array2D	None	NITVOL	
+CONORGN	g N/ metric ton soil	the concentration of organic nitrogen in the top 10 mm	MapWindowRaster	None	NUTTRA_OL	
+CONSED	Mg sed/m3 H2O	the concentration of sediment in surface runoff	MapWindowRaster	None	NUTTRA_OL	
+CONSTAORGN	mg/kg	concentration of nitrogen in the stable organic pool	Array2D	None	MINDEC	
+CPRAT		C:P ratio of the residue in the soil layer	Array2D	None	MINDEC	
+DECFREORGN	kg N/ha	nitrogen decomposed from the fresh organic N pool	Array2D	None	MINDEC	
+DECFREORGP	kg P/ha	phosphorus decomposed from the fresh organic P pool	Array2D	None	MINDEC	
+DEET	mm	Distribution of evaporation from depression storage	MapWindowRaster	GWA_RE,SET_LM,SOL_WB	DEP_FS,DEP_LINSLEY	
+DENLOSTN	kg N/ha	amount of nitrogen lost to denitrication	Array2D	None	DENITRI	
+DEP	kg	distribution of channel sediment deposition	MapWindowRaster	None	KINWAVSED_CH	
+DEPTH	mm	depth of the layer	Array2D	MINDEC,NITVOL,NUTTRA_OL	ATMDEP	
+DET	kg	distribution of channel flow detachment	MapWindowRaster	None	KINWAVSED_CH	
+DETOVERLAND	kg	distribution of overland flow detachment	MapWindowRaster	None	KINWAVSED_OL	
+DETSPLASH	kg	distribution of splash detachment	MapWindowRaster	KINWAVSED_OL	SPLASHERO_PARK	
+DISSOVP	kg/s	distribution of dissovlved P	MapWindowRaster	None	DISNUT_OL	
+DISSOVPOUTLET	mg/s	dissovlved P flows to outlet	Single	None	DISNUT_CH	
+DISSOVPTOCH	kg	dissovlved P flow to channel	MapWindowRaster	DISNUT_CH	DISNUT_OL	
+DPST	mm	Distribution of depression storage	MapWindowRaster	SUR_SGA,SOL_WB,SUR_CN,SUR_MR,SPLASHERO_PARK,DISNUT_OL,SEDBONNUT_OL	DEP_FS,DEP_LINSLEY	
+D_ACCUMUINFIL	mm	accumulative infiltration	MapWindowRaster	IKW_OL	SUR_SGA	
+D_ACTMINP	kg P/ha	amount of phosphorus in the active mineral pool	Array2D	NUTTRA_OL	SORPHO	
+D_ACTORGN	kg N/ha	amount of nitrogen in the active organic pool in layer ly	Array2D	NUTTRA_OL	MINDEC	
+D_AMMON	kg N/ha	ammonium pool for soil nitrogen	Array2D	NITVOL,NUTTRA_OL	ATMDEP	
+D_AMMONIUMTOCH	mm	Water depth in the downslope boundary of cells	MapWindowRaster	DISNUT_CH	DISNUT_OL	
+D_CELLH	mm	Water depth in the downslope boundary of cells	MapWindowRaster	DISNUT_OL	None	
+D_CELLQ	m3/s	Flux in the downslope boundary of cells	MapWindowRaster	DISNUT_OL	None	
+D_DEET	mm	evaporation from the depression storage	MapWindowRaster	GWA_RE,SET_LM,SOL_WB	DEP_FS,DEP_LINSLEY	
+D_DEMNIT	kg N/ha	plant nitrogen demand not met by uptake from the soil	Array2D	NITFIX	None	
+D_DEPTH	mm	depth of the layer	Array2D	MINDEC,NITVOL,NUTTRA_OL	ATMDEP	
+D_DETSPLASH	kg	the distribution of splash detachment	MapWindowRaster	KINWAVSED_OL	SPLASHERO_PARK	
+D_DISSOVPTOCH	m3/s	Flux in the downslope boundary of cells	MapWindowRaster	DISNUT_CH	DISNUT_OL	
+D_DPST	mm	The depression storage	MapWindowRaster	SUR_SGA,SOL_WB,SUR_CN,SUR_MR,SPLASHERO_PARK,DISNUT_OL,SEDBONNUT_OL	DEP_FS,DEP_LINSLEY	
+D_EXCP	mm	excess precipitation calculated in the infiltration module	MapWindowRaster	DEP_LINSLEY	SUR_CN,SUR_MR	
+D_FLOWWIDTH	m	Flow width of overland plane	MapWindowRaster	KINWAVSED_OL,DISNUT_OL,SEDBONNUT_OL	IKW_OL	
+D_FREORGN	kg N/ha	nitrogen in the fresh organic pool in layer ly	Array2D	NUTTRA_OL	MINDEC	
+D_FREORGP	kg P/ha	phosphorus in the fresh organic pool in the top 10mm	Array2D	NUTTRA_OL	MINDEC	
+D_GRRE	mm	perculation	MapWindowRaster	SSR_DA	None	
+D_HTOCH	mm	Water depth added to channel water depth	MapWindowRaster	DISNUT_OL,SEDBONNUT_OL	None	
+D_HUMORGP	kg P/ha	amount of humic organic phosphorus in the layer	Array2D	NUTTRA_OL	MINDEC	
+D_INET	mm	evaporation from the interception storage obtained from the interception module	MapWindowRaster	DEP_LINSLEY,GWA_RE,SET_LM,SOL_WB	PI_MSM	
+D_INFIL	mm	Infiltration map of watershed	MapWindowRaster	IKW_OL,PER_PI,PER_STR,SOL_WB,DISNUT_OL,SEDBONNUT_OL	SUR_SGA,SUR_CN,SUR_MR	
+D_INFILCAPSURPLUS	mm	surplus of infiltration capacity	MapWindowRaster	IKW_OL	SUR_SGA	
+D_INLO	mm	evaporation from the interception storage obtained from the interception module	MapWindowRaster	DEP_FS,SOL_WB	PI_STORM,PI_MSM	
+D_NEPR	mm	The net precipitation	MapWindowRaster	SUR_SGA,SNO_DD,SNO_SP,SNO_WB,SOL_WB,SSM_PE,SUR_CN,SUR_MR,SPLASHERO_PARK	PI_STORM,PI_MSM	
+D_NITRATE	kg N/ha	amount of nitrate	Array2D	DENITRI,MINDEC,NITVOL,NITFIX,NUTTRA_OL,UPTAKEGROWTH	DISNUT_CH,ATMDEP	
+D_NITRATETOCH	mm	Infiltration map of watershed	MapWindowRaster	DISNUT_CH	DISNUT_OL	
+D_P	mm	Precipitation	MapWindowRaster	CH_DW,CH_MSK,IKW_CH,PI_STORM,PI_MSM,SNO_WB,SOL_WB,ATMDEP	ITP_P	
+D_PERCOLATION	mm	Distribution of groundwater recharge (percolation)	MapWindowRaster	GWATER_RESERVOIR	PERCO_DARCY	
+D_PERCOLATION_2D	mm	the amount of water percolated from the soil water reservoir	Array2D	GWA_RE,SOL_WB,NUTTRA_OL	PER_PI,PER_STR	
+D_PET	mm	PET calculated from the spatial interpolation module	MapWindowRaster	DEP_FS,DEP_LINSLEY,GWA_RE,PI_MSM,SET_LM,SSM_PE,UPTAKEGROWTH,YIELD	ITP_PET	
+D_QOVERLAND	m3/s	discharge added to channel flow from overland flow	MapWindowRaster	CH_DW,CH_MSK,HS_WB,IKW_CH,KINWAVSED_OL,SPLASHERO_PARK,SEDBONNUT_OL	IKW_OL	
+D_QSOIL	m3/s	discharge added to channel flow from interflow	MapWindowRaster	CH_DW,CH_MSK,HS_WB,IKW_CH	INTERFLOW_IKW	
+D_REVAP	mm	revap	MapWindowRaster	SOL_WB	GWA_RE	
+D_RM			MapWindowRaster	POTENTIALBIOMASS	ITP_RM	
+D_SBGS	mm	Groundwater storage of the subbasin	Array1D	IKW_REACH,MUSK_CH	GWATER_RESERVOIR,GWA_RE	
+D_SBIF	m3/s	interflow to streams from each subbasin	Array1D	IKW_REACH,MUSK_CH	HS_WB,IUH_IF,SSR_DA	
+D_SBOF	m3/s	overland flow to streams from each subbasin	Array1D	IKW_REACH,MUSK_CH	HS_WB,IUH_OL	
+D_SBPET	mm	the potential evapotranspiration rate of the subbasin	Array1D	IKW_REACH,MUSK_CH	GWA_RE	
+D_SBQG	m3/s	groundwater flow out of the subbasin	Array1D	CH_MSK,IKW_CH,IKW_REACH,MUSK_CH	GWATER_RESERVOIR,GWA_RE	
+D_SEDBONAMMONIUMTOCH	mm	Water depth in the downslope boundary of cells	MapWindowRaster	SEDBONNUT_CH	SEDBONNUT_OL	
+D_SEDBONPTOCH	m3/s	Flux in the downslope boundary of cells	MapWindowRaster	SEDBONNUT_CH	SEDBONNUT_OL	
+D_SEDTOCH	kg	distribution of sediment flowing to channel	MapWindowRaster	KINWAVSED_CH	KINWAVSED_OL	
+D_SNAC	mm	distribution of snow accumulation	MapWindowRaster	SNO_SP,SSM_PE,SUR_CN,SUR_MR,MUSLE_AS	SNO_DD,SNO_WB	
+D_SNME	mm	snow melt	MapWindowRaster	SNO_WB,SUR_CN,SUR_MR	SNO_DD,SNO_SP	
+D_SNRD	mm	distribution of snow blowing in or out the cell	MapWindowRaster	SNO_SP,SNO_WB,SSM_PE	None	
+D_SNSB	mm	Distribution of snow sublimation (water equivalent) for a user defined period	MapWindowRaster	SNO_SP,SNO_WB	SSM_PE	
+D_SOER	metric tons	distribution of soil erosion	MapWindowRaster	NUTTRA_OL	MUSLE_AS	
+D_SOET	mm	evaporation from the soil water storage	MapWindowRaster	GWA_RE,SOL_WB,YIELD	SET_LM	
+D_SOLUP	kg P/ha	amount of phosphorus in solution in layer ly	Array2D	NUTTRA_OL,SORPHO,UPTAKEGROWTH	MINDEC	
+D_SOMO	%	Soil Moisture	MapWindowRaster	INTERFLOW_IKW,PERCO_DARCY	SUR_SGA	
+D_SOMO_2D	mm	Distribution of soil moisture	Array2D	GWA_RE,PER_PI,PER_STR,SET_LM,SOL_WB,SSR_DA,MINDEC,NITVOL,NITFIX,UPTAKEGROWTH	SUR_CN,SUR_MR	
+D_SOTE	oC	Soil Temperature	MapWindowRaster	PER_PI,PER_STR,SET_LM,SOL_WB,SSR_DA,SUR_CN,SUR_MR,MINDEC,NITVOL	STP_FP	
+D_SR			MapWindowRaster	POTENTIALBIOMASS	ITP_SR	
+D_SSRU	mm	The subsurface runoff	MapWindowRaster	IUH_IF	None	
+D_SSRU_2D	mm	subsurface runoff	Array2D	SOL_WB,NUTTRA_OL	SSR_DA	
+D_STAMINP	kg P/ha	amount of phosphorus in the stable mineral pool	Array2D	NUTTRA_OL	SORPHO	
+D_STAORGN	kg N/ha	amount of nitrogen in the stable organic pool	Array2D	NUTTRA_OL	MINDEC	
+D_SURU	mm	Distribution of surface runoff	MapWindowRaster	IKW_OL,INTERFLOW_IKW,SUR_SGA,IUH_OL,SOL_WB,KINWAVSED_OL,SPLASHERO_PARK,MUSLE_AS,NUTTRA_OL,SEDBONNUT_OL	DEP_FS,DEP_LINSLEY	
+D_TF		nutrient cycling temperature factor	Array2D	DENITRI	MINDEC	
+D_TMAX			MapWindowRaster	SNO_DD,SNO_SP,SNO_WB,SOL_WB,SSM_PE,STP_FP,SUR_CN,SUR_MR,POTENTIALBIOMASS,UPTAKEGROWTH	ITP_TMAX	
+D_TMIN			MapWindowRaster	SNO_DD,SNO_SP,SNO_WB,SOL_WB,SSM_PE,STP_FP,SUR_CN,SUR_MR,POTENTIALBIOMASS,UPTAKEGROWTH	ITP_TMIN	
+D_WF		nutrient cycling water factor	Array2D	DENITRI	MINDEC	
+D_WS			MapWindowRaster	None	ITP_WS	
+ENRN		nitrogen enrichment ratio	MapWindowRaster	None	NUTTRA_OL	
+ENRP		phosphorus enrichment ratio	MapWindowRaster	None	NUTTRA_OL	
+EXCP	mm	The excess precipitation	MapWindowRaster	DEP_LINSLEY	SUR_CN,SUR_MR	
+FIXN	kg N/ha	amount of nitrogen added to the plant biomass by fixation	Array2D	None	NITFIX	
+FLOWWIDTH	m	Flow width of overland plane	MapWindowRaster	KINWAVSED_OL,DISNUT_OL,SEDBONNUT_OL	IKW_OL	
+FREORGN	kg N/ha	nitrogen in the fresh organic pool in layer ly	Array2D	NUTTRA_OL	MINDEC	
+FREORGP	kg P/ha	phosphorus in the fresh organic pool in the top 10mm	Array2D	NUTTRA_OL	MINDEC	
+FR_N		the optimal fraction of nitrogen in the plant biomass	MapWindowRaster	UPTAKEGROWTH	POTENTIALBIOMASS	
+FR_P		the optimal fraction of phosphorus in the plant biomass	MapWindowRaster	UPTAKEGROWTH	POTENTIALBIOMASS	
+FR_PHU		fraction of phu accumulated on a given day	MapWindowRaster	NITFIX,UPTAKEGROWTH,YIELD	POTENTIALBIOMASS	
+FR_ROOT		the fraction of total biomass partitioned to roots on a given day	MapWindowRaster	UPTAKEGROWTH	POTENTIALBIOMASS	
+F_GS		growth stage factor	MapWindowRaster	None	NITFIX	
+F_SN		soil nitrate factor	Array2D	None	NITFIX	
+F_SW		soil water factor	Array2D	None	NITFIX	
+GWWB			Array2D	None	GWA_RE	
+HCH	mm	Water depth in the downslope boundary of cells	Array2D	KINWAVSED_CH,DISNUT_CH,SEDBONNUT_CH	CH_DW,CH_MSK,IKW_CH	
+HUMORGN	kg N/ha	amount of humic organic nitrogen in the layer	Array2D	None	MINDEC	
+HUMORGP	kg P/ha	amount of humic organic phosphorus in the layer	Array2D	NUTTRA_OL	MINDEC	
+ID_OUTLET		index of outlet in the compressed array	Single	None	IKW_OL	
+INET	mm	Evaporation From Interception Storage	MapWindowRaster	DEP_LINSLEY,GWA_RE,SET_LM,SOL_WB	PI_MSM	
+INFIL	mm	Infiltration map of watershed	MapWindowRaster	IKW_OL,PER_PI,PER_STR,SOL_WB,DISNUT_OL,SEDBONNUT_OL	SUR_SGA,SUR_CN,SUR_MR	
+INFILCAPSURPLUS	mm	surplus of infiltration capacity	MapWindowRaster	IKW_OL	SUR_SGA	
+INLO	mm	Interception Loss Distribution	MapWindowRaster	DEP_FS,SOL_WB	PI_STORM,PI_MSM	
+LAI		leaf area index for a given day	MapWindowRaster	UPTAKEGROWTH,YIELD	POTENTIALBIOMASS	
+LAI_DELTA		potential leaf area added on day	MapWindowRaster	UPTAKEGROWTH	POTENTIALBIOMASS	
+LAI_PRE		leaf area index for the previous day	MapWindowRaster	UPTAKEGROWTH	POTENTIALBIOMASS	
+LANITTOCH	kg	lateral nitrate to channel from each subbasin	Array1D	NUTTRA_CH	NUTTRA_OL	
+LANITTOCH_T	kg	Total lateral nitrate flowing to channel	Single	None	NUTTRA_OL	
+LATNIT	kg N/ha	the nitrate removed in lateral flow from a layer	Array2D	None	NUTTRA_OL	
+LAYER_NUPTAKE	kg/ha	layer N uptake	Array2D	None	UPTAKEGROWTH	
+LAYER_PUPTAKE	kg/ha	layer P uptake	Array2D	None	UPTAKEGROWTH	
+LAYER_WATERUPTAKE	mm	layer water uptake	Array2D	None	UPTAKEGROWTH	
+MIDZ	mm	depth from the soil surface to the middle of the layer	Array2D	None	NITVOL	
+MINFREORGN	kg N/ha	nitrogen mineralized from the fresh organic N pool	Array2D	None	MINDEC	
+MINFREORGP	kg P/ha	phosphorus mineralized from the fresh organic P pool	Array2D	None	MINDEC	
+MINHUMN		nitrogen mineralized from the humus active organic N pool	Array2D	None	MINDEC	
+MINHUMP	kg P/ha	phosphorus mineralized from the humus active organic P pool	Array2D	None	MINDEC	
+MOBQ	mm H2O	the amount of mobile water in the layer	Array2D	None	NUTTRA_OL	
+NEPR	mm	Net Precipitation Distribution	MapWindowRaster	SUR_SGA,SNO_DD,SNO_SP,SNO_WB,SOL_WB,SSM_PE,SUR_CN,SUR_MR,SPLASHERO_PARK	PI_STORM,PI_MSM	
+NITLOSTF		estimated fraction of nitrogen lost by nitrification	Array2D	None	NITVOL	
+NITOUTLET	kg	nitrate concentration at the watershed outlet	Array1D	None	NUTTRA_CH	
+NITR		nitrification regulator	Array2D	None	NITVOL	
+NITRATE	kg/s	distribution of nutrient, nitrate in reaches	Array2D	DENITRI,MINDEC,NITVOL,NITFIX,NUTTRA_OL,UPTAKEGROWTH	DISNUT_CH,ATMDEP	
+NITRATEDISNUTOL	kg/s	distribution of nutrient, nitrate	MapWindowRaster	None	DISNUT_OL	
+NITRATEOUTLET	mg/s	nitrate flows to outlet	Single	None	DISNUT_CH	
+NITRATETOCH	kg	nitrate flow to channel	MapWindowRaster	DISNUT_CH	DISNUT_OL	
+NITVOLAMMON	kg N/ha	amount of ammonium converted via nitrification and volatilization in layer ly	Array2D	None	NITVOL	
+NITVOLTF		nitrification/volatilization temperature factor	Array2D	None	NITVOL	
+NITWF		nitrification soil water factor	Array2D	None	NITVOL	
+N_FIXATION	kg/ha	N fixation	MapWindowRaster	None	UPTAKEGROWTH	
+ORGNOUTLET	kg	organic nitrogen concentration at the watershed outlet	Array1D	None	NUTTRA_CH	
+ORGNTOCH	kg	the amount of organic nitrogen transported to channel in surface runoff	Array1D	NUTTRA_CH	NUTTRA_OL	
+ORGNTOCH_T	kg	Total organic nitrogen transported to channel in surface runoff	Single	None	NUTTRA_OL	
+PAI		phosphorus availability index	Array2D	None	SORPHO	
+PERCOLATION	mm	Distribution of groundwater recharge (percolation)	MapWindowRaster	GWATER_RESERVOIR	PERCO_DARCY	
+PERCOLATION_2D	mm	Distribution of groundwater recharge (percolation)	Array2D	GWA_RE,SOL_WB,NUTTRA_OL	PER_PI,PER_STR	
+PERNIT	kg N/ha	the nitrate moved to the underlying layer by percolation	Array2D	None	NUTTRA_OL	
+QCH	m3/s	Flux in the downslope boundary of cells	Array2D	DISNUT_CH,SEDBONNUT_CH	CH_DW,CH_MSK	
+QG		Groundwater discharge at each reach outlet and at each time step	Array1D	SEDR_VCD,NUTTRA_CH	IKW_REACH,MUSK_CH	
+QI		Interflow at each reach outlet and at each time step	Array1D	SEDR_VCD,NUTTRA_CH	IKW_REACH,MUSK_CH	
+QOUTLET	m3/s	discharge at the watershed outlet	Single	None	CH_DW,CH_MSK,IKW_CH,IKW_REACH,MUSK_CH	
+QOVERLAND	m3/s	overland runoff	MapWindowRaster	CH_DW,CH_MSK,HS_WB,IKW_CH,KINWAVSED_OL,SPLASHERO_PARK,SEDBONNUT_OL	IKW_OL	
+QRECH	m3/s	Flux in the downslope boundary of cells	Array2D	KINWAVSED_CH	IKW_CH	
+QS		Overland discharge at each reach outlet and at each time step	Array1D	SEDR_VCD,NUTTRA_CH	IKW_REACH,MUSK_CH	
+QSN	kg/s	distribution of channel sediment rate	MapWindowRaster	None	KINWAVSED_CH	
+QSOIL	m3/s	Flux in the downslope boundary of cells	MapWindowRaster	CH_DW,CH_MSK,HS_WB,IKW_CH	INTERFLOW_IKW	
+QSOUTLET	m3/s	discharge at the watershed outlet	Single	None	IKW_REACH,MUSK_CH	
+QSUBBASIN	m3/s	discharge at the subbasin outlet	Array1D	None	CH_DW,CH_MSK,IKW_CH	
+QTOTAL	m3/s	discharge at the watershed outlet	Single	None	IKW_CH	
+RADIANSLOPE		Radian slope	MapWindowRaster	IKW_CH	IKW_OL	
+RATECONRD		residue decay rate constant	Array2D	None	MINDEC	
+REINFILTRATION	mm	reinfiltration	MapWindowRaster	None	IKW_OL	
+RESCOMF		nutrient cycling residue composition factor	Array2D	None	MINDEC	
+RETURNFLOW	mm	water depth of return flow	MapWindowRaster	None	INTERFLOW_IKW	
+REVAP			MapWindowRaster	SOL_WB	GWA_RE	
+RG			Array1D	SOL_WB	GWA_RE	
+RM		Relative humidity	Array1D	ITP_RM,TSD_RD_RM,PET_PM,PET_PT	TSD_RD_RM	
+ROOTDEPTH	kg/ha	N fixation	MapWindowRaster	None	UPTAKEGROWTH	
+SAMMTOCH	kg	surface ammonium to channel	Array1D	NUTTRA_CH	NUTTRA_OL	
+SAMMTOCH_T	kg	Total surface ammonium flowing to channel	Single	None	NUTTRA_OL	
+SATW	mm H2O	the saturated water content of the soil layer	Array2D	None	NUTTRA_OL	
+SBGS	mm	ground water storage	Array1D	IKW_REACH,MUSK_CH	GWATER_RESERVOIR,GWA_RE	
+SBIF	mm	Interflow to streams for each subbasin	Array1D	IKW_REACH,MUSK_CH	HS_WB,IUH_IF,SSR_DA	
+SBOF	mm	Overland flow to streams for each subbasin	Array1D	IKW_REACH,MUSK_CH	HS_WB,IUH_OL	
+SBPET			Array1D	IKW_REACH,MUSK_CH	GWA_RE	
+SBQG	m3/s	groundwater flow to channel	Array1D	CH_MSK,IKW_CH,IKW_REACH,MUSK_CH	GWATER_RESERVOIR,GWA_RE	
+SEDBONAMMONIUM	kg/s	distribution of nutrient, sediment bound ammonium in reaches	Array2D	None	SEDBONNUT_CH	
+SEDBONAMMONIUMOUTLET	mg/s	sediment bound ammonium flows to outlet	Single	None	SEDBONNUT_CH	
+SEDBONAMMONIUMTOCH	kg	ammonium flow to channel	MapWindowRaster	SEDBONNUT_CH	SEDBONNUT_OL	
+SEDBONP	kg/s	distribution of sediment bound P in reaches	Array2D	None	SEDBONNUT_CH	
+SEDBONPOUTLET	mg/s	sediment bound P flows to outlet	Single	None	SEDBONNUT_CH	
+SEDBONPTOCH	kg	dissovlved P flow to channel	MapWindowRaster	SEDBONNUT_CH	SEDBONNUT_OL	
+SEDDEP	kg	distribution of sediment deposition	MapWindowRaster	None	KINWAVSED_OL	
+SEDOUTLET	kg/m3	sediment concentration at the watershed outlet	Single	None	KINWAVSED_CH,SEDR_VCD	
+SEDRECH	ton	Sediment in a text format at each reach outlet and at each time step	Array1D	None	SEDR_VCD	
+SEDSUBBASIN	ton/s	sediment yield production of each subbasin	MapWindowRaster	None	KINWAVSED_CH	
+SEDTOCH	kg	distribution of sediment flowing to channel	MapWindowRaster	KINWAVSED_CH	KINWAVSED_OL	
+SEDTOCH_T	kg	Total sediment flowing to channel	Single	None	MUSLE_AS	
+SEEPAGE	m3	seepage	Array1D	None	IKW_REACH,MUSK_CH	
+SNAC	mm	distribution of snow accumulation	MapWindowRaster	SNO_SP,SSM_PE,SUR_CN,SUR_MR,MUSLE_AS	SNO_DD,SNO_WB	
+SNITTOCH	kg	surface nitrate to channel from each subbasin	Array1D	NUTTRA_CH	NUTTRA_OL	
+SNITTOCH_T	kg	Total surface nitrate flowing to channel	Single	None	NUTTRA_OL	
+SNME	mm	distribution of snowmelt	MapWindowRaster	SNO_WB,SUR_CN,SUR_MR	SNO_DD,SNO_SP	
+SNSB	mm	Distribution of snow sublimation (water equivalent) for a user defined period	MapWindowRaster	SNO_SP,SNO_WB	SSM_PE	
+SNWB	mm	snow water balance for selected subbasins	Array2D	None	SNO_WB	
+SOER	metric tons	distribution of soil erosion	MapWindowRaster	NUTTRA_OL	MUSLE_AS	
+SOET	mm	Distribution of soil evapotranspiration for a user defined period.	MapWindowRaster	GWA_RE,SOL_WB,YIELD	SET_LM	
+SOLUP	kg P/ha	amount of phosphorus in solution in layer ly	Array2D	NUTTRA_OL,SORPHO,UPTAKEGROWTH	MINDEC	
+SOLUPOUTLET	kg	soluble phosphorus concentration at the watershed outlet	Array1D	None	NUTTRA_CH	
+SOMO	m3/m3	Average soil moisture distribution for a user defined period.	MapWindowRaster	INTERFLOW_IKW,PERCO_DARCY	SUR_SGA	
+SOMO_2D	m3/m3	Average soil moisture distribution for a user defined period.	Array2D	GWA_RE,PER_PI,PER_STR,SET_LM,SOL_WB,SSR_DA,MINDEC,NITVOL,NITFIX,UPTAKEGROWTH	SUR_CN,SUR_MR	
+SOTE	oC	Soil Temperature	MapWindowRaster	PER_PI,PER_STR,SET_LM,SOL_WB,SSR_DA,SUR_CN,SUR_MR,MINDEC,NITVOL	STP_FP	
+SOWB	mm	soil water balance	Array2D	None	HS_WB,SOL_WB	
+SR	MJ/m2/d	Solar radiation	Array1D	ITP_SR,TSD_RD_SR,PET_PM,PET_PT	TSD_RD_SR	
+SSOLPTOCH	kg	surface soluble phosphorus to channel	Array1D	NUTTRA_CH	NUTTRA_OL	
+SSOLPTOCH_T	kg	Total surface soluble phosphorus flowing to channel	Single	None	NUTTRA_OL	
+SSRUVOL_2D	mm	Distribution of subsurface runoff (m3).	Array2D	None	SSR_DA	
+SSRU_2D	mm	Distribution of subsurface runoff (mm).	Array2D	SOL_WB,NUTTRA_OL	SSR_DA	
+STAMINP	kg P/ha	amount of phosphorus in the stable mineral pool	Array2D	NUTTRA_OL	SORPHO	
+STAORGN	kg N/ha	amount of nitrogen in the stable organic pool	Array2D	NUTTRA_OL	MINDEC	
+STAORGP	kg P/ha	amount of phosphorus in the stable organic pool	Array2D	None	MINDEC	
+STCAPSURPLUS	mm	surplus of storage capacity	MapWindowRaster	None	DEP_FS	
+SUBSEDTOCH	kg	sediment to streams from each subbasin	Array1D	SEDR_VCD	None	
+SURAMM	kg N/ha	the ammonium removed in surface runoff	MapWindowRaster	None	NUTTRA_OL	
+SURNIT	kg N/ha	the nitrate removed in surface runoff	MapWindowRaster	None	NUTTRA_OL	
+SURSOLP	kg P/ha	the amount of soluble phosphorus lost in surface runoff	MapWindowRaster	None	NUTTRA_OL	
+SURU	mm	Distribution of surface runoff	MapWindowRaster	IKW_OL,INTERFLOW_IKW,SUR_SGA,IUH_OL,SOL_WB,KINWAVSED_OL,SPLASHERO_PARK,MUSLE_AS,NUTTRA_OL,SEDBONNUT_OL	DEP_FS,DEP_LINSLEY	
+SWE	mm	average SA of the watershed	Single	SNO_SP,SSM_PE	SNO_WB	
+TESTDPST	mm	Distribution of depression storage	MapWindowRaster	None	DISNUT_OL,SEDBONNUT_OL	
+TESTQV	m/s	distribution of sediment content in flow	MapWindowRaster	None	KINWAVSED_OL	
+TESTV	m/s	distribution of sediment content in flow	MapWindowRaster	None	KINWAVSED_OL	
+TF		nutrient cycling temperature factor	Array2D	DENITRI	MINDEC	
+TMAX	degree	Maximum Air Temperature	Array1D	ITP_TMAX,TSD_RD_TMAX,PET_H,PET_PM,PET_PT	TSD_RD_TMAX	
+TMIN	degree	Minimum Air Temperature	Array1D	ITP_TMIN,TSD_RD_TMIN,PET_H,PET_PM,PET_PT	TSD_RD_TMIN	
+TOTAL_NUPTAKE	kg/ha	total N uptake	MapWindowRaster	None	UPTAKEGROWTH	
+TOTAL_PUPTAKE	kg/ha	total P uptake	MapWindowRaster	None	UPTAKEGROWTH	
+TOTAL_WATERUPTAKE	mm	total water uptake	MapWindowRaster	YIELD	UPTAKEGROWTH	
+TRAATTP	kg P/ha	the amount of phosphorus attached to sediment transported to the next cell in surface runoff	MapWindowRaster	None	NUTTRA_OL	
+TRANSPIRATION_MAX	mm	maximum transpiration under ideal conditions	MapWindowRaster	None	UPTAKEGROWTH	
+TRAORGN	kg N/ha	amount of nitrogen transferred between the active and stable organic pools	Array2D	None	MINDEC	
+TSOLACTP	kg P/ha	amount of phosphorus transferred between the soluble and active mineral pool	Array2D	None	SORPHO	
+TSTAACTP	kg P/ha	amount of phosphorus transferred between the active and stable mineral pools	Array2D	None	SORPHO	
+T_CHSB		Channel sediment balance in a text format for each reach and at each time step	Array2D	None	SEDR_VCD	
+T_GWNEW	mm	The volumn of water from the bank storage to the adjacent unsaturated zone and groundwater storage	Array1D	GWA_RE	None	
+T_P			Array1D	ITP_P,TSD_RD_P	TSD_RD_P	
+T_PET			Array1D	ITP_PET,TSD_RD_PET	TSD_RD_PET,PET_H,PET_PM,PET_PT	
+T_RG	mm	groundwater runoff	Array1D	SOL_WB	GWA_RE	
+T_RM			Array1D	ITP_RM,TSD_RD_RM,PET_PM,PET_PT	TSD_RD_RM	
+T_SR			Array1D	ITP_SR,TSD_RD_SR,PET_PM,PET_PT	TSD_RD_SR	
+T_TMAX			Array1D	ITP_TMAX,TSD_RD_TMAX,PET_H,PET_PM,PET_PT	TSD_RD_TMAX	
+T_TMIN			Array1D	ITP_TMIN,TSD_RD_TMIN,PET_H,PET_PM,PET_PT	TSD_RD_TMIN	
+T_WS			Array1D	ITP_WS,TSD_RD_WS,PET_PM,SNO_WB	TSD_RD_WS	
+USLE_LS	USLE LS factor	USLE LS factor	MapWindowRaster	None	MUSLE_AS	
+VOLDF		volatilization depth factor	Array2D	None	NITVOL	
+VOLLOSTF		estimated fraction of nitrogen lost by volatilization	Array2D	None	NITVOL	
+VOLR		volatilization regulator	Array2D	None	NITVOL	
+VPD	kPa	vapor pressure deficit	MapWindowRaster	None	POTENTIALBIOMASS	
+WF		nutrient cycling water factor	Array2D	DENITRI	MINDEC	
+WS	m/s	Wind speed (measured at 10 meters above surface)	Array1D	ITP_WS,TSD_RD_WS,PET_PM,SNO_WB	TSD_RD_WS	
+YIELD	kg/ha	crop yield	MapWindowRaster	None	YIELD	
+YIELD_N	kg/ha	amount of nitrogen removed in the yield	MapWindowRaster	None	YIELD	
+YIELD_P	kg/ha	amount of phosphorus removed in the yield	MapWindowRaster	None	YIELD	

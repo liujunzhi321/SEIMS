@@ -60,7 +60,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddOutput("DissovP", "kg/s", "distribution of dissovlved P", DT_Raster);
 	mdi.AddOutput("Ammonium", "kg/s", "distribution of nutrient, ammonium", DT_Raster);
-	mdi.AddOutput("Nitrate", "kg/s", "distribution of nutrient, nitrate", DT_Raster);
+	mdi.AddOutput("NitrateDisNutOL", "kg/s", "distribution of nutrient, nitrate", DT_Raster);
 
 	mdi.AddOutput("DissovPToCh", "kg", "dissovlved P flow to channel", DT_Raster);
 	mdi.AddOutput("AmmoniumToCh", "kg", "ammonium flow to channel", DT_Raster);

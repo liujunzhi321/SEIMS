@@ -7,6 +7,7 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
+#include "text.h"
 
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
@@ -30,18 +31,17 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
-	mdi.AddParameter("RootDepth", "mm", "Depth from the soil surface", "file.in", DT_Raster); 
-	mdi.AddParameter("ConRainNitra", "mg N/L", "concentration of nitrate in the rain", "file.in", DT_Single); 
-	mdi.AddParameter("ConRainAmm", "mg N/L", "concentration of ammonia in the rain", "file.in", DT_Single);
+	mdi.AddParameter("RootDepth", "mm", "Depth from the soil surface", Source_ParameterDB, DT_Raster); 
+	mdi.AddParameter("ConRainNitra", "mg N/L", " Concentration of nitrogen in rainfall", Source_ParameterDB, DT_Single); 
+	mdi.AddParameter("ConRainAmm", "mg N/L", "Concentration of ammonia in rainfall", Source_ParameterDB, DT_Single);
 
-	mdi.AddInput("D_P","mm","precipitation","Module",DT_Raster);
+	mdi.AddInput("D_P","mm","Precipitation",Source_Module,DT_Raster); ///< from ITP_P
 
-	mdi.AddOutput("Nitrate", "kg N/ha", "amount of nitrate", DT_Array2D);
-	mdi.AddOutput("Ammon", "kg N/ha", "ammonium pool for soil nitrogen", DT_Array2D);
-	mdi.AddOutput("Depth", "mm", "depth of the layer", DT_Array2D); 
-
-	mdi.AddOutput("AddRainNitra", "kg N/ha", "nitrate added by rainfall", DT_Raster);
-	mdi.AddOutput("AddRainAmm", "kg N/ha", "ammonium added by rainfall", DT_Raster); 
+	mdi.AddOutput("Nitrate", "kg N/ha", "amount of nitrate", DT_Array2D); ///< invoked by the other nutrient modules
+	mdi.AddOutput("Ammon", "kg N/ha", "ammonium pool for soil nitrogen", DT_Array2D); ///< invoded by NITVOL
+	mdi.AddOutput("Depth", "mm", "depth of the layer", DT_Array2D);  ///< invoked by MINDEC,NITVOL,NUTTRA_OL
+	mdi.AddOutput("AddRainNitra", "kg N/ha", "nitrate added by rainfall", DT_Raster); ///< invoked by no module
+	mdi.AddOutput("AddRainAmm", "kg N/ha", "ammonium added by rainfall", DT_Raster);  ///< invoked by no module
 
 	res = mdi.GetXMLDocument();
 
