@@ -1,0 +1,164 @@
+ACC		the number of flow accumulation cells of each cell	MapWindowRaster	MUSLE_AS	
+ANIEXCF		the fraction of porosity from which anions are excluded	Single	NUTTRA_OL	
+A_BNK		bank flow recession constant	Single	IKW_REACH,MUSK_CH	
+BASE_EX		baseflow recession exponent	Single	GWATER_RESERVOIR,GWA_RE	
+BIOEHI	kg*m*m/ha*MJ	rue of the plant at elevated atmospheric CO_2 concentration	MapWindowRaster	POTENTIALBIOMASS	
+BIO_E	kg*m*m/ha*MJ	rue of the plant at ambient atmospheric CO_2 concentration	MapWindowRaster	POTENTIALBIOMASS	
+BLAI		maximum leaf area index	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+BMX_TREES	kg/ha	biomass of a fully develop tree stand for the specific tree species	MapWindowRaster	UPTAKEGROWTH	
+BN1		the normal fraction of nitrogen in the plant biomass at emergence	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+BN2		the normal fraction of nitrogen in the plant biomass at 50% maturity	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+BN3		the normal fraction of nitrogen in the plant biomass at maturity	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+BNK0	m3/m	initial bank storage per meter of reach length	Single	IKW_REACH,MUSK_CH	
+BP1		the normal fraction of phosphorus in the plant biomass at emergence	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+BP2		the normal fraction of phosphorus in the plant biomass at 50% maturity	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+BP3		the normal fraction of phosphorus in the plant biomass at maturity	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+B_BNK		bank storage loss coefficient	Single	IKW_REACH,MUSK_CH	
+CATEF		volatilization cation exchange factor	Single	NITVOL	
+CCOE		calibration coefficient of overland erosion	Single	KINWAVSED_OL	
+CELLSIZE	m	cell size of the grid	Single	GWA_RE,SNO_WB	
+CELLWIDTH	m	Cell width	Single	CH_DW,CH_MSK,GWATER_RESERVOIR,IKW_CH,IKW_OL,INTERFLOW_IKW,PERCO_DARCY,GWA_RE,IUH_IF,IUH_OL,SSR_DA,KINWAVSED_CH,KINWAVSED_OL,SPLASHERO_PARK,MUSLE_AS,DISNUT_OL,DISNUT_CH,NUTTRA_OL,SEDBONNUT_CH,SEDBONNUT_OL	
+CHDETCO		calibration coefficient of channel flow detachment	Single	KINWAVSED_CH	
+CHS0	m3/m	initial channel storage per meter of reach length	Single	CH_MSK,IKW_REACH,MUSK_CH,SEDR_VCD,NUTTRA_CH	
+CHTCCO		calibration coefficient of transport capacity	Single	KINWAVSED_CH	
+CHWIDTH	m	Channel width	MapWindowRaster	CH_DW,CH_MSK,IKW_CH,IKW_OL,INTERFLOW_IKW,SSR_DA,KINWAVSED_CH,KINWAVSED_OL,DISNUT_OL,DISNUT_CH,NUTTRA_OL,SEDBONNUT_CH,SEDBONNUT_OL	
+CH_MANNINGFACTOR		Manning scaling factor for channel routing	Single	IKW_CH	
+CLAY	%	Percent of clay content	MapWindowRaster	SUR_SGA,DISNUT_OL,SEDBONNUT_OL	
+CLAY_2D		Clay fraction in soil	MapWindowRaster	NUTTRA_OL	
+CN2	-	CN under moisture condition II	MapWindowRaster	SUR_CN	
+CNYLD		fraction of nitrogen in the yield	MapWindowRaster	YIELD	
+CO2	ppmv	CO2 Concentration	Single	PET_PM,POTENTIALBIOMASS	
+CO2HI	ppmv	an elevated atmospheric CO2 concentration	MapWindowRaster	POTENTIALBIOMASS	
+CONDUCTIVITY	mm/h	Soil hydraulic conductivity	MapWindowRaster	INTERFLOW_IKW,PERCO_DARCY,SUR_SGA	
+CONDUCTIVITY_2D	mm/h	saturation hydraulic conductivity	Array2D	PER_PI,PER_STR,SSR_DA	
+COND_MAX	m/s	maximum stomatal conductance	Single	PET_PM	
+COND_RATE	m/s/kPa	rate of decline in stomatal conductance per unit increase in vapor pressure deficit	Single	PET_PM	
+CONRAINAMM	mg N/L	Concentration of ammonia in rainfall	Single	ATMDEP	
+CONRAINNITRA	mg N/L	Concentration of nitrogen in rainfall	Single	ATMDEP	
+CONSOLUP	mg/kg	concentration of solution phosphorus all layers	Single	MINDEC	
+CPYLD	kg/ha	fraction of phosphorus in the yield	MapWindowRaster	YIELD	
+C_RAIN	mm/mm/oC/delta_t	Rainfall impact factor	Single	SNO_DD	
+C_SNOW	mm/oC/delta_t	temperature impact factor	Single	SNO_DD	
+C_SNOW12	mm/oC/day	Melt factor on Decemeber 21	Single	SNO_SP	
+C_SNOW6	mm/oC/day	Melt factor on June 21	Single	SNO_SP	
+DATA_TYPE		climate data type	Single	TSD_RD_P,TSD_RD_TMIN,TSD_RD_TMAX,TSD_RD_PET,TSD_RD_SR,TSD_RD_WS,TSD_RD_RM	
+DEM	m	Elevation	MapWindowRaster	CH_DW,ITP_P,ITP_TMIN,ITP_TMAX,ITP_PET,ITP_SR,ITP_WS,ITP_RM	
+DENRC		rate coefficient for denitrification	Single	DENITRI	
+DENSITY	kg/m3	Soil density	MapWindowRaster	SEDBONNUT_OL	
+DENSITY_2D	g/cm3	Soil density	Array2D	MINDEC,NUTTRA_OL	
+DEPRESSION	mm	Depression storage capacity	MapWindowRaster	DEP_FS,DEP_LINSLEY	
+DEPRE_IN	-	initial depression storage coefficient	Single	DEP_FS,DEP_LINSLEY	
+DF_COEF		Deep percolation coefficient	Single	GWA_RE	
+DLAI		the fraction of growing season(PHU) when senescence becomes dominant	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH,YIELD	
+DT_CH	s	time step	Single	IKW_REACH,MUSK_CH	
+DT_HS	second	Time step of the simulation	Single	CH_DW,CH_MSK,GWATER_RESERVOIR,IKW_CH,IKW_OL,INTERFLOW_IKW,PERCO_DARCY,PI_STORM,SUR_SGA,SUR_MR,KINWAVSED_CH,KINWAVSED_OL,SPLASHERO_PARK,DISNUT_OL,DISNUT_CH	
+ECO1		calibration coefficient of transport capacity calculation	Single	KINWAVSED_OL	
+ECO2		calibration coefficient of transport capacity calculation	Single	KINWAVSED_OL	
+ENDDATE		the simulation end of date	MapWindowRaster	POTENTIALBIOMASS	
+EP_CH	mm/h	reach evaporation adjustment factor	Single	IKW_REACH,MUSK_CH	
+EXT_COEF		light extinction coefficient	MapWindowRaster	POTENTIALBIOMASS	
+FIELDCAP	m3/m3	Soil field capacity	MapWindowRaster	HS_WB,INTERFLOW_IKW,PERCO_DARCY,SUR_SGA	
+FIELDCAP_2D	m3/m3	Soil field capacity	Array2D	PER_PI,PER_STR,SET_LM,SSR_DA,SUR_CN,SUR_MR,MINDEC,NITVOL,NITFIX,UPTAKEGROWTH	
+FLOWIN_INDEX_D8		The index of flow in cell in the compressed array, and the first element in each sub-array is the number of flow in cells in this sub-array	Array2D	CH_DW,CH_MSK,IKW_CH,IKW_OL,INTERFLOW_IKW,SSR_DA,KINWAVSED_CH,KINWAVSED_OL,DISNUT_OL,DISNUT_CH,NUTTRA_OL,SEDBONNUT_CH,SEDBONNUT_OL	
+FLOWOUT_INDEX_D8		The index of flow in cell in the compressed array	Array1D	CH_DW,CH_MSK,IKW_CH,IKW_OL,KINWAVSED_CH,DISNUT_CH,SEDBONNUT_CH	
+FLOW_DIR		Flow direction by the rule of ArcGIS	MapWindowRaster	CH_DW,CH_MSK,IKW_CH,IKW_OL	
+FRGRW1		fraction of total potential heat units corresponding to the 1st point on the optimal leaf area development curve	MapWindowRaster	POTENTIALBIOMASS	
+FRGRW2		fraction of total potential heat units corresponding to the 2nd point on the optimal leaf area development curve	MapWindowRaster	POTENTIALBIOMASS	
+GW0	mm	Initial groundwater storage	Single	GWATER_RESERVOIR,GWA_RE	
+GWMAX	mm	maximum ground water storage	Single	GWA_RE	
+HARVESTDATE		the simulation end of date	MapWindowRaster	YIELD	
+HUMNF	m	fraction of humic nitrogen in the active pool	Single	MINDEC	
+HVSTI	kg/ha	potential harvest index for the plant at maturity given ideal growing conditions	MapWindowRaster	YIELD	
+IDC		land cover/plant classification	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH,YIELD	
+INITCONC_NH4	kg/kg	Initial average concentration of ammonium in the soil	Single	DISNUT_OL	
+INITCONC_NO3	kg/kg	Initial average concentration of nitrate in the soil	Single	DISNUT_OL	
+INITCONC_P	kg/kg	Initial average concentration of P in the soil	Single	DISNUT_OL	
+INIT_IS		Initial interception storage	Single	PI_STORM,PI_MSM	
+INTERC_MAX	mm	Maximum Interception Storage Capacity	MapWindowRaster	PI_STORM,PI_MSM	
+INTERC_MIN	mm	Minimum Interception Storage Capacity	MapWindowRaster	PI_STORM,PI_MSM	
+KG		baseflow recession coefficient	Single	GWATER_RESERVOIR,GWA_RE	
+KI	-	Interflow scale factor	Single	INTERFLOW_IKW,SSR_DA	
+K_BANK	mm/h	hydraulic conductivity of the channel bank	Single	IKW_REACH,MUSK_CH	
+K_BLOW	-	a fraction coefficient of snow blowing into or out of the watershed	Single	SNO_SP,SNO_WB,SSM_PE	
+K_CHB	mm/h	hydraulic conductivity of the channel bed	Single	IKW_REACH,MUSK_CH	
+K_PET		Correction Factor for PET	Single	PET_H,PET_PM,PET_PT	
+K_RUN	-	Runoff exponent	Single	SUR_MR	
+K_SOIL10		Ratio between soil temperature at 10 cm and the mean	Single	STP_FP	
+K_SUBLI	-	Praction of PET for sublimation	Single	SSM_PE	
+LAG_SNOW	-	Snow temperature lag factor	Single	SNO_SP	
+LAIMX1		fraction of max LAI corresponding to the 1st point on the optimal leaf area development curve	MapWindowRaster	POTENTIALBIOMASS	
+LAIMX2		fraction of max LAI corresponding to the 2nd point on the optimal leaf area development curve	MapWindowRaster	POTENTIALBIOMASS	
+LAPSERATE	/100m	Lapse Rate	Array2D	ITP_P,ITP_TMIN,ITP_TMAX,ITP_PET,ITP_SR,ITP_WS,ITP_RM	
+LATITUDE_M	degree	Latitude	Array1D	PET_H,PET_PM,PET_PT	
+MANNING		Manning's roughness	MapWindowRaster	IKW_OL,KINWAVSED_OL,DISNUT_OL,SEDBONNUT_OL	
+MAT_YRS	years	the number of years for the tree species to reach full development	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+MOIST_IN	m3/m3	Initial soil moisture	MapWindowRaster	SUR_SGA,SUR_CN,SUR_MR	
+MSK_CO1		Weighting factor of bankful flow	Single	IKW_REACH,MUSK_CH	
+MSK_X		Muskingum weighting factor	Single	CH_MSK,IKW_REACH,MUSK_CH	
+NDIS		nitrogen uptake distribution parameter	Single	UPTAKEGROWTH	
+NFIXFACTOR		nitrogen fixation factor	Single	UPTAKEGROWTH	
+NFIXMAX	kg/ha	maximum daily-n fixation	Single	UPTAKEGROWTH	
+NITPC		the nitrate percolation coefficient	Single	NUTTRA_OL	
+OL_IUH		IUH of each grid cell	Array2D	IUH_IF,IUH_OL	
+OMEGA		calibration coefficient of splash erosion	Single	SPLASHERO_PARK	
+PARCOEP	m3/Mg	phosphorus soil partitioning coefficient	Single	NUTTRA_OL	
+PDIS		phosphorus uptake distribution parameter, P_UPDIS	Single	UPTAKEGROWTH	
+PI_B		Interception Storage Capacity Exponent	Single	PI_STORM,PI_MSM	
+POREINDEX	-	pore size distribution index	MapWindowRaster	INTERFLOW_IKW,PERCO_DARCY	
+POREINDEX_2D	-	pore size distribution index	Array2D	PER_PI,PER_STR,SSR_DA	
+POROSITY	m3/m3	soil porosity	MapWindowRaster	HS_WB,INTERFLOW_IKW,PERCO_DARCY,SUR_SGA,DISNUT_OL,SEDBONNUT_OL	
+POROSITY_2D	m3/m3	soil porosity	Array2D	PER_PI,PER_STR,SSR_DA,SUR_CN,SUR_MR,NUTTRA_OL	
+P_MAX	mm	Maximum P corresponding to runoffCo	Single	SUR_MR	
+P_RF		Peak rate adjustment factor	Single	SEDR_VCD,NUTTRA_CH	
+RATECOEH		rate coefficient for mineralization of the humus active organic nutrients	Single	MINDEC	
+RATECOER		rate coefficient for mineralization of the residue fresh organic nutrients	Single	MINDEC	
+RATECONST		rate constant	Single	MINDEC	
+RCHPARAM		reach parameters	Array2D	GWATER_RESERVOIR,HS_WB,IKW_REACH,MUSK_CH,SEDR_VCD,NUTTRA_CH	
+RDMX	mm	the maximum depth for root development in the soil	MapWindowRaster	UPTAKEGROWTH	
+REACHPARAMETER		Reach parameters such stream order, manning's n and downstream subbasin id	Array2D	CH_DW,CH_MSK,IKW_CH,KINWAVSED_CH,DISNUT_CH,SEDBONNUT_CH	
+ROOTDEPTH	mm	Root depth	MapWindowRaster	HS_WB,INTERFLOW_IKW,PERCO_DARCY,SUR_SGA,GWA_RE,PER_PI,PER_STR,SET_LM,SOL_WB,SSR_DA,SUR_CN,SUR_MR,ATMDEP	
+ROUTING_LAYERS		Routing layers according to the flow directionThere are not flow relationships within each layer, and the first element in each layer is the number of cells in the layer	Array2D	IKW_OL,INTERFLOW_IKW,SSR_DA,KINWAVSED_OL,DISNUT_OL,NUTTRA_OL,SEDBONNUT_OL	
+RUNOFF_CO	-	Potential runoff coefficient	MapWindowRaster	SUR_MR	
+SAND	%	Percent of sand content	MapWindowRaster	SUR_SGA	
+SLOER	d-1	slow equilibration rate constant	Single	SORPHO	
+SLOPE	%	Slope	MapWindowRaster	CH_DW,CH_MSK,IKW_OL,INTERFLOW_IKW,PI_STORM,GWA_RE,SSR_DA,KINWAVSED_CH,KINWAVSED_OL,SPLASHERO_PARK,MUSLE_AS,DISNUT_OL,DISNUT_CH,SEDBONNUT_CH,SEDBONNUT_OL	
+SOILLAYER		the num of soil layers	Single	UPTAKEGROWTH	
+SOIL_T10		Factor of soil temperature relative to short grass (degree)	MapWindowRaster	STP_FP	
+SOIL_TA0		Coefficient a0 for Finn Plauborg Method	Single	STP_FP	
+SOIL_TA1		Coefficient a1 for Finn Plauborg Method	Single	STP_FP	
+SOIL_TA2		Coefficient a2 for Finn Plauborg Method	Single	STP_FP	
+SOIL_TA3		Coefficient a3 for Finn Plauborg Method	Single	STP_FP	
+SOIL_TB1		Coefficient b1 for Finn Plauborg Method	Single	STP_FP	
+SOIL_TB2		Coefficient b2 for Finn Plauborg Method	Single	STP_FP	
+SOIL_TD1		Coefficient d1 for Finn Plauborg Method	Single	STP_FP	
+SOIL_TD2		Coefficient d2 for Finn Plauborg Method	Single	STP_FP	
+SPCON		Coefficient in sediment transport equation	Single	SEDR_VCD,NUTTRA_CH	
+SPEXP		Exponent in sediment transport equation	Single	SEDR_VCD,NUTTRA_CH	
+STARTDATE		the date begin to simulate	MapWindowRaster	POTENTIALBIOMASS	
+STATIONELEVATION	m	Site Elevation	Array1D	ITP_P,ITP_TMIN,ITP_TMAX,ITP_PET,ITP_SR,ITP_WS,ITP_RM	
+STATIONELEVATION_M	m	Elevation	Array1D	PET_PM,PET_PT	
+STORM_DT	second	Time step of the simulation	Single	SEDBONNUT_CH,SEDBONNUT_OL	
+STREAM_LINK		Stream link (id of reaches)	MapWindowRaster	CH_DW,CH_MSK,HS_WB,IKW_CH,IKW_OL,INTERFLOW_IKW,SSR_DA,KINWAVSED_CH,KINWAVSED_OL,MUSLE_AS,DISNUT_OL,DISNUT_CH,NUTTRA_OL,SEDBONNUT_CH,SEDBONNUT_OL	
+SUBBASIN		The subbasion grid	MapWindowRaster	GWATER_RESERVOIR,HS_WB,GWA_RE,IKW_REACH,IUH_IF,IUH_OL,MUSK_CH,SNO_WB,SOL_WB,SSR_DA,MUSLE_AS,NUTTRA_OL	
+SUBBASINSELECTED		The subbasion ids listed in file.out	Array1D	SNO_WB	
+SWE0	mm	Initial snow water equivalent	Single	SNO_DD,SNO_SP,SNO_WB,SSM_PE	
+S_FROZEN		Frozen moisture relative to porosity with no infiltration	Single	SUR_CN,SUR_MR	
+T0	oC	the snowmelt threshold temperature	Single	SNO_DD,SNO_SP,SNO_WB,SSM_PE,SUR_CN,SUR_MR	
+TIMESTEP	hr	time step	Single	GWA_RE,IUH_IF,IUH_OL,PER_PI,PER_STR,SSR_DA,SEDR_VCD,NUTTRA_CH	
+T_BASE	oC	base or minimum temperature for growth	MapWindowRaster	POTENTIALBIOMASS,UPTAKEGROWTH	
+T_OPT	oC	optimal temperature for growth	MapWindowRaster	UPTAKEGROWTH	
+T_SNOW	mm	Amount of water in snow	Single	PET_PM,PET_PT,SNO_DD,SNO_SP,SNO_WB,SSM_PE,SUR_CN,SUR_MR	
+T_SOIL	oC	threshold soil freezing temperature	Single	PER_PI,PER_STR,SET_LM,SSR_DA,SUR_CN,SUR_MR	
+USLE_C		the cover management factor	MapWindowRaster	KINWAVSED_OL,SPLASHERO_PARK,MUSLE_AS	
+USLE_K		the soil erodibility factor	MapWindowRaster	KINWAVSED_CH,KINWAVSED_OL,SPLASHERO_PARK,MUSLE_AS	
+USLE_P		the erosion control practice factor	MapWindowRaster	MUSLE_AS	
+VCRIT	m/s	critical veloctiy for sediment deposition	Single	SEDR_VCD,NUTTRA_CH	
+VELSCALEFACTOR		flow velocity scaling factor for calibration	Single	MUSK_CH	
+VERTICALINTERPOLATION		Whether the vertical interpolation will be executed	Single	ITP_P,ITP_TMIN,ITP_TMAX,ITP_PET,ITP_SR,ITP_WS,ITP_RM	
+VSEEP0	m3/s	the initial volume of transmission loss to the deep aquifer over the time interval	Single	IKW_REACH,MUSK_CH	
+WAVP	kg*m*m/ha*MJ	rate of decline in rue per unit increase in vapor pressure deficit	MapWindowRaster	POTENTIALBIOMASS	
+WCOM		plant uptake compensation factor	Single	UPTAKEGROWTH	
+WDIS		water-use distribution parameter	Single	UPTAKEGROWTH	
+WEIGHT		Weight used for interpolation	Array1D	ITP_P,ITP_TMIN,ITP_TMAX,ITP_PET,ITP_SR,ITP_WS,ITP_RM	
+WILTINGPOINT_2D	m3/m3	Plant wilting point moisture	Array2D	SET_LM,SUR_CN,NITVOL,UPTAKEGROWTH	
+WSYF		harvest index for the plant in drought conditions and represents the minimum harvest index allowed for the plant	MapWindowRaster	YIELD	

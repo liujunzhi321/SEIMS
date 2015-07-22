@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	string modulesListFile = "";
 	string storePath = "";
 	utils util;
-	string moduleIOListFile = "", paramListFile = "", dllPath = "";
+	string moduleIOListFile = "", paramListFile = "",moduleParamListFile = "", dllPath = "";
 	
 	ModulesIOList *modulesIO;
 	if (argc == 2)
@@ -39,15 +39,15 @@ int main(int argc, char* argv[])
 	else
 		goto errexit;
 	storePath = GetPathFromFullName(modulesListFile);
-	moduleIOListFile = storePath + "module_IO_List.txt";
-	paramListFile = storePath + "params_List.txt";
+	moduleIOListFile = storePath + "module_IO_List.txt";  ///< parameters from Database, inputs from other modules or files, and outputs
+	paramListFile = storePath + "params_List.txt";  ///< parameters from Database as input for modules
+	moduleParamListFile = storePath + "module_Params_List.txt";
 	dllPath = _GetApplicationPath();
 	modulesIO = new ModulesIOList(modulesListFile,dllPath);
 	writeText(moduleIOListFile,modulesIO->moduleInfoList);
-
-	//writeText(moduleIOListFile,modulesIO->GetModuleIDs());
-	//cout<<storePath<<endl;
-	system("pause");
+	writeText(moduleParamListFile,modulesIO->moduleParamsInfoList);
+	writeText(paramListFile,modulesIO->paramsInfoList);
+	//system("pause");
 	return 0;
 errexit:
 	cout<<"Error invoke format!"<<endl;

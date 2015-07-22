@@ -186,12 +186,12 @@ void SettingsInput::ReadSiteList()
 		if (bson_find(it, stationInfo, "SiteListM")) 
 		{
 			string siteList = bson_iterator_string(it);
-			m_inputStation->ReadSitesData(m_dbHydro, siteList, "TMAX", m_startDate, m_endDate);
-			m_inputStation->ReadSitesData(m_dbHydro, siteList, "TMIN", m_startDate, m_endDate);
-			m_inputStation->ReadSitesData(m_dbHydro, siteList, "WS", m_startDate, m_endDate);
-			m_inputStation->ReadSitesData(m_dbHydro, siteList, "SR", m_startDate, m_endDate);
-			m_inputStation->ReadSitesData(m_dbHydro, siteList, "RM", m_startDate, m_endDate);
-			//m_inputStation->ReadSitesData(m_dbHydro, siteList, "P", m_startDate, m_endDate);
+			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_MaximumTemperature, m_startDate, m_endDate);
+			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_MinimumTemperature, m_startDate, m_endDate);
+			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_WindSpeed, m_startDate, m_endDate);
+			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_SolarRadiation, m_startDate, m_endDate);
+			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_RelativeAirMoisture, m_startDate, m_endDate);
+			//m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_Precipitation, m_startDate, m_endDate);
 		}
 		
 		if (bson_find(it, stationInfo, "SiteListP")) 

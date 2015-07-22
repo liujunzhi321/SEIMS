@@ -4,6 +4,7 @@ import bson
 import glob
 import os
 import sqlite3
+from config import *
 
 def ImportParameters(sqlite_file, db):
     #read sqlite database
@@ -37,7 +38,12 @@ def ImportParameters(sqlite_file, db):
     print 'parameter table is imported.'
     
 if __name__ == "__main__":
-    sqlite_file = r'E:\863poject\Storm_Model\Debug\database\Parameter.db3'
-    ImportParameter(sqlite_file, "192.168.5.195", "model_lyg_90m")
-    #test()
-    print 'done!'
+    try:
+        conn = Connection(host=HOSTNAME, port=PORT)
+    except ConnectionFailure, e:
+        sys.stderr.write("Could not connect to MongoDB: %s" % e)
+        sys.exit(1)
+    db = conn[SpatialDBName]
+    if "parameters" in db.collection_names():
+        db.drop_collection("parameters")
+    ImportParameters(sqliteFile, db)

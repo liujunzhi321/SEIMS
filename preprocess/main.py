@@ -21,11 +21,11 @@ if __name__ == "__main__":
     ## Discharge Data
     #ImportDailyDischargeData(HOSTNAME,PORT,ClimateDBName,DischargeExcelPrefix,DischargeYear)
     ## Spatial Data
-    #SubbasinDelineation(np, WORKING_DIR,dem,outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
-    #f = open(WORKING_DIR + os.sep + "ProjConfig.txt")
-    #proj4Str = f.readlines()[2].strip()
-    #f.close()
-    #GenerateSubbasins(WORKING_DIR, proj4Str,exeDir=CPP_PROGRAM_DIR)
+    SubbasinDelineation(np, WORKING_DIR,dem,outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
+    f = open(WORKING_DIR + os.sep + "ProjConfig.txt")
+    proj4Str = f.readlines()[2].strip()
+    f.close()
+    GenerateSubbasins(WORKING_DIR, proj4Str,exeDir=CPP_PROGRAM_DIR)
     ## Extract parameters from landuse, soil properties etc.
     ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
     ## Import to MongoDB database
