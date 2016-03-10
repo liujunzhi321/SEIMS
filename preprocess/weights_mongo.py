@@ -1,6 +1,6 @@
 import glob
-import os, sys
-from pymongo import Connection
+#from pymongo import Connection
+from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from gridfs import *  
 import time
@@ -180,7 +180,8 @@ if __name__ == "__main__":
     hostname = '192.168.6.55'
     port = 27017
     try:
-        conn = Connection(host=hostname, port=27017)
+        conn = MongoClient(host=hostname, port=27017)
+        #conn = Connection(host=hostname, port=27017)
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
