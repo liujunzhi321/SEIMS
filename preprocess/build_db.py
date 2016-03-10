@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 #coding=utf-8
 import sys, os, thread
-from pymongo import Connection
+## from pymongo import Connection # Connection is deprecated by Pymongo!
+from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from import_parameters import ImportParameters
 from generate_stream_input import GenerateReachTable
@@ -32,7 +33,8 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
 
     # build mongodb database
     try:
-        conn = Connection(host=HOSTNAME, port=PORT)
+        conn = MongoClient(host=HOSTNAME, port=PORT)
+        # conn = Connection(host=HOSTNAME, port=PORT)
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)

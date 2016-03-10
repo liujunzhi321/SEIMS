@@ -1,4 +1,5 @@
-from pymongo import Connection
+#from pymongo import Connection
+from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 import bson
 import glob
@@ -30,7 +31,8 @@ def ImportParameters(sqlite_file, db):
                     dic[field_list[i]] = items[i].encode('ascii')
                 else:
                     dic[field_list[i]] = items[i]
-            db.parameters.insert(dic, safe=True)            
+            #db.parameters.insert(dic, safe=True)
+            db.parameters.insert(dic)
 
     db.parameters.create_index("NAME")
     c.close()
@@ -39,7 +41,8 @@ def ImportParameters(sqlite_file, db):
     
 if __name__ == "__main__":
     try:
-        conn = Connection(host=HOSTNAME, port=PORT)
+        conn = MongoClient(host=HOSTNAME, port=PORT)
+        #conn = Connection(host=HOSTNAME, port=PORT)
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)

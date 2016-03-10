@@ -6,7 +6,8 @@ import math
 import sys
 import os
 import pymongo
-from pymongo import Connection
+#from pymongo import Connection
+from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 import shutil
 from adjust_groups import *
@@ -265,7 +266,8 @@ def GenerateReachTable(folder, db, forCluster):
                 dic['LENGTH'] = lenDic[id] 
                 dic['DEPTH'] = depthDic[id]   
                 dic['AREA'] = areaDic[id]*dx*dx     
-                db.reaches.insert(dic, safe=True)
+                #db.reaches.insert(dic, safe=True)
+                db.reaches.insert(dic)
             continue
         
         #kmetis
@@ -325,7 +327,8 @@ def GenerateReachTable(folder, db, forCluster):
     print 'The reach table is generated!'
 
 if __name__ == "__main__":
-    conn = Connection(host='192.168.6.55', port=27017)
+    #conn = Connection(host='192.168.6.55', port=27017)
+    conn = MongoClient(host='192.168.6.55', port=27017)
     workingDir = '/data/liujz/data/fenkeng/output'
     db = conn['cluster_model_fenkeng_90m']
     GenerateReachTable(workingDir, db, True)

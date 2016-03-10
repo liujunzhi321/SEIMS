@@ -3,7 +3,7 @@
 ## @Configuration of Preprocessing for SEIMS
 # 
 #  TODO, give more detailed description here.
-import os,platform
+import os,platform,sys
 
 ## Directionaries 
 if platform.system() == "Windows":
