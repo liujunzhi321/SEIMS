@@ -29,3 +29,6 @@
 
 # Python compiled files
 *.pyc
+
+# Everything in the build directory
+build

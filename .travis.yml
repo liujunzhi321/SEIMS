@@ -1,7 +1,17 @@
+language: cpp
 before_install:
- - openssl aes-256-cbc 
-  -K $encrypted_418b3341ab06_key 
+- sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+- sudo apt-add-repository --yes ppa:boost-latest/ppa
+- sudo sh -c 'echo "deb http://llvm.org/apt/precise/ llvm-toolchain-precise main" >> /etc/apt/sources.list'
+- sudo apt-get update
+after_success:
+- sudo apt-get install doxygen graphviz
+- openssl aes-256-cbc
+  -K  $encrypted_418b3341ab06_key
   -iv $encrypted_418b3341ab06_iv
-  -in travisci_rsa.enc -out config/travisci_rsa -d
-  - chmod 0600 config/travisci_rsa
-  - cp config/travisci_rsa ~/.ssh/id_rsa
+  -in config/travisci_rsa.enc
+  -out config/travisci_rsa
+  -d
+- chmod 0600 config/travisci_rsa
+- cp config/travisci_rsa ~/.ssh/id_rsa
+- ./config/publish-doxygen
