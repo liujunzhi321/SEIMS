@@ -1,4 +1,3 @@
-language: cpp
 before_install:
 - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
 - sudo apt-add-repository --yes ppa:boost-latest/ppa
