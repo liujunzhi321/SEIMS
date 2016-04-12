@@ -1,7 +1,7 @@
 from osgeo import gdal
 from osgeo import ogr
 import networkx as nx
-import pylab
+#import pylab
 import math
 import sys
 import os

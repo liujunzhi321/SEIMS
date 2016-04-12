@@ -29,4 +29,4 @@ if __name__ == "__main__":
     ## Extract parameters from landuse, soil properties etc.
     # ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
     ## Import to MongoDB database
-    # BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesVorShp,MeteorSitesVorShp)
+    BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesVorShp,MeteorSitesVorShp)
