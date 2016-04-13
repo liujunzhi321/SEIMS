@@ -1,4 +1,4 @@
-## Welcome to SEIMS
+Welcome to SEIMS {#mainpage}
 ==========
 ----------
 
@@ -16,30 +16,30 @@ Platform: Windows and linux cluster
 
 Modules:  **Hydrology, Erosion, Nutrient, Plant Growth**
 
-# Compile
+Compile
 ----------
 ~~~
 cd <build path>
 cmake <SEIMS path>
 ~~~
 
-# Preprocessing
+Preprocessing
 ----------
 
 See [Preprocessing](preprocess/Preprocess.md) for more detail.
-# Postprocessing
+
+Postprocessing
 ----------
+TO BE CONTINUE.
 
-
-# Developer
+Developer
 ----------
-For helping developers to contribute to SEIMS smoothly and quickly, we prepared a detail manual.
-See [Mannual for Developers](doc/Developers.md) for more information.
+For helping developers to contribute to SEIMS, we prepared a detail manual.
+See [Mannual for Developers](src/DevelopersCN.md) for more information.
 
-# Contact
+Contact
 ----------
 Dr.Junzhi Liu (liujunzhi@njnu.edu.cn)
 
 Liangjun Zhu (zlj@lreis.ac.cn)
 
-[Go Home](#welcome-to-seims)

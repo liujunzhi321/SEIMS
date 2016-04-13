@@ -1,4 +1,4 @@
-# Proprocessing for SEIMS
+Preprocessing for SEIMS
 --------
 prepared by Liangjun Zhu
 

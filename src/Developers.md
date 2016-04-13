@@ -1,4 +1,4 @@
-# Manual for Developers in Chinese v1.0
+Manual for Developers in Chinese v1.0
 ==========
 
 prepared by Liangjun Zhu （zlj@lreis.ac.cn）
@@ -140,7 +140,7 @@ Git push –u origin master
 git remote -v
 ~~~
 经过以上的设置，正常情况应该看到类似结果,如果没有upstream则需添加上游远程库
-![查看远程主机地址](img/gitremotev.png)
+![查看远程主机地址](../doc/img/gitremotev.png)
 + 将源代码库更新的内容同步到本地，检查差异，然后再和本机分支合并
 ~~~
 git fetch upstream
@@ -148,7 +148,7 @@ git checkout master
 git merge upstream/master
 ~~~
 + 多数情况下，git可以自动合并，如果出现冲突，则需手动处理后，再`commit`提交，冲突结果类似：
-![手动修改合并冲突](img/conflictwhenmerge.png)
+![手动修改合并冲突](../doc/img/conflictwhenmerge.png)
 
 [返回目录](#目录)
 
@@ -156,7 +156,7 @@ git merge upstream/master
 这部分介绍如何在不同平台下编译安装SEIMS。
 
 ## 源码结构
-![源代码根目录](img/srcdir.png)
+![源代码根目录](../doc/img/srcdir.png)
 根目录如上图所示，其中:
 ~~~
 .git Github版本管理的一些文件，勿动
@@ -196,8 +196,8 @@ cmake <source path>
 我的是cmake E:\github-zlj\SIMS
 ~~~
 + cmake会自动生成sln项目文件，随后打开SEIMS.sln。命令行界面如下（左），VS解决方案如下（右）。
-![CMake运行界面](img/cmake.png)
-![VS解决方案](img/vsproject.png)
+![CMake运行界面](../doc/img/cmake.png)
+![VS解决方案](../doc/img/vsproject.png)
 + 按F6生成解决方案，在`Debug`或`Release`下可以看到一系列`lib`、`dll`库以及`seims_omp.exe`或`seims.exe`可执行文件。
  
 + 至此，由源码到VS工程的转换已经完成。在此基础上对代码所做的修改都是对<source path>内源文件的修改。
@@ -375,9 +375,9 @@ Execute |执行模块功能
 装VAssistX之后，便可以在菜单栏里看到VAssistX选项了。
 
 依次打开VAssistX -> Visual Assist X Options -> Edit VA Snippets，如图：
-![VAssistX](img/vassistx.png)
+![VAssistX](../doc/img/vassistx.png)
 现在我们需要添加一些符合doxygen规则的C++注释模板，为了方便起见，快捷键Shortcut统一设置为`/*!`，这样，当需要输入注释模板时，输入`/*!`后便会出现只能提示，如下图，选择合适的便可快速插入。
-![doxygen注释模板](img/doxygentemplate.png)
+![doxygen注释模板](../doc/img/doxygentemplate.png)
 
 + 最基本的注释，对任何对象（`file`，`function`，`class`…）均适用，使用格式如下
 ~~~
