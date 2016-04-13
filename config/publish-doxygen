@@ -21,7 +21,7 @@ cd -
 
 #make doxygen
 doxygen Doxyfile
-echo "doxygen generated done!"
+echo "Doxygen generated done!"
 # Create and commit the documentation repo.
 cd ${HTML_PATH}
 git add .
