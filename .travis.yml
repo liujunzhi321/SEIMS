@@ -4,4 +4,5 @@ before_install:
 - sudo apt-get install doxygen graphviz
 - chmod 0600 config/travisci_rsa
 - cp config/travisci_rsa ~/.ssh/id_rsa
+- chmod 700 config/publish-doxygen
 - "./config/publish-doxygen"
