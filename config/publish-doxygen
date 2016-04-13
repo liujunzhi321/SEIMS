@@ -19,7 +19,8 @@ cd -
 
 # Generate the HTML documentation.
 
-make doxygen
+#make doxygen
+doxygen Doxyfile
 echo "doxygen generated done!"
 # Create and commit the documentation repo.
 cd ${HTML_PATH}
