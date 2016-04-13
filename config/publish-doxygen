@@ -18,8 +18,9 @@ git rm -rf .
 cd -
 
 # Generate the HTML documentation.
-make doxygen
 
+make doxygen
+echo "doxygen generated done!"
 # Create and commit the documentation repo.
 cd ${HTML_PATH}
 git add .
