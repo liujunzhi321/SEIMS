@@ -119,7 +119,8 @@ INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cpp \
                          *.h \
-                         *.py
+                         *.py \
+                         *.md
 RECURSIVE              = YES
 EXCLUDE                = ./build \
 						 ./model_data \
