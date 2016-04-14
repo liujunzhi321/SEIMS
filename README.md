@@ -26,7 +26,7 @@ cmake <SEIMS path>
 Preprocessing
 ----------
 
-See [Preprocessing](preprocess/Preprocess.md) for more detail.
+See [Preprocessing](doc/Preprocess.md) for more detail.
 
 Postprocessing
 ----------
@@ -35,7 +35,7 @@ TO BE CONTINUE.
 Developer
 ----------
 For helping developers to contribute to SEIMS, we prepared a detail manual.
-See [Mannual for Developers](src/Developers.md) for more information.
+See [Mannual for Developers](doc/Developers.md) for more information.
 
 Contact
 ----------
