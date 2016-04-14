@@ -1,8 +1,9 @@
-Manual for Developers in Chinese v1.0
+Manual for Developers in Chinese v1.1
 ==========
 
 prepared by Liangjun Zhu （zlj@lreis.ac.cn）
 
+Latest Updated：Apr.14, 2016 
 ----------
 
 # 目录
@@ -43,7 +44,8 @@ prepared by Liangjun Zhu （zlj@lreis.ac.cn）
 1. [doxygen注释规则](#doxygen注释规则)
 
 
-[可能需要用的的软件](http://pan.baidu.com/s/1bng29AJ)
+[需要用的的软件](http://pan.baidu.com/s/1bng29AJ)
+
 # 前言
 -----------
 SEIMS（Spatially Explicit Integrated Modeling System）模型是由刘军志等人开发的以栅格为基本模拟单元、能体现水流空间运动的全分布式水文模型。SEIMS在借鉴Wetspa、LISEM、CASC2D、DHSVM和流溪河模型等多个模型基础上开发的模块化水文模型，采用C++编写，实现了子流域-基本单元的双层并行，采用的并行策略为共享内存（OpenMP）和消息传递（MPI），并利用NoSql数据库MongoDB进行数据组织管理。模型可在Windows及Linux平台下运行。
@@ -140,7 +142,9 @@ Git push –u origin master
 git remote -v
 ~~~
 经过以上的设置，正常情况应该看到类似结果,如果没有upstream则需添加上游远程库
-![查看远程主机地址](../doc/img/gitremotev.png)
+
+![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fgitremotev.png)
+
 + 将源代码库更新的内容同步到本地，检查差异，然后再和本机分支合并
 ~~~
 git fetch upstream
@@ -148,7 +152,9 @@ git checkout master
 git merge upstream/master
 ~~~
 + 多数情况下，git可以自动合并，如果出现冲突，则需手动处理后，再`commit`提交，冲突结果类似：
-![手动修改合并冲突](../doc/img/conflictwhenmerge.png)
+
+![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fconflictwhenmerge.png)
+
 
 [返回目录](#目录)
 
@@ -156,7 +162,9 @@ git merge upstream/master
 这部分介绍如何在不同平台下编译安装SEIMS。
 
 ## 源码结构
-![源代码根目录](../doc/img/srcdir.png)
+
+![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fsrcdir.png)
+
 根目录如上图所示，其中:
 ~~~
 .git Github版本管理的一些文件，勿动
@@ -196,8 +204,11 @@ cmake <source path>
 我的是cmake E:\github-zlj\SIMS
 ~~~
 + cmake会自动生成sln项目文件，随后打开SEIMS.sln。命令行界面如下（左），VS解决方案如下（右）。
-![CMake运行界面](../doc/img/cmake.png)
-![VS解决方案](../doc/img/vsproject.png)
+
+![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fcmake.png)
+
+![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fvsproject.png)
+
 + 按F6生成解决方案，在`Debug`或`Release`下可以看到一系列`lib`、`dll`库以及`seims_omp.exe`或`seims.exe`可执行文件。
  
 + 至此，由源码到VS工程的转换已经完成。在此基础上对代码所做的修改都是对<source path>内源文件的修改。
@@ -375,21 +386,30 @@ Execute |执行模块功能
 装VAssistX之后，便可以在菜单栏里看到VAssistX选项了。
 
 依次打开VAssistX -> Visual Assist X Options -> Edit VA Snippets，如图：
-![VAssistX](../doc/img/vassistx.png)
+
+![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fvassistx.png)
+
 现在我们需要添加一些符合doxygen规则的C++注释模板，为了方便起见，快捷键Shortcut统一设置为`/*!`，这样，当需要输入注释模板时，输入`/*!`后便会出现只能提示，如下图，选择合适的便可快速插入。
-![doxygen注释模板](../doc/img/doxygentemplate.png)
+
+![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fdoxygentemplate.png)
 
 + 最基本的注释，对任何对象（`file`，`function`，`class`…）均适用，使用格式如下
-~~~
+
+\code
+```
 //! Brief description, can span only 1 line
 /*!
  * More detailed description.
  * Feel free to span as many lines
  * as you wish... All allowed.
  */
-~~~
+```
+\endcode
+
 在VA中设置如下（`Title`，`Description`可以按照自己想法设置，下面均不再重复）：
-~~~
+
+\code
+```
 Title: generalCommentBlock
 Shortcut: /*!
 Descrition: General Doxygen Commen Block
@@ -399,16 +419,23 @@ Code:
  * \ingroup 
  *
  */
-~~~
+```
+\endcode
 
-+ doxygen有三种机制用于将文档分组。`module`,`member groups`, `subpaging`. 我们将采用`module`方式，首先需要用`\defgroup`标签定义一个`module`，注意**只能定义一次**，然后在添加其他对象（类、函数、变量、枚举、宏定义、`typedef`等）注释的时候用`\ingroup`标签将其纳入`module`：
++ doxygen有三种机制用于将文档分组。`module`,`member groups`, `subpaging`. 我们将采用`module`方式，首先需要用`defgroup`标签定义一个`module`，注意**只能定义一次**，然后在添加其他对象（类、函数、变量、枚举、宏定义、`typedef`等）注释的时候用`ingroup`标签将其纳入`module`：
+
+\code
 ~~~
 /*!
  * \defgroup Base
  * Base classes and functions of SEIMS 
  */
 ~~~
+\endcode
+
 在VA中设置
+
+\code
 ~~~
 /** \defgroup
  * \brief
@@ -417,8 +444,11 @@ Code:
  *
  */
 ~~~
+\endcode
 
 + 对于一些变量或函数的定义，希望在一行内对其注释，使用格式如下：
+
+\code
 ~~~
 void function1();    //!< Correct
 void function2(int i);    //!< WRONG! Comment on parameter i, but function not documented!
@@ -426,11 +456,19 @@ void function2(int i);    //!< WRONG! Comment on parameter i, but function not d
 //! Some other function.
 void function3(int i);    //!< Some int. Correct - both function and parameter documented
 ~~~
+\endcode
+
 上面的例子说明，对于含有参数的函数定义，不能用`in-line comment`的方式。VA中的设置如下：
+
+\code
 ~~~
 //!<
 ~~~
+\endcode
+
 + 在*.h, *.cpp文件头部的注释,使用格式：
+
+\code
 ~~~
 /*!
  * \file [filename]
@@ -444,7 +482,11 @@ void function3(int i);    //!< Some int. Correct - both function and parameter d
  * [your comment here]
  */
 ~~~
+\endcode
+
 在VA中设置：
+
+\code
 ~~~
 /*!
  * \ingroup
@@ -460,8 +502,11 @@ void function3(int i);    //!< Some int. Correct - both function and parameter d
  * $end$
  */
 ~~~
+\endcode
 
 + 类定义的注释
+
+\code
 ~~~
 /*!
  * \ingroup <group label>
@@ -475,7 +520,11 @@ void function3(int i);    //!< Some int. Correct - both function and parameter d
  * \date
  */
 ~~~
+\endcode
+
 VA中的设置：
+
+\code
 ~~~
 /*!
  * \ingroup
@@ -489,7 +538,11 @@ VA中的设置：
  * \date $MONTHLONGNAME$ $YEAR$
  */
 ~~~
+\endcode
+
 + 函数注释块
+
+\code
 ~~~
 /*!
  * \ingroup <group label>
@@ -505,7 +558,11 @@ VA中的设置：
  * \warning [any warning if necessary]
  */
 ~~~
+\endcode
+
 VA中设置：
+
+\code
 ~~~
 /*!
  * \ingroup
@@ -521,13 +578,20 @@ VA中设置：
  * \warning
  */
 ~~~
+\endcode
+
 + 数学公式的输入, 采用[MATHJAX](http://www.mathjax.org/)规则
+
+\code
 ~~~
 \f$, \f$ … though the same, have to come in pair; inserts an in-text (LaTeX) formula; e.g. \f$\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}\f$
 \f[, \f] … inserts a long (LaTeX) formula that is displayed centered on a separate line
 ~~~
+\endcode
 
 + 其他一些有用的标签
+
+\code
 ~~~
 \attention … paragraph where a message that needs attention may be entered
 \author … paragraph where one or more author names may be entered
@@ -554,5 +618,6 @@ e.g.
 \version … paragraph where one or more version strings may be entered
 \warning … paragraph where one or more warning messages may be entered
 ~~~
+\endcode
 
 [返回目录](#目录)
