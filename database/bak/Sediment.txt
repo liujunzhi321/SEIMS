@@ -1,0 +1,24 @@
+Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+USLE_C	the cover management factor	 	ALL	-99	0	NC			Y
+USLE_P	the erosion control practice factor		ALL	-99		NC			Y
+USLE_K	the soil erodibility factor		ALL	-99		NC			Y
+flow_acc	the number of flow accumulation cells of each cell		ALL	-99		NC			Y
+T0_s	time of concentration	hr	ALL	-99		NC			Y
+adj_pkr	peak rate adjustment factor		MUSLE_I30	1	0	AC	1	0.1	Y
+rain_yrs	number of yeares of data used to obtain values for RAINHHMX		MUSLE_I30	10	0	AC	10	5	Y
+decay	dacay constant	1/day	ChannelRouting	0.184	0	NC			Y
+spcon	 Coefficient in sediment transport equation		ChannelRouting	0.0001	0.0001	AC	0.01	0.0001	Y
+p_rf	 Peak rate adjustment factor 		ChannelRouting	1	0.1	AC	3	1	Y
+spexp	Exponent in sediment transport equation		ChannelRouting	1.5	0.1	AC	2	1	Y
+sed_chi	Initial channel sediment concentration	ton/m^3	ChannelRouting	0.03	0.01	AC	1	0	Y
+vcrit	critical veloctiy for sediment deposition	m/s	ChannelRouting	0.01	0.01	AC	1	0	Y
+downcut	 whether do the channel downcutting and widening		ChannelRouting	1	0	NC	1	0	Y
+rsd_covco	residue cover factor for computing fraction of cover		MUSLEC_LAI	0.3	0.1	AC	0.5	0.1	Y
+Spl_delratio	Splash delivery ratio		SplashEro_KinEen	0.1	1	RC	1	0	Y
+RandRough	The random roughness	cm	SplashEro_KinEen	-99	0	NC	20	0.05	Y
+Omega	calibration coefficient of splash detachment erosion		SplashEro_Park	0.02	1	RC	10	0.0001	Y
+ccoe	calibration coefficient of overland flow detachment erosion		KinWavSed_OL	0.05	1	RC	100	0.001	Y
+eco1	calibration coefficient of transport capacity calculation		KinWavSed_OL	146	1	RC	1000	0.001	Y
+eco2	calibration coefficient of transport capacity calculation		KinWavSed_OL	14600	1	RC	1000	0.001	Y
+ChTcCo	calibration coefficient of transport capacity calculation		KinWavSed_CH	0.8	1	RC	100000	0.001	Y
+ChDetCo	calibration coefficient of channel flow detachment		KinWavSed_CH	0.001	1	RC	1	0.0001	Y
