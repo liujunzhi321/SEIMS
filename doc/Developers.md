@@ -149,10 +149,14 @@ git remote -v
 
 + 将源代码库更新的内容同步到本地，检查差异，然后再和本机分支合并
 ~~~
-git fetch upstream
+git fetch upstream <branch>
 git checkout master
 git merge upstream/master
 ~~~
+
+> fetch远程库的时候注意，如果仅用git fetch upstream命令，会把所有远程库分支下载，速度慢，因此推荐使用
+> git fetch upstream master
+
 + 多数情况下，git可以自动合并，如果出现冲突，则需手动处理后，再`commit`提交，冲突结果类似：
 
 ![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fconflictwhenmerge.png)
