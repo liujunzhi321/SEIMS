@@ -1,0 +1,188 @@
+## Table title (columns are split by Tab!)
+## TYPE	Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+Header	NCOLS	Number of cell columns		ALL			NC			
+Header	NROWS	Number of cell rows		ALL			NC			
+Header	XLLCENTER	X coordinate of the origin by center of the cell.		ALL			NC			
+Header	YLLCENTER	Y coordinate of the origin by center of the cell		ALL			NC			
+Header	DX	cell size of horizontal direction		ALL			NC			
+Header	DY	cell size of vertical direction		ALL			NC			
+Header	NODATA_VALUE	The input values to be NoData in the output raster.		ALL			NC			
+
+Climate	DEM	Elevation of each grid cell	m	ALL	-99		NC			
+Climate	K_pet	PET Correction factor		ALL	1	0	AC	1.3	0.7	Y
+Climate	Co2	CO2 Concentration	ppmv	ALL	330	1	RC	350	300	Y
+Climate	Cond_rate	rate of decline in stomatal conductance	m/s/kPa	PET_PM	3.75		NC			
+Climate	Cond_max	maximum stomatal conductance	m/s	PET_PM	0.005		NC			
+Climate	Weight_P	Weight Coefficient of Precipitation		ALL	-999		NC			
+Climate	Weight_T	Weight Coefficient of Temperature		ALL	-999		NC			
+Climate	Weight_PET	Weight Coefficient of Potential Evapotranspiration		ALL	-999		NC			
+
+Snow	T_snow	Snowfall temperature	oC	ALL	0	0	AC	2	-2	Y
+Snow	T0	Snowmelt temperature	oC	ALL	1	0	AC	3	-1	Y
+Snow	K_snow	Degree day coefficient	mm/oC/day	SNO_DD	2	0	AC	5	0.5	Y
+Snow	K_rain	Rainfall impact factor	mm/mm/oC/day	SNO_DD	0	0	AC	1	0	Y
+Snow	D_snow	Snow redistribution coefficient		SNO_DD	-99	1	RC	1.5	0.5	Y
+Snow	curva_wind	Curvature along wind direction	%	SRD_MB	-99		NC			Y
+Snow	k_curvature	Curvature coefficient in wind direction		SRD_MB	145	0	AC	500	0	Y
+Snow	k_slope	Slope coefficient in wind direction		SRD_MB	60	0	AC	100	0	Y
+Snow	shc	Snow holding capacity	m	SRD_MB	-99	1	RC	3	0.5	Y
+Snow	slope_wind	Slope along wind direction	%	SRD_MB	-99		NC			Y
+Snow	U0	Wind speed over Ut at which WWi=1	m/s	SRD_MB	10	0	AC	1	0.2	Y
+Snow	Ut0	Threshold wind speed at -27 degree	m/s	SRD_MB	6.98	0	AC	10	4	Y
+Snow	k_blow	fraction of snow into or out of the watershed		ALL	0	0	AC	1	-1	Y
+Snow	swe0	Initial snow water equivalent	mm	ALL	20	0	AC	300	0	Y
+Snow	subbasin	subbasin identity		ALL	-99	0	NC	0	100	
+Snow	shc_crop	snow holding capacity of cropland	mm	SRD_MB	50	0	NC	0.1	0	Y
+Snow	T_wind	temperature at which wind transport of snow is most favorable	oC	SRD_MB	-27.27	0	NC	-20	-35	Y
+Snow	k_subli	Praction of PET for sublimation		SSM_PE	1	0	AC	5	0	Y
+Snow	c_snow	temperature impact factor	mm/oC/delta_t	SNO_DD	3	0	AC	6	0	Y
+Snow	c_rain	Rainfall impact factor	mm/mm/oC/delta_t	SNO_DD	0.04	0	AC	1	0	Y
+Snow	lag_snow	Snow temperature lag factor		SNO_SP	0.8	0	AC	1	0	
+Snow	c_snow6	Melt factor on June 21	mm/oC/day	SNO_SP	2.5	0	AC	4	1	Y
+Snow	c_snow12	Melt factor on December 21	mm/oC/day	SNO_SP	6.5	0	AC	9	6	Y
+
+Interception	Interc_max	Maximum Interception Capacity	mm	ALL	-99	1	RC	1.5	0.5	Y
+Interception	Interc_min	Minimum Interception Capacity	mm	ALL	-99	1	RC	1.5	0.5	Y
+Interception	Pi_b	Interception Storage Capacity Exponent		ALL	1.35	0	AC	1.5	0.5	Y
+Interception	Init_IS	Initial interception storage	mm	ALL	0	0	AC	1	0	
+Interception	BLAI	Leaf area index		PI_STORM	-99	1	RC	12	0	Y
+Interception	CoverFrac	vegetation cover fraction		All	-99	1	RC	1	0	Y
+
+WaterBalance	Depression	Depression storage capacity	mm	ALL	-99	1	RC	5	0.5	Y
+WaterBalance	CN2	Curve number in condition II		ALL	-99	1	RC	1.3	0.7	
+WaterBalance	Density	Soil bulk density	mg/cm3	ALL	-99	1	RC	1.2	0.8	
+WaterBalance	Clay	Clay proportion		ALL	-99	1	RC	1.2	0.8	
+WaterBalance	Sand	Sand proportion		ALL	-99	1	RC	1.2	0.8	
+WaterBalance	WTI	Wetness index		SUR_SA	-99	1	RC	1.2	0.8	Y
+WaterBalance	Slope	Slope	%	ALL	-99	1	RC	1.1	0.9	Y
+WaterBalance	Wiltingpoint	Plant wilting point moisture	m3/m3	ALL	-99	1	RC	1.2	0.8	Y
+WaterBalance	Poreindex	Pore size distribution index		ALL	-99	1	RC	1.2	0.8	Y
+WaterBalance	Runoff_co	Potential runoff coefficient		SUR_MR	-99	1	RC	1	0.5	Y
+WaterBalance	Conductivity	Soil hydraulic conductivity	mm/hr	ALL	-99	1	RC	10	0.1	Y
+WaterBalance	Porosity	Soil porosity	m3/m3	ALL	-99	1	RC	1.2	0.8	Y
+WaterBalance	Fieldcap	Soil field capacity	m3/m3	ALL	-99	1	RC	1.2	0.8	Y
+WaterBalance	Moist_in	Initial soil moisture	m3/m3	ALL	-99	1	RC	1	0.8	Y
+WaterBalance	soiltemp0	Initial soil temperature	oC	SOI_EB	-99	1	RC	1.2	0.8	Y
+WaterBalance	K_run	Runoff exponent when net rainfall approaches to zero		SUR_MR	2.5	0	AC	5	0	Y
+WaterBalance	P_max	Maximum rainfall intensity when k_run = 1.0	mm	SUR_MR	30	0	AC	60	10	Y
+WaterBalance	Depre_in	Initial depression storage coefficient		ALL	0	0	RC	1	0	Y
+WaterBalance	Rootdepth	Root depth	m	ALL	-99	1	RC	1.5	0.2	Y
+WaterBalance	soil_ta0	Empirical coefficient for estimating soil temperature	oC	STP_FP	4.768	0	AC	10	0	Y
+WaterBalance	soil_ta1	Empirical coefficient for estimating soil temperature		STP_FP	0.174	0	AC	1	0	Y
+WaterBalance	soil_ta2	Empirical coefficient for estimating soil temperature		STP_FP	0.163	0	AC	1	0	Y
+WaterBalance	soil_ta3	Empirical coefficient for estimating soil temperature		STP_FP	0.223	0	AC	1	0	Y
+WaterBalance	soil_tb1	Empirical coefficient for estimating soil temperature	oC	STP_FP	-1.361	0	AC	0	-5	Y
+WaterBalance	soil_tb2	Empirical coefficient for estimating soil temperature	oC	STP_FP	-3.762	0	AC	0	-5	Y
+WaterBalance	soil_td1	Empirical coefficient for estimating soil temperature	oC	STP_FP	0.057	0	AC	1	0	Y
+WaterBalance	soil_td2	Empirical coefficient for estimating soil temperature	oC	STP_FP	0.339	0	AC	1	0	Y
+WaterBalance	k_soil10	ratio between soil temperature at 10 cm and the mean		STP_FP	1	0	AC	3	0	Y
+WaterBalance	soil_t10	soil temperature relative to short grass cover	oC	STP_FP	-99	1	RC	2	0	Y
+WaterBalance	rv_co	Groundwater revap coefficient		GWA_RE	0	0	AC	0.2	0	Y
+WaterBalance	t_soil	Soil freezing temperature	oC	ALL	-5	0	AC	0	-15	Y
+WaterBalance	s_frozen	Frozen moisture relative to porosity with no infiltration		ALL	0.5	0	AC	1	0.1	Y
+WaterBalance	Residual	soil residual moisture	m3/m3	ALL	-99	1	RC	1.2	0.8	Y
+
+Discharge	Ol_iuh	Overland flow IUH		ALL	-999		NC			Y
+Discharge	Ch_iuh	Channel flow IUH		ChannelRouting	-999		NC			Y
+Discharge	Reach	Reach properties		ALL	-99	0	NC	0	0	Y
+Discharge	Ki	Interflow scaling factor		SSR_DA	3	0	AC	10	0	Y
+Discharge	Kg	Baseflow recession coefficient		GWA_RE	5E-5	0	AC	0.1	0.001	Y
+Discharge	Base_ex	Baseflow exponent		GWA_RE	1	1	AC	4	1	Y
+Discharge	df_coef	Deep percolation coefficient		GWA_RE	0	0	AC	1	0	
+Discharge	gw0	Initial groundwater storage	mm	GWA_RE	100	0	AC	1000	0	Y
+Discharge	gwmax	Maximum groundwater storage	mm	GWA_RE	300	0	AC	1000	0	Y
+Discharge	k_chb	channel bottom hydraulic conductivity	mm/hr	ALL	0.5	0	AC	150	0	Y
+Discharge	k_bank	channel bank hydraulic conductivity	mm/hr	ALL	20	0	AC	150	0	Y
+Discharge	ep_ch	reach evaporation adjustment factor		ALL	1	0	AC	1	0	Y
+Discharge	bnk0	Initial bank storage	m3/m	ALL	0	0	AC	1	0	Y
+Discharge	chs0	initial channel storage	m3/m	All	0	0	AC	100	0	Y
+Discharge	a_bnk	bank flow recession constant		ALL	0.2	0	AC	1	0	Y
+Discharge	b_bnk	bank storage loss coefficient		ALL	0.05	0	AC	0.2	0.02	Y
+Discharge	ReachParameter	the parameters of each reach		ALL	-999		NC			Y
+Discharge	MSK_X	Muskingum weighting factor		ChannelRouting	0.2	0	AC	0.5	0	
+Discharge	MSK_co1	Weighting factor of bankful flow		ChannelRouting	0.7	0	AC	1	0	
+Discharge	q_iter	Thrashold of storage change rate	m3/s	ChannelRouting	0.01	0	AC	0.1	0.001	
+Discharge	n_iter	maximum number of iteration		ChannelRouting	10	0	AC	30	3	
+Discharge	s_iter	Threshold of reservoir storage change rate	m3	ALL	50	0	AC	1000	10	Y
+Discharge	n_iter_rs	Maximum number of reservoir routing iteration		ALL	10	0	AC	30	3	Y
+Discharge	FLOWOUT_INDEX	The index of flow in cell in the compressed array		ALL	-99	0	AC			N
+Discharge	FLOWIN_INDEX	The index of flow in cell in the compressed array		ALL	-999	0	AC			N
+Discharge	ROUTING_LAYERS	Routing layers according to the flow direction		ALL	-999	0	AC			N
+Discharge	FLOW_DIR	Flow direction		ALL	-99	0	AC			N
+Discharge	CHWIDTH	Channel width	m	ALL	-99	0	AC			N
+Discharge	MANNING	Manning's n		ALL	-99	0	AC	0.001	10	Y
+Discharge	THETA	Parameter theta for the implicit finite deffirent equation		ALL	0.75	0	AC	1	0	Y
+Discharge	STREAM_LINK	Stream link		ALL	-99	0	AC			N
+Discharge	STREAM_ORDER	Stream Order		ALL	-99	0	AC			N
+Discharge	ReachParameter	Reach parameters such as mannning's n, upstream subbasins and so on.		ALL	-999	0	AC			N
+Discharge	VelScaleFactor	Scale factor used to adjust V0 in CH_MUSK		CH_MUSK	1	0	AC	1.5	0.5	Y
+Discharge	CH_ManningFactor	Manning scaling factor of channel routing		IKW_CH	1	0	AC	3	0.1	Y
+
+Sediment	USLE_C	the cover management factor	 	ALL	-99	0	NC			Y
+Sediment	USLE_P	the erosion control practice factor		ALL	-99		NC			Y
+Sediment	USLE_K	the soil erodibility factor		ALL	-99		NC			Y
+Sediment	flow_acc	the number of flow accumulation cells of each cell		ALL	-99		NC			Y
+Sediment	T0_s	time of concentration	hr	ALL	-99		NC			Y
+Sediment	adj_pkr	peak rate adjustment factor		MUSLE_I30	1	0	AC	1	0.1	Y
+Sediment	rain_yrs	number of yeares of data used to obtain values for RAINHHMX		MUSLE_I30	10	0	AC	10	5	Y
+Sediment	decay	dacay constant	1/day	ChannelRouting	0.184	0	NC			Y
+Sediment	spcon	 Coefficient in sediment transport equation		ChannelRouting	0.0001	0.0001	AC	0.01	0.0001	Y
+Sediment	p_rf	 Peak rate adjustment factor 		ChannelRouting	1	0.1	AC	3	1	Y
+Sediment	spexp	Exponent in sediment transport equation		ChannelRouting	1.5	0.1	AC	2	1	Y
+Sediment	sed_chi	Initial channel sediment concentration	ton/m^3	ChannelRouting	0.03	0.01	AC	1	0	Y
+Sediment	vcrit	critical veloctiy for sediment deposition	m/s	ChannelRouting	0.01	0.01	AC	1	0	Y
+Sediment	downcut	 whether do the channel downcutting and widening		ChannelRouting	1	0	NC	1	0	Y
+Sediment	rsd_covco	residue cover factor for computing fraction of cover		MUSLEC_LAI	0.3	0.1	AC	0.5	0.1	Y
+Sediment	Spl_delratio	Splash delivery ratio		SplashEro_KinEen	0.1	1	RC	1	0	Y
+Sediment	RandRough	The random roughness	cm	SplashEro_KinEen	-99	0	NC	20	0.05	Y
+Sediment	Omega	calibration coefficient of splash detachment erosion		SplashEro_Park	0.02	1	RC	10	0.0001	Y
+Sediment	ccoe	calibration coefficient of overland flow detachment erosion		KinWavSed_OL	0.05	1	RC	100	0.001	Y
+Sediment	eco1	calibration coefficient of transport capacity calculation		KinWavSed_OL	146	1	RC	1000	0.001	Y
+Sediment	eco2	calibration coefficient of transport capacity calculation		KinWavSed_OL	14600	1	RC	1000	0.001	Y
+Sediment	ChTcCo	calibration coefficient of transport capacity calculation		KinWavSed_CH	0.8	1	RC	100000	0.001	Y
+Sediment	ChDetCo	calibration coefficient of channel flow detachment		KinWavSed_CH	0.001	1	RC	1	0.0001	Y
+
+InstreamWQ	ai0	Ratio of algal biomass to chlorophyII-a	ug chla/mg alg	ChannelRouting	50			100	10	
+InstreamWQ	ai1	Fraction of algal biomass that is nitrogen	mg N/mg alg	ChannelRouting	0.08			0.09	0.07	
+InstreamWQ	ai2	Fraction of algal biomass that is phosphorous	mg P/mg alg	ChannelRouting	0.015			0.02	0.01	
+InstreamWQ	ai3	Rate of oxygen production per unit of algal photosynthesis	mg O2/mg alg	ChannelRouting	1.6			1.8	1.4	
+InstreamWQ	ai4	Rate of oxygen uptake per unit of alga respiration	mg O2/mg alg	ChannelRouting	2			2.3	1.6	
+InstreamWQ	ai5	Rate of oxygen uptake per unit of NH3 nitrogen oxidation	mg O2/mg NH3-N	ChannelRouting	3.5			4	3	
+InstreamWQ	ai6	Rate of oxygen uptake per unit of NO2 nitrogen oxidation	mg O2/mg NO2-N	ChannelRouting	1.07			1.14	1	
+InstreamWQ	algae	Algal biomass concentration in reach on the first day	mg alg/L	ChannelRouting	0					
+InstreamWQ	nh3	Ammonia concentration in reach on the first day	mg N/L	ChannelRouting	0					
+InstreamWQ	chlora	ChlorophyII-a concentration in reach on the first day	mg chla/L	ChannelRouting	0					
+InstreamWQ	disp	Dissolved P concentration in reach on the first day	mg P/L	ChannelRouting	0					
+InstreamWQ	k_l	Half saturation coefficient for light	kJ/(m2-min)	ChannelRouting	0.75			1.135	0.2227	
+InstreamWQ	k_n	Michaelis-mention half-saturation constant for nitrogen	mg N/L	ChannelRouting	0.02			0.03	0.01	
+InstreamWQ	k_p	Michaelis-mention half-saturation constant for P	mg P/L	ChannelRouting	0.025			0.05	0.001	
+InstreamWQ	lambda0	Non-algal portion of hte light extinction coefficient	1/m	ChannelRouting	1					
+InstreamWQ	lambda1	Linear algal self-shading coefficient	(1/m) 1/(ug chla/L)	ChannelRouting	0.03			0.065	0.0065	
+InstreamWQ	lambda2	Nonlinear alga self-shading coefficient	(1/m) (ug chla/L)^(-2/3)	ChannelRouting	0.0541			0.0541	0.0541	
+InstreamWQ	mumax	Maximum specific algal growth rate at 20 deg C	1/day	ChannelRouting	2			3	1	
+InstreamWQ	no3	NO3-N concentration in reach on the first day	mg N/L	ChannelRouting	0					
+InstreamWQ	no2	NO2-N concentration in reach on the first day	mg N/L	ChannelRouting	0					
+InstreamWQ	orgn	Organic N concentration in reach on the first day	mg N/L	ChannelRouting	0					
+InstreamWQ	orgp	Organic P concentration in reach on the first day	mg P/L	ChannelRouting	0					
+InstreamWQ	p_n	Algal preference factor for ammonia	none	ChannelRouting	0.5			1	0.01	
+InstreamWQ	cbod	Carbonaceous biochemical oxygen demand in reach on the frist day	mg O2/L	ChannelRouting	0					
+InstreamWQ	diso2	Dissolved oxygen concentration in reach on the first day	mg O2/L	ChannelRouting	0					
+InstreamWQ	rhoq	Algal respiration rate coefficient in reach at 20 deg C	1/day	ChannelRouting	0.3			0.5	0.05	
+InstreamWQ	tfact	Fraction of solar radiation computed in the temperature heat balance that is photosynthetically active	none	ChannelRouting	0.3			1	0.1	
+
+Nutrient	InitConc_NO3	Initial average concentration of NO3 in the soil	kg/kg	All	0.001	1	RC	0.001	1E-5	Y
+Nutrient	InitConc_P	Initial average concentration of P in the soil	kg/kg	All	0.001	1	RC	0.001	1E-5	Y
+Nutrient	InitConc_NH4	Initial average concentration of NH4 in the soil	kg/kg	All	0.001	1	RC	0.001	1E-5	Y
+Nutrient	ConRainNitra	concentration of nitrate in the rain	mg N/L	ATMDEP	0	0	AC	15	0	Y
+Nutrient	ConRainAmm	Concentration of ammonia in rainfall	mg N/L	ATMDEP	0	0	AC	15	0	Y
+
+PlantGrowth	nFixFactor	nitrogen fixation factor		PG_EPIC	0.5			1	0	
+PlantGrowth	nFixMax	maximum daily-n fixation	kg/ha	PG_EPIC	10			20	1	
+PlantGrowth	wDis	water use distribution parameter		PG_EPIC	10					
+PlantGrowth	wCom	water uptake compensation factor		PG_EPIC	0.5			1	0	
+PlantGrowth	nDis	nitrogen uptake distribution parameter		PG_EPIC	10					
+PlantGrowth	pDis	phosphorous uptake distribution parameter		PG_EPIC	10					
+PlantGrowth	frPerennial	perennial biomass loss fraction		PG_EPIC	0.1					
+PlantGrowth	startYear	the start year of rotation		PG_EPIC	2000					
+PlantGrowth	landUse	the initial distribution of crops		PG_EPIC	-99					
+PlantGrowth	minGrazingBio	minimum plant biomass for grazing	kg/ha	PG_EPIC	0				0	

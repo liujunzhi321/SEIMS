@@ -1,0 +1,9 @@
+Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+DEM	Elevation of each grid cell	m	ALL	-99		NC			
+K_pet	PET Correction factor		ALL	1	0	AC	1.3	0.7	Y
+Co2	CO2 Concentration	ppmv	ALL	330	1	RC	350	300	Y
+Cond_rate	rate of decline in stomatal conductance	m/s/kPa	PET_PM	3.75		NC			
+Cond_max	maximum stomatal conductance	m/s	PET_PM	0.005		NC			
+Weight_P	Weight Coefficient of Precipitation		ALL	-999		NC			
+Weight_T	Weight Coefficient of Temperature		ALL	-999		NC			
+Weight_PET	Weight Coefficient of Potential Evapotranspiration		ALL	-999		NC			

@@ -1,0 +1,24 @@
+Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+T_snow	Snowfall temperature	oC	ALL	0	0	AC	2	-2	Y
+T0	Snowmelt temperature	oC	ALL	1	0	AC	3	-1	Y
+K_snow	Degree day coefficient	mm/oC/day	SNO_DD	2	0	AC	5	0.5	Y
+K_rain	Rainfall impact factor	mm/mm/oC/day	SNO_DD	0	0	AC	1	0	Y
+D_snow	Snow redistribution coefficient		SNO_DD	-99	1	RC	1.5	0.5	Y
+curva_wind	Curvature along wind direction	%	SRD_MB	-99		NC			Y
+k_curvature	Curvature coefficient in wind direction		SRD_MB	145	0	AC	500	0	Y
+k_slope	Slope coefficient in wind direction		SRD_MB	60	0	AC	100	0	Y
+shc	Snow holding capacity	m	SRD_MB	-99	1	RC	3	0.5	Y
+slope_wind	Slope along wind direction	%	SRD_MB	-99		NC			Y
+U0	Wind speed over Ut at which WWi=1	m/s	SRD_MB	10	0	AC	1	0.2	Y
+Ut0	Threshold wind speed at -27 degree	m/s	SRD_MB	6.98	0	AC	10	4	Y
+k_blow	fraction of snow into or out of the watershed		ALL	0	0	AC	1	-1	Y
+swe0	Initial snow water equivalent	mm	ALL	20	0	AC	300	0	Y
+subbasin	subbasin identity		ALL	-99	0	NC	0	100	
+shc_crop	snow holding capacity of cropland	mm	SRD_MB	50	0	NC	0.1	0	Y
+T_wind	temperature at which wind transport of snow is most favorable	oC	SRD_MB	-27.27	0	NC	-20	-35	Y
+k_subli	Praction of PET for sublimation		SSM_PE	1	0	AC	5	0	Y
+c_snow	temperature impact factor	mm/oC/delta_t	SNO_DD	3	0	AC	6	0	Y
+c_rain	Rainfall impact factor	mm/mm/oC/delta_t	SNO_DD	0.04	0	AC	1	0	Y
+lag_snow	Snow temperature lag factor		SNO_SP	0.8	0	AC	1	0	
+c_snow6	Melt factor on June 21	mm/oC/day	SNO_SP	2.5	0	AC	4	1	Y
+c_snow12	Melt factor on December 21	mm/oC/day	SNO_SP	6.5	0	AC	9	6	Y

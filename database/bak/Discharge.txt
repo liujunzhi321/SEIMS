@@ -1,0 +1,36 @@
+Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+Ol_iuh	Overland flow IUH		ALL	-999		NC			Y
+Ch_iuh	Channel flow IUH		ChannelRouting	-999		NC			Y
+Reach	Reach properties		ALL	-99	0	NC	0	0	Y
+Ki	Interflow scaling factor		SSR_DA	3	0	AC	10	0	Y
+Kg	Baseflow recession coefficient		GWA_RE	5E-5	0	AC	0.1	0.001	Y
+Base_ex	Baseflow exponent		GWA_RE	1	1	AC	4	1	Y
+df_coef	Deep percolation coefficient		GWA_RE	0	0	AC	1	0	
+gw0	Initial groundwater storage	mm	GWA_RE	100	0	AC	1000	0	Y
+gwmax	Maximum groundwater storage	mm	GWA_RE	300	0	AC	1000	0	Y
+k_chb	channel bottom hydraulic conductivity	mm/hr	ALL	0.5	0	AC	150	0	Y
+k_bank	channel bank hydraulic conductivity	mm/hr	ALL	20	0	AC	150	0	Y
+ep_ch	reach evaporation adjustment factor		ALL	1	0	AC	1	0	Y
+bnk0	Initial bank storage	m3/m	ALL	0	0	AC	1	0	Y
+chs0	initial channel storage	m3/m	All	0	0	AC	100	0	Y
+a_bnk	bank flow recession constant		ALL	0.2	0	AC	1	0	Y
+b_bnk	bank storage loss coefficient		ALL	0.05	0	AC	0.2	0.02	Y
+ReachParameter	the parameters of each reach		ALL	-999		NC			Y
+MSK_X	Muskingum weighting factor		ChannelRouting	0.2	0	AC	0.5	0	
+MSK_co1	Weighting factor of bankful flow		ChannelRouting	0.7	0	AC	1	0	
+q_iter	Thrashold of storage change rate	m3/s	ChannelRouting	0.01	0	AC	0.1	0.001	
+n_iter	maximum number of iteration		ChannelRouting	10	0	AC	30	3	
+s_iter	Threshold of reservoir storage change rate	m3	ALL	50	0	AC	1000	10	Y
+n_iter_rs	Maximum number of reservoir routing iteration		ALL	10	0	AC	30	3	Y
+FLOWOUT_INDEX	The index of flow in cell in the compressed array		ALL	-99	0	AC			N
+FLOWIN_INDEX	The index of flow in cell in the compressed array		ALL	-999	0	AC			N
+ROUTING_LAYERS	Routing layers according to the flow direction		ALL	-999	0	AC			N
+FLOW_DIR	Flow direction		ALL	-99	0	AC			N
+CHWIDTH	Channel width	m	ALL	-99	0	AC			N
+MANNING	Manning's n		ALL	-99	0	AC	0.001	10	Y
+THETA	Parameter theta for the implicit finite deffirent equation		ALL	0.75	0	AC	1	0	Y
+STREAM_LINK	Stream link		ALL	-99	0	AC			N
+STREAM_ORDER	Stream Order		ALL	-99	0	AC			N
+ReachParameter	Reach parameters such as mannning's n, upstream subbasins and so on.		ALL	-999	0	AC			N
+VelScaleFactor	Scale factor used to adjust V0 in CH_MUSK		CH_MUSK	1	0	AC	1.5	0.5	Y
+CH_ManningFactor	Manning scaling factor of channel routing		IKW_CH	1	0	AC	3	0.1	Y
