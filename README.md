@@ -1,6 +1,7 @@
 ## Welcome to SEIMS
 ==========
 ----------
+##modify by shenfang
 
 **SEIMS** is short for **Spatially Explicit Integrated Modeling System** and is originally developed by **Dr.** Junzhi Liu and **Prof.** A-Xing Zhu et al. since 2010 in Lreis Lab., IGSNRR, CAS, China.
 
