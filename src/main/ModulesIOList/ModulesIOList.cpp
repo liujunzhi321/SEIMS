@@ -182,10 +182,10 @@ dimensionTypes ModulesIOList::MatchType(string strType)
 //! is constant input?
 bool ModulesIOList::IsConstantInputFromName(string& name)
 {
-	if(	StringMatch(name,Contant_Input_Elevation) ||
-		StringMatch(name,Contant_Input_Latitude)	||
-		StringMatch(name,Contant_Input_Xpr)		||
-		StringMatch(name,Contant_Input_Ypr))
+	if(	StringMatch(name,CONS_IN_ELEV) ||
+		StringMatch(name,CONS_IN_LAT)	||
+		StringMatch(name,CONS_IN_XPR)		||
+		StringMatch(name,CONS_IN_YPR))
 		//StringMatch(name,Contant_Input_FlowdiversionProperty) ||
 		//StringMatch(name,Contant_Input_PointsourceProperty) ||
 		//StringMatch(name,Contant_Input_ReservoirProperty) ||

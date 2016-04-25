@@ -5,7 +5,8 @@
  *
  *
  * \author Junzhi Liu
- * \version 1.0
+ * \revised LiangJun Zhu
+ * \version 1.1
  * \date June 2010
  *
  * 
@@ -18,25 +19,26 @@
 //        to make it easier to change them later 
 #define App_Config_File "app.config"
 
-//for contant input variables
-#define Contant_Input_Elevation						"Elevation"
-#define Contant_Input_Latitude						"Latitude"
-#define Contant_Input_Xpr							"xpr"
-#define Contant_Input_Ypr							"ypr"
+//! Constant input variables
+#define CONS_IN_ELEV						"Elevation"
+#define CONS_IN_LAT						    "Latitude"
+#define CONS_IN_XPR							"xpr"
+#define CONS_IN_YPR							"ypr"
 //#define Contant_Input_FlowdiversionProperty			"FlowDiversion_property"
 //#define Contant_Input_PointsourceProperty			"PointSource_property"
 //#define Contant_Input_ReservoirProperty				"Reservoir_property"
 //#define Contant_Input_ReservoirRatingCurve			"Reservoir_RatingCurve"
 //#define Contant_Input_ReservoirOperationSchedual	"Reservoir_OperationSchedual"
 
-//for data type
+//! Climate data type
 #define DataType_Precipitation "P"					//1
-#define DataType_MinimumTemperature "TMIN"			//2
-#define DataType_MaximumTemperature "TMAX"			//3
-#define DataType_PotentialEvapotranspiration "PET"	//4
-#define DataType_SolarRadiation "SR"				//5
-#define DataType_WindSpeed "WS"						//6
-#define DataType_RelativeAirMoisture "RM"			//7
+#define DataType_MeanTemperature "T"			    //2
+#define DataType_MinimumTemperature "TMIN"			//3
+#define DataType_MaximumTemperature "TMAX"			//4
+#define DataType_PotentialEvapotranspiration "PET"	//5
+#define DataType_SolarRadiation "SR"				//6
+#define DataType_WindSpeed "WS"						//7
+#define DataType_RelativeAirMoisture "RM"			//8
 #define DataType_Meteorology "M"
 
 #define Tag_Elevation "Elevation"
@@ -50,9 +52,11 @@
 
 #ifndef linux
     #define Tag_ModuleDirectoryName "\\"
+	#define SEP "\\"
     #define Tag_ModuleExt ".dll"
 #else
     #define Tag_ModuleDirectoryName "/"
+	#define SEP "/"
     #define Tag_ModuleExt ".so"
 #endif
 
@@ -90,19 +94,19 @@
 #define Tag_ROUTING_LAYERS "ROUTING_LAYERS"
 
 // TODO: Dinf, MFD, MFD-md integrated into SEIMS.
-// D-infinity Flow model after Tarboton et al.(1991)
+//! D-infinity Flow model after Tarboton et al.(1991)
 #define Tag_FLOWIN_INDEX_DINF "FLOWIN_INDEX_DINF"
 #define Tag_FLOWIN_PERCENTAGE_DINF "FLOWIN_PERCENTAGE_DINF"
 #define Tag_FLOWOUT_INDEX_DINF "FLOWOUT_INDEX_DINF"
 #define Tag_FLOWOUT_PERCENTAGE_DINF "FLOWOUT_PERCENTAGE_DINF"
 #define Tag_ROUTING_LAYERS_DINF "ROUTING_LAYERS_DINF"
-// Multi-Flow model after Quinn et al.(1991)
+//! Multi-Flow model after Quinn et al.(1991)
 #define Tag_FLOWIN_INDEX_MFD "FLOWIN_INDEX_MFD"
 #define Tag_FLOWIN_PERCENTAGE_MFD "FLOWIN_PERCENTAGE_MFD"
 #define Tag_FLOWOUT_INDEX_MFD "FLOWOUT_INDEX_MFD"
 #define Tag_FLOWOUT_PERCENTAGE_MFD "FLOWOUT_PERCENTAGE_MFD"
 #define Tag_ROUTING_LAYERS_MFD "ROUTING_LAYERS_MFD"
-//MFD-md flow model after Qin et al.(2007) (md means maximum downslope)
+//! MFD-md flow model after Qin et al.(2007) (md means maximum downslope)
 #define Tag_FLOWIN_INDEX_MFD_MD "FLOWIN_INDEX_MFD_MD"
 #define Tag_FLOWIN_PERCENTAGE_MFD_MD "FLOWIN_PERCENTAGE_MFD_MD"
 #define Tag_FLOWOUT_INDEX_MFD_MD "FLOWOUT_INDEX_MFD_MD"
@@ -124,7 +128,7 @@
 #define ModId_ITP_AU "ITP_AU"
 #define ModId_PI_MSM "PI_MSM"
 
-//for reach hydroclimate data
+//!for reach hydro climate data
 #define DIVERSION	"flowdiversion"
 #define POINTSOURCE "pointsource"
 #define RESERVOIR	"reservoir"
@@ -197,13 +201,35 @@
 #define SITELIST_TABLE "SiteList"
 #define SITELIST_TABLE_STORM "StormSiteList"
 
-#ifndef linux
-#define CH_ROUTING_MODULE "IKW_CH"
-#define SEP "\\"
-#else
-#define CH_ROUTING_MODULE "libIKW_CH"
-#define SEP "/"
-#endif
+
+//////////////////////////////////////////////////////////////////////////
+/// Define unit names common used in SEIMS, in case of inconsistency /////
+/// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+#define VAR_PET_K "K_pet"                           /// Correction factor for PET
+#define VAT_PET_T "T_PET"                           /// Potential Evapotranspiration of day
+//////////////////////////////////////////////////////////////////////////
+/// Define units common used in SEIMS, in case of inconsistency //////////
+/// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+#define UNIT_AREA_KM2 "km2"                         /// Square kilometer of area
+#define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
+#define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
+#define UNIT_LEN_M "m"                              /// Meter of length
+#define UNIT_LONLAT_DEG "degree"                    /// Degree of longitude and latitude
+#define UNIT_NON_DIM ""                             /// Non dimension  
+#define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
+#define UNIT_WTRDLT_MMD "mm/d"                      /// Millimeter per day of water changes
+
+//////////////////////////////////////////////////////////////////////////
+/// Define description of units common used in SEIMS            //////////
+/// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+#define DESC_MAXTEMP "Maximum Celsius degree of air temperature"
+#define DESC_MEANTEMP "Mean Celsius degree of air temperature"
+#define DESC_METEOLAT "Latitude of MeteoClimate station"
+#define DESC_MINTEMP "Minimum Celsius degree of air temperature"
+#define DESC_PET_K "Correction factor for PET"
+#define DESC_PET_T "Potential Evapotranspiration of day"
 
 #endif
-
