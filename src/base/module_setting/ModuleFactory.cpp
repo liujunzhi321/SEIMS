@@ -573,10 +573,10 @@ void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, S
 //! is constant input?
 bool ModuleFactory::IsConstantInputFromName(string& name)
 {
-	if(	StringMatch(name,Contant_Input_Elevation) ||
-		StringMatch(name,Contant_Input_Latitude)	||
-		StringMatch(name,Contant_Input_Xpr)		||
-		StringMatch(name,Contant_Input_Ypr))
+	if(	StringMatch(name,CONS_IN_ELEV) ||
+		StringMatch(name,CONS_IN_LAT)	||
+		StringMatch(name,CONS_IN_XPR)		||
+		StringMatch(name,CONS_IN_YPR))
 		//StringMatch(name,Contant_Input_FlowdiversionProperty) ||
 		//StringMatch(name,Contant_Input_PointsourceProperty) ||
 		//StringMatch(name,Contant_Input_ReservoirProperty) ||
@@ -902,10 +902,10 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	//set the parameter data to the module
 	string name = param->BasicName;
 	if(setting->dataTypeString().size() == 0 
-		&& !StringMatch(param->BasicName,Contant_Input_Elevation) 
+		&& !StringMatch(param->BasicName,CONS_IN_ELEV) 
 		&& !StringMatch(param->BasicName,Contant_Input_latitude) 
-		&& !StringMatch(param->BasicName,Contant_Input_Xpr)
-		&& !StringMatch(param->BasicName,Contant_Input_Ypr))
+		&& !StringMatch(param->BasicName,CONS_IN_XPR)
+		&& !StringMatch(param->BasicName,CONS_IN_YPR))
 	{
 		name = param->Name;
 		//cout << param->Name << " " << param->BasicName << endl;
@@ -1307,16 +1307,16 @@ void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInpu
 			if(param.DependPara != NULL) 
 				continue;	//the input which comes from other modules will not change when the date is change.
 #ifdef linux
-			if(strcasecmp(param.Name.c_str(), Contant_Input_Elevation) == 0 
-				|| strcasecmp(param.Name.c_str(),Contant_Input_Latitude) == 0
-				|| strcasecmp(param.Name.c_str(),Contant_Input_Xpr) == 0
-				|| strcasecmp(param.Name.c_str(),Contant_Input_Ypr) == 0) 
+			if(strcasecmp(param.Name.c_str(), CONS_IN_ELEV) == 0 
+				|| strcasecmp(param.Name.c_str(),CONS_IN_LAT) == 0
+				|| strcasecmp(param.Name.c_str(),CONS_IN_XPR) == 0
+				|| strcasecmp(param.Name.c_str(),CONS_IN_YPR) == 0) 
 				continue;
 #else
-			if(_stricmp(param.Name.c_str(), Contant_Input_Elevation) == 0
-				|| _stricmp(param.Name.c_str(),Contant_Input_Latitude) == 0
-				|| _stricmp(param.Name.c_str(),Contant_Input_Xpr) == 0
-				|| _stricmp(param.Name.c_str(),Contant_Input_Ypr) == 0) 
+			if(_stricmp(param.Name.c_str(), CONS_IN_ELEV) == 0
+				|| _stricmp(param.Name.c_str(),CONS_IN_LAT) == 0
+				|| _stricmp(param.Name.c_str(),CONS_IN_XPR) == 0
+				|| _stricmp(param.Name.c_str(),CONS_IN_YPR) == 0) 
 				continue;
 #endif
 			if (dataType.length() > 0)

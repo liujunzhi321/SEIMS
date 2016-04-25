@@ -38,7 +38,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//if T_MEAN is larger than T_snow, then m_snow = 0;
 	//else m_snow = 1.
 	mdi.AddParameter("T_snow","mm","Amount of water in snow","ParameterDB_Snow", DT_Single); 
-	mdi.AddParameter("K_pet", "", "Correction Factor for PET", "ParameterDB", DT_Single);
+	mdi.AddParameter(VAR_PET_K, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
 	//Now the canopy height is assumed as constant for everyday and is consider as a parameter and read from asc file.
 	//After the plant growth module is completed, this should be converted to input variable.
 	//mdi.AddParameter("CHT","m","Canopy height for the day","file_height.asc", Array1D);	

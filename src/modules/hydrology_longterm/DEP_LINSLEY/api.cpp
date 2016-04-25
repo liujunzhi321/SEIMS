@@ -4,7 +4,7 @@
  *
  *
  *
- * \author [your name]
+ * \author JunZhi Liu
  * \version 
  * \date June 2015
  *
@@ -38,7 +38,13 @@ extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 	return new DepressionFSDaily();
 }
 
-// function to return the XML Metadata document string
+/*!
+ * \ingroup DEP_LINSLEY
+ * \brief function to return the XML Metadata document string
+ *
+ *   
+ * 
+ */
 extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	MetadataInfo mdi;
