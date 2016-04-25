@@ -143,7 +143,7 @@ void AtmosphericDeposition::SetValue(const char* key, float data) ///< set Singl
 		m_conRainNitra = data;
 	else if (StringMatch(sk, "ConRainAmm"))
 		m_conRainAmm = data;
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
 	else
 		throw ModelException("AtmosphericDeposition", "SetSingleData", "Parameter " + sk 

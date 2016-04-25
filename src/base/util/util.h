@@ -10,16 +10,17 @@
  *
  * 
  */
-
-#ifndef SEIM_UTIL_INCLUDE
-#define SEIM_UTIL_INCLUDE
+#pragma once
+#ifndef SEIMS_UTIL_INCLUDE
+#define SEIMS_UTIL_INCLUDE
 
 #define NODATA -99.0f
-#define SEIM_FLOAT float
-
+#define SEIMS_FLOAT float /// useless? LJ, Apr. 2016
+#define UTIL_ZERO 0.0000000001
 #include <string>
 #include <vector>
 #include <stdio.h>
+#include "text.h"
 
 using namespace std;
 //! grid layering method for parallel computing

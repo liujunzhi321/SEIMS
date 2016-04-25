@@ -5,6 +5,7 @@
 #include "ModelException.h"
 #include "util.h"
 
+
 #include <omp.h>
 
 SUR_MR::SUR_MR(void):m_infil(NULL),m_pe(NULL), m_dt(-1), m_nSoilLayers(2),
@@ -242,7 +243,7 @@ void SUR_MR::SetValue(const char* key, float value)
 {
 	string sk(key);
 
-	if (StringMatch(key, "ThreadNum"))
+	if (StringMatch(key, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)value);
 	else if (StringMatch(sk, "DT_HS"))	
 		m_dt = value;

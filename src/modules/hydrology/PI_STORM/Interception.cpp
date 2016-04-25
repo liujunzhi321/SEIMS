@@ -75,7 +75,7 @@ void clsPI_MSM::SetValue(const char* key, float data)
 	//else if(StringMatch(s,"K_pet"))			this->m_K_pet = data;
 	else if(StringMatch(s,"Init_IS"))		
 		this->m_Init_IS = data;
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

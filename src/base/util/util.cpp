@@ -10,10 +10,10 @@
  *
  * 
  */
+#pragma once
 #include <cmath>
 #include "util.h"
 #include "utils.h"
-#include "text.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -28,8 +28,6 @@
 #endif
 
 using namespace std;
-
-#define UTIL_ZERO 0.0000000001
 
 /*!
  * \ingroup Util
@@ -484,10 +482,12 @@ int copyfile_linux(const char* srcfile, const char* dstfile)
     return 0;
 }
 #endif
-/**
+
+/*!
  * \ingroup Util
-*/
-//! Get local time
+ * \brief Get local time
+ *
+ */
 void LocalTime(time_t date, struct tm *t)
 {
 #ifndef linux

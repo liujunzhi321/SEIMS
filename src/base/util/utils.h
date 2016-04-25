@@ -19,8 +19,8 @@
  * 
  */
 
-#pragma once
-
+#ifndef SEIMS_UTIL_INCLUDE
+#define SEIMS_UTIL_INCLUDE
 #include <vector>
 #include <string>
 #include <sstream> 
@@ -59,3 +59,4 @@ public:
 
 	static int GetDateInfoFromTimet(time_t* seconds, int* year, int* month, int* day);
 };
+#endif

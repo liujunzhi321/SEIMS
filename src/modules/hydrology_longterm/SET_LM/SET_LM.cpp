@@ -105,7 +105,7 @@ void SET_LM::SetValue(const char* key, float data)
 	string s(key);
 	if(StringMatch(s,"T_Soil"))				
 		m_frozenT = data;
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
 	else								
 		throw ModelException("SET_LM","SetValue","Parameter " + s + " does not exist in SET_LM method. Please contact the module developer.");

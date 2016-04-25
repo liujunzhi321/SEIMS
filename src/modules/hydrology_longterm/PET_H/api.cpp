@@ -10,7 +10,6 @@
 #include <string>
 #include "api.h"
 #include "util.h"
-#include "text.h"
 #include "PETHargreaves.h"
 #include <iostream>
 #include "SimulationModule.h"
@@ -50,16 +49,18 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	// set the parameters (non-time series)
 	//mdi.AddInput("T_MEAN","degree","Mean Air Temperature","interpolation module", Array1D);
 	mdi.AddParameter(VAR_PET_K, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_PET_HCOEF, UNIT_NON_DIM, DESC_PET_HCOEF, Source_ParameterDB, DT_Single);
 	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Array1D);
 	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Array1D);
+
 	//mdi.AddInput("SR_MAX","MJ/m2/d","Maximum Solar Radiation","climate generation module", Array1D);
 	mdi.AddParameter(Tag_Latitude_Meteorology,UNIT_LONLAT_DEG,DESC_METEOLAT,Source_HydroClimateDB, DT_Array1D);
 
 	// set the output variables
-	mdi.AddOutput(VAT_PET_T,UNIT_WTRDLT_MMD, DESC_PET_T, DT_Array1D);
+	mdi.AddOutput(VAR_PET_T,UNIT_WTRDLT_MMD, DESC_PET_T, DT_Array1D);
 
 	// set the dependencies, does this necessary? LJ
-	//mdi.AddDependency("CLIMATE_GEN", "");
+	mdi.AddDependency("PET_PM", "");
 
 	string res = mdi.GetXMLDocument();
 

@@ -66,15 +66,15 @@ const string TagDependencies = "dependencies";
 enum dimensionTypes
 {
 	DT_Unknown			= -1,///< Unknown type
-	DT_Single			= 0,///< Single numeric
-	DT_Array1D			= 1,///< 1D array
-	DT_Array2D			= 2,///< 2D array
-	DT_Array3D			= 3,///< 3D array
-	DT_Array1DDateValue = 4,///< 1D date array
-	DT_Raster	= 5,        ///< Raster data
-	DT_SiteInformation	= 6,///< Hydrological or meterological site information
-	DT_LapseRateArray	= 7,///< Lapse rate array
-	DT_Scenario			= 8///< Scenario used by BMPs
+	DT_Single			= 0, ///< Single numeric
+	DT_Array1D			= 1, ///< 1D array
+	DT_Array2D			= 2, ///< 2D array
+	DT_Array3D			= 3, ///< 3D array
+	DT_Array1DDateValue = 4, ///< 1D date array
+	DT_Raster	= 5,         ///< Raster data
+	DT_SiteInformation	= 6, ///< Hydrological or meterological site information
+	DT_LapseRateArray	= 7, ///< Lapse rate array
+	DT_Scenario			= 8 ///< Scenario used by BMPs
 };
 
 
