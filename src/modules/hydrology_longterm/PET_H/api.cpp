@@ -1,3 +1,11 @@
+/*!
+ * \file api.cpp
+ *
+ * \author JunZhi Liu, LiangJun Zhu
+ * \date April 2016
+ *
+ * 
+ */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -8,13 +16,22 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-
+/** \defgroup PET_H
+ * \ingroup Hydrology_longterm
+ * \brief Calculate potential evapotranspiration using Hargreaves method
+ *
+ *
+ *
+ */
+//! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new PETHargreaves();
 }
-
-/// function to return the XML Metadata document string
+/*!
+ * \ingroup PET_H
+ * \brief function to return the XML Metadata document string
+ */
 extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	MetadataInfo mdi;
@@ -26,23 +43,23 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("PET_H");
 	mdi.SetName("PET_H");
-	mdi.SetVersion("0.5");
+	mdi.SetVersion("1.0");
 	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("PET_H.html");
 
 	// set the parameters (non-time series)
 	//mdi.AddInput("T_MEAN","degree","Mean Air Temperature","interpolation module", Array1D);
-	mdi.AddParameter("K_pet", "", "Correction Factor for PET", "ParameterDB", DT_Single);
-	mdi.AddInput("Tmax","degree","Maximum Air Temperature","Module", DT_Array1D);
-	mdi.AddInput("Tmin","degree","Minimum Air Temperature","Module", DT_Array1D);
+	mdi.AddParameter(VAR_PET_K, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
+	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Array1D);
 	//mdi.AddInput("SR_MAX","MJ/m2/d","Maximum Solar Radiation","climate generation module", Array1D);
-	mdi.AddParameter(Tag_Latitude_Meteorology,"degree","Latitude","HydroClimateDB", DT_Array1D);
+	mdi.AddParameter(Tag_Latitude_Meteorology,UNIT_LONLAT_DEG,DESC_METEOLAT,Source_HydroClimateDB, DT_Array1D);
 
 	// set the output variables
-	mdi.AddOutput("T_PET","mm/d", "Potential Evapotranspiration", DT_Array1D);
+	mdi.AddOutput(VAT_PET_T,UNIT_WTRDLT_MMD, DESC_PET_T, DT_Array1D);
 
-	// set the dependencies
-	mdi.AddDependency("CLIMATE_GEN", "");
+	// set the dependencies, does this necessary? LJ
+	//mdi.AddDependency("CLIMATE_GEN", "");
 
 	string res = mdi.GetXMLDocument();
 

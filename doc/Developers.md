@@ -54,7 +54,7 @@ SEIMS（Spatially Explicit Integrated Modeling System）模型是由刘军志等
 
 目前，模型还不完善，主要存在以下主要问题：
 
-1. 生态和养分循环模块还很初步，距实用还相差很远；
+1. 生态和养分循环还很初步，距实用还相差很远；
 2. 水文和侵蚀模块虽相对成熟，但尚缺乏进一步的验证工作。
 
 因此需要大家群策群力完善模型，主要有以下几个目标：
@@ -149,10 +149,14 @@ git remote -v
 
 + 将源代码库更新的内容同步到本地，检查差异，然后再和本机分支合并
 ~~~
-git fetch upstream
+git fetch upstream <branch>
 git checkout master
 git merge upstream/master
 ~~~
+
+> fetch远程库的时候注意，如果仅用git fetch upstream命令，会把所有远程库分支下载，速度慢，因此推荐使用
+> git fetch upstream master
+
 + 多数情况下，git可以自动合并，如果出现冲突，则需手动处理后，再`commit`提交，冲突结果类似：
 
 ![](http://zhulj-blog.oss-cn-beijing.aliyuncs.com/seims-img%2Fconflictwhenmerge.png)
@@ -370,6 +374,7 @@ Execute |执行模块功能
 模块编写的一般步骤：
 
 + 阅读相关文献和模型文档，编写模型文档的理论部分；
++ 设计模块名，基本命名规则为`模块功能_算法`，缩写规范自行查找，比如`YLD`可以是作物产量`Yield`的缩写，没有指定具体算法的，命名只有`模块功能`即可
 + 根据模型的相关理论，参考已有成熟模型的代码，列出模型的输入（包括以其他模块的输出作为输入）、输出，编写元数据函数(`MetadataInformation`)代码
 + 在头文件中定义所需变量，并做初始化、赋值和有效性检查的工作
 + 初始化：构造函数末尾, `initalOutputs`(为本模块的输出变量开辟内存空间，并注意在析构函数中删除所开辟的空间)

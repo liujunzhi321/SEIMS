@@ -4,7 +4,7 @@
  *
  *
  *
- * \author [your name]
+ * \author JunZhi Liu
  * \version 
  * \date June 2015
  *
@@ -27,7 +27,7 @@
  */
 /** \defgroup CH_DW
  * \ingroup Hydrology
- * \brief 
+ * \brief Channel routing using diffusive wave equation.
  *
  *
  *

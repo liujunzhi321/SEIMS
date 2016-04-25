@@ -1,0 +1,7 @@
+Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+Interc_max	Maximum Interception Capacity	mm	ALL	-99	1	RC	1.5	0.5	Y
+Interc_min	Minimum Interception Capacity	mm	ALL	-99	1	RC	1.5	0.5	Y
+Pi_b	Interception Storage Capacity Exponent		ALL	1.35	0	AC	1.5	0.5	Y
+Init_IS	Initial interception storage	mm	ALL	0	0	AC	1	0	
+BLAI	Leaf area index		PI_STORM	-99	1	RC	12	0	Y
+CoverFrac	vegetation cover fraction		All	-99	1	RC	1	0	Y

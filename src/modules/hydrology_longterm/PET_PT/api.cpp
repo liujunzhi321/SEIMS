@@ -50,7 +50,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput("SR","MJ/m2/d","Solar radiation","Module", DT_Array1D);
 
 	// set the output variables
-	mdi.AddOutput("T_PET","mm/d", "Potential Evapotranspiration", DT_Array1D);
+	mdi.AddOutput("T_PET",UNIT_WTRDLT_MMD, "Potential Evapotranspiration of day", DT_Array1D);
 
 	string res = mdi.GetXMLDocument();
 
