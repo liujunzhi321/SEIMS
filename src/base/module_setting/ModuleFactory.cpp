@@ -903,7 +903,7 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	string name = param->BasicName;
 	if(setting->dataTypeString().size() == 0 
 		&& !StringMatch(param->BasicName,Contant_Input_Elevation) 
-		&& !StringMatch(param->BasicName,Contant_Input_latitude) 
+		&& !StringMatch(param->BasicName,Contant_Input_Latitude) 
 		&& !StringMatch(param->BasicName,Contant_Input_Xpr)
 		&& !StringMatch(param->BasicName,Contant_Input_Ypr))
 	{
