@@ -18,6 +18,7 @@ int main(int argc, const char* argv[])
 	LayeringMethod layeringMethod = UP_DOWN;
 	char mongodbIP[16];
 	strcpy(mongodbIP,"192.168.6.55");
+	//strcpy(mongodbIP,"127.0.0.1");
 	int port = 27017;
 	if (argc < 2)
 	{

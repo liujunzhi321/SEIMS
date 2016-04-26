@@ -206,18 +206,39 @@
 /// Define unit names common used in SEIMS, in case of inconsistency /////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
+#define VAR_CO2 "Co2"                               /// CO2 Concentration
+#define VAR_COND_MAX "Cond_max"                     /// "Maximum automata's conductance"
+#define VAR_COND_RATE "Cond_rate"                   /// Rate of decline in automata's conductance per unit increase in vapor pressure deficit
+#define VAR_OMP_THREADNUM "ThreadNum"               /// Thread numbers for OMP
+#define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PET_K "K_pet"                           /// Correction factor for PET
-#define VAT_PET_T "T_PET"                           /// Potential Evapotranspiration of day
+#define VAR_PET_T "T_PET"                           /// Potential Evapotranspiration of day
+#define VAR_VP_SAT "svp"                            /// Saturated vapor pressure
+#define VAR_VP_ACT "avp"                            /// actual vapor pressure
+#define VAR_SNOW_TEMP "T_snow"                      /// Snowfall temperature
+#define VAR_SR_MAX "srMax"                          /// Max solar radiation
+
+
+
 //////////////////////////////////////////////////////////////////////////
 /// Define units common used in SEIMS, in case of inconsistency //////////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
 #define UNIT_AREA_KM2 "km2"                         /// Square kilometer of area
+
+#define UNIT_CONDRATE_MSPA "m/s/kPa"                /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
 #define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
+#define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
+#define UNIT_GAS_PPMV "ppmv"                        /// Concentration of gas, e.g., CO2
 #define UNIT_LEN_M "m"                              /// Meter of length
 #define UNIT_LONLAT_DEG "degree"                    /// Degree of longitude and latitude
 #define UNIT_NON_DIM ""                             /// Non dimension  
+#define UNIT_PRESSURE "kPa"                         /// Vapor pressure
+#define UNIT_SPEED_MS "m/s"                         /// Speed related
+#define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
 #define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
 #define UNIT_WTRDLT_MMD "mm/d"                      /// Millimeter per day of water changes
 
@@ -225,11 +246,22 @@
 /// Define description of units common used in SEIMS            //////////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
+#define DESC_CO2 "CO2 Concentration"
+#define DESC_CONDRATE "Rate of decline in stomatal conductance per unit increase in vapor pressure deficit"
+#define DESC_MAXCOND "Maximum stomatal conductance"
 #define DESC_MAXTEMP "Maximum Celsius degree of air temperature"
 #define DESC_MEANTEMP "Mean Celsius degree of air temperature"
 #define DESC_METEOLAT "Latitude of MeteoClimate station"
 #define DESC_MINTEMP "Minimum Celsius degree of air temperature"
+#define DESC_PET_HCOEF "Coefficient related to radiation used in Hargreaves method"
 #define DESC_PET_K "Correction factor for PET"
 #define DESC_PET_T "Potential Evapotranspiration of day"
-
+#define DESC_RM "Relative humidity"
+#define DESC_SNOW_TEMP "Snowfall temperature"
+#define DESC_SR "Solar radiation"
+#define DESC_SR_MAX "Max solar radiation"
+#define DESC_VP_SAT "Saturated vapor pressure"
+#define DESC_VP_ACT "actual vapor pressure"
+#define DESC_WS "Wind speed (measured at 10 meters above surface)"
 #endif
