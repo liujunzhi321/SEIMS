@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Cheng Wei");
 	mdi.SetClass("UptakeGrowth", "Calculate the amount of UptakeGrowth.");
 	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in the SEIMS.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetID("UptakeGrowth");
 	mdi.SetName("UptakeGrowth");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("UptakeGrowth.chm");
 
 	mdi.AddParameter("IDC","","land cover/plant classification","ParameterDB_Crop",DT_Raster);

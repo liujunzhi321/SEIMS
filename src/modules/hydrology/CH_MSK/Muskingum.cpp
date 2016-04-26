@@ -502,7 +502,7 @@ void Muskingum::SetValue(const char* key, float data)
 		m_qUpReach = data;
 	else if(StringMatch(sk, "MSK_X"))
 		m_msk_x = data;
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
 	else if (StringMatch(sk, "VelocityScalingFactor"))
 		m_vScalingFactor = data;

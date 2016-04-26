@@ -353,7 +353,7 @@ void NutrientTransport_OL::SetValue(const char* key, float data)
 		m_parCoeP = data;
 	else if (StringMatch(sk, "PhoPC"))
 		m_phoPC = data;
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

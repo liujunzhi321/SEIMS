@@ -119,7 +119,7 @@ void Denitrification::SetValue(const char* key, float data)
 		if (data > 0)
 			m_denRC = data;
 	}
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

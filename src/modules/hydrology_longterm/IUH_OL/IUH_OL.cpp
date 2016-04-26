@@ -227,7 +227,7 @@ void IUH_OL::SetValue(const char* key, float value)
 	{
 		m_CellWidth = value;
 	}
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)value);
 	}

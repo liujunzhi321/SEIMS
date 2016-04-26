@@ -180,7 +180,7 @@ void ModuleFactory::ReadParametersFromSQLite()
 		if (!dbman.IsError())
 		{
 			vector<string> paraTables;
-			paraTables.push_back("Climate");
+			paraTables.push_back("PET_PM");
 			paraTables.push_back("Discharge");
 			paraTables.push_back("InstreamWQ");
 			paraTables.push_back("Interception");

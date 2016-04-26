@@ -265,7 +265,7 @@ void SEDR_VCD::SetValue(const char* key, float value)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "ThreadNum"))
+	if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)value);
 	}

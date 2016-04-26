@@ -375,7 +375,7 @@ void ImplicitKinematicWave::SetValue(const char* key, float data)
 		m_dtStorm = data;
 	else if (StringMatch(sk, "CellWidth"))
 		m_dx = data;
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

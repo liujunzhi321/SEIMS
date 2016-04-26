@@ -200,7 +200,7 @@ void NitrificationAndAmmoniaVolatilization::SetValue(const char* key, float data
 		if (data > 0)
 			m_catEF = data;
 	}
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

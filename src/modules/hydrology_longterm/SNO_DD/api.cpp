@@ -1,3 +1,11 @@
+/*!
+ * \file api.cpp
+ *
+ * \author ZhuLJ
+ * \date April 2016
+ *
+ * 
+ */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -7,7 +15,11 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-
+/** \defgroup SNO_DD
+ * \ingroup Hydrology_longterm
+ * \brief 
+ *
+ */
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new SNO_DD();
@@ -22,11 +34,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Snowmelt", "Calculate the amount of snow melt.");
 	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in the SEIMS.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetID("SNO_DD");
 	mdi.SetName("SNO_DD");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SNO_DD.chm");
 
 	mdi.AddParameter("c_snow","mm/oC/delta_t","temperature impact factor ","ParameterDB_Snow",DT_Single);
