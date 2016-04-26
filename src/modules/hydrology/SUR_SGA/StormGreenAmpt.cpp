@@ -6,6 +6,7 @@
 #include <fstream>
 #include "ModelException.h"
 #include "util.h"
+#include "text.h"
 
 #include <omp.h>
 
@@ -376,7 +377,7 @@ void StormGreenAmpt::SetValue(const char* key, float value)
 	{
 		m_dt = value;
 	}
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)value);
 	}

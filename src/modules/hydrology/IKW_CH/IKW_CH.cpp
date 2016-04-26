@@ -515,7 +515,7 @@ void ImplicitKinematicWave::SetValue(const char* key, float data)
 		m_idUpReach = (int)data;
 	else if(StringMatch(sk, "QUPREACH"))
 		m_qUpReach = data;
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

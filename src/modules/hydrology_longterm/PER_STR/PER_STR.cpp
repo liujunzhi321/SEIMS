@@ -183,7 +183,7 @@ void PER_STR::SetValue(const char* key, float data)
 		m_dt = int(data);
 	else if(StringMatch(s,"t_soil"))		
 		m_frozenT = data;
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
 	//else if(StringMatch(s,"UpperSoilDepth"))		
 	//	m_upSoilDepth = data;

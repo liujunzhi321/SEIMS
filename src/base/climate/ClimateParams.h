@@ -1,59 +1,61 @@
 /*!
- * \file PETHargreaves.h
+ * \file ClimateParams.h
  *
- * \author Junzhi Liu
- * \date Nov. 2010
+ * \author ZhuLJ
+ * \date April 2016
  *
  * 
  */
-#ifndef SEIMS_PET_HARGREAVES_INCLUDE
-#define SEIMS_PET_HARGREAVES_INCLUDE
-
+#pragma once
+#ifndef SEIMS_CLIMATE_PARAMS_INCLUDE
+#define SEIMS_CLIMATE_PARAMS_INCLUDE
 #include <string>
 #include "api.h"
 #include "SimulationModule.h"
 
 using namespace std;
 /*!
- * \class PETHargreaves
- * \ingroup PET_H
+ * \class ClimateParameters
+ * \ingroup CLIMATE
  *
- * \brief Hargreaves method to Compute PET
+ * \brief Climate related intermediate parameters, e.g., saturation vapor pressure, max solar radiation.
  *
  */
-class PETHargreaves : public SimulationModule
+class ClimateParameters : public SimulationModule
 {
 public:
-	PETHargreaves(void);
-	~PETHargreaves(void);
+	ClimateParameters(void);
+	~ClimateParameters(void);
 
-	virtual void SetValue(const char* key, float value);
 	virtual void Set1DData(const char* key, int n, float *value);
-	virtual void Get1DData(const char* key, int* n, float **data);
+	virtual void SetValue(const char* key, float value);
 	virtual int Execute();
-
+	virtual void Get1DData(const char* key, int* n, float** data);
 private:
+	
 	/// mean air temperature for a given day(degree)
-	///float *m_tMean;
-
+	float *m_tMean;
 	/// maximum air temperature for a given day(degree)
 	float *m_tMax;
 	/// minimum air temperature for a given day(degree)
 	float *m_tMin;
-	/// coefficient related to radiation used in Hargreaves method
-	float m_HCoef_pet;
-
-	/// size of the input array
-	int m_size;
-
-	/// output PET array
-	float *m_pet;
-	
-	/// Correction Factor for PET
-	float m_petFactor;
-
+	/// solar radiation(MJ/m2/d)
+	float *m_sr;
+	/// relative humidity(%)
+	float *m_rhd;
+	/// wind speed
+	float *m_ws;
 	///latitude of the stations
 	float *m_latitude;
+	///
+	int m_size;
+	/// output variables
+	/// maximum solar radiation
+	float *m_srMax;
+	/// saturated vapor pressure
+	float *m_svp;
+	/// actual vapor pressure
+	float *m_avp;
 private:
 
 	/*!
@@ -87,6 +89,13 @@ private:
 	 * \return int Julian day
 	 */
 	int JulianDay(time_t);
+
+	/*!
+	 * \brief calculates saturation vapor pressure at a given air temperature.
+	 * \param[in] float t: mean air temperature(deg C)
+	 * \return saturation vapor pressure(kPa)
+	 */
+	float SaturationVaporPressure(float t);
 };
 
 #endif

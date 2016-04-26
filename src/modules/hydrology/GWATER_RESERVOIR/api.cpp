@@ -1,3 +1,11 @@
+/*!
+ * \file api.cpp
+ *
+ * \author ZhuLJ
+ * \date April 2016
+ *
+ * 
+ */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -7,7 +15,11 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-
+/** \defgroup GWATER_RESERVOIR
+ * \ingroup Hydrology
+ * \brief Calculate potential evapotranspiration using Penman-Monteith method
+ *
+ */
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new GWaterReservoir();

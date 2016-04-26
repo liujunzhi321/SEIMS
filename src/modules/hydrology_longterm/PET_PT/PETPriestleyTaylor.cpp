@@ -1,3 +1,12 @@
+/*!
+ * \ingroup PET_PT
+ * \file PETPriestleyTaylor.cpp
+ *
+ * \author Junzhi Liu
+ * \date Nov. 2010
+ * \revised LiangJun Zhu
+ *
+ */
 #include "PETPriestleyTaylor.h"
 #include "MetadataInfo.h"
 #include <cmath>
@@ -5,7 +14,7 @@
 #include <fstream>
 #include "ModelException.h"
 #include "util.h"
-#include "text.h"
+//#include "text.h"
 #include <omp.h>
 
 using namespace std;
@@ -26,7 +35,7 @@ PETPriestleyTaylor::~PETPriestleyTaylor(void)
 void PETPriestleyTaylor::Get1DData(const char* key, int* n, float **data)
 {
 	string sk(key);
-	if (StringMatch(sk, "T_PET") || StringMatch(sk, "PET"))   //infiltration
+	if (StringMatch(sk, VAR_PET_T)) // deprecated code: || StringMatch(sk, "PET"))
 	{
 		*data = this->m_pet;
 		*n = this->m_size;
@@ -34,7 +43,6 @@ void PETPriestleyTaylor::Get1DData(const char* key, int* n, float **data)
 	else
 	{
 		throw ModelException("PET_PT", "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
-
 	}
 }
 
@@ -53,7 +61,6 @@ bool PETPriestleyTaylor::CheckInputSize(const char* key, int n)
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -77,7 +84,7 @@ bool PETPriestleyTaylor::CheckInputData()
 
 	if(this->m_latitude == NULL)
 	{
-		throw ModelException("PET_PT","CheckInputData","The latitude can not be NULL.");
+		throw ModelException("PET_PT","CheckInputData","The latitude of meteorology stations can not be NULL.");
 	}
 
 	if(this->m_rhd == NULL)
@@ -92,12 +99,12 @@ bool PETPriestleyTaylor::CheckInputData()
 
 	if(this->m_tMin == NULL)
 	{
-		throw ModelException("PET_PT","CheckInputData","The min temeprature can not be NULL.");
+		throw ModelException("PET_PT","CheckInputData","The min temperature can not be NULL.");
 	}
 
 	if(this->m_tMax == NULL)
 	{
-		throw ModelException("PET_PT","CheckInputData","The max temeprature can not be NULL.");
+		throw ModelException("PET_PT","CheckInputData","The max temperature can not be NULL.");
 	}
 
 	return true;
@@ -105,7 +112,9 @@ bool PETPriestleyTaylor::CheckInputData()
 
 float PETPriestleyTaylor::SaturationVaporPressure(float t)
 {
-	if ( abs(t + 237.3f) >= 1.0e-6f)
+	/// Calculate saturation vapor pressure, equation 1:2.3.2 in SWAT Theory 2009, p54
+	/// Tetens (1930) and Murray (1967), ee.f in SWAT src.
+	if (!FloatEqual(t + 237.3f, UTIL_ZERO))
 	{
 		float ee = (16.78f * t - 116.9f) / (t + 237.3f);
 		return exp(ee);
@@ -134,29 +143,26 @@ int PETPriestleyTaylor::Execute()
 		//////////////////////////////////////////////////////////////////////////
 		//compute net radiation
 
-		//net short-wave radiation for PET(from swat)
+		/// net short-wave radiation for PET, etpot.f in SWAT src
 		float raShortWave = m_sr[i] * (1.0f - 0.23f);
 		float tMean = (m_tMax[i] + m_tMin[i]) / 2;
-
-		//*********************************************************
-		//if(m_snow[j] > 0.5f) 
-		if(tMean < this->m_tSnow)		//if the mean t < snow t, consider the snow depth is larger than 0.5mm.
+		//if the mean T < T_snow, consider the snow depth is larger than 0.5mm.
+		if(tMean < this->m_tSnow)		
 			raShortWave = m_sr[i] * (1.0f - 0.8f);
-		//*********************************************************
 
-		//calculate the max solar radiation
+		/// calculate the max solar radiation
 		float srMax = this->MaxSolarRadiation(d,this->m_latitude[i]);
 
-		//calculate net long-wave radiation
-		//net emissivity  equation 2.2.20 in SWAT manual
+		/// calculate net long-wave radiation
+		/// net emissivity  equation 2.2.20 in SWAT manual
 		float satVaporPressure = SaturationVaporPressure(tMean);
 		float actualVaporPressure = m_rhd[i] * satVaporPressure;
 		float rbo = -(0.34f - 0.139f * sqrt(actualVaporPressure));
-		//cloud cover factor equation 2.2.19
+		//cloud cover factor
 		float rto = 0.0f;
 		if (srMax >= 1.0e-4)
 			rto = 0.9f * (m_sr[i] / srMax) + 0.1f;
-		//net long-wave radiation equation 2.2.21
+		//net long-wave radiation
 		float tk = tMean + 273.15f;
 		float raLongWave = rbo * rto * 4.9e-9f * pow(tk, 4);
 
@@ -188,25 +194,25 @@ void PETPriestleyTaylor::Set1DData(const char* key,int n, float *value)
 	if(!this->CheckInputSize(key,n)) return;
 
 	string sk(key);
-	if (StringMatch(sk,"TMIN"))
+	if (StringMatch(sk,DataType_MinimumTemperature))
 	{
-		m_tMin = value;
+		this->m_tMin = value;
 	}
-	else if (StringMatch(sk,"TMAX"))
+	else if (StringMatch(sk,DataType_MaximumTemperature))
 	{
-		m_tMax = value;
+		this->m_tMax = value;
 	}
-	else if (StringMatch(sk,"RM"))
+	else if (StringMatch(sk,DataType_RelativeAirMoisture))
 	{
-		m_rhd = value;
+		this->m_rhd = value;
 	}
-	else if (StringMatch(sk,"SR"))
+	else if (StringMatch(sk,DataType_SolarRadiation))
 	{
-		m_sr = value;
+		this->m_sr = value;
 	}
 	else if (StringMatch(sk, Tag_Elevation_Meteorology))
 	{
-		m_elev = value;
+		this->m_elev = value;
 	}
 	else if (StringMatch(sk, Tag_Latitude_Meteorology))
 	{
@@ -216,21 +222,20 @@ void PETPriestleyTaylor::Set1DData(const char* key,int n, float *value)
 	{
 		throw ModelException("PET_PT","SetValue","Parameter " + sk + " does not exist in PETPriestleyTaylor method. Please contact the module developer.");
 	}
-
 }
 
 void PETPriestleyTaylor::SetValue(const char* key, float value)
 {
 	string sk(key);
-	if (StringMatch(sk,"T_snow"))
+	if (StringMatch(sk,VAR_SNOW_TEMP))
 	{
 		this->m_tSnow = value;
 	}
-	else if (StringMatch(sk,"K_pet"))
+	else if (StringMatch(sk,VAR_PET_K))
 	{
 		m_petFactor = value;
 	}
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)value);
 	}
@@ -241,40 +246,40 @@ void PETPriestleyTaylor::SetValue(const char* key, float value)
 
 }
 
-//The source code come from Junzhi's MaxRadiation project.
+
 float PETPriestleyTaylor::MaxSolarRadiation(int day,float lat)
 {
-	  lat = lat*3.1415926f/180;
-	  //Calculate Daylength
-      //calculate solar declination: equation 2.1.2 in SWAT manual
-      float sd = asin(0.4f * sin((day - 82.0f) / 58.09f));  //365/2pi = 58.09
+	lat = lat*3.1415926/180;
+	//Calculate Daylength
+	//calculate solar declination: equation 1:1.1.2 in SWAT Theory 2009, p31
+	float sd = asin(0.4f * sin((day - 82.0f) / 58.09f));  /// 365/2pi = 58.09
 
-      //calculate the relative distance of the earth from the sun
-      //the eccentricity of the orbit
-      //equation 2.1.1 in SWAT manual
-      float dd = 1.0f + 0.033f * cos(day / 58.09f);
+	//calculate the relative distance of the earth from the sun
+	//also called the eccentricity correction factor of the orbit, Duffie and Beckman(1980)
+	//equation 1:1.1.1 in SWAT Theory 2009, p30
+	float dd = 1.0f + 0.033f * cos(day / 58.09f);
 
-      //daylength = 2 * Acos(-Tan(sd) * Tan(lat)) / omega
-      //where the angular velocity of the earth's rotation, omega, is equal
-      //to 15 deg/hr or 0.2618 rad/hr and 2/0.2618 = 7.6374
-      //equation 2.1.6 in SWAT manual
+	//daylength = 2 * Acos(-Tan(sd) * Tan(lat)) / omega
+	//where the angular velocity of the earth's rotation, omega, is equal
+	//to 15 deg/hr or 0.2618 rad/hr and 2/0.2618 = 7.6374
+	//equation 2.1.6 in SWAT manual
 
-      float h = 0.0f;
-      float ch = -sin(lat) * tan(sd) / cos(lat);
-      if (ch > 1.f) //ch will be >= 1. if latitude exceeds +/- 66.5 deg in winter
-        h = 0.0f;
-      else if (ch >= -1.0f)
-        h = acos(ch);
-      else
-        h = 3.1416f; //latitude exceeds +/- 66.5 deg in summer
-      
-      float dayl = 7.6394f * h;
-          
-      //Calculate Potential (maximum) Radiation !!
-      //equation 2.2.7 in SWAT manual
-      float ys = sin(lat) * sin(sd);
-      float yc = cos(lat) * cos(sd);
-      
-	  return 30.f * dd * (h * ys + yc * sin(h));
+	float h = 0.0f;
+	/// equation 1:1.1.4 in SWAT Theory 2009, p32
+	float ch = -sin(lat) * tan(sd) / cos(lat);
+	if (ch > 1.f) //ch will be >= 1. if latitude exceeds +/- 66.5 deg in winter
+		h = 0.0f;
+	else if (ch >= -1.0f)
+		h = acos(ch);
+	else
+		h = 3.1416f; //latitude exceeds +/- 66.5 deg in summer
+
+	float dayl = 7.6394f * h; /// useless?
+
+	//Calculate Potential (maximum) Radiation !!
+	/// equation 1:1.1.3 in SWAT Theory 2009, p31
+	float ys = sin(lat) * sin(sd);
+	float yc = cos(lat) * cos(sd);
+	/// equation 1:1.1.7 in SWAT Theory 2009, p34
+	return 30.f * dd * (h * ys + yc * sin(h));
 }
-

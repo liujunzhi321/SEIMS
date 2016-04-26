@@ -1,3 +1,11 @@
+/*!
+ * \file api.cpp
+ *
+ * \author ZhuLJ
+ * \date April 2016
+ *
+ * 
+ */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -8,7 +16,11 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 #include "PETPriestleyTaylor.h"
-
+/** \defgroup PET_PT
+ * \ingroup Hydrology_longterm
+ * \brief Calculate potential evapotranspiration using PriestleyTaylor method
+ *
+ */
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new PETPriestleyTaylor();
@@ -26,31 +38,31 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetEmail("SEIMS2015@163.com");
 	mdi.SetID("PET_PT");
 	mdi.SetName("PET_PT");
-	mdi.SetVersion("0.5");
+	mdi.SetVersion("1.0");
 	mdi.SetWebsite("http://seims.github.io/SEIMS");
 	mdi.SetHelpfile("PET_PT.html");
 
 	//This temperature is used to determine the value of variable m_snow
 	//if T_MEAN is larger than T_snow, then m_snow = 0;
 	//else m_snow = 1.
-	mdi.AddParameter("T_snow","mm","Amount of water in snow","ParameterDB_Snow", DT_Single); 
-	mdi.AddParameter("K_pet", "", "Correction Factor for PET", "ParameterDB", DT_Single);
-	//The elevation of station is read from HydroClimateDB. It would be consider as a paramter. And its name must be Elevation. 
-	//This will force the main program to read elevation from HydroClimateDB. See Line 1078 of main.cpp.
-	mdi.AddParameter(Tag_Elevation_Meteorology,"m","Elevation","HydroClimateDB", DT_Array1D);
+	mdi.AddParameter(VAR_SNOW_TEMP,UNIT_DEPTH_MM,DESC_SNOW_TEMP,Source_ParameterDB, DT_Single); 
+	mdi.AddParameter(VAR_PET_K, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
+	//The elevation of station is read from HydroClimateDB. It would be consider as a parameter. And its name must be Elevation. 
+	//This will force the main program to read elevation from HydroClimateDB.
+	mdi.AddParameter(Tag_Elevation_Meteorology,UNIT_LEN_M,CONS_IN_ELEV,Source_HydroClimateDB, DT_Array1D);
 
-	//Latitude is used to calculate max solar radiation. It is read in the similiar format with elevation.
-	mdi.AddParameter(Tag_Latitude_Meteorology,"degree","Latitude","HydroClimateDB", DT_Array1D);
+	//Latitude is used to calculate max solar radiation. It is read in the similar format with elevation.
+	mdi.AddParameter(Tag_Latitude_Meteorology,UNIT_LONLAT_DEG,CONS_IN_LAT,Source_HydroClimateDB, DT_Array1D);
 
-	// set the input
 	//These five inputs are read from HydroClimateDB
-	mdi.AddInput("TMin","degree","Mean air temperature","Module", DT_Array1D); //use TMin and TMax to calculate TMean
-	mdi.AddInput("TMax","degree","Mean air temperature","Module", DT_Array1D);
-	mdi.AddInput("RM","","Relative humidity","Module", DT_Array1D);
-	mdi.AddInput("SR","MJ/m2/d","Solar radiation","Module", DT_Array1D);
+	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_RelativeAirMoisture,UNIT_NON_DIM,DESC_RM,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_SolarRadiation,UNIT_SR,DESC_SR,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_WindSpeed,UNIT_SPEED_MS,DESC_WS,Source_Module, DT_Array1D);
 
 	// set the output variables
-	mdi.AddOutput("T_PET",UNIT_WTRDLT_MMD, "Potential Evapotranspiration of day", DT_Array1D);
+	mdi.AddOutput(VAR_PET_T,UNIT_WTRDLT_MMD, DESC_PET_T, DT_Array1D);
 
 	string res = mdi.GetXMLDocument();
 

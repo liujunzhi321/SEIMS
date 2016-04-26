@@ -70,7 +70,7 @@ void SplashEro_Park::SetValue(const char* key, float data)
 	if(StringMatch(s,"cellwidth"))			m_cellWith = int(data);
 	else if(StringMatch(s,"DT_HS"))		m_TimeStep = data;
 	else if(StringMatch(s,"Omega"))		    m_Omega = data;
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

@@ -5,6 +5,7 @@
 #include "utils.h"
 #include "util.h"
 #include "Common.h"
+#include "text.h"
 //#include "Climate.h"
 #include <omp.h>
 #include <cmath>
@@ -413,7 +414,7 @@ void UptakeGrowth::SetValue(const char* key, float data)
 	//else if(StringMatch(s, "endDate"))				
 	//	m_endDate = data;
 
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

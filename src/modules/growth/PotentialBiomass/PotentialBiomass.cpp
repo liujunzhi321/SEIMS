@@ -366,7 +366,7 @@ void PotentialBiomass::SetValue(const char* key, float data)
 	if(StringMatch(s,"CO2"))				
 		m_co2 = data;
 
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

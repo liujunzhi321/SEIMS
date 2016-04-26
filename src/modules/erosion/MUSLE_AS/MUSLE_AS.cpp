@@ -204,7 +204,7 @@ void MUSLE_AS::SetValue(const char* key, float data)
 	string sk(key);
 	if(StringMatch(sk,"cellwidth"))			
 		m_cellWidth = int(data);
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}
