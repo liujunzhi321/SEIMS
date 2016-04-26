@@ -33,13 +33,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Potential Evapotranspiration", "Calculate the potential evapotranspiration for an array of climate inputs.");
-	mdi.SetDescription("PriestleyTaylor method for calculating the potential evapotranspiration.");
-	mdi.SetEmail("SEIMS2015@163.com");
-	mdi.SetID("PET_PT");
-	mdi.SetName("PET_PT");
+	mdi.SetClass(MCLS_PET, MCLSDESC_PET);
+	mdi.SetDescription(MDESC_PET_PT);
+	mdi.SetEmail(SEIMS_EMAIL);
+	mdi.SetID(MID_PET_PT);
+	mdi.SetName(MID_PET_PT);
 	mdi.SetVersion("1.0");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("PET_PT.html");
 
 	//This temperature is used to determine the value of variable m_snow

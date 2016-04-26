@@ -37,8 +37,8 @@ ENDIF(WIN32)
 
 
 SET (BASE_HOME ./src/base)
-SET (MAIN_HOME ./src/main)
 SET (MODULE_HOME ./src/modules)
+SET (MAIN_HOME ./src/main)
 
 IF(WIN32)## copy external dll libraries to Debug and Release folder
 	SET(EXTERNAL_DLLS "./lib/dlls/gdal15-vc9.dll" "./lib/dlls/libpng13-vc9.dll" "./lib/dlls/libexpat.dll" "./lib/dlls/mongoc.dll" "./lib/dlls/zlib1-vc9.dll" "./lib/dlls/bson.dll")

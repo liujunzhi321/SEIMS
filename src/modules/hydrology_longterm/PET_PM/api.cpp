@@ -1,7 +1,7 @@
 /*!
  * \file api.cpp
  *
- * \author ZhuLJ
+ * \author JunZhi Liu, LiangJun Zhu
  * \date April 2016
  *
  * 
@@ -10,7 +10,6 @@
 #include <string>
 #include "api.h"
 #include "util.h"
-#include "text.h"
 #include "PETPenmanMonteith.h"
 #include <iostream>
 #include "SimulationModule.h"
@@ -21,25 +20,29 @@
  * \brief Calculate potential evapotranspiration using Penman-Monteith method
  *
  */
+//! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new PETPenmanMonteith();
 }
 
-//! function to return the XML Metadata document string
+/*!
+ * \ingroup PET_H
+ * \brief function to return the XML Metadata document string
+ */
 extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	MetadataInfo mdi;
 
 	// set the information properties
 	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Potential Evapotranspiration", "Calculate the potential evapotranspiration for an array of climate inputs.");
-	mdi.SetDescription("Penman Monteith method for calculating the potential evapotranspiration.");
-	mdi.SetEmail("SEIMS2015@163.com");
-	mdi.SetID("PET_PM");
-	mdi.SetName("PET_PM");
+	mdi.SetClass(MCLS_PET, MCLSDESC_PET);
+	mdi.SetDescription(MDESC_PET_PM);
+	mdi.SetEmail(SEIMS_EMAIL);
+	mdi.SetID(MID_PET_PM);
+	mdi.SetName(MID_PET_PM);
 	mdi.SetVersion("1.0");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("PET_PM.html");
 
 	// set the parameters

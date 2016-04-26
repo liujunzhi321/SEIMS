@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("NutrientTransport_OL", "Nutrient Transport Overland.");
 	mdi.SetDescription("Nutrient Transport Overland.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("NutrientTransport_OL.chm");
 	mdi.SetID("NutrientTransport_OL");
 	mdi.SetName("NutrientTransport_OL");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	// Nitrate
 	mdi.AddParameter("AniExcF", "", "the fraction of porosity from which anions are excluded", "file.in", DT_Single); 

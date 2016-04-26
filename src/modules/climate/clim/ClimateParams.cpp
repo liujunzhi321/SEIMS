@@ -1,6 +1,6 @@
 /*!
  * \file ClimateParams.cpp
- *
+ * \ingroup CLIM
  * \author ZhuLJ
  * \date April 2016
  *

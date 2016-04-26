@@ -37,13 +37,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Potential Evapotranspiration", "Calculate the potential evapotranspiration for an array of climate inputs.");
-	mdi.SetDescription("Hargreaves method for calculating the potential evapotranspiration.");
-	mdi.SetEmail("SEIMS2015@163.com");
-	mdi.SetID("PET_H");
-	mdi.SetName("PET_H");
+	mdi.SetClass(MCLS_PET, MCLSDESC_PET);
+	mdi.SetDescription(MDESC_PET_H);
+	mdi.SetEmail(SEIMS_EMAIL);
+	mdi.SetID(MID_PET_H);
+	mdi.SetName(MID_PET_H);
 	mdi.SetVersion("1.0");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("PET_H.html");
 
 	// set the parameters (non-time series)
@@ -59,7 +59,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_PET_T,UNIT_WTRDLT_MMD, DESC_PET_T, DT_Array1D);
 
 	// set the dependencies, does this necessary? LJ
-	mdi.AddDependency("PET_PM", "");
+	mdi.AddDependency("CLIMATE", "");
 
 	string res = mdi.GetXMLDocument();
 

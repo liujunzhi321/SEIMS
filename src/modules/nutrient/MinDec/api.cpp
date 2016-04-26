@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("MineralizationAndDecomposition", "Mineralization and decomposition/immobilization.");
 	mdi.SetDescription("Mineralization and decomposition/immobilization of residue and humus.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("MineralizationAndDecomposition.chm");
 	mdi.SetID("MineralizationAndDecomposition");
 	mdi.SetName("MineralizationAndDecomposition");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("RateConst", "", "rate constant", "file.in", DT_Single); 
 	mdi.AddParameter("HumNF", "m", "fraction of humic nitrogen in the active pool", "file.in", DT_Single); 

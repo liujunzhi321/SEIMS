@@ -1,5 +1,3 @@
-#pragma once
-
 /** 
 *	@file
 *	@version	1.0
@@ -10,12 +8,23 @@
 *
 */
 
-
+#pragma once
 #include <string>
 #include "SimulationModule.h"
 
 using namespace std;
-
+/** \defgroup GWATER_RESERVOIR
+ * \ingroup Hydrology_strom
+ * \brief Calculate groundwater using reservoir method
+ *
+ */
+/*!
+ * \class GWaterReservoir
+ * \ingroup GWATER_RESERVOIR
+ *
+ * \brief 
+ *
+ */
 class GWaterReservoir : public SimulationModule
 {
 public:

@@ -11,13 +11,16 @@
  *
  * 
  */
-#ifndef TEXT_H
-#define TEXT_H
+#ifndef SEIMS_TEXT_H
+#define SEIMS_TEXT_H
 
 // string constants used in the code
 // TODO - you may consider moving these to an external resource file 
 //        to make it easier to change them later 
 #define App_Config_File "app.config"
+
+#define SEIMS_EMAIL "SEIMS2015@163.com"
+#define SEIMS_SITE "http://seims.github.io/SEIMS"
 
 //! Constant input variables
 #define CONS_IN_ELEV						"Elevation"
@@ -185,9 +188,6 @@
 #define Print_D_INET "D_INET"
 #define Print_D_NEPR "D_NEPR"
 
-#define ModID_PI_MSM "PI_MSM"
-#define ModID_ITP_AU "ITP_AU"
-
 #define PARAMETERS_TABLE "parameters"
 #define LANDUSE_TABLE "LanduseLookup"
 #define SOIL_TABLE "SoilLookup"
@@ -201,6 +201,29 @@
 #define SITELIST_TABLE "SiteList"
 #define SITELIST_TABLE_STORM "StormSiteList"
 
+//////////////////////////////////////////////////////////////////////////
+/// Define models' ID and description in SEIMS  //////////////////////////
+/// By LiangJun Zhu, Apr. 26, 2016  //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+/// Base Modules
+#define MCLS_CLIMATE "Climate Variables"
+#define MCLSDESC_CLIMATE "Calculate climate related intermediate parameters."
+#define MID_CLIMATE "CLIM"
+#define MDESC_CLIM "Calculate climate related intermediate parameters."
+
+/// Potential Evapotranspiration Modules
+#define MCLS_PET "Potential Evapotranspiration"
+#define MCLSDESC_PET "Calculate the potential evapotranspiration for an array of climate inputs."
+#define MID_PET_H "PET_H"
+#define MDESC_PET_H "Hargreaves method for calculating the potential evapotranspiration."
+#define MID_PET_PT "PET_PT"
+#define MDESC_PET_PT "PriestleyTaylor method for calculating the potential evapotranspiration."
+#define MID_PET_PM "PET_PM"
+#define MDESC_PET_PM "Penman Monteith method for calculating the potential evapotranspiration."
+
+#define MID_PI_MSM "PI_MSM"
+#define MID_ITP_AU "ITP_AU"
 
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
@@ -248,7 +271,6 @@
 //////////////////////////////////////////////////////////////////////////
 
 #define DESC_CO2 "CO2 Concentration"
-
 #define DESC_CONDRATE "Rate of decline in stomatal conductance per unit increase in vapor pressure deficit"
 #define DESC_MAXCOND "Maximum stomatal conductance"
 #define DESC_MAXTEMP "Maximum Celsius degree of air temperature"

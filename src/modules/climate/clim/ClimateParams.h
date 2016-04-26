@@ -1,22 +1,28 @@
+/** \defgroup CLIM
+ * \ingroup Climate
+ * \brief Calculate climate related intermediate parameters.
+ *  
+ */
 /*!
  * \file ClimateParams.h
- *
+ * \ingroup CLIM
  * \author ZhuLJ
  * \date April 2016
  *
  * 
  */
 #pragma once
-#ifndef SEIMS_CLIMATE_PARAMS_INCLUDE
-#define SEIMS_CLIMATE_PARAMS_INCLUDE
+#ifndef SEIMS_CLIM_PARAMS_INCLUDE
+#define SEIMS_CLIM_PARAMS_INCLUDE
 #include <string>
 #include "api.h"
 #include "SimulationModule.h"
 
 using namespace std;
+
 /*!
  * \class ClimateParameters
- * \ingroup CLIMATE
+ * \ingroup CLIM
  *
  * \brief Climate related intermediate parameters, e.g., saturation vapor pressure, max solar radiation.
  *
@@ -50,6 +56,7 @@ private:
 	///
 	int m_size;
 	/// output variables
+
 	/// maximum solar radiation
 	float *m_srMax;
 	/// saturated vapor pressure
