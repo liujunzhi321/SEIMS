@@ -201,7 +201,7 @@ void SNO_SP::SetValue(const char* key, float data)
 	else if(StringMatch(s,"lag_snow"))		this->m_lagSnow = data;
 	else if(StringMatch(s,"c_snow6"))		this->m_csnow6 = data;
 	else if(StringMatch(s,"c_snow12"))		this->m_csnow12 = data;
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

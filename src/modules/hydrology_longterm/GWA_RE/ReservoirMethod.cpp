@@ -200,7 +200,7 @@ void ReservoirMethod::SetValue(const char* key, float value)
 	string sk(key);
 	if (StringMatch(sk,"TimeStep"))
 		m_TimeStep = int(value);
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)value);
 	else if (StringMatch(sk,"CellSize"))
 		m_nCells = int(value);

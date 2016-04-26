@@ -1,14 +1,11 @@
-/** 
-*	@file
-*	@version	1.0
-*	@author	Junzhi Liu
-*	@date	1-November-2010
-*
-*	@brief	Hargreaves Method to Compute PET
-*
-*	Revision:
-*   Date:
-*/
+/*!
+ * \file PETHargreaves.h
+ *
+ * \author Junzhi Liu
+ * \date Nov. 2010
+ *
+ * 
+ */
 #ifndef SEIMS_PET_HARGREAVES_INCLUDE
 #define SEIMS_PET_HARGREAVES_INCLUDE
 
@@ -19,10 +16,9 @@
 using namespace std;
 /*!
  * \class PETHargreaves
+ * \ingroup PET_H
  *
- * \brief 
- *
- * 
+ * \brief Hargreaves method to Compute PET
  *
  */
 class PETHargreaves : public SimulationModule
@@ -39,16 +35,18 @@ public:
 private:
 	/// mean air temperature for a given day(degree)
 	///float *m_tMean;
+
 	/// maximum air temperature for a given day(degree)
 	float *m_tMax;
 	/// minimum air temperature for a given day(degree)
 	float *m_tMin;
-	/// maximum solar radiation(MJ/m2/d)
-	///float *m_srMax;
+	/// coefficient related to radiation used in Hargreaves method
+	float m_HCoef_pet;
+
 	/// size of the input array
 	int m_size;
 
-	/// output pet array
+	/// output PET array
 	float *m_pet;
 	
 	/// Correction Factor for PET
@@ -57,35 +55,37 @@ private:
 	///latitude of the stations
 	float *m_latitude;
 private:
-	/**
-	*	@brief check the input data. Make sure all the input data is available.
-	*
-	*	@return bool The validity of the input data.
-	*/
+
+	/*!
+	 * \brief check the input data. Make sure all the input data is available.
+	 * \return bool The validity of the input data.
+	 */
 	bool CheckInputData(void);
 
-	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
-	*	
-	*	@param key The key of the input data
-	*	@param n The input data dimension
-	*	@return bool The validity of the dimension
-	*/
+	/*!
+	 * \brief check the input size. Make sure all the input data have same dimension.
+	 *
+	 *
+	 * \param[in] key The key of the input data
+	 * \param[in] n The input data dimension
+	 * \return bool The validity of the dimension
+	 */
 	bool CheckInputSize(const char*,int);
 
-	/**
-	*	@brief Calculate the max solar radiation for a station of one day
-	*
-	*	@param day Julian day.
-	*	@param lat Latitude of the station
-	*	
-	*	@return float The max solar radiation.
-	*/
+	/*!
+	 * \brief Calculate the max solar radiation for a station of one day
+	 *
+	 *
+	 * \param[in] day Julian day.
+	 * \param[in] lat Latitude of the station
+	 * \return float The max solar radiation.
+	 */
 	float MaxSolarRadiation(int,float);
 
-	/**
-	*	@brief Get the Julian day of one day
-	*/
+	/*!
+	 * \brief Get the Julian day of one day
+	 * \return int Julian day
+	 */
 	int JulianDay(time_t);
 };
 

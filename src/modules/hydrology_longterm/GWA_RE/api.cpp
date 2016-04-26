@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wu Hui");
 	mdi.SetClass("Groundwater", "Calculate groundwater balance and baseflow.");
 	mdi.SetDescription("Reservoir Method to calculate groundwater balance and baseflow.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("GWA_RE.chm");
 	mdi.SetID("GWA_RE");
 	mdi.SetName("GWA_RE");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("TimeStep","hr","time step","config.fig",DT_Single); 
 	mdi.AddParameter("CellSize","m","cell size of the grid ","mask",DT_Single);

@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("NitrificationAndAmmoniaVolatilization", "Nitrification and Ammonia volatilization.");
 	mdi.SetDescription("Nitrification and Ammonia volatilization.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("NitrificationAndAmmoniaVolatilization.chm");
 	mdi.SetID("NitrificationAndAmmoniaVolatilization");
 	mdi.SetName("NitrificationAndAmmoniaVolatilization");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("catEF", "", "volatilization cation exchange factor", "file.in", DT_Single); 
 

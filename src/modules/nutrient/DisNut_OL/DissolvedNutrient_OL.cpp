@@ -422,7 +422,7 @@ void DissolvedNutrient_OL::SetValue(const char* key, float data)
 		m_initConcNH4 = data;
 	else if (StringMatch(sk, "InitConc_NO3"))
 		m_initConcNO3 = data;
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

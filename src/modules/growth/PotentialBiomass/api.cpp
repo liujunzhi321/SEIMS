@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Cheng Wei");
 	mdi.SetClass("PotentialBiomass", "Calculate the amount of PotentialBiomass.");
 	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in SEIMS.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetID("PotentialBiomass");
 	mdi.SetName("PotentialBiomass");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("PotentialBiomass.chm");
 
 	mdi.AddParameter("IDC","","land cover/plant classification","ParameterDB_Crop",DT_Raster);
@@ -60,8 +60,10 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("WAVP","kg*m*m/ha*MJ","rate of decline in rue per unit increase in vapor pressure deficit","ParameterDB_Crop",DT_Raster);
 
 
-	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster);									//! from interpolation module
-	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster);									//! from interpolation module
+	//! from interpolation module
+	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster);
+	//! from interpolation module									
+	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster);									
 	mdi.AddInput("D_SR","MJ/m2/d","Solar radiation","Module", DT_Raster);
 	mdi.AddInput("D_RM","","Relative humidity","Module", DT_Raster);
 

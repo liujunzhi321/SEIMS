@@ -293,7 +293,7 @@ void MUSK_CH::SetValue(const char* key, float value)
 	{
 		m_dt = (int) value;
 	}
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)value);
 	}

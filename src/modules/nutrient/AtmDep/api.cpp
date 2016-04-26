@@ -24,12 +24,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("AtmosphericDeposition", "Atmospheric Deposition.");
 	mdi.SetDescription("Atmospheric Deposition.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("AtmosphericDeposition.chm");
 	mdi.SetID("AtmosphericDeposition");
 	mdi.SetName("AtmosphericDeposition");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("RootDepth", "mm", "Depth from the soil surface", Source_ParameterDB, DT_Raster); 
 	mdi.AddParameter("ConRainNitra", "mg N/L", " Concentration of nitrogen in rainfall", Source_ParameterDB, DT_Single); 

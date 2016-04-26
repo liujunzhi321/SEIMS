@@ -21,9 +21,12 @@ using namespace std;
  */
 enum TimeStepType
 {
-	TIMESTEP_HILLSLOPE,///< Hillslope scale
-	TIMESTEP_CHANNEL,  ///< Channel scale
-	TIMESTEP_ECOLOGY   ///< Ecology scale
+	///< Hillslope scale
+	TIMESTEP_HILLSLOPE,
+	///< Channel scale
+	TIMESTEP_CHANNEL,  
+	///< Ecology scale
+	TIMESTEP_ECOLOGY   
 };
 /*!
  * \ingroup Util

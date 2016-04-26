@@ -106,7 +106,7 @@ int HS_WB::Execute()
 void HS_WB::SetValue(const char* key, float data)
 {
 	string s(key);
-	if (StringMatch(s, "ThreadNum"))
+	if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

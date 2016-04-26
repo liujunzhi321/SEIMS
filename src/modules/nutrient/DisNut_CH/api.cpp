@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("Dissolved Nutrient CH", "Channel Dissolved Nutrient.");
 	mdi.SetDescription("Dissolved Nutrient Channel transport method using KinematicWave Method.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("DissolvedNutrient_CH.chm");
 	mdi.SetID("DissolvedNutrient_CH");
 	mdi.SetName("DissolvedNutrient_CH");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
 	mdi.AddParameter("CellWidth", "m", "Cell size", "file.in", DT_Single); 

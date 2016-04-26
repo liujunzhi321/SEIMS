@@ -198,7 +198,7 @@ void SNO_WB::SetValue(const char* key, float data)
 	else if(StringMatch(s,"T_snow"))		this->m_tsnow = data;
 	else if(StringMatch(s,"swe0"))			this->m_swe0 = data;
 	else if(StringMatch(s,"cellSize"))		this->m_cellSize = int(data);
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

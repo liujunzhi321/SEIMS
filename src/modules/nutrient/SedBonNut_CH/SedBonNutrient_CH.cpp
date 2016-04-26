@@ -144,7 +144,7 @@ void SedBonNutrient_CH::SetValue(const char* key, float data)
 		m_dt = data;
 	else if (StringMatch(sk, "CellWidth"))
 		m_dx = data;
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

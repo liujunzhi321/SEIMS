@@ -146,7 +146,7 @@ void KinWavSed_OL::SetValue(const char* key, float data)
 	else if(StringMatch(s,"eco1"))		    m_eco1 = data;//
 	else if(StringMatch(s,"eco2"))		    m_eco2 = data;//
 	else if(StringMatch(s,"ccoe"))		    m_Ccoe = data;
-	else if (StringMatch(s, "ThreadNum"))
+	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}
