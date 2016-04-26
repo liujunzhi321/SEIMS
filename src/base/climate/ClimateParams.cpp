@@ -17,7 +17,7 @@
 
 using namespace std;
 
-ClimateParameters::ClimateParameters(void):m_elev(NULL), m_rhd(NULL), m_sr(NULL), m_tMean(NULL), m_tMin(NULL), m_tMax(NULL), m_ws(NULL), m_latitude(NULL)
+ClimateParameters::ClimateParameters(void):m_tMean(NULL), m_tMin(NULL), m_tMax(NULL), m_rhd(NULL), m_sr(NULL), m_ws(NULL), m_latitude(NULL)
 {
 	this->m_size = -1;
 }
@@ -32,19 +32,13 @@ bool ClimateParameters::CheckInputData()
 {
 	if(this->m_date == -1)
 	{
-		throw ModelException("CLIMATE","CheckInputData","You have not set the time.");
+		throw ModelException("CLIMATE","CheckInputData","You have not set the date time.");
 		return false;
 	}
 
 	if(m_size <= 0)
 	{
 		throw ModelException("CLIMATE","CheckInputData","The dimension of the input data can not be less than zero.");
-		return false;
-	}
-
-	if(this->m_elev == NULL)
-	{
-		throw ModelException("CLIMATE","CheckInputData","The elevation can not be NULL.");
 		return false;
 	}
 
@@ -77,7 +71,10 @@ bool ClimateParameters::CheckInputData()
 		throw ModelException("CLIMATE","CheckInputData","The wind speed can not be NULL.");
 		return false;
 	}
-
+	if (this->m_latitude == NULL)
+	{
+		throw ModelException("CLIMATE","CheckInputData","The latitude of meteorology stations can not be NULL.");
+	}
 	return true;
 }
 
@@ -101,42 +98,10 @@ bool ClimateParameters::CheckInputSize(const char* key, int n)
 	return true;
 }
 
-
-
-int ClimateParameters::Execute()
-{	
-	if(!this->CheckInputData()) return false;
-	int d = JulianDay(this->m_date);
-#pragma omp parallel for
-	/// Calculate climate parameters
-	for (int i = 0; i < m_size; ++i)
-	{
-		/// calculate the max solar radiation
-		float srMax = this->MaxSolarRadiation(d,this->m_latitude[i]);
-		float tMean = (m_tMax[i] + m_tMin[i]) / 2;
-		float satVaporPressure = SaturationVaporPressure(tMean);
-		float actualVaporPressure = m_rhd[i] * satVaporPressure;
-		//calculate latent heat of vaporization(MJ/kg, from swat)
-		float latentHeat = 2.501f - 0.002361f * tMean;
-	}
-	return 0;
-}
 void ClimateParameters::SetValue(const char* key, float value)
 {
 	string sk(key);
-	if (StringMatch(sk,"Co2"))
-	{
-		m_co2 = value;
-	}
-	else if (StringMatch(sk,"Cond_rate"))
-	{
-		m_vpd2 = value;
-	}
-	else if (StringMatch(sk,"Cond_max"))
-	{
-		m_gsi = value;
-	}
-	else if (StringMatch(sk, VAR_OMP_THREADNUM))
+	if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)value);
 	}
@@ -144,65 +109,93 @@ void ClimateParameters::SetValue(const char* key, float value)
 	{
 		throw ModelException("CLIMATE","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
-
 }
 
 void ClimateParameters::Set1DData(const char* key,int n, float *value)
 {
-	//check the input data
 	if(!this->CheckInputSize(key,n)) return;
 
-	//set the value
 	string sk(key);
-	//from hydroclimate data tables
-	if (StringMatch(sk,"TMin"))
+	if (StringMatch(sk,DataType_MeanTemperature) || StringMatch(sk,"TMEAN"))
 	{
-		m_tMin = value;
+		this->m_tMean = value;
 	}
-	else if (StringMatch(sk,"TMax"))
+	if (StringMatch(sk,DataType_MinimumTemperature))
 	{
-		m_tMax = value;
+		this->m_tMin = value;
 	}
-	else if (StringMatch(sk, "RM"))
+	else if (StringMatch(sk,DataType_MaximumTemperature))
 	{
-		m_rhd = value;
+		this->m_tMax = value;
 	}
-	else if (StringMatch(sk,"SR"))
+	else if (StringMatch(sk,DataType_RelativeAirMoisture))
 	{
-		m_sr = value;
+		this->m_rhd = value;
 	}
-	else if (StringMatch(sk,"WS"))
+	else if (StringMatch(sk,DataType_SolarRadiation))
 	{
-		m_ws = value;
-	}
-	//from hydroclimate stations table
-	else if (StringMatch(sk, Tag_Elevation_Meteorology))
-	{
-		m_elev = value;
+		this->m_sr = value;
 	}
 	else if (StringMatch(sk, Tag_Latitude_Meteorology))
 	{
 		this->m_latitude = value;
 	}
-	//from grid file
-	else if (StringMatch(sk,"CHT"))
+	else
 	{
-		m_cht = value;
+		throw ModelException("CLIMATE","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
-	//from LAI model
-	else if (StringMatch(sk,"LAIDAY"))
-	{
-		m_lai = value;
+	/// If TMEAN is not existed, then set TMEAN = (TMAX + TMIN) / 2
+	if (this->m_tMean == NULL){
+		for (int i = 0; i < m_size; ++i)
+			m_tMean[i] = (m_tMax[i] + m_tMin[i]) / 2;
 	}
-	else if (StringMatch(sk, "IGRO"))
+}
+
+int ClimateParameters::Execute()
+{	
+	if(!this->CheckInputData()) return false;
+	if(this->m_srMax == NULL)
 	{
-		this->m_growCode = value;
+		this->m_srMax = new float[this->m_size];
+	}
+	int d = JulianDay(this->m_date);
+#pragma omp parallel for
+	/// Calculate climate parameters
+	for (int i = 0; i < m_size; ++i)
+	{
+		/// calculate the max solar radiation
+		m_srMax[i] = this->MaxSolarRadiation(d,this->m_latitude[i]);
+		/// calculate saturated vapor pressure and actual vapor pressure
+		m_svp[i] = SaturationVaporPressure(m_tMean[i]);
+		m_avp[i] = m_rhd[i] * m_svp[i];
+		//calculate latent heat of vaporization(MJ/kg, from swat)
+		float latentHeat = 2.501f - 0.002361f * m_tMean[i];
+	}
+	return 0;
+}
+
+void ClimateParameters::Get1DData(const char* key, int* n, float** data)
+{
+	string sk(key);
+	if (StringMatch(sk, VAR_SR_MAX))
+	{
+		*data = this->m_srMax;
+		*n = this->m_size;
+	}
+	else if (StringMatch(sk, VAR_VP_SAT))
+	{
+		*data = this->m_svp;
+		*n = this->m_size;
+	}
+	else if (StringMatch(sk, VAR_VP_ACT))
+	{
+		*data = this->m_avp;
+		*n = this->m_size;
 	}
 	else
 	{
-		throw ModelException("CLIMATE","SetValue","Parameter " + sk + " does not exist in PETPenmanMonteith method. Please contact the module developer.");		
+		throw ModelException("CLIMATE", "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
-
 }
 
 //// FUNCTIONS IMPLEMENTATION ////
@@ -218,6 +211,7 @@ float ClimateParameters::SaturationVaporPressure(float t)
 	}
 	return 0.0f;
 }
+
 float ClimateParameters::MaxSolarRadiation(int day,float lat)
 {
 	lat = lat*3.1415926/180;

@@ -214,7 +214,10 @@
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PET_K "K_pet"                           /// Correction factor for PET
 #define VAR_PET_T "T_PET"                           /// Potential Evapotranspiration of day
+#define VAR_VP_SAT "svp"                            /// Saturated vapor pressure
+#define VAR_VP_ACT "avp"                            /// actual vapor pressure
 #define VAR_SNOW_TEMP "T_snow"                      /// Snowfall temperature
+#define VAR_SR_MAX "srMax"                          /// Max solar radiation
 
 
 
@@ -233,6 +236,7 @@
 #define UNIT_LEN_M "m"                              /// Meter of length
 #define UNIT_LONLAT_DEG "degree"                    /// Degree of longitude and latitude
 #define UNIT_NON_DIM ""                             /// Non dimension  
+#define UNIT_PRESSURE "kPa"                         /// Vapor pressure
 #define UNIT_SPEED_MS "m/s"                         /// Speed related
 #define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
 #define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
@@ -257,5 +261,8 @@
 #define DESC_RM "Relative humidity"
 #define DESC_SNOW_TEMP "Snowfall temperature"
 #define DESC_SR "Solar radiation"
+#define DESC_SR_MAX "Max solar radiation"
+#define DESC_VP_SAT "Saturated vapor pressure"
+#define DESC_VP_ACT "actual vapor pressure"
 #define DESC_WS "Wind speed (measured at 10 meters above surface)"
 #endif

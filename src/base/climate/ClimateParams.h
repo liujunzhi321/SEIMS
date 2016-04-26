@@ -30,7 +30,7 @@ public:
 	virtual void Set1DData(const char* key, int n, float *value);
 	virtual void SetValue(const char* key, float value);
 	virtual int Execute();
-	virtual void GetValue(const char* key, float* value);
+	virtual void Get1DData(const char* key, int* n, float** data);
 private:
 	
 	/// mean air temperature for a given day(degree)
@@ -45,12 +45,17 @@ private:
 	float *m_rhd;
 	/// wind speed
 	float *m_ws;
-	/// elevation(m)
-	float *m_elev;
-	int m_size;
-
 	///latitude of the stations
 	float *m_latitude;
+	///
+	int m_size;
+	/// output variables
+	/// maximum solar radiation
+	float *m_srMax;
+	/// saturated vapor pressure
+	float *m_svp;
+	/// actual vapor pressure
+	float *m_avp;
 private:
 
 	/*!

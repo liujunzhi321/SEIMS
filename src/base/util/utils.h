@@ -19,8 +19,8 @@
  * 
  */
 
-#ifndef SEIMS_UTIL_INCLUDE
-#define SEIMS_UTIL_INCLUDE
+#ifndef SEIMS_UTILS_INCLUDE
+#define SEIMS_UTILS_INCLUDE
 #include <vector>
 #include <string>
 #include <sstream> 

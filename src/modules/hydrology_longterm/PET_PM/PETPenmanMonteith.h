@@ -122,8 +122,6 @@ private:
 
 	///The temperature of snow melt
 	float m_tSnow;
-
-
 };
 
 #endif

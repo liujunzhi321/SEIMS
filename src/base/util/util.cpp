@@ -10,7 +10,7 @@
  *
  * 
  */
-#pragma once
+
 #include <cmath>
 #include "util.h"
 #include "utils.h"

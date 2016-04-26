@@ -84,7 +84,7 @@ bool PETPriestleyTaylor::CheckInputData()
 
 	if(this->m_latitude == NULL)
 	{
-		throw ModelException("PET_PT","CheckInputData","The latitude can not be NULL.");
+		throw ModelException("PET_PT","CheckInputData","The latitude of meteorology stations can not be NULL.");
 	}
 
 	if(this->m_rhd == NULL)
@@ -196,23 +196,23 @@ void PETPriestleyTaylor::Set1DData(const char* key,int n, float *value)
 	string sk(key);
 	if (StringMatch(sk,DataType_MinimumTemperature))
 	{
-		m_tMin = value;
+		this->m_tMin = value;
 	}
 	else if (StringMatch(sk,DataType_MaximumTemperature))
 	{
-		m_tMax = value;
+		this->m_tMax = value;
 	}
 	else if (StringMatch(sk,DataType_RelativeAirMoisture))
 	{
-		m_rhd = value;
+		this->m_rhd = value;
 	}
 	else if (StringMatch(sk,DataType_SolarRadiation))
 	{
-		m_sr = value;
+		this->m_sr = value;
 	}
 	else if (StringMatch(sk, Tag_Elevation_Meteorology))
 	{
-		m_elev = value;
+		this->m_elev = value;
 	}
 	else if (StringMatch(sk, Tag_Latitude_Meteorology))
 	{
@@ -222,7 +222,6 @@ void PETPriestleyTaylor::Set1DData(const char* key,int n, float *value)
 	{
 		throw ModelException("PET_PT","SetValue","Parameter " + sk + " does not exist in PETPriestleyTaylor method. Please contact the module developer.");
 	}
-
 }
 
 void PETPriestleyTaylor::SetValue(const char* key, float value)

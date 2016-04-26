@@ -50,10 +50,9 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//mdi.AddInput("T_MEAN","degree","Mean Air Temperature","interpolation module", Array1D);
 	mdi.AddParameter(VAR_PET_K, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_PET_HCOEF, UNIT_NON_DIM, DESC_PET_HCOEF, Source_ParameterDB, DT_Single);
-	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Array1D);
-	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Array1D);
 
-	//mdi.AddInput("SR_MAX","MJ/m2/d","Maximum Solar Radiation","climate generation module", Array1D);
+	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_HydroClimateDB, DT_Array1D);
+	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_HydroClimateDB, DT_Array1D);
 	mdi.AddParameter(Tag_Latitude_Meteorology,UNIT_LONLAT_DEG,DESC_METEOLAT,Source_HydroClimateDB, DT_Array1D);
 
 	// set the output variables

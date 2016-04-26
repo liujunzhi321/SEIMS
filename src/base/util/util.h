@@ -10,7 +10,6 @@
  *
  * 
  */
-#pragma once
 #ifndef SEIMS_UTIL_INCLUDE
 #define SEIMS_UTIL_INCLUDE
 
