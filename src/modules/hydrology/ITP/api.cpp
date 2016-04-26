@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Interpolation module", "Interpolation module for P, E, PET and so on.");
 	mdi.SetDescription("Interpolation module for P, E, PET and so on.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetID("ITP");
 	mdi.SetName("ITP");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("ITP.html");
 
 	//from txt file

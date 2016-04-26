@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("Denitrification", "Denitrification.");
 	mdi.SetDescription("Denitrification.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("Denitrification.chm");
 	mdi.SetID("Denitrification");
 	mdi.SetName("Denitrification");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("DenRC", "", "rate coefficient for denitrification", "file.in", DT_Single); 
 

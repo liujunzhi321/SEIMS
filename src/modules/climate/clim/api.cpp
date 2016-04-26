@@ -1,6 +1,6 @@
 /*!
  * \file api.cpp
- *
+ * \ingroup CLIM
  * \author ZhuLJ
  * \date April 2016
  *
@@ -15,11 +15,7 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-/** \defgroup CLIMATE
- * \ingroup base
- * \brief Calculate climate related parameters for PET, plant growth etc.
- *
- */
+
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new ClimateParameters();
@@ -30,13 +26,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	MetadataInfo mdi;
 	mdi.SetAuthor("LiangJun Zhu");
-	mdi.SetClass("Climate Parameters", "Calculate climate related intermediate parameters.");
-	mdi.SetDescription("Calculate climate related intermediate parameters.");
-	mdi.SetEmail("SEIMS2015@163.com");
-	mdi.SetID("PET_PM");
-	mdi.SetName("PET_PM");
+	mdi.SetClass(MCLS_CLIMATE, MCLSDESC_CLIMATE);
+	mdi.SetDescription(MDESC_CLIM);
+	mdi.SetEmail(SEIMS_EMAIL);
+	mdi.SetID(MDESC_CLIM);
+	mdi.SetName(MDESC_CLIM);
 	mdi.SetVersion("1.0");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("CLIMATE.html");
 
 	// set the parameters

@@ -1,4 +1,5 @@
 MESSAGE(STATUS "Compiling folder: modules...")
+ADD_SUBDIRECTORY(./climate)
 ADD_SUBDIRECTORY(./erosion)
 ADD_SUBDIRECTORY(./hydrology)
 ADD_SUBDIRECTORY(./hydrology_longterm)

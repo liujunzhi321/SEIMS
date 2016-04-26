@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Percolation", "Calculate the amount of water percolated out of the root zone within the time step.");
 	mdi.SetDescription("The method relating percolation with soil moisture and pore size distribution index used in the original WetSpa will be the default method to estimate percolation out of the root zone.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetID("Percolation");
 	mdi.SetName("Percolation");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("Percolation.chm");
 
 	//mdi.AddParameter("t_soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);							//

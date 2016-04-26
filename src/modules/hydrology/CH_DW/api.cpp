@@ -19,19 +19,8 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-/** \defgroup Hydrology
- * \brief Hydrology modules, mainly includes storm modules
- *
- *
- *
- */
-/** \defgroup CH_DW
- * \ingroup Hydrology
- * \brief Channel routing using diffusive wave equation.
- *
- *
- *
- */
+
+
 //! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
@@ -53,12 +42,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Channel routing", "Channel routing.");
 	mdi.SetDescription("Channel routing using diffusive wave equation.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("CH_DW.chm");
 	mdi.SetID("CH_DW");
 	mdi.SetName("CH_DW");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); /// \param[in] DT_HS "Time step of the simulation from file.in, DT_Single"
 	mdi.AddParameter("CellWidth", "m", "Cell width", "file.in", DT_Single); /// \param[in] CellWidth "Cell width from file.in, DT_Single"

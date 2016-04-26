@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Junzhi Liu");
 	mdi.SetClass("Channel routing", "Channel routing.");
 	mdi.SetDescription("Channel routing using Muskingum-Cunge method.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("CH_MSK.chm");
 	mdi.SetID("CH_MSK");
 	mdi.SetName("CH_MSK");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
 	mdi.AddParameter("CellWidth", "m", "Cell width", "file.in", DT_Single); 
