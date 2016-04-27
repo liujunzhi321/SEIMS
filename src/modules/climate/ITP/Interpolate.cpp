@@ -1,3 +1,11 @@
+/*!
+ * \file Interpolate.cpp
+ * \ingroup ITP
+ * \author Junzhi Liu, LiangJun Zhu
+ * \date Jan. 2010
+ * \revised date Apr. 2016
+ * 
+ */
 #include <cmath>
 #include "Interpolate.h"
 #include "MetadataInfo.h"
@@ -15,25 +23,22 @@ Interpolate::Interpolate():m_nCells(-1), m_nStatioins(-1),
 	m_month(-1), m_output(NULL), m_stationData(NULL), m_weights(NULL), 
 	m_dem(NULL),m_hStations(NULL), m_lapseRate(NULL), m_vertical(false), m_dataType(0)
 {
-	//omp_set_num_threads(1);
-	//ofs.open("c:\\staiondata.txt");
 }
 
 void Interpolate::SetDataType(float value)
 {
 	if(FloatEqual(value, 1.0f))
-		m_dataType = 0;
-	else if(FloatEqual(value, 2.0f) || FloatEqual(value, 3.0f)) 
-		m_dataType = 1;
-	else if(FloatEqual(value, 4.0f)) 
-		m_dataType = 2;
+		m_dataType = 0; /// Precipitation
+	else if(FloatEqual(value, 2.0f) || FloatEqual(value, 3.0f) || FloatEqual(value, 4.0f)) 
+		m_dataType = 1; /// Temperature
+	else if(FloatEqual(value, 5.0f)) 
+		m_dataType = 2; /// PET
 }
 
 Interpolate::~Interpolate(void)
 {
 	if (m_output != NULL)
 		delete[] m_output;
-	//ofs.close();
 }
 ;
 int Interpolate::Execute()
@@ -48,10 +53,6 @@ int Interpolate::Execute()
 		for (int i = 0; i < m_nCells; ++i)
 			m_output[i] = 0.f;
 	}
-
-	//for (int j = 0; j < m_nStatioins; ++j)
-	//	ofs << m_stationData[j] << "\t";
-	//ofs << endl;
 
 	//this->StatusMsg("execute ITP...");
 	#pragma omp parallel for
@@ -76,9 +77,7 @@ int Interpolate::Execute()
 		m_output[i] = value;
 	}
 	//Output1DArray(m_nCells, m_output, "F:\\p.txt");
-	
 	//this->StatusMsg("end execute ITP...");
-
 	return true;
 }
 
@@ -99,18 +98,17 @@ void Interpolate::SetValue(const char* key, float value)
 {
 	string sk(key);
 	
-	if (StringMatch(sk, "ThreadNum"))
+	if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)value);
 	}
-	else if(StringMatch(sk, "Data_Type"))
+	else if(StringMatch(sk, VAR_TSD_DT))
 	{
 		if(value == 1.0f) m_dataType = 0;
-		if(value == 2.0f || value == 3.0f) m_dataType = 1;
-		if(value == 4.0f) m_dataType = 2;
-		//m_dataType = int(value); 
+		if(value == 2.0f || value == 3.0f || value == 4.0f) m_dataType = 1;
+		if(value == 5.0f) m_dataType = 2;
 	}
-	else if (StringMatch(sk, "VerticalInterpolation"))
+	else if (StringMatch(sk, Tag_VerticalInterpolation))
 	{
 		if (value > 0)
 			m_vertical = true;
@@ -119,7 +117,7 @@ void Interpolate::SetValue(const char* key, float value)
 	}
 	else
 	{
-		throw ModelException("ITP", "SetValue", "Parameter " + sk 
+		throw ModelException(MID_ITP, "SetValue", "Parameter " + sk 
 			+ " does not exist in the Interpolate module. Please contact the module developer.");
 	}
 	
@@ -129,7 +127,7 @@ void Interpolate::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "LapseRate"))
+	if (StringMatch(sk, Tag_LapseRate))
 	{
 		if(m_vertical)
 		{
@@ -140,7 +138,7 @@ void Interpolate::Set2DData(const char *key, int nRows, int nCols, float **data)
 	}
 	else
 	{
-		throw ModelException("ITP", "Set2DData", "Parameter " + sk 
+		throw ModelException(MID_ITP, "Set2DData", "Parameter " + sk 
 			+ " does not exist in the Interpolate module. Please contact the module developer.");
 	}
 	
@@ -150,7 +148,7 @@ void Interpolate::Set1DData(const char* key, int n, float* data)
 {
 	string sk(key);
 	
-	if(StringMatch(sk, "DEM"))
+	if(StringMatch(sk, Tag_DEM))
 	{
 		if(m_vertical)
 		{
@@ -158,13 +156,13 @@ void Interpolate::Set1DData(const char* key, int n, float* data)
 			m_dem = data;
 		}
 	}
-	else if(StringMatch(sk, "Weight"))
+	else if(StringMatch(sk, Tag_Weight))
 	{
 		CheckInputSize(sk, n, m_nCells);
 		m_weights = data;
 	}
-	else if (StringMatch(sk, "StationElevation_P") || StringMatch(sk, "StationElevation_M")
-		|| StringMatch(sk, "StationElevation_T") || StringMatch(sk, "StationElevation_PET"))
+	else if (StringMatch(sk, Tag_Elevation_Precipitation) || StringMatch(sk, Tag_Elevation_Meteorology)
+		|| StringMatch(sk, Tag_Elevation_Temperature) || StringMatch(sk, Tag_Elevation_PET))
 	{
 		if(m_vertical)
 		{
@@ -175,7 +173,7 @@ void Interpolate::Set1DData(const char* key, int n, float* data)
 	else
 	{
 		string prefix = sk.substr(0,1);
-		if (prefix == "T" || prefix == "t")
+		if (StringMatch(prefix, DataType_Prefix_TS))
 		{
 			CheckInputSize(sk, n, m_nStatioins);
 			this->m_stationData = data;
@@ -185,7 +183,7 @@ void Interpolate::Set1DData(const char* key, int n, float* data)
 		}
 		else
 		{
-			throw ModelException("ITP", "Set1DData", "Parameter " + sk 
+			throw ModelException(MID_ITP, "Set1DData", "Parameter " + sk 
 				+ " does not exist in the Interpolate module. Please contact the module developer.");
 		}
 	}
@@ -195,7 +193,7 @@ bool Interpolate::CheckInputSize(string& key, int n, int& m_n)
 {
 	if(n <= 0)
 	{
-		throw ModelException("ITP","CheckInputSize","Input data for " + key 
+		throw ModelException(MID_ITP,"CheckInputSize","Input data for " + key 
 			+" is invalid. The size could not be less than zero.");
 	}
 	if(n != m_n)
@@ -206,10 +204,9 @@ bool Interpolate::CheckInputSize(string& key, int n, int& m_n)
 		{
 			ostringstream oss;
 			oss << n;
-			throw ModelException("ITP","CheckInputSize",
+			throw ModelException(MID_ITP,"CheckInputSize",
 				"Input data for "+ key +" is invalid." + " The size of input data is " + 
-				oss.str()+
-				". The number of columns in weight file and the number of stations should be same.");
+				oss.str()+ ". The number of columns in weight file and the number of stations should be same.");
 		}
 	}
 
@@ -219,22 +216,22 @@ bool Interpolate::CheckInputSize(string& key, int n, int& m_n)
 void Interpolate::CheckInputData()
 {
 	if(m_dataType < 0)
-		throw ModelException("ITP","CheckInputData","The parameter: DataType has not been set.");
+		throw ModelException(MID_ITP,"CheckInputData","The parameter: Climate DataType has not been set.");
 	if(m_month < 0)
-		throw ModelException("ITP","CheckInputData","The date has not been set.");
+		throw ModelException(MID_ITP,"CheckInputData","The date has not been set.");
 	if(m_weights == NULL)
-		throw ModelException("ITP","CheckInputData","The parameter: Weight has not been set.");
+		throw ModelException(MID_ITP,"CheckInputData","The parameter: Weight has not been set.");
 	if(m_vertical)
 	{
 		if(m_lapseRate == NULL)
-			throw ModelException("ITP","CheckInputData","The parameter: LapseRate has not been set.");
+			throw ModelException(MID_ITP,"CheckInputData","The parameter: LapseRate has not been set.");
 		if(m_dem == NULL)
-			throw ModelException("ITP","CheckInputData","The parameter: DEM has not been set.");
+			throw ModelException(MID_ITP,"CheckInputData","The parameter: DEM has not been set.");
 		if(m_hStations == NULL)
-			throw ModelException("ITP","CheckInputData","The parameter: StaionElevation have not been set.");
+			throw ModelException(MID_ITP,"CheckInputData","The parameter: StaionElevation have not been set.");
 	}
 	if(m_stationData == NULL)
-		throw ModelException("ITP","CheckInputData","The parameter: T has not been set.");
+		throw ModelException(MID_ITP,"CheckInputData","The parameter: Climate data has not been set.");
 
 }
 
@@ -242,24 +239,24 @@ void Interpolate::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
 	
-	if(StringMatch(sk, "DEM"))
+	if(StringMatch(sk, Tag_DEM))
 	{
 		*n = m_nCells;
 		*data = m_dem;
 	}
-	else if (StringMatch(sk, "StaionElevation"))
+	else if (StringMatch(sk, Tag_StationElevation))
 	{
 		*n = m_nStatioins;
 		*data = m_hStations;
 	}
-	else if (StringMatch(sk, "T"))
+	else if (StringMatch(sk, DataType_Prefix_TS))
 	{
 		*n = m_nStatioins;
 		*data = m_stationData;
 	}
 	else
 	{
-		//throw ModelException("ITP", "Get1DData", "Parameter " + sk 
+		//throw ModelException(MID_ITP, "Get1DData", "Parameter " + sk 
 		//	+ " does not exist in the Interpolate module. Please contact the module developer.");
 		*n = m_nCells;
 		*data = m_output;

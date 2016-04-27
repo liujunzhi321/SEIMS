@@ -84,7 +84,7 @@ bool SettingsInput::readDate()
 	if (dtList.size() > 1)
 		m_dtCh = atoi(dtList[1].c_str());
 
-	if (StringMatch(m_mode, "Daily"))
+	if (StringMatch(m_mode, Tag_Mode_Daily))
 	{
 		m_dtHs = 86400; // 86400 secs is 1 day
 		m_dtCh = 86400;
@@ -155,16 +155,16 @@ void SettingsInput::ReadSiteList()
 	bson_init(query);
 
 	// subbasin id
-	bson_append_int(query, "SubbasinID", m_subbasinID);
+	bson_append_int(query, Tag_SubbasinId, m_subbasinID);
 	// mode
-	bson_append_string(query, "Mode", m_mode.c_str());
+	bson_append_string(query, Tag_Mode, m_mode.c_str());
 
 	bson_finish(query);
 	//bson_print(query);
 
 	string siteListTable = SITELIST_TABLE;
 	bool stormMode = false;
-	if (StringMatch(m_mode, "Storm"))
+	if (StringMatch(m_mode, Tag_Mode_Storm))
 		stormMode = true;
 	mongo_cursor cursor[1];
 	ostringstream oss;
@@ -183,22 +183,22 @@ void SettingsInput::ReadSiteList()
 		else
 			throw ModelException("SettingsInput", "ReadSiteList", "The DB field does not exist in SiteList table.");
 
-		if (bson_find(it, stationInfo, "SiteListM")) 
+		if (bson_find(it, stationInfo, SITELIST_TABLE_M)) 
 		{
 			string siteList = bson_iterator_string(it);
+			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_MeanTemperature, m_startDate, m_endDate);
 			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_MaximumTemperature, m_startDate, m_endDate);
 			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_MinimumTemperature, m_startDate, m_endDate);
 			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_WindSpeed, m_startDate, m_endDate);
 			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_SolarRadiation, m_startDate, m_endDate);
 			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_RelativeAirMoisture, m_startDate, m_endDate);
-			//m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_Precipitation, m_startDate, m_endDate);
 		}
 		
-		if (bson_find(it, stationInfo, "SiteListP")) 
-			m_inputStation->ReadSitesData(m_dbHydro, bson_iterator_string(it), "P", m_startDate, m_endDate, stormMode);
+		if (bson_find(it, stationInfo, SITELIST_TABLE_P)) 
+			m_inputStation->ReadSitesData(m_dbHydro, bson_iterator_string(it), DataType_Precipitation, m_startDate, m_endDate, stormMode);
 
-		if (bson_find(it, stationInfo, "SiteListPET")) 
-			m_inputStation->ReadSitesData(m_dbHydro, bson_iterator_string(it), "PET", m_startDate, m_endDate, stormMode);
+		if (bson_find(it, stationInfo, SITELIST_TABLE_PET)) 
+			m_inputStation->ReadSitesData(m_dbHydro, bson_iterator_string(it), DataType_PotentialEvapotranspiration, m_startDate, m_endDate, stormMode);
 
 	}
 
@@ -210,7 +210,7 @@ bool SettingsInput::LoadSettingsFromFile(string filename,string dbName)
 {
 	m_dbName = dbName;
 
-	//first get the settingstrings from baseclass LoadSettingsFromFile function
+	//first get the SettingStrings from base class LoadSettingsFromFile function
 	if(!Settings::LoadSettingsFromFile(filename)) 
 		throw ModelException("SettingsInput","LoadSettingsFromFile",
 		"The file.in is invalid. Please check it.");

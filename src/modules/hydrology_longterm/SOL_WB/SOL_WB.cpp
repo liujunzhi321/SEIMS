@@ -93,7 +93,7 @@ int SOL_WB::Execute()
 void SOL_WB::SetValue(const char* key, float data)
 {
 	string s(key);
-	if (StringMatch(s, "ThreadNum"))
+	if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

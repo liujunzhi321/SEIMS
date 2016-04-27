@@ -236,7 +236,7 @@ void InterFlow::SetValue(const char* key, float data)
 		m_dx = data;
 	else if (StringMatch(sk, "Ki"))
 		m_landuseFactor = data;
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}

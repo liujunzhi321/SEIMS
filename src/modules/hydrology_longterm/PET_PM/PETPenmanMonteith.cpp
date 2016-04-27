@@ -103,13 +103,13 @@ bool PETPenmanMonteith::CheckInputData()
 
 	if(this->m_tMin == NULL)
 	{
-		throw ModelException("PET_PM","CheckInputData","The min temeprature can not be NULL.");
+		throw ModelException("PET_PM","CheckInputData","The min temperature can not be NULL.");
 		return false;
 	}
 
 	if(this->m_tMax == NULL)
 	{
-		throw ModelException("PET_PM","CheckInputData","The max temeprature can not be NULL.");
+		throw ModelException("PET_PM","CheckInputData","The max temperature can not be NULL.");
 		return false;
 	}
 
@@ -381,7 +381,7 @@ void PETPenmanMonteith::SetValue(const char* key, float value)
 	{
 		m_petFactor = value;
 	}
-	else if (StringMatch(sk, "ThreadNum"))
+	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)value);
 	}

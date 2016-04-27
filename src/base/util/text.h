@@ -1,54 +1,57 @@
 /*!
  * \file text.h
- * \brief Predefined of some const string names.
- *
- *
- *
- * \author Junzhi Liu
- * \revised LiangJun Zhu
+ * \brief Predefined string constants used in the code
+ 
+ * \author Junzhi Liu, LiangJun Zhu, Huiran Gao
  * \version 1.1
- * \date June 2010
+ * \date Jun. 2010, Apr.2016
  *
  * 
  */
-#ifndef TEXT_H
-#define TEXT_H
+#ifndef SEIMS_TEXT_H
+#define SEIMS_TEXT_H
 
-// string constants used in the code
+// 
 // TODO - you may consider moving these to an external resource file 
 //        to make it easier to change them later 
-#define App_Config_File "app.config"
+
+#define SEIMS_EMAIL "SEIMS2015@163.com"
+#define SEIMS_SITE "http://seims.github.io/SEIMS"
 
 //! Constant input variables
 #define CONS_IN_ELEV						"Elevation"
 #define CONS_IN_LAT						    "Latitude"
 #define CONS_IN_XPR							"xpr"
 #define CONS_IN_YPR							"ypr"
-//#define Contant_Input_FlowdiversionProperty			"FlowDiversion_property"
-//#define Contant_Input_PointsourceProperty			"PointSource_property"
-//#define Contant_Input_ReservoirProperty				"Reservoir_property"
-//#define Contant_Input_ReservoirRatingCurve			"Reservoir_RatingCurve"
-//#define Contant_Input_ReservoirOperationSchedual	"Reservoir_OperationSchedual"
 
-//! Climate data type
+//! Climate data type, used in SEIMS_ModuleSetting class, ITP, etc. // LJ, Apr.,2016
 #define DataType_Precipitation "P"					//1
-#define DataType_MeanTemperature "T"			    //2
+#define DataType_MeanTemperature "TMEAN"      	    //2
 #define DataType_MinimumTemperature "TMIN"			//3
 #define DataType_MaximumTemperature "TMAX"			//4
 #define DataType_PotentialEvapotranspiration "PET"	//5
 #define DataType_SolarRadiation "SR"				//6
 #define DataType_WindSpeed "WS"						//7
 #define DataType_RelativeAirMoisture "RM"			//8
-#define DataType_Meteorology "M"
+#define DataType_Meteorology "M"                    
+#define DataType_Prefix_TS "T"                      // Prefix of time series data
+#define DataType_Prefix_DIS "D"                     // Prefix of distributed data
 
-#define Tag_Elevation "Elevation"
+//! Tags
 #define Tag_Configuration "Configuration"
+#define Tag_DEM "DEM"
+#define Tag_Elevation_Meteorology "StationElevation_M"
+#define Tag_Elevation_PET "StationElevation_PET"
+#define Tag_Elevation_Precipitation "StationElevation_P"
+#define Tag_Elevation_Temperature "StationElevation_T"
+#define Tag_LapseRate "LapseRate"
+#define Tag_Latitude_Meteorology "Latitude_M"
 #define Tag_ProjectsPath "ProjectsPath"
 #define Tag_StationElevation "StationElevation"
-#define Tag_Elevation_Meteorology "StationElevation_M"
-#define Tag_Elevation_Precipitation "StationElevation_P"
-#define Tag_Latitude_Meteorology "Latitude_M"
-#define Tag_LapseRate "LapseRate"
+#define Tag_VerticalInterpolation "VERTICALINTERPOLATION"
+#define Tag_Weight "WEIGHT"
+
+
 
 #ifndef linux
     #define Tag_ModuleDirectoryName "\\"
@@ -72,10 +75,10 @@
 #define Tag_Type "TYPE"
 #define Tag_Count "COUNT"
 #define Tag_DataType "DATA_TYPE"
-#define Tag_Weight "WEIGHT"
-#define Tag_VerticalInterpolation "VERTICALINTERPOLATION"
+
+
 #define Tag_SubbasinCount "SUBBASINCOUNT"
-#define Tag_SubbasinId "SUBBASINID"
+#define Tag_SubbasinId "SubbasinID"
 #define Tag_ReservoirCount "RESERVOIRCOUNT"
 #define Tag_ReservoirId "RESERVOIRID"
 #define Tag_SubbasinSelected "subbasinSelected"
@@ -141,7 +144,7 @@
 #define NO2			"NO2"
 #define MINERALP	"mineralP"
 
-//! string constants used in the code
+/// Files or database constant strings
 #define MapWindowRasterExtension ".asc"
 #define RasterExtension ".asc"
 #define GTiffExtension ".tif"
@@ -161,12 +164,28 @@
 #define Source_HydroClimateDB "HydroClimateDB"
 #define Source_ParameterDB "ParameterDB"
 #define Source_Module "Module"
+#define PARAMETERS_TABLE "parameters"
+#define LANDUSE_TABLE "LanduseLookup"
+#define SOIL_TABLE "SoilLookup"
+#define STATIONS_TABLE "stations"
+#define TOPOLOGY_TABLE "reaches"
+#define SPATIAL_TABLE "spatial.files"
+#define MEASUREMENT_TABLE "measurement"
 
+#define SITES_TABLE "Sites"
+#define DATADAY_TABLE_PREFIX "DataValuesDay_"
+#define SITELIST_TABLE "SiteList"
+#define SITELIST_TABLE_M "SiteListM"
+#define SITELIST_TABLE_P "SiteListP"
+#define SITELIST_TABLE_PET "SiteListPET"
+#define SITELIST_TABLE_STORM "StormSiteList"
 
 //! define string constants used in the code
 #define Tag_NoDataValue "NoDataValue"
 #define Tag_SubbasinSelected "subbasinSelected"
-#define Tag_Mode "MODE"
+#define Tag_Mode "Mode"
+#define Tag_Mode_Storm "Storm"
+#define Tag_Mode_Daily "Daily"
 
 #define Type_Scenario "SCENARIO"
 #define Type_LapseRateArray "LAPSERATEARRAY"
@@ -185,39 +204,76 @@
 #define Print_D_INET "D_INET"
 #define Print_D_NEPR "D_NEPR"
 
-#define ModID_PI_MSM "PI_MSM"
-#define ModID_ITP_AU "ITP_AU"
 
-#define PARAMETERS_TABLE "parameters"
-#define LANDUSE_TABLE "LanduseLookup"
-#define SOIL_TABLE "SoilLookup"
-#define STATIONS_TABLE "stations"
-#define TOPOLOGY_TABLE "reaches"
-#define SPATIAL_TABLE "spatial.files"
-#define MEASUREMENT_TABLE "measurement"
 
-#define SITES_TABLE "Sites"
-#define DATADAY_TABLE_PREFIX "DataValuesDay_"
-#define SITELIST_TABLE "SiteList"
-#define SITELIST_TABLE_STORM "StormSiteList"
+//////////////////////////////////////////////////////////////////////////
+/// Define models' ID and description in SEIMS  //////////////////////////
+/// By LiangJun Zhu, Apr. 26, 2016  //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+/// Climate related Modules
+#define MCLS_CLIMATE "Climate Variables"
+#define MCLSDESC_CLIMATE "Calculate climate related intermediate parameters."
+#define MID_ICLIM "ICLIM"
+#define MDESC_ICLIM "Calculate climate related intermediate parameters."
+#define MCLS_TSD "Time series data"
+#define MID_TSD_RD "TSD_RD"
+#define MDESC_TSD_RD "Read time series data from HydroClimate database."
+#define MCLS_ITP "Interpolation module"
+#define MID_ITP "ITP"
+#define MDESC_ITP "Interpolation of P, E, PET, etc."
+
+/// Potential Evapotranspiration Modules
+#define MCLS_PET "Potential Evapotranspiration"
+#define MCLSDESC_PET "Calculate the potential evapotranspiration for an array of climate inputs."
+#define MID_PET_H "PET_H"
+#define MDESC_PET_H "Hargreaves method for calculating the potential evapotranspiration."
+#define MID_PET_PT "PET_PT"
+#define MDESC_PET_PT "PriestleyTaylor method for calculating the potential evapotranspiration."
+#define MID_PET_PM "PET_PM"
+#define MDESC_PET_PM "Penman Monteith method for calculating the potential evapotranspiration."
 
 
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
+#define VAR_CO2 "Co2"                               /// CO2 Concentration
+#define VAR_COND_MAX "Cond_max"                     /// Maximum stomatal conductance
+#define VAR_COND_RATE "Cond_rate"                   /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
+#define VAR_DEM "DEM"                               /// Digital Elevation Model
+#define VAR_JULIAN_DAY "JDay"                       /// Julian day (int)
+#define VAR_LAP_RATE "LapseRate"                    /// Lapse rate
+#define VAR_OMP_THREADNUM "ThreadNum"               /// Thread numbers for OMP
+#define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PET_K "K_pet"                           /// Correction factor for PET
-#define VAT_PET_T "T_PET"                           /// Potential Evapotranspiration of day
+#define VAR_PET_T "T_PET"                           /// Potential Evapotranspiration of day
+#define VAR_VP_SAT "svp"                            /// Saturated vapor pressure
+#define VAR_VP_ACT "avp"                            /// actual vapor pressure
+#define VAR_SNOW_TEMP "T_snow"                      /// Snowfall temperature
+#define VAR_SR_MAX "srMax"                          /// Max solar radiation
+#define VAR_TSD_DT "data_type"                      /// Time series data type
+
+
 //////////////////////////////////////////////////////////////////////////
 /// Define units common used in SEIMS, in case of inconsistency //////////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
 #define UNIT_AREA_KM2 "km2"                         /// Square kilometer of area
+#define UNIT_CONDRATE_MSPA "m/s/kPa"                /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
 #define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
+#define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
+#define UNIT_GAS_PPMV "ppmv"                        /// Concentration of gas, e.g., CO2
+#define UNIT_LAP_RATE "/100m"                       /// Lapse rate
 #define UNIT_LEN_M "m"                              /// Meter of length
 #define UNIT_LONLAT_DEG "degree"                    /// Degree of longitude and latitude
 #define UNIT_NON_DIM ""                             /// Non dimension  
+#define UNIT_PRESSURE "kPa"                         /// Vapor pressure
+#define UNIT_SPEED_MS "m/s"                         /// Speed related
+#define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
 #define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
 #define UNIT_WTRDLT_MMD "mm/d"                      /// Millimeter per day of water changes
 
@@ -225,11 +281,30 @@
 /// Define description of units common used in SEIMS            //////////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
+#define DESC_CO2 "CO2 Concentration"
+#define DESC_CONDRATE "Rate of decline in stomatal conductance per unit increase in vapor pressure deficit"
+#define DESC_DEM "Digital Elevation Model"
+#define DESC_JULIAN_DAY "Julian day (int)"
+#define DESC_LAP_RATE "Lapse Rate"
+#define DESC_MAXCOND "Maximum stomatal conductance"
 #define DESC_MAXTEMP "Maximum Celsius degree of air temperature"
 #define DESC_MEANTEMP "Mean Celsius degree of air temperature"
 #define DESC_METEOLAT "Latitude of MeteoClimate station"
 #define DESC_MINTEMP "Minimum Celsius degree of air temperature"
+#define DESC_NONE ""
+#define DESC_PET_HCOEF "Coefficient related to radiation used in Hargreaves method"
 #define DESC_PET_K "Correction factor for PET"
 #define DESC_PET_T "Potential Evapotranspiration of day"
-
+#define DESC_RM "Relative humidity"
+#define DESC_SNOW_TEMP "Snowfall temperature"
+#define DESC_SR "Solar radiation"
+#define DESC_SR_MAX "Max solar radiation"
+#define DESC_TSD_DT "Time series data type, e.g., climate data"
+#define DESC_TSD_CLIMATE "Climate data of all the stations"
+#define DESC_VER_ITP "Execute vertical interpolation (1) or not (0), defined in config.fig"
+#define DESC_VP_SAT "Saturated vapor pressure"
+#define DESC_VP_ACT "actual vapor pressure"
+#define DESC_WEIGHT_ITP "Weight used for interpolation"
+#define DESC_WS "Wind speed (measured at 10 meters above surface)"
 #endif

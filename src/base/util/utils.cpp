@@ -24,7 +24,7 @@
 
 using namespace std;
 
-#define UTIL_ZERO 0.0000000001 
+ 
 
 //! Return a flag indicating if the given file exists
 bool utils::FileExists( string FileName )

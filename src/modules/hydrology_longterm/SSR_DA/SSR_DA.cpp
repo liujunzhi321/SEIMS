@@ -209,7 +209,7 @@ int SSR_DA::Execute()
 void SSR_DA::SetValue(const char* key, float data)
 {
 	string s(key);
-	if (StringMatch(s, "ThreadNum"))
+	if (StringMatch(s, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
 	else if(StringMatch(s,"T_Soil"))				
 		m_frozenT = data;

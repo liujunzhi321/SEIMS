@@ -9,7 +9,8 @@ Header	DY	cell size of vertical direction		ALL			NC
 Header	NODATA_VALUE	The input values to be NoData in the output raster.		ALL			NC			
 
 Climate	DEM	Elevation of each grid cell	m	ALL	-99		NC			
-Climate	K_pet	PET Correction factor		ALL	1	0	AC	1.3	0.7	Y
+Climate	K_pet	Correction factor for PET		ALL	1	0	AC	1.3	0.7	Y
+Climate	HCoef_pet	Coefficient related to radiation used in Hargreaves method		PET_H	0.0023	0	RC	0.0032	0.0019	Y
 Climate	Co2	CO2 Concentration	ppmv	ALL	330	1	RC	350	300	Y
 Climate	Cond_rate	rate of decline in stomatal conductance	m/s/kPa	PET_PM	3.75		NC			
 Climate	Cond_max	maximum stomatal conductance	m/s	PET_PM	0.005		NC			

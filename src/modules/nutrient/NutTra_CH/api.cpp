@@ -23,12 +23,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Wang Lin");
 	mdi.SetClass("nutrient", "Nutrient channel routing using simple storage method.");
 	mdi.SetDescription("Nutrient channel routing using simple storage method.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("NutTra_CH.chm");
 	mdi.SetID("NutTra_CH");
 	mdi.SetName("NutTra_CH");
 	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 #ifdef STORM_MODEL
 	mdi.AddParameter("DT_CH","s","time step","file.in",DT_Single);  //for long term model
 #else

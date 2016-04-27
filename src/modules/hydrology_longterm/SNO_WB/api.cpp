@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetAuthor("Chunping Ou");
 	mdi.SetClass("Snowmelt", "Calculate the amount of snow melt.");
 	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in the SEIMS.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetID("SNO_WB");
 	mdi.SetName("SNO_WB");
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SNO_WB.chm");
 
 	mdi.AddParameter("cellSize","","the number of invalid cells", "mask.asc",DT_Single);

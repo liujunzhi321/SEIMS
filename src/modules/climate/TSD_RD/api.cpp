@@ -1,3 +1,11 @@
+/*!
+ * \file api.cpp
+ * \ingroup TSD_RD
+ * \author Zhiqiang Yu
+ * \date Apr. 2010
+ *
+ * 
+ */
 #include <stdio.h>
 #include <string>
 #include "util.h"
@@ -20,22 +28,22 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	string res;
 
 	mdi.SetAuthor("Zhiqiang Yu");
-	mdi.SetClass("Time series data","read time series data from hydroclimate database.");
-	mdi.SetDescription("read time series data from hydroclimate database.");
-	mdi.SetEmail("SEIMS2015@163.com");
+	mdi.SetClass(MCLS_TSD,MDESC_TSD_RD);
+	mdi.SetDescription(MDESC_TSD_RD);
+	mdi.SetID(MID_TSD_RD);
+	mdi.SetName(MID_TSD_RD);
+	mdi.SetVersion("1.0");
+	mdi.SetEmail(SEIMS_EMAIL);
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("");
-	mdi.SetID("TSD_RD");
-	mdi.SetName("TSD_RD");
-	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://seims.github.io/SEIMS");
 
-	mdi.AddParameter("data_type","","climate data type","Config.fig",DT_Single);
+	mdi.AddParameter(VAR_TSD_DT,UNIT_NON_DIM,DESC_TSD_DT,File_Config,DT_Single);
 
-	/// set the input variables (time series)
-	mdi.AddInput("T","", "the climate data of all the sites", "HydroClimateDB", DT_Array1D); ///T means time series. D means distribution.
+	/// set the input variables (time series), and T means time series. D means distribution.
+	mdi.AddInput(DataType_Prefix_TS,UNIT_NON_DIM, DESC_TSD_CLIMATE, Source_HydroClimateDB, DT_Array1D);
 
 	/// set the output variables
-	mdi.AddOutput("T","", "the climate data of all the sites", DT_Array1D);
+	mdi.AddOutput(DataType_Prefix_TS,UNIT_NON_DIM, DESC_TSD_CLIMATE, DT_Array1D);
 
 	/// write out the XML file.
 	res = mdi.GetXMLDocument();
