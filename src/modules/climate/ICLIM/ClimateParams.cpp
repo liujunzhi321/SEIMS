@@ -1,6 +1,6 @@
 /*!
  * \file ClimateParams.cpp
- * \ingroup CLIM
+ * \ingroup ICLIM
  * \author ZhuLJ
  * \date April 2016
  *
@@ -32,48 +32,57 @@ bool ClimateParameters::CheckInputData()
 {
 	if(this->m_date == -1)
 	{
-		throw ModelException("CLIMATE","CheckInputData","You have not set the date time.");
+		throw ModelException(MID_ICLIM,"CheckInputData","You have not set the date time.");
 		return false;
 	}
 
 	if(m_size <= 0)
 	{
-		throw ModelException("CLIMATE","CheckInputData","The dimension of the input data can not be less than zero.");
+		throw ModelException(MID_ICLIM,"CheckInputData","The dimension of the input data can not be less than zero.");
 		return false;
 	}
 
 	if(this->m_rhd == NULL)
 	{
-		throw ModelException("CLIMATE","CheckInputData","The relative humidity can not be NULL.");
+		throw ModelException(MID_ICLIM,"CheckInputData","The relative humidity can not be NULL.");
 		return false;
 	}
 
 	if(this->m_sr == NULL)
 	{
-		throw ModelException("CLIMATE","CheckInputData","The solar radiation can not be NULL.");
+		throw ModelException(MID_ICLIM,"CheckInputData","The solar radiation can not be NULL.");
 		return false;
 	}
-
+	if(this->m_tMean == NULL)
+	{
+		throw ModelException(MID_ICLIM,"CheckInputData","The mean temperature can not be NULL.");
+		return false;
+	}
 	if(this->m_tMin == NULL)
 	{
-		throw ModelException("CLIMATE","CheckInputData","The min temperature can not be NULL.");
+		throw ModelException(MID_ICLIM,"CheckInputData","The min temperature can not be NULL.");
 		return false;
 	}
 
 	if(this->m_tMax == NULL)
 	{
-		throw ModelException("CLIMATE","CheckInputData","The max temperature can not be NULL.");
+		throw ModelException(MID_ICLIM,"CheckInputData","The max temperature can not be NULL.");
 		return false;
 	}
-
+// 	/// If TMEAN is not existed, then set TMEAN = (TMAX + TMIN) / 2
+// 	if (this->m_tMean == NULL){
+// 		this->m_tMean = new float[this->m_size];
+// 		for (int i = 0; i < m_size; ++i)
+// 			m_tMean[i] = (m_tMax[i] + m_tMin[i]) / 2;
+// 	}
 	if(this->m_ws == NULL)
 	{
-		throw ModelException("CLIMATE","CheckInputData","The wind speed can not be NULL.");
+		throw ModelException(MID_ICLIM,"CheckInputData","The wind speed can not be NULL.");
 		return false;
 	}
 	if (this->m_latitude == NULL)
 	{
-		throw ModelException("CLIMATE","CheckInputData","The latitude of meteorology stations can not be NULL.");
+		throw ModelException(MID_ICLIM,"CheckInputData","The latitude of meteorology stations can not be NULL.");
 	}
 	return true;
 }
@@ -82,7 +91,7 @@ bool ClimateParameters::CheckInputSize(const char* key, int n)
 {
 	if(n<=0)
 	{
-		throw ModelException("CLIMATE","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_ICLIM,"CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(this->m_size != n)
@@ -90,7 +99,7 @@ bool ClimateParameters::CheckInputSize(const char* key, int n)
 		if(this->m_size <=0) this->m_size = n;
 		else
 		{
-			throw ModelException("CLIMATE","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
+			throw ModelException(MID_ICLIM,"CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			return false;
 		}
 	}
@@ -107,7 +116,7 @@ void ClimateParameters::SetValue(const char* key, float value)
 	}
 	else
 	{
-		throw ModelException("CLIMATE","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
+		throw ModelException(MID_ICLIM,"SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
 }
 
@@ -116,7 +125,7 @@ void ClimateParameters::Set1DData(const char* key,int n, float *value)
 	if(!this->CheckInputSize(key,n)) return;
 
 	string sk(key);
-	if (StringMatch(sk,DataType_MeanTemperature) || StringMatch(sk,"TMEAN"))
+	if (StringMatch(sk,DataType_MeanTemperature))
 	{
 		this->m_tMean = value;
 	}
@@ -142,29 +151,26 @@ void ClimateParameters::Set1DData(const char* key,int n, float *value)
 	}
 	else
 	{
-		throw ModelException("CLIMATE","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
+		throw ModelException(MID_ICLIM,"SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
-	/// If TMEAN is not existed, then set TMEAN = (TMAX + TMIN) / 2
-	if (this->m_tMean == NULL){
-		for (int i = 0; i < m_size; ++i)
-			m_tMean[i] = (m_tMax[i] + m_tMin[i]) / 2;
-	}
+	
 }
 
 int ClimateParameters::Execute()
 {	
 	if(!this->CheckInputData()) return false;
+	
 	if(this->m_srMax == NULL)
 	{
 		this->m_srMax = new float[this->m_size];
 	}
-	int d = JulianDay(this->m_date);
+	JulianDay(this->m_date);
 #pragma omp parallel for
 	/// Calculate climate parameters
 	for (int i = 0; i < m_size; ++i)
 	{
 		/// calculate the max solar radiation
-		m_srMax[i] = this->MaxSolarRadiation(d,this->m_latitude[i]);
+		m_srMax[i] = this->MaxSolarRadiation(this->m_jday,this->m_latitude[i]);
 		/// calculate saturated vapor pressure and actual vapor pressure
 		m_svp[i] = SaturationVaporPressure(m_tMean[i]);
 		m_avp[i] = m_rhd[i] * m_svp[i];
@@ -173,7 +179,14 @@ int ClimateParameters::Execute()
 	}
 	return 0;
 }
-
+void ClimateParameters::GetValue(const char* key, float* value)
+{
+	string sk(key);
+	if (StringMatch(sk, VAR_JULIAN_DAY))
+	{
+		*value = this->m_jday;
+	}
+}
 void ClimateParameters::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
@@ -194,7 +207,7 @@ void ClimateParameters::Get1DData(const char* key, int* n, float** data)
 	}
 	else
 	{
-		throw ModelException("CLIMATE", "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException(MID_ICLIM, "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }
 
@@ -249,11 +262,11 @@ float ClimateParameters::MaxSolarRadiation(int day,float lat)
 	return 30.f * dd * (h * ys + yc * sin(h));
 }
 
-int ClimateParameters::JulianDay(time_t date)
+void ClimateParameters::JulianDay(time_t date)
 {
 	struct tm dateInfo;
 	LocalTime(date, &dateInfo);
-	return dateInfo.tm_yday + 1;
+	this->m_jday = dateInfo.tm_yday + 1;
 }
 
 

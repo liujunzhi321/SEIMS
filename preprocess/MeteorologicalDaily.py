@@ -79,9 +79,9 @@ def ImportDayData(db, siteFile,VariablesFile, fileName):
     #indexList = [7, 8, 9, 10, 13, 18, 12]
     #defaultValue = {'T':10.0, 'TMAX':20, 'TMIN':0, 'RM':0.5, 'WS':3.0, 'SR':15.0, 'P':0.0}
     
-    propertyList = ['T', 'TMAX', 'TMIN', 'RM', 'WS', 'SR', 'PRS', 'EVP']
+    propertyList = ['TMEAN', 'TMAX', 'TMIN', 'RM', 'WS', 'SR', 'PRS', 'EVP']
     indexList = [4, 5, 6, 7, 8, 9, 10, 11]
-    defaultValue = {'T':10.0, 'TMAX':20, 'TMIN':0, 'RM':0.5, 'WS':3.0, 'SR':15.0, 'PRS':0.0, 'EVP': 0.0}
+    defaultValue = {'TMEAN':10.0, 'TMAX':20, 'TMIN':0, 'RM':0.5, 'WS':3.0, 'SR':15.0, 'PRS':0.0, 'EVP': 0.0}
     
     for i in range(1,nLines):
         items = lines[i].split()

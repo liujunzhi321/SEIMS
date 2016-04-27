@@ -14,7 +14,7 @@
 
 using namespace std;
 /** \defgroup GWATER_RESERVOIR
- * \ingroup Hydrology_strom
+ * \ingroup Hydrology
  * \brief Calculate groundwater using reservoir method
  *
  */

@@ -7,8 +7,8 @@ import os,platform,sys
 
 ## Directionaries 
 if platform.system() == "Windows":
-    DATA_BASE_DIR = r'E:\github-zlj\model_data\model_dianbu_30m_longterm\data_prepare'
-    PREPROC_SCRIPT_DIR = r'E:\github-zlj\SEIMS\preprocess'
+    DATA_BASE_DIR = r'E:\data\model_data\model_dianbu_30m_longterm\data_prepare'
+    PREPROC_SCRIPT_DIR = r'E:\data\SEIMS\preprocess'
     CPP_PROGRAM_DIR = r'E:\github-zlj\SEIMS_Preprocess\Debug'
     METIS_DIR = r'E:\github-zlj\SEIMS_Preprocess\metis\programs\Debug'
     MPIEXEC_DIR = None

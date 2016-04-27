@@ -259,7 +259,7 @@ string clsSiteData::toString(time_t time, float value)
 
 void clsSiteData::checkData(string typeName,time_t time,float value)
 {
-	if(!StringMatch(typeName,DataType_MinimumTemperature) && !StringMatch(typeName,DataType_MaximumTemperature))
+	if(!StringMatch(typeName,DataType_MinimumTemperature) && !StringMatch(typeName,DataType_MaximumTemperature)&& !StringMatch(typeName,DataType_MeanTemperature))
 	{		
 		if(value < 0 ) throw ModelException("clsSiteData","checkData",typeName + " data could not be less than 0." + toString(time,value));
 		

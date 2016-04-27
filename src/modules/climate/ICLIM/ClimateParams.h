@@ -1,11 +1,11 @@
-/** \defgroup CLIM
+/** \defgroup ICLIM
  * \ingroup Climate
  * \brief Calculate climate related intermediate parameters.
  *  
  */
 /*!
  * \file ClimateParams.h
- * \ingroup CLIM
+ * \ingroup ICLIM
  * \author ZhuLJ
  * \date April 2016
  *
@@ -36,6 +36,7 @@ public:
 	virtual void Set1DData(const char* key, int n, float *value);
 	virtual void SetValue(const char* key, float value);
 	virtual int Execute();
+	virtual void GetValue(const char* key, float* value);
 	virtual void Get1DData(const char* key, int* n, float** data);
 private:
 	
@@ -55,14 +56,15 @@ private:
 	float *m_latitude;
 	///
 	int m_size;
-	/// output variables
-
+	// output variables
 	/// maximum solar radiation
 	float *m_srMax;
 	/// saturated vapor pressure
 	float *m_svp;
 	/// actual vapor pressure
 	float *m_avp;
+	/// Julian day (int)
+	int m_jday;
 private:
 
 	/*!
@@ -95,7 +97,7 @@ private:
 	 * \brief Get the Julian day of one day
 	 * \return int Julian day
 	 */
-	int JulianDay(time_t);
+	void JulianDay(time_t);
 
 	/*!
 	 * \brief calculates saturation vapor pressure at a given air temperature.

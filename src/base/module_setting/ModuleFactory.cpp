@@ -112,17 +112,17 @@ void ModuleFactory::Init(const string& configFileName)
 		string id = m_moduleIDs[i];
 		string dllID = id;
 		// for ITP modules, the input ids are ITP_T, ITP_P and ITP should be used as ID name
-		if(id.find("ITP") != string::npos)
+		if(id.find(MID_ITP) != string::npos)
 #ifndef linux
-			dllID = "ITP";
+			dllID = MID_ITP;
 #else
-			dllID = "libITP";
+			dllID = "lib" + string(MID_ITP);
 #endif
-		else if (id.find("TSD") != string::npos)
+		else if (id.find(MID_TSD_RD) != string::npos)
 #ifndef linux
-			dllID = "TSD_RD";
+			dllID = MID_TSD_RD;
 #else
-			dllID = "libTSD_RD";
+			dllID = "lib" + string(MID_TSD_RD);
 #endif
 
 #ifdef INTEL_COMPILER
@@ -158,7 +158,7 @@ void ModuleFactory::Init(const string& configFileName)
 		for (size_t j = 0; j < inputs.size(); j++)
 		{
 			ParamInfo& param = inputs[j];
-			if(!StringMatch(param.Source, "module"))
+			if(!StringMatch(param.Source, Source_Module))
 				continue;
 
 			param.DependPara = FindDependentParam(param);		
@@ -310,7 +310,7 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
 		vector<ParamInfo>& parameters = m_parameters[id];
 
 		bool verticalInterpolation = true;
-		if (id.find("ITP") != string::npos)
+		if (id.find(MID_ITP) != string::npos)
 		{
 			modules[i]->SetDataType(m_settings[id]->dataType());
 			for (size_t j = 0; j < parameters.size(); j++)
@@ -466,8 +466,9 @@ void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, S
 					{
 						if(setting->dataTypeString().length() == 0) 
 							throw ModelException("ModuleFactory","readParameterSetting","The parameter " + string(Tag_Weight) + " should have corresponding data type in module " + moduleID);
-						if(StringMatch(setting->dataTypeString(),DataType_MinimumTemperature) || StringMatch(setting->dataTypeString(),DataType_MaximumTemperature))
-							param->Name += "_M";  //The weight coefficient file is same for Tmin and Tmax, so just need to read one file named "Weight_T.txt"
+						if(StringMatch(setting->dataTypeString(),DataType_MeanTemperature) || StringMatch(setting->dataTypeString(),DataType_MinimumTemperature) || StringMatch(setting->dataTypeString(),DataType_MaximumTemperature))
+							param->Name += "_T";  //The weight coefficient file is same for TMEAN, TMIN and TMAX, so just need to read one file named "Weight_T.txt"
+						/// bug? old code param->Name += "_M";
 						else
 							param->Name += "_" + setting->dataTypeString();	//combine weight and data type. e.g. Weight + PET = Weight_PET, this combined string must be the same with the parameter column in the climate table of parameter database.
 					}
@@ -577,11 +578,6 @@ bool ModuleFactory::IsConstantInputFromName(string& name)
 		StringMatch(name,CONS_IN_LAT)	||
 		StringMatch(name,CONS_IN_XPR)		||
 		StringMatch(name,CONS_IN_YPR))
-		//StringMatch(name,Contant_Input_FlowdiversionProperty) ||
-		//StringMatch(name,Contant_Input_PointsourceProperty) ||
-		//StringMatch(name,Contant_Input_ReservoirProperty) ||
-		//StringMatch(name,Contant_Input_ReservoirRatingCurve) ||
-		//StringMatch(name,Contant_Input_ReservoirOperationSchedual))
 		return true;
 	return false;
 }
@@ -973,7 +969,7 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 //! Set Value
 void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, SettingsInput* settingsInput, SimulationModule* pModule)
 {
-	//get parameter datas
+	//get parameter data
 	if(StringMatch(param->Name, Tag_DataType)) 
 	{
 		// the data type is got from config.fig
@@ -1440,7 +1436,7 @@ void ModuleFactory::ReadMultiReachInfo(const string &filename, LayeringMethod la
 		else
 			data[1][i] = atof(vec[3].c_str());
 		data[2][i] = atof(vec[1].c_str());//downstream id
-		data[3][i] = atof(vec[4].c_str());//manning's n
+		data[3][i] = atof(vec[4].c_str());//Manning's n
 		data[4][i] = atof(vec[5].c_str());
 	}
 	ifs.close();
@@ -1475,7 +1471,7 @@ void ModuleFactory::ReadSingleReachInfo(int nSubbasin, const string &filename, L
 			else
 				data[1][0] = atof(vec[3].c_str());
 			data[2][0] = atof(vec[1].c_str());//downstream id
-			data[3][0] = atof(vec[4].c_str());//manning's n
+			data[3][0] = atof(vec[4].c_str());//Manning's n
 			data[4][0] = atof(vec[5].c_str());
 
 			//cout << data[0][0] << "\t" << data[1][0] << "\t" << data[2][0] << "\t" << data[3][0] << "\t" << data[4][0] << "\n";

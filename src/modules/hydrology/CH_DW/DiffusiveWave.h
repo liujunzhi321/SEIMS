@@ -20,7 +20,7 @@
 #include "SimulationModule.h"
 using namespace std;
 /** \defgroup CH_DW
- * \ingroup Hydrology_strom
+ * \ingroup Hydrology
  * \brief Channel routing using diffusive wave equation.
  *
  *

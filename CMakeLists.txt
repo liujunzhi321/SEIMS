@@ -23,9 +23,24 @@ IF(WIN32)
 	SET (GDAL_HOME ./include/gdal)
 	SET (MONGO_HOME ./include/mongo-c-driver)
 	SET (LIB_DIR ./lib)
-	set (MPI_INCLUDE "C:/Program Files/Microsoft HPC Pack 2012/Inc")
-	set (MPI_LIBDIR "C:/Program Files/Microsoft HPC Pack 2012/Lib/i386")
-	set (MPI_LIB "C:/Program Files/Microsoft HPC Pack 2012/Lib/i386/msmpi.lib")
+	## SET MPI
+	#For MS-MPI in Windows, version v6 and above.
+	set(MPIEXEC "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe")
+	# For building MPI programs the selected Visual Studio compiler is used, namely cl.exe.
+	# So there is no need to set a specific MPI compiler.
+	set(MPI_CXX_INCLUDE_PATH "C:/Program Files (x86)/Microsoft SDKs/MPI/Include")
+	# Make sure the correct libraries (64-bit or 32-bit) are selected.
+	# Decide between 32-bit and 64-bit libraries for Microsoft's MPI
+	if("${CMAKE_SIZEOF_VOID_P}" EQUAL 8)
+		set(MS_MPI_ARCH_DIR x64)
+	else()
+		set(MS_MPI_ARCH_DIR x86)
+	endif()
+	set(MPI_CXX_LIBRARIES "C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/${MS_MPI_ARCH_DIR}/msmpi.lib")
+	SET(MPI_LIBDIR "C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/${MS_MPI_ARCH_DIR}")
+	set(MPI_INCLUDE "${MPI_CXX_INCLUDE_PATH}")
+	set(MPI_LIB "${MPI_CXX_LIBRARIES}")
+	## END SETTING MPI
 ELSE()
 	SET (CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -fopenmp -fPIC -g -ggdb")
 	SET (CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall -fopenmp -fPIC")
@@ -33,8 +48,6 @@ ELSE()
 	SET (GDAL_HOME /soft/share)
 	SET (LIB_DIR /usr/lib)
 ENDIF(WIN32)
-
-
 
 SET (BASE_HOME ./src/base)
 SET (MODULE_HOME ./src/modules)

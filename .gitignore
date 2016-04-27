@@ -32,3 +32,5 @@
 
 # Everything in the build directory
 build
+# PyCharm project files
+.idea

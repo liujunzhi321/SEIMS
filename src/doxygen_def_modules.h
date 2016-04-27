@@ -19,9 +19,9 @@
  *
  */
 
-/** \defgroup Hydrology_strom
+/** \defgroup Hydrology
  * \ingroup Modules
- * \brief Storm hydrology related modules
+ * \brief Hydrology related modules, include storm processes.
  *
  */
 

@@ -549,7 +549,7 @@ bool ModulesIOList::LoadModuleInfoFromFile(const char* filename, vector< vector<
 	ifstream myfile;
 	string line;
 	utils utl;
-	string T_variables[7] = { DataType_Precipitation,DataType_MinimumTemperature,DataType_MaximumTemperature,DataType_PotentialEvapotranspiration,DataType_SolarRadiation,DataType_WindSpeed,DataType_RelativeAirMoisture};
+	string T_variables[8] = { DataType_Precipitation,DataType_MeanTemperature,DataType_MaximumTemperature,DataType_PotentialEvapotranspiration,DataType_SolarRadiation,DataType_WindSpeed,DataType_RelativeAirMoisture};
 	try
 	{
 		// open the file

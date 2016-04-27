@@ -1,14 +1,16 @@
-/** 
-*	@file
-*	@version	1.0
-*	@author	Junzhi Liu
-*	@date	17-January-2010
-*
-*	@brief	Interpolation Module
-*
-*	Revision:
-*   Date:
-*/
+/** \defgroup ITP
+ * \ingroup Climate
+ * \brief Interpolation Module
+ *  
+ */
+/*!
+ * \file Interpolate.h
+ * \ingroup ITP
+ * \author Junzhi Liu
+ * \date Jan. 2010
+ *
+ * 
+ */
 #ifndef SEIMS_INTERPOLATE_INCLUDE
 #define SEIMS_INTERPOLATE_INCLUDE
 
@@ -16,14 +18,19 @@
 #include <ctime>
 #include <fstream>
 #include "SimulationModule.h"
-//#include "SEIMSModuleSetting.h"
-using namespace std;
 
+using namespace std;
+/*!
+ * \class Interpolate
+ * \ingroup ITP
+ *
+ * \brief Interpolation
+ *
+ */
 class Interpolate : public SimulationModule
 {
 public:
 	Interpolate();
-	//Interpolate(SEIMSModuleSetting* setting);
 	~Interpolate(void);
 
 	virtual void SetDataType(float value);
@@ -35,19 +42,21 @@ public:
 	virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
 	virtual void Get1DData(const char* key, int* n, float** data);
 
-	/** 
-	*	@brief check length of the input variable
-	*
-	*	@param const char* key: the key to identify the requested data [in]
-	*	@param int n: size of the input 1D data [in]
-	*	@param int& m_n: the corresponding member varaible of length [in/out]
-	*/
+	/*!
+	 * \brief Check length of the input variable
+	 * \param[in] key the key to identify the requested data
+	 * \param[in] n size of the input 1D data
+	 * \param[out] m_n the corresponding member variable of length
+	 */
 	bool CheckInputSize(string& key, int n, int& m_n);
 	void CheckInputData();
 	
 private:
-
-	/// the data type
+	// This is the climate data type. It is used to get the specific lapse rate from lapse_rate table. 
+	// It is also used to create a string which can match the output id. 
+	// For example, if data_type = 1, i.e. the data type is P, main program will connect the output variable name "D"
+	// and the data type to create a string like ¡°D_P¡±,
+	// this string is the same with the output id in the output lookup table and file.out.
 	int m_dataType;
 	/// count of stations
 	int m_nStatioins;
@@ -64,19 +73,13 @@ private:
 	float *m_hStations;
 	/// elevation of cells
 	float *m_dem;
-	/** 
-	*	@brief lapse rate
-	*
-	*	This is a 2D array. The first level is by month, and the second level is by data type in order of (P,T,PET).
-	*/
+	/// Lapse Rate, a 2D array. The first level is by month, and the second level is by data type in order of (P,T,PET).
 	float **m_lapseRate;
 	/// month
 	int m_month;
 
 	/// interpolation result
 	float *m_output;
-
-	//ofstream ofs;
 };
 
 #endif

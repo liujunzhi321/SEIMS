@@ -26,7 +26,7 @@ string Settings::Value(string tag)
 	{
 		for (size_t idx=0; idx<m_Settings.size(); idx++)
 		{
-			if (m_Settings[idx][0] == tag)
+			if (StringMatch(m_Settings[idx][0], tag))
 			{
 				res = m_Settings[idx][1];
 				break;
