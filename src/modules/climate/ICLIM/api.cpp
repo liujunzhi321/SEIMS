@@ -27,13 +27,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	MetadataInfo mdi;
 	mdi.SetAuthor("LiangJun Zhu");
 	mdi.SetClass(MCLS_CLIMATE, MCLSDESC_CLIMATE);
-	mdi.SetDescription(MDESC_CLIM);
+	mdi.SetDescription(MDESC_ICLIM);
 	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetID(MDESC_CLIM);
-	mdi.SetName(MDESC_CLIM);
+	mdi.SetID(MDESC_ICLIM);
+	mdi.SetName(MDESC_ICLIM);
 	mdi.SetVersion("1.0");
 	mdi.SetWebsite(SEIMS_SITE);
-	mdi.SetHelpfile("CLIMATE.html");
+	mdi.SetHelpfile("");
 
 	// set the parameters
 	//mdi.AddParameter(VAR_CO2,UNIT_GAS_PPMV,DESC_CO2,Source_ParameterDB,DT_Single);
@@ -74,6 +74,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//mdi.AddInput("IGRO","","Land cover status code","Management database", Array1D);
 
 	// set the output variables
+	mdi.AddOutput(VAR_JULIAN_DAY,UNIT_NON_DIM,DESC_JULIAN_DAY,DT_Single);
 	mdi.AddOutput(VAR_SR_MAX,UNIT_SR,DESC_SR_MAX,DT_Array1D);
 	mdi.AddOutput(VAR_VP_SAT,UNIT_PRESSURE,DESC_VP_SAT,DT_Array1D);
 	mdi.AddOutput(VAR_VP_ACT,UNIT_PRESSURE,DESC_VP_ACT,DT_Array1D);

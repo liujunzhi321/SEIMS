@@ -1,14 +1,17 @@
-/** 
-*	@file
-*	@version	1.0
-*	@author	Junzhi Liu
-*	@date	1-November-2010
-*
-*	@brief	Penman Monteith Method to Compute PET
-*
-*	Revision:
-*   Date:
-*/
+/** \defgroup PET_PM
+ * \ingroup Hydrology_longterm
+ * \brief Penman Monteith Method to Compute PET
+ *  
+ */
+/*!
+ * \file PETPenmanMonteith.h
+ * \ingroup PET_PM
+ * \author Junzhi Liu, LiangJun Zhu
+ * \date Nov. 2010
+ * \revision date Apr. 2016
+ * 
+ */
+
 #ifndef SEIMS_PET_PENMAN_MONTEITH_INCLUDE
 #define SEIMS_PET_PENMAN_MONTEITH_INCLUDE
 
@@ -17,7 +20,13 @@
 #include "SimulationModule.h"
 
 using namespace std;
-
+/*!
+ * \class PETPenmanMonteith
+ * \ingroup PET_PM
+ *
+ * \brief Penman Monteith Method to Compute PET
+ *
+ */
 class PETPenmanMonteith : public SimulationModule
 {
 public:
@@ -73,10 +82,10 @@ private:
 private:
 	/// mean air temperature for a given day(degree)
 	//float *m_tMean;
-	float *m_tMin;		//now the mean T is calcuated by minT and maxT. They can be obtained from database directly
+	float *m_tMin;		//now the mean T is calculated by minT and maxT. They can be obtained from database directly
 	float *m_tMax;
 	/// maximum solar radiation(MJ/m2/d)
-	///The max solar radiation is calculated from Julin day and latitude now.
+	///The max solar radiation is calculated from Julian day and latitude now.
 	///float *m_srMax;
 	/// solar radiation(MJ/m2/d)
 	float *m_sr;

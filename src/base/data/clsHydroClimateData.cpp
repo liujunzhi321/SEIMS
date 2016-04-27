@@ -127,6 +127,8 @@ bool clsHydroClimateData::IsHydroClimateDataType(const string* type)
 		return true;
 	else if(StringMatch(*type,DataType_Precipitation)) 
 		return true;
+	else if(StringMatch(*type,DataType_MeanTemperature)) 
+		return true;
 	else if(StringMatch(*type,DataType_MinimumTemperature)) 
 		return true;
 	else if(StringMatch(*type,DataType_MaximumTemperature)) 

@@ -40,7 +40,7 @@ string SEIMSModuleSetting::dataTypeString(){return dataType2String(dataType());}
 
 float SEIMSModuleSetting::dataType()
 {
-	if(m_moduleId.find("ITP") == string::npos && m_moduleId.find("TSD") == string::npos) 
+	if(m_moduleId.find(MID_ITP) == string::npos && m_moduleId.find(MID_TSD_RD) == string::npos) 
 	{
 		return -1.0f;
 	}
@@ -48,7 +48,7 @@ float SEIMSModuleSetting::dataType()
 	{
 		if(m_settings.size() < 2) throw ModelException("SEIMSModuleSetting","dataType","Module "+ m_moduleId + " does not appoint data type in the second column.");
 		float dataType = dataTypeString2Float(m_settings.at(1));
-		if(dataType == -1.0f) throw ModelException("SEIMSModuleSetting","dataType","The data type of module "+ m_moduleId + " is not correct. It must be P, TMIN, TMAX or PET.");
+		if(dataType == -1.0f) throw ModelException("SEIMSModuleSetting","dataType","The data type of module "+ m_moduleId + " is not correct. It must be P, TMEAN, TMIN, TMAX or PET.");
 		return dataType;
 	}
 }
@@ -94,12 +94,13 @@ string SEIMSModuleSetting::channelNutrientRoutingMethod()
 float SEIMSModuleSetting::dataTypeString2Float(string dataType)
 {
 	if(StringMatch(dataType,DataType_Precipitation)) return 1.0f;
-	if(StringMatch(dataType,DataType_MinimumTemperature)) return 2.0f;
-	if(StringMatch(dataType,DataType_MaximumTemperature)) return 3.0f;
-	if(StringMatch(dataType,DataType_PotentialEvapotranspiration)) return 4.0f;
-	if(StringMatch(dataType,DataType_SolarRadiation)) return 5.0f;
-	if(StringMatch(dataType,DataType_WindSpeed)) return 6.0f;
-	if(StringMatch(dataType,DataType_RelativeAirMoisture)) return 7.0f;
+	if(StringMatch(dataType,DataType_MeanTemperature)) return 2.0f;
+	if(StringMatch(dataType,DataType_MinimumTemperature)) return 3.0f;
+	if(StringMatch(dataType,DataType_MaximumTemperature)) return 4.0f;
+	if(StringMatch(dataType,DataType_PotentialEvapotranspiration)) return 5.0f;
+	if(StringMatch(dataType,DataType_SolarRadiation)) return 6.0f;
+	if(StringMatch(dataType,DataType_WindSpeed)) return 7.0f;
+	if(StringMatch(dataType,DataType_RelativeAirMoisture)) return 8.0f;
 	return -1.0f;
 }
 
@@ -110,16 +111,18 @@ string SEIMSModuleSetting::dataType2String(float dataType)
 		case 1:
 			return DataType_Precipitation;
 		case 2:
-			return DataType_MinimumTemperature;
+			return DataType_MeanTemperature;
 		case 3:
-			return DataType_MaximumTemperature;
+			return DataType_MinimumTemperature;
 		case 4:
-			return DataType_PotentialEvapotranspiration;
+			return DataType_MaximumTemperature;
 		case 5:
-			return DataType_SolarRadiation;
+			return DataType_PotentialEvapotranspiration;
 		case 6:
-			return DataType_WindSpeed;
+			return DataType_SolarRadiation;
 		case 7:
+			return DataType_WindSpeed;
+		case 8:
 			return DataType_RelativeAirMoisture;
 		default:
 			return "";

@@ -4,6 +4,6 @@ SET(SRC_LIST ../../../base/util/SimulationModule.cpp PETPenmanMonteith.cpp api.c
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_LIBRARY(PET_PM SHARED ${SRC_LIST})
 #TARGET_LINK_LIBRARIES(PET_PM libutil.a)
-TARGET_LINK_LIBRARIES(PET_PM util module_setting climate)
+TARGET_LINK_LIBRARIES(PET_PM util module_setting)
 SET_TARGET_PROPERTIES( PET_PM PROPERTIES COMPILE_FLAGS "/openmp")
 SET_PROPERTY(TARGET PET_PM PROPERTY FOLDER "modules/hydrology_longterm")

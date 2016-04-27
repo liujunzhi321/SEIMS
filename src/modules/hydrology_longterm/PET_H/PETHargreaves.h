@@ -33,27 +33,29 @@ public:
 	virtual int Execute();
 
 private:
-	/// mean air temperature for a given day(degree)
-	///float *m_tMean;
-
+	// input from Database
 	/// maximum air temperature for a given day(degree)
 	float *m_tMax;
 	/// minimum air temperature for a given day(degree)
 	float *m_tMin;
-	/// coefficient related to radiation used in Hargreaves method
-	float m_HCoef_pet;
-
+	///latitude of the stations
+	float *m_latitude;
+	// input from other module
+	/// mean air temperature for a given day(degree)
+	float *m_tMean;
+	/// maximum solar radiation
+	float *m_srMax;
 	/// size of the input array
 	int m_size;
-
+	/// coefficient related to radiation used in Hargreaves method
+	float m_HCoef_pet;
+	/// Correction Factor for PET
+	float m_petFactor;
+	/// Julian day
+	int m_jday;
 	/// output PET array
 	float *m_pet;
 	
-	/// Correction Factor for PET
-	float m_petFactor;
-
-	///latitude of the stations
-	float *m_latitude;
 private:
 
 	/*!
@@ -72,21 +74,21 @@ private:
 	 */
 	bool CheckInputSize(const char*,int);
 
-	/*!
-	 * \brief Calculate the max solar radiation for a station of one day
-	 *
-	 *
-	 * \param[in] day Julian day.
-	 * \param[in] lat Latitude of the station
-	 * \return float The max solar radiation.
-	 */
-	float MaxSolarRadiation(int,float);
+// 	/*!
+// 	 * \brief Calculate the max solar radiation for a station of one day
+// 	 *
+// 	 *
+// 	 * \param[in] day Julian day.
+// 	 * \param[in] lat Latitude of the station
+// 	 * \return float The max solar radiation.
+// 	 */
+// 	float MaxSolarRadiation(int,float);
 
-	/*!
-	 * \brief Get the Julian day of one day
-	 * \return int Julian day
-	 */
-	int JulianDay(time_t);
+// 	/*!
+// 	 * \brief Get the Julian day of one day
+// 	 * \return int Julian day
+// 	 */
+// 	int JulianDay(time_t);
 };
 
 #endif

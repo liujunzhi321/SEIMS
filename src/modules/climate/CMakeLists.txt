@@ -1,2 +1,4 @@
-MESSAGE(STATUS "Compiling folder: climate...")
-ADD_SUBDIRECTORY(./clim)
+MESSAGE(STATUS "    Compiling folder: climate...")
+ADD_SUBDIRECTORY(./ICLIM)
+ADD_SUBDIRECTORY(./ITP)
+ADD_SUBDIRECTORY(./TSD_RD)

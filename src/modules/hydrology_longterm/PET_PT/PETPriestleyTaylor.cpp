@@ -194,7 +194,11 @@ void PETPriestleyTaylor::Set1DData(const char* key,int n, float *value)
 	if(!this->CheckInputSize(key,n)) return;
 
 	string sk(key);
-	if (StringMatch(sk,DataType_MinimumTemperature))
+	if (StringMatch( sk,DataType_MeanTemperature))
+	{
+		m_tMax = value;
+	}
+	else if (StringMatch(sk,DataType_MinimumTemperature))
 	{
 		this->m_tMin = value;
 	}
