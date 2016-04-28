@@ -1,8 +1,0 @@
-Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
-NCOLS	Number of cell columns		ALL	450		NC			
-NROWS	Number of cell rows		ALL	438		NC			
-XLLCENTER	X coordinate of the origin by center of the cell.		ALL	541011		NC			
-YLLCENTER	Y coordinate of the origin by center of the cell		ALL	5460660		NC			
-DX	cell size of horizontal direction		ALL	30		NC			
-DY	cell size of vertical direction		ALL	30		NC			
-NODATA_VALUE	The input values to be NoData in the output raster.		ALL	-99		NC			

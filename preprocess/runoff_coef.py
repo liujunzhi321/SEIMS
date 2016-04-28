@@ -4,7 +4,7 @@ from osgeo import gdal, osr
 import math, os, sys
 import sqlite3
 from numpy import *
-from config import *
+from text import *
 import util
 
 def RunoffCoefficent(filepath, sqliteFile):

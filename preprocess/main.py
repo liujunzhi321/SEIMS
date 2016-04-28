@@ -2,8 +2,8 @@
 #coding=utf-8
 ## @Main function entrance for preprocessing
 #
-#
-from config import *
+from text import *
+from txt2db3 import reConstructSQLiteDB
 ## Climate modules
 from PrecipitationDaily import *
 from MeteorologicalDaily import *
@@ -16,7 +16,7 @@ from parameters_extraction import ExtractParameters
 from build_db import BuildMongoDB
 if __name__ == "__main__":
     ## Update SQLite Parameters.db3 database
-    ## TODO by Shen Fang
+    #reConstructSQLiteDB()
     ## Climate Data
     ImportDailyMeteoData(HOSTNAME,PORT,ClimateDBName,MeteoVarFile,MeteoDailyFile,MetroSiteFile)
     ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecSitesVorShp,PrecExcelPrefix,PrecDataYear)

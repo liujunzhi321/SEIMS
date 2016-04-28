@@ -227,7 +227,7 @@ int main(int argc,char **argv)
        printf("The following are appended to the file names\n");
        printf("before the files are opened:\n");
        printf("fel   pit filled or carved elevation grid (input)\n");
-       printf("p   D8 flow direction grid (Input)\n");
+       printf("p   D-infinity flow direction grid (Input)\n");
        printf("slpd   avalanche source site grod (input)\n");
        exit(0);
 } 

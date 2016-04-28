@@ -207,19 +207,16 @@ int netsetup(char *pfile,char *srcfile,char *ordfile,char *ad8file,char *elevfil
 		MPI_Comm_rank(MCW,&rank);
 		MPI_Comm_size(MCW,&size);
 		if(rank==0)
-			{
+		{
 				printf("StreamNet version %s\n",TDVERSION);
 				fflush(stdout);
 		}
-
 		//  Used throughout
 		float tempFloat;
 		long tempLong;
 		short tempShort;
-
 		//  Keep track of time
 		double begint = MPI_Wtime();
-
 		//  *** initiate src grid partition from src
 		tiffIO srcIO(srcfile, SHORT_TYPE);  
 		long TotalX = srcIO.getTotalX();
@@ -1310,10 +1307,8 @@ int netsetup(char *pfile,char *srcfile,char *ordfile,char *ad8file,char *elevfil
         MPI_Allreduce (&total, &tempd, 1, MPI_DOUBLE, MPI_SUM, MCW);
         total = tempd/size;
 
-		if( rank == 0){
-			//printf("Processors: %d\nRead time: %f\nLength compute time: %f\nLink compute time: %f\nLink write time: %f\nWatershed compute time: %f\nWrite time: %f\nTotal time: %f\n", size, dataRead, lengthc, linkc, linkw, wshedlab, write,total);
-			printf("Processors: %d\nRead time: %f\nCompute time: %f\nWrite time: %f\nTotal time: %f\n", size, dataRead, lengthc+linkc+wshedlab,linkw + write,total);
-		}
+		if( rank == 0)
+			printf("Processors: %d\nRead time: %f\nLength compute time: %f\nLink compute time: %f\nLink write time: %f\nWatershed compute time: %f\nWrite time: %f\nTotal time: %f\n", size, dataRead, lengthc, linkc, linkw, wshedlab, write,total);
 
 
 	}MPI_Finalize();

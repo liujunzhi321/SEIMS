@@ -1,5 +1,3 @@
-import networkx
-
 def GetMaxWeight(groupWeightDic, groupDic):
     maxId = -1
     maxWeight = -1

@@ -9,7 +9,7 @@ from osgeo import gdal
 from pyproj import Proj, transform
 from numpy import *
 from util import *
-from config import *
+from text import *
 import os
 
 NODATA = -9999

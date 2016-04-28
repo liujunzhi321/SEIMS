@@ -3,8 +3,8 @@
 ## @Generate landuse lookup table
 #
 #
-from osgeo import gdal,osr
-import math, os, sys
+
+import os
 import sqlite3
 from numpy import *
 

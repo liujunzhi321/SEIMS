@@ -150,7 +150,7 @@ void testMain(string modelPath,char *host,int port,int scenarioID, int numThread
 		int status = mongo_connect(conn, host, port); 
 		if( MONGO_OK != status ) 
 		{ 
-			cout << "can not connect to mongodb.\n";
+			cout << "Can not connect to mongoDB.\n";
 			exit(-1);
 		}
 		//checkDatabase(conn, dbName);

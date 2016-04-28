@@ -17,8 +17,6 @@ from velocity import GenerateVelocity
 from t0_s import GenerateT0_s
 from delta_s import GenerateDelta_s
 from runoff_coef import RunoffCoefficent
-
-from config import *
 from util import *
 
 def soil_parameters(dstdir, maskFile, sandList, clayList, orgList=None):

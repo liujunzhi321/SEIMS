@@ -1,16 +1,13 @@
 #! /usr/bin/env python
 #coding=utf-8
-import sys
-from subbasin_delineation import * 
+
 from post_process_taudem import *
-#from parameters_extraction import *
-from config import *
+from text import *
 from osgeo import gdal,osr
 from numpy import zeros
 import util
 from util import Raster
 from util import WriteGTiffFile
-from util import ReadRaster
 
 def GetMaskFromRaster(rasterFile, dstdir):
     ds = gdal.Open(rasterFile)

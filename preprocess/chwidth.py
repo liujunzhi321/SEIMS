@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 #coding=utf-8
 from osgeo import gdal,osr
-import math, os
 from numpy import *
 import util
+from text import *
 
 def chwidth(accFile, chwidthFile):
     ds = gdal.Open(accFile)
@@ -13,7 +13,7 @@ def chwidth(accFile, chwidthFile):
     ysize = band.YSize
     noDataValue = band.GetNoDataValue()
     if noDataValue is None:
-        noDataValue = -9999
+        noDataValue = DEFAULT_NODATA
         
     srs = osr.SpatialReference()
     srs.ImportFromWkt(ds.GetProjection())
@@ -28,8 +28,9 @@ def chwidth(accFile, chwidthFile):
     # 100               1.4    0.56
     a = 1.2
     b = 0.56
+    ## TODO: Figure out what's means, and move it to text.py or config.py. LJ
     
-    noDataValue = -9999
+    noDataValue = DEFAULT_NODATA
     width = zeros((ysize, xsize))
     for i in range(0, ysize):
         for j in range(0, xsize):

@@ -1,4 +1,5 @@
 OBJECTID	OP	OP1	OPNUM	FIELDS
+INT	TEXT	TEXT	INT	TEXT
 1	End of year rotation flag	 	0	
 2	Plant/begin. growing season	Plant	1	
 3	Irrigation operation	Irrigation	2	
