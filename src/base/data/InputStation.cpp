@@ -18,8 +18,6 @@
 #include "utils.h"
 #include "ModelException.h"
 #include "text.h"
-
-
 #include "RegularMeasurement.h"
 #include "NotRegularMeasurement.h"
 

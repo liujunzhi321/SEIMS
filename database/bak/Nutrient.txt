@@ -1,6 +1,0 @@
-Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
-InitConc_NO3	Initial average concentration of NO3 in the soil	kg/kg	All	0.001	1	RC	0.001	1E-5	Y
-InitConc_P	Initial average concentration of P in the soil	kg/kg	All	0.001	1	RC	0.001	1E-5	Y
-InitConc_NH4	Initial average concentration of NH4 in the soil	kg/kg	All	0.001	1	RC	0.001	1E-5	Y
-ConRainNitra	concentration of nitrate in the rain	mg N/L	ATMDEP	0	0	AC	15	0	Y
-ConRainAmm	Concentration of ammonia in rainfall	mg N/L	ATMDEP	0	0	AC	15	0	Y

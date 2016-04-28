@@ -5,15 +5,13 @@
 import os
 from osgeo import gdal,ogr
 from numpy import zeros
-from config import *
-import util
-from util import CopyShpFile
-from util import ReadRaster
+from text import *
+from util import *
 from chwidth import chwidth
 
 def GenerateSubbasinVector(dstdir, subbasinRaster, subbasinVector):
     subbasinVectorTmp = dstdir + os.sep + "subbasin_tmp.shp"
-    util.RemoveShpFile(subbasinVectorTmp)
+    RemoveShpFile(subbasinVectorTmp)
     strCmd = 'python %s/gdal_polygonize.py -f "ESRI Shapefile" %s %s' % (PREPROC_SCRIPT_DIR, subbasinRaster, subbasinVectorTmp)
     print strCmd
     os.system(strCmd)
@@ -32,7 +30,7 @@ def GenerateSubbasinVector(dstdir, subbasinRaster, subbasinVector):
         ft = layer.GetNextFeature()
 
     drv = ogr.GetDriverByName("ESRI Shapefile")
-    util.RemoveShpFile(subbasinVector)
+    RemoveShpFile(subbasinVector)
     dsNew = drv.CreateDataSource(subbasinVector)
     lyrName = "subbasin"
     lyr = dsNew.CreateLayer(lyrName, layer.GetSpatialRef(), ogr.wkbPolygon)
@@ -76,7 +74,7 @@ def SerializeStreamNet(streamNetFile, outputReachFile):
         id = ft.GetFieldAsInteger(iLink)
         reachLen = ft.GetFieldAsDouble(iLen)
         if not id in oldIdList:
-            if reachLen < util.DELTA:
+            if reachLen < DELTA:
                 downstreamId = ft.GetFieldAsInteger(iLinkDownSlope)
                 outputDic[id] = downstreamId 
             else:
@@ -141,19 +139,19 @@ def SerializeSubbasin(subbasinFile, streamRasterFile, idMap, \
     print "number of reaches: ", n
     for i in range(nRows):
         for j in range(nCols):
-            if abs(data[i][j] - noDataValue) < util.DELTA:
+            if abs(data[i][j] - noDataValue) < DELTA:
                 outputSubbasin[i][j] = noDataValue
             else:
                 outputSubbasin[i][j] = idMap[int(data[i][j])]#error if the outlet subbasin contains only one grid, so there is no reach for this subbasin
                 
-            if dataStream[i][j] < util.DELTA:
+            if dataStream[i][j] < DELTA:
                 outputStream[i][j] = noDataValueStream  
             else:
                 outputStream[i][j] = outputSubbasin[i][j]
     
-    util.WriteGTiffFile(outputSubbasinFile, nRows, nCols, outputSubbasin, \
+    WriteGTiffFile(outputSubbasinFile, nRows, nCols, outputSubbasin, \
             subbasin.geotrans, subbasin.srs, noDataValue, gdal.GDT_Int32)
-    util.WriteGTiffFile(outputStreamLinkFile, nRows, nCols, outputStream, \
+    WriteGTiffFile(outputStreamLinkFile, nRows, nCols, outputStream, \
             streamRaster.geotrans, streamRaster.srs, noDataValue, gdal.GDT_Int32)
 
             
@@ -169,13 +167,13 @@ def ChangeFlowDir(flowDirFileTau, flowDirFileEsri):
     dataTau.shape = n
     output = zeros(n)
     for i in range(n):
-        if abs(dataTau[i] - noDataValue) < util.DELTA:
+        if abs(dataTau[i] - noDataValue) < DELTA:
             output[i] = noDataValue
         else:
             value = int(dataTau[i]) - 1
             output[i] = dirMap[value]
     output.shape = (nRows, nCols)    
-    util.WriteGTiffFile(flowDirFileEsri, nRows, nCols, output, \
+    WriteGTiffFile(flowDirFileEsri, nRows, nCols, output, \
             flowDirTau.geotrans, flowDirTau.srs, noDataValue, gdal.GDT_Int32)
         
 
@@ -191,12 +189,12 @@ def ChangeSlope(slopeFile, outputFile):
     output = zeros(n)
     
     for i in range(n):
-        if abs(data[i] - noDataValue) < util.DELTA:
+        if abs(data[i] - noDataValue) < DELTA:
             output[i] = noDataValue
         else:
             output[i] = 100*data[i]
     output.shape = (nRows, nCols)    
-    util.WriteGTiffFileByMask(outputFile, output, slopeTau, gdal.GDT_Float32)
+    WriteGTiffFileByMask(outputFile, output, slopeTau, gdal.GDT_Float32)
 
 def AddWidthToReach(reachFile, stramLinkFile, width):
     streamLink = ReadRaster(stramLinkFile)
@@ -214,7 +212,7 @@ def AddWidthToReach(reachFile, stramLinkFile, width):
             #streamRaster[i][j] = dataStream[i][j]
             #if width[i][j] > dx:
             #    pass
-            if abs(dataStream[i][j] - noDataValue) > util.DELTA:
+            if abs(dataStream[i][j] - noDataValue) > DELTA:
                 id = int(dataStream[i][j])
                 chNumDic.setdefault(id, 0)
                 chWidthDic.setdefault(id, 0)
@@ -291,7 +289,7 @@ def PostProcessTauDEM(dstdir):
 
     maskFile = dstdir + os.sep + mask_to_ext
     basinVectorTmp = dstdir + os.sep + "basin_tmp.shp"
-    util.RemoveShpFile(basinVectorTmp)
+    RemoveShpFile(basinVectorTmp)
     strCmd = 'python %s/gdal_polygonize.py -f "ESRI Shapefile" %s %s' % (PREPROC_SCRIPT_DIR, maskFile, basinVectorTmp)
     os.system(strCmd)
 
@@ -301,7 +299,7 @@ def PostProcessTauDEM(dstdir):
 
     basinVector = dstdir + os.sep + basinVec
     drv = ogr.GetDriverByName("ESRI Shapefile")
-    util.RemoveShpFile(basinVector)
+    RemoveShpFile(basinVector)
     dsNew = drv.CreateDataSource(basinVector)
     lyrName = "basin"
     lyr = dsNew.CreateLayer(lyrName, layer.GetSpatialRef(), ogr.wkbPolygon)

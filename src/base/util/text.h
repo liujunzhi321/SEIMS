@@ -25,7 +25,7 @@
 #define CONS_IN_YPR							"ypr"
 
 //! Climate data type, used in SEIMS_ModuleSetting class, ITP, etc. // LJ, Apr.,2016
-#define DataType_Precipitation "P"					//1
+#define DataType_Precipitation "P"					//1, Suffix of precipitation data
 #define DataType_MeanTemperature "TMEAN"      	    //2
 #define DataType_MinimumTemperature "TMIN"			//3
 #define DataType_MaximumTemperature "TMAX"			//4
@@ -33,7 +33,7 @@
 #define DataType_SolarRadiation "SR"				//6
 #define DataType_WindSpeed "WS"						//7
 #define DataType_RelativeAirMoisture "RM"			//8
-#define DataType_Meteorology "M"                    
+#define DataType_Meteorology "M"                    // Suffix of meteorology data
 #define DataType_Prefix_TS "T"                      // Prefix of time series data
 #define DataType_Prefix_DIS "D"                     // Prefix of distributed data
 
@@ -180,12 +180,12 @@
 #define SITELIST_TABLE_PET "SiteListPET"
 #define SITELIST_TABLE_STORM "StormSiteList"
 
-//! define string constants used in the code
+//! define string constants used in the code, also used in the mongoDB.SiteList table's header
 #define Tag_NoDataValue "NoDataValue"
 #define Tag_SubbasinSelected "subbasinSelected"
 #define Tag_Mode "Mode"
-#define Tag_Mode_Storm "Storm"
-#define Tag_Mode_Daily "Daily"
+#define Tag_Mode_Storm "STORM"
+#define Tag_Mode_Daily "DAILY"
 
 #define Type_Scenario "SCENARIO"
 #define Type_LapseRateArray "LAPSERATEARRAY"

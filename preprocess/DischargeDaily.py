@@ -3,18 +3,18 @@
 ## @Discharge daily data import
 #
 #
-import datetime
-from util import *
+from text import *
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from pymongo.collection import Collection
-import os, time, xlrd
+import xlrd
 from util import *
+
 def ImportOneYear(year, db, siteFile):
     bk = xlrd.open_workbook(siteFile)
     cList = db.collection_names()
-    if not 'Discharge' in cList:
-        db.create_collection('Discharge')
+    ##if not DataType_Discharge in cList:  changed by LJ
+    if not StringInList(DataType_Discharge, cList):
+        db.create_collection(DataType_Discharge)
     
     for sh in bk.sheets():
         #print sh.name
@@ -32,11 +32,11 @@ def ImportOneYear(year, db, siteFile):
                 utcTime = time.gmtime(sec)  
                 if value != 0:
                     dic = {}
-                    dic['StationName'] = sh.name
+                    dic[Tag_ST_StationName] = sh.name
                     dic['UTCOffset'] = 8    
                     dic['LocalDateTime'] = t
                     dic['UTCDateTime'] = datetime.datetime(utcTime[0], utcTime[1], utcTime[2], utcTime[3], utcTime[4])
-                    dic['q'] = value
+                    dic[Tag_Dischage] = value
                     db.Discharge.insert(dic)
     
 def ImportDailyDischargeData(hostname,port,dbName,DischargeExcelPrefix,DischargeYear):

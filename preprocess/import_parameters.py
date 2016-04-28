@@ -1,11 +1,8 @@
 #from pymongo import Connection
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-import bson
-import glob
-import os
 import sqlite3
-from config import *
+from text import *
 
 def ImportParameters(sqlite_file, db):
     #read sqlite database

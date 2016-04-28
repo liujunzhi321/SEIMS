@@ -2,12 +2,10 @@
 #coding=utf-8
 
 from osgeo import gdal,osr
-import math, os
 import sqlite3
 from numpy import *
-import util
 from util import WriteGTiffFile
-from config import *
+from text import *
 
 def GenerateCN2(dstdir, dbname):
     maskFile = dstdir + os.sep + mask_to_ext
@@ -57,13 +55,13 @@ def GenerateCN2(dstdir, dbname):
         for j in range(0, xsize):
             landuseID = int(dataLanduse[i][j])
             if(landuseID < 0):
-                data_prop[i][j] = -9999
+                data_prop[i][j] = DEFAULT_NODATA
             else:
                 hg = int(dataHg[i][j]) - 1 
                 data_prop[i][j] = cn2Map[landuseID][hg]
     
     WriteGTiffFile(filename, ysize, xsize, data_prop, \
-                           geotransform, srs, -9999, gdal.GDT_Float32)
+                           geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
             
     print 'The CN2 file is generated!'
 

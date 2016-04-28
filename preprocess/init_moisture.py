@@ -1,11 +1,10 @@
 #! /usr/bin/env python
 #coding=utf-8
 from osgeo import gdal,osr
-import math, os
 from numpy import *
 import util
 from util import WriteGTiffFile
-from config import *
+from text import *
 def InitMoisture(dstdir):
     acc_name = dstdir + os.sep + accM
     slope_name = dstdir + os.sep + slopeM

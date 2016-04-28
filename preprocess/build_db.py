@@ -1,35 +1,34 @@
 #! /usr/bin/env python
 #coding=utf-8
 import sys, os, thread
-## from pymongo import Connection # Connection is deprecated by Pymongo!
+## from pymongo import Connection # Connection is deprecated by Pymongo! LJ
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from import_parameters import ImportParameters
 from generate_stream_input import GenerateReachTable
 from find_sites import FindSites
-from weights_mongo import GenerateWeightInfo 
-import util
-from config import *
+from weights_mongo import GenerateWeightInfo
+from text import *
 
 def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
                    hydroDBName=None, thiessenFilePreci=None, thiessenFileMeteo=None):
     genIUH = True
 
-    statusFile = workingDir + os.sep + "status_BuildMongoDB.txt"
+    statusFile = workingDir + os.sep + FN_STATUS_MONGO
     f = open(statusFile, 'w')
     
-    simuMode = 'DAILY'
+    simuMode = Tag_Mode_Daily
     if stormMode:
-        simuMode = 'STORM'
-        if not "storm" in modelName.lower():
-            modelName = modelName + "_storm"
+        simuMode = Tag_Mode_Storm
+        if not Tag_Mode_Storm.lower() in modelName.lower():
+            modelName = modelName + "_" + Tag_Mode_Storm.lower()
         genIUH = False
 
-    if not "model" in modelName.lower():
-        modelName = "model_" + modelName
+    if not Tag_Model.lower() in modelName.lower():
+        modelName = Tag_Model.lower() + "_" + modelName
 
-    if forCluster and (not "cluster" in modelName.lower()):
-        modelName = "cluster_" + modelName
+    if forCluster and (not Tag_Cluster.lower() in modelName.lower()):
+        modelName = Tag_Cluster.lower() + "_" + modelName
 
     # build mongodb database
     try:
@@ -51,18 +50,18 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
     subbasinFile = workingDir + os.sep + basinVec
     subbasinRaster = workingDir + os.sep + mask_to_ext
     if forCluster:
-        subbasinFile = workingDir + os.sep + "subbasins" + os.sep + subbasinVec
+        subbasinFile = workingDir + os.sep + DIR_Subbasin + os.sep + subbasinVec
         subbasinRaster = workingDir + os.sep + subbasinOut
 
     if hydroDBName is not None:
         if stormMode:
-            hydroDBName = hydroDBName + "_storm_cmorph"
+            hydroDBName = hydroDBName + "_" + Tag_CLIM_STORM_Suf.lower()
     if stormMode:
         meteoThiessenList = [thiessenFilePreci]
-        meteoTypeList = ['P']
+        meteoTypeList = [DataType_Precipitation]
     else:
         meteoThiessenList = [thiessenFileMeteo, thiessenFilePreci]
-        meteoTypeList = ['M', 'P']
+        meteoTypeList = [DataType_Meteorology, DataType_Precipitation]
 
     f.write("20, Finding nearby stations for each sub-basin...\n")
     f.flush()
@@ -76,7 +75,7 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
     f.write("40, Importing raster to database...\n")
     f.flush()
 
-    tifFolder = workingDir + os.sep + "tif_files"
+    tifFolder = workingDir + os.sep + DIR_TIFF
     if not os.path.exists(tifFolder):
         os.mkdir(tifFolder)
     for i in range(1,nSubbasins+1):
@@ -95,20 +94,20 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
         GenerateWeightInfo(conn, modelName, i+1, stormMode)
 
     if genIUH:
-        f.write("80, Generating IUH...\n")
+        f.write("80, Generating IUH (Instantaneous Unit Hydrograph)...\n")
         f.flush()
         dt = 24
-        print 'Generating IUH...'
+        print 'Generating IUH (Instantaneous Unit Hydrograph)...'
         strCmd = "%s/iuh %s %d %s %s %d" % (CPP_PROGRAM_DIR, HOSTNAME, PORT, modelName, dt, nSubbasins)
         print strCmd
         os.system(strCmd)
 
-    f.write("90, Grid layering...\n")
+    f.write("90, Generating Grid layering...\n")
     f.flush()
-    layeringDir = workingDir + os.sep + "layering_info"
+    layeringDir = workingDir + os.sep + DIR_Layering_Info
     if not os.path.exists(layeringDir):
         os.mkdir(layeringDir)
-    print 'Grid layering...'
+    print 'Generating Grid layering...'
     strCmd = "%s/grid_layering %s %d %s %s %d" % (CPP_PROGRAM_DIR, HOSTNAME, PORT, layeringDir, modelName, nSubbasins)
     print strCmd
     os.system(strCmd)
@@ -117,6 +116,7 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
     f.close()
     print 'Build DB: %s finished!' % (modelName)
 
+## test code
 if __name__ == "__main__":
 
     workingDir = r"/data/hydro_preprocessing/fenkeng"

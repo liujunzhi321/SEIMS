@@ -1,17 +1,12 @@
 from osgeo import gdal
 from osgeo import ogr
 import networkx as nx
-#import pylab
 import math
-import sys
-import os
 import pymongo
-#from pymongo import Connection
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
 import shutil
 from adjust_groups import *
-from config import *
+from text import *
 
 sys.setrecursionlimit(10000)
 

@@ -10,7 +10,7 @@ from osgeo import gdal
 from osr import SpatialReference
 from gen_dinf import GenerateDinf
 import util
-from config import *
+from text import *
 def SubbasinDelineation(np, workingDir, dem,outlet, threshold, mpiexeDir=None,exeDir=None):
     if not os.path.exists(workingDir):
         os.mkdir(workingDir)

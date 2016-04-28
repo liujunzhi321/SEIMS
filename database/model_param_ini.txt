@@ -1,5 +1,6 @@
 ## Table title (columns are split by Tab!)
-## TYPE	Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+TYPE	Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+TEXT	TEXT	TEXT	TEXT	TEXT	REAL	REAL	VARCHAR(2)	REAL	REAL	VARCHAR(1)
 Header	NCOLS	Number of cell columns		ALL			NC			
 Header	NROWS	Number of cell rows		ALL			NC			
 Header	XLLCENTER	X coordinate of the origin by center of the cell.		ALL			NC			
