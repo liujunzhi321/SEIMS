@@ -272,12 +272,10 @@
 #define MCLS_ITP "Interpolation module"
 #define MID_ITP "ITP"
 #define MDESC_ITP "Interpolation of P, E, PET, etc."
-
 #define MCLS_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization"
 #define MCLSDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
 #define MID_NMINRL "NMINRL"
 #define MDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
-
 /// Potential Evapotranspiration Modules
 #define MCLS_PET "Potential Evapotranspiration"
 #define MCLSDESC_PET "Calculate the potential evapotranspiration for an array of climate inputs."
@@ -299,8 +297,6 @@
 #define VAR_COND_MAX "Cond_max"                     /// "Maximum automata's conductance"
 #define VAR_COND_RATE "Cond_rate"                   /// Rate of decline in automata's conductance per unit increase in vapor pressure deficit
 #define VAR_CMN "cmn"                               /// Rate coefficient for mineralization of the humus active organic nutrients
-#define VAR_COND_MAX "Cond_max"                     /// Maximum stomatal conductance
-#define VAR_COND_RATE "Cond_rate"                   /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
 #define VAR_DEM "DEM"                               /// Digital Elevation Model
 #define VAR_JULIAN_DAY "JDay"                       /// Julian day (int)
 #define VAR_LAP_RATE "LapseRate"                    /// Lapse rate
@@ -451,7 +447,6 @@
 #define DESC_ROCTL "amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell"
 #define DESC_CellSize "numble of cells"
 #define DESC_CellWidth "width of the cell"
-
 //////////////////////////////////////////////////////////////////////////
 /// Define MongoDB related constant strings used in SEIMS and preprocess//
 /// By LiangJun Zhu, May. 4, 2016  ///////////////////////////////////////
