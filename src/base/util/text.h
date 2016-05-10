@@ -51,6 +51,22 @@
 #define Tag_VerticalInterpolation "VERTICALINTERPOLATION"
 #define Tag_Weight "WEIGHT"
 
+///////  define parameter-related string constants used in the SEIMS ///////
+#define PARAM_USE_Y			"Y"
+#define PARAM_USE_N			"N"
+#define PARAM_CHANGE_RC		"RC"
+#define PARAM_CHANGE_AC		"AC"
+#define PARAM_CHANGE_NC		"NC"
+#define PARAM_FLD_NAME		"NAME"
+#define PARAM_FLD_DESC		"DESCRIPTION"
+#define PARAM_FLD_UNIT		"UNIT"
+#define PARAM_FLD_MIDS		"MODULE"
+#define PARAM_FLD_VALUE		"VALUE"
+#define PARAM_FLD_IMPACT	"IMPACT"
+#define PARAM_FLD_CHANGE	"CHANGE"
+#define PARAM_FLD_MAX		"MAX"
+#define PARAM_FLD_MIN		"MIN"
+#define PARAM_FLD_USE		"USE"
 
 
 #ifndef linux
@@ -82,12 +98,12 @@
 #define Tag_ReservoirCount "RESERVOIRCOUNT"
 #define Tag_ReservoirId "RESERVOIRID"
 #define Tag_SubbasinSelected "subbasinSelected"
-#define Tag_CellSize "CELLSIZE"
+#define Tag_CellNUM "CELLNUM" /// by LJ, have not been tested!
 #define Tag_Mask "MASK"
 #define Tag_TimeStep "TimeStep"
 #define Tag_StormTimeStep "DT_HS"
 #define Tag_ChannelTimeStep "DT_CH"
-#define Tag_CellWidth "CellWidth"
+#define Tag_CellWidth "CELLSIZE"
 #define Tag_PStat "P_STAT"
 
 
@@ -118,18 +134,27 @@
 
 #define Tag_ReachParameter "ReachParameter"
 #define Tag_RchParam "RchParam"
-#define Tag_QOUTLET "QOUTLET"
-#define Tag_QTotal "QTotal"
-#define Tag_SEDOUTLET "SEDOUTLET"
-#define Tag_OL_IUH "OL_IUH"
+
+////////////  Output Tags   ///////////////
+//// Output aggregation type //////
+#define Tag_Unknown			"UNKNOWN" 
+#define Tag_Sum				"SUM"
+#define Tag_Average			"AVERAGE"
+#define Tag_Average2		"AVE"
+#define Tag_Minimum			"MIN"
+#define Tag_Maximum			"MAX"
+#define Tag_SpecificCells	"SPECIFIC"
+
+#define TAG_OUT_QOUTLET "QOUTLET"
+#define TAG_OUT_QTOTAL "QTotal"
+#define TAG_OUT_SEDOUTLET "SEDOUTLET"
+#define TAG_OUT_OL_IUH "OL_IUH"
 #define Tag_DisPOutlet "DissovePOutlet"
 #define Tag_AmmoOutlet "AmmoniumOutlet"
 #define Tag_NitrOutlet "NitrateOutlet"
-#define Tag_QSUBBASIN "QSUBBASIN"
+#define TAG_OUT_QSUBBASIN "QSUBBASIN"
 
-#define ModID_PET_RD "PET_RD"
-#define ModId_ITP_AU "ITP_AU"
-#define ModId_PI_MSM "PI_MSM"
+
 
 //!for reach hydro climate data
 #define DIVERSION	"flowdiversion"
@@ -158,45 +183,64 @@
 #define File_Mask "MASK.asc"
 #define File_DEM "dem.asc"
 
-#define File_Config "config.fig"
-#define File_Input "file.in"
-#define File_Output "file.out"
-#define Source_HydroClimateDB "HydroClimateDB"
-#define Source_ParameterDB "ParameterDB"
-#define Source_Module "Module"
-#define PARAMETERS_TABLE "parameters"
-#define LANDUSE_TABLE "LanduseLookup"
-#define SOIL_TABLE "SoilLookup"
-#define STATIONS_TABLE "stations"
-#define TOPOLOGY_TABLE "reaches"
-#define SPATIAL_TABLE "spatial.files"
-#define MEASUREMENT_TABLE "measurement"
+#define File_Config				"config.fig"
+#define File_Input				"file.in"
+#define File_Output				"file.out"
+#define Source_HydroClimateDB	"HydroClimateDB"
+#define Source_ParameterDB		"ParameterDB"
+#define Source_Module			"Module"
 
-#define SITES_TABLE "Sites"
-#define DATADAY_TABLE_PREFIX "DataValuesDay_"
-#define SITELIST_TABLE "SiteList"
-#define SITELIST_TABLE_M "SiteListM"
-#define SITELIST_TABLE_P "SiteListP"
-#define SITELIST_TABLE_PET "SiteListPET"
-#define SITELIST_TABLE_STORM "StormSiteList"
+///////// Table Names required in MongoDB /////////
+#define DB_TAB_PARAMETERS		"parameters"
+#define DB_TAB_LOOKUP_LANDUSE	"LanduseLookup"
+#define DB_TAB_LOOKUP_SOIL		"SoilLookup"
+#define DB_TAB_SITELIST			"SiteList"
+#define DB_TAB_REACH			"reaches"
+#define DB_TAB_SPATIAL			"spatial"  /// spatial.files
+#define DB_TAB_SITES			"Sites"
+#define DB_TAB_DATAVALUES		"DataValues" // hydroClimate data values
+#define DB_TAB_MEASUREMENT		"measurement" // TODO: discharge, nutrient etc. should be stored in this collection
+
+#define DB_TAB_OUT_SPATIAL		"output"
+
+/// Fields in DB_TAB_REACH ///
+#define REACH_SUBBASIN			"SUBBASIN"
+#define REACH_GROUPDIVIDED		"GROUP_DIVIDE"
+#define REACH_DOWNSTREAM		"DOWNSTREAM"
+#define REACH_UPDOWN_ORDER		"UP_DOWN_ORDER"
+#define REACH_DOWNUP_ORDER		"DOWN_UP_ORDER"
+#define REACH_WIDTH				"WIDTH"
+#define REACH_LENGTH			"LENGTH"
+#define REACH_DEPTH				"DEPTH"
+#define REACH_V0				"V0"
+#define REACH_AREA				"AREA"
+#define REACH_MANNING			"MANNING"
+#define REACH_SLOPE				"SLOPE" 
+
+/// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
+#define SITELIST_TABLE_M		"SiteListM"
+#define SITELIST_TABLE_P		"SiteListP"
+#define SITELIST_TABLE_PET		"SiteListPET"
+#define SITELIST_TABLE_STORM	"StormSiteList"
 
 //! define string constants used in the code, also used in the mongoDB.SiteList table's header
-#define Tag_NoDataValue "NoDataValue"
-#define Tag_SubbasinSelected "subbasinSelected"
-#define Tag_Mode "Mode"
-#define Tag_Mode_Storm "STORM"
-#define Tag_Mode_Daily "DAILY"
+#define Tag_NoDataValue			"NoDataValue"
+#define Tag_SubbasinSelected	"subbasinSelected"
+#define Tag_Mode				"Mode"
+#define Tag_Mode_Storm			"STORM"
+#define Tag_Mode_Daily			"DAILY"
 
-#define Type_Scenario "SCENARIO"
-#define Type_LapseRateArray "LAPSERATEARRAY"
-#define Type_SiteInformation "SITEINFORMATION"
-#define Type_MapWindowRaster "MAPWINDOWRASTER"
-#define Type_Array1DDateValue "ARRAY1DDATEVALUE"
-#define Type_Array3D "ARRAY3D"
-#define Type_Array2D "ARRAY2D"
-#define Type_Array1D "ARRAY1D"
-#define Type_Single "SINGLE"
+#define Type_Scenario			"SCENARIO"
+#define Type_LapseRateArray		"LAPSERATEARRAY"
+#define Type_SiteInformation	"SITEINFORMATION"
+#define Type_MapWindowRaster	"MAPWINDOWRASTER"
+#define Type_Array1DDateValue	"ARRAY1DDATEVALUE"
+#define Type_Array3D			"ARRAY3D"
+#define Type_Array2D			"ARRAY2D"
+#define Type_Array1D			"ARRAY1D"
+#define Type_Single				"SINGLE"
 
+//// Optional Output Data ////
 #define Print_D_PREC "D_PREC"
 #define Print_D_POET "D_POET"
 #define Print_D_TEMP "D_TEMP"
@@ -204,7 +248,13 @@
 #define Print_D_INET "D_INET"
 #define Print_D_NEPR "D_NEPR"
 
-
+/// 2D Soil Attribute Data ///
+#define Print_2D_CONDUCTIVITY	"Conductivity_2D"
+#define Print_2D_POROSITY		"Porosity_2D"
+#define Print_2D_POREINDEX		"Poreindex_2D"
+#define Print_2D_FIELDCAP		"FieldCap_2D"
+#define Print_2D_WILTINGPOINT	"WiltingPoint_2D"
+#define Print_2D_DENSITY		"Density_2D"
 
 //////////////////////////////////////////////////////////////////////////
 /// Define models' ID and description in SEIMS  //////////////////////////
@@ -307,4 +357,39 @@
 #define DESC_VP_ACT "actual vapor pressure"
 #define DESC_WEIGHT_ITP "Weight used for interpolation"
 #define DESC_WS "Wind speed (measured at 10 meters above surface)"
+
+
+
+//////////////////////////////////////////////////////////////////////////
+/// Define MongoDB related constant strings used in SEIMS and preprocess//
+/// By LiangJun Zhu, May. 4, 2016  ///////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+#define MONG_GRIDFS_FN				"filename"
+#define MONG_GRIDFS_WEIGHT_CELLS	"NUM_CELLS"
+#define MONG_GRIDFS_WEIGHT_SITES	"NUM_SITES"
+#define MONG_GRIDFS_ID				"ID"
+#define MONG_GRIDFS_SUBBSN			"SUBBASIN"
+#define MONG_HYDRO_SITE_TYPE		"Type"
+#define MONG_HYDRO_SITE_LAT			"Lat"
+#define MONG_HYDRO_SITE_ELEV		"Elevation"
+#define MONG_HYDRO_DATA				"DataValues"
+#define MONG_HYDRO_DATA_SITEID		"StationID"
+#define MONG_HYDRO_DATA_UTC			"UTCDateTime"
+#define MONG_HYDRO_DATA_LOCALT		"LocalDateTime"
+#define MONG_HYDRO_DATA_VALUE		"Value"
+#define MONG_SITELIST_SUBBSN		"SubbasinID"
+#define MONG_SITELIST_DB			"DB"
+
+
+//////////////////////////////////////////////////////////////////////////
+/// Define Raster/ related constant strings used in SEIMS and preprocess//
+/// By LiangJun Zhu, May. 5, 2016  ///////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+#define HEADER_RS_TAB	    "Header"
+#define HEADER_RS_NODATA	"NODATA_VALUE"
+#define HEADER_RS_XLL		"XLLCENTER"
+#define HEADER_RS_YLL		"YLLCENTER"
+#define HEADER_RS_NROWS		"NROWS"
+#define HEADER_RS_NCOLS		"NCOLS"
+#define HEADER_RS_CELLSIZE	"CELLSIZE"
 #endif

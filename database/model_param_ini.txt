@@ -1,13 +1,15 @@
 ## Table title (columns are split by Tab!)
-TYPE	Parameter	Description	Unit	Module_ID	Value	Impact	Change	Max	Min	Use
+TYPE	NAME	DESCRIPTION	UNIT	MODULE	VALUE	IMPACT	CHANGE	MAX	MIN	USE
 TEXT	TEXT	TEXT	TEXT	TEXT	REAL	REAL	VARCHAR(2)	REAL	REAL	VARCHAR(1)
-Header	NCOLS	Number of cell columns		ALL			NC			
-Header	NROWS	Number of cell rows		ALL			NC			
-Header	XLLCENTER	X coordinate of the origin by center of the cell.		ALL			NC			
-Header	YLLCENTER	Y coordinate of the origin by center of the cell		ALL			NC			
-Header	DX	cell size of horizontal direction		ALL			NC			
-Header	DY	cell size of vertical direction		ALL			NC			
-Header	NODATA_VALUE	The input values to be NoData in the output raster.		ALL			NC			
+## The Header information should be UPDATE in reConstruct SQLite Database. DONE!
+#Header	NCOLS	Number of cell columns		ALL			NC			
+#Header	NROWS	Number of cell rows		ALL			NC			
+#Header	XLLCENTER	X coordinate of the origin by center of the cell.		ALL			NC			
+#Header	YLLCENTER	Y coordinate of the origin by center of the cell		ALL			NC			
+#Header	DX	cell size of horizontal direction		ALL			NC			
+#Header	DY	cell size of vertical direction		ALL			NC			
+#Header	CELLSIZE	cell size		ALL			NC			
+#Header	NODATA_VALUE	The input values to be NoData in the output raster.		ALL			NC			
 
 Climate	DEM	Elevation of each grid cell	m	ALL	-99		NC			
 Climate	K_pet	Correction factor for PET		ALL	1	0	AC	1.3	0.7	Y

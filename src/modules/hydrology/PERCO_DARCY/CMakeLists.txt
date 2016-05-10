@@ -1,6 +1,5 @@
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
-INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
-SET(SRC_LIST ../../../base/util/SimulationModule.cpp Percolation.cpp api.cpp)
+SET(SRC_LIST ${MODULE_SRC} Percolation.cpp api.cpp)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_LIBRARY(PERCO_DARCY SHARED ${SRC_LIST})
 #TARGET_LINK_LIBRARIES(PERCO_DARCY libutil.so)

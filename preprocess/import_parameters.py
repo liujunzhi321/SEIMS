@@ -11,10 +11,12 @@ def ImportParameters(sqlite_file, db):
     #get all the tablename
     c.execute("select name from sqlite_master where type='table' order by name;")
     tablelist = c.fetchall()
-    tablelist = [item[0].encode("ascii") for item in tablelist if (item[0].find("sqlite") < 0 and item[0].lower().find("lookup") < 0 and item[0].lower().find("crop") < 0)]
+    # Find parameter table list excluding "XXLookup"
+    tablelist = [item[0].encode("ascii") for item in tablelist if (item[0].lower().find("lookup") < 0)]
     #print tablelist
-    
-    field_list = ['NAME', 'DESCRIPTION', 'UNIT', 'MODULE', 'VALUE', 'IMPACT', 'CHANGE', 'MAX', 'MIN', 'USE']
+
+    field_list = [PARAM_FLD_NAME,PARAM_FLD_DESC,PARAM_FLD_UNIT,PARAM_FLD_MODS,PARAM_FLD_VALUE,\
+                PARAM_FLD_IMPACT,PARAM_FLD_CHANGE,PARAM_FLD_MAX,PARAM_FLD_MIN,PARAM_FLD_USE]
     for tablename in tablelist:
         #print tablename
         str_sql = "select * from %s;" % (tablename,)
@@ -31,10 +33,10 @@ def ImportParameters(sqlite_file, db):
             #db.parameters.insert(dic, safe=True)
             db.parameters.insert(dic)
 
-    db.parameters.create_index("NAME")
+    db.parameters.create_index(PARAM_FLD_NAME)
     c.close()
     conn.close()
-    print 'parameter table is imported.'
+    print 'Parameter tables are imported.'
     
 if __name__ == "__main__":
     try:

@@ -29,7 +29,7 @@ def ImportSites(db, shpFileName, siteType):
         feat = lyr.GetFeature(i)
         geom = feat.GetGeometryRef()
         dic = {}
-        dic[Tag_ST_StationID] = feat.GetFieldAsInteger(iID)
+        dic[Tag_ST_StationID] = int(feat.GetFieldAsInteger(iID))
         dic[Tag_ST_StationName] = feat.GetFieldAsString(iName)
         dic[Tag_ST_LocalX] = feat.GetFieldAsDouble(iLocalX)
         dic[Tag_ST_LocalY] = feat.GetFieldAsDouble(iLocalY)
@@ -123,7 +123,7 @@ def ImportPrecipitation(db, siteDic, xlsFileName, year):
                 sec = time.mktime(dt.timetuple())
                 utcTime = time.gmtime(sec)                
                 dic[Tag_DT_LocalT] = dt
-                dic[Tag_DT_Zone] = 8
+                dic[Tag_DT_Zone] = time.timezone / 3600
                 dic[Tag_DT_UTC] = datetime.datetime(utcTime[0], utcTime[1], utcTime[2], utcTime[3])
                 dic[Tag_DT_Value] = pValue
                 preciTable.insert_one(dic)
@@ -153,13 +153,13 @@ def ImportET(db, siteDic, xlsFileName, year):
                     pValue = float(s)                      
                             
                 dic = {}
-                dic[Tag_DT_StationID] = siteDic.get(name, [0,])[0]
+                dic[Tag_DT_StationID] = int(siteDic.get(name, [0,])[0])
                 dic[Tag_DT_Type] = DataType_PotentialEvapotranspiration
                 dt = datetime.datetime(year, j, i, 0, 0)
                 sec = time.mktime(dt.timetuple())
                 utcTime = time.gmtime(sec)                
                 dic[Tag_DT_LocalT] = dt
-                dic[Tag_DT_Zone] = 8
+                dic[Tag_DT_Zone] = time.timezone / 3600
                 dic[Tag_DT_UTC] = datetime.datetime(utcTime[0], utcTime[1], utcTime[2], utcTime[3])
                 dic[Tag_DT_Value] = pValue
                 preciTable.insert_one(dic)

@@ -1,6 +1,6 @@
 /*!
  * \file ModuleFactory.cpp
- * \brief
+ * \brief Constructor of ModuleFactory from config file
  *
  *
  *
@@ -11,6 +11,7 @@
  * 
  */
 #ifndef linux
+#include <WinSock2.h>
 #include <windows.h>
 #define DLL_EXT  ".dll"
 #else
@@ -32,30 +33,32 @@
 
 #include "util.h"
 #include "utils.h"
-#include "text.h"
 #include "ModuleFactory.h"
 #include "ModelException.h"
 #include "MetadataInfoConst.h"
 #include "MetadataInfo.h"
 #include "MongoUtil.h"
-#include "DBManager.h"
+//#include "DBManager.h"
 
-//! Constructor, by default the layering method is DOWN_UP
-ModuleFactory::ModuleFactory(const string& configFileName, const string& modulePath, mongo* conn, const string& dbName)
-	:m_modulePath(modulePath), m_conn(conn), m_dbName(dbName), m_layingMethod(DOWN_UP)
+ModuleFactory::ModuleFactory(const string& configFileName, const string& modulePath, mongoc_client_t* conn, const string& dbName)
+	:m_modulePath(modulePath), m_conn(conn), m_dbName(dbName), m_layingMethod(UP_DOWN)
 {
 	Init(configFileName);
 #ifdef USE_MONGODB
-	gridfs_init(m_conn, m_dbName.c_str(), "spatial", m_spatialData); 
+	bson_error_t *err = NULL;
+	m_spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
+	if (err != NULL)
+	{
+		throw ModelException("ModuleFactory","Constructor","Failed to connect to GridFS!\n");
+	}
 #endif
-	
 }
-//! Destructor
+
 ModuleFactory::~ModuleFactory(void)
 {
 #ifdef USE_MONGODB
-	gridfs_destroy(m_spatialData);
-	mongo_destroy(m_conn);
+	mongoc_gridfs_destroy(m_spatialData);
+	mongoc_client_destroy(m_conn);
 #endif
 
 	for (map<string, SEIMSModuleSetting*>::iterator it = m_settings.begin(); it != m_settings.end(); ++it)
@@ -67,7 +70,7 @@ ModuleFactory::~ModuleFactory(void)
 	for (map<string, ParamInfo*>::iterator it = m_parametersInDB.begin(); it != m_parametersInDB.end(); ++it)
 		delete it->second;
 
-	for (map<string, clsInterpolationWeighData*>::iterator it = m_weightDataMap.begin(); it != m_weightDataMap.end(); ++it)
+	for (map<string, clsInterpolationWeightData*>::iterator it = m_weightDataMap.begin(); it != m_weightDataMap.end(); ++it)
 		delete it->second;
 
 	for (map<string, clsRasterData*>::iterator it = m_rsMap.begin(); it != m_rsMap.end(); ++it)
@@ -92,17 +95,15 @@ ModuleFactory::~ModuleFactory(void)
 		dlclose(m_dllHandles[i]);
 #endif
 	}
-
-
 }
-//! Initialization
+
 void ModuleFactory::Init(const string& configFileName)
 {
 	ReadConfigFile(configFileName.c_str());
-#ifndef USE_MONGODB
-	ReadParametersFromSQLite();
-#else
+#ifdef USE_MONGODB
 	ReadParametersFromMongoDB();
+#else
+	//ReadParametersFromSQLite();
 #endif
 
 	size_t n = m_moduleIDs.size();
@@ -167,127 +168,60 @@ void ModuleFactory::Init(const string& configFileName)
 	}
 	
 }
-//! Read parameters from Sqlite database
-//! \deprecated For now, Sqlite is deprecated in SEIMS.
-void ModuleFactory::ReadParametersFromSQLite()
-{
-	DBManager dbman;
-	try
-	{
-		// open the hydrclimate database
-		dbman.Open(m_dbName);
-		// if there is no error
-		if (!dbman.IsError())
-		{
-			vector<string> paraTables;
-			paraTables.push_back("PET_PM");
-			paraTables.push_back("Discharge");
-			paraTables.push_back("InstreamWQ");
-			paraTables.push_back("Interception");
-			paraTables.push_back("PlantGrowth");
-			paraTables.push_back("Sediment");
-			paraTables.push_back("Snow");
-			paraTables.push_back("WaterBalance");
 
-			// loop table list to get parameter information
-			for (size_t i = 0; i < paraTables.size(); i++)
-			{
-				// 'NAME', 'DESCRIPTION', 'UNIT', 'MODULE', 'VALUE', 'IMPACT', 'CHANGE', 'MAX', 'MIN', 'USE'
-				string strSQL = "select * from " + paraTables[i];
-				slTable *tbl = dbman.Load(strSQL);
-				if (tbl != NULL)
-				{
-					// if there is at least one record
-					for (size_t iRow = 0; iRow < tbl->nRows; iRow++)
-					{
-						ParamInfo * p = new ParamInfo();
-						p->Name = tbl->FieldValue(iRow, 0);
-						p->Description = tbl->FieldValue(iRow, 1);
-						p->Units = tbl->FieldValue(iRow, 2);
-						p->Value = atof(tbl->FieldValue(iRow, 4).c_str());
-						p->Impact = atof(tbl->FieldValue(iRow, 5).c_str());
-						p->Change = tbl->FieldValue(iRow, 6);
-						p->Max = atof(tbl->FieldValue(iRow, 7).c_str());
-						p->Min = atof(tbl->FieldValue(iRow, 8).c_str());
-						p->Use = tbl->FieldValue(iRow, 9);
-
-						m_parametersInDB[GetUpper(p->Name)] = p;
-
-						//cout << p->Name << "\t" << p->Value << endl;
-					}
-					delete tbl;
-				}
-				tbl = NULL;
-			}
-
-		}
-		dbman.Close();
-	}
-	catch (...)
-	{
-		dbman.Close();		
-		throw;
-	}
-}
-//! Read parameters from mongodb
 void ModuleFactory::ReadParametersFromMongoDB()
 {
-	mongo_cursor cursor[1];
-	ostringstream oss;
-	oss << m_dbName << "." << PARAMETERS_TABLE;
-	mongo_cursor_init(cursor, m_conn, oss.str().c_str());
-
-	
-	while( mongo_cursor_next(cursor) == MONGO_OK ) 
+	mongoc_cursor_t		*cursor;
+	mongoc_collection_t	*collection;
+	bson_t				*query;
+	collection = mongoc_client_get_collection(m_conn, m_dbName.c_str(),DB_TAB_PARAMETERS);
+	query = bson_new();
+	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,query,NULL,NULL);
+	bson_error_t		*err = NULL;
+	if (mongoc_cursor_error(cursor,err))
 	{
-		const bson* info = mongo_cursor_bson(cursor);
-		ParamInfo * p = new ParamInfo();
-		bson_iterator it[1];
-		bson_iterator_init(it, info);
-		while(bson_iterator_next(it)){
-			if(strcmp("NAME", bson_iterator_key(it)) == 0)
-				p->Name = bson_iterator_string(it);
-			else if(strcmp("UNIT", bson_iterator_key(it)) == 0)
-				p->Units = bson_iterator_string(it);
-			else if(strcmp("VALUE", bson_iterator_key(it)) == 0)
-				p->Value = (float)bson_iterator_double(it);
-			else if(strcmp("IMPACT", bson_iterator_key(it)) == 0)
-				p->Impact = (float)bson_iterator_double(it);
-			else if(strcmp("CHANGE", bson_iterator_key(it)) == 0)
-				p->Change = bson_iterator_string(it);
-			else if(strcmp("MAX", bson_iterator_key(it)) == 0)
-				p->Max = (float)bson_iterator_double(it);
-			else if(strcmp("MIN", bson_iterator_key(it)) == 0)
-				p->Min = (float)bson_iterator_double(it);
-			else if(strcmp("USE", bson_iterator_key(it)) == 0)
-				p->Use = bson_iterator_string(it);
-		}
-		
+		throw ModelException("ModuleFactory","ReadParametersFromMongoDB","Nothing found in the collection: " + string(DB_TAB_PARAMETERS) + ".\n");
+	}
+	const bson_t			*info;
+	while(mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor,&info)){
+		ParamInfo	*p = new ParamInfo();
+		bson_iter_t	iter;
+		if (bson_iter_init_find(&iter,info,PARAM_FLD_NAME))
+			p->Name = GetStringFromBSONITER(&iter);
+		if (bson_iter_init_find(&iter,info,PARAM_FLD_UNIT))
+			p->Units = GetStringFromBSONITER(&iter);
+		if (bson_iter_init_find(&iter,info,PARAM_FLD_VALUE))
+			p->Value = GetFloatFromBSONITER(&iter);
+		if (bson_iter_init_find(&iter,info,PARAM_FLD_CHANGE))
+			p->Change = GetStringFromBSONITER(&iter);
+		if (bson_iter_init_find(&iter,info,PARAM_FLD_IMPACT))
+			p->Impact = GetFloatFromBSONITER(&iter);
+		if (bson_iter_init_find(&iter,info,PARAM_FLD_MAX))
+			p->Max = GetFloatFromBSONITER(&iter);
+		if (bson_iter_init_find(&iter,info,PARAM_FLD_MIN))
+			p->Min = GetFloatFromBSONITER(&iter);
+		if (bson_iter_init_find(&iter,info,PARAM_FLD_USE))
+			p->Use = GetStringFromBSONITER(&iter);
 		m_parametersInDB[GetUpper(p->Name)] = p;
 	}
-
-	//bson_destroy(query);
-	mongo_cursor_destroy(cursor);
-
+	mongoc_cursor_destroy(cursor);
+	mongoc_collection_destroy(collection);
+	bson_destroy(query);
 }
-//! Get comparable name after underscore if necessary
+
 string ModuleFactory::GetComparableName(string& paraName)
 {
     if (paraName.length() <= 2)
         return paraName;
-
 	string compareName;
-
 	string prefix = paraName.substr(0, 2);
 	if (prefix == "D_" || prefix == "T_" || prefix == "d_" || prefix == "t_")
 		compareName = paraName.substr(2); //use the string after the underscore, T_PET, use PET
 	else 
 		compareName = paraName;
-
 	return compareName;
 }
 
-//! Create module list. Return time-consuming of reading data
 int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThreads, LayeringMethod layeringMethod, 
 	clsRasterData* templateRaster, SettingsInput* settingsInput, vector<SimulationModule*>& modules)
 {
@@ -296,7 +230,6 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
 	for (size_t i = 0; i < n; i++)
 	{
 		SimulationModule *pModule = GetInstance(m_moduleIDs[i]);
-		//pModule->SetID(m_moduleIDs[i]);
 		pModule->SetTheadNumber(numThreads);
 		modules.push_back(pModule);
 	}
@@ -310,6 +243,7 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
 		vector<ParamInfo>& parameters = m_parameters[id];
 
 		bool verticalInterpolation = true;
+		/// Special operation for ITP module
 		if (id.find(MID_ITP) != string::npos)
 		{
 			modules[i]->SetDataType(m_settings[id]->dataType());
@@ -338,10 +272,9 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
 	}
 	clock_t t2 = clock();
     //cout << "reading parameter finished.\n";
-
 	return t2-t1;
 }
-//! Find dependent parameters 
+
 ParamInfo* ModuleFactory::FindDependentParam(ParamInfo& paramInfo)
 {
 	string paraName = GetComparableName(paramInfo.Name);
@@ -364,10 +297,10 @@ ParamInfo* ModuleFactory::FindDependentParam(ParamInfo& paramInfo)
 			}
 		}
 	}
-	//throw ModelException("ModuleFactory", "FindDependentParam", "Can not find input for " + paraName + ".\n");
+	throw ModelException("ModuleFactory", "FindDependentParam", "Can not find input for " + paraName + " from other Modules.\n");
 	return NULL;
 }
-//! Load function pointers from .DLL or .so
+
 void ModuleFactory::ReadDLL(string& id, string& dllID)
 {
 	// the dll file is already read, return
@@ -403,17 +336,15 @@ void ModuleFactory::ReadDLL(string& id, string& dllID)
 
 }
 
-//! Get instance
 SimulationModule* ModuleFactory::GetInstance(string& moduleID)
 {
 	return m_instanceFuncs[moduleID]();
 }
-//! Match type
+
 dimensionTypes ModuleFactory::MatchType(string strType)
 {
 	// default
 	dimensionTypes typ = DT_Unknown;
-
 	if (StringMatch(strType,Type_Single)) typ = DT_Single;
 	if (StringMatch(strType,Type_Array1D)) typ = DT_Array1D;
 	if (StringMatch(strType,Type_Array2D)) typ = DT_Array2D;
@@ -423,10 +354,9 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 	if (StringMatch(strType,Type_SiteInformation)) typ = DT_SiteInformation;
 	if (StringMatch(strType,Type_LapseRateArray)) typ = DT_LapseRateArray;
 	if (StringMatch(strType,Type_Scenario)) typ = DT_Scenario;
-
 	return typ;
 }
-//! Read module's parameters setting from XML string
+
 void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_parameters.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
@@ -465,7 +395,7 @@ void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, S
 					if(StringMatch(param->Name,Tag_Weight)) 
 					{
 						if(setting->dataTypeString().length() == 0) 
-							throw ModelException("ModuleFactory","readParameterSetting","The parameter " + string(Tag_Weight) + " should have corresponding data type in module " + moduleID);
+							throw ModelException("ModuleFactory","ReadParameterSetting","The parameter " + string(Tag_Weight) + " should have corresponding data type in module " + moduleID);
 						if(StringMatch(setting->dataTypeString(),DataType_MeanTemperature) || StringMatch(setting->dataTypeString(),DataType_MinimumTemperature) || StringMatch(setting->dataTypeString(),DataType_MaximumTemperature))
 							param->Name += "_T";  //The weight coefficient file is same for TMEAN, TMIN and TMAX, so just need to read one file named "Weight_T.txt"
 						/// bug? old code param->Name += "_M";
@@ -571,7 +501,7 @@ void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, S
 		} // while
 	}
 }
-//! is constant input?
+
 bool ModuleFactory::IsConstantInputFromName(string& name)
 {
 	if(	StringMatch(name,CONS_IN_ELEV) ||
@@ -581,7 +511,7 @@ bool ModuleFactory::IsConstantInputFromName(string& name)
 		return true;
 	return false;
 }
-//! Read module's input setting from XML string
+
 void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_inputs.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
@@ -673,21 +603,21 @@ void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMS
 			if (param->Name.size() <= 0 )
 			{
 				delete param;
-				throw ModelException("SEIMSModule","readInputSetting","Some input variables have not name in metadata!");
+				throw ModelException("SEIMSModule","ReadInputSetting","Some input variables have not name in metadata!");
 			}
 
 			if (param->Source.size() <= 0)
 			{
 				string name = param->Name;
 				delete param;
-				throw ModelException("SEIMSModule","readInputSetting","Input variable "+ name + " does not have source!");
+				throw ModelException("SEIMSModule","ReadInputSetting","Input variable "+ name + " does not have source!");
 			}
 
 			if (param->Dimension == DT_Unknown)
 			{
 				string name = param->Name;
 				delete param;
-				throw ModelException("SEIMSModule","readInputSetting","Input variable "+ name + " does not have dimension!");
+				throw ModelException("SEIMSModule","ReadInputSetting","Input variable "+ name + " does not have dimension!");
 			}
 
 			vecPara.push_back(*param);
@@ -698,7 +628,7 @@ void ModuleFactory::ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMS
 		}
 	}
 }
-//! Read module's output from XML string
+
 void ModuleFactory::ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting)
 {
 	m_outputs.insert(map<string, vector<ParamInfo> >::value_type(moduleID, vector<ParamInfo>()));
@@ -795,14 +725,13 @@ void ModuleFactory::ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIM
 		}
 	}
 }
-//! Load settings from file
+
 bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<string> >& settings)
 {
 	bool bStatus = false;
 	ifstream myfile;
 	string line;
 	utils utl;
-
 	try
 	{
 		// open the file
@@ -814,7 +743,6 @@ bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<st
 				if (myfile.good())
 				{
 					getline(myfile, line);
-					//utl.TrimSpaces(line);
 					line = trim(line);
 					if ((line.size() > 0) && (line[0] != '#')) // ignore comments and empty lines
 					{
@@ -850,12 +778,11 @@ bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<st
 	catch (...)
 	{
 		myfile.close();
-		//throw;
+		throw ModelException("ModuleFactory","LoadSettingsFromFile","Failed, Please check the format of " + string(File_Config) + ".\n");
 	}
-
 	return bStatus;
 }
-//! Read configuration file 
+
 void ModuleFactory::ReadConfigFile(const char* configFileName)
 {
 	vector< vector<string> > settings;
@@ -887,11 +814,11 @@ void ModuleFactory::ReadConfigFile(const char* configFileName)
 	}
 	catch (...)
 	{
-		throw;
+		throw ModelException("ModuleFactory","ReadConfigFile","Failed!");
 	}
 
 }
-//! Set data
+
 void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* setting, ParamInfo* param, clsRasterData* templateRaster,
 	SettingsInput* settingsInput, SimulationModule* pModule, bool vertitalItp)
 {
@@ -922,9 +849,9 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	const char* paramName = name.c_str();
 	ostringstream oss;
 	oss << nSubbasin << "_" << name;
-	if (StringMatch(name, "weight"))
+	if (StringMatch(name, Tag_Weight))
 	{
-		if (setting->dataTypeString() == "P")
+		if (setting->dataTypeString() == DataType_Precipitation)
 			oss << "_P";
 		else
 			oss << "_M";
@@ -966,7 +893,7 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	//if(param->Dimension != DT_Single)
 	//	cout << name << "\t" << end-start << endl;
 }
-//! Set Value
+
 void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, SettingsInput* settingsInput, SimulationModule* pModule)
 {
 	//get parameter data
@@ -975,11 +902,11 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 		// the data type is got from config.fig
 		return;
 	}	
-	else if(StringMatch(param->Name, Tag_CellSize))  //cell size
+	else if(StringMatch(param->Name, Tag_CellNUM))  // valid cell number? // old code is cell size? Is it confused? LJ
 	{
 		param->Value = float(templateRaster->Size());
 	}
-	else if(StringMatch(param->Name, Tag_CellWidth))  //cell width
+	else if(StringMatch(param->Name, Tag_CellWidth))  //cell size
 	{
 		param->Value = float(templateRaster->getCellWidth());
 	}
@@ -1003,7 +930,7 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 
 	pModule->SetValue(param->Name.c_str(), param->Value);
 }
-//! Set 1D data
+
 void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, 
 	SimulationModule* pModule, SettingsInput* settingsInput, bool vertitalItp)
 {
@@ -1014,7 +941,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 	{
 		if (StringMatch(paraName, Tag_Weight))
 		{
-			clsInterpolationWeighData *weightData = m_weightDataMap[remoteFileName];
+			clsInterpolationWeightData *weightData = m_weightDataMap[remoteFileName];
 			weightData->getWeightData(&n, &data);
 		}
 		else
@@ -1030,19 +957,20 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 	{
 		try
 		{
-#ifndef USE_MONGODB
-			ostringstream oss;
-			oss << dbName << remoteFileName << TextExtension;
-			//cout << oss.str() << endl;
-			Read1DArray(oss.str().c_str(), n, data);
-			if(templateRaster->getCellNumber() != n)
-			{
-				oss.str("");
-				oss << "The data length in " << remoteFileName << "(" << n << ")" << " is not the same as the template(" << templateRaster->getCellNumber() << ").\n";
-				throw ModelException("Set1DData","Read1DArray", oss.str());
-			}
-#else
+#ifdef USE_MONGODB
 			Read1DArrayFromMongoDB(m_spatialData, remoteFileName, templateRaster, n, data);
+			
+//#else
+//			ostringstream oss;
+//			oss << dbName << remoteFileName << TextExtension;
+//			//cout << oss.str() << endl;
+//			Read1DArray(oss.str().c_str(), n, data);
+//			if(templateRaster->getCellNumber() != n)
+//			{
+//				oss.str("");
+//				oss << "The data length in " << remoteFileName << "(" << n << ")" << " is not the same as the template(" << templateRaster->getCellNumber() << ").\n";
+//				throw ModelException("Set1DData","Read1DArray", oss.str());
+//			}
 #endif
 		}
 		catch (ModelException e)
@@ -1053,15 +981,14 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 	}
 	else if (StringMatch(paraName, Tag_Weight))
 	{
-		#ifndef USE_MONGODB
+		#ifdef USE_MONGODB
+			clsInterpolationWeightData *weightData = new clsInterpolationWeightData(m_spatialData, remoteFileName.c_str());
+		/*#else
 			ostringstream ossWeightFile;
 			ossWeightFile << dbName << remoteFileName << TextExtension;
-			clsInterpolationWeighData *weightData = new clsInterpolationWeighData(ossWeightFile.str());
-		#else
-			clsInterpolationWeighData *weightData = new clsInterpolationWeighData(m_spatialData, remoteFileName.c_str());
+			clsInterpolationWeightData *weightData = new clsInterpolationWeightData(ossWeightFile.str());*/
 		#endif
 			weightData->getWeightData(&n, &data);
-			//weightData->dump("c:/weight2.txt");
 			m_weightDataMap[remoteFileName] = weightData;
 	}
 	else if (StringMatch(paraName, Tag_Elevation_Meteorology))
@@ -1069,8 +996,8 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		if (vertitalItp)
 		{
 			InputStation* pStation = settingsInput->StationData();
-			n = pStation->NumberOfSites("M");
-			data = pStation->GetElevation("M");
+			n = pStation->NumberOfSites(DataType_Meteorology);
+			data = pStation->GetElevation(DataType_Meteorology);
 		}
 		else
 			return;
@@ -1080,8 +1007,8 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		if (vertitalItp)
 		{
 			InputStation* pStation = settingsInput->StationData();
-			n = pStation->NumberOfSites("P");
-			data = pStation->GetElevation("P");
+			n = pStation->NumberOfSites(DataType_Precipitation);
+			data = pStation->GetElevation(DataType_Precipitation);
 		}
 		else
 			return;
@@ -1091,8 +1018,8 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		if (vertitalItp)
 		{
 			InputStation* pStation = settingsInput->StationData();
-			n = pStation->NumberOfSites("M");
-			data = pStation->GetLatitude("M");
+			n = pStation->NumberOfSites(DataType_Meteorology);
+			data = pStation->GetLatitude(DataType_Meteorology);
 		}
 		else
 			return;
@@ -1109,7 +1036,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 
 	pModule->Set1DData(paraName.c_str(), n, data);
 }
-//! Set 2D data
+
 void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule)
 {
 	int nRows = 0;
@@ -1128,9 +1055,9 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 
 	try
 	{
-		if (StringMatch(paraName, "Conductivity_2D") || StringMatch(paraName, "Porosity_2D") ||
-			StringMatch(paraName, "Poreindex_2D") || StringMatch(paraName, "FieldCap_2D") ||
-			StringMatch(paraName, "WiltingPoint_2D") || StringMatch(paraName, "Density_2D"))
+		if (StringMatch(paraName, Print_2D_CONDUCTIVITY) || StringMatch(paraName, Print_2D_POROSITY) ||
+			StringMatch(paraName, Print_2D_POREINDEX) || StringMatch(paraName, Print_2D_FIELDCAP) ||
+			StringMatch(paraName, Print_2D_WILTINGPOINT) || StringMatch(paraName, Print_2D_DENSITY))
 		{
 			Read2DSoilAttr(m_spatialData, remoteFileName.substr(0, remoteFileName.size()-3), templateRaster, nRows, data);
 			nCols = 2;
@@ -1150,55 +1077,55 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 				oss << remoteFileName << "_DOWN_UP";
 				remoteFileName = oss.str();
 			}
-		#ifndef USE_MONGODB
+		#ifdef USE_MONGODB
+			Read2DArrayFromMongoDB(m_spatialData, remoteFileName, templateRaster, nRows, data);
+		/*#else
 			ostringstream ossRoutingLayers;
 			ossRoutingLayers << dbName << remoteFileName << TextExtension;
-			Read2DArray(ossRoutingLayers.str().c_str(), nRows, data);
-		#else
-			Read2DArrayFromMongoDB(m_spatialData, remoteFileName, templateRaster, nRows, data);
+			Read2DArray(ossRoutingLayers.str().c_str(), nRows, data);*/
 		#endif
 		}
 		else if(StringMatch(paraName, Tag_FLOWIN_INDEX) || StringMatch(paraName, Tag_FLOWIN_INDEX_DINF)
 			|| StringMatch(paraName, Tag_FLOWIN_PERCENTAGE_DINF) || StringMatch(paraName, Tag_FLOWOUT_INDEX_DINF)
 			|| StringMatch(paraName, Tag_ROUTING_LAYERS_DINF))
 		{
-		#ifndef USE_MONGODB
-			ostringstream ossFlowIn;
-			ossFlowIn << dbName << remoteFileName << TextExtension;
-			Read2DArray(ossFlowIn.str().c_str(), nRows, data);
-		#else
-			//string ascFileName = projectPath + Name + TextExtension;
+		#ifdef USE_MONGODB
 			Read2DArrayFromMongoDB(m_spatialData, remoteFileName, templateRaster, nRows, data);
+		//#else
+		//	ostringstream ossFlowIn;
+		//	ossFlowIn << dbName << remoteFileName << TextExtension;
+		//	Read2DArray(ossFlowIn.str().c_str(), nRows, data);
+		//	//string ascFileName = projectPath + Name + TextExtension;	
 		#endif
 		}
-		else if(StringMatch(paraName, Tag_OL_IUH))
+		else if(StringMatch(paraName, TAG_OUT_OL_IUH))
 		{
 			ReadIUHFromMongoDB(m_spatialData, remoteFileName, templateRaster, nRows, data);
 		}
 		else if (StringMatch(paraName, Tag_ReachParameter))
 		{
-		#ifndef USE_MONGODB
+		#ifdef USE_MONGODB
+			#ifndef MULTIPLY_REACHES
+				ReadReachInfoFromMongoDB(m_layingMethod, m_conn,dbName, nSubbasin, nRows, nCols, data);
+			#else
+				ReadMutltiReachInfoFromMongoDB(m_layingMethod, m_conn, dbName, nRows, nCols, data);
+			#endif	
+		/*#else
 			ostringstream ossReachInfo;
 			ossReachInfo << dbName << GetUpper(Tag_ReachParameter) << "_1" << TextExtension;
 			#ifndef MULTIPLY_REACHES
-			ReadSingleReachInfo(nSubbasin, ossReachInfo.str(), m_layingMethod, nRows, nCols, data);
+				ReadSingleReachInfo(nSubbasin, ossReachInfo.str(), m_layingMethod, nRows, nCols, data);
 			#else
-			ReadMultiReachInfo(ossReachInfo.str(), m_layingMethod, nRows, nCols, data);
-			#endif
-		#else
-			#ifndef MULTIPLY_REACHES
-			ReadReachInfoFromMongoDB(m_layingMethod, dbName, m_spatialData, nSubbasin, remoteFileName, templateRaster, nRows, nCols, data);
-			#else
-			ReadMutltiReachInfoFromMongoDB(m_layingMethod, dbName, m_spatialData, remoteFileName, templateRaster, nRows, nCols, data);//
-			#endif
+				ReadMultiReachInfo(ossReachInfo.str(), m_layingMethod, nRows, nCols, data);
+			#endif*/
 		#endif
 		}
 		else if (StringMatch(paraName, Tag_RchParam))
 		{
 #ifndef MULTIPLY_REACHES
-			ReadLongTermReachInfo(dbName, m_spatialData, nSubbasin, nRows, nCols, data);
+			ReadLongTermReachInfo(m_conn, m_dbName, nSubbasin, nRows, nCols, data);
 #else
-			ReadLongTermMutltiReachInfo(dbName, m_spatialData, nRows, nCols, data);//
+			ReadLongTermMutltiReachInfo(m_conn,m_dbName, nRows, nCols, data);
 #endif
 		}
 		else if (StringMatch(paraName, Tag_LapseRate))
@@ -1229,10 +1156,9 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 	m_2DRowsLenMap[remoteFileName] = nRows;
 	m_2DColsLenMap[remoteFileName] = nCols;
 	
-	
 	pModule->Set2DData(paraName.c_str(), nRows, nCols, data);
 }
-//! Set raster data
+
 void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule)
 {
 	int n;
@@ -1243,22 +1169,22 @@ void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFi
 	{
 		try
 		{
-#ifndef USE_MONGODB
-			ostringstream oss;
-			raster = new clsRasterData();
-			//oss << dbName << remoteFileName << GTiffExtension;
-			//raster->ReadFromGDAL(oss.str(), templateRaster);
-			oss << dbName << remoteFileName << RasterExtension;
-			raster->readASCFile(oss.str(), templateRaster);
-			//oss.str("");
-			//oss << dbName << remoteFileName << "_COPY" << RasterExtension;
-			//raster->outputAAIGrid(oss.str());
-#else
+#ifdef USE_MONGODB
 			raster = new clsRasterData(m_spatialData, remoteFileName.c_str(), templateRaster);
 			string upperName = GetUpper(paraName);
 			raster->getRasterData(&n, &data);
 			if (data != NULL && m_parametersInDB.find(upperName) != m_parametersInDB.end())
-			    m_parametersInDB[upperName]->Adjust1DArray(n, data);
+				m_parametersInDB[upperName]->Adjust1DArray(n, data);
+//#else
+//			ostringstream oss;
+//			raster = new clsRasterData();
+//			//oss << dbName << remoteFileName << GTiffExtension;
+//			//raster->ReadFromGDAL(oss.str(), templateRaster);
+//			oss << dbName << remoteFileName << RasterExtension;
+//			raster->readASCFile(oss.str(), templateRaster);
+//			//oss.str("");
+//			//oss << dbName << remoteFileName << "_COPY" << RasterExtension;
+//			//raster->outputAAIGrid(oss.str());	
 #endif
 		}
 		catch (ModelException e)
@@ -1281,10 +1207,8 @@ void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFi
 		string upperName = GetUpper(paraName);
 		pModule->Set1DData(paraName.c_str(), n, data);
 	}
-
-
 }
-//! Update input
+
 void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInput* inputSetting, time_t t)
 {
 	size_t n = m_moduleIDs.size();
@@ -1322,24 +1246,24 @@ void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInpu
 				
 				inputSetting->StationData()->GetTimeSeriesData(t, dataType, &n, &data);
 #ifdef linux
-				if (strcasecmp(param.Name.c_str(), "PET") == 0)
+				if (strcasecmp(param.Name.c_str(), DataType_PotentialEvapotranspiration) == 0)
 #else
-				if (_stricmp(param.Name.c_str(), "PET") == 0)
+				if (_stricmp(param.Name.c_str(), DataType_PotentialEvapotranspiration) == 0)
 #endif
 				{
 					for (int iData = 0; iData < n; iData++)
 					{
-						data[iData] *= m_parametersInDB["K_PET"]->GetAdjustedValue();
+						data[iData] *= m_parametersInDB[VAR_PET_K]->GetAdjustedValue();
 					}
 				}
-				pModule->Set1DData("T", n, data);
+				pModule->Set1DData("T", n, data);   /// TODO why "T"?   LJ
 			}
 		}
 
 	}
 
 }
-//! Get value from dependency modules
+
 void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationModule*>& modules)
 {
 	size_t n = m_moduleIDs.size();
@@ -1387,7 +1311,7 @@ void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationM
 
 	}
 }
-//! Find outputID parameter's module. Return Module index iModule and its ParamInfo
+
 void ModuleFactory::FindOutputParameter(string& outputID, int& iModule, ParamInfo*& paraInfo)
 {
 	string compareName = outputID;
@@ -1410,7 +1334,7 @@ void ModuleFactory::FindOutputParameter(string& outputID, int& iModule, ParamInf
 		}
 	}
 }
-//! Read multiply reach information from file
+
 void ModuleFactory::ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nAttr, int& nReaches, float**& data)
 {
 	ifstream ifs(filename.c_str());
@@ -1441,7 +1365,7 @@ void ModuleFactory::ReadMultiReachInfo(const string &filename, LayeringMethod la
 	}
 	ifs.close();
 }
-//! Read single reach information 
+
 void ModuleFactory::ReadSingleReachInfo(int nSubbasin, const string &filename, LayeringMethod layeringMethod, int& nAttr, int& nReaches, float**& data)
 {
 	ifstream ifs(filename.c_str());

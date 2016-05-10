@@ -111,7 +111,7 @@ void BMPReachReservoir::loadStructureSpecificParameter()
 
 		if(m_methodFlowInt == RESERVOIR_FLOW_ROUTING_RATING_CURVE)	//rating curve file
 		{
-			m_ratingCurveData = new clsInterpolationWeighData(fileName);
+			m_ratingCurveData = new clsInterpolationWeightData(fileName);
 		}
 		else								//operation schedual file
 		{
@@ -148,7 +148,7 @@ int BMPReachReservoir::FlowRoutingMethod2Int(string method)
 	else return RESERVOIR_FLOW_ROUTING_NAME_UNKNOWN;
 }
 
-clsInterpolationWeighData*  BMPReachReservoir::RatingCurve(){return m_ratingCurveData;}
+clsInterpolationWeightData*  BMPReachReservoir::RatingCurve(){return m_ratingCurveData;}
 clsSimpleTxtData*			BMPReachReservoir::OperationSchedual(){return m_operationSchedualData;}
 
 void BMPReachReservoir::Dump(ostream* fs)

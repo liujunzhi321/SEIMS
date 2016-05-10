@@ -21,7 +21,7 @@ def ImportDayData(db, siteFile,VariablesFile, ClimateDateFile):
         dic = {}
         for j in range(len(siteDataItems[i])):
             if StringMatch(siteFlds[j], Tag_ST_StationID):
-                dic[Tag_ST_StationID] = siteDataItems[i][j]
+                dic[Tag_ST_StationID] = int(siteDataItems[i][j])
             elif StringMatch(siteFlds[j], Tag_ST_StationName):
                 dic[Tag_ST_StationName] = siteDataItems[i][j]  ## unicode(siteDataItems[i][j], 'gb2312')
             elif StringMatch(siteFlds[j], Tag_ST_LocalX):
@@ -72,7 +72,7 @@ def ImportDayData(db, siteFile,VariablesFile, ClimateDateFile):
         curSSD = DEFAULT_NODATA
         for j in range(len(climDataItems[i])):
             if StringMatch(climFlds[j], Tag_DT_StationID):
-                dic[Tag_DT_StationID] = climDataItems[i][j]
+                dic[Tag_DT_StationID] = int(climDataItems[i][j])
             elif StringMatch(climFlds[j], Tag_DT_Year):
                 curY = int(climDataItems[i][j])
             elif StringMatch(climFlds[j], Tag_DT_Month):
@@ -100,7 +100,7 @@ def ImportDayData(db, siteFile,VariablesFile, ClimateDateFile):
         sec = time.mktime(dt.timetuple())
         utcTime = time.gmtime(sec)
         dic[Tag_DT_LocalT] = dt
-        dic[Tag_DT_Zone] = 8
+        dic[Tag_DT_Zone] = time.timezone / 3600
         dic[Tag_DT_UTC] = datetime.datetime(utcTime[0], utcTime[1], utcTime[2], utcTime[3])
 
         ### Do if some of these data are not provided

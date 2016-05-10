@@ -1,12 +1,13 @@
 /*!
  * \file MetadataInfoConst.h
+ * \ingroup util
  * \brief Define some const variables used by MetadataInfo class
  *
  * This file contains string constants for the MetadataInfo XML Schema.
  *
  * \author Junzhi Liu
- * \version 
- * \date June 2010
+ * \version 1.1
+ * \date Jun. 2010
  *
  * 
  */

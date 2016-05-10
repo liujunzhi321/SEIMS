@@ -22,7 +22,7 @@
 #include <omp.h>
 
 #define MINI_SLOPE 0.0001f
-#define NODATA_VALUE -99
+//#define NODATA_VALUE -99
 
 using namespace std;
 

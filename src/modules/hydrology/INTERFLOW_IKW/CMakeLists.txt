@@ -1,6 +1,5 @@
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
-INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
-SET(SRC_LIST ../../../base/util/SimulationModule.cpp InterFlow.cpp api.cpp)
+SET(SRC_LIST ${MODULE_SRC} InterFlow.cpp api.cpp)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_LIBRARY(INTERFLOW_IKW SHARED ${SRC_LIST})
 #TARGET_LINK_LIBRARIES(INTERFLOW_IKW libutil.so)

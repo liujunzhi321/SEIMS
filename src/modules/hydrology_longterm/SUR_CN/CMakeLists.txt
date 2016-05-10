@@ -1,6 +1,5 @@
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
-INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
-SET(SRC_LIST ../../../base/util/SimulationModule.cpp SUR_CN.cpp api.cpp)
+SET(SRC_LIST ${MODULE_SRC} SUR_CN.cpp api.cpp)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_LIBRARY(SUR_CN SHARED ${SRC_LIST})
 #TARGET_LINK_LIBRARIES(SUR_CN libutil.a)
