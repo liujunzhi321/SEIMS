@@ -16,12 +16,12 @@ from parameters_extraction import ExtractParameters
 from build_db import BuildMongoDB
 if __name__ == "__main__":
     ## Update SQLite Parameters.db3 database
-    #reConstructSQLiteDB()
+    reConstructSQLiteDB()
     ## Climate Data
-    ImportDailyMeteoData(HOSTNAME,PORT,ClimateDBName,MeteoVarFile,MeteoDailyFile,MetroSiteFile)
-    ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecSitesVorShp,PrecExcelPrefix,PrecDataYear)
+    #ImportDailyMeteoData(HOSTNAME,PORT,ClimateDBName,MeteoVarFile,MeteoDailyFile,MetroSiteFile)
+    #ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecSitesVorShp,PrecExcelPrefix,PrecDataYear)
     ## Discharge Data
-    ImportDailyDischargeData(HOSTNAME,PORT,ClimateDBName,DischargeExcelPrefix,DischargeYear)
+    #ImportDailyDischargeData(HOSTNAME,PORT,ClimateDBName,DischargeExcelPrefix,DischargeYear)
     ## Spatial Data
     # SubbasinDelineation(np, WORKING_DIR,dem,outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
     # f = open(WORKING_DIR + os.sep + "ProjConfig.txt")
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     ## Extract parameters from landuse, soil properties etc.
     #ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
     ## Import to MongoDB database
-    #BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesVorShp,MeteorSitesVorShp)
+    BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesVorShp,MeteorSitesVorShp)

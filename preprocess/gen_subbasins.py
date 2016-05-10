@@ -53,14 +53,14 @@ def GetMaskFromRaster(rasterFile, dstdir):
             if abs(data[i+iMin][j+jMin] - noDataValue) > util.DELTA:
                 mask[i][j] = 1
             else:
-                mask[i][j] = -9999
+                mask[i][j] = DEFAULT_NODATA
     
     outputFile = dstdir + os.sep + mask_to_ext
     maskGeotrans = [xMinMask, dx, 0, yMaxMask, 0, -dx]
     WriteGTiffFile(outputFile, ySizeMask, xSizeMask, mask, \
-                            maskGeotrans, srs, -9999, gdal.GDT_Int32)
+                            maskGeotrans, srs, DEFAULT_NODATA, gdal.GDT_Int32)
     
-    return outputFile, Raster(ySizeMask, xSizeMask, mask, -9999, maskGeotrans, srs)
+    return outputFile, Raster(ySizeMask, xSizeMask, mask, DEFAULT_NODATA, maskGeotrans, srs)
     
 def MaskDEMFiles(workingDir,exeDir=None):
     tauDir = workingDir + os.sep + "taudir"
@@ -86,7 +86,7 @@ def MaskDEMFiles(workingDir,exeDir=None):
     f.write(maskFile+"\n")
     f.write("%d\n" % (n,))
     for i in range(n):
-        s = "%s\t%d\t%s\n" % (originalFiles[i], -9999, maskedFiles[i])
+        s = "%s\t%d\t%s\n" % (originalFiles[i], DEFAULT_NODATA, maskedFiles[i])
         f.write(s)
     f.close()
 

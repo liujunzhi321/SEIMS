@@ -19,7 +19,7 @@
 #include <sstream>
 
 #define MINI_SLOPE 0.0001f
-#define NODATA_VALUE -99
+//#define NODATA_VALUE -99
 using namespace std;
 
 Muskingum::Muskingum(void):m_size(-1), m_chNumber(-1), m_dt(-1.0f), m_dx(-1.0f),

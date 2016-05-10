@@ -19,7 +19,7 @@
 #include <sstream>
 
 #define MINI_SLOPE 0.0001f
-#define NODATA_VALUE -9999
+//#define NODATA_VALUE -9999
 
 #define MIN_FLUX 1e-12f 
 #define MAX_ITERS_CH 10

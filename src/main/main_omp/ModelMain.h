@@ -1,167 +1,191 @@
+/*!
+ * \file ModelMain.h
+ * \brief Control the simulation of SEIMS
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date May 2016
+ *
+ * 
+ */
 #pragma once
-
 #include "SettingsInput.h"
 #include "SettingsOutput.h"
-//#include "SettingsConfig.h"
 #include "clsRasterData.h"
-#include "mongo.h"
-#include "gridfs.h"
+#include "mongoc.h"
 #include <string>
 #include <set>
 #include <map>
 #include "ModuleFactory.h"
-//#include "SimulationModule.h"
-
 using namespace std;
-
+/*!
+ * \class ModelMain
+ * \ingroup seims_omp
+ *
+ * \brief SEIMS OpenMP version, Class to control the whole model
+ *
+ */
 class ModelMain
 {
 public:
-	/**
-	*	@brief constructor
-	*	@param projectPath The path of the project. This path contains cofig.fig, file.in and file.out.
-	*	@param modulePath The path of the modules. This path contains all the *.dll(or *.so) of SEIMS modules.
-	*/
-	ModelMain(mongo* conn, string dbName, string projectPath, SettingsInput* input, 
+	/*!
+	 * \brief Constructor
+	 *
+	 * \param[in] conn \a mongoc_client_t, MongoDB client
+	 * \param[in] dbName model name, e.g., model_dianbu30m_longterm
+	 * \param[in] projectPath Path of the project, contains cofig.fig, file.in and file.out
+	 * \param[in] input \sa SettingInput, input setting information
+	 * \param[in] factory \sa ModuleFactory, module factory instance
+	 * \param[in] subBasinID subBasinID, default is 1
+	 * \param[in] scenarioID Scenario ID, default is 0
+	 * \param[in] numThread Thread number for OpenMP, default is 1
+	 * \param[in] layeringMethod Layering method, default is UP_DOWN
+	 */
+	ModelMain(mongoc_client_t* conn, string dbName, string projectPath, SettingsInput* input, 
 		ModuleFactory *factory, int subBasinID = 1, int scenarioID = 0, int numThread = 1, LayeringMethod layeringMethod = UP_DOWN);
-    ModelMain(mongo* conn, string dbName, string projectPath,
+	/*!
+	 * \brief Constructor
+	 *
+	 * \param[in] conn \a mongoc_client_t, MongoDB client
+	 * \param[in] dbName model name, e.g., model_dianbu30m_longterm
+	 * \param[in] projectPath Path of the project, contains cofig.fig, file.in and file.out
+	 * \param[in] factory \sa ModuleFactory, module factory instance
+	 * \param[in] subBasinID subBasinID
+	 * \param[in] scenarioID Scenario ID
+	 * \param[in] layeringMethod Layering method, default is UP_DOWN
+	 */
+    ModelMain(mongoc_client_t* conn, string dbName, string projectPath,
                  ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod = UP_DOWN);
+	//! Destructor
 	~ModelMain(void);
 
-
-	/**
-	*	@brief Execute all the modules and create output.
-	*/
-	void Execute();
-	void Output();
-    void Init(SettingsInput* input, int numThread);
-
-	void Step(time_t time);
-	void StepOverland(time_t t);
-	void StepChannel(time_t t);
-	void SetChannelFlowIn(float value);
-
-	time_t getStartTime()
-	{
-		return m_input->getStartTime();
-	};
-
-	time_t getEndTime()
-	{
-		return m_input->getEndTime();
-	};
-
-	time_t getDtHillSlope()
-	{
-		return m_dtHs;
-	};
-
-	time_t getDtChannel()
-	{
-		return m_dtCh;
-	};
-
-	time_t getDtDaily()
-	{
-		return m_dtDaily;
-	};
-
-	float GetQOutlet()
-	{
-		if(m_channelModules.size() == 0)
-			return 0.f;
-		float value;
-		int index = m_channelModules[0];
-		m_simulationModules[index]->GetValue("QOUTLET", &value);
-		return value;
-	}
-
-	void SetLayeringMethod(LayeringMethod method)
-	{
-		m_layeringMethod = method;
-	}
-
-	void OutputExecuteTime();
-	int GetReadDataTime()
-	{
-		return m_readFileTime;
-	}
-
-	int GetModuleCount()
-	{
-		return m_simulationModules.size();
-	}
-
-	string GetModuleID(int i)
-	{
-		return m_factory->GetModuleID(i);
-	}
-
-	int GetModuleExecuteTime(int i)
-	{
-		return m_executeTime[i];
-	}
-
-	bool IncludeChannelProcesses()
-	{
-		return m_channelModules.size() != 0;
-	}
+	//! Destroy the GridFS instance
+	void	CloseGridFS(){mongoc_gridfs_destroy(m_outputGfs);}
+	//! Execute all the modules, create output, and write the total time-consuming.
+	void	Execute();
 	
-	void CloseGridFS();
+	//! Get hillslope time interval
+	time_t	getDtHillSlope(){return m_dtHs;	}
+	//! Get channel time interval
+	time_t	getDtChannel(){return m_dtCh;	}
+	//! Get daily time interval
+	time_t	getDtDaily(){return m_dtDaily;}
+	//! Get start time of simulation
+	time_t	getStartTime(){	return m_input->getStartTime();	}
+	//! Get end time of simulation
+	time_t	getEndTime(){return m_input->getEndTime();}
+	//! Get module counts of current SEIMS
+	int		GetModuleCount(){return m_simulationModules.size();}
+	//! Get module ID by index in ModuleFactory
+	string	GetModuleID(int i){	return m_factory->GetModuleID(i);}
+	//! Get module execute time by index in ModuleFactory
+	int		GetModuleExecuteTime(int i)	{ return m_executeTime[i];}
+	//! Get time consuming of read files
+	int		GetReadDataTime(){return m_readFileTime;}
+	float	GetQOutlet();
+	//! Include channel processes or not?
+	bool	IncludeChannelProcesses(){return m_channelModules.size() != 0;}
 
-	void StepHillSlope(time_t t, int subIndex);
-	void Output(time_t time);
-    bool IsInitialized() { return m_initialized; }
+	void	Init(SettingsInput* input, int numThread);
+	//! Has the model been initialized?
+	bool	IsInitialized() { return m_initialized; }
+	//! Creating output files, e.g., QOutlet.txt
+	void	Output();
+	//! Get output at the given time
+	void	Output(time_t time);
+	void	OutputExecuteTime();
+	//! Set layering method
+	void	SetLayeringMethod(LayeringMethod method){m_layeringMethod = method;}
+	//! Check module input data, date and execute module
+	void	Step(time_t time);
+	//! Execute channel modules in current step
+	void	StepChannel(time_t t);
+	//! Execute hillslope modules in current step
+	void	StepHillSlope(time_t t, int subIndex);
+	//! Execute overland modules in current step
+	void	StepOverland(time_t t);
+	//! Set Flow In Channel data for Channel-related module, e.g., CH_DW
+	void	SetChannelFlowIn(float value);
 	
 private:
-	mongo *m_conn;
-	gridfs m_outputGfs[1];
+	//! MongoDB Client
+	mongoc_client_t				*m_conn;
+	//! output GridFS to store spatial data etc. 
+	mongoc_gridfs_t				*m_outputGfs;
+	//! Model name
+	string						m_dbName;
+	//! SubBasin ID
+	int							m_subBasinID;
+	//! Parameters information map
+	map<string, ParamInfo*>		m_parameters;
+	//! Modules factory
+	ModuleFactory				*m_factory;
+	//! Modules list in current model run
+	vector<SimulationModule*>	m_simulationModules;
+	//! Hillslope modules index list
+	vector<int>					m_hillslopeModules;
+	//! Channel modules index list
+	vector<int>					m_channelModules;
+	//! Ecology modules index list
+	vector<int>					m_ecoModules;
+	//! Execute time list of each module
+	vector<int>					m_executeTime;
+	//! Time consuming for read files
+	int							m_readFileTime;
+	//! Layering method
+	LayeringMethod				m_layeringMethod;
 	
-	string m_dbName;
-	int m_subBasinID;
-	map<string, ParamInfo*> m_parameters;
-	ModuleFactory *m_factory;
-	vector<SimulationModule*> m_simulationModules;
-	vector<int> m_hillslopeModules;
-	vector<int> m_channelModules;
-	vector<int> m_ecoModules;
-	
-	vector<int> m_executeTime;
-	int m_readFileTime;
 
-	LayeringMethod m_layeringMethod;
-
+	/*!
+	 * \brief Check whether the output file is valid
+	 * \TODO NEED TO BE UPDATED
+	 * 1. The output id should be valid for moduls in config files;
+	 * 2. The date range should be in the data range of file.in;
+	 * 3. Assign MASK clsRasterData to \sa m_templateRasterData
+	 * The method should be called after config, input and output is initialed.
+	 *
+	 * \param[in] gfs \a mongoc_gridfs_t
+	 */
+	void CheckOutput(mongoc_gridfs_t* gfs);
+	/*!
+	 * \brief Check whether the output file is valid
+	 * \TODO NEED TO BE UPDATED
+	 * 1. The output id should be valid for moduls in config files;
+	 * 2. The date range should be in the data range of file.in;
+	 * 3. Assign MASK clsRasterData to \sa m_templateRasterData
+	 * The method should be called after config, input and output is initialed.
+	 *
+	 * \param[in] gfs \a mongoc_gridfs_t
+	 */
+	void CheckOutput(SettingsOutput* output,SettingsInput* input);
+	//! Check module input data, date and execute module
 	void Step(time_t t, vector<int>& moduleIndex, bool firstRun);
 
-	//! check whether the output file is valid. 
-	//! 1. The output id should be valid for moduls in config files;
-	//! 2. The date range should be in the data range of file.in;
-	//! This method should be called after config, input and output is initialed.
-	void CheckOutput(gridfs* gfs);
-	void CheckOutput(SettingsOutput* output,SettingsInput* input);
-
 private:
-	bool m_firstRun;
-	bool m_firstRunOverland;
-	bool m_firstRunChannel;
-
-	string m_projectPath;
-	string m_databasePath;
-	string m_modulePath;
-
-	/**
-	*	@brief The input setting of the project.
-	*/
+	//! Is the firt run of SEIMS
+	bool			m_firstRun;
+	//! Is the first run of overland
+	bool			m_firstRunOverland;
+	//! Is the first run of channel
+	bool			m_firstRunChannel;
+	//! Has the model been initialized
+	bool			m_initialized;
+	//! Path of the project
+	string			m_projectPath;
+	//! Path of database
+	string			m_databasePath;
+	//! Path of the model
+	string			m_modulePath;
+	//! The input setting of the model
 	SettingsInput*	m_input;
-	/**
-	*	@brief The output setting of the project.
-	*/
+	//! The output setting of the model
 	SettingsOutput*	m_output;
-
-	clsRasterData* m_templateRasterData;
-
-	time_t m_dtDaily, m_dtHs, m_dtCh;
-
-    bool m_initialized;
+	//! Template raster data
+	clsRasterData*	m_templateRasterData;
+	//! Daily time interval
+	time_t			m_dtDaily;
+	//! Hillslope time interval
+	time_t			m_dtHs;
+	//! Channel time interval
+	time_t			m_dtCh;
 };
 

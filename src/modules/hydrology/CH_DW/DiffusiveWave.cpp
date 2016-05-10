@@ -23,7 +23,7 @@
 
 #define MINI_SLOPE 0.0001f
 #define MIN_FLUX 1e-9f 
-#define NODATA_VALUE -99
+//#define NODATA_VALUE -99 defined in util.h
 const float _23 = 2.0f/3.0f;
 const float SQ2 = sqrt(2.f);
 

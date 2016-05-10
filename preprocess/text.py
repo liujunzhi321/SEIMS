@@ -20,7 +20,7 @@ Tag_Lookup = "lookup"
 init_params = 'model_param_ini'
 lookup_tabs = ['SoilLookup','LanduseLookup','TillageLookup',\
                'UrbanLookup','CropLookup','FertilizerLookup',\
-               'ManagementType','MgtOpSchedulesLookup']
+               'ManagementTypeLookup','MgtOpSchedulesLookup']
 CROP_FILE = TXT_DB_DIR + os.sep + 'crop.txt'
 sqliteFile = TXT_DB_DIR + os.sep + "Parameter.db3"
 
@@ -146,3 +146,29 @@ runoff_coefFile = "runoff_co.tif"
 
 ## Other filenames used in preprocessing
 FN_STATUS_MONGO = "status_BuildMongoDB.txt"
+
+## Header information of raster data (Derived from Mask.tif)
+HEADER_RS_TAB =     "Header"
+HEADER_RS_NODATA =	"NODATA_VALUE"
+HEADER_RS_XLL =		"XLLCENTER"
+HEADER_RS_YLL =		"YLLCENTER"
+HEADER_RS_NROWS =	"NROWS"
+HEADER_RS_NCOLS =	"NCOLS"
+HEADER_RS_CELLSIZE ="CELLSIZE"
+
+## Fields in parameter table of MongoDB
+PARAM_FLD_NAME =    "NAME"
+PARAM_FLD_DESC =    "DESCRIPTION"
+PARAM_FLD_UNIT =    "UNIT"
+PARAM_FLD_MODS =    "MODULE"
+PARAM_FLD_VALUE =   "VALUE"
+PARAM_FLD_IMPACT =  "IMPACT"
+PARAM_FLD_CHANGE =  "CHANGE"
+PARAM_FLD_MAX =     "MAX"
+PARAM_FLD_MIN =     "MIN"
+PARAM_FLD_USE =     "USE"
+PARAM_CHANGE_RC =	"RC"
+PARAM_CHANGE_AC =	"AC"
+PARAM_CHANGE_NC	=	"NC"
+PARAM_USE_Y =       "Y"
+PARAM_USE_N =       "N"

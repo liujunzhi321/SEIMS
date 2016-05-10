@@ -1,12 +1,10 @@
 /*!
  * \file Settings.h
- * \brief Settings class
- *
- * Class to store the settings information from configuration files
- *
- * \author [your name]
- * \version 
- * \date June 2015
+ * \ingroup module_setting
+ * \brief Settings class to store the settings information from Configuration files
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date June 2010
  *
  * 
  */
@@ -19,40 +17,38 @@
 #include <algorithm> 
 #include <iterator> 
 #include "utils.h"
-
+#include "util.h"
+#include "ModelException.h"
 using namespace std;
-/** \defgroup module_setting
- * \ingroup Base
- * \brief module_setting group
- *
- *
- *
- */
-//! \typdef 2D vector array to store string
+
+//! \typdef 2D stringarray (vector)  
 typedef vector<vector<string> > string2DArray;
 /*!
  * \ingroup module_setting
  * \class Settings
  *
- * \brief 
- *
- *
- *
+ * \brief Basic setting class
  */
 class Settings
 {
 public:
-	string2DArray m_Settings; ///< m_Settings to store setting tag and values
+	//! Store setting key and values
+	string2DArray m_Settings;
 
 public:
+	//! Constructor
 	Settings(void);
+	//! Destructor
 	~Settings(void);
+	//! Load the settings value from the given file
+	virtual bool	LoadSettingsFromFile(string filename);
 
-	virtual bool LoadSettingsFromFile(string filename);
-	virtual void Dump(string);
-	string Value(string tag);
+	virtual void	Dump(string);
+	//! Return the value for the entry with the given tag
+	string			Value(string tag);
 
 protected:
-	string m_settingFileName; ///< input setting file path
+	//! input setting file path
+	string m_settingFileName;
 };
 

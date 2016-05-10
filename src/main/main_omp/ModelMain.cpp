@@ -1,5 +1,13 @@
+/*!
+ * \file ModelMain.cpp
+ * \brief Control the simulation of SEIMS
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date May 2016
+ *
+ * 
+ */
 #include "ModelMain.h"
-#include "text.h"
 #include "utils.h"
 #include "util.h"
 #include "ModelException.h"
@@ -8,9 +16,7 @@
 #include <ctime>
 #include <sstream>
 
-
-
-ModelMain::ModelMain(mongo* conn, string dbName, string projectPath, SettingsInput* input, 
+ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath, SettingsInput* input, 
 						ModuleFactory *factory, int subBasinID, int scenarioID, int numThread, LayeringMethod layeringMethod):m_readFileTime(0), m_initialized(false)
 {
 	m_templateRasterData = NULL;
@@ -20,21 +26,21 @@ ModelMain::ModelMain(mongo* conn, string dbName, string projectPath, SettingsInp
 	m_conn = conn;
 	m_dbName = dbName;
 
-	gridfs spatialData[1];
-	gridfs_init(m_conn, dbName.c_str(), "spatial", spatialData); 
-	if(gridfs_init(m_conn, dbName.c_str(), "output", m_outputGfs) != MONGO_OK)
-		cout << "gridfs_init output failed in ModelMain::ModelMain.\n"; 
-	//cout << subBasinID << "\t" << m_outputGfs << endl;
-
+	mongoc_gridfs_t	*spatialData;
+	bson_error_t	*err = NULL;
+	spatialData = mongoc_client_get_gridfs(m_conn,dbName.c_str(),DB_TAB_SPATIAL,err);
+	if(err != NULL)
+		throw ModelException("MainMongoDB","ModelMain","Failed to get GridFS: " + string(DB_TAB_SPATIAL) + ".\n");
+	m_outputGfs = mongoc_client_get_gridfs(m_conn,dbName.c_str(),DB_TAB_OUT_SPATIAL,err);
+	if(err != NULL)
+		throw ModelException("MainMongoDB","ModelMain","Failed to create output GridFS: " + string(DB_TAB_OUT_SPATIAL) + ".\n");
+	
 	string dbNameStr = dbName;
+	m_input		= input;
+	m_dtDaily	= m_input->getDtDaily();
+	m_dtHs		= m_input->getDtHillslope();
+	m_dtCh		= m_input->getDtChannel();
 
-	//if(!this->m_config->needScenario()) scenarioID = -1;	//-1 means this model doesn't need scenario information
-	m_input = input;
-	m_dtDaily = m_input->getDtDaily();
-	m_dtHs = m_input->getDtHillslope();
-	m_dtCh = m_input->getDtChannel();
-
-	//m_output = output;
 	m_output = new SettingsOutput(subBasinID, projectPath + File_Output, m_conn, m_outputGfs);
 	CheckOutput(spatialData);
 	m_factory = factory;
@@ -70,9 +76,10 @@ ModelMain::ModelMain(mongo* conn, string dbName, string projectPath, SettingsInp
 	m_firstRunOverland = true;
 
     m_initialized = true;
+	mongoc_gridfs_destroy(spatialData);
 }
 
-ModelMain::ModelMain(mongo* conn, string dbName, string projectPath,  
+ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath,  
 						ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod):m_readFileTime(0), m_initialized(false)
 {
 	m_templateRasterData = NULL;
@@ -82,13 +89,11 @@ ModelMain::ModelMain(mongo* conn, string dbName, string projectPath,
 	m_conn = conn;
 	m_dbName = dbName;
 
-	//if(!this->m_config->needScenario()) scenarioID = -1;	//-1 means this model doesn't need scenario information
 	m_factory = factory;
 	m_layeringMethod = layeringMethod;
     
 	m_firstRunChannel = true;
 	m_firstRunOverland = true;
-
 }
 
 void ModelMain::Init(SettingsInput* input, int numThread)
@@ -100,11 +105,15 @@ void ModelMain::Init(SettingsInput* input, int numThread)
 
 	m_output = new SettingsOutput(m_subBasinID, m_projectPath + File_Output, m_conn, m_outputGfs);
 
-	gridfs spatialData[1];
-	gridfs_init(m_conn, m_dbName.c_str(), "spatial", spatialData); 
-	if(gridfs_init(m_conn, m_dbName.c_str(), "output", m_outputGfs) != MONGO_OK)
-		cout << "gridfs_init output failed in ModelMain::ModelMain.\n"; 
-	//cout << subBasinID << "\t" << m_outputGfs << endl;
+	mongoc_gridfs_t	*spatialData;
+	bson_error_t	*err = NULL;
+	spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
+	if(err != NULL)
+		throw ModelException("MainMongoDB","ModelMain","Failed to get GridFS: " + string(DB_TAB_SPATIAL) + ".\n");
+	m_outputGfs = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_OUT_SPATIAL,err);
+	if(err != NULL)
+		throw ModelException("MainMongoDB","ModelMain","Failed to create output GridFS: " + string(DB_TAB_OUT_SPATIAL) + ".\n");
+
 	CheckOutput(spatialData);
     
 	m_readFileTime = m_factory->CreateModuleList(m_dbName, m_subBasinID, numThread, m_layeringMethod, m_templateRasterData, m_input, m_simulationModules);
@@ -146,12 +155,10 @@ void ModelMain::Init(SettingsInput* input, int numThread)
 	//gridfs_destroy(spatialData);
 
     m_initialized = true;
+	mongoc_gridfs_destroy(spatialData);
 }
 
-void ModelMain::CloseGridFS()
-{
-	gridfs_destroy(m_outputGfs);
-}
+
 
 ModelMain::~ModelMain(void)
 {
@@ -171,6 +178,8 @@ ModelMain::~ModelMain(void)
 
 	if(m_input != NULL)
 		delete m_input;
+	if(m_outputGfs != NULL)
+		mongoc_gridfs_destroy(m_outputGfs);
 }
 
 void ModelMain::Step(time_t time)
@@ -207,6 +216,16 @@ void ModelMain::Step(time_t time)
 	m_firstRunOverland = false;
 	m_firstRunChannel = false;
 	//cout << m_subBasinID << "Step\n";
+}
+
+float ModelMain::GetQOutlet()
+{
+	if(m_channelModules.size() == 0)
+		return 0.f;
+	float value;
+	int index = m_channelModules[0];
+	m_simulationModules[index]->GetValue(TAG_OUT_QOUTLET, &value);
+	return value;
 }
 
 void ModelMain::StepOverland(time_t t)
@@ -318,7 +337,7 @@ void ModelMain::Output()
 	}
 }
 
-void ModelMain::CheckOutput(gridfs* gfs)
+void ModelMain::CheckOutput(mongoc_gridfs_t* gfs)
 {
 	if(this->m_input == NULL) return;
 	if(this->m_output == NULL) return;
@@ -329,19 +348,18 @@ void ModelMain::CheckOutput(gridfs* gfs)
 	//if(this->m_output->isOutputASCFile())
 	//{
 	ostringstream oss;
-#ifndef USE_MONGODB
-	//oss << m_projectPath << m_subBasinID << "_" << NAME_MASK << GTiffExtension;
-	m_templateRasterData = new clsRasterData();
-	//m_templateRasterData->ReadFromGDAL(oss.str());
-	oss << m_projectPath << m_subBasinID << "_" << NAME_MASK << RasterExtension;
-	m_templateRasterData->readASCFile(oss.str());
-
-#else
+#ifdef USE_MONGODB
 	oss << m_subBasinID << "_" << GetUpper(NAME_MASK);
 	m_templateRasterData = new clsRasterData(gfs, oss.str().c_str());
+//#else
+//	//oss << m_projectPath << m_subBasinID << "_" << NAME_MASK << GTiffExtension;
+//	m_templateRasterData = new clsRasterData();
+//	//m_templateRasterData->ReadFromGDAL(oss.str());
+//	oss << m_projectPath << m_subBasinID << "_" << NAME_MASK << RasterExtension;
+//	m_templateRasterData->readASCFile(oss.str());
 #endif	
 	//}
-	this->m_output->setSpecificCellRasterOutput(this->m_projectPath,this->m_databasePath,m_templateRasterData);
+	//this->m_output->setSpecificCellRasterOutput(this->m_projectPath,this->m_databasePath,m_templateRasterData);
 }
 
 void ModelMain::OutputExecuteTime()
@@ -363,7 +381,6 @@ void ModelMain::CheckOutput(SettingsOutput* output,SettingsInput* input)
 		//try to find module output which match the outputid
 		m_factory->FindOutputParameter(outputid, (*it)->m_moduleIndex, (*it)->m_param);
 		
-
 		if((*it)->m_moduleIndex < 0) 
 			throw ModelException("ModelMain","CheckOutput","Can't find output variable for output id "+ outputid + ". Please check config.fig, file.out and module's metadata.");
 	
@@ -472,7 +489,7 @@ void ModelMain::Output(time_t time)
 						StringMatch(param->BasicName,"RSWB")	||	//reservoir water balance
 						StringMatch(param->BasicName,"RESB")	||  //reservoir sediment balance
 						StringMatch(param->BasicName,"CHSB")	)
-						//more conditions will be added in the future.
+						// TODO: more conditions will be added in the future.
 					{
 						//for modules in which only the results of output subbasins are calculated.
 						//In this case, the 2-D array just contain the results of selected subbasins in file.out.
@@ -523,7 +540,6 @@ void ModelMain::Output(time_t time)
 		}
 	}
 }
-
 
 void ModelMain::SetChannelFlowIn(float value)
 {

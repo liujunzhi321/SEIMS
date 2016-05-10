@@ -1,6 +1,6 @@
 #pragma once
 #include "BMPReach.h"
-#include "clsInterpolationWeighData.h"
+#include "clsInterpolationWeightData.h"
 #include "clsSimpleTxtData.h"
 
 namespace MainBMP
@@ -40,13 +40,13 @@ namespace MainBMP
 		/*
 		** Rating Curve Data for RAT_RES
 		*/
-		clsInterpolationWeighData*	m_ratingCurveData;		//for RAT_RES		
+		clsInterpolationWeightData*	m_ratingCurveData;		//for RAT_RES		
 		/*
 		** Operation Schedual Data for TRR_RES
 		*/
 		clsSimpleTxtData*			m_operationSchedualData;//for TRR_RES
 	public:
-		clsInterpolationWeighData*  RatingCurve();
+		clsInterpolationWeightData*  RatingCurve();
 		clsSimpleTxtData*			OperationSchedual();
 	private:
 		int m_methodFlowInt;

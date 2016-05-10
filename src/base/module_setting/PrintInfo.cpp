@@ -1,4 +1,11 @@
-//! Class to manage Print information from the file.out file
+/*!
+ * \file PrintInfo.cpp
+ * \brief Class to store and manage the PRINT information from the file.out file
+ *
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date June 2010
+ */
 #include "PrintInfo.h"
 #include "utils.h"
 #include "util.h"
@@ -14,16 +21,7 @@
     #include <sys/stat.h>
 #endif
 
-//!  define string constants used in the code
-#define Tag_Unknown "UNKNOWN" 
-#define Tag_Sum "SUM"
-#define Tag_Average "AVERAGE"
-#define Tag_Average2 "AVE"
-#define Tag_Minimum "MIN"
-#define Tag_Maximum "MAX"
-#define Tag_SpecificCells "SPECIFIC"
 
-//! Constructor
 PrintInfoItem::PrintInfoItem(void):m_2dData(NULL), m_nCols(0)
 {
 	m_Counter = 0;
@@ -39,15 +37,14 @@ PrintInfoItem::PrintInfoItem(void):m_2dData(NULL), m_nCols(0)
 	m_AggregationType = AT_Unknown;
 
 }
+//Deprecated
+//void PrintInfoItem::setSpecificCellRasterOutput(string projectPath,string databasePath,
+//	clsRasterData* templateRasterData,string outputID)
+//{
+//	if(m_AggregationType == AT_SpecificCells)
+//		m_specificOutput = new clsSpecificOutput(projectPath,databasePath,templateRasterData,outputID);
+//}
 
-void PrintInfoItem::setSpecificCellRasterOutput(string projectPath,string databasePath,
-	clsRasterData* templateRasterData,string outputID)
-{
-	if(m_AggregationType == AT_SpecificCells)
-		m_specificOutput = new clsSpecificOutput(projectPath,databasePath,templateRasterData,outputID);
-}
-
-//! Destructor
 PrintInfoItem::~PrintInfoItem(void)
 {
 	string file = Filename;
@@ -90,39 +87,26 @@ PrintInfoItem::~PrintInfoItem(void)
 	StatusMessage(("End to release PrintInfoItem for " + file + " ...").c_str());
 }
 
-//! Determine if the given date is within the date range for this item
 bool PrintInfoItem::IsDateInRange(time_t dt)
 {
 	bool bStatus = false;
-
-	// TODO - this assumes the hour is included in the date string
-	//        should put a check in to determine whether this is true
-	//start = utl.ConvertToTime(StartTime, "%d/%d/%d/%d", true);
-	//end = utl.ConvertToTime(EndTime, "%d/%d/%d/%d", true);
 	if (dt >= m_startTime && dt <= m_endTime)
 	{
 		bStatus = true;
 	}
-
 	return bStatus;
 }
-//! get start time
+
 time_t PrintInfoItem::getStartTime()
 {
-	//utils utl;
 	return m_startTime;
-	//return utl.ConvertToTime2(StartTime,"%d-%d-%d %d:%d:%d",true);
-	//return utl.ConvertToTime(StartTime, "%d/%d/%d/%d", true);
 }
-//! get end time
+
 time_t PrintInfoItem::getEndTime()
 {
 	return m_endTime;
-	//utils utl;
-	//return utl.ConvertToTime2(EndTime,"%d-%d-%d %d:%d:%d",true);
-	//return utl.ConvertToTime(EndTime, "%d/%d/%d/%d", true);
 }
-//! add 1D time series data result
+
 void PrintInfoItem::add1DTimeSeriesResult(time_t t,int n,float* data)
 {
 	float* temp = new float[n];
@@ -133,7 +117,7 @@ void PrintInfoItem::add1DTimeSeriesResult(time_t t,int n,float* data)
 	TimeSeriesDataForSubbasin[t] = temp;
 	TimeSeriesDataForSubbasinCount = n;
 }
-//! create "output" folder to store all results
+
 void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, string header)
 {
 #ifndef linux
@@ -155,12 +139,12 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	// Don't forget add appropriate suffix to Filename... ZhuLJ, 2015/6/16 
 	if(m_AggregationType == AT_SpecificCells)
 	{
-		if(m_specificOutput != NULL)
+		/*if(m_specificOutput != NULL)
 		{
 			m_specificOutput->dump(projectPath + Filename + ".txt");
 			StatusMessage(("Create " + projectPath + Filename + " successfully!").c_str());
 		}
-			
+			*/
 		return;
 	}
 	if(TimeSeriesData.size() > 0 && (SiteID != -1 || SubbasinID != -1))	//time series data
@@ -266,7 +250,6 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	throw ModelException("PrintInfoItem","flush","Creating " + Filename + " is failed. There is not result data for this file. Please check ouput varaibles of modules.");
 }
 
-//! Aggregate the data from the given data parameter using the given method type
 void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float** data)
 {
 	if(m_AggregationType == AT_SpecificCells)
@@ -329,15 +312,15 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float** d
 	}
 }
 
-//! Aggregate the data from the given data parameter using the given method type
+
 void PrintInfoItem::AggregateData(time_t time,int numrows, float* data)
 {
 	if(m_AggregationType == AT_SpecificCells)
 	{
-		if(m_specificOutput != NULL)
+		/*if(m_specificOutput != NULL)
 		{
 			m_specificOutput->setData(time,data);
-		}			
+		}		*/	
 	}
 	else
 	{
@@ -380,7 +363,7 @@ void PrintInfoItem::AggregateData(time_t time,int numrows, float* data)
 	}
 }
 
-//! Aggregate the data from the given data parameter using the given method type
+
 void PrintInfoItem::AggregateData(int numrows, float** data, AggregationType type, float NoDataValue)
 {
 	// check to see if there is an aggregate array to add data to
@@ -480,18 +463,73 @@ void PrintInfoItem::AggregateData(int numrows, float** data, AggregationType typ
 	}
 }
 
-void PrintInfo::setSpecificCellRasterOutput(string projectPath, string databasePath,
-clsRasterData* templateRasterData)
+AggregationType PrintInfoItem::MatchAggregationType(string type)
 {
-	vector<PrintInfoItem*>::iterator it;
-	for(it= m_PrintItems.begin();it<m_PrintItems.end();it++)
+	//AT_Sum = 1,
+	//AT_Average = 2,
+	//AT_Minimum = 3,
+	//AT_Maximum = 4
+
+	// TODO - should convert the given string to UPPERCASE for comparison
+
+	AggregationType res = AT_Unknown;
+	if (StringMatch(type, Tag_Unknown))
 	{
-		(*it)->setSpecificCellRasterOutput(projectPath,databasePath,templateRasterData,m_OutputID);
+		res = AT_Unknown;
 	}
+	if (StringMatch(type, Tag_Sum))
+	{
+		res = AT_Sum;
+	}
+	if (StringMatch(type, Tag_Average) || StringMatch(type, Tag_Average2))
+	{
+		res = AT_Average;
+	}
+	if (StringMatch(type, Tag_Minimum))
+	{
+		res = AT_Minimum;
+	}
+	if (StringMatch(type, Tag_Maximum))
+	{
+		res = AT_Maximum;
+	}
+	if (StringMatch(type,Tag_SpecificCells))
+	{
+		res = AT_SpecificCells;
+	}
+
+	return res;
 }
 
 
-//! Constructor
+void PrintInfoItem::setAggregationType(AggregationType type)
+{
+	m_AggregationType = type;
+}
+
+
+AggregationType PrintInfoItem::getAggregationType(void)
+{
+	return m_AggregationType;
+}
+
+
+void PrintInfo::setInterval(int interval)
+{
+	m_Interval = interval;
+}
+
+//void PrintInfo::setSpecificCellRasterOutput(string projectPath, string databasePath,
+//clsRasterData* templateRasterData)
+//{
+//	vector<PrintInfoItem*>::iterator it;
+//	for(it= m_PrintItems.begin();it<m_PrintItems.end();it++)
+//	{
+//		(*it)->setSpecificCellRasterOutput(projectPath,databasePath,templateRasterData,m_OutputID);
+//	}
+//}
+
+
 PrintInfo::PrintInfo(void)
 {
 	m_Interval = 0;
@@ -503,7 +541,6 @@ PrintInfo::PrintInfo(void)
 	m_subbasinSelectedArray = NULL;
 }
 
-//! Destructor
 PrintInfo::~PrintInfo(void)
 {
 	m_Interval = 0;
@@ -514,13 +551,13 @@ PrintInfo::~PrintInfo(void)
 	if(m_subbasinSelectedArray!=NULL) delete [] m_subbasinSelectedArray;
 }
 
-//! Set the OutputID for this object
+
 void PrintInfo::setOutputID(string id)
 {
 	m_OutputID = id;
 }
 
-//! Get the OutputId for this object
+
 string PrintInfo::getOutputID(void)
 {
 	return m_OutputID;
@@ -629,7 +666,6 @@ string PrintInfo::getOutputTimeSeriesHeader()
 		headers.push_back("ResSedStorage");
 		headers.push_back("ResSedOut");
 	}
-
 	ostringstream oss;
 	vector<string>::iterator it;
 	for(it=headers.begin();it<headers.end();it++)
@@ -639,86 +675,26 @@ string PrintInfo::getOutputTimeSeriesHeader()
 		else						
 			oss << " " << setw(15) << right << setfill(' ') << *it;
 	}
-
 	return oss.str(); 
 }
 
-//! convert the given string into a matching Aggregation type
-AggregationType PrintInfoItem::MatchAggregationType(string type)
-{
-	//AT_Sum = 1,
-	//AT_Average = 2,
-	//AT_Minimum = 3,
-	//AT_Maximum = 4
 
-	// TODO - should convert the given string to UPPERCASE for comparison
-
-	AggregationType res = AT_Unknown;
-	if (StringMatch(type, Tag_Unknown))
-	{
-		res = AT_Unknown;
-	}
-	if (StringMatch(type, Tag_Sum))
-	{
-		res = AT_Sum;
-	}
-	if (StringMatch(type, Tag_Average) || StringMatch(type, Tag_Average2))
-	{
-		res = AT_Average;
-	}
-	if (StringMatch(type, Tag_Minimum))
-	{
-		res = AT_Minimum;
-	}
-	if (StringMatch(type, Tag_Maximum))
-	{
-		res = AT_Maximum;
-	}
-	if (StringMatch(type,Tag_SpecificCells))
-	{
-		res = AT_SpecificCells;
-	}
-
-	return res;
-}
-
-//! Set the Aggregation type
-void PrintInfoItem::setAggregationType(AggregationType type)
-{
-	m_AggregationType = type;
-}
-
-//! Get the Aggregation type
-AggregationType PrintInfoItem::getAggregationType(void)
-{
-	return m_AggregationType;
-}
-
-//! Set the interval
-void PrintInfo::setInterval(int interval)
-{
-	m_Interval = interval;
-}
-
-//! Set the interval units
 void PrintInfo::setIntervalUnits(string units)
 {
 	m_IntervalUnits = units;
 }
 
-//! Get the interval
+
 int PrintInfo::getInterval(void)
 {
 	return m_Interval;
 }
 
-//! Get the interval units
 string PrintInfo::getIntervalUnits(void)
 {
 	return m_IntervalUnits;
 }
 
-//! Add an item with the given start time, end time and output file name
 void PrintInfo::AddPrintItem(string start, string end, string file)
 {
 	// create a new object instance
@@ -729,15 +705,15 @@ void PrintInfo::AddPrintItem(string start, string end, string file)
 	itm->StartTime = start;
 	itm->EndTime = end;
 	itm->Filename = file;
-
+	/// TODO  do check if the date time has hours
 	itm->m_startTime = utils::ConvertToTime2(start, "%d-%d-%d %d:%d:%d",true);
 	itm->m_endTime = utils::ConvertToTime2(end, "%d-%d-%d %d:%d:%d",true);
 	// add it to the list
 	m_PrintItems.push_back(itm);
 }
 
-//! Add an item with the given start time, end time and output file name
-void PrintInfo::AddPrintItem(string type,string start, string end, string file, mongo* conn, gridfs* gfs)
+
+void PrintInfo::AddPrintItem(string type,string start, string end, string file, mongoc_client_t* conn, mongoc_gridfs_t* gfs)
 {
 	// create a new object instance
 	PrintInfoItem* itm = new PrintInfoItem();
@@ -764,8 +740,7 @@ void PrintInfo::AddPrintItem(string type,string start, string end, string file, 
 	m_PrintItems.push_back(itm);
 }
 
-//! Add an item with the given start time , end time, output file name and sitename 
-//! Overloaded method
+
 void PrintInfo::AddPrintItem(string start, string end, string file, string sitename, bool isSubbasin)
 {
 	PrintInfoItem* itm = new PrintInfoItem();
@@ -805,13 +780,13 @@ void PrintInfo::getSubbasinSelected(int* count, float** subbasins)
 	*subbasins = m_subbasinSelectedArray;
 }
 
-//! Return the number of items
+
 int PrintInfo::ItemCount(void)
 {
 	return m_PrintItems.size();
 }
 
-//! Return a reference to the Item located at the given index position
+
 PrintInfoItem* PrintInfo::getPrintInfoItem(int index)
 {
 	// default is NULL

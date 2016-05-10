@@ -1,10 +1,11 @@
 /*!
  * \file SimulationModule.h
+ * \ingroup util
  * \brief Parent class for all modules in SEIMS
  *
- * 
- *
- * 
+ * \author Junzhi Liu
+ * \version 1.1
+ * \date Jul. 2010
  */
 #pragma once
 #include <string>
@@ -15,27 +16,18 @@
 using namespace std;
 
 /*!
- * \ingroup Util
  * \enum TimeStepType
- *
  */
 enum TimeStepType
 {
-	///< Hillslope scale
-	TIMESTEP_HILLSLOPE,
-	///< Channel scale
-	TIMESTEP_CHANNEL,  
-	///< Ecology scale
-	TIMESTEP_ECOLOGY   
+	TIMESTEP_HILLSLOPE,	/**< Hillslope scale */
+	TIMESTEP_CHANNEL,	/**< Channel scale */ 
+	TIMESTEP_ECOLOGY	/**< Ecology scale */   
 };
 /*!
  * \ingroup Util
  * \class SimulationModule
- *
  * \brief Base module for all simulation modules in SEIMS
- *
- *
- *
  */
 class SimulationModule
 {
@@ -98,6 +90,7 @@ public:
 	{
 		return  TIMESTEP_HILLSLOPE;
 	};
+
 	//! Reset subtime step
 	virtual void ResetSubTimeStep()
 	{
@@ -116,7 +109,6 @@ public:
 protected:
 	time_t m_date; ///< date time
 	//string m_id;
-
 	int m_tsCounter;  ///< sub-timestep counter
 };
 

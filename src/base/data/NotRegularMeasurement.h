@@ -1,23 +1,22 @@
 /*!
  * \file NotRegularMeasurement.h
- * \brief
+ * \brief Not Regular hydroclimate data
  *
- *
- *
- * \author [your name]
- * \version 
- * \date June 2015
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date May 2016
  *
  * 
  */
 #pragma once
 #include "Measurement.h"
+#include "MongoUtil.h"
 #include <map>
 /*!
  * \ingroup data
  * \class NotRegularMeasurement
  *
- * \brief inherited from Measurement class
+ * \brief Not Regular hydroclimate data
  *
  *
  *
@@ -25,17 +24,30 @@
 class NotRegularMeasurement : public Measurement
 {
 public:
-	NotRegularMeasurement(mongo* conn, string hydroDBName, string sitesList, string siteType, time_t startTime, time_t endTime);
+	/*!
+	 * \brief Constructor
+	 *
+	 * Initialize NotRegular Measurement instance from MongoDB
+	 *
+	 * \param[in] conn \a mongoc_client_t, MongoDB client
+	 * \param[in] hydroDBName \a string, HydroClimate database name
+	 * \param[in] sitesList \a string, site list
+	 * \param[in] siteType \a string, site type
+	 * \param[in] startDate \a time_t, start date time
+	 * \param[in] endDate \a time_t, end date time
+	 */
+	NotRegularMeasurement(mongoc_client_t* conn, string hydroDBName, string sitesList, string siteType, time_t startTime, time_t endTime);
+	//! Destructor
 	~NotRegularMeasurement(void);
-
-	virtual float* GetSiteDataByTime(time_t t);
+	//! Get site date by time \a pData
+	virtual float*				GetSiteDataByTime(time_t t);
 
 private:
-	//! site data : the first dimension is site, and the second dimension is time
-	vector< vector<time_t> > m_timeList;
-	vector< vector<float> > m_valueList;
-	vector<int> m_curIndexList; ///< initialized as 0
-
-	
+	//! time list of site data
+	vector< vector<time_t> >	m_timeList;
+	//! site data corresponding to m_timeList
+	vector< vector<float> >		m_valueList;
+	//! index
+	vector<int>					m_curIndexList;
 };
 

@@ -1,30 +1,34 @@
-//! Implemetation of the methods for the Settings class
+/*!
+ * \file Settings.cpp
+ * \brief Settings class to store the settings information from Configuration files
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date June 2010
+ *
+ * 
+ */
 #include "Settings.h"
-#include "util.h"
 
-
-//! Constructor
 Settings::Settings(void)
 {
 }
-
-//! Destructor
 Settings::~Settings(void)
 {
 	if (m_Settings.size() > 0)
 	{
 		m_Settings.clear();
+		string2DArray(m_Settings).swap(m_Settings); /// added by LJ
 	}
 }
 
-//! Return the value for the entry with the given tag
+
 string Settings::Value(string tag)
 {
 	string res = "";
 
 	if (m_Settings.size() > 0)
 	{
-		for (size_t idx=0; idx<m_Settings.size(); idx++)
+		for (size_t idx = 0; idx < m_Settings.size(); idx++)
 		{
 			if (StringMatch(m_Settings[idx][0], tag))
 			{
@@ -37,7 +41,7 @@ string Settings::Value(string tag)
 	return res;
 }
 
-//! Load the settings value from the given file
+
 bool Settings::LoadSettingsFromFile(string filename)
 {
 	m_settingFileName = filename;
@@ -92,13 +96,11 @@ bool Settings::LoadSettingsFromFile(string filename)
 	catch (...)
 	{
 		myfile.close();
-		//throw;
+		throw ModelException("Settings","LoadSettingsFromFile","Load setting file: " + string(filename) + "failed!\n");
 	}
-
 	return bStatus;
 }
 
 void Settings::Dump(string fileName)
 {
-
 }

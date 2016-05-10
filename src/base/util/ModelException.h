@@ -1,10 +1,10 @@
 /*!
  * \file ModelException.h
+ * \ingroup util
  * \brief Define ModelException class
- *
- *
- *
- * 
+ * \author Junzhi Liu
+ * \version 1.1
+ * \date Jun. 2010
  */
 #pragma once
 
@@ -13,7 +13,7 @@
 
 using namespace std;
 /*!
- * \ingroup Util
+ * \ingroup util
  * \class ModelException
  *
  * \brief Print the exception message
@@ -25,11 +25,22 @@ class ModelException :
 	public exception
 {
 public:
+	/*!
+	 * \brief Construct
+	 * \param[in] className, functionName, msg \a string
+	 */
 	ModelException(string, string, string);
+	//! Deconstruct (void)
 	~ModelException(void) throw();
-
+	/*!
+	 * \brief Construct error information (string version)
+	 * \param[out] \a string error information
+	 */
 	string toString();
-
+	/*!
+	 * \brief Construct error information (char* version)
+	 * \param[out] \a char* error information
+	 */
     const char* what() const throw()
     {
         string descri = "\n";
@@ -43,6 +54,5 @@ private:
 	string m_className;
 	string m_functionName;
 	string m_msg;
-
 };
 

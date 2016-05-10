@@ -1,68 +1,68 @@
 /*!
  * \file Measurement.h
- * \brief
+ * \brief Measurement class to store HydroClimate site data
  *
  *
  *
- * \author [your name]
- * \version 
- * \date June 2015
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date May 2016
  *
  * 
  */
 #pragma once
 #include <string>
 #include <vector>
-#include "mongo.h"
+#include "mongoc.h"
 
 using namespace std;
 /*!
- * \ingroup 
+ * \ingroup data
  * \class Measurement
- *
- * \brief Get site data by site type and time
- *
- *
- *
+ * \brief Get HydroClimate measurement data from MongoDB
  */
 class Measurement
 {
 public:
-	Measurement(mongo* conn, string hydroDBName, string sitesList, string siteType, time_t startDate, time_t endDate);
+	/*!
+	 * \brief Constructor
+	 *
+	 * Initialize Measurement instance from MongoDB
+	 *
+	 * \param[in] conn \a mongoc_client_t, MongoDB client
+	 * \param[in] hydroDBName \a string, HydroClimate database name
+	 * \param[in] siteType \a string, site type
+	 * \param[in] startDate \a time_t, start date time
+	 * \param[in] endDate \a time_t, end date time
+	 */
+	Measurement(mongoc_client_t* conn, string hydroDBName, string sitesList, string siteType, time_t startDate, time_t endDate);
+	//! Destructor
 	~Measurement(void);
 	//! Get site data by time
-	virtual float* GetSiteDataByTime(time_t t) = 0;
-	//! sites number
-	int NumberOfSites()
-	{
-		return m_siteIDList.size();
-	}
-	//! site type
-	string Type()
-	{
-		return m_type;
-	}
+	virtual float*		GetSiteDataByTime(time_t t) = 0;
+	//! Get Number of site
+	int					NumberOfSites()	{return m_siteIDList.size();}
+	//! Get HydroClimate site type, "M" or "P"
+	string				Type(){return m_type;	}
 	//! start time
-	time_t StartTime()
-	{
-		return m_startTime;
-	}
+	time_t				StartTime(){return m_startTime;}
 	//! end time
-	time_t EndTime()
-	{
-		return m_endTime;
-	}
+	time_t				EndTime(){return m_endTime;}
 
 protected:
-	mongo* m_conn; ///< mongo object
-	string m_hydroDBName; ///< hydro database name
-
-	vector<int> m_siteIDList; ///< site ID list
-	string m_type; ///< site type
-
-	time_t m_startTime;///< start time
-	time_t m_endTime;///< end time
-
-	float *pData; ///< site data
+	//! MongoDB client object
+	mongoc_client_t*	m_conn;
+	//! HydroClimate database name
+	string				m_hydroDBName;
+	//! Site IDs list
+	vector<int>			m_siteIDList;
+	//! Site type, M means meteorology, and P means precipitation
+	string				m_type;
+	//! Start time
+	time_t				m_startTime;
+	//! End time
+	time_t				m_endTime;
+	//!	Measurement data of all sites in given date
+	float				*pData;
 };
 

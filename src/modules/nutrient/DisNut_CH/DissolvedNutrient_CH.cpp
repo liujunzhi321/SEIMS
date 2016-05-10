@@ -8,7 +8,7 @@
 #include <fstream>
 
 #include <omp.h>
-#define NODATA_VALUE -99
+//#define NODATA_VALUE -99
 using namespace std;
 
 DissolvedNutrient_CH::DissolvedNutrient_CH(void):m_size(-1), m_dt(-1.0f), m_dx(-1.0f), m_flowInIndex(NULL),m_flowOutIndex(NULL),

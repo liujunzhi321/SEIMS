@@ -1,23 +1,17 @@
 /*!
  * \file SettingsOutput.h
- * \brief
+ * \brief Setting Outputs for SEIMS
  *
- *
- *
- * \author [your name]
- * \version 
- * \date June 2015
- *
- * 
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date June 2010
  */
 #pragma once
 #include "Settings.h"
 #include "PrintInfo.h"
 #include <vector>
 #include "clsRasterData.h"
-
-#include "mongo.h"
-#include "gridfs.h"
+#include "mongoc.h"
 /*!
  * \ingroup module_setting
  * \class SettingsOutput
@@ -31,24 +25,30 @@ class SettingsOutput :
 	public Settings
 {
 public:
-	SettingsOutput(int, string, mongo* conn=NULL, gridfs* gfs=NULL);
+	//! Constructor
+	SettingsOutput(int, string, mongoc_client_t* conn=NULL, mongoc_gridfs_t* gfs=NULL);
+	//! Destructor
 	~SettingsOutput(void);
-
+	//! Load output setting from file
 	bool LoadSettingsFromFile(int, string);	
+	//! Write output information to log file
 	void Dump(string);
+	//! Check date of output settings
 	void checkDate(time_t,time_t);
+	//! is output be an ASC file?
 	bool isOutputASCFile(void);
-
-	void setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData);
+	
+	///void setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData);
 public:
-	///All the print settings
+	//! All the print settings
 	vector<PrintInfo*> m_printInfos;
 
 private:
-	mongo* m_conn;
-	gridfs* m_outputGfs;
-	///Get all the print settings
-	///It comes from Alex's source code of function ParseOutputSettings in main.cpp
+	//! MongoDB client
+	mongoc_client_t* m_conn;
+	//! Output GridFS
+	mongoc_gridfs_t* m_outputGfs;
+	//! Parse output settings for given subBasinID
 	bool ParseOutputSettings(int);
 };
 

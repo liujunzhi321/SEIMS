@@ -22,7 +22,7 @@ using namespace std;
 
 /*!
  * \class ClimateParameters
- * \ingroup CLIM
+ * \ingroup ICLIM
  *
  * \brief Climate related intermediate parameters, e.g., saturation vapor pressure, max solar radiation.
  *

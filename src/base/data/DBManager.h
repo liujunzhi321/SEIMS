@@ -4,13 +4,13 @@
  *
  *
  *
- * \author [your name]
- * \version 
- * \date June 2015
+ * \author Junzhi Liu
+ * \version 1.1
+ * \date Jun. 2010
  *
  * 
  */
-//! Classes to manage sqlite database access
+
 #pragma once
 
 #include <string>
@@ -46,7 +46,7 @@ public:
  *
  * \brief sqlite database management class
  *
- * \deprecated Currently, this is no longer used.
+ * \deprecated Currently, SQLite is replaced by MongoDB. 
  *
  */
 class DBManager

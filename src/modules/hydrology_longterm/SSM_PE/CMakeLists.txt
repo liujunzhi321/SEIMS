@@ -1,6 +1,5 @@
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
-INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
-SET(SRC_LIST ../../../base/util/SimulationModule.cpp SSM_PE.cpp api.cpp)
+SET(SRC_LIST ${MODULE_SRC} SSM_PE.cpp api.cpp)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_LIBRARY(SSM_PE SHARED ${SRC_LIST})
 #TARGET_LINK_LIBRARIES(SSM_PE libutil.a)
