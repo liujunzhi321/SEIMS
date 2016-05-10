@@ -179,6 +179,9 @@ Nutrient	InitConc_P	Initial average concentration of P in the soil	kg/kg	All	0.0
 Nutrient	InitConc_NH4	Initial average concentration of NH4 in the soil	kg/kg	All	0.001	1	RC	0.001	1E-5	Y
 Nutrient	ConRainNitra	concentration of nitrate in the rain	mg N/L	ATMDEP	0	0	AC	15	0	Y
 Nutrient	ConRainAmm	Concentration of ammonia in rainfall	mg N/L	ATMDEP	0	0	AC	15	0	Y
+Nutrient	cmn	Rate coefficient for mineralization of the humus active organic nutrients		NMINRL	0.002	0	AC	0.001	0.003	Y
+Nutrient	cdn	rate coefficient for denitrification		NMINRL	1	0	AC	0	3	Y
+Nutrient	rsdco_pl	Plant residue decomposition coefficient		NMINRL	0.02	0.1	AC	0.01	0.099	Y
 
 PlantGrowth	nFixFactor	nitrogen fixation factor		PG_EPIC	0.5			1	0	
 PlantGrowth	nFixMax	maximum daily-n fixation	kg/ha	PG_EPIC	10			20	1	
