@@ -1,12 +1,13 @@
 /*!
  * \file MetadataInfoConst.h
+ * \ingroup util
  * \brief Define some const variables used by MetadataInfo class
  *
  * This file contains string constants for the MetadataInfo XML Schema.
  *
  * \author Junzhi Liu
- * \version 
- * \date June 2010
+ * \version 1.1
+ * \date Jun. 2010
  *
  * 
  */
@@ -62,19 +63,34 @@ const string TagParameterDimension = "dimension";
 
 const string TagDependencies = "dependencies";
 
-//! enum of dimension data types
+/*!
+ * \enum dimensionTypes
+ * \ingroup util
+ * \brief enum of dimension data types
+ *
+ */
 enum dimensionTypes
 {
-	DT_Unknown			= -1,///< Unknown type
-	DT_Single			= 0, ///< Single numeric
-	DT_Array1D			= 1, ///< 1D array
-	DT_Array2D			= 2, ///< 2D array
-	DT_Array3D			= 3, ///< 3D array
-	DT_Array1DDateValue = 4, ///< 1D date array
-	DT_Raster	= 5,         ///< Raster data
-	DT_SiteInformation	= 6, ///< Hydrological or meterological site information
-	DT_LapseRateArray	= 7, ///< Lapse rate array
-	DT_Scenario			= 8 ///< Scenario used by BMPs
+	/// Unknown type
+	DT_Unknown			= -1,
+	/// Single numeric
+	DT_Single			= 0, 
+	/// 1D array
+	DT_Array1D			= 1,
+	/// 2D array
+	DT_Array2D			= 2, 
+	/// 3D array
+	DT_Array3D			= 3, 
+	/// 1D date array
+	DT_Array1DDateValue = 4, 
+	/// Raster data
+	DT_Raster	        = 5,  
+	/// Hydrological or meteorological site information
+	DT_SiteInformation	= 6, 
+	/// Lapse rate array
+	DT_LapseRateArray	= 7, 
+	/// Scenario used by BMPs
+	DT_Scenario			= 8 
 };
 
 

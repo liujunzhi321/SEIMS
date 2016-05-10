@@ -8,7 +8,7 @@ from datetime import datetime
 from osgeo import gdal
 import math
 from struct import *
-from config import *
+from text import *
 import util
 
 def cal_dis(x1, y1, x2, y2):

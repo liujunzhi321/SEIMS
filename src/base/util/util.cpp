@@ -1,14 +1,13 @@
 /*!
  * \file util.cpp
+ * \ingroup util
  * \brief Utility functions to handle numeric, string and file
  *
  * Utility functions for all SEIMS modules
  *
  * \author Junzhi Liu
  * \version 1.0
- * \date 29-July-2010
- *
- * 
+ * \date Jul. 2010
  */
 
 #include <cmath>
@@ -28,24 +27,21 @@
 #endif
 
 using namespace std;
+bool DoubleEqual(double d1, double d2)
+{
+	if (abs(d1 - d2) < UTIL_ZERO)
+		return true;
+	else
+		return false;
+}
 
-/*!
- * \ingroup Util
- * \brief Find files in given paths
- *
- * 
- *
- * \param[in] lpPath, expression
- * \param[out] vecFiles
- * \return 0 means success
- */
 int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFiles)
 {
 #ifndef linux
 	char szFind[MAX_PATH];
-	strcpy(szFind,lpPath);
-	strcat(szFind,"\\");
-	strcat(szFind, expression);
+	strcpy_s(szFind,lpPath);
+	strcat_s(szFind,"\\");
+	strcat_s(szFind, expression);
 
 	WIN32_FIND_DATA findFileData;
 	HANDLE hFind=::FindFirstFile(szFind, &findFileData);
@@ -57,9 +53,9 @@ int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFil
 			continue;
 
 		char fullpath[MAX_PATH];
-		strcpy(fullpath,lpPath);
-		strcat(fullpath,"\\");
-		strcat(fullpath, findFileData.cFileName);
+		strcpy_s(fullpath,lpPath);
+		strcat_s(fullpath,"\\");
+		strcat_s(fullpath, findFileData.cFileName);
 
 		vecFiles.push_back(fullpath);
 
@@ -68,130 +64,7 @@ int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFil
 
 	return 0;
 }
-/*!
- * \ingroup Util
- * \brief GetCoreFileName
- *
- * Return the file name from a given file's path
- *
- * \param[in] fullFileName 
- * \param[out] CoreFileName
- * \return CoreFileName
- */
-string GetCoreFileName(const string& fullFileName)
-{
-	string::size_type start = fullFileName.find_last_of("\\");
-	if (start == string::npos)
-	{
-		start = fullFileName.find_last_of("/");
-	}
 
-	if (start == string::npos)
-		start = -1; // old code: start = 0; Modified by ZhuLJ, 2015/6/16
-
-	string::size_type end = fullFileName.find_last_of(".");
-
-	if (end == string::npos)
-		end = fullFileName.length();
-
-	return fullFileName.substr(start+1, end-start-1);
-}
-/*!
- * \ingroup Util
- * \brief trim
- *
- * trim "\n,\t,\r" of given string's heading and tailing
- *
- * \param[in] string
- * \return trimmed string
- */
-string& trim(string& s)
-{
-    if(s.empty())
-        return s;
-    s.erase(0, s.find_first_not_of(" \n\r\t"));
-    return s.erase(s.find_last_not_of(" \n\r\t") + 1);
-}
-
-/*!
- * \ingroup Util
- * \brief GetUpper
- *
- * Get Uppercase of given string
- *
- * \param[in] string
- * \return Uppercase string
- */
-string GetUpper(string str)
-{
-	string strTmp1 = string(str);
-	for (int j=0; j<(int)strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
-	return strTmp1;
-}
-
-/*!
- * \ingroup Util
- * \brief Match String
- *
- * whether string1 is as same as string2
- *
- * \param[in] string1, string2
- * \return true or false
- */
-bool StringMatch(string text1, string text2)
-{
-	// convert the key to UPPERCASE for comparison
-	string strTmp1 = string(text1);
-	for (int j=0; j<(int)strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
-
-	string strTmp2 = string(text2);
-	for (int j=0; j<(int)strTmp2.length(); j++) strTmp2[j] = toupper(strTmp2[j]);
-
-	return (strTmp1 == strTmp2);
-}
-/*!
- * \ingroup Util
- * \brief
- *
- * whether char*a equal to char*b when ignore case
- *
- * \param[in] char* a, char* b
- * \return true or false
- */
-bool StrEqualIgnoreCase(const char* a, const char* b)
-{
-#ifndef linux
-    return _stricmp(a, b) == 0;
-#else
-    return strcasecmp(a, b) == 0;
-#endif 
-
-}
-/*!
- * \ingroup Util
- * \brief DoubleEqual
- *
- * whether d1 is equal to d2
- *
- * \param[in] double d1, double d2
- * \return true or false
- */
-bool DoubleEqual(double d1, double d2)
-{
-	if (abs(d1 - d2) < UTIL_ZERO)
-		return true;
-	else
-		return false;
-}
-/*!
- * \ingroup Util
- * \brief FloatEqual
- *
- *  whether f1 is equal to f2
- *
- * \param[in] float f1, float f2
- * \return true or false
- */
 bool FloatEqual(float f1, float f2)
 {
 	if (abs(f1 - f2) < UTIL_ZERO)
@@ -199,199 +72,7 @@ bool FloatEqual(float f1, float f2)
 	else
 		return false;
 }
-/*!
- * \ingroup Util
- * \brief GetPathFromFullName
- *
- * Get Path From FullName string
- *
- * \param[in] fullFileName string
- * \return filePath string
- */
-string GetPathFromFullName(string& fullFileName)
-{
-	string::size_type i = fullFileName.find_last_of("\\");
-	if (i == string::npos)
-	{
-		i = fullFileName.find_last_of("/");
-	}
 
-	if (i == string::npos)
-		return "";
-
-	return fullFileName.substr(0, i+1);
-}
-
-//! Print a status message, for Debugging. 
-void StatusMessage(const char* msg)
-{
-	//cout << msg << endl;
-}
-/*!
- * \ingroup Util
- * \brief Read 2D array from file
- *
- * The input file should follow the format:
- *     a 2D array sized nRows * nRows
- * The size of data is nRows * (nRows + 1), the first element of each row is the nRows.
- *
- * \param[in] filename, nRows
- * \param[out] data
- */
-void Read2DArray(const char* filename, int& nRows, float**& data)
-{
-	ifstream ifs(filename);
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float*[nRows];
-	int n;
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> n;
-		data[i] = new float[n+1];
-		data[i][0] = (float)n;
-		for (int j = 1; j <= n; j++)
-			ifs >> data[i][j];
-	}
-	ifs.close();
-}
-/*!
- * \ingroup Util
- * \brief Read 1D array from file
- *
- * The input file should follow the format:
- *     a 1D array sized nRows * 1
- * The size of data is nRows
- *
- * \param[in] filename, nRows
- * \param[out] data
- */
-void Read1DArray(const char* filename, int& nRows, float*& data)
-{
-	ifstream ifs(filename);
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float[nRows];
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> data[i];
-	}
-	ifs.close();
-}
-
-/*!
- * \ingroup Util
- * \brief Read 2D array from string
- *
- * The input string should follow the format:
- *     float value, total number is nRows * nRows
- * The size of data is nRows * (nRows + 1), the first element of each row is the nRows.
- *
- * \param[in] s, nRows
- * \param[out] data
- */
-void Read2DArrayFromString(const char* s, int& nRows, float**& data)
-{
-	istringstream ifs(s);
-	
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float*[nRows];
-	int n;
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> n;
-		data[i] = new float[n+1];
-		data[i][0] = (float)n;
-		for (int j = 1; j <= n; j++)
-			ifs >> data[i][j];
-	}
-}
-/*!
- * \ingroup Util
- * \brief Write 1D array to a file
- *
- * \sa Read1DArray(), Read2DArray(), Output2DArray()
- *
- * \param[in] n, data, filename
- */
-void Output1DArray(int n, float* data, const char* filename)
-{
-	ofstream ofs(filename);
-
-	for (int i = 0; i < n; ++i)
-		ofs << data[i] << "\n";
-
-	ofs.close();
-}
-/*!
- * \ingroup Util
- * \brief Write 2D array to a file
- *
- * 
- *
- * \param[in] nRows, nCols, data, filename
- */
-void Output2DArray(int nRows, int nCols, float** data, const char* filename)
-{
-	ofstream ofs(filename);
-
-	for (int i = 0; i < nRows; ++i)
-	{
-		for (int j = 0; j < nCols; ++j)
-		{
-			ofs << data[i][j] << "\t";
-		}
-		ofs << "\n";
-	}
-
-	ofs.close();
-}
-/*!
- * \ingroup Util
- * \brief Sum of a double array
- *
- * Get sum value of a double array with size n.
- *
- * \param[in] a,n
- * \return sum
- */
-//! 
-double Sum(double *a, int n)
-{
-	double s = 0.0;
-	for (int i = 0; i < n; i++)
-	{
-		s += a[i];
-	}
-	return s;
-}
-/*!
- * \ingroup Util
- * \brief Max value of a double array
- *
- * Get maximum value in a double array with size n.
- *
- * \param[in] a, n
- * \return max value
- */
-//! 
-double Max(double *a, int n)
-{
-	double m = a[0];
-	for (int i = 1; i < n; i++)
-	{
-		if (a[i] > m)
-		{
-			m = a[i];
-		}
-	}
-	return m;
-}
-/**
- * \ingroup Util
-*/
-//! Get the root path of the current executable.
 string GetAppPath()
 {
 	string RootPath;
@@ -414,6 +95,205 @@ string GetAppPath()
 
 	return RootPath;
 }
+
+string GetCoreFileName(const string& fullFileName)
+{
+	string::size_type start = fullFileName.find_last_of("\\");
+	if (start == string::npos)
+	{
+		start = fullFileName.find_last_of("/");
+	}
+
+	if (start == string::npos)
+		start = -1; // old code: start = 0; Modified by ZhuLJ, 2015/6/16
+
+	string::size_type end = fullFileName.find_last_of(".");
+
+	if (end == string::npos)
+		end = fullFileName.length();
+
+	return fullFileName.substr(start+1, end-start-1);
+}
+
+string GetPathFromFullName(string& fullFileName)
+{
+	string::size_type i = fullFileName.find_last_of("\\");
+	if (i == string::npos)
+	{
+		i = fullFileName.find_last_of("/");
+	}
+
+	if (i == string::npos)
+		return "";
+
+	return fullFileName.substr(0, i+1);
+}
+
+string GetUpper(string str)
+{
+	string strTmp1 = string(str);
+	for (int j=0; j<(int)strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
+	return strTmp1;
+}
+
+void LocalTime(time_t date, struct tm *t)
+{
+#ifndef linux
+	localtime_s(t, &date);
+#else
+	localtime_r(&date, t);
+#endif
+}
+
+double Max(double *a, int n)
+{
+	double m = a[0];
+	for (int i = 1; i < n; i++)
+	{
+		if (a[i] > m)
+		{
+			m = a[i];
+		}
+	}
+	return m;
+}
+
+void Output1DArray(int n, float* data, const char* filename)
+{
+	ofstream ofs(filename);
+
+	for (int i = 0; i < n; ++i)
+		ofs << data[i] << "\n";
+
+	ofs.close();
+}
+
+void Output2DArray(int nRows, int nCols, float** data, const char* filename)
+{
+	ofstream ofs(filename);
+
+	for (int i = 0; i < nRows; ++i)
+	{
+		for (int j = 0; j < nCols; ++j)
+		{
+			ofs << data[i][j] << "\t";
+		}
+		ofs << "\n";
+	}
+
+	ofs.close();
+}
+
+void Read1DArray(const char* filename, int& nRows, float*& data)
+{
+	ifstream ifs(filename);
+	string tmp;
+	ifs >> tmp >> nRows;
+	data = new float[nRows];
+	for (int i = 0; i < nRows; i++)
+	{
+		ifs >> data[i];
+	}
+	ifs.close();
+}
+
+void Read2DArray(const char* filename, int& nRows, float**& data)
+{
+	ifstream ifs(filename);
+	string tmp;
+	ifs >> tmp >> nRows;
+	data = new float*[nRows];
+	int n;
+	for (int i = 0; i < nRows; i++)
+	{
+		ifs >> n;
+		data[i] = new float[n+1];
+		data[i][0] = (float)n;
+		for (int j = 1; j <= n; j++)
+			ifs >> data[i][j];
+	}
+	ifs.close();
+}
+
+void Read2DArrayFromString(const char* s, int& nRows, float**& data)
+{
+	istringstream ifs(s);
+
+	string tmp;
+	ifs >> tmp >> nRows;
+	data = new float*[nRows];
+	int n;
+	for (int i = 0; i < nRows; i++)
+	{
+		ifs >> n;
+		data[i] = new float[n+1];
+		data[i][0] = (float)n;
+		for (int j = 1; j <= n; j++)
+			ifs >> data[i][j];
+	}
+}
+
+void StatusMessage(const char* msg)
+{
+	//cout << msg << endl;
+}
+
+bool StrEqualIgnoreCase(const char* a, const char* b)
+{
+#ifndef linux
+	return _stricmp(a, b) == 0;
+#else
+	return strcasecmp(a, b) == 0;
+#endif 
+
+}
+
+bool StringMatch(string text1, string text2)
+{
+	// convert the key to UPPERCASE for comparison
+	string strTmp1 = string(text1);
+	for (int j=0; j<(int)strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
+
+	string strTmp2 = string(text2);
+	for (int j=0; j<(int)strTmp2.length(); j++) strTmp2[j] = toupper(strTmp2[j]);
+
+	return (strTmp1 == strTmp2);
+}
+
+double Sum(double *a, int n)
+{
+	double s = 0.0;
+	for (int i = 0; i < n; i++)
+	{
+		s += a[i];
+	}
+	return s;
+}
+
+string& trim(string& s)
+{
+    if(s.empty())
+        return s;
+    s.erase(0, s.find_first_not_of(" \n\r\t"));
+    return s.erase(s.find_last_not_of(" \n\r\t") + 1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //bool CopyFile (const char* srcFileName, const char* destFileName)
 //{
@@ -483,16 +363,5 @@ int copyfile_linux(const char* srcfile, const char* dstfile)
 }
 #endif
 
-/*!
- * \ingroup Util
- * \brief Get local time
- *
- */
-void LocalTime(time_t date, struct tm *t)
-{
-#ifndef linux
-	localtime_s(t, &date);
-#else
-	localtime_r(&date, t);
-#endif
-}
+
+

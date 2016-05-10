@@ -1,51 +1,43 @@
 /*!
  * \file SettingsOutput.cpp
- * \brief
+ * \brief Setting Outputs for SEIMS
  *
- *
- *
- * \author [your name]
- * \version 
- * \date June 2015
- *
- * 
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date June 2010
  */
 #include "SettingsOutput.h"
 #include "util.h"
 #include "utils.h"
-#include "text.h"
 #include "ModelException.h"
-//! Constructor
-SettingsOutput::SettingsOutput(int subBasinID, string fileName, mongo* conn, gridfs* gfs):m_conn(conn), m_outputGfs(gfs)
+
+SettingsOutput::SettingsOutput(int subBasinID, string fileName, mongoc_client_t* conn, mongoc_gridfs_t* gfs):m_conn(conn), m_outputGfs(gfs)
 {
 	LoadSettingsFromFile(subBasinID, fileName);
 }
 
-//! Destructor
+
 SettingsOutput::~SettingsOutput(void)
 {
 	StatusMessage("Start to release SettingsOutput ...");
-
 	vector<PrintInfo*>::iterator it;
 	for(it=m_printInfos.begin();it<m_printInfos.end();it++)
 	{
 		if((*it)!=NULL) delete (*it);
 	}
-
 	StatusMessage("End to release SettingsOutput ...");
 }
-//! Load settings from file
+
 bool SettingsOutput::LoadSettingsFromFile(int subBasinID, string fileName)
 {
 	if(!Settings::LoadSettingsFromFile(fileName)) return false;
 	if(!ParseOutputSettings(subBasinID)) return false;
 	return true;
 }
-//! parse output settings for given subBasinID
+
 bool SettingsOutput::ParseOutputSettings(int subBasinID)
 {
 	PrintInfo* pi = NULL;
-	//PrintInfoItem* pii = NULL;
 	ostringstream oss;
 	oss << subBasinID << "_";
 	string strSubbasinID = oss.str();
@@ -93,7 +85,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 			pi->setOutputID(m_Settings[i][1]);
 
 			// for QOUTLET or QTotal or SEDOUTLET or DissovePOutlet or AmmoniumOutlet or NitrateOutlet
-			if (StringMatch(m_Settings[i][1], Tag_QOUTLET) || StringMatch(m_Settings[i][1], Tag_QTotal) || StringMatch(m_Settings[i][1], Tag_SEDOUTLET) 
+			if (StringMatch(m_Settings[i][1], TAG_OUT_QOUTLET) || StringMatch(m_Settings[i][1], TAG_OUT_QTOTAL) || StringMatch(m_Settings[i][1], TAG_OUT_SEDOUTLET) 
 				|| StringMatch(m_Settings[i][1], Tag_DisPOutlet) || StringMatch(m_Settings[i][1], Tag_AmmoOutlet) 
 				|| StringMatch(m_Settings[i][1], Tag_NitrOutlet))
 			{
@@ -315,7 +307,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 
 	return true;
 }
-//! check date
+
 void SettingsOutput::checkDate(time_t startTime, time_t endTime)
 {
 	utils util;
@@ -343,15 +335,15 @@ bool SettingsOutput::isOutputASCFile()
 	return false;
 }
 //! set specific cell raster output
-void SettingsOutput::setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData)
-{
-	vector<PrintInfo*>::iterator itInfo;
-	for(itInfo=m_printInfos.begin();itInfo<m_printInfos.end();itInfo++)
-	{
-		(*itInfo)->setSpecificCellRasterOutput(projectPath,databasePath,templateRasterData);
-	}
-}
-//! dump
+//void SettingsOutput::setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData)
+//{
+//	vector<PrintInfo*>::iterator itInfo;
+//	for(itInfo=m_printInfos.begin();itInfo<m_printInfos.end();itInfo++)
+//	{
+//		(*itInfo)->setSpecificCellRasterOutput(projectPath,databasePath,templateRasterData);
+//	}
+//}
+
 void SettingsOutput::Dump(string fileName)
 {
 	ofstream fs;

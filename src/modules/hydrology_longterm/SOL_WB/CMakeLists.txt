@@ -1,6 +1,5 @@
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
-INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
-SET(SRC_LIST ../../../base/util/SimulationModule.cpp SOL_WB.cpp api.cpp subbasin.cpp)
+SET(SRC_LIST ${MODULE_SRC} SOL_WB.cpp api.cpp subbasin.cpp)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_LIBRARY(SOL_WB SHARED ${SRC_LIST})
 #TARGET_LINK_LIBRARIES(SOL_WB libutil.a)

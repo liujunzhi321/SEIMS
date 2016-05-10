@@ -1,14 +1,10 @@
 /*!
  * \file MetadataInfo.h
+ * \ingroup util
  * \brief Define MetadataInfo class used by modules
- *
- *
- *
  * \author Junzhi Liu
  * \version 1.0
  * \date June 2010
- *
- * 
  */
 #pragma once
 
@@ -21,7 +17,7 @@ using namespace std;
 
 
 /*!
- * \ingroup Util
+ * \ingroup util
  * \class ModelClass
  *
  * \brief Class for model
@@ -36,61 +32,52 @@ public:
 	string Description;
 };
 /*!
- * \ingroup Util
+ * \ingroup util
  * \class Parameter
  *
  * \brief Model parameter information class
- *
- *
- *
  */
 class Parameter
 {
 public:
-	string Name;
-	string Units;
-	string Description;
-	string Source;
-	dimensionTypes Dimension;///< \a dimensionTypes
+	string Name;				///< Name
+	string Units;				///< Units
+	string Description;			///< Description
+	string Source;				///< Source type
+	dimensionTypes Dimension;	///< Data dimension type
 };
 /*!
- * \ingroup Util
+ * \ingroup util
  * \class Information
  *
  * \brief Module development information class
- *
- *
- *
  */
 class Information
 {
 public:
-	string Id;
-	string Name;
-	string Description;
-	string Version;
-	string Author;
-	string EMail;
-	string Website;
-	string Helpfile;
+	string Id;			///< Module ID
+	string Name;		///< Module Name
+	string Description;	///< Module Description
+	string Version;		///< Module Version
+	string Author;		///< Author
+	string EMail;		///< Email
+	string Website;		///< Website
+	string Helpfile;	///< Helpfile
 };
 /*!
- * \ingroup Util
+ * \ingroup util
  * \class InputVariable
  *
  * \brief Input variable information class
- *
- *
- *
  */
 class InputVariable
 {
 public:
-	string Name;
-	string Units;
-	string Description;
-	string Source;
-	dimensionTypes Dimension;///< \a dimensionTypes
+	string Name;				///< Name
+	string Units;				///< Units
+	string Description;			///< Description
+	string Source;				///< Source
+	dimensionTypes Dimension;	///< Data dimension type
 };
 /*!
  * \ingroup Util
@@ -104,10 +91,10 @@ public:
 class OutputVariable
 {
 public:
-	string Name;
-	string Units;
-	string Description;
-	dimensionTypes Dimension;///< \a dimensionTypes
+	string Name;				///< Name
+	string Units;				///< Units
+	string Description;			///< Description
+	dimensionTypes Dimension;	///< Data dimension type
 };
 /*!
  * \ingroup Util
@@ -121,14 +108,13 @@ public:
 class MetadataInfo
 {
 private:
-	//! private member variables
-	 string m_strSchemaVersion;			//! latest XML schema version supported by this class
-	 ModelClass m_oClass;				//! class name for the module
-	 Information m_Info;				//! the general information for the module
-	 vector<InputVariable> m_vInputs;		//! list of input parameters for the module
-	 vector<OutputVariable> m_vOutputs;	//! list of output parameters for the module
-	 vector<ModelClass> m_vDependencies;	//! list of dependency classes for the module
-	 vector<Parameter> m_vParameters;		//! list of parameters for the module
+	 string m_strSchemaVersion;				///< latest XML schema version supported by this class
+	 ModelClass m_oClass;					///< class name for the module
+	 Information m_Info;					///< the general information for the module
+	 vector<InputVariable> m_vInputs;		///< list of input parameters for the module
+	 vector<OutputVariable> m_vOutputs;		///<list of output parameters for the module
+	 vector<ModelClass> m_vDependencies;	///< list of dependency classes for the module
+	 vector<Parameter> m_vParameters;		///< list of parameters for the module
 
     void OpenTag(string name, string attributes, int indent, string* sb);
     void CloseTag(string name, int indent, string* sb);

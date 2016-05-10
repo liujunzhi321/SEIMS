@@ -1,15 +1,11 @@
 #! /usr/bin/env python
 #coding=utf-8
 import pymongo
-#from pymongo import Connection
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-import bson, sys
-from shapely.geometry import Point
-from shapely.geometry import Point, MultiPolygon
-from shapely.wkt import dumps, loads
+from shapely.wkt import loads
 from osgeo import ogr
-from config import *
+from text import *
 
 def OGRWkt2Shapely(input_shape, idField):
     shapely_objects=[]

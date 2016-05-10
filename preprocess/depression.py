@@ -1,11 +1,10 @@
 #! /usr/bin/env python
 #coding=utf-8
 from osgeo import gdal,osr
-import math, os
 import sqlite3
 from numpy import *
 import util
-from config import *
+from text import *
 
 def DepressionCap(filepath, sqliteFile):
     #read landuselookup table from sqlite

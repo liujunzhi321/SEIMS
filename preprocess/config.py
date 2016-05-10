@@ -7,20 +7,22 @@ import os,platform,sys
 
 ## Directionaries 
 if platform.system() == "Windows":
-    DATA_BASE_DIR = r'E:\github-zlj\model_data\model_dianbu_30m_longterm\data_prepare'
-    PREPROC_SCRIPT_DIR = r'E:\github-zlj\SEIMS\preprocess'
-    CPP_PROGRAM_DIR = r'E:\github-zlj\SEIMS_Preprocess\Debug'
-    METIS_DIR = r'E:\github-zlj\SEIMS_Preprocess\metis\programs\Debug'
+    BASE_DATA_DIR = r'E:\data\model_data\model_dianbu_30m_longterm\data_prepare'
+    TXT_DB_DIR = r'E:\code\Hydro\SEIMS\database'
+    PREPROC_SCRIPT_DIR = r'E:\code\Hydro\SEIMS\preprocess'
+    CPP_PROGRAM_DIR = r'D:\Compile\SEIMS_Preprocess\Release'
+    METIS_DIR = r'D:\Compile\SEIMS_Preprocess\metis\programs\Release'
     MPIEXEC_DIR = None
-elif platform.system() == "Linux":
-    DATA_BASE_DIR = r'/data/liujz/data'
+elif platform.system() == "Linux": ### Hasn't tested yet, Apr.,2016, LJ.
+    BASE_DATA_DIR = r'/data/liujz/data'
+    TXT_DB_DIR = r'/data/liujz/data/database'
     PREPROC_SCRIPT_DIR = r'/data/hydro_preprocessing'
     CPP_PROGRAM_DIR = r'/data/hydro_preprocessing/cpp_programs'
     METIS_DIR = r'/soft/programming/metis-5.1.0/build/programs'
     MPIEXEC_DIR = None
-CLIMATE_DATA_DIR = DATA_BASE_DIR + os.sep + 'climate'
-SPATIAL_DATA_DIR = DATA_BASE_DIR + os.sep + 'spatial'
-WORKING_DIR      = DATA_BASE_DIR + os.sep + 'output'
+CLIMATE_DATA_DIR = BASE_DATA_DIR + os.sep + 'climate'
+SPATIAL_DATA_DIR = BASE_DATA_DIR + os.sep + 'spatial'
+WORKING_DIR      = BASE_DATA_DIR + os.sep + 'output'
 
 ## MongoDB related
 #HOSTNAME = '192.168.6.55'
@@ -45,8 +47,7 @@ MetroSiteFile = CLIMATE_DATA_DIR + os.sep + 'sites_hefei.txt'
 DischargeExcelPrefix = CLIMATE_DATA_DIR + os.sep + 'discharge_by_day_'
 DischargeYear = [2014]
 
-## Parameters for SEIMS
-sqliteFile = DATA_BASE_DIR + os.sep + "Parameter.db3"
+
 ## Spatial Input
 dem = SPATIAL_DATA_DIR + os.sep + 'dem_30m.tif'
 outlet_file = SPATIAL_DATA_DIR + os.sep + 'outlet_30m.shp'
@@ -70,7 +71,7 @@ defaultClay = 30
 defaultOrg = 2.5
 
 ## Predefined variables
-CROP_FILE = PREPROC_SCRIPT_DIR + os.sep + 'crop.txt'
+
 CROP_ATTR_LIST  = ["IDC", "EXT_COEF",  "BMX_TREES", "BLAI", "HVSTI",\
                     "MAT_YRS", "T_BASE", "FRGRW1", "FRGRW2", "LAIMX1",\
                     "LAIMX2", "DLAI", "BN1", "BN2", "BN3", "BP1", "BP2",\
@@ -94,67 +95,3 @@ SOIL_ATTR_DB  = ["sand", "clay","wp", "fc", "porosity","B_DENSITY","ks", "P_INDE
 
 ## Hydrological parameters
 coeTable = {"T2":[0.05, 0.48],"T10":[0.12, 0.52], "T100":[0.18,0.55]} ## used in radius.py
-
-## Conventional Spatial Raster Data File Names
-filledDem = "demFilledTau.tif"
-flowDir = "flowDirTauD8.tif"
-slope = "slopeTau.tif"
-acc = "accTauD8.tif"
-streamRaster = "streamRasterTau.tif"
-
-flowDirDinf = "flowDirDinfTau.tif"
-dirCodeDinf = "dirCodeDinfTau.tif"
-slopeDinf = "slopeDinfTau.tif"
-weightDinf = "weightDinfTau.tif"
-
-modifiedOutlet = "outletM.shp"
-streamSkeleton = "streamSkeleton.tif"
-streamOrder = "streamOrderTau.tif"
-chNetwork = "chNetwork.txt"
-chCoord = "chCoord.txt"
-streamNet = "streamNet.shp"
-subbasin = "subbasinTau.tif"
-mask_to_ext = "mask.tif"
-## masked file names
-subbasinM = "subbasinTauM.tif"
-flowDirM = "flowDirTauM.tif"
-streamRasterM = "streamRasterTauM.tif"
-## output to mongoDB file names
-reachesOut = "reach.shp"
-subbasinOut = "subbasin.tif"
-flowDirOut = "flow_dir.tif"
-streamLinkOut = "stream_link.tif"
-## masked and output to mongoDB file names
-slopeM = "slope.tif"
-filldemM = "dem.tif"
-accM = "acc.tif"
-streamOrderM = "stream_order.tif"
-flowDirDinfM = "flow_dir_angle_dinf.tif"
-dirCodeDinfM = "flow_dir_dinf.tif"
-slopeDinfM = "slope_dinf.tif"
-weightDinfM = "weight_dinf.tif"
-
-subbasinVec = "subbasin.shp"
-basinVec = "basin.shp"
-chwidthName = "chwidth.tif"
-
-landuseMFile = "landuse.tif"
-
-soilTexture = "soil_texture.tif"
-hydroGroup = "hydro_group.tif"
-usleK = "usle_k.tif"
-
-initSoilMoist = "moist_in.tif"
-depressionFile = "depression.tif"
-
-CN2File = "CN2.tif"
-radiusFile = "radius.tif"
-ManningFile = "Manning.tif"
-velocityFile = "velocity.tif"
-## flow time to the main river from each grid cell
-t0_sFile = "t0_s.tif"
-## standard deviation of t0_s
-delta_sFile = "delta_s.tif"
-## potential runoff coefficient
-runoff_coefFile = "runoff_co.tif"
-

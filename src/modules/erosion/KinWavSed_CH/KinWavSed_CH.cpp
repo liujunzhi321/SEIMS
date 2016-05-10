@@ -9,7 +9,7 @@
 #include <cstdio>
 
 #include <omp.h>
-#define NODATA_VALUE -99
+//#define NODATA_VALUE -99
 using namespace std;
 
 KinWavSed_CH::KinWavSed_CH(void):m_cellWith(-1),m_nCells(-1), m_TimeStep(-99.0f), m_chNumber(-1), m_Slope(NULL),

@@ -20,7 +20,7 @@ Compile
 ----------
 ~~~
 cd <build path>
-cmake <SEIMS source path>
+cmake <SEIMS path> [-DVERSION=MPI]
 ~~~
 
 Preprocessing

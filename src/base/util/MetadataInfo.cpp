@@ -1,12 +1,11 @@
 /*!
  * \file MetadataInfo.cpp
+ * \ingroup util
  * \brief methods for MetadataInfo class
  *
- *
- *
  * \author Junzhi Liu
- * \version 1.0
- * \date June 2010
+ * \version 1.1
+ * \date Jun. 2010
  *
  * 
  */

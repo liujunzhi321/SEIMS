@@ -1,10 +1,35 @@
 /** \defgroup Base
- * \brief Base modules, e.g., module_setting...
+ * \brief Base modules, e.g., data, util, module_setting
+ *
+ */
+/** \defgroup data
+ * \ingroup Base
+ * \brief Include data related classes, e.g. Measurement, HydroClimateData etc.
+ *
+ */
+/** \defgroup util
+ * \ingroup Base
+ * \brief Include classes of MetadataInfo, ModelException and SimulationModule et al.
+ *
+ */
+/** \defgroup module_setting
+ * \ingroup Base
+ * \brief Setting for SEIMS
  *
  */
 
 /** \defgroup Main
  * \brief Entrance for SEIMS
+ *
+ */
+/** \defgroup main_omp
+ * \ingroup Main
+ * \brief SEIMS OpenMP version
+ *
+ */
+/** \defgroup main_mpi
+ * \ingroup Main
+ * \brief SEIMS MPI version
  *
  */
 
@@ -19,9 +44,9 @@
  *
  */
 
-/** \defgroup Hydrology_strom
+/** \defgroup Hydrology
  * \ingroup Modules
- * \brief Storm hydrology related modules
+ * \brief Hydrology related modules, include storm processes.
  *
  */
 

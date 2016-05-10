@@ -9,7 +9,7 @@
 *.pch
 
 # Compiled Dynamic libraries
-*.so
+#*.so
 *.dylib
 #*.dll
 
@@ -18,8 +18,8 @@
 
 # Compiled Static libraries
 *.lai
-*.la
-*.a
+#*.la
+#*.a
 #*.lib
 
 # Executables
@@ -32,3 +32,8 @@
 
 # Everything in the build directory
 build
+# PyCharm project files
+.idea
+# Exclude SQLite Database, which will be reConstructor by preprocessing script
+.db3
+.db

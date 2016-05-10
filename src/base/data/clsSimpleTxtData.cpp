@@ -23,9 +23,9 @@ clsSimpleTxtData::clsSimpleTxtData(string fileName)
 	m_data = NULL;
 
 	utils util;
-	if(!util.FileExists(fileName)) throw ModelException("clsSimpleTxtData","readFile","The file " + fileName + " does not exist or has not read permission.");
+	if(!util.FileExists(fileName)) throw ModelException("clsSimpleTxtData","ReadFile","The file " + fileName + " does not exist or has not read permission.");
 
-	StatusMessage(("read " + fileName + "...").c_str());
+	//StatusMessage(("read " + fileName + "...").c_str());
 
 	ifstream myfile;
 	myfile.open(fileName.c_str(),ifstream::in);

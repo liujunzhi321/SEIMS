@@ -2,19 +2,17 @@
 #coding=utf-8
 
 from osgeo import gdal, osr
-import math, os, sys
-import sqlite3
 from numpy import *
-from config import *
-import util
+from text import *
 from util import WriteGTiffFile
-
+import util
 sys.setrecursionlimit(10000)
 
 #the flowout of outletId is nodata
 sqrt2 = math.sqrt(2)
+#This flow direction is ArcGIS encode.
 celllen = {1:1,4:1,16:1,64:1, 2:sqrt2, 8:sqrt2, 32:sqrt2, 128:sqrt2}
-deffer = {1:[0,1], 2:[1,1], 4:[1,0], 8:[1,-1],16:[0,-1],32:[-1,-1],64:[-1,0],128:[-1,1]}
+differ = {1:[0, 1], 2:[1, 1], 4:[1, 0], 8:[1, -1], 16:[0, -1], 32:[-1, -1], 64:[-1, 0], 128:[-1, 1]}
 
 def flowlen_cell(i,j,ysize,xsize,fdir,cellsize, weight, length):  
     #print i,j, weight[i][j]
@@ -25,8 +23,8 @@ def flowlen_cell(i,j,ysize,xsize,fdir,cellsize, weight, length):
                 prej = j
                 wt = weight[i][j]
                 fdirV = fdir[i][j]
-                di = deffer[fdirV][0]
-                dj = deffer[fdirV][1]
+                di = differ[fdirV][0]
+                dj = differ[fdirV][1]
                 i = i + di
                 j = j + dj
                 relen = flowlen_cell(i,j,ysize,xsize,fdir,cellsize,weight, length)
@@ -69,8 +67,6 @@ def cal_flowlen(filepath, weight):
     return length
 
 
-#coeTable = {"T2":[0.05, 0.48],"T10":[0.12, 0.52], "T100":[0.18,0.55]}
-
 def GenerateDelta_s(filepath):
     
     streamlink = filepath + os.sep + streamLinkOut
@@ -107,7 +103,7 @@ def GenerateDelta_s(filepath):
     for i in range(0, ysize):
         for j in range(0, xsize):
             if(abs(vel_data[i][j]-noDataValue) < util.DELTA ):
-                delta_s[i][j] = -9999
+                delta_s[i][j] = DEFAULT_NODATA
                 continue
             if(strlk_data[i][j] <= 0):
                 weight[i][j] = 1
@@ -130,7 +126,7 @@ def GenerateDelta_s(filepath):
                             
     filename = filepath + os.sep + delta_sFile
     WriteGTiffFile(filename, ysize, xsize, delta_s, \
-                                geotransform, srs, -9999, gdal.GDT_Float32)
+                                geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
                      
     
     

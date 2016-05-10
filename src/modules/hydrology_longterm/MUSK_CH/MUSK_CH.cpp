@@ -24,7 +24,7 @@
 #include <omp.h>
 
 #define MINI_SLOPE 0.0001f
-#define NODATA_VALUE -99
+//#define NODATA_VALUE -99
 using namespace std;
 //! Constructor
 MUSK_CH::MUSK_CH(void): m_dt(-1), m_nreach(-1), m_Kchb(NODATA), 

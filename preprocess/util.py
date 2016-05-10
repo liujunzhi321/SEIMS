@@ -4,11 +4,10 @@
 #
 #
 import os,math,datetime,time
-from osgeo import gdal,ogr,osr,gdalconst
+from osgeo import gdal,osr
 from gdalconst import *
 import shutil
-import geojson
-import config
+from text import *
 
 ####  Climate Utility Functions  ####
 def IsLeapYear(year):
@@ -125,7 +124,7 @@ def RemoveShpFile(shpFile):
         filename = prefix + ext
         if os.path.exists(filename):
             os.remove(filename)
-
+### TODO: This function can be simply replaced by date += datetime.timedelta(days=1). PLZ check and update. LJ
 def NextDay(date):
     year = date.year
     mon = date.month
@@ -178,13 +177,6 @@ def LastHalfDay(date):
             day = GetDayNumber(year, mon)
             
     return datetime.datetime(year, mon, day, h)
-
-
-def IsLeapYear(year):
-    if( (year%4 == 0 and year%100 != 0) or (year%400 == 0)):
-        return True
-    else:
-        return False
 
 def GetDayNumber(year, month):
     if month in [1,3,5,7,8,10,12]:
@@ -292,6 +284,28 @@ def MaskRaster(maskFile, inputFile, outputFile, outputAsc=False, noDataValue=-99
         asc = "-asc"
     s = "%s/mask_rasters/build/mask_raster %s %s" % (config.CPP_PROGRAM_DIR, configFile, asc)
     os.system(s)
-
     os.remove(configFile)
-    
+
+def StringInList(str, strList):
+    newStrList = strList[:]
+    for i in range(len(newStrList)):
+        newStrList[i] = newStrList[i].lower()
+    if str.lower() in newStrList:
+        return True
+    else:
+        return False
+def StringMatch(str1, str2):
+    if str1.lower() == str2.lower():
+        return True
+    else:
+        return False
+def ReadDataItemsFromTxt(txtFile):
+    f = open(txtFile)
+    dataItems = []
+    for line in f:
+        strLine = line.split('\n')[0]
+        if strLine !='' and strLine.find('#') < 0:
+            lineList = strLine.split('\t')
+            dataItems.append(lineList)
+    f.close()
+    return dataItems

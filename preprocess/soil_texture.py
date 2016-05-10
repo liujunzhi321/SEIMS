@@ -5,7 +5,7 @@ import os
 from osgeo import gdal
 from numpy import zeros
 from util import *
-from config import *
+from text import *
 def GetTexture(clay, sand):
     silt = 100 - sand - clay
     if (clay >= 40 and silt <= 40 and sand <= 45):

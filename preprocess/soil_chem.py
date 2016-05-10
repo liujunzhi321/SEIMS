@@ -11,7 +11,7 @@ import math
 from osgeo import gdal
 import numpy
 from util import *
-from config import *
+from text import *
 
 ## INPUTS ##
 #nactfr: nitrogen active pool fraction. The fraction of organic nitrogen in the active pool

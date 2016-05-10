@@ -1,6 +1,5 @@
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
-INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
-SET(SRC_LIST ../../../base/util/SimulationModule.cpp clsPI_MSM.cpp api.cpp)
+SET(SRC_LIST ${MODULE_SRC} clsPI_MSM.cpp api.cpp)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_LIBRARY(PI_MSM SHARED ${SRC_LIST})
 #TARGET_LINK_LIBRARIES(PI_MSM libutil.a)

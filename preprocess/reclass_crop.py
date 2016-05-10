@@ -3,9 +3,8 @@
 from osgeo import gdal,osr
 import os, sys, re
 import numpy
-from time import time
 import util
-from config import *
+from text import *
 
 def ReadCropAttrs(cropFile):
     if not os.path.exists(cropFile):

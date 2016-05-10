@@ -1,5 +1,5 @@
-INCLUDE_DIRECTORIES(../../../base/util ../../../base/module_setting)
-SET(SRC_LIST ../../../base/util/SimulationModule.cpp MUSK_CH.cpp api.cpp)
+LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
+SET(SRC_LIST ${MODULE_SRC} MUSK_CH.cpp api.cpp)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_LIBRARY(MUSK_CH SHARED ${SRC_LIST})
 #TARGET_LINK_LIBRARIES(MUSK_CH libutil.a)

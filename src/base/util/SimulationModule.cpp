@@ -1,14 +1,11 @@
 /*!
  * \file SimulationModule.cpp
+ * \ingroup util
  * \brief Initialization of SimulationModule class
  *
- *
- *
  * \author Junzhi Liu
- * \version 
- * \date June 2010
- *
- * 
+ * \version 1.1
+ * \date Jul. 2010
  */
 #include "SimulationModule.h"
 

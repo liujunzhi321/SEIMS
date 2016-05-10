@@ -4,13 +4,10 @@
 #
 #
 from osgeo import gdal, osr
-import math, os, sys
 import sqlite3
 import numpy
-from time import time
-import util
 from util import WriteGTiffFile
-from config import *
+from text import *
 
 def ReclassLanduse(landuseFile, dbname, dstdir):
     #code:{property_name:value}

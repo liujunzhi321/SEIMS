@@ -1,12 +1,19 @@
-// Defines the entry point for SEIMS application.
-//
-
+/*!
+ * \ingroup main
+ * \file main.cpp
+ * \brief Entry point for SEIMS application.
+ * \author Junzhi Liu
+ * \date May 2010
+ *
+ * 
+ */
 #include <iostream>
 #include "invoke.h"
 #include "util.h"
 #include "gdal_priv.h"
 #include "omp.h"
 #define MAIN
+#define USE_MONGODB
 //#define TEST
 int main(int argc, const char* argv[])
 {
@@ -17,8 +24,7 @@ int main(int argc, const char* argv[])
 	int numThread = 1;
 	LayeringMethod layeringMethod = UP_DOWN;
 	char mongodbIP[16];
-	strcpy(mongodbIP,"192.168.6.55");
-	//strcpy(mongodbIP,"127.0.0.1");
+	strcpy_s(mongodbIP,"192.168.6.55");
 	int port = 27017;
 	if (argc < 2)
 	{
@@ -61,7 +67,7 @@ int main(int argc, const char* argv[])
 		if(argc > i){
 			if(isIPAddress(argv[i]))
 			{
-				strcpy(mongodbIP,argv[i]);
+				strcpy_s(mongodbIP,argv[i]);
 				i++;
 				if(argc > i && atoi(argv[i]) > 0)
 				{
@@ -91,10 +97,10 @@ int main(int argc, const char* argv[])
 		cout << "Please input the model path:" << endl;
 		cin >> modelPath;
 	}
-#ifndef USE_MONGODB
-	testMainSQLite(modelPath,scenarioID, numThread, layeringMethod);
-#else
-	testMain(modelPath,mongodbIP,port,scenarioID, numThread, layeringMethod);
+#ifdef USE_MONGODB
+	MainMongoDB(modelPath,mongodbIP,port,scenarioID, numThread, layeringMethod);
+//#else
+//	testMainSQLite(modelPath,scenarioID, numThread, layeringMethod); /// TODO Remove SQLite thoroughly. LJ
 #endif
 	
 #endif			
@@ -103,25 +109,25 @@ int main(int argc, const char* argv[])
 	// run the model
 	//Run(strTmp);
 	//testSettingInput();
-	testBMP();
+	//testBMP();
 	//testSettingOutput();
 	
 	//testModule();
 	//testRaster();
 #endif
 
-	//system("pause");
+	system("pause");
 	return 0;
 errexit:
 	cout<<"Simple Usage:\n "<<argv[0]<<" <ModelPath>"<<endl;
 	cout<<"\tBy default: "<<endl;
-	cout<<"\t\tThe mongodb's IP is 192.168.6.55, the port is 27017."<<endl;
+	cout<<"\t\tThe MongoDB IP is 192.168.6.55, and the port is 27017."<<endl;
 	cout<<"\t\tThe threads or processor number is 1."<<endl;
 	cout<<"\t\tThe Layering Method is UP_DOWN."<<endl<<endl;
 	cout<<"Usage: "<<argv[0]<<"<ModelPath> <threadsNum> [<layeringMethod> <IP> <port>]"<<endl;
 	cout<<"  <ModelPath> is the path of the configuration of the Model."<<endl;
 	cout<<"  <threadsNum> must be greater or equal than 1."<<endl;
 	cout<<"  <layeringMethod> can be 0 and 1, which means UP_DOWN and DOWN_UP respectively."<<endl;
-	cout<<"  <IP> is the address of mongodb database, and <port> is its port number."<<endl;
+	cout<<"  <IP> is the address of MongoDB database, and <port> is its port number."<<endl;
 	exit(0);
 }

@@ -1,42 +1,45 @@
-//! Class to manage parameter information
+/*!
+ * \file ParamInfo.cpp
+ * \brief Class to store parameter item information
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #include "ParamInfo.h"
 #include "util.h"
 #include <iostream>
 using namespace std;
 
-//! define string constants used in the code
-#define Use_Y "Y"
-#define Use_RC "RC"
-#define Use_AC "AC"
-#define Use_NC "NC"
 
-//! Constructor
+
+
 ParamInfo::ParamInfo(void)
 {
 	Reset();
 }
 
-//! Destructor
 ParamInfo::~ParamInfo(void)
 {
 }
 
-//! Return the adjusted value for this parameter
 float ParamInfo::GetAdjustedValue()
 {
 	float res = Value;
 
-	if (StringMatch(Use, Use_Y))
+	if (StringMatch(Use, PARAM_USE_Y))
 	{
-		//if (Change == Use_NC)
+		//if (Change == PARAM_CHANGE_NC)
 		//{
 		//	don't change
 		//}
-		if (StringMatch(Change, Use_RC))
+		if (StringMatch(Change, PARAM_CHANGE_RC))
 		{
 			res = Value * Impact;
 		}
-		else if (StringMatch(Change, Use_AC))
+		else if (StringMatch(Change, PARAM_CHANGE_AC))
 		{
 			res = Value + Impact;
 		}
@@ -44,21 +47,21 @@ float ParamInfo::GetAdjustedValue()
 
 	return res;
 }
-//! Adjust 1D array
+
 void ParamInfo::Adjust1DArray(int n, float* data)
 {
 	float res = Value;
 
-	if (StringMatch(Use, Use_Y))
+	if (StringMatch(Use, PARAM_USE_Y))
 	{
-		if (StringMatch(Change, Use_RC) && !FloatEqual(Impact, 1.0))
+		if (StringMatch(Change, PARAM_CHANGE_RC) && !FloatEqual(Impact, 1.0))
 		{
 			for (int i = 0; i < n; i++)
 			{
 				data[i] *= Impact;
 			}
 		}
-		else if (StringMatch(Change, Use_AC) && !FloatEqual(Impact, 0))
+		else if (StringMatch(Change, PARAM_CHANGE_AC) && !FloatEqual(Impact, 0))
 		{
 			for (int i = 0; i < n; i++)
 			{
@@ -68,7 +71,6 @@ void ParamInfo::Adjust1DArray(int n, float* data)
 	}
 }
 
-//! Reset the contents of the object to default values
 void ParamInfo::Reset(void)
 {
 	Change = "";
