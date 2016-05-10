@@ -297,7 +297,10 @@ ParamInfo* ModuleFactory::FindDependentParam(ParamInfo& paramInfo)
 			}
 		}
 	}
-	throw ModelException("ModuleFactory", "FindDependentParam", "Can not find input for " + paraName + " from other Modules.\n");
+	//TODO: Currently, there are too many bugs in api.cpp of most modules.
+	//      in the future, all input and output should be verified.
+	//      this throw sentence should be uncommented by then. By LJ.
+	//throw ModelException("ModuleFactory", "FindDependentParam", "Can not find input for " + paraName + " from other Modules.\n");
 	return NULL;
 }
 

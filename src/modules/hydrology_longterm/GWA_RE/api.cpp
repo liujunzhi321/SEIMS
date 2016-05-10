@@ -54,7 +54,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput("D_PET","mm","PET from the interpolation module","Module",DT_Raster);
 	
 	mdi.AddInput("T_GWNEW","mm",
-		"The volumn of water from the bank storage to the adjacent unsaturated zone and groundwater storage",
+		"The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage",
 		"Module",DT_Array1D);//from IUH_CH or other channel routing module
 
 	mdi.AddOutput("GWWB","","",DT_Array2D);					//used for output file

@@ -54,9 +54,9 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster);
 
 	// set the parameters (non-time series)
-	mdi.AddInput("D_GRRE","mm","perculation","Module",DT_Raster);
-	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);
-	mdi.AddInput("D_SOMO_2D","mm","Distribution of soil moisture","Module",DT_Array2D);
+	//mdi.AddInput("D_GRRE","mm","perculation","Module",DT_Raster);
+	//mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);
+	//mdi.AddInput("D_SOMO_2D","mm","Distribution of soil moisture","Module",DT_Array2D);
 
 	// set the output variables
 	mdi.AddOutput("SSRU_2D","mm", "Distribution of subsurface runoff (mm).", DT_Array2D);

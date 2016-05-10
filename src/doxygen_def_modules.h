@@ -22,12 +22,12 @@
  * \brief Entrance for SEIMS
  *
  */
-/** \defgroup main_omp
+/** \defgroup seims_omp
  * \ingroup Main
  * \brief SEIMS OpenMP version
  *
  */
-/** \defgroup main_mpi
+/** \defgroup seims_mpi
  * \ingroup Main
  * \brief SEIMS MPI version
  *
