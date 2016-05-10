@@ -34,3 +34,6 @@
 build
 # PyCharm project files
 .idea
+# Exclude SQLite Database, which will be reConstructor by preprocessing script
+.db3
+.db
