@@ -50,7 +50,7 @@ private:
 	/// time step (hr)
 	int  m_TimeStep;
 	/// cell size of the grid (the validate cells of the whole basin)
-	int  m_cellSize;
+	int  m_nCells;
 	/// cell width of the grid (m)
 	float  m_CellWidth;
 	/// the total number of subbasins

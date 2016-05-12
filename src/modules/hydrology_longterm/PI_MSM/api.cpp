@@ -30,8 +30,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("PI_MSM.chm");
 
 	// set the input variables (time series)
-	mdi.AddInput("D_P","mm","Precipitation","Module", DT_Raster);
-	mdi.AddInput("D_PET","mm", "Potential Evapotranspiration", "Module", DT_Raster);
+	mdi.AddInput("D_P","mm","Precipitation","Module", DT_Raster);/// ITP_P
+	mdi.AddInput("D_PET","mm", "Potential Evapotranspiration", "Module", DT_Raster); ///ITP_PET
 
 	// set the parameters (non-time series)
 	mdi.AddParameter("Interc_max","mm", "Maximum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster);

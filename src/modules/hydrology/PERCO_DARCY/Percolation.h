@@ -11,8 +11,10 @@ class Percolation : public SimulationModule
 {
 private:
 	int m_timestep;
-	int m_size;
-	float m_dx;
+	//! Valid cells number
+	int m_nCells;
+	//! Width of cell (m)
+	float m_CellWidth;
 
 	float* m_Conductivity;
 	float* m_Porosity;

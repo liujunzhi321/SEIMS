@@ -44,8 +44,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_NACTFR, UNIT_NON_DIM, DESC_NACTFR, Source_ParameterDB, DT_Single);
 	
 	// set the input
-	mdi.AddInput(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
-	mdi.AddInput(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
 	mdi.AddInput(VAR_WSHD_DNIT, UNIT_CONT_KGKM2, DESC_WSHD_DNIT, Source_ParameterDB, DT_Single);
 	mdi.AddInput(VAR_WSHD_HMN, UNIT_CONT_KGKM2, DESC_WSHD_HMN, Source_ParameterDB, DT_Single);

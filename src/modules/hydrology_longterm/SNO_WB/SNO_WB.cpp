@@ -10,7 +10,7 @@ SNO_WB::SNO_WB(void)
 {
 	// set default values for member variables	
 	this->m_Date = -1;
-	this->m_cellSize = -1;
+	this->m_nCells = -1;
 	this->m_t0= -99.0f;
 	this->m_tsnow = -99.0f;
 	this->m_kblow= -99.0f;
@@ -61,7 +61,7 @@ SNO_WB::~SNO_WB(void)
 bool SNO_WB::CheckInputData(void)
 {
 	if(this->m_Date <=0)			throw ModelException("SNO_WB","CheckInputData","You have not set the time.");
-	if(m_cellSize <= 0)				throw ModelException("SNO_WB","CheckInputData","The dimension of the input data can not be less than zero.");
+	if(m_nCells <= 0)				throw ModelException("SNO_WB","CheckInputData","The dimension of the input data can not be less than zero.");
 	if(this->m_P == NULL)			throw ModelException("SNO_WB","CheckInputData","The precipitation data can not be NULL.");
 	if(this->m_tMin == NULL)		throw ModelException("SNO_WB","CheckInputData","The min temperature data can not be NULL.");
 	if(this->m_tMax == NULL)		throw ModelException("SNO_WB","CheckInputData","The max temperature data can not be NULL.");
@@ -83,7 +83,7 @@ bool SNO_WB::CheckInputData(void)
 
 void SNO_WB::initalOutputs()
 {
-	if(m_cellSize <= 0)				throw ModelException("SNO_WB","CheckInputData","The dimension of the input data can not be less than zero.");
+	if(m_nCells <= 0)				throw ModelException("SNO_WB","CheckInputData","The dimension of the input data can not be less than zero.");
 	
 }
 
@@ -95,13 +95,13 @@ int SNO_WB::Execute()
 
 	if(m_subbasinList == NULL && this->m_subbasinSelected != NULL && this->m_subbasinSelectedCount > 0)
 	{
-		getSubbasinList(this->m_cellSize,this->m_subbasin,this->m_subbasinSelectedCount ,this->m_subbasinSelected);
+		getSubbasinList(this->m_nCells,this->m_subbasin,this->m_subbasinSelectedCount ,this->m_subbasinSelected);
 	}
 
 	if(this->m_SA == NULL || m_isInitial) 
 	{
-		if(this->m_SA == NULL) this->m_SA = new float[this->m_cellSize];		
-		for(int i=0;i<this->m_cellSize;i++) 
+		if(this->m_SA == NULL) this->m_SA = new float[this->m_nCells];		
+		for(int i=0;i<this->m_nCells;i++) 
 		{
 			if((this->m_tMin[i] + this->m_tMax[i]) / 2 < this->m_tsnow)	this->m_SA[i] = this->m_swe0;	//winter
 			else														this->m_SA[i] = 0.0f;			// other seasons
@@ -110,7 +110,7 @@ int SNO_WB::Execute()
 	}
 
 	this->m_SWE = 0.0f;
-	for ( int rw = 0; rw < this->m_cellSize; rw++)
+	for ( int rw = 0; rw < this->m_nCells; rw++)
 	{
 
 		float dT = (this->m_tMin[rw] + this->m_tMax[rw]) / 2;		
@@ -136,7 +136,7 @@ int SNO_WB::Execute()
 		this->m_SWE += this->m_SA[rw];
 	}
 
-	this->m_SWE /= this->m_cellSize;
+	this->m_SWE /= this->m_nCells;
 	return 0;
 }
 
@@ -147,9 +147,9 @@ bool SNO_WB::CheckInputSize(const char* key, int n)
 		throw ModelException("SNO_WB","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_cellSize != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_cellSize <=0) this->m_cellSize = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			throw ModelException("SNO_WB","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
@@ -197,7 +197,7 @@ void SNO_WB::SetValue(const char* key, float data)
 	else if(StringMatch(s,"T0"))			this->m_t0 = data;
 	else if(StringMatch(s,"T_snow"))		this->m_tsnow = data;
 	else if(StringMatch(s,"swe0"))			this->m_swe0 = data;
-	else if(StringMatch(s,"cellSize"))		this->m_cellSize = int(data);
+	else if(StringMatch(s,Tag_CellSize))	this->m_nCells = int(data);
 	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
@@ -246,9 +246,9 @@ void SNO_WB::Get1DData(const char* key, int* n, float** data)
 	{		
 		if(this->m_SA == NULL) 
 		{
-			if(this->m_cellSize <=0) throw ModelException("SNO_DD","getResult","The dimension of the input data can not be less than zero.");
-			this->m_SA = new float[this->m_cellSize];
-			for(int i=0;i<this->m_cellSize;i++) 
+			if(this->m_nCells <=0) throw ModelException("SNO_DD","getResult","The dimension of the input data can not be less than zero.");
+			this->m_SA = new float[this->m_nCells];
+			for(int i=0;i<this->m_nCells;i++) 
 			{
 				this->m_SA[i] = 0.0f;			
 			}
@@ -257,7 +257,7 @@ void SNO_WB::Get1DData(const char* key, int* n, float** data)
 	}
 	else									throw ModelException("SNO_WB","getResult","Result " + s + " does not exist in SNO_WB method. Please contact the module developer.");
 
-	*n = this->m_cellSize;
+	*n = this->m_nCells;
 }
 
 void SNO_WB::Get2DData(const char* key, int* nRows, int* nCols, float*** data)

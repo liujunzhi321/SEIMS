@@ -29,7 +29,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SNO_WB.chm");
 
-	mdi.AddParameter("cellSize","","the number of invalid cells", "mask.asc",DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("K_blow","-"," a fraction coefficient of snow blowing into or out of the watershed","ParameterDB_Snow",DT_Single);
 	mdi.AddParameter("T0","oC","the snowmelt threshold temperature ","ParameterDB_Snow",DT_Single);	
 	mdi.AddParameter("T_snow","oC","snowfall temperature","ParameterDB_Snow",DT_Single);	

@@ -14,7 +14,6 @@
 #include "utils.h"
 #include "ModelException.h"
 #include "util.h"
-#include "text.h"
 //! Constructor
 SEIMSModuleSetting::SEIMSModuleSetting(string moduleId,string setting)
 {

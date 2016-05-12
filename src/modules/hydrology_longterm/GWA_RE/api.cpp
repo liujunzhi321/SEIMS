@@ -31,8 +31,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("TimeStep","hr","time step","config.fig",DT_Single); 
-	mdi.AddParameter("CellSize","m","cell size of the grid ","mask",DT_Single);
-	mdi.AddParameter("CellWidth","m","cell size of the grid ","mask",DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
 	mdi.AddParameter("GW0","mm","initial ground water storage ","ParameterDB_WaterBalance", DT_Single);
 	mdi.AddParameter("GWMAX","mm","maximum ground water storage","ParameterDB_WaterBalance", DT_Single);

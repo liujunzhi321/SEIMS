@@ -13,7 +13,7 @@
 #include "Measurement.h"
 #include "utils.h"
 #include "bson.h"
-#include "text.h"
+#include "util.h"
 #include "ModelException.h"
 #include <algorithm>
 

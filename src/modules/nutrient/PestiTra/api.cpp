@@ -42,8 +42,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//Latitude is used to calculate max solar radiation. It is read in the similar format with elevation.
 	
 	// set the input
-	mdi.AddInput(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
-	mdi.AddInput(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
 	// set the output variables
 	mdi.AddOutput(VAR_HMNTL, UNIT_CONT_KGKM2, DESC_HMNTL, DT_Single);

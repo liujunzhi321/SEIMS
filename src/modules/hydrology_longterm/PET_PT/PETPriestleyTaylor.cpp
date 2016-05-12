@@ -14,7 +14,6 @@
 #include <fstream>
 #include "ModelException.h"
 #include "util.h"
-//#include "text.h"
 #include <omp.h>
 
 using namespace std;
@@ -35,15 +34,13 @@ PETPriestleyTaylor::~PETPriestleyTaylor(void)
 void PETPriestleyTaylor::Get1DData(const char* key, int* n, float **data)
 {
 	string sk(key);
-	if (StringMatch(sk, VAR_PET_T)) // deprecated code: || StringMatch(sk, "PET"))
+	if (StringMatch(sk, VAR_PET_T) || StringMatch(sk, "PET"))
 	{
 		*data = this->m_pet;
 		*n = this->m_size;
 	}
 	else
-	{
 		throw ModelException("PET_PT", "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
-	}
 }
 
 bool PETPriestleyTaylor::CheckInputSize(const char* key, int n)

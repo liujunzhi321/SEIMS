@@ -10,7 +10,7 @@
 
 using namespace std;
 
-KinWavSed_OL::KinWavSed_OL(void):m_cellWidth(-1),m_nCells(-1), m_TimeStep(-99.0f),m_nLayers(-1), m_routingLayers(NULL),
+KinWavSed_OL::KinWavSed_OL(void):m_CellWidth(-1),m_nCells(-1), m_TimeStep(-99.0f),m_nLayers(-1), m_routingLayers(NULL),
 	m_Slope(NULL), m_DETOverland(NULL), m_USLE_K(NULL), m_Ctrans(NULL), m_Qkin(NULL), m_FlowWidth(NULL), m_DETSplash(NULL), 
 	m_eco1(-99.0f), m_eco2(-99.0f), m_V(NULL), m_Qsn(NULL), m_Vol(NULL), m_SedDep(NULL), m_Sed_kg(NULL), m_SedToChannel(NULL),
 	m_ManningN(NULL), m_whtoCh(NULL), m_USLE_C(NULL), m_Ccoe(-99.0f), m_WH(NULL),m_streamLink(NULL)
@@ -141,7 +141,8 @@ void KinWavSed_OL::Set2DData(const char* key, int nrows, int ncols, float** data
 void KinWavSed_OL::SetValue(const char* key, float data)
 {
 	string s(key);
-	if(StringMatch(s,"CellWidth"))			m_cellWidth = data;
+	if(StringMatch(s,Tag_CellWidth))			m_CellWidth = data;
+	else if(StringMatch(s,Tag_CellSize))		m_nCells = (int)data;
 	else if(StringMatch(s,"DT_HS"))		m_TimeStep = data;//
 	else if(StringMatch(s,"eco1"))		    m_eco1 = data;//
 	else if(StringMatch(s,"eco2"))		    m_eco2 = data;//
@@ -173,7 +174,7 @@ bool KinWavSed_OL::CheckInputData()
 		throw ModelException("KinWavSed_OL","CheckInputData","You have not set the time.");
 		return false;
 	}
-	if(m_cellWidth <= 0)
+	if(m_CellWidth <= 0)
 	{
 		throw ModelException("KinWavSed_OL","CheckInputData","The cell width can not be less than zero.");
 		return false;
@@ -484,7 +485,7 @@ void KinWavSed_OL::GetSedimentInFlow(int id)
 
 void KinWavSed_OL::MaxConcentration(float watvol, float sedvol, int id)
 {
-	float conc = (watvol > m_cellWidth * m_cellWidth * 1e-6 ? sedvol / watvol : 0);
+	float conc = (watvol > m_CellWidth * m_CellWidth * 1e-6 ? sedvol / watvol : 0);
 	if (conc > 848)
 	{
 		m_SedDep[id] += max(0.f, sedvol - 848 * watvol);
@@ -511,10 +512,10 @@ void KinWavSed_OL::WaterVolumeCalc()
 	for (int i=0; i<m_nCells; i++)
 	{
 		slope = atan(m_Slope[i]);
-		DX = m_cellWidth/cos(slope);
+		DX = m_CellWidth/cos(slope);
 		wh = m_WH[i]/1000;  //mm -> m
 		//wh = m_Runoff[i]/1000;  //mm -> m
-		m_Vol[i] = DX * m_cellWidth * wh;  // m3
+		m_Vol[i] = DX * m_CellWidth * wh;  // m3
 	}
 }
 
@@ -535,7 +536,7 @@ void KinWavSed_OL::CalcuFlowDetachment(int i)  //i is the id of the cell in the 
 	/*q = m_Q[i];
 	Df = m_Ccoe * m_USLE_C[i] * m_USLE_K[i] * q * S0;*/
 	// convert kg/(m2*min) to kg/cell
-	float cellareas = (m_cellWidth/cos(atan(s))) * m_cellWidth;
+	float cellareas = (m_CellWidth/cos(atan(s))) * m_CellWidth;
 	m_DETOverland[i] = Df * (m_TimeStep/60) * cellareas;
 }
 
@@ -545,7 +546,7 @@ float KinWavSed_OL::SedToChannel(int ID)
 	if (m_chWidth[ID] > 0)
 	{
 		float tem = m_ChV[ID] * m_TimeStep;
-		fractiontochannel = 2*tem / (m_cellWidth - m_chWidth[ID]);
+		fractiontochannel = 2*tem / (m_CellWidth - m_chWidth[ID]);
 		fractiontochannel = min(fractiontochannel, 1.0f);
 	}
 	float sedtoch = fractiontochannel * m_Sed_kg[ID];

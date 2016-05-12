@@ -21,7 +21,17 @@
  * \def ZERO
  * \brief zero value used in numeric calculation
  */
-#define UTIL_ZERO 0.0000000001
+#define UTIL_ZERO		0.0000000001
+/**
+ * \def PI
+ * \brief PI value used in numeric calculation
+ */
+#define PI				3.1415926
+/**
+ * \def MINI_SLOPE
+ * \brief Minimum slope gradient
+ */
+#define MINI_SLOPE		0.0001f
 #include <string>
 #include <vector>
 #include <stdio.h>

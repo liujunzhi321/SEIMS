@@ -74,7 +74,7 @@ private:
 	int m_nReaches;
 
 	/// cell size
-	float m_dx;
+	float m_CellWidth;
 
 	float *m_subbasin;
 

@@ -102,18 +102,17 @@ int PER_PI::Execute()
 				if(j < m_nSoilLayers-1)
 					m_sm[i][j+1] += m_perc[i][j]/depth[j+1];
 
-
 				if(m_sm[i][j] != m_sm[i][j] || m_sm[i][j] < 0.f)
 				{
-					cout << "PER_PI CELL:" << i << "\tPerco:" << swater << "\t" << 
-						fcSoilWater << "\t" << m_perc[i][j] << "\t" << depth[j] << "\tValue:" << m_sm[i][j] << endl;
-					throw ModelException("PER_PI", "Execute", "moisture is less than zero.");
+					m_sm[i][j] = 0.f;
+					//cout << "PER_PI CELL:" << i << "\tPerco:" << swater << "\t" << 
+					//	fcSoilWater << "\t" << m_perc[i][j] << "\t" << depth[j] << "\tValue:" << m_sm[i][j] << endl;
+					//throw ModelException("PER_PI", "Execute", "moisture is less than zero.");
 				}
 			}
 		}
 	}
 	return 0;
-
 }
 
 

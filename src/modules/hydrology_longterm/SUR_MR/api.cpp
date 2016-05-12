@@ -43,7 +43,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter("Fieldcap_2D","m3/m3","Soil field capacity","ParameterDB_WaterBalance", DT_Array2D);
 	mdi.AddParameter("porosity_2D", "-", "Soil porosity","ParameterDB_WaterBalance", DT_Array2D);
-
 	mdi.AddParameter("s_frozen", "m3/m3", "frozen soil moisture","ParameterDB_WaterBalance", DT_Single);
 
 	mdi.AddInput("D_NEPR","mm","The net precipitation","Module", DT_Raster);
@@ -56,8 +55,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput("D_SNME","mm","The snowmelt","Module",DT_Raster);
 
 	mdi.AddOutput("EXCP", "mm","The excess precipitation", DT_Raster);
-	mdi.AddOutput("INFIL","mm","Infiltration map of watershed", DT_Raster);
-	mdi.AddOutput("SOMO_2D","m3/m3", "Average soil moisture distribution for a user defined period.", DT_Array2D);
+	mdi.AddOutput("D_INFIL","mm","Infiltration map of watershed", DT_Raster);
+	mdi.AddOutput("D_SOMO_2D","m3/m3", "Average soil moisture distribution for a user defined period.", DT_Array2D);
 
 	// write out the XML file.
 

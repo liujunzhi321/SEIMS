@@ -30,7 +30,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("TimeStep","hr","time step of the simulation","file.in",DT_Single); 
-	mdi.AddParameter("CellWidth","m","","file.in",DT_Single); 
+	mdi.AddParameter(Tag_CellSize,UNIT_LEN_M,DESC_CellSize,Source_ParameterDB,DT_Single); 
+	mdi.AddParameter(Tag_CellWidth,UNIT_LEN_M,DESC_CellWidth,Source_ParameterDB,DT_Single); 
 	mdi.AddParameter("Ol_iuh","","IUH of each grid cell","ParameterDB_Discharge",DT_Array2D);
 	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster);
 	//mdi.AddParameter("uhminCell","","start time of IUH for each grid cell","ParameterDB_Discharge",DT_Array1D);

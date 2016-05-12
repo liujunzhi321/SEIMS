@@ -19,9 +19,9 @@
 
 using namespace std;
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 
-DissolvedNutrient_OL::DissolvedNutrient_OL(void):m_size(-1), m_dt(-1.0f), m_dx(-1.0f), m_initConcP(-1.0f), m_initConcNO3(-0.f), m_initConcNH4(-0.f),
+DissolvedNutrient_OL::DissolvedNutrient_OL(void):m_nCells(-1), m_dt(-1.0f), m_CellWidth(-1.0f), m_initConcP(-1.0f), m_initConcNO3(-0.f), m_initConcNH4(-0.f),
 	m_clayFrac(NULL), m_Porosity(NULL), m_flowInIndex(NULL), m_routingLayers(NULL), m_nLayers(-1), m_CELLQ(NULL), m_CELLH(NULL), m_infil(NULL),
 	m_Slope(NULL), m_sd(NULL), m_DissovP(NULL), m_Ammonium(NULL), m_Nitrate(NULL), m_DissovPToCh(NULL), m_AmmoniumToCh(NULL), m_NitrateToCh(NULL),
 	m_flowWidth(NULL), m_streamLink(NULL), m_CP(NULL), m_CNH4(NULL), m_CNO3(NULL), m_ChV(NULL), m_whtoCh(NULL), m_PreConcP(NULL), m_PreConcNH4(NULL),
@@ -70,7 +70,7 @@ bool DissolvedNutrient_OL::CheckInputData(void)
 		return false;
 	}
 
-	if(this->m_size <= 0)
+	if(this->m_nCells <= 0)
 	{
 		throw ModelException("DissolvedNutrient_OL","CheckInputData","The cell number of the input can not be less than zero.");
 		return false;
@@ -82,7 +82,7 @@ bool DissolvedNutrient_OL::CheckInputData(void)
 		return false;
 	}
 
-	if(this->m_dx <= 0)
+	if(this->m_CellWidth <= 0)
 	{
 		throw ModelException("DissolvedNutrient_OL","CheckInputData","You have not set the CellWidth variable.");
 		return false;
@@ -150,33 +150,33 @@ bool DissolvedNutrient_OL::CheckInputData(void)
 
 void  DissolvedNutrient_OL::initalOutputs()
 {
-	if(this->m_size <= 0) throw ModelException("DissolvedNutrient_OL","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException("DissolvedNutrient_OL","initalOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_DissovP == NULL)
 	{
-		m_DissovP = new float[m_size];
-		m_Ammonium = new float[m_size];
-		m_Nitrate = new float[m_size];
-		m_DissovPToCh = new float[m_size];
-		m_AmmoniumToCh = new float[m_size];
-		m_NitrateToCh = new float[m_size];
+		m_DissovP = new float[m_nCells];
+		m_Ammonium = new float[m_nCells];
+		m_Nitrate = new float[m_nCells];
+		m_DissovPToCh = new float[m_nCells];
+		m_AmmoniumToCh = new float[m_nCells];
+		m_NitrateToCh = new float[m_nCells];
 
-		m_CP = new float[m_size];
-		m_CNH4 = new float[m_size];
-		m_CNO3 = new float[m_size];
+		m_CP = new float[m_nCells];
+		m_CNH4 = new float[m_nCells];
+		m_CNO3 = new float[m_nCells];
 
-		m_PreConcP = new float[m_size];
-		m_PreConcNH4 = new float[m_size];
-		m_PreConcNO3 = new float[m_size];
+		m_PreConcP = new float[m_nCells];
+		m_PreConcNH4 = new float[m_nCells];
+		m_PreConcNO3 = new float[m_nCells];
 
-		m_SNPT_P = new float[m_size];
-		m_SNPT_NH4 = new float[m_size];
-		m_SNPT_NO3 = new float[m_size];
+		m_SNPT_P = new float[m_nCells];
+		m_SNPT_NH4 = new float[m_nCells];
+		m_SNPT_NO3 = new float[m_nCells];
 
-		m_ChV = new float[m_size];
-		m_cellA = new float[m_size];
+		m_ChV = new float[m_nCells];
+		m_cellA = new float[m_nCells];
 	#pragma omp parallel for
-		for (int i = 0; i < m_size; ++i)
+		for (int i = 0; i < m_nCells; ++i)
 		{
 			m_DissovP[i] = 0.0f;	
 			m_Ammonium[i] = 0.0f;	
@@ -197,7 +197,7 @@ void  DissolvedNutrient_OL::initalOutputs()
 			m_ChV[i] = 0.0f;
 			//cell area
 			float s = max(0.001f, m_Slope[i]);
-			float cellareas = (m_dx/cos(atan(s))) * m_dx;
+			float cellareas = (m_CellWidth/cos(atan(s))) * m_CellWidth;
 			m_cellA[i] = cellareas;
 		}
 	}
@@ -276,7 +276,7 @@ void DissolvedNutrient_OL::CalcuVelocityChannelFlow()
 	const float _23 = 2.0f/3;
 	float Perim,R,S,n;
 
-	for (int i=0; i<m_size; i++)
+	for (int i=0; i<m_nCells; i++)
 	{
 		if (m_whtoCh[i] > 0.0001f)
 		{
@@ -347,7 +347,7 @@ void DissolvedNutrient_OL::OverlandFlow(int id)
 	if (m_chWidth[id] > 0)
 	{
 		float tem = m_ChV[id] * m_dt;
-		fractiontochannel = 2*tem / (m_dx - m_chWidth[id]);
+		fractiontochannel = 2*tem / (m_CellWidth - m_chWidth[id]);
 		fractiontochannel = min(fractiontochannel, 1.0f);
 		// convert to kg
 		m_DissovPToCh[id] = m_DissovP[id] * m_dt * fractiontochannel;
@@ -394,14 +394,14 @@ bool DissolvedNutrient_OL::CheckInputSize(const char* key, int n)
 		//this->StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_size != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_size <=0) this->m_size = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			//this->StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
 			throw ModelException("DissolvedNutrient_OL","CheckInputSize",oss.str());
 		}
 	}
@@ -414,8 +414,10 @@ void DissolvedNutrient_OL::SetValue(const char* key, float data)
 	string sk(key);
 	if (StringMatch(sk, "DT_HS"))
 		m_dt = data;
-	else if (StringMatch(sk, "CellWidth"))
-		m_dx = data;
+	else if (StringMatch(sk, Tag_CellWidth))
+		m_CellWidth = data;
+	else if (StringMatch(sk, Tag_CellSize))
+		m_nCells = (int)data;
 	else if (StringMatch(sk, "InitConc_P"))
 		m_initConcP = data;
 	else if (StringMatch(sk, "InitConc_NH4"))
@@ -483,7 +485,7 @@ void DissolvedNutrient_OL::Get1DData(const char* key, int* n, float** data)
 	initalOutputs();
 
 	string sk(key);
-	*n = m_size;
+	*n = m_nCells;
 	if (StringMatch(sk, "DissovP"))
 		*data = m_DissovP; 
 	else if (StringMatch(sk, "Ammonium"))

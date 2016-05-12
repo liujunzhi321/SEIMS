@@ -54,7 +54,7 @@ private:
 	float *m_ws;
 	///latitude of the stations
 	float *m_latitude;
-	///
+	/// data length, maybe HydroClimate sites number
 	int m_size;
 	// output variables
 	/// maximum solar radiation

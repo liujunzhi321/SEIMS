@@ -18,11 +18,11 @@
 #include <set>
 #include <sstream>
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 //#define NODATA_VALUE -99
 using namespace std;
 
-Muskingum::Muskingum(void):m_size(-1), m_chNumber(-1), m_dt(-1.0f), m_dx(-1.0f),
+Muskingum::Muskingum(void):m_nCells(-1), m_chNumber(-1), m_dt(-1.0f), m_CellWidth(-1.0f),
 	m_s0(NULL), m_direction(NULL), m_reachDownStream(NULL), m_chWidth(NULL), 
 	m_qs(NULL), m_qg(NULL), m_qi(NULL), m_chStorage(NULL), m_qCh(NULL), m_qUpCh(NULL), m_prec(NULL), m_qSubbasin(NULL),
 	m_flowLen(NULL), m_alpha(NULL), m_streamLink(NULL), m_reachId(NULL), m_sourceCellIds(NULL),
@@ -161,7 +161,7 @@ bool Muskingum::CheckInputData(void)
 		return false;
 	}
 
-	if(this->m_size <= 0)
+	if(this->m_nCells <= 0)
 	{
 		throw ModelException("CH_MSK","CheckInputData","The cell number of the input can not be less than zero.");
 		return false;
@@ -173,7 +173,7 @@ bool Muskingum::CheckInputData(void)
 		return false;
 	}
 
-	if(this->m_dx <= 0)
+	if(this->m_CellWidth <= 0)
 	{
 		throw ModelException("CH_MSK","CheckInputData","You have not set the CellWidth variable.");
 		return false;
@@ -199,7 +199,7 @@ bool Muskingum::CheckInputData(void)
 
 void  Muskingum::initalOutputs()
 {
-	if(this->m_size <= 0) throw ModelException("CH_MSK","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException("CH_MSK","initalOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_chStorage == NULL)
 	{
@@ -207,7 +207,7 @@ void  Muskingum::initalOutputs()
 		m_sourceCellIds = new int[m_chNumber];
 		for (int i = 0; i < m_chNumber; ++i)
 			m_sourceCellIds[i] = -1;
-		for (int i = 0; i < m_size; i++)
+		for (int i = 0; i < m_nCells; i++)
 		{
 			if (FloatEqual(m_streamLink[i], NODATA_VALUE))
 				continue;
@@ -288,7 +288,7 @@ void  Muskingum::initalOutputs()
 					m_s0[id] = MINI_SLOPE;
 
 				// slope length needs to be corrected by slope angle
-				dx = m_dx / cos(atan(m_s0[id]));
+				dx = m_CellWidth / cos(atan(m_s0[id]));
 				int dir = (int)m_direction[id];
 				if ((int)m_diagonal[dir] == 1)
 					dx = SQ2*dx;
@@ -398,7 +398,7 @@ int Muskingum::Execute()
 	initalOutputs();
 	CheckInputData();	
 	
-	//Output1DArray(m_size, m_prec, "f:\\p2.txt");
+	//Output1DArray(m_nCells, m_prec, "f:\\p2.txt");
 	map<int, vector<int> >::iterator it;
 	//cout << "reach layer number: " << m_reachLayers.size() << endl;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
@@ -433,14 +433,14 @@ bool Muskingum::CheckInputSize(const char* key, int n)
 		//this->StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_size != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_size <=0) this->m_size = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			//this->StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
 			throw ModelException("CH_MSK","CheckInputSize",oss.str());
 		}
 	}
@@ -491,9 +491,10 @@ void Muskingum::SetValue(const char* key, float data)
 	string sk(key);
 	if (StringMatch(sk, "DT_HS"))
 		m_dt = data;
-
-	else if (StringMatch(sk, "CellWidth"))
-		m_dx = data;
+	else if(StringMatch(sk,Tag_CellSize))
+		m_nCells = (int)data;
+	else if (StringMatch(sk, Tag_CellWidth))
+		m_CellWidth = data;
 	else if (StringMatch(sk, "Chs0"))
 		m_chS0 = data;
 	else if (StringMatch(sk, "ID_UPREACH"))
@@ -543,7 +544,7 @@ void Muskingum::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(sk, "FlowOut_Index_D8"))
 	{
 		m_flowOutIndex = data;
-		for (int i = 0; i < m_size; i++)
+		for (int i = 0; i < m_nCells; i++)
 		{
 			if (m_flowOutIndex[i] < 0)
 			{

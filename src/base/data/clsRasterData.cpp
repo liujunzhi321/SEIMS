@@ -460,7 +460,7 @@ void clsRasterData::ReadASCFile(string ascFileName,clsRasterData* mask)
 
 		ifstream rasterFile(ascFileName.c_str());
 		string tmp;
-		float tempFloat, noDataValue;
+		float noDataValue;
 
 		/// Read header and get header from mask
 		rasterFile >> tmp >> tmp; /// cols
@@ -831,7 +831,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char* remoteFilen
 //int clsRasterData::getCellWidth()
 //{
 //	map<string,float>* header =  getRasterHeader();
-//	return int((*header)["CELLSIZE"]);
+//	return int((*header)[Tag_CellSize]);
 //}
 
 //int clsRasterData::getRows()

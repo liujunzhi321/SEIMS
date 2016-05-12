@@ -121,7 +121,7 @@ void clsInterpolationWeightData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const cha
 	else
 		throw ModelException("clsInterpolationWeightData", "ReadFromMongoDB", "Failed in get INT value: " + string(MONG_GRIDFS_WEIGHT_CELLS) + "\n");
 	if (bson_iter_init (&iter, md) && bson_iter_find (&iter, MONG_GRIDFS_WEIGHT_SITES)) {
-		m_nRows = GetIntFromBSONITER(&iter);
+		m_nCols = GetIntFromBSONITER(&iter);
 	}
 	else
 		throw ModelException("clsInterpolationWeightData", "ReadFromMongoDB", "Failed in get INT value: " + string(MONG_GRIDFS_WEIGHT_SITES) + "\n");

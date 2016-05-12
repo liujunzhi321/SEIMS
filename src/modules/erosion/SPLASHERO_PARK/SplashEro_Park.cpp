@@ -10,7 +10,7 @@
 
 using namespace std;
 
-SplashEro_Park::SplashEro_Park(void):m_cellWith(-1),m_size(-1), m_TimeStep(-99.0f),m_Omega(-99.0f), m_Slope(NULL),
+SplashEro_Park::SplashEro_Park(void):m_CellWith(-1),m_nCells(-1), m_TimeStep(-99.0f),m_Omega(-99.0f), m_Slope(NULL),
 	m_Rain(NULL), m_DETSplash(NULL), m_USLE_C(NULL), m_USLE_K(NULL), m_Ccoe(-99.0f), m_Q(NULL), m_sr(NULL), m_depression(NULL)
 {
 
@@ -27,7 +27,7 @@ SplashEro_Park::~SplashEro_Park(void)
 void SplashEro_Park::Get1DData(const char* key, int* n, float** data)
 {
 	string s(key);
-	*n = m_size;
+	*n = m_nCells;
 	if(StringMatch(s,"DETSplash"))				
 	{
 		*data = m_DETSplash;
@@ -67,9 +67,10 @@ void SplashEro_Park::Set1DData(const char* key, int nRows, float* data)
 void SplashEro_Park::SetValue(const char* key, float data)
 {
 	string s(key);
-	if(StringMatch(s,"cellwidth"))			m_cellWith = int(data);
+	if(StringMatch(s,Tag_CellWidth))		m_CellWith = data;
+	else if(StringMatch(s,Tag_CellSize))	m_nCells = (int)data;
 	else if(StringMatch(s,"DT_HS"))		m_TimeStep = data;
-	else if(StringMatch(s,"Omega"))		    m_Omega = data;
+	else if(StringMatch(s,"Omega"))		m_Omega = data;
 	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
@@ -90,10 +91,10 @@ bool SplashEro_Park::CheckInputData()
 	if(m_date < 0)
 		throw ModelException("SplashEro_Park","CheckInputData","You have not set the time.");
 
-	if(m_cellWith <= 0)
+	if(m_CellWith <= 0)
 		throw ModelException("SplashEro_Park","CheckInputData","The cell width can not be less than zero.");
 
-	if(m_size <= 0)
+	if(m_nCells <= 0)
 		throw ModelException("SplashEro_Park","CheckInputData","The cell number can not be less than zero.");
 
 	if(m_TimeStep < 0)
@@ -153,9 +154,9 @@ bool SplashEro_Park::CheckInputSize(const char* key, int n)
 		throw ModelException("SplashEro_Park","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(m_size != n)
+	if(m_nCells != n)
 	{
-		if(m_size <=0) m_size = n;
+		if(m_nCells <=0) m_nCells = n;
 		else
 		{
 			throw ModelException("SplashEro_Park","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
@@ -171,8 +172,8 @@ void SplashEro_Park::initial()
 	//allocate the output variable
 	if (m_DETSplash == NULL)
 	{
-		m_DETSplash = new float[m_size];
-		for (int i=0; i<m_size; i++)
+		m_DETSplash = new float[m_nCells];
+		for (int i=0; i<m_nCells; i++)
 		{
 			m_DETSplash[i] = 0.0f;
 		}
@@ -189,7 +190,7 @@ int SplashEro_Park::Execute()
 	initial();
 	//StatusMsg("executing SplashEro_Park");
 #pragma omp parallel for
-	for (int i = 0; i < m_size; i++)
+	for (int i = 0; i < m_nCells; i++)
 	{
 		//intensity in mm/h
 		float RainInten = m_Rain[i] * 3600 / m_TimeStep;
@@ -212,7 +213,7 @@ int SplashEro_Park::Execute()
 		// kg/(m2*min)
 		Dr = m_Omega * Fw * m_USLE_C[i] * m_USLE_K[i] * pow(RainInten,2.f) * (2.96f * pow(S0,0.79f) + 0.56f);		
 		// convert kg/(m2*min) to kg/cell
-		float cellareas = (m_cellWith/cos(atan(s))) * m_cellWith;
+		float cellareas = (m_CellWith/cos(atan(s))) * m_CellWith;
 		m_DETSplash[i] = Dr * (m_TimeStep/60) * cellareas;
 		// // Deal with all exceptions: 
 		//if (m_SnowCover[i]>0) 

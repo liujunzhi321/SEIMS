@@ -17,14 +17,20 @@
 
 using namespace std;
 
-ClimateParameters::ClimateParameters(void):m_tMean(NULL), m_tMin(NULL), m_tMax(NULL), m_rhd(NULL), m_sr(NULL), m_ws(NULL), m_latitude(NULL)
+ClimateParameters::ClimateParameters(void):m_tMean(NULL), m_tMin(NULL), m_tMax(NULL), m_rhd(NULL), 
+	m_sr(NULL), m_ws(NULL), m_latitude(NULL),m_srMax(NULL),m_svp(NULL),m_avp(NULL)
 {
 	this->m_size = -1;
 }
 
 ClimateParameters::~ClimateParameters(void)
 {
-	
+	if(NULL != this->m_srMax)
+		delete [] this->m_srMax;
+	if(NULL != this->m_avp)
+		delete [] this->m_avp;
+	if(NULL != this->m_svp)
+		delete [] this->m_svp;
 }
 
 
@@ -69,12 +75,6 @@ bool ClimateParameters::CheckInputData()
 		throw ModelException(MID_ICLIM,"CheckInputData","The max temperature can not be NULL.");
 		return false;
 	}
-// 	/// If TMEAN is not existed, then set TMEAN = (TMAX + TMIN) / 2
-// 	if (this->m_tMean == NULL){
-// 		this->m_tMean = new float[this->m_size];
-// 		for (int i = 0; i < m_size; ++i)
-// 			m_tMean[i] = (m_tMax[i] + m_tMin[i]) / 2;
-// 	}
 	if(this->m_ws == NULL)
 	{
 		throw ModelException(MID_ICLIM,"CheckInputData","The wind speed can not be NULL.");
@@ -126,51 +126,40 @@ void ClimateParameters::Set1DData(const char* key,int n, float *value)
 
 	string sk(key);
 	if (StringMatch(sk,DataType_MeanTemperature))
-	{
 		this->m_tMean = value;
-	}
-	if (StringMatch(sk,DataType_MinimumTemperature))
-	{
+	else if (StringMatch(sk,DataType_MinimumTemperature))
 		this->m_tMin = value;
-	}
 	else if (StringMatch(sk,DataType_MaximumTemperature))
-	{
 		this->m_tMax = value;
-	}
 	else if (StringMatch(sk,DataType_RelativeAirMoisture))
-	{
 		this->m_rhd = value;
-	}
 	else if (StringMatch(sk,DataType_SolarRadiation))
-	{
 		this->m_sr = value;
-	}
+	else if (StringMatch(sk,DataType_WindSpeed))
+		this->m_ws = value;
 	else if (StringMatch(sk, Tag_Latitude_Meteorology))
-	{
 		this->m_latitude = value;
-	}
 	else
-	{
-		throw ModelException(MID_ICLIM,"SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
-	}
-	
+		throw ModelException(MID_ICLIM,"Set1DValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 }
 
 int ClimateParameters::Execute()
 {	
-	if(!this->CheckInputData()) return false;
+	if(!CheckInputData()) return false;
 	
-	if(this->m_srMax == NULL)
-	{
-		this->m_srMax = new float[this->m_size];
-	}
-	JulianDay(this->m_date);
+	if(NULL == m_srMax)
+		m_srMax = new float[m_size];
+	if(NULL == m_svp)
+		m_svp = new float[m_size];
+	if(NULL == m_avp)
+		m_avp = new float[m_size];
+	JulianDay(m_date);
 #pragma omp parallel for
 	/// Calculate climate parameters
 	for (int i = 0; i < m_size; ++i)
 	{
 		/// calculate the max solar radiation
-		m_srMax[i] = this->MaxSolarRadiation(this->m_jday,this->m_latitude[i]);
+		m_srMax[i] = MaxSolarRadiation(m_jday,m_latitude[i]);
 		/// calculate saturated vapor pressure and actual vapor pressure
 		m_svp[i] = SaturationVaporPressure(m_tMean[i]);
 		m_avp[i] = m_rhd[i] * m_svp[i];
@@ -227,7 +216,7 @@ float ClimateParameters::SaturationVaporPressure(float t)
 
 float ClimateParameters::MaxSolarRadiation(int day,float lat)
 {
-	lat = lat*3.1415926/180;
+	lat = lat * PI / 180.;
 	//Calculate Daylength
 	//calculate solar declination: equation 1:1.1.2 in SWAT Theory 2009, p31
 	float sd = asin(0.4f * sin((day - 82.0f) / 58.09f));  /// 365/2pi = 58.09
@@ -250,7 +239,7 @@ float ClimateParameters::MaxSolarRadiation(int day,float lat)
 	else if (ch >= -1.0f)
 		h = acos(ch);
 	else
-		h = 3.1416f; //latitude exceeds +/- 66.5 deg in summer
+		h = PI; //latitude exceeds +/- 66.5 deg in summer
 
 	float dayl = 7.6394f * h; /// useless?
 

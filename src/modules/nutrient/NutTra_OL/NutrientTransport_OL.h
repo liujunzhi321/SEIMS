@@ -31,7 +31,7 @@ private:
 	
 	//input
 	// size of array 
-	int m_size;
+	int m_nCells;
 	int m_nLayers;
 	
 	// nitrate
@@ -60,7 +60,7 @@ private:
 
 	// Organic N
 	// the width (length) of cell
-	int m_cellWidth;
+	float m_CellWidth;
 
 	//float *m_rootDepth;
 	// the sediment yield on a given day (metric tons)

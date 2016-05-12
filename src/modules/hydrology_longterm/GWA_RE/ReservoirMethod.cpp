@@ -170,7 +170,7 @@ bool ReservoirMethod::CheckInputData()
 	if (m_Slope == NULL)
 		throw ModelException("GWA_RE","CheckInputData","The parameter: Slope has not been set.");
 	if (m_soilMoisture == NULL)
-		throw ModelException("GWA_RE","CheckInputData","The parameter: D_SOMO has not been set.");
+		throw ModelException("GWA_RE","CheckInputData","The parameter: soil moisture has not been set.");
 	if (m_rootDepth == NULL)
 		throw ModelException("GWA_RE","CheckInputData","The parameter: RootDepth has not been set.");
 	return true;
@@ -187,6 +187,7 @@ bool ReservoirMethod::CheckInputSize(const char* key, int n)
 			m_nCells = n;
 		else
 		{
+			printf("m_nCells: %d\n",m_nCells);
 			throw ModelException("GWA_RE","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
 		}
 	}
@@ -202,10 +203,10 @@ void ReservoirMethod::SetValue(const char* key, float value)
 		m_TimeStep = int(value);
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)value);
-	else if (StringMatch(sk,"CellSize"))
+	else if (StringMatch(sk,Tag_CellSize))
 		m_nCells = int(value);
-	else if (StringMatch(sk,"CellWidth"))
-		m_CellWidth = int(value);
+	else if (StringMatch(sk,Tag_CellWidth))
+		m_CellWidth = value;
 	else if (StringMatch(sk,"Kg"))
 		m_Kg = value;
 	else if (StringMatch(sk,"Base_ex"))
