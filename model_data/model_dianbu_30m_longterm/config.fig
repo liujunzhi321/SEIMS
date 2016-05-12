@@ -6,15 +6,15 @@
 0 | TimeSeries_WS | | TSD_RD
 0 | TimeSeries_SR | | TSD_RD
 0 | TimeSeries_RM | | TSD_RD
-1 | ICLIM||ICLIM
-1 | PET | Hargreaves | PET_H
 2 | Interpolation_P_0 | Average uniform | ITP
 3 | Interpolation_TMEAN_0 | Average uniform | ITP
 3 | Interpolation_TMAX_0 | Average uniform | ITP
 3 | Interpolation_TMIN_0 | Average uniform | ITP
-3 | Interpolation_PET_0 | Average uniform | ITP
 3 | Interpolation_SR_0 | Average uniform | ITP
 3 | Interpolation_RM_0 | Average uniform | ITP
+#1 | ICLIM||ICLIM
+1 | PET | Hargreaves | PET_PM
+3 | Interpolation_PET_0 | Average uniform | ITP
 6 | Interception|  | PI_MSM
 7 | Snow melt |  | SNO_DD
 8 | Soil Temperature |  | STP_FP
