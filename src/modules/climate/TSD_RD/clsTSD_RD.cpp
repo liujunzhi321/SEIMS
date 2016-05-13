@@ -42,4 +42,8 @@ void clsTSD_RD::Get1DData(const char* key, int* n, float** data)
 	}
 	*data = this->m_Data;
 	*n = this->m_Rows;
+	cout<<"TSD_RD: ";
+	for(int i = 0; i < m_Rows; i++)
+		cout << m_Data[i]<<",";
+	cout<<endl;
 }

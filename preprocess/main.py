@@ -2,12 +2,14 @@
 #coding=utf-8
 ## @Main function entrance for preprocessing
 #
+
 from text import *
 from txt2db3 import reConstructSQLiteDB
 ## Climate modules
-from PrecipitationDaily import *
-from MeteorologicalDaily import *
-from DischargeDaily import *
+from hydroclimate_sites import ImportHydroClimateSitesInfo
+from PrecipitationDaily import ImportDailyPrecData
+from MeteorologicalDaily import ImportDailyMeteoData
+from DischargeDaily import ImportDailyDischargeData
 ## Spatial modules
 from subbasin_delineation import SubbasinDelineation
 from gen_subbasins import GenerateSubbasins
@@ -18,9 +20,10 @@ if __name__ == "__main__":
     ## Update SQLite Parameters.db3 database
     reConstructSQLiteDB()
     ## Climate Data
-    #ImportDailyMeteoData(HOSTNAME,PORT,ClimateDBName,MeteoVarFile,MeteoDailyFile,MetroSiteFile)
-    #ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecSitesVorShp,PrecExcelPrefix,PrecDataYear)
-    ## Discharge Data
+    SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
+    ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
+    ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecExcelPrefix,PrecDataYear, SitesPList)
+    ## Measurement Data
     #ImportDailyDischargeData(HOSTNAME,PORT,ClimateDBName,DischargeExcelPrefix,DischargeYear)
     ## Spatial Data
     # SubbasinDelineation(np, WORKING_DIR,dem,outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
@@ -31,4 +34,4 @@ if __name__ == "__main__":
     ## Extract parameters from landuse, soil properties etc.
     #ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
     ## Import to MongoDB database
-    BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesVorShp,MeteorSitesVorShp)
+    #BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesVorShp,MeteorSitesVorShp)

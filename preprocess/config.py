@@ -35,15 +35,18 @@ stormMode = False
 if forCluster and 'cluster_' not in SpatialDBName.lower():
     SpatialDBName = 'cluster_' + SpatialDBName
 ## Climate Input
-PrecSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor.shp'
-if stormMode:
-    PrecStormSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor_storm.shp'
-MeteorSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Metero_hefei_Vor.shp'
+# Thiessen Polygon of HydroClimate sites data are Deprecated, and replaced by Sites_M.txt and Sites_P.txt.
+#PrecSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor.shp'
+#if stormMode:
+#    PrecStormSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor_storm.shp'
+#MeteorSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Metero_hefei_Vor.shp'
+
+HydroClimateVarFile = CLIMATE_DATA_DIR + os.sep + 'Variables.txt'
+MetroSiteFile = CLIMATE_DATA_DIR + os.sep + 'Sites_M.txt'
+PrecSiteFile = CLIMATE_DATA_DIR + os.sep + 'Sites_P.txt'
+MeteoDailyFile = CLIMATE_DATA_DIR + os.sep+ 'meteorology_dianbu_daily.txt'
 PrecExcelPrefix = CLIMATE_DATA_DIR + os.sep + 'precipitation_by_day_'
 PrecDataYear = [2014]
-MeteoVarFile = CLIMATE_DATA_DIR + os.sep + 'Variables.txt'
-MeteoDailyFile = CLIMATE_DATA_DIR + os.sep+ 'meteorology_dianbu_daily.txt'
-MetroSiteFile = CLIMATE_DATA_DIR + os.sep + 'sites_hefei.txt'
 DischargeExcelPrefix = CLIMATE_DATA_DIR + os.sep + 'discharge_by_day_'
 DischargeYear = [2014]
 
