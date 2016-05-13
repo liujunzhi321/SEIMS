@@ -64,7 +64,7 @@ private:
 	float *m_stationData; 
 	/// count of valid cells
 	int m_nCells;
-	/// weights of input points for cells
+	/// weights of each sites of all valid cells
 	float *m_weights;
 
 	/// whether using vertical interpolation

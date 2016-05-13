@@ -6,7 +6,6 @@
 #include <fstream>
 #include "ModelException.h"
 #include "util.h"
-#include "text.h"
 
 #include <omp.h>
 

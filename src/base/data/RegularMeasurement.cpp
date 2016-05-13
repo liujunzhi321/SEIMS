@@ -12,9 +12,8 @@
 #include "RegularMeasurement.h"
 #include "utils.h"
 #include "bson.h"
-#include "text.h"
-#include "ModelException.h"
 #include "util.h"
+#include "ModelException.h"
 //! Constructor 
 RegularMeasurement::RegularMeasurement(mongoc_client_t* conn, string hydroDBName, string sitesList, string siteType, time_t startTime, time_t endTime, time_t interval)
 	:Measurement(conn, hydroDBName, sitesList, siteType, startTime, endTime), m_interval(interval)

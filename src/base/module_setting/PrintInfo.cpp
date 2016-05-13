@@ -199,8 +199,8 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			throw ModelException("PrintInfoItem", "Flush", "The templateRaster is NULL.");
 
         //cout << projectPath << Filename << endl;
-		//clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
-		//clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename);
+		clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
+		clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename);
 		clsRasterData::outputGTiff(templateRaster, RasterData, projectPath + Filename + ".tif");
 		return;
 	}

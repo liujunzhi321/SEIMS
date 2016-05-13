@@ -4,7 +4,6 @@
 #include "ModelException.h"
 #include "util.h"
 #include "utils.h"
-#include "text.h"
 //#include "Common.h"
 //#include "Climate.h"
 #include <math.h>

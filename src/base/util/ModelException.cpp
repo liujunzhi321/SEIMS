@@ -20,7 +20,6 @@ ModelException::ModelException(string className, string functionName, string msg
 
 ModelException::~ModelException(void) throw()
 {
-
 }
 
 

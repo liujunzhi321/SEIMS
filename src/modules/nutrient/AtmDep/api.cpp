@@ -7,7 +7,6 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-#include "text.h"
 
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {

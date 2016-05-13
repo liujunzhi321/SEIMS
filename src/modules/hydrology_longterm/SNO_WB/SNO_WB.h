@@ -24,8 +24,8 @@ public:
 	bool CheckInputData(void);
 
 private:
-
-	int m_cellSize;
+	//! Valid cells number
+	int m_nCells;
 	time_t m_Date;
 
 	float m_t0;

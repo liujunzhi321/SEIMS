@@ -65,11 +65,11 @@ private:
 	}
 	void ChannelFlow(int iReach, int iCell, int id);
 	void initalOutputs();
-	
-	int m_size;///< size
+	///< Valid cells number
+	int m_nCells;
 
-	
-	float m_dx;///< cell width of the grid (m)
+	///< cell width of the grid (m)
+	float m_CellWidth;
 	
 	float m_dt;///< time step (second)
 

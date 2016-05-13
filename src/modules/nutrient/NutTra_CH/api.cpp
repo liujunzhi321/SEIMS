@@ -38,10 +38,10 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("spcon","", "Coefficient in sediment transport equation","ParameterDB_Sediment", DT_Single);
 	mdi.AddParameter("spexp","", "Exponent in sediment transport equation","ParameterDB_Sediment", DT_Single);
 	mdi.AddParameter("vcrit","m/s", "critical veloctiy for sediment deposition","ParameterDB_Sediment", DT_Single);
-
-	//mdi.AddParameter("CellSize","","the size of the cell (the validate cells of the whole basin)","file.in",DT_Single); 
+	
+	//mdi.AddParameter(Tag_CellSize,"","the size of the cell (the validate cells of the whole basin)","file.in",DT_Single); 
 	//mdi.AddParameter("nPETS","","the number of the PET stations","file.in",DT_Single);
-	//mdi.AddParameter("CellWidth","m","cell width of the grid","file.in",DT_Single);
+	//mdi.AddParameter("Tag_CellWidth","m","cell width of the grid","file.in",DT_Single);
 	mdi.AddParameter("Chs0","m3/m","initial channel storage per meter of reach length","ParameterDB_Discharge", DT_Single);
 	//mdi.AddParameter("Vseep0","m3/s","the initial volume of transmission loss to the deep aquifer over the time interval","ParameterDB_Discharge", DT_Single);
 

@@ -6,7 +6,6 @@
 #include "utils.h"
 #include <vector>
 #include <sstream>
-#include "text.h"
 
 using namespace MainBMP;
 

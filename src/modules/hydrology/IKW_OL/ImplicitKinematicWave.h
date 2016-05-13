@@ -53,11 +53,11 @@ private:
 
 	void initalOutputs();
 
-	/// size
-	int m_size;
+	//! valid cells number
+	int m_nCells;
 
 	/// cell width of the grid (m)
-	float m_dx;
+	float m_CellWidth;
 	/// time step (second)
 	float m_dtStorm;
 

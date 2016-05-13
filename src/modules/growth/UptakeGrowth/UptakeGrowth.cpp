@@ -5,7 +5,6 @@
 #include "utils.h"
 #include "util.h"
 #include "Common.h"
-#include "text.h"
 //#include "Climate.h"
 #include <omp.h>
 #include <cmath>

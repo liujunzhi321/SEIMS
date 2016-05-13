@@ -94,8 +94,8 @@ private:
 
 	//time_t m_Date;  //not used
 	/// cell width of grid map (m)
-	int m_cellWith;
-	/// number of cells
+	float m_CellWith;
+	/// number of valid cells
 	int m_nCells;
 	/// length of time step (s)
 	float m_TimeStep;

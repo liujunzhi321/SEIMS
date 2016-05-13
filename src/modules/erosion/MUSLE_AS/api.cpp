@@ -30,7 +30,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("MUSLE_AS.chm");
 
 	//3 grid parameter
-	mdi.AddParameter("CellWidth","m","the width (length) of cell","mask.asc",DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("USLE_C","","the cover management factor","ParameterDB_Sediment",DT_Raster);
 	mdi.AddParameter("USLE_P","","the erosion control practice factor ","ParameterDB_Sediment",DT_Raster);
 	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster);

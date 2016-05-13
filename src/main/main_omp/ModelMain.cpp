@@ -179,7 +179,9 @@ ModelMain::~ModelMain(void)
 	if(m_input != NULL)
 		delete m_input;
 	if(m_outputGfs != NULL)
-		mongoc_gridfs_destroy(m_outputGfs);
+		ModelMain::CloseGridFS();
+	if(!m_conn)
+		mongoc_client_destroy(m_conn);
 }
 
 void ModelMain::Step(time_t time)

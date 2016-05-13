@@ -147,7 +147,7 @@ private:
 	int m_nLayers;
 
 	/// cell width of grid map (m)
-	float m_cellWidth;
+	float m_CellWidth;
 	/// number of cells
 	int m_nCells;
 	/// length of time step (s)

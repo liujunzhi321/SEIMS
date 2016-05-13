@@ -18,7 +18,7 @@
 #include <set>
 #include <sstream>
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 //#define NODATA_VALUE -9999
 
 #define MIN_FLUX 1e-12f 
@@ -29,7 +29,7 @@ const float SQ2 = sqrt(2.f);
 
 using namespace std;
 
-ImplicitKinematicWave::ImplicitKinematicWave(void):m_size(-1), m_chNumber(-1), m_dt(-1.0f), m_dx(-1.0f),
+ImplicitKinematicWave::ImplicitKinematicWave(void):m_nCells(-1), m_chNumber(-1), m_dt(-1.0f), m_CellWidth(-1.0f),
 	m_sRadian(NULL), m_direction(NULL), m_reachDownStream(NULL), m_chWidth(NULL), 
 	m_qs(NULL), m_hCh(NULL), m_qCh(NULL), m_prec(NULL), m_qSubbasin(NULL), m_qg(NULL),
 	m_flowLen(NULL), m_qi(NULL), m_streamLink(NULL), m_reachId(NULL), m_sourceCellIds(NULL),
@@ -164,13 +164,13 @@ bool ImplicitKinematicWave::CheckInputData(void)
 	if(m_date <= 0)
 		throw ModelException("IKW_CH","CheckInputData","You have not set the Date variable.");
 
-	if(m_size <= 0)
+	if(m_nCells <= 0)
 		throw ModelException("IKW_CH","CheckInputData","The cell number of the input can not be less than zero.");
 
 	if(m_dt <= 0)
 		throw ModelException("IKW_CH","CheckInputData","You have not set the TimeStep variable.");
 
-	if(m_dx <= 0)
+	if(m_CellWidth <= 0)
 		throw ModelException("IKW_CH","CheckInputData","You have not set the CellWidth variable.");
 
 	if(m_sRadian == NULL)
@@ -191,7 +191,7 @@ bool ImplicitKinematicWave::CheckInputData(void)
 
 void  ImplicitKinematicWave::initalOutputs()
 {
-	if(m_size <= 0) throw ModelException("IKW_CH","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_nCells <= 0) throw ModelException("IKW_CH","initalOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_hCh == NULL)
 	{
@@ -205,7 +205,7 @@ void  ImplicitKinematicWave::initalOutputs()
 			//m_qsInput[i] = 0.f;
 		}
 
-		for (int i = 0; i < m_size; i++)
+		for (int i = 0; i < m_nCells; i++)
 		{
 			if (FloatEqual(m_streamLink[i], NODATA_VALUE))
 				continue;
@@ -281,7 +281,7 @@ void  ImplicitKinematicWave::initalOutputs()
 				//id = m_reachs[i][j];
 				//
 				//// slope length needs to be corrected by slope angle
-				//dx = m_dx / cos(m_sRadian[id]);
+				//dx = m_CellWidth / cos(m_sRadian[id]);
 				//int dir = (int)m_direction[id];
 				//if ((int)m_diagonal[dir] == 1)
 				//	dx = SQ2*dx;
@@ -312,7 +312,7 @@ void  ImplicitKinematicWave::initalOutputs2()
 		{
 			id = m_reachs[i][j];
 			// slope length needs to be corrected by slope angle
-			dx = m_dx / cos(m_sRadian[id]);
+			dx = m_CellWidth / cos(m_sRadian[id]);
 			int dir = (int)m_direction[id];
 			if ((int)m_diagonal[dir] == 1)
 				dx = SQ2*dx;
@@ -441,14 +441,14 @@ bool ImplicitKinematicWave::CheckInputSize(const char* key, int n)
 		//StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(m_size != n)
+	if(m_nCells != n)
 	{
-		if(m_size <=0) m_size = n;
+		if(m_nCells <=0) m_nCells = n;
 		else
 		{
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
 			throw ModelException("IKW_CH","CheckInputSize",oss.str());
 		}
 	}
@@ -509,8 +509,10 @@ void ImplicitKinematicWave::SetValue(const char* key, float data)
 	string sk(key);
 	if (StringMatch(sk, "DT_HS"))
 		m_dt = data;
-	else if (StringMatch(sk, "CellWidth"))
-		m_dx = data;
+	else if (StringMatch(sk, Tag_CellWidth))
+		m_CellWidth = data;
+	else if (StringMatch(sk, Tag_CellSize))
+		m_nCells = int(data);
 	else if (StringMatch(sk, "ID_UPREACH"))
 		m_idUpReach = (int)data;
 	else if(StringMatch(sk, "QUPREACH"))
@@ -559,7 +561,7 @@ void ImplicitKinematicWave::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(sk, "FlowOut_Index_D8"))
 	{
 		m_flowOutIndex = data;
-		for (int i = 0; i < m_size; i++)
+		for (int i = 0; i < m_nCells; i++)
 		{
 			if (m_flowOutIndex[i] < 0)
 			{
@@ -578,7 +580,7 @@ void ImplicitKinematicWave::Set1DData(const char* key, int n, float* data)
 void ImplicitKinematicWave::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
-	//*n = m_size;
+	//*n = m_nCells;
 	*n = m_chNumber;
 	if (StringMatch(sk, "QRECH"))
 	{

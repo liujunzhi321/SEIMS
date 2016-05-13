@@ -55,16 +55,22 @@ int Interpolate::Execute()
 	}
 
 	//this->StatusMsg("execute ITP...");
-	#pragma omp parallel for
+	//#pragma omp parallel for
+	int index = 0;
+	cout<<"ITP: ";
+	for (int j = 0; j < m_nStatioins; ++j)
+		cout<<m_stationData[j]<<",";
+	cout<<endl;
 	for (int i = 0; i < m_nCells; ++i)
 	{
 		float value = 0.f;
-		int index = 0;
 		for (int j = 0; j < m_nStatioins; ++j)
 		{
 			index = i*m_nStatioins + j;
 			
 			value += m_stationData[j] * m_weights[index];
+			//if(value < 0.f)
+			//	cout<<"CELL:"<<i<<", Site: "<<j<<", Weight: "<<m_weights[index]<<", Value:"<<value<<";"<<endl;
 			//cout << m_weights[index] << endl;
 			if (m_vertical)
 			{

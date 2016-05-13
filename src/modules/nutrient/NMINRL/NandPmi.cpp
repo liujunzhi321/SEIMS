@@ -89,7 +89,7 @@ void NandPim::SetValue(const char* key, float value)
 		omp_set_num_threads((int)value);
 	} 
 	else if (StringMatch(sk, Tag_CellSize)) {
-		this -> m_nCells = value;
+		this -> m_nCells = (int)value;
 	} 
 	else if (StringMatch(sk, Tag_CellWidth)) {
 		this -> m_cellWidth = value;
@@ -348,7 +348,7 @@ void NandPim::CalculateMinerandImmobi() {
 
 					float rdc = 0;
 					//Calculate ca, equation 3:1.2.8 in SWAT Theory 2009, p190
-					ca = min(cnrf, cprf, 1);
+					ca = min(min(cnrf, cprf), 1);
 					if (m_idplt[i] > 0) {
 						decr = m_rsdco_pl[(int)m_idplt[i]] * ca * csf;
 					} else {

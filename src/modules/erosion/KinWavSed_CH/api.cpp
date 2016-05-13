@@ -32,7 +32,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("KinWavSed_CH.chm");
 
-	mdi.AddParameter("CellWidth","m","the width (length) of cell","mask.asc",DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single);
 	mdi.AddParameter("ChTcCo","","calibration coefficient of transport capacity","ParameterDB_Sediment",DT_Single);
 	/*mdi.AddParameter("eco1","","calibration coefficient of transport capacity calculation","ParameterDB_Sediment",DT_Single);

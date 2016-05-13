@@ -5,60 +5,11 @@
 #
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from pymongo.collection import Collection
-import bson
-import datetime, time
 from util import *
-import math, sys
+import math
 from text import *
-
-def ImportDayData(db, siteFile,VariablesFile, ClimateDateFile):
-    ### Import meteorology site table
-    sitesLoc = {}
-    siteDataItems = ReadDataItemsFromTxt(siteFile)
-    siteFlds = siteDataItems[0]
-    for i in range(1,len(siteDataItems)):
-        dic = {}
-        for j in range(len(siteDataItems[i])):
-            if StringMatch(siteFlds[j], Tag_ST_StationID):
-                dic[Tag_ST_StationID] = int(siteDataItems[i][j])
-            elif StringMatch(siteFlds[j], Tag_ST_StationName):
-                dic[Tag_ST_StationName] = siteDataItems[i][j]  ## unicode(siteDataItems[i][j], 'gb2312')
-            elif StringMatch(siteFlds[j], Tag_ST_LocalX):
-                dic[Tag_ST_LocalX] = float(siteDataItems[i][j])
-            elif StringMatch(siteFlds[j], Tag_ST_LocalY):
-                dic[Tag_ST_LocalY] = float(siteDataItems[i][j])
-            elif StringMatch(siteFlds[j], Tag_ST_LocalPrjID):
-                dic[Tag_ST_LocalPrjID] = siteDataItems[i][j]
-            elif StringMatch(siteFlds[j], Tag_ST_Longitude):
-                dic[Tag_ST_Longitude] = float(siteDataItems[i][j])
-            elif StringMatch(siteFlds[j], Tag_ST_Latitude):
-                dic[Tag_ST_Latitude] = float(siteDataItems[i][j])
-            elif StringMatch(siteFlds[j], Tag_ST_DatumID):
-                dic[Tag_ST_DatumID] = siteDataItems[i][j]
-            elif StringMatch(siteFlds[j], Tag_ST_Elevation):
-                dic[Tag_ST_Elevation] = float(siteDataItems[i][j])
-        dic[Tag_ST_Type] = DataType_Meteorology
-        db[Tag_ClimateDB_Sites].insert(dic)
-        sitesLoc[dic[Tag_ST_StationID]] = [dic[Tag_ST_Longitude], dic[Tag_ST_Latitude]]
-    ### Import variables table
-    varDataItems = ReadDataItemsFromTxt(VariablesFile)
-    varFlds = varDataItems[0]
-    for i in range(1,len(varDataItems)):
-        dic = {}
-        for j in range(len(varDataItems[i])):
-            if StringMatch(varFlds[j], Tag_VAR_ID):
-                dic[Tag_VAR_ID] = int(varDataItems[i][j])
-            elif StringMatch(varFlds[j], Tag_VAR_Type):
-                dic[Tag_VAR_Type] = varDataItems[i][j]  ## unicode(siteDataItems[i][j], 'gb2312')
-            elif StringMatch(varFlds[j], Tag_VAR_UNIT):
-                dic[Tag_VAR_UNIT] = varDataItems[i][j]
-            elif StringMatch(varFlds[j], Tag_VAR_IsReg):
-                dic[Tag_VAR_IsReg] = varDataItems[i][j]
-            elif StringMatch(varFlds[j], Tag_VAR_Time):
-                dic[Tag_VAR_Time] = float(varDataItems[i][j])
-        db[Tag_ClimateDB_VARs].insert_one(dic)
-    ### Import climate data table
+### Import climate data table
+def ImportDayData(db, ClimateDateFile, sitesLoc):
     climDataItems = ReadDataItemsFromTxt(ClimateDateFile)
     climFlds = climDataItems[0]
     requiredFlds = [Tag_DT_Year, Tag_DT_Month, Tag_DT_Day, \
@@ -112,7 +63,7 @@ def ImportDayData(db, siteFile,VariablesFile, ClimateDateFile):
                 exit(0)
             else:
                 if dic[Tag_DT_StationID] in sitesLoc.keys():
-                    curLon, curLat = sitesLoc[dic[Tag_DT_StationID]]
+                    curLon, curLat = sitesLoc[dic[Tag_DT_StationID]].LonLat()
                     dic[DataType_SolarRadiation] = Rs(doy(dt), float(curSSD), curLat * math.pi / 180.0)
         outputFlds = [DataType_MeanTemperature, DataType_MaximumTemperature, DataType_MinimumTemperature,\
                       DataType_RelativeAirMoisture, DataType_PotentialEvapotranspiration, DataType_WindSpeed,\
@@ -128,7 +79,7 @@ def ImportDayData(db, siteFile,VariablesFile, ClimateDateFile):
                 curDic[Tag_DT_Type] = fld
                 db[Tag_ClimateDB_Data].insert_one(curDic)
 
-def ImportDailyMeteoData(hostname,port,dbName,VariablesFile,meteofile,sitefile):
+def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     try:
         connMongo = MongoClient(hostname, port)
         print "Connected successfully"
@@ -137,11 +88,10 @@ def ImportDailyMeteoData(hostname,port,dbName,VariablesFile,meteofile,sitefile):
         sys.exit(1)
     db = connMongo[dbName]
     cList = db.collection_names()
-    tables = [Tag_ClimateDB_Sites, Tag_ClimateDB_Data, Tag_ClimateDB_VARs]
-    for tb in tables:
-        if not tb in cList:
-            db.create_collection(tb)
-        else:
-            db.drop_collection(tb)
-    ImportDayData(db, sitefile, VariablesFile,meteofile)
+
+    if not Tag_ClimateDB_Data in cList:
+        db.create_collection(Tag_ClimateDB_Data)
+    # else:
+    #     db.drop_collection(tb)
+    ImportDayData(db, meteofile, siteMLoc)
     connMongo.close()

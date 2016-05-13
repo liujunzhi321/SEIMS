@@ -9,11 +9,11 @@
 
 using namespace std;
 
-NutrientTransport_OL::NutrientTransport_OL(void):m_nLayers(3), m_size(-1), m_aniExcF(0.2f), m_nitPC(0.26f), m_Nitrate(NULL), m_porosity(NULL),
+NutrientTransport_OL::NutrientTransport_OL(void):m_nLayers(3), m_nCells(-1), m_aniExcF(0.2f), m_nitPC(0.26f), m_Nitrate(NULL), m_porosity(NULL),
 	 m_sr(NULL), m_ssr(NULL), m_perc(NULL),                                             // nitrate input
 	 m_clayFrac(NULL), m_Ammon(NULL),    // Ammonium input
 	 m_parCoeP(165.f), m_phoPC(15.f), m_SoluP(NULL),                  // soluble P input
-	 m_cellWidth(-1), m_Depth(NULL), m_sedimentYield(NULL), m_Density(NULL), m_ActOrgN(NULL), m_StaOrgN(NULL), m_FreOrgN(NULL),   // organic N input
+	 m_CellWidth(-1), m_Depth(NULL), m_sedimentYield(NULL), m_Density(NULL), m_ActOrgN(NULL), m_StaOrgN(NULL), m_FreOrgN(NULL),   // organic N input
 	 m_actMinP(NULL), m_staMinP(NULL), m_humOrgP(NULL), m_FreOrgP(NULL),    // Attached P input
 	 m_chWidth(NULL), m_streamLink(NULL), m_flowInIndex(NULL), m_routingLayers(NULL), m_nRoutingLayers(-1),   // cell to cell
 	 m_nsub(-1), m_subbasin(NULL),  // to channel input
@@ -139,7 +139,7 @@ NutrientTransport_OL::~NutrientTransport_OL(void)
 
 bool NutrientTransport_OL::CheckInputData(void)
 {
-	if(m_size <= 0)
+	if(m_nCells <= 0)
 	{
 		throw ModelException("NutrientTransport_OL","CheckInputData","The cell number of the input can not be less than zero.");
 		return false;
@@ -181,7 +181,7 @@ bool NutrientTransport_OL::CheckInputData(void)
 	if(m_perc == NULL)
 		throw ModelException("NutrientTransport_OL","CheckInputData","You have not set the amount of water percolating to the underlying soil layer on a given day.");
 	
-	if(m_cellWidth <= 0)
+	if(m_CellWidth <= 0)
 	{
 		throw ModelException("NutrientTransport_OL","CheckInputData","The width (length) of cell can not be less than zero.");
 		return false;
@@ -219,11 +219,11 @@ bool NutrientTransport_OL::CheckInputData(void)
 
 void  NutrientTransport_OL::initalOutputs()
 {
-	if(m_size <= 0) throw ModelException("NutrientTransport_OL","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_nCells <= 0) throw ModelException("NutrientTransport_OL","initalOutputs","The cell number of the input can not be less than zero.");
 	if(m_nsub <= 0)
 	{
 		map<int,int> subs;
-		for(int i=0;i<this->m_size;i++)
+		for(int i=0;i<this->m_nCells;i++)
 		{
 			subs[int(this->m_subbasin[i])] += 1;
 		}
@@ -264,22 +264,22 @@ void  NutrientTransport_OL::initalOutputs()
 		m_perNit = new float*[m_nLayers];
 		m_conAmm = new float*[m_nLayers];
 
-		m_surNit = new float[m_size];
-		m_surAmm = new float[m_size];
-		m_conSed = new float[m_size];
-		m_enrN = new float[m_size];
-		m_conOrgN = new float[m_size];
-		m_traOrgN = new float[m_size];
+		m_surNit = new float[m_nCells];
+		m_surAmm = new float[m_nCells];
+		m_conSed = new float[m_nCells];
+		m_enrN = new float[m_nCells];
+		m_conOrgN = new float[m_nCells];
+		m_traOrgN = new float[m_nCells];
 
-		m_surSolP = new float[m_size];
-		m_perPho = new float[m_size];
+		m_surSolP = new float[m_nCells];
+		m_perPho = new float[m_nCells];
 
-		m_enrP = new float[m_size];
-		m_conAttP = new float[m_size];
-		m_traAttP = new float[m_size];
+		m_enrP = new float[m_nCells];
+		m_conAttP = new float[m_nCells];
+		m_traAttP = new float[m_nCells];
 
 	    #pragma omp parallel for
-	    	for (int i = 0; i < m_size; ++i)
+	    	for (int i = 0; i < m_nCells; ++i)
 		    {
 			    m_surNit[i] = 0.0f;
 				m_surAmm[i] = 0.0f;
@@ -297,14 +297,14 @@ void  NutrientTransport_OL::initalOutputs()
 	    #pragma omp parallel for
 		    for (int i = 0; i < m_nLayers; ++i)
 		    {
-			    m_mobQ[i] = new float[m_size];
-				m_satW[i] = new float[m_size];
-			    m_conNit[i] = new float[m_size];
-				m_conAmm[i] = new float[m_size];
-			    m_latNit[i] = new float[m_size];
-			    m_perNit[i] = new float[m_size];
+			    m_mobQ[i] = new float[m_nCells];
+				m_satW[i] = new float[m_nCells];
+			    m_conNit[i] = new float[m_nCells];
+				m_conAmm[i] = new float[m_nCells];
+			    m_latNit[i] = new float[m_nCells];
+			    m_perNit[i] = new float[m_nCells];
 
-			    for (int j = 0; j < m_size; ++j)
+			    for (int j = 0; j < m_nCells; ++j)
 			    {
 			    	m_mobQ[i][j] = 0.0f;
 					m_satW[i][j] = 0.0f;
@@ -325,14 +325,14 @@ bool NutrientTransport_OL::CheckInputSize(const char* key, int n)
 		//StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(m_size != n)
+	if(m_nCells != n)
 	{
-		if(m_size <=0) m_size = n;
+		if(m_nCells <=0) m_nCells = n;
 		else
 		{
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
 			throw ModelException("NutrientTransport_OL","CheckInputSize",oss.str());
 		}
 	}
@@ -347,8 +347,8 @@ void NutrientTransport_OL::SetValue(const char* key, float data)
 		m_aniExcF = data;	
 	else if (StringMatch(sk, "NitPC"))
 		m_nitPC = data;
-	else if (StringMatch(sk, "CellWidth"))
-		m_cellWidth = data;
+	else if (StringMatch(sk, Tag_CellWidth))
+		m_CellWidth = data;
 	else if (StringMatch(sk, "ParCoeP"))
 		m_parCoeP = data;
 	else if (StringMatch(sk, "PhoPC"))
@@ -422,7 +422,7 @@ void NutrientTransport_OL::Get1DData(const char* key, int* n, float** data)
 	initalOutputs();
 
 	string sk(key);
-	*n = m_size;
+	*n = m_nCells;
 	if (StringMatch(sk, "SurNit"))
 		*data = m_surNit; 
 	else if (StringMatch(sk, "SurAmm"))
@@ -597,7 +597,7 @@ void NutrientTransport_OL::Get2DData(const char* key, int *nRows, int *nCols, fl
 {
 	string sk(key);
 	*nRows = m_nLayers;
-	*nCols = m_size;
+	*nCols = m_nCells;
     if (StringMatch(sk, "MobQ"))
 		*data = m_mobQ; 
 	else if (StringMatch(sk, "SatW"))
@@ -617,7 +617,7 @@ void NutrientTransport_OL::Get2DData(const char* key, int *nRows, int *nCols, fl
 
 void NutrientTransport_OL::FlowInSoil(int id)
 {
-	float flowWidth = m_cellWidth;
+	float flowWidth = m_CellWidth;
 	// there is no land in this cell
 	if (m_streamLink[id] > 0)
 		flowWidth -= m_chWidth[id];
@@ -657,13 +657,13 @@ int NutrientTransport_OL::Execute()
 
 	initalOutputs();
 
-	int area = m_cellWidth * m_cellWidth / 10000;
+	int area = m_CellWidth * m_CellWidth / 10000;
 
 	// calculate amount of nutrient for transpotation in each cell 
 	#pragma omp parallel for
 	for(int i=0; i < m_nLayers; i++)
 	{
-	    for(int j=0; j < m_size; j++)
+	    for(int j=0; j < m_nCells; j++)
         { 
 			int hydroIndex = max(0, i-1);
 			float sr = 0.f;
@@ -757,7 +757,7 @@ int NutrientTransport_OL::Execute()
 		m_laNittoCh[i] = 0.f;
 
     float laNitAllLayers = 0.f;
-	for(int i = 0; i < m_size; i++)
+	for(int i = 0; i < m_nCells; i++)
 	{
 	    if(m_streamLink[i] > 0)
 		{
@@ -776,7 +776,7 @@ int NutrientTransport_OL::Execute()
 	for(int i = 0; i < m_nsub; i++)
 		m_laNittoCh_T += m_laNittoCh[i];
 
-	for(int i=0;i<m_size;i++)
+	for(int i=0;i<m_nCells;i++)
 	{
 		// add each subbasin's sediment yield to channel
 		if(m_nsub > 1)

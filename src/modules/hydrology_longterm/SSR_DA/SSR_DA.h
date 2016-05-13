@@ -18,7 +18,7 @@ private:
 
 	int m_nCells;
 	int m_dt;
-	float m_cellWidth;
+	float m_CellWidth;
 
 	float m_ki;
 	float m_frozenT;

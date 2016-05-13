@@ -45,7 +45,7 @@ private:
 	float *m_tMean;
 	/// maximum solar radiation
 	float *m_srMax;
-	/// size of the input array
+	/// size of the input array, i.e., the HydroClimate sites number
 	int m_size;
 	/// coefficient related to radiation used in Hargreaves method
 	float m_HCoef_pet;

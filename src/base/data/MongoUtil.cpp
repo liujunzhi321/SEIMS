@@ -253,8 +253,9 @@ void ReadLongTermMutltiReachInfo(mongoc_client_t *conn,string& dbName, int& nr, 
 	bson_error_t		*err = NULL;
 
 	collection = mongoc_client_get_collection(conn,dbName.c_str(),DB_TAB_REACH);
-	int nReaches = (int)mongoc_collection_count(collection,MONGOC_QUERY_NONE,b,0,0,NULL,err);
-	if(err != NULL)
+	const bson_t		*qCount = bson_new();
+	int nReaches = (int)mongoc_collection_count(collection,MONGOC_QUERY_NONE,qCount,0,0,NULL,err);
+	if(err != NULL || nReaches < 0)
 		throw ModelException("MongoUtil","ReadLongTermMutltiReachInfo","Failed to get document number of collection: " + string(DB_TAB_REACH) + ".\n");
 	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,b,NULL,NULL);
 

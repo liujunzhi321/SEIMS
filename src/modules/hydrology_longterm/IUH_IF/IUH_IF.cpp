@@ -7,7 +7,7 @@
 
 using namespace std;
 
-IUH_IF::IUH_IF(void): m_TimeStep(-1), m_cellSize(-1), m_CellWidth(NODATA), m_nsub(-1), m_subbasin(NULL),
+IUH_IF::IUH_IF(void): m_TimeStep(-1), m_nCells(-1), m_CellWidth(NODATA), m_nsub(-1), m_subbasin(NULL),
 	m_iuhCell(NULL), m_ssru(NULL), m_iuhCols(-1),m_cellFlowCols(-1)
 {
 	m_Q_SBIF = NULL;
@@ -21,7 +21,7 @@ IUH_IF::~IUH_IF(void)
 		delete [] m_Q_SBIF;
 	if(this->m_cellFlow != NULL)
 	{
-		for(int i=0;i<this->m_cellSize;i++)
+		for(int i=0;i<this->m_nCells;i++)
 		{
 			if(this->m_cellFlow[i] != NULL) delete [] this->m_cellFlow[i];
 		}
@@ -31,9 +31,9 @@ IUH_IF::~IUH_IF(void)
 
 bool IUH_IF::CheckInputData(void)
 {
-	if (m_cellSize < 0)
+	if (m_nCells < 0)
 	{
-		throw ModelException("IUH_IF","CheckInputData","The parameter: m_cellSize has not been set.");
+		throw ModelException("IUH_IF","CheckInputData","The parameter: m_nCells has not been set.");
 		return false;
 	}
 	if (FloatEqual(m_CellWidth, NODATA))
@@ -83,13 +83,13 @@ bool IUH_IF::CheckInputData(void)
 
 void IUH_IF::initalOutputs()
 {
-	if(this->m_cellSize <= 0 || this->m_subbasin == NULL)				throw ModelException("IUH_IF","CheckInputData","The dimension of the input data can not be less than zero.");
+	if(this->m_nCells <= 0 || this->m_subbasin == NULL)				throw ModelException("IUH_IF","CheckInputData","The dimension of the input data can not be less than zero.");
 	// allocate the output variables
 
 	if(m_nsub <= 0)
 	{
 		map<int,int> subs;
-		for(int i=0;i<this->m_cellSize;i++)
+		for(int i=0;i<this->m_nCells;i++)
 		{
 			subs[int(this->m_subbasin[i])] += 1;
 		}
@@ -103,14 +103,14 @@ void IUH_IF::initalOutputs()
 		{
 			m_Q_SBIF[i] = 0.f;
 		}
-		m_cellFlow = new float*[this->m_cellSize];
+		m_cellFlow = new float*[this->m_nCells];
 
-		for(int i=0;i<this->m_cellSize;i++)
+		for(int i=0;i<this->m_nCells;i++)
 			m_cellFlowCols = max(int(m_iuhCell[i][1]+1), m_cellFlowCols);
 
 		//get m_cellFlowCols, i.e. the maximum of second column of iuh add 1.
 		#pragma omp parallel for
-		for(int i=0;i<this->m_cellSize;i++)
+		for(int i=0;i<this->m_nCells;i++)
 		{
 			m_cellFlow[i] = new float[m_cellFlowCols];
 			for(int j=0;j<m_cellFlowCols;j++)
@@ -137,7 +137,7 @@ int IUH_IF::Execute()
 	float area = m_CellWidth * m_CellWidth;
 
 	//#pragma omp parallel for
-	for (int i = 0; i < m_cellSize; i++)
+	for (int i = 0; i < m_nCells; i++)
 	{
 		//forward one time step
 		for(int j=0; j<m_cellFlowCols; j++)
@@ -198,9 +198,9 @@ bool IUH_IF::CheckInputSize(const char* key, int n)
 		throw ModelException("IUH_IF","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_cellSize != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_cellSize <=0) this->m_cellSize = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			throw ModelException("IUH_IF","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
@@ -219,9 +219,13 @@ void IUH_IF::SetValue(const char* key, float value)
 	{
 		m_TimeStep =(int) value;
 	}
-	else if (StringMatch(sk, "CellWidth"))
+	else if (StringMatch(sk, Tag_CellWidth))
 	{
 		m_CellWidth = value;
+	}
+	else if (StringMatch(sk, Tag_CellSize))
+	{
+		m_nCells = (int)value;
 	}
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{

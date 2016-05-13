@@ -20,7 +20,7 @@
 #include <algorithm> 
 #include <omp.h>
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 //#define NODATA_VALUE -9999  defined in util.h
 
 #define MIN_FLUX 1e-12f 
