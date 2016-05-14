@@ -39,3 +39,4 @@ build
 .db
 # output folders
 **output
+output/*
