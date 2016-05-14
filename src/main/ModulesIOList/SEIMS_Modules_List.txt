@@ -1,0 +1,62 @@
+#### SEIMS MODULES LIST ####
+#### Basic format: No. | Category | ModuleID | SettingPrefix ####
+## HYDROLOGY ##
+1 | HYDRO | CH_DW | None
+2 | HYDRO | CH_MSK | None
+3 | HYDRO | DEP_FS | None
+4 | HYDRO | GWATER_RESERVOIR | None
+5 | HYDRO | HS_WB | None
+6 | HYDRO | IKW_CH | None
+7 | HYDRO | IKW_OL | None
+8 | HYDRO | INTERFLOW_IKW | None
+9 | HYDRO | ITP | Interpolation
+10 | HYDRO | PERCO_DARCY | None
+11 | HYDRO | PI_STORM | None
+12 | HYDRO | SUR_SGA | None
+13 | HYDRO | TSD_RD | Timeseries
+## HYDROLOGY_LONGTERM ##
+1 | HYDRO_LONG | DEP_LINSLEY | None
+2 | HYDRO_LONG | GWA_RE | None
+3 | HYDRO_LONG | IKW_REACH | None
+4 | HYDRO_LONG | IUH_IF | None
+5 | HYDRO_LONG | IUH_OL | None
+6 | HYDRO_LONG | MUSK_CH | None
+7 | HYDRO_LONG | PER_PI | None
+8 | HYDRO_LONG | PER_STR | None
+9 | HYDRO_LONG | PET_H | None
+10 | HYDRO_LONG | PET_PM | None
+11 | HYDRO_LONG | PET_PT | None
+12 | HYDRO_LONG | PI_MSM | None
+13 | HYDRO_LONG | SET_LM | None
+14 | HYDRO_LONG | SNO_DD | None
+15 | HYDRO_LONG | SNO_SP | None
+16 | HYDRO_LONG | SNO_WB | None
+17 | HYDRO_LONG | SOL_WB | None
+18 | HYDRO_LONG | SSM_PE | None
+19 | HYDRO_LONG | SSR_DA | None
+20 | HYDRO_LONG | STP_FP | None
+21 | HYDRO_LONG | SUR_CN | None
+22 | HYDRO_LONG | SUR_MR | None
+## EROSION ##
+1 | EROSION | KinWavSed_CH | None
+2 | EROSION | KinWavSed_OL | None
+3 | EROSION | SPLASHERO_PARK | None
+4 | EROSION | SEDR_VCD | None
+5 | EROSION | MUSLE_AS | None
+## NUTRIENT ##
+1 | NUTRIENT | DisNut_OL | None
+2 | NUTRIENT | DisNut_CH | None
+3 | NUTRIENT | AtmDep | None
+4 | NUTRIENT | Denitri | None
+5 | NUTRIENT | MinDec | None
+6 | NUTRIENT | NitVol | None
+7 | NUTRIENT | NitFix | None
+8 | NUTRIENT | NutTra_CH | None
+9 | NUTRIENT | NutTra_OL | None
+10 | NUTRIENT | SedBonNut_CH | None
+11 | NUTRIENT | SedBonNut_OL | None
+12 | NUTRIENT | SorPho | None
+## PLANT GROWTH ##
+1 | GROWTH | PotentialBiomass | None
+2 | GROWTH | UptakeGrowth | None
+3 | GROWTH | Yield | None

@@ -1,0 +1,29 @@
+1 | Climate
+0 | TimeSeries_P | | TSD_RD
+0 | TimeSeries_TMIN | | TSD_RD
+0 | TimeSeries_TMAX | | TSD_RD
+#0 | TimeSeries_WS | | TSD_RD
+#0 | TimeSeries_SR | | TSD_RD
+#0 | TimeSeries_RM | | TSD_RD
+1 | PET | Priestley-Taylor | PET_H
+2 | Interpolation_P_0 | Average uniform | ITP
+3 | Interpolation_TMAX_0 | Average uniform | ITP
+3 | Interpolation_TMIN_0 | Average uniform | ITP
+3 | Interpolation_PET_0 | Average uniform | ITP
+#3 | Interpolation_SR_0 | Average uniform | ITP
+#3 | Interpolation_RM_0 | Average uniform | ITP
+6 | Interception|  | PI_MSM
+7 | Snow melt |  | SNO_DD
+8 | Soile Temperature |  | STP_FP
+9 | Infiltration |  | SUR_MR
+9 | Depression|  | DEP_LINSLEY 
+10 | Percolation|  | PER_PI
+10 | Subsurface|  | SSR_DA
+10 | evaporation|  | SET_LM
+10 | groundwater|  | GWA_RE
+10 | water balance|  | SOL_WB
+#10 | PotentialBiomass|  | PotentialBiomass
+#10 | UptakeGrowth|  | UptakeGrowth
+#10 | Yield|  | Yield
+11 | routing |  | IUH_OL
+11 | routing |  | MUSK_CH
