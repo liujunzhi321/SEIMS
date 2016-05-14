@@ -116,7 +116,7 @@ int main(int argc, const char* argv[])
 	//testRaster();
 #endif
 
-	system("pause");
+	//system("pause");
 	return 0;
 errexit:
 	cout<<"Simple Usage:\n "<<argv[0]<<" <ModelPath>"<<endl;

@@ -134,10 +134,9 @@ void SSR_DA::FlowInSoil(int id)
 			
 			if(m_sm[id][j] != m_sm[id][j] || m_sm[id][j] < 0.f)
 			{
-				m_sm[id][j] = 0.f;
-				//ostringstream oss;
-				//oss << id << "\t" << j << "\nmoisture is less than zero: " << m_sm[id][j] << "\t" << depth[j];
-				//throw ModelException("SSR_DA", "Execute", oss.str());
+				ostringstream oss;
+				oss << id << "\t" << j << "\nmoisture is less than zero: " << m_sm[id][j] << "\t" << depth[j];
+				throw ModelException("SSR_DA", "Execute", oss.str());
 			}
 		}
 	}

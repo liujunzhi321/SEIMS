@@ -148,7 +148,7 @@ int PETHargreaves::Execute()
 	/// Test code
 	/*for (int i = 0; i < m_size; ++i)
 		cout<< "m_srMax: " << m_srMax[i] << ", m_pet: " << m_pet[i] << "; ";*/
-	cout<<endl;
+	//cout<<endl;
 	return 0;
 }
 

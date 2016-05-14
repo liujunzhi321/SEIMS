@@ -25,7 +25,7 @@
 #define MIN_FLUX 1e-9f 
 //#define NODATA_VALUE -99 defined in util.h
 const float _23 = 2.0f/3.0f;
-const float SQ2 = sqrt(2.f);
+const float SQ2 = M_SQRT2; //sqrt(2.f); 
 
 using namespace std;
 //! Constructor

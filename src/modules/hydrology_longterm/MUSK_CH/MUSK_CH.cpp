@@ -204,8 +204,9 @@ int MUSK_CH::Execute()
 			ChannelFlow(reachIndex);
 		}
 	}
-	int iOutlet = m_reachLayers.rbegin()->second[0];
-	cout<<iOutlet << "," << m_qOut[iOutlet]<<endl;
+	//Test outlet discharge, By LJ
+	//int iOutlet = m_reachLayers.rbegin()->second[0];
+	//cout<<iOutlet << "," << m_qOut[iOutlet]<<endl;
 	return 0;
 }
 //! Check input size

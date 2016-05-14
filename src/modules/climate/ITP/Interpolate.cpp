@@ -57,10 +57,10 @@ int Interpolate::Execute()
 	//this->StatusMsg("execute ITP...");
 	//#pragma omp parallel for
 	int index = 0;
-	cout<<"ITP: ";
-	for (int j = 0; j < m_nStatioins; ++j)
-		cout<<m_stationData[j]<<",";
-	cout<<endl;
+	//cout<<"ITP: ";
+	//for (int j = 0; j < m_nStatioins; ++j)
+	//	cout<<m_stationData[j]<<",";
+	//cout<<endl;
 	for (int i = 0; i < m_nCells; ++i)
 	{
 		float value = 0.f;

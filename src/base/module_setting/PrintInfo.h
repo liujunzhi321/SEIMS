@@ -28,17 +28,17 @@ using namespace std;
  */
 enum AggregationType
 {
-	///< unknown
+	/// unknown
 	AT_Unknown			= 0,
-	///< sum
+	/// sum
 	AT_Sum				= 1,
-	///< average
+	/// average
 	AT_Average			= 2,
-	///< minimum
+	/// minimum
 	AT_Minimum			= 3,
-	///< maximum
+	/// maximum
 	AT_Maximum			= 4,
-	///< output values of specific cells
+	/// output values of specific cells
 	AT_SpecificCells	= 5
 };
 

@@ -12,8 +12,8 @@
 3 | Interpolation_TMIN_0 | Average uniform | ITP
 3 | Interpolation_SR_0 | Average uniform | ITP
 3 | Interpolation_RM_0 | Average uniform | ITP
-#1 | ICLIM||ICLIM
-1 | PET | Hargreaves | PET_PM
+1 | ICLIM||ICLIM
+1 | PET | Hargreaves | PET_H
 3 | Interpolation_PET_0 | Average uniform | ITP
 6 | Interception|  | PI_MSM
 7 | Snow melt |  | SNO_DD
