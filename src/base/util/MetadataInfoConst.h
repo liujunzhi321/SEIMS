@@ -75,15 +75,15 @@ enum dimensionTypes
 	DT_Unknown			= -1,
 	/// Single numeric
 	DT_Single			= 0, 
-	/// 1D array
+	/// 1D array, e.g., valid cells of raster data
 	DT_Array1D			= 1,
-	/// 2D array
+	/// 2D array, e.g., multi-layers of soil properties
 	DT_Array2D			= 2, 
-	/// 3D array
+	/// 3D array, currently not used
 	DT_Array3D			= 3, 
 	/// 1D date array
 	DT_Array1DDateValue = 4, 
-	/// Raster data
+	/// Raster data, same as DT_Array1D
 	DT_Raster	        = 5,  
 	/// Hydrological or meteorological site information
 	DT_SiteInformation	= 6, 

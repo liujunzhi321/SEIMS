@@ -47,8 +47,10 @@ using namespace std;
  */
 enum LayeringMethod
 {
-	UP_DOWN, /**< layering-from-source method */
-	DOWN_UP  /**< layering-from-outlet method */
+	/// layering-from-source method
+	UP_DOWN, 
+	/// layering-from-outlet method
+	DOWN_UP
 };
 /*!
  * \brief Whether d1 is equal to d2 or not
