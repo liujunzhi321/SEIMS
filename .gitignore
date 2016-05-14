@@ -37,3 +37,5 @@ build
 # Exclude SQLite Database, which will be reConstructor by preprocessing script
 .db3
 .db
+# output folders
+output
