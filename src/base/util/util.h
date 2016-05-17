@@ -10,6 +10,7 @@
  */
 #ifndef SEIMS_UTIL_INCLUDE
 #define SEIMS_UTIL_INCLUDE
+#pragma once
 #include <string>
 #include <vector>
 #include <stdio.h>
@@ -22,23 +23,23 @@ using namespace std;
  * \brief NODATA value
  */
 #define NODATA_VALUE	-9999.0f
-#define NODATA			-99.0f
+#define NODATA					-99.0f
 
 /**
  * \def ZERO
  * \brief zero value used in numeric calculation
  */
-#define UTIL_ZERO		0.0000000001
+#define UTIL_ZERO				0.000001
 /**
  * \def PI
  * \brief PI value used in numeric calculation
  */
-#define PI				M_PI
+#define PI								3.14159265358979323846
 /**
  * \def MINI_SLOPE
  * \brief Minimum slope gradient
  */
-#define MINI_SLOPE		0.0001f
+#define MINI_SLOPE			0.0001f
 
 /*!
  * \ingroup util

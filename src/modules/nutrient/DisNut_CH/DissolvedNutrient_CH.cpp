@@ -264,7 +264,7 @@ void DissolvedNutrient_CH::Get1DData(const char* key, int* n, float** data)
 void DissolvedNutrient_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
-	if(StringMatch(sk, "ReachParameter"))
+	if(StringMatch(sk, Tag_ReachParameter))
 	{
 		m_chNumber = ncols;
 		m_reachId = data[0];

@@ -6,7 +6,7 @@
 #include "util.h"
 #include <omp.h>
 
-#define M_PI       3.14159265358979323846
+//#define M_PI       3.14159265358979323846
 
 SNO_SP::SNO_SP(void)
 {
@@ -153,7 +153,7 @@ int SNO_SP::Execute()
 float SNO_SP::CMelt()
 {
 	int d = JulianDay(this->m_Date);
-	float sinv = float(sin(2*M_PI/365.0f*(d-81)));
+	float sinv = float(sin(2*PI/365.0f*(d-81)));
 	return (this->m_csnow6 + this->m_csnow12) / 2.0f + (this->m_csnow6 - this->m_csnow12) / 2.0f * sinv;
 }
 

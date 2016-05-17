@@ -200,7 +200,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 
         //cout << projectPath << Filename << endl;
 		clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
-		clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename);
+		//clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename + ".asc");
 		clsRasterData::outputGTiff(templateRaster, RasterData, projectPath + Filename + ".tif");
 		return;
 	}

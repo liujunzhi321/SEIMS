@@ -623,7 +623,7 @@ void ImplicitKinematicWave::Get2DData(const char* key, int *nRows, int *nCols, f
 void ImplicitKinematicWave::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
-	if(StringMatch(sk, "ReachParameter"))
+	if(StringMatch(sk, Tag_ReachParameter))
 	{
 		//cout << "Set2DData: " << nrows << "\t" << ncols << endl;
 

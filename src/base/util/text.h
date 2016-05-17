@@ -131,9 +131,10 @@
 #define Tag_FLOWOUT_INDEX_MFD_MD "FLOWOUT_INDEX_MFD_MD"
 #define Tag_FLOWOUT_PERCENTAGE_MFD_MD "FLOWOUT_PERCENTAGE_MFD_MD"
 #define Tag_ROUTING_LAYERS_MFD_MD "ROUTING_LAYERS_MFD_MD"
-
+/// Replaced by VAR_RCHPARAM
 #define Tag_ReachParameter	"ReachParameter"
 #define Tag_RchParam		"RchParam"
+#define VAR_RCHPARAM	"ReachParameters"
 
 ////////////  Output Tags   ///////////////
 //// Output aggregation type //////
@@ -205,6 +206,7 @@
 
 /// Fields in DB_TAB_REACH ///
 #define REACH_SUBBASIN			"SUBBASIN"
+#define REACH_NUMCELLS			"NUM_CELLS"
 #define REACH_GROUPDIVIDED		"GROUP_DIVIDE"
 #define REACH_DOWNSTREAM		"DOWNSTREAM"
 #define REACH_UPDOWN_ORDER		"UP_DOWN_ORDER"
@@ -216,6 +218,7 @@
 #define REACH_AREA				"AREA"
 #define REACH_MANNING			"MANNING"
 #define REACH_SLOPE				"SLOPE" 
+
 
 /// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
 #define SITELIST_TABLE_M		"SiteListM"

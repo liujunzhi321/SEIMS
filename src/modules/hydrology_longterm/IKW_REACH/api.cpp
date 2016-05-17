@@ -43,7 +43,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("MSK_co1","","Weighting factor of bankful flow","ParameterDB_Discharge", DT_Single);
 	//mdi.AddParameter("ManningScaleFactor","","flow velocity scaling factor for calibration","ParameterDB_Discharge", DT_Single);
 
-	mdi.AddParameter("RchParam","","reach parameters", "reachparameters.txt",DT_Array2D);
+	mdi.AddParameter(Tag_RchParam,"","reach parameters", "reachparameters.txt",DT_Array2D);
 	//mdi.AddParameter("Vdiv","m3","diversion loss of the river reach", "diversionloss.txt",DT_Array1D);
 	//mdi.AddParameter("Vpoint","m3"," point source discharge", "diversionloss.txt",DT_Array1D);
 

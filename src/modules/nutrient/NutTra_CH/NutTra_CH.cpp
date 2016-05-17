@@ -522,7 +522,7 @@ void NutTra_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "RchParam"))
+	if (StringMatch(sk, Tag_RchParam))
 	{
 		m_nreach = ncols-1;
 
