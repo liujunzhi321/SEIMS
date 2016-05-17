@@ -37,10 +37,10 @@ def soil_parameters(dstdir, maskFile, sandList, clayList, orgList=None):
 #    defaultClay = 30
 #    defaultOrg = 2.5
     for i in range(n):
-        strLayer = str(i+1) if i > 0 else ''
-        sandFile = "%s/sand%s.tif" % (dstdir, strLayer)
-        clayFile = "%s/clay%s.tif" % (dstdir, strLayer)
-        orgFile = "%s/org%s.tif" % (dstdir, strLayer)
+        #strLayer = str(i+1) if i > 0 else ''
+        sandFile = "%s/sand_%s.tif" % (dstdir, str(i+1))
+        clayFile = "%s/clay_%s.tif" % (dstdir, str(i+1))
+        orgFile = "%s/org_%s.tif" % (dstdir, str(i+1))
         fMask.write("%s\t%d\t%s\n" % (sandList[i], defaultSand, sandFile))
         fMask.write("%s\t%d\t%s\n" % (clayList[i], defaultClay, clayFile))    
         if orgList is not None:

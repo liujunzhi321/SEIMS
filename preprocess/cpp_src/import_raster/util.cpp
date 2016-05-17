@@ -88,6 +88,19 @@ int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFil
 
 	return 0;
 }
+vector<string> SplitString(string item, char delimiter)
+{
+	istringstream iss(item); 
+	vector<string> tokens; 
+
+	std::string field;
+	while (std::getline(iss, field, delimiter))
+	{
+		tokens.push_back(field);
+	}
+
+	return tokens;
+}
 
 string GetCoreFileName(const string& fullFileName)
 {

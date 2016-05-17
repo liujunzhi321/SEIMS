@@ -69,4 +69,4 @@ def InitMoisture(dstdir):
     return filename
     
 if __name__ == "__main__":
-    init_moisture(r'F:\data\guanting\30m')
+    InitMoisture(r'F:\data\guanting\30m')

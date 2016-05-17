@@ -7,11 +7,46 @@
 import os, sys
 from TauDEM import *
 from osgeo import gdal
+from osgeo import osr,ogr
 from osr import SpatialReference
 from gen_dinf import GenerateDinf
-import util
-from text import *
-def SubbasinDelineation(np, workingDir, dem,outlet, threshold, mpiexeDir=None,exeDir=None):
+from util import *
+import numpy
+
+def GenerateCellLatRaster():
+    ds = ReadRaster(WORKING_DIR + os.sep + "taudir" + os.sep + filledDem)
+    src_srs = ds.srs
+
+    dst_srs = osr.SpatialReference()
+    dst_srs.ImportFromEPSG(4326) ## WGS84
+    dst_wkt = dst_srs.ExportToWkt()
+
+    transform = osr.CoordinateTransformation(src_srs, dst_srs)
+
+    point_ll = ogr.CreateGeometryFromWkt("POINT (%f %f)" % (ds.xMin, ds.yMin))
+    point_ur = ogr.CreateGeometryFromWkt("POINT (%f %f)" % (ds.xMax, ds.yMax))
+
+    point_ll.Transform(transform)
+    point_ur.Transform(transform)
+
+    lowerLat = point_ll.GetY()
+    upLat = point_ur.GetY()
+
+    rows = ds.nRows
+    cols = ds.nCols
+
+    data = ds.data
+    dataLat = numpy.copy(data)
+    deltaLat = (upLat - lowerLat) / float(rows)
+    for row in range(rows):
+        for col in range(cols):
+            if dataLat[row][col] != ds.noDataValue:
+                dataLat[row][col] = upLat - (row + 0.5) * deltaLat
+    WriteGTiffFile(WORKING_DIR + os.sep + "taudir" + os.sep + cellLat,rows,cols,dataLat,\
+                   ds.geotrans,ds.srs,ds.noDataValue,GDT_Float32)
+    #print lowerLat,upLat
+
+def SubbasinDelineation(np, workingDir, dem, outlet, threshold, mpiexeDir=None,exeDir=None):
     if not os.path.exists(workingDir):
         os.mkdir(workingDir)
     statusFile = workingDir + os.sep + "status_SubbasinDelineation.txt"
@@ -102,8 +137,13 @@ def SubbasinDelineation(np, workingDir, dem,outlet, threshold, mpiexeDir=None,ex
         
     fStatus.write("100,subbasin delineation is finished!")
     fStatus.close()
-    
+
+    ## Get spatial reference from Source DEM file
     ds = gdal.Open(dem)
+    projWkt = ds.GetProjection()
+    srs = SpatialReference()
+    srs.ImportFromWkt(projWkt)
+    ## Write Projection Configuration file
     configFile = workingDir + os.sep + 'ProjConfig.txt'
     f = open(configFile, 'w')
     f.write(dem + "\n")
@@ -114,3 +154,6 @@ def SubbasinDelineation(np, workingDir, dem,outlet, threshold, mpiexeDir=None,ex
     proj4Str = srs.ExportToProj4()
     f.write(proj4Str + "\n")
     f.close()
+
+    ## Convert to WGS84 (EPSG:4326)
+    GenerateCellLatRaster()

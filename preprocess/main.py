@@ -14,6 +14,7 @@ from DischargeDaily import ImportDailyDischargeData
 from subbasin_delineation import SubbasinDelineation
 from gen_subbasins import GenerateSubbasins
 from parameters_extraction import ExtractParameters
+
 ## Import to MongoDB
 from build_db import BuildMongoDB
 if __name__ == "__main__":
@@ -23,15 +24,14 @@ if __name__ == "__main__":
     SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
     ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
     ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecExcelPrefix,PrecDataYear, SitesPList)
-    ## Measurement Data
+    ## TODO: Measurement Data
     #ImportDailyDischargeData(HOSTNAME,PORT,ClimateDBName,DischargeExcelPrefix,DischargeYear)
-    ## Spatial Data
-    # SubbasinDelineation(np, WORKING_DIR,dem,outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
-    # f = open(WORKING_DIR + os.sep + "ProjConfig.txt")
-    # proj4Str = f.readlines()[2].strip()
-    # f.close()
-    # GenerateSubbasins(WORKING_DIR, proj4Str,exeDir=CPP_PROGRAM_DIR)
+    ## Spatial Data derived from DEM
+    SubbasinDelineation(np, WORKING_DIR, dem, outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
+    GenerateSubbasins(WORKING_DIR, exeDir=CPP_PROGRAM_DIR)
+    ## Soil chemical properties initialization
+
     ## Extract parameters from landuse, soil properties etc.
-    #ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
+    ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
     ## Import to MongoDB database
-    #BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesVorShp,MeteorSitesVorShp)
+    BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesThiessen, MeteorSitesThiessen)

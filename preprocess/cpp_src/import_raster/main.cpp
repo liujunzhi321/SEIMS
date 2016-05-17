@@ -1,11 +1,12 @@
 #include <vector>
 #include <map>
-#include <string>
+#include <string.h>
 #include <iostream>
 #include <cmath>
 #include <sstream>
 #include <fstream>
 #include <cstdlib>
+#include<algorithm>
 
 //gdal
 #include "gdal.h"
@@ -23,8 +24,6 @@
 #include "Raster.cpp"
 
 using namespace std;
-
-
 
 int FindBoundingBox(Raster<int>& rsSubbasin, map<int, SubBasin>& bboxMap)
 {
@@ -63,7 +62,8 @@ int FindBoundingBox(Raster<int>& rsSubbasin, map<int, SubBasin>& bboxMap)
 }
 
 
-int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubbasin, const char* dstFile, mongo* conn, gridfs* gfs)
+int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubbasin, const char* dstFile, mongo* conn, gridfs* gfs,
+	vector<string> fileExisted)
 {
 	Raster<float> rs;
 	rs.ReadFromGDAL(dstFile);
@@ -105,6 +105,9 @@ int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubba
 		remoteFilename << id << "_" << GetUpper(coreName);
 		float cellSize = rs.GetXCellSize();
 
+		if(find(fileExisted.begin(), fileExisted.end(), remoteFilename.str()) != fileExisted.end())
+			gridfs_remove_filename(gfs, remoteFilename.str().c_str());
+
 		bson *p = (bson*)malloc(sizeof(bson));
 		bson_init(p);
 		bson_append_int(p, "SUBBASIN", id );
@@ -128,19 +131,102 @@ int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubba
 		gridfile_set_metadata(gfile, p);
 		gridfile_writer_done(gfile);
 		gridfile_destroy(gfile);
-		
-		//bson_destroy(con);
-		//free(con);
+
 		bson_destroy(p);
 		free(p);
-
-		
 		delete subData;
 	}
 	return 0;
 }
 
+int Decomposite2DRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubbasin, string coreName, vector<string> dstFiles, 
+	mongo* conn, gridfs* gfs, vector<string> fileExisted)
+{
+	int colNum = dstFiles.size();
+	vector<Raster<float> > rss(colNum);
+	for (int i = 0; i < colNum; i++)
+	{
+		Raster<float> rs;
+		rs.ReadFromGDAL(dstFiles[i].c_str());
+		rss[i].Copy(rs);
+	}
+	
+	int nXSize = rss[0].GetNumberofColumns();
+	int nYSize = rss[0].GetNumberOfRows();
+	float noDataValue = rss[0].GetNoDataValue();
 
+	///cout << nXSize << "\t" << nYSize << endl;
+	vector<float**> rssData(colNum);
+	for (int i = 0; i < colNum; i++)
+		rssData[i] = rss[i].GetData();
+	int **subbasinData = rsSubbasin.GetData();
+	map<int, SubBasin>::iterator it;
+	for (it = bboxMap.begin(); it != bboxMap.end(); it++)
+	{
+		int id = it->first;
+		SubBasin& subbasin = it->second;
+		int subXSize = subbasin.xMax - subbasin.xMin + 1;
+		int subYSize = subbasin.yMax - subbasin.yMin + 1;
+
+		float **sub2DData = new float*[subXSize*subYSize];
+		for(int i = 0; i < subXSize*subYSize; i++)
+			sub2DData[i] = new float[colNum];
+
+		for (int i = subbasin.yMin; i <= subbasin.yMax; i++)
+		{
+			for (int j = subbasin.xMin; j <= subbasin.xMax; j++)
+			{
+				int index = i*nXSize + j;
+				int subIndex = (i - subbasin.yMin) * subXSize + (j - subbasin.xMin);
+				if (subbasinData[i][j] == id)
+				{
+					for(int k = 0; k < colNum; k++)
+						sub2DData[subIndex][k] = rssData[k][i][j];
+				}
+				else
+					for(int k = 0; k < colNum; k++)
+						sub2DData[subIndex][k] = noDataValue;
+			}
+		}
+
+		ostringstream remoteFilename;
+		remoteFilename << id << "_" << GetUpper(coreName);
+		float cellSize = rss[0].GetXCellSize();
+
+		if(find(fileExisted.begin(), fileExisted.end(), remoteFilename.str()) != fileExisted.end())
+			gridfs_remove_filename(gfs, remoteFilename.str().c_str());
+
+		bson *p = (bson*)malloc(sizeof(bson));
+		bson_init(p);
+		bson_append_int(p, "SUBBASIN", id );
+		bson_append_string(p, "TYPE", coreName.c_str());
+		bson_append_string(p, "ID", remoteFilename.str().c_str());
+		bson_append_string(p, "DESCRIPTION", coreName.c_str());
+		bson_append_double(p, "CELLSIZE", cellSize);
+		bson_append_double(p, "NODATA_VALUE", noDataValue);
+		bson_append_double(p, "NCOLS", subXSize);
+		bson_append_double(p, "NROWS", subYSize);
+		bson_append_double(p, "XLLCENTER", rss[0].GetXllCenter() + subbasin.xMin * cellSize);
+		bson_append_double(p, "YLLCENTER", rss[0].GetYllCenter() + (rss[0].GetNumberOfRows() - subbasin.yMax - 1) * cellSize);
+		bson_append_double(p, "LAYERS", colNum);
+		bson_finish(p);
+
+		gridfile gfile[1];
+		gridfile_writer_init(gfile, gfs, remoteFilename.str().c_str(), "float");
+		for (int k = 0; k < subYSize * subXSize; k++)
+		{
+			gridfile_write_buffer(gfile, (const char*)(sub2DData[k]), sizeof(float)*colNum);
+		}
+		gridfile_set_metadata(gfile, p);
+		gridfile_writer_done(gfile);
+		gridfile_destroy(gfile);
+
+		bson_destroy(p);
+		free(p);
+		delete sub2DData;
+	}
+	return 0;
+}
 
 int DecompositeRaster(map<int, SubBasin>& bboxMap, Raster<int>& rsSubbasin, const char* dstFile, const char* tmpFolder)
 {
@@ -241,6 +327,58 @@ int main(int argc, char** argv)
 	vector<string> dstFiles;
 	FindFiles(folder, "*.tif", dstFiles);
 
+	/// Identify Array1D and Array2D dstFiles, respectively
+	vector<string> coreFileNames;
+	vector<string>							array1DFiles;
+	map<string, vector<string > >	array2DFiles;
+	map<string, vector<string > >::iterator array2DIter;
+	for (vector<string>::iterator it = dstFiles.begin(); it != dstFiles.end(); it++)
+	{
+		string tmpCoreName = GetCoreFileName(*it);
+		coreFileNames.push_back(tmpCoreName);
+		vector<string> tokens = SplitString(tmpCoreName, '_');
+		int length = tokens.size();
+
+		if (length <= 1)
+			array1DFiles.push_back(*it);
+		else if (length >= 2) /// there are more than one underscore exist
+		{
+			string::size_type end = tmpCoreName.find_last_of("_");
+			string coreVarName = tmpCoreName.substr(0, end);
+
+			if (atoi(tokens[length-1].c_str()))
+			{
+				array2DIter = array2DFiles.find(coreVarName);
+				if (array2DIter != array2DFiles.end())
+				{
+					array2DFiles[coreVarName].push_back(*it);
+				}
+				else
+				{
+					vector<string> tmpFileName;
+					tmpFileName.push_back(*it);
+					array2DFiles.insert(make_pair(coreVarName,tmpFileName));
+				}
+			}
+			else
+				array1DFiles.push_back(*it);
+		}
+	}
+	vector<string> delVarNames;
+	for (array2DIter = array2DFiles.begin(); array2DIter != array2DFiles.end(); array2DIter++)
+	{
+		if(array2DIter->second.size() == 1)
+		{
+			array1DFiles.push_back(array2DIter->second.at(0));
+			delVarNames.push_back(array2DIter->first);
+		}
+		else
+			sort(array2DIter->second.begin(), array2DIter->second.end());
+	}
+	for(vector<string>::iterator it = delVarNames.begin(); it != delVarNames.end(); it++)
+		array2DFiles.erase(*it);
+	vector<string>(array1DFiles).swap(array1DFiles);
+
 	//////////////////////////////////////////////////////////////////////////
 	// read the subbasin file, and find the bounding box of each subbasin
 	Raster<int> rsSubbasin;
@@ -249,9 +387,9 @@ int main(int argc, char** argv)
 	FindBoundingBox(rsSubbasin, bboxMap);
 	
 	//////////////////////////////////////////////////////////////////////////
-	// loop to precess the destination files
+	/// loop to process the destination files
 	
-	// connect to mongodb
+	/// connect to MongoDB
 	mongo conn[1];
 	gridfs gfs[1];
 	int status = mongo_connect(conn, hostname, port); 
@@ -263,13 +401,43 @@ int main(int argc, char** argv)
 	}
 	gridfs_init(conn, modelName, "spatial", gfs); 
 
-    cout << "Importing spatial data to MongoDB...\n";
-	for (size_t i = 0; i < dstFiles.size(); ++i)
+	/// read document already existed in "spatial" collection
+	mongo_cursor cursor[1];
+	bson query[1];
+	bson_init(query);
+	bson_finish(query);
+	char spatialCollection[255]; 
+	strcpy_s(spatialCollection, modelName);
+	strcat_s(spatialCollection,".spatial.files");
+	mongo_cursor_init(cursor, conn, spatialCollection);
+	mongo_cursor_set_query(cursor, query);
+	vector<string> fileNamesExisted;
+	while (mongo_cursor_next(cursor) == MONGO_OK)
 	{
-        cout << "\t" << dstFiles[i] << endl;
-        if(outTifFolder != NULL)
-            DecompositeRaster(bboxMap, rsSubbasin, dstFiles[i].c_str(), outTifFolder);
-		DecompositeRasterToMongoDB(bboxMap, rsSubbasin, dstFiles[i].c_str(), conn, gfs);
+		bson_iterator iter[1];
+		//bson_print(&cursor->current);
+		if (bson_find(iter,&cursor->current,"filename"))
+			fileNamesExisted.push_back(string(bson_iterator_string(iter)));
+	}
+
+    cout << "Importing spatial data to MongoDB...\n";
+	for (array2DIter = array2DFiles.begin(); array2DIter != array2DFiles.end(); array2DIter++)
+	{
+		vector<string> tmpFileNames = array2DIter->second;
+		for(vector<string>::iterator it = tmpFileNames.begin(); it != tmpFileNames.end(); it++)
+		{
+			cout << "\t" << *it << endl;
+			if(outTifFolder != NULL)
+				DecompositeRaster(bboxMap, rsSubbasin, it->c_str(), outTifFolder);
+		}
+		Decomposite2DRasterToMongoDB(bboxMap, rsSubbasin, array2DIter->first, tmpFileNames, conn, gfs, fileNamesExisted);
+	}
+	for (size_t i = 0; i < array1DFiles.size(); ++i)
+	{
+		cout << "\t" << array1DFiles[i] << endl;
+		if(outTifFolder != NULL)
+			DecompositeRaster(bboxMap, rsSubbasin, array1DFiles[i].c_str(), outTifFolder);
+		DecompositeRasterToMongoDB(bboxMap, rsSubbasin, array1DFiles[i].c_str(), conn, gfs, fileNamesExisted);
 	}
 
 	gridfs_destroy(gfs);

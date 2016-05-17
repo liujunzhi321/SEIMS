@@ -67,12 +67,12 @@ def MaskDEMFiles(workingDir,exeDir=None):
     subbasinTauFile = tauDir + os.sep + subbasin
     originalFiles = [subbasin, flowDir, streamRaster, 
                      slope, filledDem, acc, streamOrder,
-                     flowDirDinf, dirCodeDinf, slopeDinf, weightDinf]
+                     flowDirDinf, dirCodeDinf, slopeDinf, weightDinf,cellLat]
     originalFiles = [(tauDir + os.sep + item) for item in originalFiles]
     maskedFiles = [subbasinM, flowDirM, streamRasterM]
     maskedFiles = [(tauDir + os.sep + item) for item in maskedFiles]
     outputList = [slopeM, filldemM, accM,  streamOrderM, flowDirDinfM,
-                    dirCodeDinfM, slopeDinfM, weightDinfM]
+                    dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM]
     for output in outputList:
         maskedFiles.append(workingDir + os.sep + output)
 
@@ -94,7 +94,10 @@ def MaskDEMFiles(workingDir,exeDir=None):
     os.system(s)
 
 
-def GenerateSubbasins(workingDir, proj4Str,exeDir=None):
+def GenerateSubbasins(workingDir, exeDir=None):
+    f = open(WORKING_DIR + os.sep + "ProjConfig.txt")
+    proj4Str = f.readlines()[2].strip()
+    f.close()
     statusFile = workingDir + os.sep + "status_GenerateSubbasins.txt"
     fStatus = open(statusFile, 'w')
 
