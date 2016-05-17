@@ -111,7 +111,28 @@ int GetCollectionNames(mongoc_client_t* conn, string& dbName, vector<string>& co
 	vector<string>(collNameList).swap(collNameList);
 	return 0;
 }
-
+vector<string> GetGridFsFileNames(mongoc_client_t *client, string& dbName, char* gridfsname)
+{
+	vector<string> filesExisted;
+	mongoc_collection_t *collection = mongoc_client_get_collection(client,dbName.c_str(),gridfsname);
+	bson_t *query = bson_new();
+	bson_init(query);
+	mongoc_cursor_t *cursor;
+	bson_error_t *err;
+	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,query,NULL,NULL);
+	if (mongoc_cursor_error(cursor,err))
+		throw ModelException("MongoUtil","GetGridFsFileNames","GridFS is empty!\n");
+	const bson_t			*info;
+	while(mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor,&info)){
+		bson_iter_t	iter;
+		if (bson_iter_init_find(&iter,info,"filename"))
+		{
+			filesExisted.push_back(GetStringFromBSONITER(&iter));
+		}
+	}
+	vector<string>(filesExisted).swap(filesExisted);
+	return filesExisted;
+}
 void Read1DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& num, float*& data)
 {
 	mongoc_gridfs_file_t	*gfile;
