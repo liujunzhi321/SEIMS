@@ -64,21 +64,20 @@ def FindSites(dbModel, hydroDBName, subbasinFile, thiessenFileList, siteTypeList
             siteField = 'SiteList%s' % (siteType,)
             dic[siteField] = siteListStr
         
-        dbModel.SiteList.insert(dic)      
-    dbModel.SiteList.create_index([('SubbasinID', pymongo.ASCENDING), ('Mode', pymongo.ASCENDING)])        
+        dbModel[hydroDBName].SiteList.insert_one(dic)
+    dbModel[hydroDBName].SiteList.create_index([('SubbasinID', pymongo.ASCENDING), ('Mode', pymongo.ASCENDING)])
     print 'meteorology sites table was generated.'
     return nSubbasins
 
 if __name__ == "__main__":
-    subbasinFile = r'F:\data\guanting\model_zjk_90m\basin.shp'
-    thiessenFileMeteo = r'F:\data\guanting\meteorology_sites_thiessen.shp'
-    thiessenFilePreci = r'F:\data\guanting\stations_need_thiessen.shp'
+    subbasinFile = r'E:\data\model_data\model_dianbu_30m_longterm\data_prepare\output\basin.shp'
+    thiessenFileMeteo = r'E:\data\model_data\model_dianbu_30m_longterm\data_prepare\climate\shp\Metero_hefei_Vor.shp'
+    thiessenFilePreci = r'E:\data\model_data\model_dianbu_30m_longterm\data_prepare\climate\shp\Preci_dianbu_Vor.shp'
     
-    hostname = '192.168.6.55'
+    hostname = '127.0.0.1'
     port = 27017
     try:
         conn = MongoClient(host=hostname, port=27017)
-        #conn = Connection(host=hostname, port=27017)
         print "Connected successfully"
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
@@ -86,7 +85,7 @@ if __name__ == "__main__":
     
     thiessenFileList = [thiessenFileMeteo, thiessenFilePreci]
     typeList = ['M', 'P']
-    model_name = 'model_zjk_90m'
-    FindSites(conn, model_name, 'qingshuihe', subbasinFile, thiessenFileList, typeList, 'DAILY')    
+    model_name = 'model_dianbu_30m_longterm'
+    FindSites(conn, model_name, subbasinFile, thiessenFileList, typeList, 'DAILY')
     
     print 'done!'

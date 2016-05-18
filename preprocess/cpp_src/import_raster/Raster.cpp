@@ -7,8 +7,9 @@
 *	Revision:
 *   Date:
 *---------------------------------------------------------------------*/
-#ifndef NEW_WETSPA_RASTER_CPP_INCLUDE
-#define NEW_WETSPA_RASTER_CPP_INCLUDE
+#pragma once
+#ifndef SEIMS_RASTER_CPP_INCLUDE
+#define SEIMS_RASTER_CPP_INCLUDE
 
 #include <cstddef>
 #include <iostream>
@@ -292,7 +293,8 @@ int Raster<T>::ReadFromGDAL(const char* filename)
 		cerr << "Open subbasin file failed.\n";
 		return -1;
 	}
-
+	const char* srs = poDataset->GetProjectionRef();
+	m_srs = string(srs);
 	GDALRasterBand  *poBand= poDataset->GetRasterBand(1);
 	m_nCols = poBand->GetXSize();
 	m_nRows = poBand->GetYSize();
@@ -433,15 +435,15 @@ void Raster<T>::OutputGTiff(const char* rasterName, int nRows, int nCols, T xll,
 	geoTrans[4] = 0;
 	geoTrans[5] = -dx;
 	poDstDS->SetGeoTransform(geoTrans);
-
-	OGRSpatialReference srs;
+	poDstDS->SetProjection(m_srs);
+	/*OGRSpatialReference srs;
 	srs.SetACEA(25, 47, 0, 105, 0, 0);
 	srs.SetWellKnownGeogCS("WGS84");
-	
+
 	char *pSrsWkt = NULL;
 	srs.exportToWkt(&pSrsWkt);
 	poDstDS->SetProjection(pSrsWkt);
-	CPLFree(pSrsWkt);
+	CPLFree(pSrsWkt);*/
 
 	GDALClose(poDstDS);
 }
@@ -490,6 +492,7 @@ int Raster<T>::Copy(Raster& otherRaster)
 	m_dx = otherRaster.GetXCellSize();
 	m_dy = otherRaster.GetYCellSize();
 	m_noDataValue = otherRaster.GetNoDataValue();
+	m_srs = string(otherRaster.GetSRS());
 
 	//allocate memory
 	m_data = new T*[m_nRows];

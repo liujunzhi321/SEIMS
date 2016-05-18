@@ -7,8 +7,8 @@
 *	Revision:
 *   Date:
 *---------------------------------------------------------------------*/
-#ifndef NEW_WETSPA_RASTER_CPP_INCLUDE
-#define NEW_WETSPA_RASTER_CPP_INCLUDE
+#ifndef SEIMS_RASTER_CPP_INCLUDE
+#define SEIMS_RASTER_CPP_INCLUDE
 
 #include <cstddef>
 #include <iostream>

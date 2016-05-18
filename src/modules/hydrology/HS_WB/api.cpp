@@ -33,7 +33,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("Rootdepth","mm","Root depth","ParameterDB_WaterBalance",DT_Raster);
 	mdi.AddParameter("Porosity","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Raster);
 	mdi.AddParameter("FieldCap","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("RchParam","","reach parameters", "reachparameters.txt",DT_Array2D);
+	mdi.AddParameter(Tag_RchParam,"","reach parameters", "reachparameters.txt",DT_Array2D);
 	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster);
 
 	mdi.AddInput("D_QOverland","m3/s","discharge added to channel flow from overland flow","Module", DT_Raster);

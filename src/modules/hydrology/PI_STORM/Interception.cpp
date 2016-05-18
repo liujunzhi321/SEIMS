@@ -136,7 +136,7 @@ int clsPI_MSM::Execute()
 
 		//interception storage capacity
 		//int julian = 100;
-		double degree = 2 * M_PI * (yday - 87) /365;
+		double degree = 2 * PI * (yday - 87) /365;
 		float min = this->m_minInterception[i];
 		float max = this->m_maxInterception[i];
 		double capacity = min + (max - min)*pow(0.5 + 0.5*sin(degree),double(this->m_Pi_b));

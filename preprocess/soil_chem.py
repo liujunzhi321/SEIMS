@@ -2,7 +2,7 @@
 #coding=utf-8
 ### This program initializes soil chemical properties
 ### for nutrient related modules.
-### Reference: soil_chem.f in SWAT 2009
+### Reference: soil_chem.f in SWAT 2012
 ### Author: Liangjun Zhu, Huiran Gao
 ### Date: 2016-3-28
 
@@ -11,7 +11,7 @@ import math
 from osgeo import gdal
 import numpy
 from util import *
-from text import *
+from config import *
 
 ## INPUTS ##
 #nactfr: nitrogen active pool fraction. The fraction of organic nitrogen in the active pool
@@ -74,7 +74,8 @@ from text import *
 ###    soil_TP	   |kg/ha         |Total Soil Mineral P
 ###    sol_mass, FBM, FHP, RTNO, FHS, X1, RTO, sol_min_n
 ###    
-def Soil_Chemical(workingDir, outputPath):
+def Soil_Chemical(workingDir):
+
     bd1File = workingDir + os.sep + "Density.tif"   ##sol_bd layer1 and layer2
     bd2File = workingDir + os.sep + "Density2.tif"  ##sol_bd layer3
     om1File = workingDir + os.sep + "org.tif"       ##for sol_cbn layer1 and layers2
@@ -99,9 +100,7 @@ def Soil_Chemical(workingDir, outputPath):
     sol_bd2 = bd2Raster.data
     sol_org1 = om1Raster.data
     sol_org2 = om2Raster.data
-    root_depth = rdRaster.data
-    sol_z = root_depth
-    #numpy.savetxt("d:/file.txt", sol_z)
+    sol_z = rdRaster.data       ## i.e., RootDepth
     clay1 = clay1Raster.data
     clay2 = clay2Raster.data
 
@@ -119,7 +118,7 @@ def Soil_Chemical(workingDir, outputPath):
     RTO = 0.
     nactfr = .02
 
-    nly = 3   ## By default, soil layers equal to 3 for nutrient modules, 0~10mm, 10~100mm, and 100~rootDepth
+    ##nly = 3   ## By default, soil layers equal to 3 for nutrient modules, 0~10mm, 10~100mm, and 100~rootDepth
     solpst = 0.
     sumno3 = 0.
     sumorgn = 0.
@@ -128,18 +127,18 @@ def Soil_Chemical(workingDir, outputPath):
 
     lyr1 = 10   ## unit is mm
     lyr2 = 100
-    lyr3 = root_depth
+    lyr3 = sol_z
     sol_thick1 = lyr1
     sol_thick2 = lyr2 - lyr1
     sol_thick3 = lyr3 - lyr2
-    sol_bd = [sol_bd1, sol_bd1, sol_bd2]
-    sol_cbn = [sol_cbn1, sol_cbn1, sol_cbn2]
-    sol_thick = [sol_thick1, sol_thick2, sol_thick3]
-    sol_clay = [clay1, clay1, clay2]
-    sol_rock = [0., 0., 0.]  ## fraction of rock in every soil layer, by default , sol_rock is 0
-    cmtot_kgh = numpy.zeros((3, nRows, nCols)) ## ##kg/ha  current soil carbon integrated - aggregating all soil layers
-    sol_mass = numpy.zeros((3, nRows, nCols))
-    sol_cmass = numpy.zeros((3, nRows, nCols))
+    sol_bd = [sol_bd1, sol_bd2]
+    sol_cbn = [sol_cbn1, sol_cbn2]
+    sol_thick = [sol_thick1, sol_thick2]
+    sol_clay = [clay1, clay2]
+    sol_rock = [0., 0.]  ## fraction of rock in every soil layer, by default , sol_rock is 0
+    cmtot_kgh = numpy.zeros((nlyrs, nRows, nCols)) ## ##kg/ha  current soil carbon integrated - aggregating all soil layers
+    sol_mass = numpy.zeros((nlyrs, nRows, nCols))
+    sol_cmass = numpy.zeros((nlyrs, nRows, nCols))
     for lyr in range(len(sol_thick)):
         #print lyr
         sol_mass[lyr] = (sol_thick[lyr] / 1000.) * 10000. * 1000. * (1 - sol_rock[lyr] / 100.) * sol_bd[lyr]  ##单层土壤质量(kg)
@@ -147,38 +146,41 @@ def Soil_Chemical(workingDir, outputPath):
         if lyr == 0:
             cmtot_kgh[lyr] = sol_cmass[lyr]  ## ##kg/ha    current soil carbon for first soil layer
         cmtot_kgh[lyr] = cmtot_kgh[lyr] + sol_cmass[lyr]
-##    calculate initial nutrient contents of layers, profile and
-##    average in soil for the entire watershed
-##    convert mg/kg (ppm) to kg/ha
+    ##    calculate initial nutrient contents of layers, profile and
+    ##    average in soil for the entire watershed
+    ##    convert mg/kg (ppm) to kg/ha
     xx = 0.
-    sol_fop = numpy.ones((3, nRows, nCols)) # phosphorus stored in the fresh organic (residue) pool
-    sol_fon = numpy.ones((3, nRows, nCols)) # nitrogen stored in the fresh organic (residue) pool
+    sol_fop = numpy.ones((nlyrs, nRows, nCols)) # phosphorus stored in the fresh organic (residue) pool
+    sol_fon = numpy.ones((nlyrs, nRows, nCols)) # nitrogen stored in the fresh organic (residue) pool
     sol_cov = numpy.ones((nRows, nCols)) # residue on soil surface
 
-    sol_orgn = numpy.ones((3, nRows, nCols))
-    sol_no3 = numpy.zeros((3, nRows,  nCols))
-    sol_aorgn = numpy.zeros((3, nRows,  nCols))
-    sol_orgp = numpy.ones((3, nRows,  nCols))
-    sol_solp = numpy.zeros((3, nRows,  nCols))
-    sol_actp = numpy.zeros((3, nRows,  nCols))
-    sol_stap = numpy.zeros((3, nRows,  nCols))
-    sol_P_model = numpy.zeros((3, nRows,  nCols))
-    sol_hum = numpy.zeros((3, nRows,  nCols))
+    sol_orgn = numpy.ones((nlyrs, nRows, nCols))
+    sol_no3 = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_aorgn = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_orgp = numpy.ones((nlyrs, nRows,  nCols))
+    sol_solp = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_actp = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_stap = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_P_model = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_hum = numpy.zeros((nlyrs, nRows,  nCols))
     #sol_rsd is organic matter in the soil layer classified as residue
-    sol_rsd = numpy.random.random_sample((3, nRows, nCols)) * .3  ##先随机生成sol_rsd，0~0.3的随机数
+    sol_rsd = numpy.random.random_sample((nlyrs, nRows, nCols)) * .3  ##先随机生成sol_rsd，0~0.3的随机数
     solp = numpy.zeros((nRows, nCols))
     actp = numpy.zeros((nRows, nCols))
 
-    sumno3 = sumorgn = summinp = sumorgp = numpy.zeros((nRows, nCols))
+    sumno3  = numpy.zeros((nRows, nCols))
+    sumorgn = numpy.zeros((nRows, nCols))
+    summinp = numpy.zeros((nRows, nCols))
+    sumorgp = numpy.zeros((nRows, nCols))
 
-    for j in range(nly):
+    for j in range(nlyrs):
         dg = 0.
         wt1 = 0.
         dg = (sol_z - xx)
         wt1 = sol_bd[j] * dg / 100.              ## mg/kg => kg/ha
         conv_wt = 1.e6 * wt1                    ## kg/kg => kg/ha
         ##输出conv_wt
-        conv_wt_file = outputPath + os.sep + "conv_wt%d.tif" % j
+        conv_wt_file = workingDir + os.sep + "convwt_%d.tif" % (j + 1)
         #writeTIFF(conv_wt, conv_wt_file)
 
         sol_fop[j] = sol_rsd[j] * .0010
@@ -186,8 +188,8 @@ def Soil_Chemical(workingDir, outputPath):
         sol_cov = sol_rsd[1]
 
         ##输出sol_fop,sol_fon
-        sol_fop_file = outputPath + os.sep + "sol_fop%d.tif" % j
-        sol_fon_file = outputPath + os.sep + "sol_fon%d.tif" % j
+        sol_fop_file = workingDir + os.sep + "solfop_%d.tif" % (j + 1)
+        sol_fon_file = workingDir + os.sep + "solfon_%d.tif" % (j + 1)
         #writeTIFF(sol_fop[j], sol_fop_file)
         #writeTIFF(sol_fon[j], sol_fon_file)
 
@@ -200,7 +202,7 @@ def Soil_Chemical(workingDir, outputPath):
         sol_no3[j] = sol_no3[j] * wt1          ## mg/kg => kg/ha
         sumno3 = sumno3 + sol_no3[j]
         ##输出sol_no3
-        sol_no3_file = outputPath + os.sep + "sol_no3%d.tif" % j
+        sol_no3_file = workingDir + os.sep + "solno3_%d.tif" % (j + 1)
         #writeTIFF(sol_no3[j], sol_no3_file)
 
         sol_orgn[j] = sol_orgn[j] * wt1
@@ -209,13 +211,13 @@ def Soil_Chemical(workingDir, outputPath):
                 if (sol_orgn[j][m][n] > 0.0001):
                     sol_orgn[j][m][n] = sol_orgn[j][m][n] * wt1[m][n]      ## mg/kg => kg/ha
                 else:
-            ## assume C:N ratio of 10:1
+                    ## assume C:N ratio of 10:1
                     sol_orgn[j][m][n] = 10000. * (sol_cbn[j][m][n] / 14.) * wt1[m][n]  ## CN ratio changed back to 14 cibin 03022012
         sol_aorgn[j] = sol_orgn[j] * nactfr
         sol_orgn[j] = sol_orgn[j] * (1. - nactfr)
         ##输出sol_orgn,sol_aorgn
-        sol_orgn_file = outputPath + os.sep + "sol_orgn%d.tif" % j
-        sol_aorgn_file = outputPath + os.sep + "sol_aorgn%d.tif" % j
+        sol_orgn_file = workingDir + os.sep + "solorgn_%d.tif" % (j + 1)
+        sol_aorgn_file = workingDir + os.sep + "solaorgn_%d.tif" % (j + 1)
         #writeTIFF(sol_orgn[j], sol_orgn_file)
         #writeTIFF(sol_aorgn[j], sol_aorgn_file)
 
@@ -228,16 +230,16 @@ def Soil_Chemical(workingDir, outputPath):
                 if (sol_orgp[j][m][n] > 0.0001):
                     sol_orgp[j][m][n] = sol_orgp[j][m][n] * wt1[m][n]      ## mg/kg => kg/ha
                 else:
-	        ## assume N:P ratio of 8:1
+                    ## assume N:P ratio of 8:1
                     sol_orgp[j][m][n] = .125 * sol_orgn[j][m][n]
                 if (sol_solp[j][m][n] > 0.0001) :
                     sol_solp[j][m][n] = sol_solp[j][m][n] * wt1[m][n]     ## mg/kg => kg/ha
                 else:
-            ## assume initial concentration of 5 mg/kg
+                    ## assume initial concentration of 5 mg/kg
                     sol_solp[j][m][n] = 5. * wt1[m][n]
         ##输出sol_orgp,sol_solp
-        sol_orgp_file = outputPath + os.sep + "sol_orgp%d.tif" % j
-        sol_solp_file = outputPath + os.sep + "sol_solp%d.tif" % j
+        sol_orgp_file = workingDir + os.sep + "solorgp_%d.tif" % (j + 1)
+        sol_solp_file = workingDir + os.sep + "solsolp_%d.tif" % (j + 1)
         #writeTIFF(sol_orgp[j], sol_orgp_file)
         #writeTIFF(sol_solp[j], sol_solp_file)
 
@@ -273,8 +275,8 @@ def Soil_Chemical(workingDir, outputPath):
                         ssp = 1.
                     sol_stap[j][m][n] = ssp * (sol_actp[j][m][n] + sol_solp[j][m][n])  #define stableP
                 else:
-	        ## The original code
-		            sol_stap[j] = 4. * sol_actp[j]
+                    ## The original code
+                    sol_stap[j] = 4. * sol_actp[j]
 
         sol_hum[j] = sol_cbn[j] * wt1 * 17200.
         xx = sol_z[j]
@@ -282,46 +284,59 @@ def Soil_Chemical(workingDir, outputPath):
         sumorgp = sumorgp + sol_orgp[j] + sol_fop[j]
 
         ##输出sol_actp, sol_stap, sol_hum
-        sol_actp_file = outputPath + os.sep + "sol_actp%d.tif" % j
-        sol_stap_file = outputPath + os.sep + "sol_stap%d.tif" % j
-        sol_hum_file = outputPath + os.sep + "sol_hum%d.tif" % j
+        sol_actp_file = workingDir + os.sep + "solactp_%d.tif" % (j + 1)
+        sol_stap_file = workingDir + os.sep + "solstap_%d.tif" % (j + 1)
+        sol_hum_file = workingDir + os.sep + "solhum_%d.tif" % (j + 1)
         #writeTIFF(sol_actp[j], sol_actp_file)
         #writeTIFF(sol_stap[j], sol_stap_file)
         #writeTIFF(sol_hum[j], sol_hum_file)
-
+        
+        ##output files
+        #layered
+        OutputFD_lyrd = [sol_fop[j], sol_fon[j], sol_no3[j], sol_orgn[j], sol_aorgn[j], sol_orgp[j], sol_solp[j], sol_actp[j], sol_stap[j], sol_hum[j]]
+        OutputFN_lyrd = ["sol_fop", "sol_fon", "sol_no3", "sol_orgn", "sol_aorgn", "sol_orgp", "sol_solp", "sol_actp", "sol_stap", "sol_hum"]
+        for f in range(len(OutputFN_lyrd)):
+                OutputFP = workingDir + os.sep + OutputFN_lyrd[f] + "_%d.tif" % (j + 1)
+                writeTIFF(OutputFD_lyrd[f], OutputFP)
+                #print OutputFD_lyrd[f]
+		
     ##输出sol_cov
-    sol_cov_file = outputPath + os.sep + "sol_cov.tif"
+    sol_cov_file = workingDir + os.sep + "solcov.tif"
     #writeTIFF(sol_cov, sol_cov_file)
 
     #basno3i = basno3i + sumno3 * hru_km / da_km
     #basorgni = basorgni + sumorgn * hru_km / da_km
     #basminpi = basminpi + summinp * hru_km / da_km
     #basorgpi = basorgpi + sumorgp * hru_km / da_km
-    basno3i_file = outputPath + os.sep + "sumno3.tif"
-    basorgni_file = outputPath + os.sep + "sumorgn.tif"
-    basminpi_file = outputPath + os.sep + "summinp.tif"
-    basorgpi_file = outputPath + os.sep + "sumorgp.tif"
+    basno3i_file = workingDir + os.sep + "sumno3.tif"
+    basorgni_file = workingDir + os.sep + "sumorgn.tif"
+    basminpi_file = workingDir + os.sep + "summinp.tif"
+    basorgpi_file = workingDir + os.sep + "sumorgp.tif"
     #writeTIFF(sumno3, basno3i_file)
     #writeTIFF(sumorgn, basorgni_file)
     #writeTIFF(summinp, basminpi_file)
     #writeTIFF(sumorgp, basorgpi_file)
-
+	
+    #single-layer
+    OutputFD_slyr = [conv_wt, sol_cov, sumno3, sumorgn, summinp, sumorgp]
+    OutputFN_slyr = ["conv_wt", "sol_cov", "sumno3", "sumorgn", "summinp", "sumorgp"]
+    for f in range(len(OutputFN_slyr)):
+                OutputFP = workingDir + os.sep + OutputFN_slyr[f] + ".tif"
+                writeTIFF(OutputFD_slyr[f], OutputFP)
+	
+	
 def writeTIFF(file, fpath):
     tiffile = "D:\SEIMS_model\Python\Preprocess\Model_data\model_dianbu_30m_test\data_prepare\output\Density.tif"
     nRows = ReadRaster(tiffile).nRows
     nCols = ReadRaster(tiffile).nCols
     geotrans = ReadRaster(tiffile).geotrans
     srs = ReadRaster(tiffile).srs
-    for i in range(nRows):
-        for j in range(nCols):
-            if abs(ReadRaster(tiffile).data[i][j] - (-9999)) < DELTA:
-                file[i][j] = -9999
     WriteGTiffFile(fpath, nRows, nCols, file, geotrans, srs, -9999, gdal.GDT_Float32)
-    print "%s输出完成~" % fpath
+    print "%s" % fpath
 
-#if __name__ == "__main__":
-nactfr = 0.5;
-outputPath = "D:\SEIMS_model\Python\Preprocess\Model_data\model_dianbu_30m_test\data_prepare\output\soil_chem"
-WORKING_DIR = "D:\SEIMS_model\Python\Preprocess\Model_data\model_dianbu_30m_test\data_prepare\output"
-Soil_Chemical(WORKING_DIR, outputPath);
-print "Soil chemical properties initialized done!"
+if __name__ == "__main__":
+    #print nlyrs
+    #nactfr = 0.5;
+    WORKING_DIR = "D:\SEIMS_model\Python\Preprocess\Model_data\model_dianbu_30m_test\data_prepare\output"
+    Soil_Chemical(WORKING_DIR);
+    print "Soil chemical properties initialized done!"

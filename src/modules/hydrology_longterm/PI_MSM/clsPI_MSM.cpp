@@ -108,7 +108,7 @@ int clsPI_MSM::Execute()
 		if (m_P[i] > 0)
 		{
 			//interception storage capacity
-			float degree = 2 * M_PI * (julian - 87)/365;
+			float degree = 2 * PI * (julian - 87)/365;
 			float min = m_minSt[i];
 			float max = m_maxSt[i];
 			float capacity = min + (max - min)*pow(0.5 + 0.5*sin(degree),double(m_Pi_b));

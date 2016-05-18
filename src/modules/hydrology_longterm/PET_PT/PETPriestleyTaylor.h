@@ -1,10 +1,8 @@
 /*!
  * \file PETHargreaves.h
  *
- * \author Junzhi Liu
+ * \author Junzhi Liu, LiangJun Zhu
  * \date Nov. 2010
- *
- * 
  */
 #ifndef SEIMS_PET_PRIESTTAYLOR_INCLUDE
 #define SEIMS_PET_PRIESTTAYLOR_INCLUDE
@@ -33,12 +31,12 @@ public:
 	virtual int Execute();
 	
 private:
-	/*!
-	 * \brief calculates saturation vapor pressure at a given air temperature.
-	 * \param[in] float t: mean air temperature(deg C)
-	 * \return saturation vapor pressure(kPa)
-	 */
-	float SaturationVaporPressure(float t);
+	///*!
+	// * \brief calculates saturation vapor pressure at a given air temperature.
+	// * \param[in] float t: mean air temperature(deg C)
+	// * \return saturation vapor pressure(kPa)
+	// */
+	//float SaturationVaporPressure(float t);
 
 	/*!
 	 * \brief check the input data. Make sure all the input data is available.
@@ -56,21 +54,21 @@ private:
 	 */
 	bool CheckInputSize(const char*,int);
 
-	/*!
-	 * \brief Calculate the max solar radiation for a station of one day
-	 *
-	 *
-	 * \param[in] day Julian day.
-	 * \param[in] lat Latitude of the station
-	 * \return float The max solar radiation.
-	 */
-	float MaxSolarRadiation(int,float);
+	///*!
+	// * \brief Calculate the max solar radiation for a station of one day
+	// *
+	// *
+	// * \param[in] day Julian day.
+	// * \param[in] lat Latitude of the station
+	// * \return float The max solar radiation.
+	// */
+	//float MaxSolarRadiation(int,float);
 
-	/*!
-	 * \brief Get the Julian day of one day
-	 * \return int Julian day
-	 */
-	int JulianDay(time_t);
+	///*!
+	// * \brief Get the Julian day of one day
+	// * \return int Julian day
+	// */
+	//int JulianDay(time_t);
 private:
 	/// mean air temperature for a given day(degree)
 	///float *m_tMean;

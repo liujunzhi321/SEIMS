@@ -6,7 +6,6 @@
  * \version 1.0
  * \date June 2010
  *
- * 
  */
 #pragma once
 
