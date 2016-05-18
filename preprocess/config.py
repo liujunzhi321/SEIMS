@@ -35,15 +35,17 @@ stormMode = False
 if forCluster and 'cluster_' not in SpatialDBName.lower():
     SpatialDBName = 'cluster_' + SpatialDBName
 ## Climate Input
-PrecSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor.shp'
+PrecSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor.shp'
 if stormMode:
-    PrecStormSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor_storm.shp'
-MeteorSitesVorShp = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Metero_hefei_Vor.shp'
+    PrecStormSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor_storm.shp'
+MeteorSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Metero_hefei_Vor.shp'
+
+HydroClimateVarFile = CLIMATE_DATA_DIR + os.sep + 'Variables.txt'
+MetroSiteFile = CLIMATE_DATA_DIR + os.sep + 'Sites_M.txt'
+PrecSiteFile = CLIMATE_DATA_DIR + os.sep + 'Sites_P.txt'
+MeteoDailyFile = CLIMATE_DATA_DIR + os.sep+ 'meteorology_dianbu_daily.txt'
 PrecExcelPrefix = CLIMATE_DATA_DIR + os.sep + 'precipitation_by_day_'
 PrecDataYear = [2014]
-MeteoVarFile = CLIMATE_DATA_DIR + os.sep + 'Variables.txt'
-MeteoDailyFile = CLIMATE_DATA_DIR + os.sep+ 'meteorology_dianbu_daily.txt'
-MetroSiteFile = CLIMATE_DATA_DIR + os.sep + 'sites_hefei.txt'
 DischargeExcelPrefix = CLIMATE_DATA_DIR + os.sep + 'discharge_by_day_'
 DischargeYear = [2014]
 
@@ -59,7 +61,8 @@ landuseFile = SPATIAL_DATA_DIR + os.sep + 'landuse_30m.tif'
 sandList = []
 clayList = []
 orgList = []
-for i in [1,2]:
+nlyrs = 2   # soil layers
+for i in range(1,nlyrs+1):
     sandFile = SPATIAL_DATA_DIR + os.sep + "sand" + str(i) + ".tif" 
     clayFile = SPATIAL_DATA_DIR + os.sep + "clay" + str(i) + ".tif"
     orgFile = SPATIAL_DATA_DIR + os.sep + "org" + str(i) + ".tif"

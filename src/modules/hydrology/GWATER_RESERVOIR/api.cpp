@@ -39,10 +39,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster); 
-	mdi.AddParameter("RchParam","","reach parameters", "reachparameters.txt",DT_Array2D);
+	mdi.AddParameter(Tag_RchParam,"","reach parameters", "reachparameters.txt",DT_Array2D);
 
 	mdi.AddParameter("DT_HS", "second", "time step for storm simulation","ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("CellWidth", "m", "Cell width", "file.in", DT_Single); 
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("kg", "", "baseflow recession coefficient", "ParameterDB_WaterBalance", DT_Single);
 	mdi.AddParameter("base_ex", "", "baseflow recession exponent", "ParameterDB_WaterBalance", DT_Single);
 	mdi.AddParameter("gw0", "mm", "Initial groundwater storage", "ParameterDB_WaterBalance", DT_Single);

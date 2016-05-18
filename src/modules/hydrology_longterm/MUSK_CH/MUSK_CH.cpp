@@ -23,7 +23,7 @@
 #include <algorithm> 
 #include <omp.h>
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 //#define NODATA_VALUE -99
 using namespace std;
 //! Constructor
@@ -204,7 +204,9 @@ int MUSK_CH::Execute()
 			ChannelFlow(reachIndex);
 		}
 	}
-
+	//Test outlet discharge, By LJ
+	//int iOutlet = m_reachLayers.rbegin()->second[0];
+	//cout<<iOutlet << "," << m_qOut[iOutlet]<<endl;
 	return 0;
 }
 //! Check input size
@@ -463,7 +465,7 @@ void MUSK_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "RchParam"))
+	if (StringMatch(sk, Tag_RchParam))
 	{
 		m_nreach = ncols-1;
 

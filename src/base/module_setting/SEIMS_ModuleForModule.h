@@ -10,18 +10,6 @@
  *
  * 
  */
-/*!
- * \file SEIMS_ModuleForModule.h
- * \brief
- *
- *
- *
- * \author [your name]
- * \version 
- * \date June 2015
- *
- * 
- */
 #pragma once
 
 #include <time.h>

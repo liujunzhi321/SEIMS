@@ -135,6 +135,10 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
     }
 #endif
 	
+	/// Get filenames existed in GridFS, i.e., "output.files"
+	vector<string> outputExisted = GetGridFsFileNames(conn,dbName,"output.files");
+
+
 	StatusMessage(("Creating output file " + Filename + "...").c_str());
 	// Don't forget add appropriate suffix to Filename... ZhuLJ, 2015/6/16 
 	if(m_AggregationType == AT_SpecificCells)
@@ -198,9 +202,13 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 		if(templateRaster == NULL) 
 			throw ModelException("PrintInfoItem", "Flush", "The templateRaster is NULL.");
 
+
         //cout << projectPath << Filename << endl;
-		//clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
-		//clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename);
+		bson_error_t *err = NULL;
+		if(find(outputExisted.begin(), outputExisted.end(), Filename.c_str()) != outputExisted.end())
+			mongoc_gridfs_remove_by_filename(gfs, Filename.c_str(), err);
+		clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
+		//clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename + ".asc");
 		clsRasterData::outputGTiff(templateRaster, RasterData, projectPath + Filename + ".tif");
 		return;
 	}
@@ -212,17 +220,20 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 
 		float *tmpData = new float[ValidCellCount];
 		ostringstream oss;
-		for(int j = 0; j < 2; j++)//For soil properties output, presuming the number of layers is 2
+		for(int j = 0; j < 2; j++)//For soil properties output, presuming the number of layers is 2, TODO change to nlyrs, LJ
 		{
 			for(int i = 0; i < ValidCellCount; i++)
 				tmpData[i] = m_2dData[i][j];
 			oss.str("");
-			oss << projectPath << Filename << "_L" << j << ".tif";  // Filename_L0.tif means layer 0
-			//clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
+			oss << projectPath << Filename << "_" << (j+1) << ".tif";  // Filename_1.tif means layer 1
 			clsRasterData::outputGTiff(templateRaster, tmpData, oss.str());
 		}
-		delete[] tmpData;
+		bson_error_t *err = NULL;
+		if(find(outputExisted.begin(), outputExisted.end(), Filename.c_str()) != outputExisted.end())
+			mongoc_gridfs_remove_by_filename(gfs, Filename.c_str(), err);
+		clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
 
+		delete[] tmpData;
 		return;
 	}
 

@@ -10,24 +10,37 @@
  */
 #ifndef SEIMS_UTIL_INCLUDE
 #define SEIMS_UTIL_INCLUDE
+#pragma once
+#include <string>
+#include <vector>
+#include <stdio.h>
+#include "text.h"
+#include <math.h>
+
+using namespace std;
 /**
  * \def NODATA_VALUE
  * \brief NODATA value
  */
 #define NODATA_VALUE	-9999.0f
-#define NODATA			-99.0f
+#define NODATA					-99.0f
 
 /**
  * \def ZERO
  * \brief zero value used in numeric calculation
  */
-#define UTIL_ZERO 0.0000000001
-#include <string>
-#include <vector>
-#include <stdio.h>
-#include "text.h"
+#define UTIL_ZERO				0.000001
+/**
+ * \def PI
+ * \brief PI value used in numeric calculation
+ */
+#define PI								3.14159265358979323846
+/**
+ * \def MINI_SLOPE
+ * \brief Minimum slope gradient
+ */
+#define MINI_SLOPE			0.0001f
 
-using namespace std;
 /*!
  * \ingroup util
  * \enum LayeringMethod
@@ -35,8 +48,10 @@ using namespace std;
  */
 enum LayeringMethod
 {
-	UP_DOWN, /**< layering-from-source method */
-	DOWN_UP  /**< layering-from-outlet method */
+	/// layering-from-source method
+	UP_DOWN, 
+	/// layering-from-outlet method
+	DOWN_UP
 };
 /*!
  * \brief Whether d1 is equal to d2 or not

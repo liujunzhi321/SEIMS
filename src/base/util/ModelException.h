@@ -26,11 +26,11 @@ class ModelException :
 {
 public:
 	/*!
-	 * \brief Construct
+	 * \brief Constructor
 	 * \param[in] className, functionName, msg \a string
 	 */
 	ModelException(string, string, string);
-	//! Deconstruct (void)
+	//! Destructor (void)
 	~ModelException(void) throw();
 	/*!
 	 * \brief Construct error information (string version)

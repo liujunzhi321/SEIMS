@@ -28,17 +28,17 @@ using namespace std;
  */
 enum AggregationType
 {
-	///< unknown
+	/// unknown
 	AT_Unknown			= 0,
-	///< sum
+	/// sum
 	AT_Sum				= 1,
-	///< average
+	/// average
 	AT_Average			= 2,
-	///< minimum
+	/// minimum
 	AT_Minimum			= 3,
-	///< maximum
+	/// maximum
 	AT_Maximum			= 4,
-	///< output values of specific cells
+	/// output values of specific cells
 	AT_SpecificCells	= 5
 };
 
@@ -64,6 +64,8 @@ private:
 public:
 	//! MongoDB client
 	mongoc_client_t*	conn;
+	//! Database name
+	string						dbName;
 	//! GridFS
 	mongoc_gridfs_t*	gfs;
 	
@@ -113,7 +115,7 @@ public:
 	time_t m_endTime;
 	//! Get end time  \a time_t
 	time_t getEndTime();
-	//! output filename
+	//! output filename in GridFS
 	string Filename;
 	//! create "output" folder to store all results
 	void Flush(string,clsRasterData*,string);

@@ -30,7 +30,6 @@
 #include <fstream>
 #include "util.h"
 #include "utils.h"
-#include "text.h"
 #include "ModulesIOList.h"
 #include "ModelException.h"
 #include "MetadataInfoConst.h"

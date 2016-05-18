@@ -55,12 +55,13 @@ public:
 	//! Find outputID parameter's module. Return Module index iModule and its ParamInfo
 	void FindOutputParameter(string& outputID, int& iModule, ParamInfo*& paraInfo);
 	//! Get Module ID by index
-	string GetModuleID(int i){	return m_moduleIDs[i];}
+	string GetModuleID(int i){return m_moduleIDs[i];}
 private:
-	typedef SimulationModule* (*InstanceFunction)(void);
-	typedef const char* (*MetadataFunction)(void);
-	/// function pointers used to create class instance
+	typedef SimulationModule*			(*InstanceFunction)(void);
+	typedef const char*					(*MetadataFunction)(void);
+	//! Modules' instance map
 	map<string, InstanceFunction>		m_instanceFuncs;
+	//! Metadata map of modules
 	map<string, MetadataFunction>		m_metadataFuncs;
 	//! Module path
 	string								m_modulePath;

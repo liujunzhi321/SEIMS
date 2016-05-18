@@ -21,7 +21,7 @@
 
 #include <omp.h>
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 //#define NODATA_VALUE -99
 
 using namespace std;
@@ -522,7 +522,7 @@ void NutTra_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "RchParam"))
+	if (StringMatch(sk, Tag_RchParam))
 	{
 		m_nreach = ncols-1;
 

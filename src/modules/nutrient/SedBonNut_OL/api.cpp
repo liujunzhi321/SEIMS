@@ -31,7 +31,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("STORM_DT", "second", "Time step of the simulation", "file.in", DT_Single); 
-	mdi.AddParameter("CellWidth", "m", "Cell size", "file.in", DT_Single); 
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster); 
 	//mdi.AddParameter("Theta", "", "theta parameter for 4-point implicit finite difference", "ParameterDB_Discharge", DT_Single); 
 	/*mdi.AddParameter("InitConc_P", "kg/kg", "Initial average concentration of P in the soil", "ParameterDB_soil", DT_Single);

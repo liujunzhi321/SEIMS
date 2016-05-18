@@ -19,7 +19,7 @@
 
 using namespace std;
 
-InterFlow::InterFlow(void):m_size(-1), m_dt(-1.0f), m_dx(-1.0f), m_chWidth(NULL),
+InterFlow::InterFlow(void):m_nCells(-1), m_dt(-1.0f), m_CellWidth(-1.0f), m_chWidth(NULL),
 	m_s0(NULL), m_rootDepth(NULL), m_ks(NULL), m_landuseFactor(1.f),
 	m_soilMoistrue(NULL), m_porosity(NULL), m_poreIndex(NULL),  m_fieldCapacity(NULL),
 	m_flowInIndex(NULL), m_routingLayers(NULL), m_nLayers(-1),
@@ -48,7 +48,7 @@ bool InterFlow::CheckInputData(void)
 		return false;
 	}
 
-	if(this->m_size <= 0)
+	if(this->m_nCells <= 0)
 	{
 		throw ModelException("INTERFLOW_IKW","CheckInputData","The cell number of the input can not be less than zero.");
 		return false;
@@ -60,7 +60,7 @@ bool InterFlow::CheckInputData(void)
 		return false;
 	}
 
-	if(this->m_dx <= 0)
+	if(this->m_CellWidth <= 0)
 	{
 		throw ModelException("INTERFLOW_IKW","CheckInputData","You have not set the CellWidth variable.");
 		return false;
@@ -100,17 +100,17 @@ bool InterFlow::CheckInputData(void)
 
 void  InterFlow::initalOutputs()
 {
-	if(this->m_size <= 0) 
+	if(this->m_nCells <= 0) 
 		throw ModelException("INTERFLOW_IKW","initalOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_q == NULL)
 	{
 		CheckInputData();	
 
-		m_q = new float[m_size];
-		m_h = new float[m_size];
-		m_hReturnFlow = new float[m_size];
-		for (int i = 0; i < m_size; ++i)
+		m_q = new float[m_nCells];
+		m_h = new float[m_nCells];
+		m_hReturnFlow = new float[m_nCells];
+		for (int i = 0; i < m_nCells; ++i)
 		{
 			m_q[i] = 0.0f;	
 			m_h[i] = 0.f;
@@ -130,7 +130,7 @@ void InterFlow::FlowInSoil(int id)
 			qUp  += m_q[flowInID];
 	}
 
-	float flowWidth = m_dx;
+	float flowWidth = m_CellWidth;
 	// there is no land in this cell
 	if (m_streamLink[id] > 0)
 	{
@@ -145,7 +145,7 @@ void InterFlow::FlowInSoil(int id)
 
 	// adjust soil moisture
 	float s0 =  m_s0[id];
-	float soilVolumn = m_rootDepth[id]/1000*m_dx*flowWidth/cos(atan(s0)); //m3
+	float soilVolumn = m_rootDepth[id]/1000*m_CellWidth*flowWidth/cos(atan(s0)); //m3
 	m_soilMoistrue[id] += qUp * m_dt / soilVolumn;
 	
 	// the water exceeds the porosity is added to storage (return flow)
@@ -168,7 +168,7 @@ void InterFlow::FlowInSoil(int id)
 	//float k = m_ks[id]/1000/3600 * pow((m_soilMoistrue[id] - m_residual[id])/(m_porosity[id] - m_residual[id]), m_poreIndex[id]);
 	float k = m_ks[id]/1000/3600 * pow(m_soilMoistrue[id]/m_porosity[id], m_poreIndex[id]);
 	// calculate interflow (m3/s)
-	m_q[id] = m_landuseFactor * m_rootDepth[id]/1000 * s0 * k * m_dx;
+	m_q[id] = m_landuseFactor * m_rootDepth[id]/1000 * s0 * k * m_CellWidth;
 	
 	// available water
 	float availableWater = (m_soilMoistrue[id] - m_fieldCapacity[id]) * soilVolumn;
@@ -178,7 +178,7 @@ void InterFlow::FlowInSoil(int id)
 		m_q[id] = availableWater / m_dt;
 		interFlow = availableWater;
 	}
-	m_h[id] = 1000 * interFlow / (m_dx*m_dx);
+	m_h[id] = 1000 * interFlow / (m_CellWidth*m_CellWidth);
 
 	// adjust soil moisture
 	m_soilMoistrue[id] -= interFlow / soilVolumn;
@@ -212,14 +212,14 @@ bool InterFlow::CheckInputSize(const char* key, int n)
 		//this->StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_size != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_size <=0) this->m_size = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			//this->StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
 			throw ModelException("INTERFLOW_IKW","CheckInputSize",oss.str());
 		}
 	}
@@ -232,14 +232,14 @@ void InterFlow::SetValue(const char* key, float data)
 	string sk(key);
 	if (StringMatch(sk, "DT_HS"))
 		m_dt = data;
-	else if (StringMatch(sk, "CellWidth"))
-		m_dx = data;
+	else if (StringMatch(sk, Tag_CellWidth))
+		m_CellWidth = data;
+	else if (StringMatch(sk, Tag_CellSize))
+		m_nCells = (int)data;
 	else if (StringMatch(sk, "Ki"))
 		m_landuseFactor = data;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
-	{
 		omp_set_num_threads((int)data);
-	}
 	else
 		throw ModelException("INTERFLOW_IKW", "SetSingleData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
@@ -284,7 +284,7 @@ void InterFlow::Get1DData(const char* key, int* n, float** data)
 	initalOutputs();
 
 	string sk(key);
-	*n = m_size;
+	*n = m_nCells;
 	if (StringMatch(sk, "QSoil"))
 		*data = m_q;
 	else if(StringMatch(sk, "ReturnFlow"))

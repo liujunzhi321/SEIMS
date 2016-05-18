@@ -273,13 +273,10 @@ void SUR_MR::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 	*nCols = m_nSoilLayers;
 
 	if (StringMatch(sk, "SOMO_2D"))   // excess precipitation
-	{
 		*data = m_soilMoisture;
-	}
 	else
 		throw ModelException("SUR_MR", "Get2DData", "Output " + sk 
 		+ " does not exist. Please contact the module developer.");
-
 }
 
 void SUR_MR::Set2DData(const char* key, int nrows, int ncols, float** data)

@@ -95,9 +95,9 @@ def RunoffCoefficent(filepath, sqliteFile):
                 coef[i][j] = coef2*(1-imp)+imp
             else:
                 coef[i][j] = coef2
-                
-            if coef[i][j] < 0:
-                print c0, slp, s0, coe1, coef2
+            # TODO: What's means?
+            #if coef[i][j] < 0:
+            #    print c0, slp, s0, coe1, coef2
                             
     filename = filepath + os.sep + runoff_coefFile
     util.WriteGTiffFile(filename, ysize, xsize, coef, \

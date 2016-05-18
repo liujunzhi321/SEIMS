@@ -22,7 +22,7 @@ Percolation::Percolation(void)
 {
 	// set default values for member variables	
 	this->m_timestep = -1;
-	m_size = -1;
+	m_nCells = -1;
 
 	m_Conductivity = NULL;
 	m_Porosity= NULL;
@@ -36,7 +36,7 @@ Percolation::Percolation(void)
 
 	m_recharge= NULL;
 	m_rootDepth = NULL;
-	m_dx = -1.f;
+	m_CellWidth = -1.f;
 }
 
 Percolation::~Percolation(void)
@@ -51,11 +51,11 @@ int Percolation::Execute()
 	if(m_recharge == NULL) 
 	{
 		CheckInputData();
-		m_recharge = new float[this->m_size];	
+		m_recharge = new float[this->m_nCells];	
 	}
 	
 #pragma omp parallel for
-	for(int i = 0; i < m_size; i++)
+	for(int i = 0; i < m_nCells; i++)
 	{
 		//if(this->m_SoilT[i] <= this->m_ForzenT)	//if the soil temperature is lower than tFrozen, then PERC = 0.
 		//{
@@ -105,7 +105,7 @@ void Percolation::Get1DData(const char* key, int* nRows, float** data)
 	}
 	else									throw ModelException("Percolation","getResult","Result " + s + " does not exist in Percolation method. Please contact the module developer.");
 
-	*nRows = this->m_size;
+	*nRows = this->m_nCells;
 }
 
 void Percolation::Set1DData(const char* key, int nRows, float* data)
@@ -131,8 +131,10 @@ void Percolation::SetValue(const char* key, float data)
 	string s(key);
 	if(StringMatch(s,"DT_HS"))			
 		this->m_timestep = int(data);
-	else if(StringMatch(s,"CellWidth"))			
-		m_dx = data;
+	else if(StringMatch(s,Tag_CellWidth))			
+		m_CellWidth = data;
+	else if(StringMatch(s, Tag_CellSize))
+		m_nCells = (int)data;
 	//else if(StringMatch(s,"t_soil"))		this->m_ForzenT = data;
 	else									
 		throw ModelException("Percolation","SetValue","Parameter " + s + " does not exist in Percolation method. Please contact the module developer.");
@@ -143,11 +145,11 @@ bool Percolation::CheckInputData()
 {
 	if(this->m_date <=0)				
 		throw ModelException("Percolation","CheckInputData","You have not set the time.");
-	if(m_size <= 0)					
+	if(m_nCells <= 0)					
 		throw ModelException("Percolation","CheckInputData","The dimension of the input data can not be less than zero.");
 	if(this->m_timestep <=0)			
 		throw ModelException("Percolation","CheckInputData","The time step can not be less than zero.");
-	if (m_dx < 0)
+	if (m_CellWidth < 0)
 		throw ModelException("Percolation", "CheckInputData","The parameter CellWidth is not set.");
 	if(this->m_Conductivity == NULL)	
 		throw ModelException("Percolation","CheckInputData","The Conductivity can not be NULL.");
@@ -171,9 +173,9 @@ bool Percolation::CheckInputSize(const char* key, int n)
 		throw ModelException("Percolation","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_size != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_size <=0) this->m_size = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			throw ModelException("Percolation","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");

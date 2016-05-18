@@ -89,7 +89,7 @@ void NandPim::SetValue(const char* key, float value)
 		omp_set_num_threads((int)value);
 	} 
 	else if (StringMatch(sk, Tag_CellSize)) {
-		this -> m_nCells = value;
+		this -> m_nCells = (int)value;
 	} 
 	else if (StringMatch(sk, Tag_CellWidth)) {
 		this -> m_cellWidth = value;

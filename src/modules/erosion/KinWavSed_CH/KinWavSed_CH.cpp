@@ -12,7 +12,7 @@
 //#define NODATA_VALUE -99
 using namespace std;
 
-KinWavSed_CH::KinWavSed_CH(void):m_cellWith(-1),m_nCells(-1), m_TimeStep(-99.0f), m_chNumber(-1), m_Slope(NULL),
+KinWavSed_CH::KinWavSed_CH(void):m_CellWith(-1),m_nCells(-1), m_TimeStep(-99.0f), m_chNumber(-1), m_Slope(NULL),
 	m_chWidth(NULL), m_ChannelWH(NULL), m_flowInIndex(NULL), m_flowOutIndex(NULL), m_reachId(NULL), m_streamOrder(NULL),
 	m_sourceCellIds(NULL), m_streamLink(NULL), m_ChQkin(NULL), m_ChVol(NULL), m_Qsn(NULL), m_CHDETFlow(NULL), m_CHSedDep(NULL),
 	m_CHSed_kg(NULL), m_SedSubbasin(NULL), m_ChDetCo(-99.0f), m_USLE_K(NULL),m_SedToChannel(NULL), m_ChV(NULL),
@@ -114,7 +114,8 @@ KinWavSed_CH::~KinWavSed_CH(void)
 void KinWavSed_CH::SetValue(const char* key, float data)
 {
 	string s(key);
-	if(StringMatch(s,"CellWidth"))			m_cellWith = int(data);
+	if(StringMatch(s,Tag_CellWidth))			m_CellWith = data;
+	else if(StringMatch(s, Tag_CellSize))		m_nCells = (int)data;
 	else if(StringMatch(s,"DT_HS"))		m_TimeStep = data;
 	else if(StringMatch(s,"ChTcCo"))		m_ChTcCo = data;
 	/*else if(StringMatch(s,"eco1"))		m_eco1 = data;
@@ -206,7 +207,7 @@ void KinWavSed_CH::Get1DData(const char* key, int* n, float** data)
 void KinWavSed_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
-	if(StringMatch(sk, "ReachParameter"))
+	if(StringMatch(sk, Tag_ReachParameter))
 	{
 		m_chNumber = ncols; // overland is nrows;
 		m_reachId = data[0];
@@ -275,7 +276,7 @@ bool KinWavSed_CH::CheckInputData()
 		throw ModelException("KinWavSed_CH","CheckInputData","You have not set the time.");
 		return false;
 	}
-	if(m_cellWith <= 0)
+	if(m_CellWith <= 0)
 	{
 		throw ModelException("KinWavSed_CH","CheckInputData","The cell width can not be less than zero.");
 		return false;
@@ -535,7 +536,7 @@ void KinWavSed_CH::CalcuVelocityChannelFlow(int iReach, int iCell, int id)  //id
 
 //float KinWavSed_CH::MaxConcentration(float watvol, float sedvol)
 //{
-//	float conc = (watvol > m_cellWith * m_cellWith * 1e-6 ? sedvol / watvol : 0);
+//	float conc = (watvol > m_CellWith * m_CellWith * 1e-6 ? sedvol / watvol : 0);
 //	if (conc > 848)
 //	{
 //		//dep += min(0, 848 * watvol - sedvol);
@@ -548,7 +549,7 @@ void KinWavSed_CH::CalcuVelocityChannelFlow(int iReach, int iCell, int id)  //id
 
 //float KinWavSed_CH::MaxConcentration(float watvol, float sedvol, int iReach, int iCell)
 //{
-//	float conc = (watvol > m_cellWith * m_cellWith * 1e-6 ? sedvol / watvol : 0);
+//	float conc = (watvol > m_CellWith * m_CellWith * 1e-6 ? sedvol / watvol : 0);
 //	if (conc > 848)
 //	{
 //		m_CHSedDep[iReach][iCell] = min(0.f, 848 * watvol - sedvol);
@@ -563,8 +564,8 @@ void KinWavSed_CH::WaterVolumeCalc(int iReach, int iCell, int id)
 {
 	float slope, DX, wh;
 	slope = atan(m_Slope[id]);
-	DX = m_cellWith/cos(slope);
-	wh = m_ChannelWH[iReach][iCell]/1000;  //mm -> m   : m_ChannelWH[iReach][iCell] => "HCH" from the channel routing module
+	DX = m_CellWith/cos(slope);
+	wh = m_ChannelWH[iReach][iCell]/1000.f;  //mm -> m   : m_ChannelWH[iReach][iCell] => "HCH" from the channel routing module
 	m_ChVol[iReach][iCell] = DX * m_chWidth[id] * wh;  // m3
 	//test
 	m_chanVol[id] = m_ChVol[iReach][iCell];
@@ -587,7 +588,7 @@ void KinWavSed_CH::CalcuChFlowDetachment(int iReach, int iCell, int id)  //i is 
 	Df = m_ChDetCo * m_USLE_K[id] * pow(shearStr, 1.5f);
 	///  kg/(m2*min), convert to kg
 	float DX, CHareas;
-	DX = m_cellWith/cos(atan(s));
+	DX = m_CellWith/cos(atan(s));
 	CHareas = DX * m_chWidth[id];
 	m_CHDETFlow[iReach][iCell] = Df * (m_TimeStep/60) * CHareas;  //kg
 	m_detCH[id] = m_CHDETFlow[iReach][iCell];
@@ -645,8 +646,8 @@ float KinWavSed_CH::GetTransportCapacity(int iReach, int iCell, int id)
 
 void KinWavSed_CH::GetSedimentInFlow(int iReach, int iCell, int id)
 {
-	float TC, sedinf, Df, SedtoCh, Deposition, concentration, chVol;
-
+	float TC, Df, SedtoCh, Deposition, concentration, chVol;
+	//float sedinf;
 	TC = GetTransportCapacity(iReach, iCell, id);        //kg/m3
 	m_cap[id] = TC;
 	CalcuChFlowDetachment(iReach, iCell, id);
@@ -756,7 +757,7 @@ void KinWavSed_CH::ChannelflowSedRouting(int iReach, int iCell, int id)
 	//else
 	//	Q = 0;
 	//Qs = Q * m_CHSedConc[iReach][iCell];
-	//float DX = m_cellWith/cos(asin(S));
+	//float DX = m_CellWith/cos(asin(S));
 	//m_Qsn[iReach][iCell] = complexSedCalc(m_ChQ[iReach][iCell], Qin, Q, Sin, Qs, Alpha, m_TimeStep, DX);
 	//----end
 

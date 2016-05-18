@@ -39,14 +39,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("spexp","", "Exponent in sediment transport equation","ParameterDB_Sediment", DT_Single);
 	mdi.AddParameter("vcrit","m/s", "critical veloctiy for sediment deposition","ParameterDB_Sediment", DT_Single);
 
-	//mdi.AddParameter("CellSize","","the size of the cell (the validate cells of the whole basin)","file.in",DT_Single); 
+	//mdi.AddParameter(Tag_CellSize,"","the size of the cell (the validate cells of the whole basin)","file.in",DT_Single); 
 	//mdi.AddParameter("nPETS","","the number of the PET stations","file.in",DT_Single);
-	//mdi.AddParameter("CellWidth","m","cell width of the grid","file.in",DT_Single);
+	//mdi.AddParameter(Tag_CellSize,"m","cell width of the grid","file.in",DT_Single);
 	mdi.AddParameter("Chs0","m3/m","initial channel storage per meter of reach length","ParameterDB_Discharge", DT_Single);
 	//mdi.AddParameter("Vseep0","m3/s","the initial volume of transmission loss to the deep aquifer over the time interval","ParameterDB_Discharge", DT_Single);
 
-	mdi.AddParameter("RchParam","","reach parameters", "reachparameters.txt",DT_Array2D);
-	//mdi.AddParameter("ReachParameter", "", "Reach parameters such stream order, manning's n and downstream subbasin id", "ParameterDB_Discharge", DT_Array2D);
+	mdi.AddParameter(Tag_RchParam,"","reach parameters", "reachparameters.txt",DT_Array2D);
+	//mdi.AddParameter(Tag_ReachParameter, "", "Reach parameters such stream order, manning's n and downstream subbasin id", "ParameterDB_Discharge", DT_Array2D);
 	//mdi.AddParameter("Vdiv","m3","diversion loss of the river reach", "diversionloss.txt",DT_Array1D);
 	//mdi.AddParameter("Vpoint","m3"," point source discharge", "diversionloss.txt",DT_Array1D);
 

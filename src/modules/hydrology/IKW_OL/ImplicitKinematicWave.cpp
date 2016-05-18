@@ -21,9 +21,9 @@
 
 using namespace std;
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 
-ImplicitKinematicWave::ImplicitKinematicWave(void):m_size(-1), m_dx(-1.0f),
+ImplicitKinematicWave::ImplicitKinematicWave(void):m_nCells(-1), m_CellWidth(-1.0f),
 	m_s0(NULL), m_n(NULL), m_flowInIndex(NULL), m_flowOutIndex(NULL), m_direction(NULL), m_routingLayers(NULL), m_nLayers(-1),
 	m_q(NULL), m_sr(NULL), m_flowWidth(NULL), m_flowLen(NULL), m_alpha(NULL), m_streamLink(NULL),
 	m_sRadian(NULL), m_vel(NULL), m_reInfil(NULL), m_idOutlet(-1),
@@ -80,13 +80,13 @@ bool ImplicitKinematicWave::CheckInputData(void)
 	if(m_date <= 0)
 		throw ModelException("IKW_OL","CheckInputData","You have not set the Date variable.");
 
-	if(m_size <= 0)
+	if(m_nCells <= 0)
 		throw ModelException("IKW_OL","CheckInputData","The cell number of the input can not be less than zero.");
 
 	if(m_dtStorm <= 0)
 		throw ModelException("IKW_OL","CheckInputData","You have not set the TimeStep variable of the overland flow routing.");
 
-	if(m_dx <= 0)
+	if(m_CellWidth <= 0)
 		throw ModelException("IKW_OL","CheckInputData","You have not set the CellWidth variable.");
 
 	if(m_s0 == NULL)
@@ -112,30 +112,30 @@ bool ImplicitKinematicWave::CheckInputData(void)
 
 void  ImplicitKinematicWave::initalOutputs()
 {
-	if(m_size <= 0) throw ModelException("IKW_OL","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_nCells <= 0) throw ModelException("IKW_OL","initalOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_q == NULL)
 	{
 		CheckInputData();	
-		m_q = new float[m_size];
+		m_q = new float[m_nCells];
 		
-		m_sRadian = new float[m_size];
-		m_vel = new float[m_size];
-		m_flowWidth = new float[m_size];
-		m_flowLen = new float[m_size];
-		m_alpha = new float[m_size];
-		m_reInfil = new float[m_size];
+		m_sRadian = new float[m_nCells];
+		m_vel = new float[m_nCells];
+		m_flowWidth = new float[m_nCells];
+		m_flowLen = new float[m_nCells];
+		m_alpha = new float[m_nCells];
+		m_reInfil = new float[m_nCells];
 		
-		for (int i = 0; i < m_size; ++i)
+		for (int i = 0; i < m_nCells; ++i)
 		{
 			m_q[i] = 0.0f;	
 			m_reInfil[i] = 0.f;
 
 			// flow width
-			m_flowWidth[i] = m_dx;
+			m_flowWidth[i] = m_CellWidth;
 			int dir = (int)m_direction[i];
 			if (m_diagonal[dir] == 1)
-				m_flowWidth[i] = m_dx/SQ2;
+				m_flowWidth[i] = m_CellWidth/SQ2;
 			if(m_streamLink[i] > 0)
 				m_flowWidth[i] -= m_chWidth[i];
 
@@ -145,7 +145,7 @@ void  ImplicitKinematicWave::initalOutputs()
 			m_sRadian[i] = atan(s0);
 			
 			// flow length needs to be corrected by slope angle
-			float dx = m_dx / cos(m_sRadian[i]);
+			float dx = m_CellWidth / cos(m_sRadian[i]);
 			if (m_diagonal[dir] == 1)
 				dx = SQ2*dx;
 			m_flowLen[i] = dx;
@@ -353,14 +353,14 @@ bool ImplicitKinematicWave::CheckInputSize(const char* key, int n)
 		//StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(m_size != n)
+	if(m_nCells != n)
 	{
-		if(m_size <=0) m_size = n;
+		if(m_nCells <=0) m_nCells = n;
 		else
 		{
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
 			throw ModelException("IKW_OL","CheckInputSize",oss.str());
 		}
 	}
@@ -373,12 +373,12 @@ void ImplicitKinematicWave::SetValue(const char* key, float data)
 	string sk(key);
 	if (StringMatch(sk, "DT_HS"))
 		m_dtStorm = data;
-	else if (StringMatch(sk, "CellWidth"))
-		m_dx = data;
+	else if (StringMatch(sk, Tag_CellWidth))
+		m_CellWidth = data;
+	else if (StringMatch(sk, Tag_CellSize))
+		m_nCells = int(data);
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
-	{
 		omp_set_num_threads((int)data);
-	}
 	else
 		throw ModelException("IKW_OL", "SetSingleData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
@@ -403,7 +403,7 @@ void ImplicitKinematicWave::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(sk, "FlowOut_Index_D8"))
 	{
 		m_flowOutIndex = data;
-		for (int i = 0; i < m_size; i++)
+		for (int i = 0; i < m_nCells; i++)
 		{
 			if (m_flowOutIndex[i] < 0)
 			{
@@ -444,7 +444,7 @@ void ImplicitKinematicWave::Get1DData(const char* key, int* n, float** data)
 	initalOutputs();
 
 	string sk(key);
-	*n = m_size;
+	*n = m_nCells;
 	if (StringMatch(sk, "QOverland"))
 		*data = m_q;
 	else if (StringMatch(sk, "Reinfiltration"))

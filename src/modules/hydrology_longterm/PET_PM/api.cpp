@@ -69,14 +69,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//These five inputs are read from HydroClimateDB
 	//! Current: use TMin and TMax to calculate TMean
 	//! TODO: Use mean temperature if exists
-	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_HydroClimateDB, DT_Array1D);
-	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_HydroClimateDB, DT_Array1D);
-	mdi.AddInput(DataType_RelativeAirMoisture,UNIT_NON_DIM,DESC_RM,Source_HydroClimateDB, DT_Array1D);
-	mdi.AddInput(DataType_SolarRadiation,UNIT_SR,DESC_SR,Source_HydroClimateDB, DT_Array1D);
-	mdi.AddInput(DataType_WindSpeed,UNIT_SPEED_MS,DESC_WS,Source_HydroClimateDB, DT_Array1D);
+	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_RelativeAirMoisture,UNIT_NON_DIM,DESC_RM,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_SolarRadiation,UNIT_SR,DESC_SR,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_WindSpeed,UNIT_SPEED_MS,DESC_WS,Source_Module, DT_Array1D);
 
 	//LAI needs to be calculated by other modules.
-	//mdi.AddInput("LAIDAY","m2/m2","Leaf area index","Plant growth module", Array1D); //Wetspa Manual P17, need min LAI,max LAI and Julian day.
+	//mdi.AddInput("LAIDAY","m2/m2","Leaf area index","Plant growth module", Array1D); //Wetspa Manual P17, need min LAI,max LAI and Julian day?
 
 	//The albedo also needs plant growth module. 
 	//Now, for testing, its value is determined by T_snow and T_MEAN.

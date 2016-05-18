@@ -5,7 +5,6 @@
 #include <fstream>
 #include "ModelException.h"
 #include "util.h"
-#include "text.h"
 #include <omp.h>
 
 using namespace std;
@@ -394,60 +393,37 @@ void PETPenmanMonteith::SetValue(const char* key, float value)
 
 void PETPenmanMonteith::Set1DData(const char* key,int n, float *value)
 {
-	//checke the input data
 	if(!this->CheckInputSize(key,n)) return;
-
-	//set the value
 	string sk(key);
-	//from hydroclimate data tables
-	if (StringMatch(sk,"TMin"))
-	{
-		m_tMin = value;
-	}
-	else if (StringMatch(sk,"TMax"))
-	{
-		m_tMax = value;
-	}
-	else if (StringMatch(sk, "RM"))
-	{
-		m_rhd = value;
-	}
-	else if (StringMatch(sk,"SR"))
-	{
-		m_sr = value;
-	}
-	else if (StringMatch(sk,"WS"))
-	{
-		m_ws = value;
-	}
+	//if (StringMatch( sk,DataType_MeanTemperature))
+	//	this->m_tMean = value;
+	if (StringMatch( sk,DataType_MaximumTemperature))
+		this->m_tMax = value;
+	else if (StringMatch( sk, DataType_MinimumTemperature))
+		this->m_tMin = value;
+	else if (StringMatch( sk, Tag_Latitude_Meteorology))
+		this->m_latitude = value;
+	else if (StringMatch(sk, DataType_RelativeAirMoisture))
+		this->m_rhd = value;
+	else if (StringMatch(sk, DataType_SolarRadiation))
+		this->m_sr = value;
+	else if (StringMatch(sk, DataType_WindSpeed))
+		this->m_ws = value;
 	//from hydroclimate stations table
 	else if (StringMatch(sk, Tag_Elevation_Meteorology))
-	{
-		m_elev = value;
-	}
+		this->m_elev = value;
 	else if (StringMatch(sk, Tag_Latitude_Meteorology))
-	{
 		this->m_latitude = value;
-	}
 	//from grid file
 	else if (StringMatch(sk,"CHT"))
-	{
 		m_cht = value;
-	}
 	//from LAI model
 	else if (StringMatch(sk,"LAIDAY"))
-	{
 		m_lai = value;
-	}
 	else if (StringMatch(sk, "IGRO"))
-	{
 		this->m_growCode = value;
-	}
 	else
-	{
-		throw ModelException("PET_PM","SetValue","Parameter " + sk + " does not exist in PETPenmanMonteith method. Please contact the module developer.");		
-	}
-
+		throw ModelException("PET_PM","SetValue","Parameter " + sk + " does not exist in PETPenmanMonteith method. Please contact the module developer.");
 }
 
 

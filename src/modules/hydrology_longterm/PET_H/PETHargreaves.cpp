@@ -15,7 +15,6 @@
 #include <iostream>
 #include <fstream>
 #include "util.h"
-#include "text.h"
 #include "ModelException.h"
 #include <omp.h>
 
@@ -62,36 +61,19 @@ void PETHargreaves::SetValue(const char* key, float value)
 void PETHargreaves::Set1DData(const char* key,int n, float *value)
 {
 	if(!this->CheckInputSize(key,n)) return;
-
 	string sk(key);
 	if (StringMatch( sk,DataType_MeanTemperature))
-	{
-		m_tMax = value;
-	}
+		this->m_tMean = value;
 	else if (StringMatch( sk,DataType_MaximumTemperature))
-	{
-		m_tMax = value;
-	}
+		this->m_tMax = value;
 	else if (StringMatch( sk, DataType_MinimumTemperature))
-	{
-		m_tMin = value;
-	}
+		this->m_tMin = value;
 	else if (StringMatch( sk, Tag_Latitude_Meteorology))
-	{
 		this->m_latitude = value;
-	}
-	else if (StringMatch( sk, DataType_MeanTemperature))
-	{
-		m_tMean = value;
-	}
 	else if (StringMatch(sk, VAR_SR_MAX))
-	{
-		m_srMax = value;
-	}
+		this->m_srMax = value;
 	else
-	{
-		throw ModelException("PET_H","SetValue","Parameter " + sk + " does not exist in PETHargreaves method. Please contact the module developer.");
-	}
+		throw ModelException("PET_H","Set1DValue","Parameter " + sk + " does not exist in PETHargreaves method. Please contact the module developer.");
 }
 
 // int PETHargreaves::JulianDay(time_t date)
@@ -142,11 +124,10 @@ void PETHargreaves::Set1DData(const char* key,int n, float *value)
 int PETHargreaves::Execute()
 {
 	if(!this->CheckInputData()) return false;
-	if(this->m_pet == NULL)
-	{
-		this->m_pet = new float[this->m_size];
-	}
+	if(NULL == m_pet)
+		this->m_pet = new float[m_size];
 	// int d = JulianDay(this->m_date);
+	//cout<<m_tMean[0]<<","<<m_tMax[0]<<","<<m_tMin[0]<<endl;
 #pragma omp parallel for
 	for (int i = 0; i < m_size; ++i)
 	{	
@@ -164,16 +145,26 @@ int PETHargreaves::Execute()
 			* (m_tMean[i] + 17.8f) / latentHeat;
 		m_pet[i] = m_petFactor * max(0.0f, petValue);
 	}
+	/// Test code
+	/*for (int i = 0; i < m_size; ++i)
+		cout<< "m_srMax: " << m_srMax[i] << ", m_pet: " << m_pet[i] << "; ";*/
+	//cout<<endl;
 	return 0;
 }
 
 
 void PETHargreaves::Get1DData(const char* key, int* n, float **data)
 {
+	string sk(key);
 	if(this->m_pet == NULL) 
 		throw ModelException("PET_H","getPET","The result is NULL. Please first execute the module.");
-	*data = this->m_pet;
-	*n = this->m_size;
+	if (StringMatch(sk, VAR_PET_T) || StringMatch(sk, "PET"))
+	{
+		*data = this->m_pet;
+		*n = this->m_size;
+	}
+	else
+		throw ModelException("PET_H", "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
 bool PETHargreaves::CheckInputSize(const char* key, int n)

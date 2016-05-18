@@ -20,7 +20,7 @@
 #include <algorithm> 
 #include <omp.h>
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 //#define NODATA_VALUE -9999  defined in util.h
 
 #define MIN_FLUX 1e-12f 
@@ -464,7 +464,7 @@ void IKW_REACH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "RchParam"))
+	if (StringMatch(sk, Tag_RchParam))
 	{
 		m_nreach = ncols-1;
 

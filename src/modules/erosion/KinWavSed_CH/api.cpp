@@ -32,7 +32,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("KinWavSed_CH.chm");
 
-	mdi.AddParameter("CellWidth","m","the width (length) of cell","mask.asc",DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single);
 	mdi.AddParameter("ChTcCo","","calibration coefficient of transport capacity","ParameterDB_Sediment",DT_Single);
 	/*mdi.AddParameter("eco1","","calibration coefficient of transport capacity calculation","ParameterDB_Sediment",DT_Single);
@@ -48,7 +49,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
 		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
 	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster);
-	mdi.AddParameter("ReachParameter", "", "Reach parameters such stream order, manning's n and downstream subbasin id", "ParameterDB_Discharge", DT_Array2D);
+	mdi.AddParameter(Tag_ReachParameter, "", "Reach parameters such stream order, manning's n and downstream subbasin id", "ParameterDB_Discharge", DT_Array2D);
 
 	//input from other module	
 	//mdi.AddInput("T_HCH","mm", "Water depth in the downslope boundary of cells","Module",DT_Array2D);		//chWH, from channel routing module

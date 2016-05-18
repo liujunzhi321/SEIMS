@@ -60,6 +60,15 @@ string		GetStringFromBSONITER(bson_iter_t *iter);
  */
 int			GetCollectionNames(mongoc_client_t* conn, string& dbName, vector<string>& tableNameList);
 /*!
+ * \brief Get GridFs file names in MongoDB database
+ *
+ * \param[in] conn \a mongoc_client_t
+ * \param[in] dbName \string database name
+ * \param[in] gridfsname \char* GridFS name, e.g., spatial.files
+ * \return filenames vector<string>
+ */
+vector<string> GetGridFsFileNames(mongoc_client_t *conn, string& dbName, char* gridfsname);
+/*!
  * \brief Read 1D array data from MongoDB database
  *
  * \param[in] spatialData \a mongoc_gridfs_t
@@ -87,7 +96,7 @@ extern void Read2DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteF
  * \param[in] templateRaster \clsRasterData*
  * \param[out] n \int&, valid cell number
  * \param[out] data \float*&, returned data
- * \TODO currently just support 2 soil layers, it should be extend to any layers defined by user. LJ
+ * \deprecated Replaced by \sa Read2DArrayFromMongoDB()
  */
 extern void Read2DSoilAttr(mongoc_gridfs_t* spatialData, string remoteFilename, clsRasterData* templateRaster, int& n, float**& data);
 /*!

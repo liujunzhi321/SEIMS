@@ -59,11 +59,11 @@ private:
 	*/
 	map<int, vector<int> > m_reachs;
     /// cell width of the grid (m)
-	float m_dx;
+	float m_CellWidth;
 	/// time step (second)
 	float m_dt;
-	/// number of cells
-	int m_size;
+	/// number of valid cells
+	int m_nCells;
 	/// id of source cells of reaches
 	int* m_sourceCellIds;
 	/// channel number

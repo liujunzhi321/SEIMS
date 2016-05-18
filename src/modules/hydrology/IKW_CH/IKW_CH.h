@@ -58,10 +58,10 @@ private:
 	void initalOutputs();
 	void initalOutputs2();
 	/// size
-	int m_size;
+	int m_nCells;
 
 	/// cell width of the grid (m)
-	float m_dx;
+	float m_CellWidth;
 	/// time step (second)
 	float m_dt;
 

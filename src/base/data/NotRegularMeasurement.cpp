@@ -11,7 +11,7 @@
 #include "NotRegularMeasurement.h"
 #include "utils.h"
 #include "bson.h"
-#include "text.h"
+#include "util.h"
 #include "ModelException.h"
 //! Constructor
 NotRegularMeasurement::NotRegularMeasurement(mongoc_client_t* conn, string hydroDBName, string sitesList, string siteType, time_t startTime, time_t endTime)

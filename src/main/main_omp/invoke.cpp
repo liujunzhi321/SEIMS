@@ -10,7 +10,7 @@
 #include "invoke.h"
 #include "clsRasterData.h"
 //#include "clsWgnData.h"
-#include "text.h"
+#include "util.h"
 #include "clsSimpleTxtData.h"
 //#include "clsSiteData.h"
 #include "clsInterpolationWeightData.h"
@@ -166,8 +166,25 @@ void MainMongoDB(string modelPath,char *host,int port,int scenarioID, int numThr
 		if(!mongoc_client_get_server_status(conn,NULL,reply,err))
 			throw ModelException("SEIMS","MainMongoDB","Failed to connect to MongoDB!\n");
 		bson_destroy(reply);
-
+		
 		// TODO: ADD CHECK DATABASE AND TABLE, LJ.
+		char		**dbnames;
+		unsigned	i;
+		bool		dbExist = false;
+		if (dbnames = mongoc_client_get_database_names(conn,err))
+		{
+			for (i = 0; dbnames[i]; i++)
+			{
+				if(StringMatch(string(dbnames[i]),dbName)){
+					dbExist = true;
+					break;
+				}
+			}
+			bson_strfreev(dbnames);
+		}
+		if(!dbExist)
+			throw ModelException("SEIMS","MainMongoDB","Database: " + dbName + " is not existed in MongoDB!\n");
+		// CHECK FINISHED
 
 		int nSubbasin = 1;
 		int scenarioID = 0;
@@ -180,7 +197,7 @@ void MainMongoDB(string modelPath,char *host,int port,int scenarioID, int numThr
 
 		delete factory;
 		mongoc_uri_destroy(uri);
-		mongoc_client_destroy(conn);
+		//mongoc_client_destroy(conn);
 		mongoc_cleanup();
 	}
 	catch(ModelException e)

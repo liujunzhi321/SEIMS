@@ -21,7 +21,7 @@
 
 #include <omp.h>
 
-#define MINI_SLOPE 0.0001f
+//#define MINI_SLOPE 0.0001f
 //#define NODATA_VALUE -99
 
 using namespace std;
@@ -388,7 +388,7 @@ void SEDR_VCD::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "RchParam"))
+	if (StringMatch(sk, Tag_RchParam))
 	{
 		m_nreach = ncols-1;
 
@@ -418,7 +418,7 @@ void SEDR_VCD::Set2DData(const char* key, int nrows, int ncols, float** data)
 		throw ModelException("SEDR_VCD", "Set2DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 	//--------------for phd work
-	//if(StringMatch(sk, "ReachParameter"))
+	//if(StringMatch(sk, Tag_ReachParameter))
 	//{
 	//	m_nreach = ncols;
 

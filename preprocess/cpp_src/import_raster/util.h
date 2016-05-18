@@ -36,7 +36,9 @@ extern void Read1DArray(const char* filename, int& nRows, float*& data);
 extern void Output1DArray(int n, float* data, const char* filename);
 extern void Output2DArray(int nRows, int nCols, float** data, const char* filename);
 extern double Max(double *a, int n);
+vector<string> SplitString(string item, char delimiter);
 extern double Sum(double *a, int n);
+
 extern string& trim(string& s);
 extern int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFiles);
 extern string GetCoreFileName(const string& fullFileName);

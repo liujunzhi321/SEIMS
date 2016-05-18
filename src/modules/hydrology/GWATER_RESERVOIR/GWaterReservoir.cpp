@@ -11,7 +11,7 @@
 
 using namespace std;
 
-GWaterReservoir::GWaterReservoir(void):m_recharge(NULL), m_storage(NULL), m_recessionCoefficient(-1.f), m_recessionExponent(1.f), m_dx(-1.f),
+GWaterReservoir::GWaterReservoir(void):m_recharge(NULL), m_storage(NULL), m_recessionCoefficient(-1.f), m_recessionExponent(1.f), m_CellWidth(-1.f),
 										m_deepCoefficient(0.f), m_nCells(-1), m_nReaches(-1), m_qg(NULL), m_percSubbasin(NULL), m_subbasin(NULL),
 										m_nCellsSubbasin(NULL), m_initStorage(0.f)
 {
@@ -53,7 +53,7 @@ bool GWaterReservoir::CheckInputData()
 		return false;
 	}
 
-	if(m_dx <= 0)
+	if(m_CellWidth <= 0)
 	{
 		throw ModelException("GWATER_RESERVOIR","CheckInputData","The cell width  is not set.");
 		return false;
@@ -154,7 +154,7 @@ int GWaterReservoir::Execute(void)
 		// depth of groundwater runoff(mm)
 		float outFlowDepth = m_recessionCoefficient * pow(m_storage[i], m_recessionExponent);
 		// groundwater flow out of the subbasin at time t (m3/s)
-		m_qg[i] = outFlowDepth /1000 * m_nCellsSubbasin[i] * m_dx * m_dx / m_dt;
+		m_qg[i] = outFlowDepth /1000 * m_nCellsSubbasin[i] * m_CellWidth * m_CellWidth / m_dt;
 		//sum = sum + m_qg[i];
 
 		// water balance (mm)
@@ -192,9 +192,13 @@ void GWaterReservoir::SetValue(const char* key, float value)
 	{
 		m_dt = value;
 	}
-	else if (StringMatch(sk,"CellWidth"))
+	else if (StringMatch(sk,Tag_CellWidth))
 	{
-		m_dx = value;
+		m_CellWidth = value;
+	}
+	else if (StringMatch(sk, Tag_CellSize))
+	{
+		m_nCells = (int)value;
 	}
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
@@ -246,7 +250,7 @@ void GWaterReservoir::Set2DData(const char* key, int nrows, int ncols, float** d
 {
 	string sk(key);
 
-	if (StringMatch(sk, "RchParam"))
+	if (StringMatch(sk, Tag_RchParam))
 	{
 		m_nReaches = ncols-1;
 	}

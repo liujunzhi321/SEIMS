@@ -47,7 +47,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput("D_Ammon", "kg N/ha", "ammonium pool for soil nitrogen", "Module", DT_Array2D);
 
 	// Organic N
-	mdi.AddParameter("CellWidth","m","the width (length) of cell","mask.asc",DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("Density_2D", "g/cm3", "Soil density", "ParameterDB_WaterBalance", DT_Array2D);
     //mdi.AddParameter("RootDepth", "mm", "depth from the soil surface", "file.in", DT_Raster);
 	

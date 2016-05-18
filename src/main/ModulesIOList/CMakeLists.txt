@@ -1,4 +1,3 @@
-INCLUDE_DIRECTORIES(../../base/util ../../base/data ../../base/module_setting)
 LINK_DIRECTORIES(${PROJECT_BINARY_DIR})
 SET(SRC_LIST main.cpp ModulesIOList.cpp)
 ADD_EXECUTABLE(modulesiolist ${SRC_LIST})

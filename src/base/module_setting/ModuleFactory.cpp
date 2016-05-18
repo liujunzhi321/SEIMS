@@ -4,8 +4,8 @@
  *
  *
  *
- * \author [your name]
- * \version 
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
  * \date June 2015
  *
  * 
@@ -102,7 +102,7 @@ void ModuleFactory::Init(const string& configFileName)
 	ReadConfigFile(configFileName.c_str());
 #ifdef USE_MONGODB
 	ReadParametersFromMongoDB();
-#else
+//#else
 	//ReadParametersFromSQLite();
 #endif
 
@@ -267,11 +267,16 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
 			ParamInfo& param = parameters[j];
 			//if (param.Dimension != DT_Single)
 			//	cout << "\t\t" << param.Name << endl;
+			//cout << "\t\t" << id << " : " << param.Name << endl;
+			//if (StringMatch(id,"ICLIM"))
+			//{
+			//	cout<<"error"<<endl;
+			//}
 			SetData(dbName, subbasinID, m_settings[id], &param, templateRaster, settingsInput, modules[i], verticalInterpolation);
 		}
 	}
 	clock_t t2 = clock();
-    //cout << "reading parameter finished.\n";
+	StatusMessage("Reading parameter finished.\n");
 	return t2-t1;
 }
 
@@ -297,7 +302,10 @@ ParamInfo* ModuleFactory::FindDependentParam(ParamInfo& paramInfo)
 			}
 		}
 	}
-	throw ModelException("ModuleFactory", "FindDependentParam", "Can not find input for " + paraName + " from other Modules.\n");
+	//TODO: Currently, there are too many bugs in api.cpp of most modules.
+	//      in the future, all input and output should be verified.
+	//      this throw sentence should be uncommented by then. By LJ.
+	//throw ModelException("ModuleFactory", "FindDependentParam", "Can not find input for " + paraName + " from other Modules.\n");
 	return NULL;
 }
 
@@ -345,15 +353,15 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 {
 	// default
 	dimensionTypes typ = DT_Unknown;
-	if (StringMatch(strType,Type_Single)) typ = DT_Single;
-	if (StringMatch(strType,Type_Array1D)) typ = DT_Array1D;
-	if (StringMatch(strType,Type_Array2D)) typ = DT_Array2D;
-	if (StringMatch(strType,Type_Array3D)) typ = DT_Array3D;
-	if (StringMatch(strType,Type_Array1DDateValue)) typ = DT_Array1DDateValue;
-	if (StringMatch(strType,Type_MapWindowRaster)) typ = DT_Raster;
-	if (StringMatch(strType,Type_SiteInformation)) typ = DT_SiteInformation;
-	if (StringMatch(strType,Type_LapseRateArray)) typ = DT_LapseRateArray;
-	if (StringMatch(strType,Type_Scenario)) typ = DT_Scenario;
+	if (StringMatch(strType,Type_Single))			typ = DT_Single;
+	if (StringMatch(strType,Type_Array1D))			typ = DT_Array1D;
+	if (StringMatch(strType,Type_Array2D))			typ = DT_Array2D;
+	if (StringMatch(strType,Type_Array3D))			typ = DT_Array3D;
+	if (StringMatch(strType,Type_Array1DDateValue))	typ = DT_Array1DDateValue;
+	if (StringMatch(strType,Type_MapWindowRaster))	typ = DT_Raster;
+	if (StringMatch(strType,Type_SiteInformation))	typ = DT_SiteInformation;
+	if (StringMatch(strType,Type_LapseRateArray))	typ = DT_LapseRateArray;
+	if (StringMatch(strType,Type_Scenario))			typ = DT_Scenario;
 	return typ;
 }
 
@@ -397,8 +405,7 @@ void ModuleFactory::ReadParameterSetting(string& moduleID, TiXmlDocument& doc, S
 						if(setting->dataTypeString().length() == 0) 
 							throw ModelException("ModuleFactory","ReadParameterSetting","The parameter " + string(Tag_Weight) + " should have corresponding data type in module " + moduleID);
 						if(StringMatch(setting->dataTypeString(),DataType_MeanTemperature) || StringMatch(setting->dataTypeString(),DataType_MinimumTemperature) || StringMatch(setting->dataTypeString(),DataType_MaximumTemperature))
-							param->Name += "_T";  //The weight coefficient file is same for TMEAN, TMIN and TMAX, so just need to read one file named "Weight_T.txt"
-						/// bug? old code param->Name += "_M";
+							param->Name += "_M";  //The weight coefficient file is same for TMEAN, TMIN and TMAX, so just need to read one file named "Weight_M"
 						else
 							param->Name += "_" + setting->dataTypeString();	//combine weight and data type. e.g. Weight + PET = Weight_PET, this combined string must be the same with the parameter column in the climate table of parameter database.
 					}
@@ -901,10 +908,10 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 	{
 		// the data type is got from config.fig
 		return;
-	}	
-	else if(StringMatch(param->Name, Tag_CellSize))  // valid cell number? // old code is cell size? Is it confused? LJ
+	}
+	else if(StringMatch(param->Name, Tag_CellSize))  // valid cells number, do not be confused with Tag_CellWidth
 	{
-		param->Value = float(templateRaster->Size());
+		param->Value = float(templateRaster->getCellNumber()); // old code is ->Size();  they have the same function
 	}
 	else if(StringMatch(param->Name, Tag_CellWidth))  //cell size
 	{
@@ -1268,6 +1275,8 @@ void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationM
 {
 	size_t n = m_moduleIDs.size();
 	string id = m_moduleIDs[iModule];
+	//if(StringMatch(id,"SSR_DA"))
+	//	cout<<"SSR_DA"<<endl;
 	vector<ParamInfo>& inputs = m_inputs[id];
 	for (size_t j = 0; j < inputs.size(); j++)
 	{

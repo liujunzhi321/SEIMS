@@ -12,7 +12,7 @@
 #include <map>
 #include <iostream>
 
-SSR_DA::SSR_DA(void):m_nSoilLayers(2), m_dt(-1), m_nCells(-1), m_nSubbasin(-1), m_frozenT(-99.f), m_ki(-99.f), m_ks(NULL), 
+SSR_DA::SSR_DA(void):m_nSoilLayers(2), m_dt(-1), m_nCells(-1), m_CellWidth(-1),m_nSubbasin(-1), m_frozenT(-99.f), m_ki(-99.f), m_ks(NULL), 
 	m_porosity(NULL), m_poreIndex(NULL), m_sm(NULL), m_fc(NULL), m_soilT(NULL), m_rootDepth(NULL), m_slope(NULL), m_qi(NULL), m_qiVol(NULL),
 	m_chWidth(NULL), m_streamLink(NULL), m_flowInIndex(NULL), m_flowInPercentage(NULL), m_routingLayers(NULL), m_nRoutingLayers(-1),
 	m_subbasin(NULL), m_qiSubbasin(NULL), m_upSoilDepth(200.f)
@@ -54,7 +54,7 @@ void SSR_DA::FlowInSoil(int id)
 		throw ModelException("SSR_DA", "Execute",  oss.str());
 	}
 
-	float flowWidth = m_cellWidth;
+	float flowWidth = m_CellWidth;
 	// there is no land in this cell
 	if (m_streamLink[id] > 0)
 		flowWidth -= m_chWidth[id];
@@ -84,7 +84,7 @@ void SSR_DA::FlowInSoil(int id)
 		}
 		
 		// add upstream water to the current cell
-		float soilVolumn = depth[j]/1000*m_cellWidth*flowWidth; //m3
+		float soilVolumn = depth[j]/1000*m_CellWidth*flowWidth; //m3
 		m_sm[id][j] += qUp / soilVolumn;
 
 		//TEST
@@ -128,7 +128,7 @@ void SSR_DA::FlowInSoil(int id)
 			if(soilWater > maxSoilWater)
 				m_qi[id][j] += soilWater - maxSoilWater;
 
-			m_qiVol[id][j] = m_qi[id][j]/1000*m_cellWidth*flowWidth; //m3
+			m_qiVol[id][j] = m_qi[id][j]/1000*m_CellWidth*flowWidth; //m3
 			//Adjust the moisture content in the current layer, and the layer immediately below it
 			m_sm[id][j] -= m_qi[id][j]/depth[j];
 			
@@ -215,8 +215,10 @@ void SSR_DA::SetValue(const char* key, float data)
 		m_frozenT = data;
 	else if(StringMatch(s,"Ki"))			
 		m_ki = data;
-	else if(StringMatch(s,"CellWidth"))		
-		m_cellWidth = data;
+	else if (StringMatch(s,Tag_CellSize))
+		m_nCells = int(data);
+	else if(StringMatch(s,Tag_CellWidth))		
+		m_CellWidth = data;
 	else if(StringMatch(s,"TimeStep"))		
 		m_dt = int(data);
 	//else if(StringMatch(s,"UpperSoilDepth"))		
@@ -347,7 +349,7 @@ bool SSR_DA::CheckInputData()
 		throw ModelException("SSR_DA","CheckInputData","You have not set frozen T.");
 	if(m_dt <= 0)					
 		throw ModelException("SSR_DA","CheckInputData","You have not set time step.");
-	if(m_cellWidth <= 0)				
+	if(m_CellWidth <= 0)				
 		throw ModelException("SSR_DA","CheckInputData","You have not set cell width.");
 	if(m_subbasin == NULL)		
 		throw ModelException("SSR_DA","CheckInputData","The parameter: subbasin can not be NULL.");

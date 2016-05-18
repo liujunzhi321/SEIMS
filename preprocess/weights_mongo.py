@@ -1,11 +1,6 @@
-import glob
-#from pymongo import Connection
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from gridfs import *  
-import time
-from datetime import datetime
-from osgeo import gdal
 import math
 from struct import *
 from text import *
@@ -108,14 +103,14 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
     #print mList
     dbHydro = conn[dbName]
     
-    typeList = ['M', 'P', 'PET']
+    typeList = [DataType_Meteorology, DataType_Precipitation, DataType_PotentialEvapotranspiration]
     siteLists = [mList, pList, petList]
     if petList is None:
         del typeList[2]
         del siteLists[2]
     
     if(stormMode):
-        typeList = ['P']
+        typeList = [DataType_Precipitation]
         siteLists = [pList]   
     #print typeList
     #print siteLists
@@ -130,20 +125,20 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
             siteList = [int(item) for item in siteList]            
             metadic['NUM_SITES'] = len(siteList)
             #print siteList
-            qDic = {'ID': {'$in' : siteList}, 'Type':typeList[i]}
-            cursor = dbHydro.Sites.find(qDic).sort('ID', 1)
+            qDic = {Tag_ST_StationID: {'$in' : siteList}, Tag_ST_Type:typeList[i]}
+            cursor = dbHydro.Sites.find(qDic).sort(Tag_ST_StationID, 1)
             
             #meteorology station can also be used as precipitation station
-            if cursor.count() == 0 and typeList[i] == 'P':
-                qDic = {'ID': {'$in' : siteList}, 'Type':'M'}
-                cursor = dbHydro.Sites.find(qDic).sort('ID', 1)
+            if cursor.count() == 0 and typeList[i] == DataType_Precipitation:
+                qDic = {Tag_ST_StationID: {'$in' : siteList}, Tag_ST_Type:DataType_Meteorology}
+                cursor = dbHydro.Sites.find(qDic).sort(Tag_ST_StationID, 1)
             
             #get site locations 
             idList = []
             locList = []
             for site in cursor:
-                idList.append(site['ID'])
-                locList.append([site['LocalX'], site['LocalY']])
+                idList.append(site[Tag_ST_StationID])
+                locList.append([site[Tag_ST_LocalX], site[Tag_ST_LocalY]])
                 #print site['ID'], [site['LocalX'], site['LocalY']]
             #print 'loclist', locList
             #interpolate using the locations
@@ -177,17 +172,17 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
             #fTest.close()
             
 if __name__ == "__main__":
-    hostname = '192.168.6.55'
+    #hostname = '192.168.6.55'
+    hostname = '127.0.0.1'
     port = 27017
     try:
         conn = MongoClient(host=hostname, port=27017)
-        #conn = Connection(host=hostname, port=27017)
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
         
     #for i in range(1, 900):
-    GenerateWeightInfo(conn, 'cluster_model_ganjiang', 125, False)
+    GenerateWeightInfo(conn, 'model_dianbu_30m_longterm', 1, False)
     
     print 'done!'
     

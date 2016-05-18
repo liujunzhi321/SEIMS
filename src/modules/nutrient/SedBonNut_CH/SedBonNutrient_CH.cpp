@@ -11,7 +11,7 @@
 //#define NODATA_VALUE -99
 using namespace std;
 
-SedBonNutrient_CH::SedBonNutrient_CH(void):m_size(-1), m_dt(-1.0f), m_dx(-1.0f), m_flowInIndex(NULL),m_flowOutIndex(NULL),
+SedBonNutrient_CH::SedBonNutrient_CH(void):m_nCells(-1), m_dt(-1.0f), m_CellWidth(-1.0f), m_flowInIndex(NULL),m_flowOutIndex(NULL),
 	m_reachId(NULL), m_streamOrder(NULL), m_sourceCellIds(NULL), m_streamLink(NULL), m_Slope(NULL), m_SedBonP(NULL), 
 	m_ChannelWH(NULL),m_ChQkin(NULL), m_SedBonPToCh(NULL), m_SedBonAmmoniumToCh(NULL), m_chWidth(NULL),m_SedBonAmmonium(NULL),
 	m_ChVol(NULL), m_SedBonP_KG(NULL),m_SedBonAmmonium_KG(NULL)
@@ -73,7 +73,7 @@ bool SedBonNutrient_CH::CheckInputData(void)
 		return false;
 	}
 
-	if(this->m_size <= 0)
+	if(this->m_nCells <= 0)
 	{
 		throw ModelException("SedBonNutrient_CH","CheckInputData","The cell number of the input can not be less than zero.");
 		return false;
@@ -85,7 +85,7 @@ bool SedBonNutrient_CH::CheckInputData(void)
 		return false;
 	}
 
-	if(this->m_dx <= 0)
+	if(this->m_CellWidth <= 0)
 	{
 		throw ModelException("SedBonNutrient_CH","CheckInputData","You have not set the CellWidth variable.");
 		return false;
@@ -122,14 +122,14 @@ bool SedBonNutrient_CH::CheckInputSize(const char* key, int n)
 		//this->StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_size != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_size <=0) this->m_size = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			//this->StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
 			throw ModelException("SedBonNutrient_CH","CheckInputSize",oss.str());
 		}
 	}
@@ -142,8 +142,10 @@ void SedBonNutrient_CH::SetValue(const char* key, float data)
 	string sk(key);
 	if (StringMatch(sk, "STORM_DT"))
 		m_dt = data;
-	else if (StringMatch(sk, "CellWidth"))
-		m_dx = data;
+	else if (StringMatch(sk, Tag_CellWidth))
+		m_CellWidth = data;
+	else if (StringMatch(sk, Tag_CellSize))
+		m_nCells = (int)data;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
@@ -234,7 +236,7 @@ void SedBonNutrient_CH::Get1DData(const char* key, int* n, float** data)
 void SedBonNutrient_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
-	if(StringMatch(sk, "ReachParameter"))
+	if(StringMatch(sk, Tag_ReachParameter))
 	{
 		m_chNumber = ncols;
 		m_reachId = data[0];
@@ -271,7 +273,7 @@ void SedBonNutrient_CH::Get2DData(const char *key, int *nRows, int *nCols, float
 void  SedBonNutrient_CH::initalOutputs()
 {
 	//allocate the output variable
-	if(this->m_size <= 0) throw ModelException("SedBonNutrient_CH","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException("SedBonNutrient_CH","initalOutputs","The cell number of the input can not be less than zero.");
 	if(this->m_chNumber <= 0) throw ModelException("DissolveNutrient_CH","initalOutputs","The channel number of the input can not be less than zero.");
 
 	if(m_SedBonP_KG == NULL)
@@ -280,7 +282,7 @@ void  SedBonNutrient_CH::initalOutputs()
 		m_sourceCellIds = new int[m_chNumber];
 		for (int i = 0; i < m_chNumber; ++i)
 			m_sourceCellIds[i] = -1;
-		for (int i = 0; i < m_size; i++)
+		for (int i = 0; i < m_nCells; i++)
 		{
 			if (FloatEqual(m_streamLink[i], NODATA_VALUE))
 				continue;
@@ -364,7 +366,7 @@ void SedBonNutrient_CH::WaterVolumeCalc(int iReach, int iCell, int id)
 {
 	float slope, DX, wh;
 	slope = atan(m_Slope[id]);
-	DX = m_dx/cos(slope);
+	DX = m_CellWidth/cos(slope);
 	wh = m_ChannelWH[iReach][iCell]/1000;  //mm -> m   : m_ChannelWH[iReach][iCell] => "HCH" from the channel routing module
 	m_ChVol[iReach][iCell] = DX * m_chWidth[id] * wh;  // m3
 }

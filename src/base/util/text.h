@@ -103,7 +103,7 @@
 #define Tag_TimeStep "TimeStep"
 #define Tag_StormTimeStep "DT_HS"
 #define Tag_ChannelTimeStep "DT_CH"
-#define Tag_CellWidth "CELLSIZE"
+#define Tag_CellWidth "CELLWIDTH" // this is the size of a single CELL
 #define Tag_PStat "P_STAT"
 
 
@@ -131,9 +131,10 @@
 #define Tag_FLOWOUT_INDEX_MFD_MD "FLOWOUT_INDEX_MFD_MD"
 #define Tag_FLOWOUT_PERCENTAGE_MFD_MD "FLOWOUT_PERCENTAGE_MFD_MD"
 #define Tag_ROUTING_LAYERS_MFD_MD "ROUTING_LAYERS_MFD_MD"
-
-#define Tag_ReachParameter "ReachParameter"
-#define Tag_RchParam "RchParam"
+/// Replaced by VAR_RCHPARAM
+#define Tag_ReachParameter	"ReachParameter"
+#define Tag_RchParam		"RchParam"
+#define VAR_RCHPARAM	"ReachParameters"
 
 ////////////  Output Tags   ///////////////
 //// Output aggregation type //////
@@ -205,6 +206,7 @@
 
 /// Fields in DB_TAB_REACH ///
 #define REACH_SUBBASIN			"SUBBASIN"
+#define REACH_NUMCELLS			"NUM_CELLS"
 #define REACH_GROUPDIVIDED		"GROUP_DIVIDE"
 #define REACH_DOWNSTREAM		"DOWNSTREAM"
 #define REACH_UPDOWN_ORDER		"UP_DOWN_ORDER"
@@ -216,6 +218,7 @@
 #define REACH_AREA				"AREA"
 #define REACH_MANNING			"MANNING"
 #define REACH_SLOPE				"SLOPE" 
+
 
 /// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
 #define SITELIST_TABLE_M		"SiteListM"
@@ -347,7 +350,7 @@
 #define VAR_SOL_ORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/km2)
 #define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/km2)
 #define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/km2)
-#define VAR_SOL_SOLP "sol_solp"                     /// amount of phosohorus stored in solution(kg P/km2)
+#define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/km2)
 #define VAR_SOL_ACTP "sol_actp"                     /// amount of phosphorus stored in the active mineral phosphorus pool(kg P/km2)
 #define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/km2)
 #define VAR_SOL_NH3 "sol_nh3"                       /// amount of nitrogen stored in the ammonium pool in soil layer
@@ -482,7 +485,7 @@
 #define DESC_PSP "Phosphorus availability index"
 #define DESC_RMP1TL "amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell"
 #define DESC_ROCTL "amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell"
-#define DESC_CellSize "numble of cells"
+#define DESC_CellSize "numble of valid cells, i.e., excluding NODATA"
 #define DESC_CellWidth "width of the cell"
 #define DESC_SEDORGN "amount of organic nitrogen in surface runoff"
 #define DESC_SEDORGP "amount of organic phosphorus in surface runoff"
@@ -528,5 +531,6 @@
 #define HEADER_RS_NROWS		"NROWS"
 #define HEADER_RS_NCOLS		"NCOLS"
 #define HEADER_RS_CELLSIZE	"CELLSIZE"
-
+#define HEADER_RS_LAYERS		"LAYERS"
+#define HEADER_RS_SRS				"SRS"
 #endif

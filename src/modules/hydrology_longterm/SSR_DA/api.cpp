@@ -28,7 +28,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SSR_DA.chm");
 
-	mdi.AddParameter("CellWidth","m","","file.in",DT_Single);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("TimeStep","h","","file.in",DT_Single);
 	//mdi.AddParameter("UpperSoilDepth", "mm", "depth of the upper soil layer", "ParameterDB_WaterBalance", DT_Single);
 	mdi.AddParameter("Ki","-","Interflow scale factor","ParameterDB_WaterBalance",DT_Single);
@@ -54,7 +55,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster);
 
 	// set the parameters (non-time series)
-	mdi.AddInput("D_GRRE","mm","perculation","Module",DT_Raster);
+	mdi.AddInput("D_GRRE","mm","percolation","Module",DT_Raster);
 	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);
 	mdi.AddInput("D_SOMO_2D","mm","Distribution of soil moisture","Module",DT_Array2D);
 

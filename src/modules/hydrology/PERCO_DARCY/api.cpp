@@ -31,7 +31,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	//mdi.AddParameter("t_soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);							//
 	mdi.AddParameter("DT_HS", "second", "time step for storm simulation","ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("CellWidth", "m", "Cell size", "file.in", DT_Single); 
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single); 
 
 	mdi.AddParameter("Conductivity","mm/h","saturation hydraulic conductivity","ParameterDB_WaterBalance",DT_Raster);
 	mdi.AddParameter("Porosity","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Raster);

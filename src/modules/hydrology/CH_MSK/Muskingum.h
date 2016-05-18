@@ -59,8 +59,8 @@ private:
 	}
 	void ChannelFlow(int iReach, int iCell, int id, float qgEachCell);
 	void initalOutputs();
-	/// size
-	int m_size;
+	/// valid cells number
+	int m_nCells;
 
 	/// Muskingum weighting factor
 	float m_msk_x;
@@ -68,7 +68,7 @@ private:
 	float m_chS0;
 
 	/// cell width of the grid (m)
-	float m_dx;
+	float m_CellWidth;
 	/// time step (second)
 	float m_dt;
 

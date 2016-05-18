@@ -85,12 +85,13 @@ private:
 private:
 	//inputs
 	/// time step (hr)
-	int   m_TimeStep;
+	int		m_TimeStep;
+	//! Valid cells number
+	int		m_nCells;
 	/// cell size of the grid (m)
-	int   m_nCells;
-	int   m_CellWidth;
-	int   m_nSoilLayers;
-	float m_upSoilDepth;
+	float	m_CellWidth;
+	int		m_nSoilLayers;
+	float	m_upSoilDepth;
 
 	/// the amount of water percolated from the soil water reservoir and input to the groundwater reservoir from the percolation module(mm)
 	float **m_perc;
