@@ -72,15 +72,46 @@ Tag_ST_DatumID = 'DatumID'
 Tag_ST_Elevation = 'Elevation'
 Tag_ST_Type = 'Type'
 
+
+## Table Names required in MongoDB
+DB_TAB_PARAMETERS =	"parameters"
+DB_TAB_LOOKUP_LANDUSE = "LanduseLookup"
+DB_TAB_LOOKUP_SOIL = "SoilLookup"
+DB_TAB_SPATIAL = "spatial"
+DB_TAB_SITES = "Sites"
+DB_TAB_DATAVALUES = "DataValues"
+DB_TAB_MEASUREMENT = "measurement"
+DB_TAB_SITELIST = "SiteList"
+DB_TAB_REACH = "reaches"
+
+### Fields in DB_TAB_REACH
+REACH_SUBBASIN = "SUBBASIN"
+REACH_NUMCELLS = "NUM_CELLS"
+REACH_GROUP = "GROUP"
+REACH_GROUPDIVIDED = "GROUP_DIVIDE"
+REACH_DOWNSTREAM = "DOWNSTREAM"
+REACH_UPDOWN_ORDER = "UP_DOWN_ORDER"
+REACH_DOWNUP_ORDER = "DOWN_UP_ORDER"
+REACH_WIDTH	 = "WIDTH"
+REACH_LENGTH = "LENGTH"
+REACH_DEPTH	 = "DEPTH"
+REACH_V0	 = "V0"
+REACH_AREA	 = "AREA"
+REACH_MANNING = "MANNING"
+REACH_SLOPE	 = "SLOPE"
+REACH_KMETIS = 'GROUP_KMETIS'
+REACH_PMETIS = 'GROUP_PMETIS'
 ## Hydrological data related tags
 DataType_Discharge = "Discharge"
 Tag_Dischage = 'q'
 ## Spatial Data related string or values
 DEFAULT_NODATA = -9999
 ## Spatial data preprocessing
-DIR_Subbasin = "subbasins"
+DIR_REACHES = "reaches"
+DIR_SUBBASIN = "subbasins"
 DIR_TIFF = "tif_files"
-DIR_Layering_Info = "layering_info"
+DIR_LAYERING = "layering_info"
+DIR_METIS = "metis_output"
 ## intermediate data files' names
 filledDem = "demFilledTau.tif"
 flowDir = "flowDirTauD8.tif"

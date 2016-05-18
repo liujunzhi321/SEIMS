@@ -64,8 +64,8 @@ def FindSites(dbModel, hydroDBName, subbasinFile, thiessenFileList, siteTypeList
             siteField = 'SiteList%s' % (siteType,)
             dic[siteField] = siteListStr
         
-        dbModel[hydroDBName].SiteList.insert_one(dic)
-    dbModel[hydroDBName].SiteList.create_index([('SubbasinID', pymongo.ASCENDING), ('Mode', pymongo.ASCENDING)])
+        dbModel[DB_TAB_SITELIST].insert_one(dic)
+    dbModel[DB_TAB_SITELIST].create_index([('SubbasinID', pymongo.ASCENDING), ('Mode', pymongo.ASCENDING)])
     print 'meteorology sites table was generated.'
     return nSubbasins
 
