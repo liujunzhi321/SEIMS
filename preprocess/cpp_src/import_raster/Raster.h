@@ -7,11 +7,12 @@
 *	Revision:
 *   Date:
 *---------------------------------------------------------------------*/
-
+#pragma once
 #ifndef SEIMS_RASTER_INCLUDE
 #define SEIMS_RASTER_INCLUDE
 #include "gridfs.h"
-
+#include <string>
+using namespace std;
 template <typename T>
 class Raster
 {
@@ -41,6 +42,7 @@ public:
 	float GetYllCenter() { return m_yllCenter; }
 	float GetXCellSize() { return m_dx; }
 	float GetYCellSize() { return m_dy; }
+	const char* GetSRS(){return m_srs.c_str();}
 	T GetNoDataValue() { return m_noDataValue; }
 	T** GetData() { return m_data; }
 
@@ -53,6 +55,7 @@ private:
 	int m_nRows, m_nCols;
 	float m_xllCenter, m_yllCenter;
 	float m_dx, m_dy;
+	string m_srs;
 
 private:
 	void DeleteExistingData(void);
