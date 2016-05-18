@@ -2,8 +2,6 @@
 #coding=utf-8
 ## @Extract parameters from landuse, soil properties etc.
 #
-#
-import os
 from gen_lookup_table import CreateLookupTable
 #from reclass_landuse import ReclassLanduse
 from soil_param import GenerateSoilAttributes 
@@ -33,9 +31,7 @@ def soil_parameters(dstdir, maskFile, sandList, clayList, orgList=None):
     fMask = open(configFile, 'w')
     fMask.write(maskFile+"\n")
     fMask.write("%d\n"%(total))  # modified by Zhu LJ,2015-04-01
-#    defaultSand = 40
-#    defaultClay = 30
-#    defaultOrg = 2.5
+
     for i in range(n):
         #strLayer = str(i+1) if i > 0 else ''
         sandFile = "%s/sand_%s.tif" % (dstdir, str(i+1))
@@ -51,10 +47,10 @@ def soil_parameters(dstdir, maskFile, sandList, clayList, orgList=None):
     os.system(s)
 
     for i in range(n):
-        strLayer = str(i+1) if i > 0 else ''
-        sandFile = "%s/sand%s.tif" % (dstdir, strLayer)
-        clayFile = "%s/clay%s.tif" % (dstdir, strLayer)
-        orgFile = "%s/som%s.tif" % (dstdir, strLayer)
+        #strLayer = str(i+1) if i > 0 else ''
+        sandFile = "%s/sand_%s.tif" % (dstdir, str(i+1))
+        clayFile = "%s/clay_%s.tif" % (dstdir, str(i+1))
+        orgFile = "%s/org_%s.tif" % (dstdir, str(i+1))
         GenerateSoilAttributes(dstdir, i+1, sandFile, clayFile, orgFile)
     SoilTexture(dstdir)
     

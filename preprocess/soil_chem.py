@@ -6,9 +6,6 @@
 ### Author: Liangjun Zhu, Huiran Gao
 ### Date: 2016-3-28
 
-import os
-import math
-from osgeo import gdal
 import numpy
 from util import *
 from config import *

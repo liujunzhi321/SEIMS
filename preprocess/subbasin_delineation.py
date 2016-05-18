@@ -87,7 +87,7 @@ def SubbasinDelineation(np, workingDir, dem, outlet, threshold, mpiexeDir=None,e
         print StreamRaster(np, tauDir, acc, streamRaster, threshold, mpiexeDir=mpiexeDir,exeDir=exeDir)
     else:
         accD8 = tauDir+os.sep+acc
-        maxAccum, minAccum, meanAccum, STDAccum = util.GetRasterStat(accD8)
+        maxAccum, minAccum, meanAccum, STDAccum = GetRasterStat(accD8)
         print StreamRaster(np, tauDir, acc, streamRaster, meanAccum, mpiexeDir=mpiexeDir,exeDir=exeDir)
         print "[Output], %s, %s" % (workingDir, status)
         

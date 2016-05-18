@@ -19,19 +19,19 @@ from parameters_extraction import ExtractParameters
 from build_db import BuildMongoDB
 if __name__ == "__main__":
     ## Update SQLite Parameters.db3 database
-    reConstructSQLiteDB()
+    #reConstructSQLiteDB()
     ## Climate Data
-    SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
-    ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
-    ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecExcelPrefix,PrecDataYear, SitesPList)
+    #SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
+    #ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
+    #ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecExcelPrefix,PrecDataYear, SitesPList)
     ## TODO: Measurement Data
     #ImportDailyDischargeData(HOSTNAME,PORT,ClimateDBName,DischargeExcelPrefix,DischargeYear)
     ## Spatial Data derived from DEM
-    SubbasinDelineation(np, WORKING_DIR, dem, outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
-    GenerateSubbasins(WORKING_DIR, exeDir=CPP_PROGRAM_DIR)
+    #SubbasinDelineation(np, WORKING_DIR, dem, outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
+    #GenerateSubbasins(WORKING_DIR, exeDir=CPP_PROGRAM_DIR)
     ## Soil chemical properties initialization
 
     ## Extract parameters from landuse, soil properties etc.
-    ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
+    #ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
     ## Import to MongoDB database
     BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesThiessen, MeteorSitesThiessen)

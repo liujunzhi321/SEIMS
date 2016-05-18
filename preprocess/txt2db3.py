@@ -303,8 +303,8 @@ def reConstructSQLiteDB():
     for df in lookup_tabs:
         dataFiles.append([Tag_Lookup, df])
     txt2Sqlite(dataFiles, sqliteFile)
-    # Read Raster Header from MASK, and import to database
-    header2Sqlite(WORKING_DIR + os.sep + mask_to_ext, sqliteFile)
+    # Read Raster Header from MASK, and import to database, useless and deprecated! LJ
+    #header2Sqlite(WORKING_DIR + os.sep + mask_to_ext, sqliteFile)
 if __name__ == "__main__":
     reConstructSQLiteDB()
 

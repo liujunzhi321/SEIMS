@@ -70,7 +70,7 @@ def Rs(doy, n, lat):
 ####  Spatial Utility Functions  ####
 
 DELTA = 0.000001
-
+MINI_SLOPE = 0.0001
 def FloatEqual(a, b):
     return abs(a - b) < DELTA
 

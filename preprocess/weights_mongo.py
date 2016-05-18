@@ -93,7 +93,7 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
     'SUBBASIN': subbasinID, 
     'NUM_CELLS': num}    
 
-    siteLists = dbModel.SiteList.find({'SubbasinID':subbasinID})
+    siteLists = dbModel[DB_TAB_SITELIST].find({'SubbasinID':subbasinID})
     siteList = siteLists.next()
     dbName = siteList['DB']
     pList = siteList.get('SiteListP')
