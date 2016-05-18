@@ -98,7 +98,7 @@
 #define Tag_ReservoirCount "RESERVOIRCOUNT"
 #define Tag_ReservoirId "RESERVOIRID"
 #define Tag_SubbasinSelected "subbasinSelected"
-#define Tag_CellNUM "CELLNUM" /// by LJ, have not been tested!
+#define Tag_CellSize "CELLSIZE" /// by LJ, have not been tested!
 #define Tag_Mask "MASK"
 #define Tag_TimeStep "TimeStep"
 #define Tag_StormTimeStep "DT_HS"
@@ -276,6 +276,19 @@
 #define MCLSDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
 #define MID_NMINRL "NMINRL"
 #define MDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
+#define MCLS_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MCLSDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MID_SurTra "SurTra"
+#define MDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MCLS_ATMDEP "AtmosphericDeposition"
+#define MCLSDESC_ATMDEP "AtmosphericDeposition"
+#define MID_ATMDEP "ATMDEP"
+#define MDESC_ATMDEP "AtmosphericDeposition"
+#define MCLS_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MCLSDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
+#define MID_NutRemv "NutRemv"
+#define MDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
+
 /// Potential Evapotranspiration Modules
 #define MCLS_PET "Potential Evapotranspiration"
 #define MCLSDESC_PET "Calculate the potential evapotranspiration for an array of climate inputs."
@@ -319,6 +332,7 @@
 #define VAR_WSHD_VOLN "wshd_voln"                   /// average annual amount if nitrogen lost by ammonia volatilization in watershed
 #define VAR_WSHD_PAL "wshd_pal"                     /// average annual amount of phosphorus moving from labile mineral to active mineral pool in watershed
 #define VAR_WSHD_PAS "wshd_pas"                     /// average annual amount of phosphorus moving from active mineral to stable mineral pool in watershed
+#define VAR_WSHD_RNO3 "wshd_rno3"                   /// average annual amount of NO3 added to soil by rainfall in watershed (kg/km2)
 #define VAR_LCC "idplt"                             /// land cover code
 #define VAR_NACTFR "nactfr"                         /// nitrogen active pool fraction. The fraction of organic nitrogen in the active pool.
 #define VAR_SOL_CBN "sol_cbn"                       /// percent organic carbon in soil layer(%)
@@ -338,6 +352,11 @@
 #define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/km2)
 #define VAR_SOL_NH3 "sol_nh3"                       /// amount of nitrogen stored in the ammonium pool in soil layer
 #define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)
+#define VAR_SOL_BD "density"                        /// bulk density of the soil (mg/m3)
+#define VAR_SOL_MP "sol_mp" 
+#define VAR_SOER "SOER"                             /// soil loss caused by water erosion (t)
+#define VAR_SURU "D_SURU"                           /// surface runoff generated
+#define VAR_SURU "D_SURU"                           /// surface runoff generated
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
 #define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
 #define VAR_RMN2TL "rmn2tl"                         /// amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/km2)
@@ -349,6 +368,17 @@
 #define VAR_RMP1TL "rmp1tl"                         /// amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell
 #define VAR_ROCTL "roctl"                           /// amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell
 #define VAR_TSD_DT "data_type"                      /// Time series data type
+#define VAR_SEDORGN "sedorgn"						/// amount of organic nitrogen in surface runoff
+#define VAR_SEDORGP "sedorgp"                       /// amount of organic phosphorus in surface runoff
+#define VAR_SEDMINPA "sedminpa"                     /// amount of active mineral phosphorus sorbed to sediment in surface runoff
+#define VAR_SEDMINPS "sedminps"                     /// amount of stable mineral phosphorus sorbed to sediment in surface runoff
+#define VAR_ADDRNO3 "addrno3"                       /// nitrate added by rainfall (kg/km2)
+#define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/km2)
+#define VAR_DRYDEP_NO3 "drydep_no3"                 /// tmospheric dry deposition of nitrates (kg/km2)
+#define VAR_DRYDEP_NH4 "drydep_nh4"                 /// atmospheric dry deposition of ammonia (kg/km2)
+#define VAR_PRECI "D_P"                             /// precipitation for the day (mm)
+#define VAR_RCN "rcn"                               /// concentration of nitrate in the rain (mg N/m3)  L -> 0.001 * m3
+#define VAR_RCA "rca"                               /// concentration of ammonia in the rain (mg N/m3)  L -> 0.001 * m3
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -372,6 +402,8 @@
 #define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
 #define UNIT_WTRDLT_MMD "mm/d"                      /// Millimeter per day of water changes
 #define UNIT_PERCENT "%"                            /// Percent
+#define UNIT_TONS "t"                               /// metric tons
+#define UNIT_DENSITY "mg/m3"                        /// density
 
 //////////////////////////////////////////////////////////////////////////
 /// Define description of units common used in SEIMS            //////////
@@ -416,8 +448,11 @@
 #define DESC_WSHD_VOLN "average annual amount if nitrogen lost by ammonia volatilization in watershed" 
 #define DESC_WSHD_PAL "average annual amount of phosphorus moving from labile mineral to active mineral pool in watershed"
 #define DESC_WSHD_PAS "average annual amount of phosphorus moving from active mineral to stable mineral pool in watershed"
+#define DESC_WSHD_RNO3 "average annual amount of NO3 added to soil by rainfall in watershed"
 #define DESC_LCC "land cover code"
 #define DESC_NACTFR "nitrogen active pool fraction. The fraction of organic nitrogen in the active pool."
+#define DESC_SOER "soil loss caused by water erosion"
+#define DESC_SURU "surface runoff generated"
 #define DESC_SOL_CBN "percent organic carbon in soil layer"
 #define DESC_SOL_WST "amount of water stored in the soil layer on current day"
 #define DESC_SOL_WFC "Water content of soil profile at field capacity"
@@ -435,6 +470,8 @@
 #define DESC_SOL_WPMM " water content of soil at -1.5 MPa (wilting point)"
 #define DESC_SOL_ACTP "amount of phosphorus stored in the active mineral phosphorus pool"
 #define DESC_SOL_STAP "amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool"
+#define DESC_SOL_BD "bulk density of the soil"
+#define DESC_SOL_MP "??"
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"
 #define DESC_HMPTL "amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell"
 #define DESC_RMN2TL "amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell"
@@ -447,6 +484,18 @@
 #define DESC_ROCTL "amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell"
 #define DESC_CellSize "numble of cells"
 #define DESC_CellWidth "width of the cell"
+#define DESC_SEDORGN "amount of organic nitrogen in surface runoff"
+#define DESC_SEDORGP "amount of organic phosphorus in surface runoff"
+#define DESC_SEDMINPA " amount of active mineral phosphorus sorbed to sediment in surface runoff"
+#define DESC_SEDMINPS "amount of stable mineral phosphorus sorbed to sediment in surface runoff"
+#define DESC_ADDRNO3 "nitrate added by rainfall"
+#define DESC_ADDRNH3 "ammonium added by rainfall"
+#define DESC_DRYDEP_NO3 "tmospheric dry deposition of nitrates"
+#define DESC_DRYDEP_NH4 "atmospheric dry deposition of ammonia"
+#define DESC_PRECI "precipitation for the day"
+#define DESC_RCN "concentration of nitrate in the rain"
+#define DESC_RCA "concentration of ammonia in the rain"
+
 //////////////////////////////////////////////////////////////////////////
 /// Define MongoDB related constant strings used in SEIMS and preprocess//
 /// By LiangJun Zhu, May. 4, 2016  ///////////////////////////////////////

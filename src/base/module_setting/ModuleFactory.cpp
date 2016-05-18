@@ -902,7 +902,7 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 		// the data type is got from config.fig
 		return;
 	}	
-	else if(StringMatch(param->Name, Tag_CellNUM))  // valid cell number? // old code is cell size? Is it confused? LJ
+	else if(StringMatch(param->Name, Tag_CellSize))  // valid cell number? // old code is cell size? Is it confused? LJ
 	{
 		param->Value = float(templateRaster->Size());
 	}
