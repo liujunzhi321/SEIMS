@@ -71,7 +71,7 @@ int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubba
 	int nXSize = rs.GetNumberofColumns();
 	int nYSize = rs.GetNumberOfRows();
 	float noDataValue = rs.GetNoDataValue();
-
+	const char* srs = rs.GetSRS();
     //cout << nXSize << "\t" << nYSize << endl;
 	float **rsData = rs.GetData();
 	int **subbasinData = rsSubbasin.GetData();
@@ -120,6 +120,8 @@ int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubba
 		bson_append_double(p, "NROWS", subYSize);
 		bson_append_double(p, "XLLCENTER", rs.GetXllCenter() + subbasin.xMin * cellSize);
 		bson_append_double(p, "YLLCENTER", rs.GetYllCenter() + (rs.GetNumberOfRows() - subbasin.yMax - 1) * cellSize);
+		bson_append_double(p,"LAYERS",1.0);
+		bson_append_string(p,"SRS",srs);
 		bson_finish(p);
 		
 		gridfile gfile[1];
@@ -154,7 +156,7 @@ int Decomposite2DRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSub
 	int nXSize = rss[0].GetNumberofColumns();
 	int nYSize = rss[0].GetNumberOfRows();
 	float noDataValue = rss[0].GetNoDataValue();
-
+	const char* srs = rss[0].GetSRS();
 	///cout << nXSize << "\t" << nYSize << endl;
 	vector<float**> rssData(colNum);
 	for (int i = 0; i < colNum; i++)
@@ -209,6 +211,7 @@ int Decomposite2DRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSub
 		bson_append_double(p, "XLLCENTER", rss[0].GetXllCenter() + subbasin.xMin * cellSize);
 		bson_append_double(p, "YLLCENTER", rss[0].GetYllCenter() + (rss[0].GetNumberOfRows() - subbasin.yMax - 1) * cellSize);
 		bson_append_double(p, "LAYERS", colNum);
+		bson_append_string(p,"SRS",srs);
 		bson_finish(p);
 
 		gridfile gfile[1];

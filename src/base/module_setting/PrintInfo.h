@@ -64,6 +64,8 @@ private:
 public:
 	//! MongoDB client
 	mongoc_client_t*	conn;
+	//! Database name
+	string						dbName;
 	//! GridFS
 	mongoc_gridfs_t*	gfs;
 	
@@ -113,7 +115,7 @@ public:
 	time_t m_endTime;
 	//! Get end time  \a time_t
 	time_t getEndTime();
-	//! output filename
+	//! output filename in GridFS
 	string Filename;
 	//! create "output" folder to store all results
 	void Flush(string,clsRasterData*,string);

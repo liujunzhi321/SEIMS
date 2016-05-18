@@ -482,5 +482,6 @@
 #define HEADER_RS_NROWS		"NROWS"
 #define HEADER_RS_NCOLS		"NCOLS"
 #define HEADER_RS_CELLSIZE	"CELLSIZE"
-
+#define HEADER_RS_LAYERS		"LAYERS"
+#define HEADER_RS_SRS				"SRS"
 #endif

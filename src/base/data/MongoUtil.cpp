@@ -118,7 +118,7 @@ vector<string> GetGridFsFileNames(mongoc_client_t *client, string& dbName, char*
 	bson_t *query = bson_new();
 	bson_init(query);
 	mongoc_cursor_t *cursor;
-	bson_error_t *err;
+	bson_error_t *err = NULL;
 	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,query,NULL,NULL);
 	if (mongoc_cursor_error(cursor,err))
 		throw ModelException("MongoUtil","GetGridFsFileNames","GridFS is empty!\n");
