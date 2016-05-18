@@ -1,5 +1,5 @@
 /** \defgroup ATMDEP
- * \ingroup nutrient
+ * \ingroup Nutrient
  * \brief Calculate the atmospheric deposition of nitrogen, include nitrate and ammonia.
  */
 /*!

@@ -1,5 +1,5 @@
 /*!
- * \file NandPmi.cpp
+ * \file SurrunoffTransfer.cpp
  * \ingroup SurTra
  * \author Huiran Gao
  * \date May 2016

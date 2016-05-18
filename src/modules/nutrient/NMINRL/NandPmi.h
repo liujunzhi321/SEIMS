@@ -1,5 +1,5 @@
 /** \defgroup NMINRL
- * \ingroup nutrient
+ * \ingroup Nutrient
  * \brief Daily nitrogen and phosphorus mineralization and immobilization.
  */
 /*!
