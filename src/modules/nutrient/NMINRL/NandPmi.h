@@ -36,6 +36,7 @@ class NandPim : public SimulationModule {
 	virtual void SetValue(const char* key, float value);
 	virtual int Execute();
 	virtual void GetValue(const char* key, float* value);
+	//virtual void Get1DData(const char* key, int* n, float** data);
 	virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
 private:
 	/// cell width of grid map (m)

@@ -908,7 +908,7 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 	{
 		// the data type is got from config.fig
 		return;
-	}	
+	}
 	else if(StringMatch(param->Name, Tag_CellSize))  // valid cells number, do not be confused with Tag_CellWidth
 	{
 		param->Value = float(templateRaster->getCellNumber()); // old code is ->Size();  they have the same function

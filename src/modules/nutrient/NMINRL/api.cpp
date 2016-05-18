@@ -43,44 +43,46 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_CMN, UNIT_NON_DIM, DESC_CMN,Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_NACTFR, UNIT_NON_DIM, DESC_NACTFR, Source_ParameterDB, DT_Single);
 	
-	// set the input
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
-	mdi.AddInput(VAR_WSHD_DNIT, UNIT_CONT_KGKM2, DESC_WSHD_DNIT, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_HMN, UNIT_CONT_KGKM2, DESC_WSHD_HMN, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_HMP, UNIT_CONT_KGKM2, DESC_WSHD_HMP, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_RMN, UNIT_CONT_KGKM2, DESC_WSHD_RMN, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_RMP, UNIT_CONT_KGKM2, DESC_WSHD_RMP, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_RWN, UNIT_CONT_KGKM2, DESC_WSHD_RWN, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_NITN, UNIT_CONT_KGKM2, DESC_WSHD_NITN, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_VOLN, UNIT_CONT_KGKM2, DESC_WSHD_VOLN, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_PAL, UNIT_CONT_KGKM2, DESC_WSHD_PAL, Source_ParameterDB, DT_Single);
-	mdi.AddInput(VAR_WSHD_PAS, UNIT_CONT_KGKM2, DESC_WSHD_PAS, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_DNIT, UNIT_CONT_KGKM2, DESC_WSHD_DNIT, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_HMN, UNIT_CONT_KGKM2, DESC_WSHD_HMN, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_HMP, UNIT_CONT_KGKM2, DESC_WSHD_HMP, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_RMN, UNIT_CONT_KGKM2, DESC_WSHD_RMN, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_RMP, UNIT_CONT_KGKM2, DESC_WSHD_RMP, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_RWN, UNIT_CONT_KGKM2, DESC_WSHD_RWN, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_NITN, UNIT_CONT_KGKM2, DESC_WSHD_NITN, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_VOLN, UNIT_CONT_KGKM2, DESC_WSHD_VOLN, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_PAL, UNIT_CONT_KGKM2, DESC_WSHD_PAL, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_WSHD_PAS, UNIT_CONT_KGKM2, DESC_WSHD_PAS, Source_ParameterDB, DT_Single);
+	// set the input
 
-	mdi.AddInput(VAR_CDN, UNIT_NON_DIM, DESC_CDN, Source_ParameterDB, DT_Array1D);
-	mdi.AddInput(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Array1D);
-	mdi.AddInput(VAR_PL_RSDCO, UNIT_NON_DIM, DESC_PL_RSDCO, Source_ParameterDB, DT_Array1D);
-	mdi.AddInput(VAR_PSP, UNIT_NON_DIM, DESC_PSP, Source_ParameterDB, DT_Array1D);
+	mdi.AddParameter(VAR_CDN, UNIT_NON_DIM, DESC_CDN, Source_ParameterDB, DT_Array1D);
+	mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Array1D);
+	mdi.AddParameter(VAR_PL_RSDCO, UNIT_NON_DIM, DESC_PL_RSDCO, Source_ParameterDB, DT_Array1D);
+	mdi.AddParameter(VAR_PSP, UNIT_NON_DIM, DESC_PSP, Source_ParameterDB, DT_Array1D);
 
-	mdi.AddInput(VAR_SOL_CBN, UNIT_PERCENT, DESC_SOL_CBN, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_WST, UNIT_DEPTH_MM, DESC_SOL_WST, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_WFC, UNIT_DEPTH_MM, DESC_SOL_WFC, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_TMP, UNIT_TEMP_DEG, DESC_SOL_TMP, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_WH, UNIT_DEPTH_MM, DESC_SOL_WH, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_WPMM, UNIT_CONT_KGKM2, DESC_SOL_WPMM, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_ROOTDEPTH, UNIT_CONT_KGKM2, DESC_ROOTDEPTH, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, Source_ParameterDB, DT_Array2D);
-	mdi.AddInput(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_CBN, UNIT_PERCENT, DESC_SOL_CBN, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_WST, UNIT_DEPTH_MM, DESC_SOL_WST, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_WFC, UNIT_DEPTH_MM, DESC_SOL_WFC, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_TMP, UNIT_TEMP_DEG, DESC_SOL_TMP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_WH, UNIT_DEPTH_MM, DESC_SOL_WH, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_WPMM, UNIT_CONT_KGKM2, DESC_SOL_WPMM, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_CONT_KGKM2, DESC_ROOTDEPTH, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, Source_ParameterDB, DT_Array2D);
+
+	// set the input
 
 	// set the output variables
 	mdi.AddOutput(VAR_HMNTL, UNIT_CONT_KGKM2, DESC_HMNTL, DT_Single);

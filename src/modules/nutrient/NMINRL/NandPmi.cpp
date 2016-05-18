@@ -131,7 +131,7 @@ void NandPim::SetValue(const char* key, float value)
 		this -> m_wshd_pas = value;
 	}
 	else {
-		throw ModelException("CLIMATE","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
+		throw ModelException("NMINRL","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
 }
 void NandPim::Set1DData(const char* key,int n, float *data)
@@ -228,27 +228,29 @@ int NandPim::Execute() {
 	CalculateMinerandVolati();
 	//Calculate P flux between the labile, active mineral and stable mineral P pools
 	CalculatePflux();
+	//return ??
+	return 0;
 }
 void NandPim::CalculateMinerandImmobi() {
 	//soil layer (k)
-	for(int k = 0; k < m_nLayers; k++) {
-		//soil layer used to compute soil water and soil temperature factors
-		int kk = 0;
-		if(k == 0) {
-			kk = 1;
-		} else {
-			kk = k;
-		}
-		for(int i = 0; i < m_nCells; i++) {
+	for(int i = 0; i < m_nCells; i++) {
+		for(int k = 0; k < m_nLayers; k++) {
+			//soil layer used to compute soil water and soil temperature factors
+			int kk = 0;
+			if(k == 0) {
+				kk = 1;
+			} else {
+				kk = k;
+			}
 			float sut = 0;
 			// mineralization can occur only if temp above 0 deg
-			if (m_sol_tmp[kk][i] > 0) {
+			if (m_sol_tmp[i][kk] > 0) {
 				// compute soil water factor (sut)
 				sut = 0;
-				if (m_sol_st[kk][i] < 0) {
-					m_sol_st[kk][i] = 0.0000001f;
+				if (m_sol_st[i][kk] < 0) {
+					m_sol_st[i][kk] = 0.0000001f;
 				}
-				sut = 0.1 + 0.9 * sqrt(m_sol_st[kk][i] / m_sol_fc[kk][i]);
+				sut = 0.1 + 0.9 * sqrt(m_sol_st[i][kk] / m_sol_fc[i][kk]);
 				sut = max(0.05, sut);
 
 				//compute soil temperature factor
@@ -256,7 +258,7 @@ void NandPim::CalculateMinerandImmobi() {
 				float xx = 0;
 				//soil temperature factor (cdg)
 				float cdg = 0;
-				xx = m_sol_tmp[kk][i];
+				xx = m_sol_tmp[i][kk];
 				cdg = 0.9 * xx / (xx + exp(9.93 - 0.312 * xx)) + 0.1;
 				cdg = max(0.1, cdg);
 
@@ -276,37 +278,37 @@ void NandPim::CalculateMinerandImmobi() {
 				// compute flow from active to stable pools
 				//amount of nitrogen moving from active organic to stable organic pool in layer (rwn)
 				float rwn = 0;
-				rwn = 0.1e-4 * (m_sol_aorgn[k][i] * (1 / m_nactfr - 1.) - m_sol_orgn[k][i]);
+				rwn = 0.1e-4 * (m_sol_aorgn[i][k] * (1 / m_nactfr - 1.) - m_sol_orgn[i][k]);
 				if (rwn > 0.) {
-					rwn = min(rwn, m_sol_aorgn[k][i]);
+					rwn = min(rwn, m_sol_aorgn[i][k]);
 				} else {
-					rwn = -(min(abs(rwn), m_sol_orgn[k][i]));
+					rwn = -(min(abs(rwn), m_sol_orgn[i][k]));
 				}
-				m_sol_orgn[k][i] = max(1.e-6, m_sol_orgn[k][i] + rwn);
-				m_sol_aorgn[k][i] = max(1.e-6, m_sol_aorgn[k][i] - rwn);
+				m_sol_orgn[i][k] = max(1.e-6, m_sol_orgn[i][k] + rwn);
+				m_sol_aorgn[i][k] = max(1.e-6, m_sol_aorgn[i][k] - rwn);
 
 				// compute humus mineralization on active organic n
 				//amount of nitrogen moving from active organic nitrogen pool to nitrate pool in layer (hmn)
 				float hmn = 0;
-				hmn = m_cmn * csf * m_sol_aorgn[k][i];
-				hmn = min(hmn, m_sol_aorgn[k][i]);
+				hmn = m_cmn * csf * m_sol_aorgn[i][k];
+				hmn = min(hmn, m_sol_aorgn[i][k]);
 				// compute humus mineralization on active organic p
 				xx = 0;
 				//amount of phosphorus moving from the organic pool to the labile pool in layer (hmp)
 				float hmp = 0;
-				xx = m_sol_orgn[k][i] + m_sol_aorgn[k][i];
+				xx = m_sol_orgn[i][k] + m_sol_aorgn[i][k];
 				if (xx > 1e-6) {
-					hmp = 1.4 * hmn * m_sol_orgp[k][i] / xx;
+					hmp = 1.4 * hmn * m_sol_orgp[i][k] / xx;
 				} else {
 					hmp = 0;
 				}
-				hmp = min(hmp, m_sol_orgp[k][i]);
+				hmp = min(hmp, m_sol_orgp[i][k]);
 
 				// move mineralized nutrients between pools;
-				m_sol_aorgn[k][i] = max(1e-6, m_sol_aorgn[k][i] - hmn);
-				m_sol_no3[k][i] = m_sol_no3[k][i] + hmn;
-				m_sol_orgp[k][i] = m_sol_orgp[k][i] - hmp;
-				m_sol_solp[k][i] = m_sol_solp[k][i] + hmp;
+				m_sol_aorgn[i][k] = max(1e-6, m_sol_aorgn[i][k] - hmn);
+				m_sol_no3[i][k] = m_sol_no3[i][k] + hmn;
+				m_sol_orgp[i][k] = m_sol_orgp[i][k] - hmp;
+				m_sol_solp[i][k] = m_sol_solp[i][k] + hmp;
 
 				// compute residue decomp and mineralization of 
 				// fresh organic n and p (upper two layers only)
@@ -323,9 +325,9 @@ void NandPim::CalculateMinerandImmobi() {
 					float ca = 0;
 					float cnrf = 0;
 					float cprf = 0;
-					if (m_sol_fon[k][i] + m_sol_no3[k][i] > 1e-4) {
+					if (m_sol_fon[i][k] + m_sol_no3[i][k] > 1e-4) {
 						//Calculate cnr, equation 3:1.2.5 in SWAT Theory 2009, p189
-						cnr = 0.58 * m_sol_rsd[k][i] / (m_sol_fon[k][i] + m_sol_no3[k][i]);
+						cnr = 0.58 * m_sol_rsd[i][k] / (m_sol_fon[i][k] + m_sol_no3[i][k]);
 						if (cnr > 500) {
 							cnr = 500;
 						}
@@ -333,8 +335,8 @@ void NandPim::CalculateMinerandImmobi() {
 					} else {
 						cnrf = 1;
 					}
-					if (m_sol_fop[k][i] + m_sol_solp[k][i] > 1e-4) {
-						cpr = 0.58 * m_sol_rsd[k][i] / (m_sol_fop[k][i] + m_sol_solp[k][i]);
+					if (m_sol_fop[i][k] + m_sol_solp[i][k] > 1e-4) {
+						cpr = 0.58 * m_sol_rsd[i][k] / (m_sol_fop[i][k] + m_sol_solp[i][k]);
 						if (cpr > 5000) {
 							cpr = 5000;
 						}
@@ -355,23 +357,23 @@ void NandPim::CalculateMinerandImmobi() {
 						decr = 0.05;
 					}
 					decr = min(decr, 1.0f);
-					m_sol_rsd[k][i] = max(1.e-6, m_sol_rsd[k][i]);
-					rdc = decr * m_sol_rsd[k][i];
-					m_sol_rsd[k][i] = m_sol_rsd[k][i] - rdc;
-					if (m_sol_rsd[k][i] < 0) {
-						m_sol_rsd[k][i] = 0;
+					m_sol_rsd[i][k] = max(1.e-6, m_sol_rsd[i][k]);
+					rdc = decr * m_sol_rsd[i][k];
+					m_sol_rsd[i][k] = m_sol_rsd[i][k] - rdc;
+					if (m_sol_rsd[i][k] < 0) {
+						m_sol_rsd[i][k] = 0;
 					}
-					rmn1 = decr * m_sol_fon[k][i];
-					m_sol_fop[k][i] = max(1e-6, m_sol_fop[k][i]);
-					rmp = decr * m_sol_fop[k][i];
+					rmn1 = decr * m_sol_fon[i][k];
+					m_sol_fop[i][k] = max(1e-6, m_sol_fop[i][k]);
+					rmp = decr * m_sol_fop[i][k];
 
-					m_sol_fop[k][i] = m_sol_fop[k][i] - rmp;
-					m_sol_fon[k][i] = max(1e-6, m_sol_fon[k][i]) - rmn1;;
+					m_sol_fop[i][k] = m_sol_fop[i][k] - rmp;
+					m_sol_fon[i][k] = max(1e-6, m_sol_fon[i][k]) - rmn1;;
 					//Calculate no3, aorgn, solp, orgp, equation 3:1.2.9 in SWAT Theory 2009, p190
-					m_sol_no3[k][i] = m_sol_no3[k][i] + 0.8 * rmn1;
-					m_sol_aorgn[k][i] = m_sol_aorgn[k][i] + 0.2 * rmn1;
-					m_sol_solp[k][i] = m_sol_solp[k][i] + 0.8 * rmp;
-					m_sol_orgp[k][i] = m_sol_orgp[k][i] + 0.2 * rmp;
+					m_sol_no3[i][k] = m_sol_no3[i][k] + 0.8 * rmn1;
+					m_sol_aorgn[i][k] = m_sol_aorgn[i][k] + 0.2 * rmn1;
+					m_sol_solp[i][k] = m_sol_solp[i][k] + 0.8 * rmp;
+					m_sol_orgp[i][k] = m_sol_orgp[i][k] + 0.2 * rmp;
 				}
 				//  compute denitrification
 				//amount of nitrogen lost from nitrate pool in layer due to denitrification
@@ -380,11 +382,11 @@ void NandPim::CalculateMinerandImmobi() {
 				float* sdnco(NULL);////////////////////////////////////////////////////////////////////////parameter
 				//Calculate wdn, equation 3:1.4.1 and 3:1.4.2 in SWAT Theory 2009, p194
 				if (sut >= sdnco[i]) {
-					wdn = m_sol_no3[k][i] * (1. - exp(-m_cdn[i] * cdg * m_sol_cbn[k][i]));
+					wdn = m_sol_no3[i][k] * (1. - exp(-m_cdn[i] * cdg * m_sol_cbn[i][k]));
 				} else {
 					wdn = 0;
 				}
-				m_sol_no3[k][i] = m_sol_no3[k][i] - wdn;
+				m_sol_no3[i][k] = m_sol_no3[i][k] - wdn;
 
 				// Summary calculations
 				m_wshd_hmn = m_wshd_hmn + hmn * (1 / m_nCells);
@@ -406,22 +408,22 @@ void NandPim::CalculateMinerandImmobi() {
 void NandPim::CalculateMinerandVolati() {
 	//soil layer (k)
 	int kk = 0;
-	for(int k = 0; k < m_nLayers; k++) {
-		for(int i = 0; i < m_nCells; i++) {
+	for(int i = 0; i < m_nCells; i++) {
+		for(int k = 0; k < m_nLayers; k++) {
 			//nitrification/volatilization temperature factor (nvtf)
 			float nvtf = 0;
 			//Calculate nvtf, equation 3:1.3.1 in SWAT Theory 2009, p192
-			nvtf = 0.41 * (m_sol_tmp[k][i] - 5) / 10;
-			if (m_sol_nh3[k][i] > 0 && nvtf >= 0.001) {
+			nvtf = 0.41 * (m_sol_tmp[i][k] - 5) / 10;
+			if (m_sol_nh3[i][k] > 0 && nvtf >= 0.001) {
 				float sw25 = 0;
 				float swwp = 0;
 				//nitrification soil water factor (swf)
 				float swf = 0;
 				//Calculate nvtf, equation 3:1.3.2 and 3:1.3.3 in SWAT Theory 2009, p192
-				sw25 = m_sol_wpmm[k][i] + 0.25 * m_sol_fc[k][i];
-				swwp = m_sol_wpmm[k][i] + m_sol_st[k][i];
+				sw25 = m_sol_wpmm[i][k] + 0.25 * m_sol_fc[i][k];
+				swwp = m_sol_wpmm[i][k] + m_sol_st[i][k];
 				if (swwp < sw25) {
-					swf = (swwp - m_sol_wpmm[k][i]) / (sw25 - m_sol_wpmm[k][i]);
+					swf = (swwp - m_sol_wpmm[i][k]) / (sw25 - m_sol_wpmm[i][k]);
 				} else {
 					swf = 1;
 				}
@@ -448,12 +450,12 @@ void NandPim::CalculateMinerandVolati() {
 				//volatilization CEC factor (cecf)
 				float cecf = 0.15;
 				//Calculate nvtf, equation 3:1.3.2 and 3:1.3.3 in SWAT Theory 2009, p192
-				dmidl = (m_sol_z[k][i] + kk) / 2;
+				dmidl = (m_sol_z[i][k] + kk) / 2;
 				dpf = 1 - dmidl / (dmidl + exp(4.706 - 0.0305 * dmidl));
 				//Calculate rnv, equation 3:1.3.6, 3:1.3.7 and 3:1.3.8 in SWAT Theory 2009, p193
 				akn = nvtf * swf;
 				akv = nvtf * dpf * cecf;
-				rnv = m_sol_nh3[k][i] * (1 - exp(-akn - akv));
+				rnv = m_sol_nh3[i][k] * (1 - exp(-akn - akv));
 				//Calculate rnit, equation 3:1.3.9 in SWAT Theory 2009, p193
 				rnit = 1 - exp(-akn);
 				//Calculate rvol, equation 3:1.3.10 in SWAT Theory 2009, p193
@@ -470,18 +472,18 @@ void NandPim::CalculateMinerandVolati() {
 					if (rnit < 0) {
 						rnit = 0;
 					}
-					m_sol_nh3[k][i] = max(1e-6, m_sol_nh3[k][i] - rnit);
+					m_sol_nh3[i][k] = max(1e-6, m_sol_nh3[i][k] - rnit);
 				}
-				if (m_sol_nh3[k][i] < 0) {
-					rnit = rnit + m_sol_nh3[k][i];
-					m_sol_nh3[k][i] = 0;
+				if (m_sol_nh3[i][k] < 0) {
+					rnit = rnit + m_sol_nh3[i][k];
+					m_sol_nh3[i][k] = 0;
 				}
-				m_sol_no3[k][i] = m_sol_no3[k][i] + rnit;
+				m_sol_no3[i][k] = m_sol_no3[i][k] + rnit;
 				//calculate ammonia volatilization
-				m_sol_nh3[k][i] = max(1e-6, m_sol_nh3[k][i] - rvol);
-				if (m_sol_nh3[k][i] < 0) {
-					rvol = rvol + m_sol_nh3[k][i];
-					m_sol_nh3[k][i] = 0;
+				m_sol_nh3[i][k] = max(1e-6, m_sol_nh3[i][k] - rvol);
+				if (m_sol_nh3[i][k] < 0) {
+					rvol = rvol + m_sol_nh3[i][k];
+					m_sol_nh3[i][k] = 0;
 				}
 				//summary calculations
 				m_wshd_voln = m_wshd_voln + rvol * (1 / m_nCells);
