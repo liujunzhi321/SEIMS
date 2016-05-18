@@ -1,18 +1,16 @@
+/** \defgroup ATMDEP
+ * \ingroup nutrient
+ * \brief Calculate the atmospheric deposition of nitrogen, include nitrate and ammonia.
+ */
 /*!
  * \file AtmosphericDeposition.h
- * \brief Calculate the atmospheric deposition of nitrogen, include nitrate and ammonia
- *
- *
- *
- * \author Lin Wang
- * \revised by Liangjun Zhu
- * \version 
- * \date July 2015
- *
- * 
+ * \ingroup ATMDEP
+ * \author Huiran Gao
+ * \date May 2016
  */
 #pragma once
-
+#ifndef SEIMS_ATMDEP_PARAMS_INCLUDE
+#define SEIMS_ATMDEP_PARAMS_INCLUDE
 #include <string>
 #include <ctime>
 #include <cmath>
@@ -30,42 +28,51 @@ public:
 
 	virtual void SetValue(const char* key, float data);
 	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	//virtual void Set2DData(const char* key, int nrows, int ncols, float** data);
+	virtual void Set2DData(const char* key, int nrows, int ncols, float** data);
+	virtual void GetValue(const char* key, float* value);
+	//virtual void Get1DData(const char* key, int* n, float** data);
 	virtual void Get2DData(const char* key, int *nRows, int *nCols, float*** data);
-
 	bool CheckInputSize(const char* key, int n);
 	bool CheckInputData(void);
 
 private:
 
-	void initalOutputs();
-
+	/// size of array 
+	int m_nCells;
+	/// cell width of grid map (m)
+	float m_cellWidth;
 	int m_nLayers;
 
 	/// parameters
-	/// root depth from the soil surface
-	float *m_rootDepth;
-	/// size of array 
-	int m_size;
 	/// concentration of nitrate in the rain (mg N/L) 
-	float m_conRainNitra;
+	float m_rcn;
 	/// concentration of ammonia in the rain (mg N/L)
-	float m_conRainAmm;
+	float m_rca;
+	///atmospheric dry deposition of nitrates (kg/km2)
+	float m_drydep_no3;
+	///atmospheric dry deposition of ammonia (kg/km2)
+	float m_drydep_nh4;
+
 	/// input
-	/// amount of precipitation in a given day (mm H2O) 
-	float* m_P;
-	
+	/// precipitation (mm H2O) 
+	float *m_preci;
+	/// root depth from the soil surface
+	float **m_sol_z;
+	///amount of ammonium in layer (kg/km2)
+	float **m_sol_nh3;
+
 	/// output
-	/// depth of the layer (mm)
-	float **m_Depth;
-	/// amount of nitrate in layer ly (kg N/ha)
-	float **m_Nitrate;
-	///amount of ammonium in layer ly (kg N/ha)
-	float **m_Ammon;
-	/// nitrate added by rainfall (kg N/ha)
-	float* m_addRainNitra;
-    /// ammonium added by rainfall (kg N/ha)
-	float* m_addRainAmm;
+	/// nitrate added by rainfall (kg/km2)
+	float m_addrnh3;
+	/// ammonium added by rainfall (kg/km2)
+	float m_addrno3;
+
+	/// input & output
+	/// average annual amount of NO3 added to soil by rainfall in watershed (kg/km2)
+	float m_wshd_rno3;
+	/// amount of nitrate in layer (kg/km2)
+	float **m_sol_no3;
+
 
 };
+#endif
