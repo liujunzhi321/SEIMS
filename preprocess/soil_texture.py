@@ -36,8 +36,9 @@ def GetTexture(clay, sand):
 
 
 def SoilTexture(workingDir):
-    sandFile = workingDir + os.sep + "sand.tif"
-    clayFile = workingDir + os.sep + "clay.tif"
+    ## TODO: these should be defined elsewhere
+    sandFile = workingDir + os.sep + "sand_1.tif"
+    clayFile = workingDir + os.sep + "clay_1.tif"
 
     sandRaster = ReadRaster(sandFile)
     clayRaster = ReadRaster(clayFile)

@@ -6,9 +6,6 @@
 ### Author: Liangjun Zhu, Huiran Gao
 ### Date: 2016-3-28
 
-import os
-import math
-from osgeo import gdal
 import numpy
 from util import *
 from config import *
@@ -338,5 +335,5 @@ if __name__ == "__main__":
     #print nlyrs
     #nactfr = 0.5;
     WORKING_DIR = "D:\SEIMS_model\Python\Preprocess\Model_data\model_dianbu_30m_test\data_prepare\output"
-    Soil_Chemical(WORKING_DIR);
+    Soil_Chemical(WORKING_DIR)
     print "Soil chemical properties initialized done!"

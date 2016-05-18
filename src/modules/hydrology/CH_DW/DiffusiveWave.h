@@ -14,7 +14,8 @@
 
 #include <string>
 #include <ctime>
-#include <cmath>
+//#include <cmath>
+#include <math.h>
 #include <map>
 #include <vector>
 #include "SimulationModule.h"

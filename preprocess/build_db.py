@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 #coding=utf-8
 import sys, os, thread
-## from pymongo import Connection # Connection is deprecated by Pymongo! LJ
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from import_parameters import ImportParameters
@@ -9,6 +8,7 @@ from generate_stream_input import GenerateReachTable
 from find_sites import FindSites
 from weights_mongo import GenerateWeightInfo
 from text import *
+from config import *
 
 def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
                    hydroDBName=None, thiessenFilePreci=None, thiessenFileMeteo=None):
@@ -48,9 +48,9 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
     
     ## prepare meteo data
     subbasinFile = workingDir + os.sep + basinVec
-    subbasinRaster = workingDir + os.sep + mask_to_ext
+    subbasinRaster = workingDir + os.sep + mask_to_ext  ## mask file
     if forCluster:
-        subbasinFile = workingDir + os.sep + DIR_Subbasin + os.sep + subbasinVec
+        subbasinFile = workingDir + os.sep + DIR_SUBBASIN + os.sep + subbasinVec
         subbasinRaster = workingDir + os.sep + subbasinOut
 
     if hydroDBName is not None:
@@ -104,7 +104,7 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
 
     f.write("90, Generating Grid layering...\n")
     f.flush()
-    layeringDir = workingDir + os.sep + DIR_Layering_Info
+    layeringDir = workingDir + os.sep + DIR_LAYERING
     if not os.path.exists(layeringDir):
         os.mkdir(layeringDir)
     print 'Generating Grid layering...'

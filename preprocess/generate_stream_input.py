@@ -7,6 +7,7 @@ from pymongo import MongoClient
 import shutil
 from adjust_groups import *
 from text import *
+from util import *
 
 sys.setrecursionlimit(10000)
 
@@ -21,7 +22,7 @@ def gridNumber(watershedFile):
     for i in range(ysize):
         for j in range(xsize):
             k = int(data[i][j])
-            if(abs(k - noDataValue) > 0.00001):
+            if(abs(k - noDataValue) > DELTA):
                 numDic[k] = numDic.setdefault(k,0) + 1
     return numDic, ds.GetGeoTransform()[1]
     
@@ -58,10 +59,10 @@ def downStream(reachFile):
             
         if iDepth > -1:
             slopeDic[nodeFrom] = ft.GetFieldAsDouble(iSlope)
-            if slopeDic[nodeFrom] < 0.0001:
-                slopeDic[nodeFrom] = 0.0001
+            if slopeDic[nodeFrom] < MINI_SLOPE:
+                slopeDic[nodeFrom] = MINI_SLOPE
         else:
-            slopeDic[nodeFrom] = 0.0001
+            slopeDic[nodeFrom] = MINI_SLOPE
             
         if iWidth > -1:
             widthDic[nodeFrom] = ft.GetFieldAsDouble(iWidth)
@@ -162,8 +163,8 @@ def add_group_field(shpFile, subbasinFieldName, n, groupKmetis, groupPmetis, ns)
             
 def GenerateReachTable(folder, db, forCluster):
     watershedFile = folder + os.sep + subbasinOut
-    reachFile = folder + os.sep + "reaches" + os.sep + reachesOut
-    subbasinFile = folder + os.sep + "subbasins" + os.sep + subbasinVec
+    reachFile = folder + os.sep + DIR_REACHES + os.sep + reachesOut
+    subbasinFile = folder + os.sep + DIR_SUBBASIN + os.sep + subbasinVec
     #print reachFile
     
     areaDic, dx = gridNumber(watershedFile)
@@ -180,7 +181,7 @@ def GenerateReachTable(folder, db, forCluster):
     ns = g.nodes()
     
     #consturct the METIS input file
-    metisFolder = folder + os.sep + "metis_output"
+    metisFolder = folder + os.sep + DIR_METIS
     if not os.path.exists(metisFolder):
         os.mkdir(metisFolder)
     metisInput = r'%s/metis.txt' % (metisFolder)
@@ -247,22 +248,21 @@ def GenerateReachTable(folder, db, forCluster):
         if(n == 1):
             for id in downStreamDic:
                 dic = {}
-                dic['SUBBASIN'] = id
-                dic['DOWNSTREAM'] = downStreamDic[id]
-                dic['UP_DOWN_ORDER'] = upstreamDownOrderDic[id]
-                dic['DOWN_UP_ORDER'] = downstreamUpOrderDic[id]
-                dic['MANNING'] = dicManning[id]
-                dic['SLOPE'] = slopeDic[id]
-                dic['V0'] = math.sqrt(slopeDic[id]) * math.pow(depthDic[id], 2./3) / dic['MANNING']
-                dic['NUM_CELLS'] = areaDic[id]
-                dic['GROUP'] = 1
-                dic['GROUP_DIVIDE'] = 1
-                dic['WIDTH'] = widthDic[id]
-                dic['LENGTH'] = lenDic[id] 
-                dic['DEPTH'] = depthDic[id]   
-                dic['AREA'] = areaDic[id]*dx*dx     
-                #db.reaches.insert(dic, safe=True)
-                db.reaches.insert(dic)
+                dic[REACH_SUBBASIN] = id
+                dic[REACH_DOWNSTREAM] = downStreamDic[id]
+                dic[REACH_UPDOWN_ORDER] = upstreamDownOrderDic[id]
+                dic[REACH_DOWNUP_ORDER] = downstreamUpOrderDic[id]
+                dic[REACH_MANNING] = dicManning[id]
+                dic[REACH_SLOPE] = slopeDic[id]
+                dic[REACH_V0] = math.sqrt(slopeDic[id]) * math.pow(depthDic[id], 2./3) / dic[REACH_MANNING]
+                dic[REACH_NUMCELLS] = areaDic[id]
+                dic[REACH_GROUP] = 1
+                dic[REACH_GROUPDIVIDED] = 1
+                dic[REACH_WIDTH] = widthDic[id]
+                dic[REACH_LENGTH] = lenDic[id]
+                dic[REACH_DEPTH] = depthDic[id]
+                dic[REACH_AREA] = areaDic[id]*dx*dx
+                db[DB_TAB_REACH].insert_one(dic)
             continue
         
         #kmetis
@@ -300,26 +300,27 @@ def GenerateReachTable(folder, db, forCluster):
         #get database
         for id in downStreamDic:
             dic = {}
-            dic['SUBBASIN'] = id
-            dic['DOWNSTREAM'] = downStreamDic[id]
-            dic['UP_DOWN_ORDER'] = upstreamDownOrderDic[id]
-            dic['DOWN_UP_ORDER'] = downstreamUpOrderDic[id]
-            dic['MANNING'] = dicManning[id]
-            dic['V0'] = math.sqrt(slopeDic[id]) * math.pow(depthDic[id], 2./3) / dic['MANNING']
-            dic['NUM_CELLS'] = areaDic[id]
-            dic['GROUP_KMETIS'] = groupDicK[id]
-            dic['GROUP_PMETIS'] =  groupDicP[id]
-            dic['GROUP_DIVIDE'] = n
-            dic['WIDTH'] = widthDic[id]
-            dic['LENGTH'] = lenDic[id] 
-            dic['DEPTH'] = depthDic[id]  
-            dic['AREA'] = areaDic[id]*dx*dx                
-            db.reaches.insert(dic, safe=True)       
+            dic[REACH_SUBBASIN] = id
+            dic[REACH_DOWNSTREAM] = downStreamDic[id]
+            dic[REACH_UPDOWN_ORDER] = upstreamDownOrderDic[id]
+            dic[REACH_DOWNUP_ORDER] = downstreamUpOrderDic[id]
+            dic[REACH_MANNING] = dicManning[id]
+            dic[REACH_V0] = math.sqrt(slopeDic[id]) * math.pow(depthDic[id], 2./3) / dic[REACH_MANNING]
+            dic[REACH_NUMCELLS] = areaDic[id]
+            dic[REACH_KMETIS] = groupDicK[id]
+            dic[REACH_PMETIS] =  groupDicP[id]
+            dic[REACH_GROUPDIVIDED] = n
+            dic[REACH_WIDTH] = widthDic[id]
+            dic[REACH_LENGTH] = lenDic[id]
+            dic[REACH_DEPTH] = depthDic[id]
+            dic[REACH_AREA] = areaDic[id]*dx*dx
+            db[DB_TAB_REACH].insert_one(dic)
          
-    db.reaches.create_index("GROUP_DIVIDE")
-    db.reaches.create_index([('SUBBASIN', pymongo.ASCENDING), ('GROUP_DIVIDE', pymongo.ASCENDING)])
+    db[DB_TAB_REACH].create_index(REACH_GROUPDIVIDED)
+    db[DB_TAB_REACH].create_index([(REACH_SUBBASIN, pymongo.ASCENDING),\
+                                   (REACH_GROUPDIVIDED, pymongo.ASCENDING)])
     
-    print 'The reach table is generated!'
+    print 'The reaches table is generated!'
 
 if __name__ == "__main__":
     #conn = Connection(host='192.168.6.55', port=27017)
