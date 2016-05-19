@@ -33,15 +33,15 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("TimeStep","s","","file.in",DT_Single);
 	//mdi.AddParameter("UpperSoilDepth", "mm", "depth of the upper soil layer", "ParameterDB_WaterBalance", DT_Single);
 	mdi.AddParameter("t_soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);							//
-	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance", DT_Raster);
+	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance", DT_Raster1D);
 
 	mdi.AddParameter("Conductivity_2D","mm/h","saturation hydraulic conductivity","ParameterDB_WaterBalance",DT_Array2D);
 	mdi.AddParameter("Porosity_2D","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Array2D);
 	mdi.AddParameter("Poreindex_2D","-","pore size distribution index","ParameterDB_WaterBalance",DT_Array2D);
 	mdi.AddParameter("FieldCap_2D","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Array2D);
 
-	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);
-	mdi.AddInput("D_INFIL","mm","infiltration","Module",DT_Raster);	
+	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster1D);
+	mdi.AddInput("D_INFIL","mm","infiltration","Module",DT_Raster1D);	
 	mdi.AddInput("D_SOMO_2D","mm","Distribution of soil moisture","Module",DT_Array2D);
 
 	// set the output variables

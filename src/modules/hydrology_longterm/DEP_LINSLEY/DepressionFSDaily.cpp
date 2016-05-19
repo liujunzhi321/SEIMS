@@ -158,8 +158,10 @@ bool DepressionFSDaily::CheckInputSize(const char* key, int n)
 void DepressionFSDaily::SetValue(const char* key, float data)
 {
 	string sk(key);
-	if (StringMatch(sk, "Depre_in"))
+	if (StringMatch(sk, VAR_DEPREIN))
 		m_depCo = data;
+	else if (StringMatch(sk, Tag_CellSize))
+		m_size = data;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
@@ -174,13 +176,13 @@ void DepressionFSDaily::Set1DData(const char* key, int n, float* data)
 	//check the input data
 	CheckInputSize(key,n);
 	string sk(key);
-	if(StringMatch(sk, "Depression"))
+	if(StringMatch(sk, VAR_DEPRESSION))
 		m_depCap = data;
-	else if (StringMatch(sk, "D_INET"))
+	else if (StringMatch(sk, VAR_INET))
 		m_ei = data;
-	else if(StringMatch(sk, "D_PET"))
+	else if(StringMatch(sk, VAR_PET))
 		m_pet = data;
-	else if (StringMatch(sk, "D_EXCP"))
+	else if (StringMatch(sk, VAR_EXCP))
 		m_pe = data;
 	else
 		throw ModelException("DEP_LINSLEY", "Set1DData", "Parameter " + sk 
@@ -194,11 +196,11 @@ void DepressionFSDaily::Get1DData(const char* key, int* n, float** data)
 
 	string sk(key);
 	*n = m_size;
-	if (StringMatch(sk, "DPST"))
+	if (StringMatch(sk, VAR_DPST))
 		*data = m_sd;
-	else if (StringMatch(sk, "DEET"))
+	else if (StringMatch(sk, VAR_DEET))
 		*data = m_ed;
-	else if (StringMatch(sk, "SURU"))
+	else if (StringMatch(sk, VAR_SURU))
 		*data = m_sr;
 	else
 		throw ModelException("DEP_LINSLEY", "Get1DData", "Output " + sk 

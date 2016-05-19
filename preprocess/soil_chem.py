@@ -88,8 +88,7 @@ def Soil_Chemical(workingDir):
         for m in range(nRows):
             for n in range(nCols):
                 if k == nlyrs - 1:
-                    RD = sol_z[m][n]
-                    sol_thick[k][m][n] = RD - thick
+                    sol_thick[k][m][n] = sol_z[m][n] - thick
                 else:
                     sol_thick[k][m][n] = nlyrs_thick[k]
     sol_bd = numpy.zeros((nlyrs, nRows, nCols))

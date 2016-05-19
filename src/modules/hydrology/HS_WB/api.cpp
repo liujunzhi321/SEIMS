@@ -29,15 +29,15 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("HS_WB.chm");
 
 	//mdi.AddParameter("subbasinSelected","","The subbasion ids listed in file.out","file.out",DT_Array1D); //this list is used to contrain the output size. Its name must be subbasinSelected.
-	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster); 
-	mdi.AddParameter("Rootdepth","mm","Root depth","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("Porosity","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("FieldCap","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Raster);
+	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster1D); 
+	mdi.AddParameter("Rootdepth","mm","Root depth","ParameterDB_WaterBalance",DT_Raster1D);
+	mdi.AddParameter("Porosity","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Raster1D);
+	mdi.AddParameter("FieldCap","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Raster1D);
 	mdi.AddParameter(Tag_RchParam,"","reach parameters", "reachparameters.txt",DT_Array2D);
-	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster);
+	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster1D);
 
-	mdi.AddInput("D_QOverland","m3/s","discharge added to channel flow from overland flow","Module", DT_Raster);
-	mdi.AddInput("D_QSoil","m3/s","discharge added to channel flow from interflow","Module", DT_Raster);
+	mdi.AddInput("D_QOverland","m3/s","discharge added to channel flow from overland flow","Module", DT_Raster1D);
+	mdi.AddInput("D_QSoil","m3/s","discharge added to channel flow from interflow","Module", DT_Raster1D);
 
 	//mdi.AddInput("D_P","mm","precipitation","Module",DT_Raster);
 	//mdi.AddInput("D_NEPR","mm", "net precipitation","Module", DT_Raster);			//interception

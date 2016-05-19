@@ -358,7 +358,7 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 	if (StringMatch(strType,Type_Array2D))			typ = DT_Array2D;
 	if (StringMatch(strType,Type_Array3D))			typ = DT_Array3D;
 	if (StringMatch(strType,Type_Array1DDateValue))	typ = DT_Array1DDateValue;
-	if (StringMatch(strType,Type_MapWindowRaster))	typ = DT_Raster;
+	if (StringMatch(strType,Type_MapWindowRaster))	typ = DT_Raster1D;
 	if (StringMatch(strType,Type_SiteInformation))	typ = DT_SiteInformation;
 	if (StringMatch(strType,Type_LapseRateArray))	typ = DT_LapseRateArray;
 	if (StringMatch(strType,Type_Scenario))			typ = DT_Scenario;
@@ -885,7 +885,7 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 		break;
 	case DT_Array1DDateValue:
 		break;
-	case DT_Raster:
+	case DT_Raster1D:
 		SetRaster(dbName, name, remoteFileName, templateRaster, pModule);
 		break;
 	case DT_SiteInformation:
@@ -1292,7 +1292,7 @@ void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationM
 		}
 		string compareName = GetComparableName(dependParam->Name);
 		int dataLen;
-		if (dependParam->Dimension == DT_Array1D || dependParam->Dimension == DT_Raster)
+		if (dependParam->Dimension == DT_Array1D || dependParam->Dimension == DT_Raster1D)
 		{
 			float* data;
 			modules[k]->Get1DData(compareName.c_str(), &dataLen, &data);

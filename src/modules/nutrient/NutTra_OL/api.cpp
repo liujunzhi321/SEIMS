@@ -38,12 +38,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	
 	mdi.AddInput("D_Nitrate", "kg N/ha", "amount of nitrate", "Module", DT_Array2D);
 	
-	mdi.AddInput("D_SURU", "mm", "Distribution of surface runoff", "Module",DT_Raster);   //from DEP_LINSLEY
+	mdi.AddInput("D_SURU", "mm", "Distribution of surface runoff", "Module",DT_Raster1D);   //from DEP_LINSLEY
 	mdi.AddInput("D_SSRU_2D","mm", "Distribution of subsurface runoff(lateral flow / interflow).", "Module", DT_Array2D);  //from SSR_DA
 	mdi.AddInput("D_Percolation_2D","mm", "Distribution of groundwater recharge (percolation)", "Module", DT_Array2D);  // from PER_PI
 
 	// Ammonium
-	mdi.AddParameter("Clay_2D", "", "Clay fraction in soil", "ParameterDB_WaterBalance", DT_Raster); 
+	mdi.AddParameter("Clay_2D", "", "Clay fraction in soil", "ParameterDB_WaterBalance", DT_Raster1D); 
 	mdi.AddInput("D_Ammon", "kg N/ha", "ammonium pool for soil nitrogen", "Module", DT_Array2D);
 
 	// Organic N
@@ -52,7 +52,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("Density_2D", "g/cm3", "Soil density", "ParameterDB_WaterBalance", DT_Array2D);
     //mdi.AddParameter("RootDepth", "mm", "depth from the soil surface", "file.in", DT_Raster);
 	
-	mdi.AddInput("D_SOER","metric tons", "distribution of soil erosion", "Module", DT_Raster);  // from MUSLE_AS
+	mdi.AddInput("D_SOER","metric tons", "distribution of soil erosion", "Module", DT_Raster1D);  // from MUSLE_AS
 	mdi.AddInput("D_Depth","mm","depth of the layer","Module", DT_Array2D);
 	mdi.AddInput("D_ActOrgN", "kg N/ha", "amount of nitrogen in the active organic pool in layer ly", "Module", DT_Array2D);
     mdi.AddInput("D_StaOrgN", "kg N/ha", "amount of nitrogen in the stable organic pool", "Module", DT_Array2D);
@@ -70,7 +70,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput("D_FreOrgP", "kg P/ha", "phosphorus in the fresh organic pool in the top 10mm", "Module", DT_Array2D);
 
 	// Nitrate
-	mdi.AddOutput("SurNit", "kg N/ha", "the nitrate removed in surface runoff", DT_Raster); 
+	mdi.AddOutput("SurNit", "kg N/ha", "the nitrate removed in surface runoff", DT_Raster1D); 
 
 	mdi.AddOutput("SatW","mm H2O", "the saturated water content of the soil layer", DT_Array2D);
 	mdi.AddOutput("MobQ", "mm H2O", "the amount of mobile water in the layer", DT_Array2D); 
@@ -79,25 +79,25 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput("PerNit", "kg N/ha", "the nitrate moved to the underlying layer by percolation", DT_Array2D); 
 
 	// Ammonium
-	mdi.AddOutput("SurAmm", "kg N/ha", "the ammonium removed in surface runoff", DT_Raster); 
+	mdi.AddOutput("SurAmm", "kg N/ha", "the ammonium removed in surface runoff", DT_Raster1D); 
 	mdi.AddOutput("ConAmm", "kg N/mm H2O", "the concentration of Ammonium in the mobile water for a given layer", DT_Array2D);
 
 	// Organic N
-	mdi.AddOutput("ConSed", "Mg sed/m3 H2O", "the concentration of sediment in surface runoff", DT_Raster);
-	mdi.AddOutput("EnrN", "", "nitrogen enrichment ratio",DT_Raster);
-	mdi.AddOutput("ConOrgN", "g N/ metric ton soil", "the concentration of organic nitrogen in the top 10 mm", DT_Raster);
-	mdi.AddOutput("TraOrgN", "kg N/ha", "the amount of organic nitrogen transported to the next cell in surface runoff", DT_Raster);
+	mdi.AddOutput("ConSed", "Mg sed/m3 H2O", "the concentration of sediment in surface runoff", DT_Raster1D);
+	mdi.AddOutput("EnrN", "", "nitrogen enrichment ratio",DT_Raster1D);
+	mdi.AddOutput("ConOrgN", "g N/ metric ton soil", "the concentration of organic nitrogen in the top 10 mm", DT_Raster1D);
+	mdi.AddOutput("TraOrgN", "kg N/ha", "the amount of organic nitrogen transported to the next cell in surface runoff", DT_Raster1D);
 
 	// soluble P
-	mdi.AddOutput("SurSolP", "kg P/ha", "the amount of soluble phosphorus lost in surface runoff", DT_Raster);
+	mdi.AddOutput("SurSolP", "kg P/ha", "the amount of soluble phosphorus lost in surface runoff", DT_Raster1D);
 
 	// Attached P
-	mdi.AddOutput("EnrP", "", "phosphorus enrichment ratio",DT_Raster);
-	mdi.AddOutput("ConAttP", "g P/ metric ton soil", "the concentration of phosphorus attached to sediment in the top 10 mm", DT_Raster);
-	mdi.AddOutput("TraAttP", "kg P/ha", "the amount of phosphorus attached to sediment transported to the next cell in surface runoff", DT_Raster);
+	mdi.AddOutput("EnrP", "", "phosphorus enrichment ratio",DT_Raster1D);
+	mdi.AddOutput("ConAttP", "g P/ metric ton soil", "the concentration of phosphorus attached to sediment in the top 10 mm", DT_Raster1D);
+	mdi.AddOutput("TraAttP", "kg P/ha", "the amount of phosphorus attached to sediment transported to the next cell in surface runoff", DT_Raster1D);
 
 	// to subbasin
-	mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Discharge", DT_Raster);
+	mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Discharge", DT_Raster1D);
 	mdi.AddOutput("SNITTOCH","kg", "surface nitrate to channel", DT_Array1D); 
 	mdi.AddOutput("SNITTOCH_T","kg", "Total surface nitrate flowing to channel", DT_Single); 
 	mdi.AddOutput("SAMMTOCH","kg", "surface ammonium to channel", DT_Array1D); 
@@ -112,8 +112,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput("LANITTOCH_T","kg", "Total lateral nitrate flowing to channel", DT_Single); 
 
 	// cell to cell method
-	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster); 
-	mdi.AddParameter("STREAM_LINK", "", "Stream link", "ParameterDB_Discharge", DT_Raster); 
+	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster1D); 
+	mdi.AddParameter("STREAM_LINK", "", "Stream link", "ParameterDB_Discharge", DT_Raster1D); 
 	//mdi.AddParameter("FLOWOUT_INDEX_DINF", "", "The index of flow in cell in the compressed array", "ParameterDB_Discharge", DT_Array2D);
 	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
 		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);

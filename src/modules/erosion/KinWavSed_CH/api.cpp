@@ -40,15 +40,15 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("eco2","","calibration coefficient of transport capacity calculation","ParameterDB_Sediment",DT_Single);*/
 	mdi.AddParameter("ChDetCo","","calibration coefficient of channel flow detachment","ParameterDB_Sediment",DT_Single);
 
-	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster); 
-	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster);
+	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster1D); 
+	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster1D);
 	
 	//mdi.AddParameter("Manning_nCh","","Manning's n of channel cells", "manning.txt", DT_Array1D); //from the reach parameters 
-	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster); 
+	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster1D); 
 	mdi.AddParameter("FLOWOUT_INDEX_D8", "", "The index of flow in cell in the compressed array", "ParameterDB_Discharge", DT_Array1D);
 	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
 		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
-	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster);
+	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster1D);
 	mdi.AddParameter(Tag_ReachParameter, "", "Reach parameters such stream order, manning's n and downstream subbasin id", "ParameterDB_Discharge", DT_Array2D);
 
 	//input from other module	
@@ -57,22 +57,22 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//mdi.AddInput("FlowWidth","m", "Flow width of overland plane","Module",DT_Raster);		//FlowWidth, from Overland routing module
 	//mdi.AddInput("T_QCH", "m3/s", "Flux in the downslope boundary of cells", "Module",DT_Array2D);
 	mdi.AddInput("QRECH", "m3/s", "Flux in the downslope boundary of cells", "Module",DT_Array2D);
-	mdi.AddInput("D_SEDTOCH","kg", "distribution of sediment flowing to channel", "Module",DT_Raster);
+	mdi.AddInput("D_SEDTOCH","kg", "distribution of sediment flowing to channel", "Module",DT_Raster1D);
 	// set the output variables
 	/*mdi.AddOutput("CHDETFLOW","kg/m^2", "distribution of channel flow detachment", DT_Raster);
 	mdi.AddOutput("CHSEDDEP","kg", "distribution of channel sediment deposition", DT_Raster);
 	mdi.AddOutput("CHSEDCONC","kg/m^3", "distribution of sediment concentration in channel flow", DT_Raster);
 	mdi.AddOutput("CHSEDINFLOW","kg", "distribution of sediment content in channel flow", DT_Raster);*/
-	mdi.AddOutput("SEDSUBBASIN","ton/s", "sediment yield production of each subbasin", DT_Raster);
+	mdi.AddOutput("SEDSUBBASIN","ton/s", "sediment yield production of each subbasin", DT_Raster1D);
 	mdi.AddOutput("SEDOUTLET", "kg/m3", "sediment concentration at the watershed outlet", DT_Single);
 
 	//test
-	mdi.AddOutput("DEP","kg", "distribution of channel sediment deposition", DT_Raster);
-	mdi.AddOutput("DET","kg", "distribution of channel flow detachment", DT_Raster);
-	mdi.AddOutput("QSN","kg/s", "distribution of channel sediment rate", DT_Raster);
-	mdi.AddOutput("CAP","kg", "distribution of channel flow capacity", DT_Raster);
-	mdi.AddOutput("CHANV","kg", "distribution of channel flow capacity", DT_Raster);
-	mdi.AddOutput("CHANVOL","kg", "distribution of channel flow capacity", DT_Raster);
+	mdi.AddOutput("DEP","kg", "distribution of channel sediment deposition", DT_Raster1D);
+	mdi.AddOutput("DET","kg", "distribution of channel flow detachment", DT_Raster1D);
+	mdi.AddOutput("QSN","kg/s", "distribution of channel sediment rate", DT_Raster1D);
+	mdi.AddOutput("CAP","kg", "distribution of channel flow capacity", DT_Raster1D);
+	mdi.AddOutput("CHANV","kg", "distribution of channel flow capacity", DT_Raster1D);
+	mdi.AddOutput("CHANVOL","kg", "distribution of channel flow capacity", DT_Raster1D);
 
 	//mdi.AddDependency("Overland routing","Overland routing module");      //for WH
 	mdi.AddDependency("Overland erosion","Overland erosion module");  

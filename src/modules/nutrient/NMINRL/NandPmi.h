@@ -44,7 +44,7 @@ private:
 	/// number of cells
 	int m_nCells;
 
-	int m_nLayers;
+	int m_nSolLyrs;
 
 	///input data
 	///rate factor for humus mineralization on active organic N

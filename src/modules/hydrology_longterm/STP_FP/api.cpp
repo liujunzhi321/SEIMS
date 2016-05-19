@@ -51,21 +51,21 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 		"ParameterDB_WaterBalance", DT_Single);
 
 	mdi.AddParameter("soil_t10","","Factor of soil temperature relative to short grass (degree)",
-		"ParameterDB_WaterBalance", DT_Raster);
+		"ParameterDB_WaterBalance", DT_Raster1D);
 	//mdi.AddParameter("Mask", "", "Array containing the row and column numbers for valid cells",
 	//	"ParameterDB_WaterBalance", DT_Raster);
 
 	/// from interpolation module
 	/// air temperature
-	mdi.AddInput("D_Tmin","oC","Minimum air temperature","Module", DT_Raster);
-	mdi.AddInput("D_Tmax","oC","Maximum air temperature","Module", DT_Raster);
+	mdi.AddInput("D_Tmin","oC","Minimum air temperature","Module", DT_Raster1D);
+	mdi.AddInput("D_Tmax","oC","Maximum air temperature","Module", DT_Raster1D);
 	//mdi.AddInput("Tmin1","oC","Minimum air temperature of the (d-1)th day","Module", DT_Raster);
 	//mdi.AddInput("Tmax1","oC","Maximum air temperature of the (d-1)th day","Module", DT_Raster);
 	//mdi.AddInput("Tmin2","oC","Minimum air temperature of the (d-2)th day","Module", DT_Raster);
 	//mdi.AddInput("Tmax2","oC","Maximum air temperature of the (d-2)th day","Module", DT_Raster);
 
 	/// output soil temperature
-	mdi.AddOutput("SOTE","oC", "Soil Temperature", DT_Raster);
+	mdi.AddOutput("SOTE","oC", "Soil Temperature", DT_Raster1D);
 
 	string res = mdi.GetXMLDocument();
 

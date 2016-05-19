@@ -37,25 +37,25 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("K_run","-","Runoff exponent","ParameterDB_WaterBalance",DT_Single);
 	mdi.AddParameter("P_max","mm","Maximum P corresponding to runoffCo","ParameterDB_WaterBalance",DT_Single);
 
-	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance", DT_Raster);
-	mdi.AddParameter("Runoff_co", "-", "Potential runoff coefficient","ParameterDB_WaterBalance", DT_Raster);
-	mdi.AddParameter("Moist_in","m3/m3","Initial soil moisture","ParameterDB_WaterBalance", DT_Raster);
+	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance", DT_Raster1D);
+	mdi.AddParameter("Runoff_co", "-", "Potential runoff coefficient","ParameterDB_WaterBalance", DT_Raster1D);
+	mdi.AddParameter("Moist_in","m3/m3","Initial soil moisture","ParameterDB_WaterBalance", DT_Raster1D);
 
 	mdi.AddParameter("Fieldcap_2D","m3/m3","Soil field capacity","ParameterDB_WaterBalance", DT_Array2D);
 	mdi.AddParameter("porosity_2D", "-", "Soil porosity","ParameterDB_WaterBalance", DT_Array2D);
 	mdi.AddParameter("s_frozen", "m3/m3", "frozen soil moisture","ParameterDB_WaterBalance", DT_Single);
 
-	mdi.AddInput("D_NEPR","mm","The net precipitation","Module", DT_Raster);
-	mdi.AddInput("D_Tmin","oC","Minimum air temperature","Module", DT_Raster);
-	mdi.AddInput("D_Tmax","oC","Maximum air temperature","Module", DT_Raster);
+	mdi.AddInput("D_NEPR","mm","The net precipitation","Module", DT_Raster1D);
+	mdi.AddInput("D_Tmin","oC","Minimum air temperature","Module", DT_Raster1D);
+	mdi.AddInput("D_Tmax","oC","Maximum air temperature","Module", DT_Raster1D);
 	//mdi.AddInput("D_SOMO","m3/m3","The soil moisture","Module", DT_Raster);
-	mdi.AddInput("D_DPST","mm","The depression storage","Module",DT_Raster);
-	mdi.AddInput("D_SOTE","degree Celsius","The soil temperature","Module",DT_Raster);
-	mdi.AddInput("D_SNAC","mm","The snow accumulation","Module",DT_Raster);
-	mdi.AddInput("D_SNME","mm","The snowmelt","Module",DT_Raster);
+	mdi.AddInput("D_DPST","mm","The depression storage","Module",DT_Raster1D);
+	mdi.AddInput("D_SOTE","degree Celsius","The soil temperature","Module",DT_Raster1D);
+	mdi.AddInput("D_SNAC","mm","The snow accumulation","Module",DT_Raster1D);
+	mdi.AddInput("D_SNME","mm","The snowmelt","Module",DT_Raster1D);
 
-	mdi.AddOutput("EXCP", "mm","The excess precipitation", DT_Raster);
-	mdi.AddOutput("D_INFIL","mm","Infiltration map of watershed", DT_Raster);
+	mdi.AddOutput("EXCP", "mm","The excess precipitation", DT_Raster1D);
+	mdi.AddOutput("D_INFIL","mm","Infiltration map of watershed", DT_Raster1D);
 	mdi.AddOutput("D_SOMO_2D","m3/m3", "Average soil moisture distribution for a user defined period.", DT_Array2D);
 
 	// write out the XML file.

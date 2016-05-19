@@ -215,7 +215,7 @@ void IUH_OL::SetValue(const char* key, float value)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "TimeStep"))
+	if (StringMatch(sk, Tag_TimeStep))
 	{
 		m_TimeStep =(int) value;
 	}
@@ -243,7 +243,7 @@ void IUH_OL::Set1DData(const char* key, int n, float* data)
 
 	//set the value
 	string sk(key);
-	if (StringMatch(sk,"subbasin"))
+	if (StringMatch(sk, VAR_SUBBSN))
 	{
 		m_subbasin = data;
 	}
@@ -255,7 +255,7 @@ void IUH_OL::Set1DData(const char* key, int n, float* data)
 	//{
 	//	m_uhmaxCell = data;
 	//}
-	else if (StringMatch(sk, "D_SURU"))
+	else if (StringMatch(sk, VAR_SURU))
 	{
 		m_rs = data;
 	}
@@ -268,9 +268,9 @@ void IUH_OL::Set2DData(const char* key, int nRows, int nCols, float** data)
 {
 	
 	string sk(key);
-	if (StringMatch(sk,"Ol_iuh"))
+	if (StringMatch(sk, VAR_OL_IUH))
 	{
-		this->CheckInputSize("Ol_iuh",nRows);
+		this->CheckInputSize(VAR_OL_IUH, nRows);
 
 		m_iuhCell = data;
 		m_iuhCols = nCols;
@@ -282,7 +282,7 @@ void IUH_OL::Set2DData(const char* key, int nRows, int nCols, float** data)
 void IUH_OL::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
-	if (StringMatch(sk, "SBOF"))  
+	if (StringMatch(sk, VAR_SBOF))  
 	{
 		*data = this->m_Q_SBOF;
 	}
