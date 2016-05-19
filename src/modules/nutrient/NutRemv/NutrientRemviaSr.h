@@ -1,5 +1,5 @@
 /** \defgroup NutRemv
- * \ingroup nutrient
+ * \ingroup Nutrient
  * \brief Simulates the loss of nitrate and phosphorus via surface runoff, lateral flow, tile flow, and percolation out of the profile.
  */
 /*!
@@ -41,7 +41,7 @@ private:
 	float m_cellWidth;
 	/// number of cells
 	int m_nCells;
-	int m_nLayers;
+	int m_nSolLyrs;
 
 	///input data
 	//distribution of soil loss caused by water erosion

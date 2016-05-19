@@ -191,6 +191,7 @@
 #define Source_HydroClimateDB	"HydroClimateDB"
 #define Source_ParameterDB		"ParameterDB"
 #define Source_Module			"Module"
+#define File_ReachPara			"reachparameters.txt"
 
 ///////// Table Names required in MongoDB /////////
 #define DB_TAB_PARAMETERS		"parameters"
@@ -291,7 +292,7 @@
 #define MCLSDESC_ATMDEP "AtmosphericDeposition"
 #define MID_ATMDEP "ATMDEP"
 #define MDESC_ATMDEP "AtmosphericDeposition"
-#define MCLS_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MCLS_NutRemv "Nutrient remove"
 #define MCLSDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
 #define MID_NutRemv "NutRemv"
 #define MDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
@@ -324,6 +325,127 @@
 /// Channel routing related modules
 #define MCLS_CH_ROUTING						"Channel routing"
 #define MCLSDESC_CH_ROUTING			"Channel routing modules"
+
+//////////////////////////////////////////////////////////////////////////
+/// Define unit names common used in SEIMS, in case of inconsistency /////
+/// By Huiran Gao, May 19, 2016  //////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+#define VAR_DEPREIN "Depre_in"                           /// initial depression storage coefficient
+#define VAR_DEPRESSION "Depression"                      /// Depression storage capacity
+#define VAR_INET "INET"                                  /// evaporation from the interception storage obtained from the interception module
+#define VAR_PET "PET"                                    /// PET calculated from the spatial interpolation module
+#define VAR_EXCP "EXCP"                                  /// excess precipitation calculated in the infiltration module
+#define VAR_INFIL "INFIL"                                /// Infiltration calculated in the infiltration module
+#define VAR_DPST "DPST"                                  /// Distribution of depression storage
+#define VAR_DEET "DEET"                                  /// Distribution of evaporation from depression storage
+#define VAR_GW0 "GW0"                                    /// initial ground water storage
+#define VAR_GWMAX "GWMAX"                                /// maximum ground water storage
+#define VAR_DF_COEF "df_coef"                            /// Deep percolation coefficient
+#define VAR_KG "Kg"                                      /// Baseflow recession coefficient
+#define VAR_Base_ex "Base_ex"                            /// baseflow recession exponent
+#define VAR_SUBBSN "subbasin"                            /// The subbasin grid
+#define VAR_PERCO "Percolation"                          /// the amount of water percolated from the soil water reservoir
+#define VAR_SOMO "SOMO"                                  /// Distribution of soil moisture
+#define VAR_DEET "DEET"                                  /// evaporation from the depression storage
+#define VAR_SOET "SOET"                                  /// evaporation from the soil water storage
+#define VAR_GWNEW "GWNEW"                                /// The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage
+#define VAR_GWWB "GWWB"                                  /// 
+#define VAR_REVAP "Revap"                                /// 
+#define VAR_RG "RG"                                      /// 
+#define VAR_SBQG "SBQG"                                  /// 
+#define VAR_SBPET "SBPET"                                /// 
+#define VAR_SBGS "SBGS"                                  /// 
+#define VAR_K_CHB "K_chb"                                /// hydraulic conductivity of the channel bed
+#define VAR_K_BANK "K_bank"                              /// hydraulic conductivity of the channel bank
+#define VAR_EP_CH "Ep_ch"                               /// reach evaporation adjustment factor
+#define VAR_BNK0 "Bnk0"                               /// initial bank storage per meter of reach length
+#define VAR_CHS0 "Chs0"                               /// initial channel storage per meter of reach length
+#define VAR_VSEEP0 "Vseep0"                               ///  the initial volume of transmission loss to the deep aquifer over the time interval
+#define VAR_A_BNK "a_bnk"                               /// bank flow recession constant
+#define VAR_B_BNK "b_bnk"                               /// bank storage loss coefficient
+#define VAR_MSK_X "MSK_X"                               /// muskingum weighing factor
+#define VAR_MSK_CO1 "MSK_co1"                               /// Weighting factor of bankful flow
+#define VAR_VDIV "Vdiv"                               /// diversion loss of the river reach
+#define VAR_VPOINT "Vpoint"                               /// point source discharge
+#define VAR_MSF "ManningScaleFactor"                               /// flow velocity scaling factor for calibration
+#define VAR_VSF "VelScaleFactor"                               /// flow velocity scaling factor for calibration
+#define VAR_SBOF "SBOF"                               /// overland flow to streams from each subbasin
+#define VAR_SBIF "SBIF"                               /// interflow to streams from each subbasin
+#define VAR_SBQG "SBQG"                               /// groundwater flow out of the subbasin
+#define VAR_SBPET "SBPET"                               /// the potential evapotranspiration rate of the subbasin
+#define VAR_SBGS "SBGS"                               /// Groundwater storage of the subbasin
+#define VAR_QRECH "QRECH"                               /// Discharge in a text format at each reach outlet and at each time step
+#define VAR_QOUTLET "QOUTLET"                               /// discharge at the watershed outlet
+#define VAR_QSOUTLET "QSOUTLET"                               /// discharge at the watershed outlet
+#define VAR_QS "QS"                               /// Overland discharge at each reach outlet and at each time step
+#define VAR_QI "QI"                               /// Interflow at each reach outlet and at each time step
+#define VAR_QG "QG"                               /// Groundwater discharge at each reach outlet and at each time step
+#define VAR_CHST "CHST"                               /// channel storage
+#define VAR_BKST "BKST"                               /// bank storage
+#define VAR_SEEPAGE "SEEPAGE"                               /// seepage
+#define VAR_CHWTDEPTH "CHWTDEPTH"                               /// channel water depth
+#define VAR_QUPREACH "QUPREACH"                               /// upreach
+#define VAR_OL_IUH "Ol_iuh"                               /// IUH of each grid cell
+#define VAR_SSRU "SSRU"                               /// The subsurface runoff
+#define VAR_C_WABA "C_WABA"                               /// Channel water balance in a text format for each reach and at each time step
+#define VAR_CDN "cdn"                               /// rate coefficient for denitrification
+
+#define DESC_DEPREIN "initial depression storage coefficient"
+#define DESC_DEPRESSION "Depression storage capacity"
+#define DESC_INET "evaporation from the interception storage obtained from the interception module"
+#define DESC_PET "PET calculated from the spatial interpolation module"
+#define DESC_EXCP "excess precipitation calculated in the infiltration module"
+#define DESC_INFIL "Infiltration calculated in the infiltration module"
+#define DESC_DPST "Distribution of depression storage"
+#define DESC_DEET "Distribution of evaporation from depression storage"
+#define DESC_TIMESTEP "time step"
+#define DESC_GW0 "initial ground water storage"
+#define DESC_GWMAX "maximum ground water storage"
+#define DESC_DF_COEF "Deep percolation coefficient"
+#define DESC_KG "Baseflow recession coefficient"
+#define DESC_BASE_EX "baseflow recession exponent"
+#define DESC_SUBBSN "The subbasion grid"
+#define DESC_PERCO "the amount of water percolated from the soil water reservoir"
+#define DESC_SOMO "Distribution of soil moisture"
+#define DESC_DEET "evaporation from the depression storage"
+#define DESC_SOET "evaporation from the soil water storage"
+#define DESC_GWNEW "The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage"
+#define DESC_K_CHB "hydraulic conductivity of the channel bed"
+#define DESC_K_BANK "hydraulic conductivity of the channel bank"
+#define DESC_EP_CH "reach evaporation adjustment factor"
+#define DESC_BNK0 "initial bank storage per meter of reach length"
+#define DESC_CHS0 "initial channel storage per meter of reach length"
+#define DESC_VSEEP0  "the initial volume of transmission loss to the deep aquifer over the time interval"
+#define DESC_A_BNK "bank flow recession constant"
+#define DESC_B_BNK "bank storage loss coefficient"
+#define DESC_MSK_X "muskingum weighing factor"
+#define DESC_MSK_CO1 "Weighting factor of bankful flow"
+#define DESC_VDIV "diversion loss of the river reach"
+#define DESC_VPOINT "point source discharge"
+#define DESC_MSF "flow velocity scaling factor for calibration"
+#define DESC_VSF "flow velocity scaling factor for calibration"
+#define DESC_SBOF "overland flow to streams from each subbasin"
+#define DESC_SBIF "interflow to streams from each subbasin"
+#define DESC_SBQG "groundwater flow out of the subbasin"
+#define DESC_SBPET "the potential evapotranspiration rate of the subbasin"
+#define DESC_SBGS "Groundwater storage of the subbasin"
+#define DESC_QRECH "Discharge in a text format at each reach outlet and at each time step"
+#define DESC_QOUTLET "discharge at the watershed outlet"
+#define DESC_QSOUTLET "discharge at the watershed outlet"
+#define DESC_QS "Overland discharge at each reach outlet and at each time step"
+#define DESC_QI "Interflow at each reach outlet and at each time step"
+#define DESC_QG "Groundwater discharge at each reach outlet and at each time step"
+#define DESC_CHST "channel storage"
+#define DESC_BKST "bank storage"
+#define DESC_SEEPAGE "seepage"
+#define DESC_CHWTDEPTH "channel water depth"
+#define DESC_QUPREACH "Upreach"
+#define DESC_OL_IUH "IUH of each grid cell"
+#define DESC_SSRU "The subsurface runoff"
+#define DESC_C_WABA "Channel water balance in a text format for each reach and at each time step"
+
+
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
@@ -404,7 +526,7 @@
 #define VAR_SOL_BD "density"                        /// bulk density of the soil (mg/m3)
 #define VAR_SOL_MP "sol_mp" 
 #define VAR_SOER "SOER"                             /// soil loss caused by water erosion (t)
-#define VAR_SURU "D_SURU"                           /// surface runoff generated
+#define VAR_SURU "SURU"                           /// surface runoff generated
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
 #define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
 #define VAR_RMN2TL "rmn2tl"                         /// amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/km2)
@@ -453,12 +575,17 @@
 #define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
 #define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
 #define UNIT_WTRDLT_MMD "mm/d"                      /// Millimeter per day of water changes
+#define UNIT_WTRDLT_MMH "mm/h"                      /// Millimeter per hour of water changes
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_TONS "t"                               /// metric tons
-#define UNIT_KG "kg"
 #define UNIT_KG_S "kg/s"
 #define UNIT_DENSITY "mg/m3"                        /// density
 #define UNIT_SECOND	"second"
+#define UNIT_KG "kg"                                /// mass Kg
+#define UNIT_TIMESTEP_HOUR "hr"                     /// Time step (h)
+#define UNIT_TIMESTEP_SEC "s"                      /// Time step (s)
+#define UNIT_VOL_M3 "m3"                           /// volume
+#define UNIT_STRG_M3M "m3/m"                       /// storage per meter of reach length
 
 //////////////////////////////////////////////////////////////////////////
 /// Define description of units common used in SEIMS            //////////

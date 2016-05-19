@@ -1,5 +1,5 @@
 /** \defgroup ATMDEP
- * \ingroup nutrient
+ * \ingroup Nutrient
  * \brief Calculate the atmospheric deposition of nitrogen, include nitrate and ammonia.
  */
 /*!
@@ -41,7 +41,7 @@ private:
 	int m_nCells;
 	/// cell width of grid map (m)
 	float m_cellWidth;
-	int m_nLayers;
+	int m_nSolLyrs;
 
 	/// parameters
 	/// concentration of nitrate in the rain (mg N/L) 

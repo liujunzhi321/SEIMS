@@ -18,7 +18,7 @@ using namespace std;
 
 NandPim::NandPim(void):
 	//input 
-	m_nCells(-1), m_cellWidth(-1), m_nLayers(3), m_cmn(NULL), m_cdn(NULL), m_idplt(NULL), m_nactfr(NULL), m_psp(NULL), m_sol_z(NULL),
+	m_nCells(-1), m_cellWidth(-1), m_nSolLyrs(3), m_cmn(NULL), m_cdn(NULL), m_idplt(NULL), m_nactfr(NULL), m_psp(NULL), m_sol_z(NULL),
 	m_rsdco_pl(NULL), m_sol_cbn(NULL), m_sol_st(NULL), m_sol_tmp(NULL), m_sol_ul(NULL), m_sol_nh3(NULL), m_sol_fc(NULL), m_sol_wpmm(NULL),
 	m_sol_actp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_no3(NULL),m_sol_orgn(NULL), m_sol_orgp(NULL),
 	m_sol_rsd(NULL), m_sol_solp(NULL), m_wshd_dnit(NULL), m_wshd_hmn(0), m_wshd_hmp(NULL), m_wshd_rmn(NULL), m_wshd_rmp(NULL), m_wshd_rwn(NULL),
@@ -234,7 +234,7 @@ int NandPim::Execute() {
 void NandPim::CalculateMinerandImmobi() {
 	//soil layer (k)
 	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nLayers; k++) {
+		for(int k = 0; k < m_nSolLyrs; k++) {
 			//soil layer used to compute soil water and soil temperature factors
 			int kk = 0;
 			if(k == 0) {
@@ -409,7 +409,7 @@ void NandPim::CalculateMinerandVolati() {
 	//soil layer (k)
 	int kk = 0;
 	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nLayers; k++) {
+		for(int k = 0; k < m_nSolLyrs; k++) {
 			//nitrification/volatilization temperature factor (nvtf)
 			float nvtf = 0;
 			//Calculate nvtf, equation 3:1.3.1 in SWAT Theory 2009, p192
@@ -497,7 +497,7 @@ void NandPim::CalculatePflux() {
 	float bk = 0.0006;
 	for(int i = 0; i < m_nCells; i++) {
 		float rto = m_psp[i] / (1 - m_psp[i]);
-		for(int k = 0; k < m_nLayers; k++) {
+		for(int k = 0; k < m_nSolLyrs; k++) {
 			float rmn1 = 0;
 			rmn1 = (m_sol_solp[i][1] - m_sol_actp[i][1] * rto);
 				if (rmn1 > 0.) rmn1 = rmn1 * 0.1;
@@ -594,7 +594,7 @@ void NandPim::GetValue(const char* key, float* value) {
 }	
 void NandPim::Get2DData(const char* key, int *nRows, int *nCols, float*** data) {
 	string sk(key);
-	*nRows = m_nLayers;
+	*nRows = m_nSolLyrs;
 	*nCols = m_nCells;
 	if (StringMatch(sk, VAR_SOL_AORGN)) {
 		*data = this -> m_sol_aorgn; 

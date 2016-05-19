@@ -32,13 +32,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	
 	mdi.AddParameter("FieldCap_2D", "%", "Field capacity","ParameterDB_WaterBalance", DT_Array2D);
 	
-	mdi.AddInput("Fr_PHU","","fraction of phu accumulated on a given day ","Module",DT_Raster);
+	mdi.AddInput("Fr_PHU","","fraction of phu accumulated on a given day ","Module",DT_Raster1D);
 	
 	mdi.AddInput("SOMO_2D","%","Soil Moisture","Module", DT_Array2D);
 	mdi.AddInput("D_Nitrate", "kg N/ha", "amount of nitrate", "Module", DT_Array2D);
 	mdi.AddInput("D_DemNit", "kg N/ha", "plant nitrogen demand not met by uptake from the soil", "Module", DT_Array2D);
 
-	mdi.AddOutput("F_GS", "", "growth stage factor", DT_Raster);
+	mdi.AddOutput("F_GS", "", "growth stage factor", DT_Raster1D);
 	
 	mdi.AddOutput("F_SW", "", "soil water factor", DT_Array2D);
 	mdi.AddOutput("F_SN", "", "soil nitrate factor", DT_Array2D);

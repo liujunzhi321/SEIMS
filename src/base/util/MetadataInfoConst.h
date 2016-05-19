@@ -75,7 +75,7 @@ enum dimensionTypes
 	DT_Unknown			= -1,
 	/// Single numeric
 	DT_Single			= 0, 
-	/// 1D array, e.g., 
+	/// 1D array, e.g., maximum temperature of sites
 	DT_Array1D			= 1,
 	/// 2D array
 	DT_Array2D			= 2, 

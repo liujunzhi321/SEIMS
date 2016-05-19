@@ -1,6 +1,6 @@
 /** \defgroup SurTra
- * \ingroup nutrient
- * \brief Daily nitrogen and phosphorus mineralization and immobilization.
+ * \ingroup Nutrient
+ * \brief Nutrient removed and lost in surface runoff.
  */
 /*!
  * \file SurrunoffTransfer.h
@@ -20,7 +20,7 @@ using namespace std;
  * \class SurrunoffTransfer
  * \ingroup SurTra
  *
- * \brief Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile
+ * \brief Nutrient removed and lost in surface runoff
  *
  */
 
@@ -41,7 +41,7 @@ private:
 	float m_cellWidth;
 	/// number of cells
 	int m_nCells;
-	int m_nLayers;
+	int m_nSolLyrs;
 
 	///input data
 	//distribution of soil loss caused by water erosion

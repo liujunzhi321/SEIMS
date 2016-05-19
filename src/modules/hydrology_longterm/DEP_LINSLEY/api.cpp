@@ -55,17 +55,19 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 
-	mdi.AddParameter("Depre_in","-","initial depression storage coefficient","ParameterDB_WaterBalance", DT_Single); 
-	mdi.AddParameter("Depression","mm","Depression storage capacity","ParameterDB_WaterBalance", DT_Raster1D);
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+	//mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_DEPREIN, UNIT_NON_DIM, DESC_DEPREIN, Source_ParameterDB, DT_Single); 
 
-	mdi.AddInput("D_INET","mm","evaporation from the interception storage obtained from the interception module","Module", DT_Raster1D);	//EI
-	mdi.AddInput("D_PET", "mm","PET calculated from the spatial interpolation module", "Module", DT_Raster1D);							//PET
-	//mdi.AddInput("D_INFIL","mm","Infiltration calculated in the infiltration module", "Module", DT_Raster);							//Infiltration
-	mdi.AddInput("D_EXCP","mm","excess precipitation calculated in the infiltration module", "Module", DT_Raster1D);						//PE
+	mdi.AddParameter(VAR_DEPRESSION,UNIT_DEPTH_MM,DESC_DEPRESSION,Source_ParameterDB, DT_Raster1D);
+	mdi.AddInput(VAR_INET, UNIT_DEPTH_MM, DESC_INET, Source_Module, DT_Raster1D);	//EI
+	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);							//PET
+	//mdi.AddInput(VAR_D_INFIL, UNIT_DEPTH_MM, DESC_D_INFIL, Source_Module, DT_Raster);							//Infiltration
+	mdi.AddInput(VAR_EXCP, UNIT_DEPTH_MM, DESC_EXCP, Source_Module, DT_Raster1D);						//PE
 
-	mdi.AddOutput("DPST", "mm", "Distribution of depression storage", DT_Raster1D);
-	mdi.AddOutput("DEET", "mm", "Distribution of evaporation from depression storage", DT_Raster1D);
-	mdi.AddOutput("SURU", "mm", "Distribution of surface runoff", DT_Raster1D);
+	mdi.AddOutput(VAR_DPST, UNIT_DEPTH_MM, DESC_DPST, DT_Raster1D);
+	mdi.AddOutput(VAR_DEET, UNIT_DEPTH_MM, DESC_DEET, DT_Raster1D);
+	mdi.AddOutput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, DT_Raster1D);
 
 	// set the dependencies
 	mdi.AddDependency("Interpolation","Interpolation module");

@@ -29,10 +29,7 @@ TODO LISTS
 
 目前土壤数据的的输入为机械组成和有机质含量的TIFF，这样做可扩展性太差。而且，土层默认为2层，程序中有些地方明确写死为2层，比如`MongoUtil.cpp`里的`Read2DSoilAttr`函数，这样不够合理。应改为可支持多层土壤层数。
 
-**TODO LISTS：**
-
-
-
++ 2.
 
 > 2016-5-18 已完成 `DT_Rater2D`的读写，详见`clsRaterData`类
 > 
@@ -52,3 +49,27 @@ TODO LISTS
 ### MUSLE_AS模块
 
 + 1. SEDTOCH和SEDTOCH_T单位到底是吨还是千克？
+
+## TODO by Gao
+
+##1.代码整理
++ 1 nReach等变量赋值问题
+	+ 未直接赋值，通过相关变量间接赋值，
+	+ 模块：Hydrology_longterm - IKW_REACH
+	+ 模块：Hydrology_longterm - IUH_IF
+	+ 模块：Hydrology_longterm - IUH_OF
++ 2 DT_Array2D变量及所在模块
+
+模块|变量名
+---|---
+GWA_RE|VAR_PERCO
+GWA_RE|VAR_SOMO
+GWA_RE|VAR_GWWB
+	
++ 3 变量定义不明确问题
+	+ Hydrology_longterm - IKW_REACH: VAR_QOUTLET & VAR_QSOUTLET
+	+ Hydrology_longterm - IKW_REACH: VAR_MSF & MUSK_CH: VAR_VSF
+
++ 4 add*()与set*()、get*()中变量不一致的问题
+	+ Hydrology_longterm - IKW_REACH: VAR_QUPREACH
+

@@ -199,7 +199,7 @@ bool ReservoirMethod::CheckInputSize(const char* key, int n)
 void ReservoirMethod::SetValue(const char* key, float value)
 {
 	string sk(key);
-	if (StringMatch(sk,"TimeStep"))
+	if (StringMatch(sk, Tag_TimeStep))
 		m_TimeStep = int(value);
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)value);
@@ -207,15 +207,15 @@ void ReservoirMethod::SetValue(const char* key, float value)
 		m_nCells = int(value);
 	else if (StringMatch(sk,Tag_CellWidth))
 		m_CellWidth = value;
-	else if (StringMatch(sk,"Kg"))
+	else if (StringMatch(sk, VAR_KG))
 		m_Kg = value;
-	else if (StringMatch(sk,"Base_ex"))
+	else if (StringMatch(sk, VAR_Base_ex))
 		m_Base_ex = value;
-	else if (StringMatch(sk,"df_coef"))
+	else if (StringMatch(sk, VAR_DF_COEF))
 		m_dp_co = value;
-	else if (StringMatch(sk,"GW0"))
+	else if (StringMatch(sk, VAR_GW0))
 		m_GW0 = value;
-	else if (StringMatch(sk,"GWMAX"))
+	else if (StringMatch(sk, VAR_GWMAX))
 		m_GWMAX = value;
 	//else if(StringMatch(sk, "UpperSoilDepth"))		
 	//	m_upSoilDepth = value;
@@ -234,7 +234,7 @@ void ReservoirMethod::Set1DData(const char* key, int n, float *data)
 	//	m_subbasinSelectedCount = n;
 	//}
 
-	if (StringMatch(sk,"T_GWNEW"))
+	if (StringMatch(sk, VAR_GWNEW))
 	{
 		m_VgroundwaterFromBankStorage = data;
 	}
@@ -243,31 +243,31 @@ void ReservoirMethod::Set1DData(const char* key, int n, float *data)
 	if (!CheckInputSize(key,n)) return;
 
 	//set the value	
-	if (StringMatch(sk,"D_INET"))
+	if (StringMatch(sk, VAR_INET))
 	{
 		m_D_EI = data;
 	}
-	else if (StringMatch(sk, "D_DEET"))
+	else if (StringMatch(sk, VAR_DEET))
 	{
 		m_D_ED = data;
 	}
-	else if (StringMatch(sk, "D_SOET"))
+	else if (StringMatch(sk, VAR_SOET))
 	{
 		m_D_ES = data;
 	}
-	else if (StringMatch(sk, "D_PET"))
+	else if (StringMatch(sk, VAR_PET))
 	{
 		m_D_PET = data;
 	}
-	else if (StringMatch(sk,"Subbasin"))
+	else if (StringMatch(sk, VAR_SUBBSN))
 	{
 		m_subbasin = data;
 	}
-	else if (StringMatch(sk,"Slope"))
+	else if (StringMatch(sk, VAR_SLOPE))
 	{
 		m_Slope = data;
 	}	
-	else if (StringMatch(sk,"Rootdepth"))
+	else if (StringMatch(sk, VAR_ROOTDEPTH))
 	{
 		m_rootDepth = data;
 	}	
@@ -284,9 +284,9 @@ void ReservoirMethod::Set2DData(const char* key, int nrows, int ncols, float** d
 	CheckInputSize(key, nrows);
 	m_nSoilLayers = ncols;
 
-	if (StringMatch(sk,"D_Percolation_2D"))
+	if (StringMatch(sk, VAR_PERCO))
 		m_perc = data;
-	else if(StringMatch(sk, "D_SOMO_2D"))		
+	else if(StringMatch(sk, VAR_SOMO))		
 		m_soilMoisture = data;
 	else
 		throw ModelException("PER_PI", "Set2DData", 
@@ -296,27 +296,27 @@ void ReservoirMethod::Set2DData(const char* key, int nrows, int ncols, float** d
 void ReservoirMethod::Get1DData(const char* key, int* nRows, float **data)
 {
 	string sk(key);
-	if (StringMatch(sk,"Revap"))
+	if (StringMatch(sk, VAR_REVAP))
 	{
 		*data = m_D_Revap;
 		*nRows = m_nCells;
 	}
-	else if (StringMatch(sk,"RG"))
+	else if (StringMatch(sk, VAR_RG))
 	{
 		*data = m_T_RG;
 		*nRows = m_subbasinList.size()+1;
 	}
-	else if (StringMatch(sk,"SBQG"))
+	else if (StringMatch(sk, VAR_SBQG))
 	{
 		*data = m_T_QG;
 		*nRows = m_subbasinList.size()+1;
 	}
-	else if (StringMatch(sk,"SBGS"))
+	else if (StringMatch(sk, VAR_SBGS))
 	{
 		*data = m_gwStore;
 		*nRows = m_subbasinList.size()+1;
 	}
-	else if (StringMatch(sk,"SBPET"))
+	else if (StringMatch(sk, VAR_SBPET))
 	{
 		*data = m_petSubbasin;
 		*nRows = m_subbasinList.size()+1;

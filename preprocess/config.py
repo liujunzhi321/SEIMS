@@ -7,7 +7,7 @@ import os,platform,sys
 
 ## Directionaries 
 if platform.system() == "Windows":
-    BASE_DATA_DIR = r'E:\data\model_data\model_dianbu_30m_longterm\data_prepare'
+    BASE_DATA_DIR = r'D:\SEIMS_model\Model_data\model_dianbu_30m_longterm\data_prepare'
     TXT_DB_DIR = r'E:\code\Hydro\SEIMS\database'
     PREPROC_SCRIPT_DIR = r'E:\code\Hydro\SEIMS\preprocess'
     CPP_PROGRAM_DIR = r'D:\Compile\SEIMS_Preprocess\Release'
@@ -58,14 +58,20 @@ threshold = 0  # threshold for stream extraction from D8-flow accumulation weigh
                # if threshold is 0, then Drop Analysis is used to select the optimal value.
 np = 4  # number of parallel processors
 landuseFile = SPATIAL_DATA_DIR + os.sep + 'landuse_30m.tif'
+rootDepthFile = SPATIAL_DATA_DIR + os.sep + 'RootDepth.tif'
+densityList = []
 sandList = []
 clayList = []
 orgList = []
 nlyrs = 2   # soil layers
-for i in range(1,nlyrs+1):
+nlyrs_thick=[]
+nlyrs_thick = [100, DEFAULT_NODATA]   #soil layer thick, unit is mm
+for i in range(1, nlyrs + 1):
+    densityFile = SPATIAL_DATA_DIR + os.sep + "Density" + str(i) + ".tif"
     sandFile = SPATIAL_DATA_DIR + os.sep + "sand" + str(i) + ".tif" 
     clayFile = SPATIAL_DATA_DIR + os.sep + "clay" + str(i) + ".tif"
     orgFile = SPATIAL_DATA_DIR + os.sep + "org" + str(i) + ".tif"
+    densityList.append(densityFile)
     sandList.append(sandFile)
     clayList.append(clayFile)
     orgList.append(orgFile)

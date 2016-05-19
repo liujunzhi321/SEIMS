@@ -1,5 +1,5 @@
 /*!
- * \file NandPmi.cpp
+ * \file SurrunoffTransfer.cpp
  * \ingroup SurTra
  * \author Huiran Gao
  * \date May 2016
@@ -18,7 +18,7 @@ using namespace std;
 
 SurrunoffTransfer::SurrunoffTransfer(void):
 //input 
-m_nCells(-1), m_cellWidth(-1), m_nLayers(3), m_sedimentYield(NULL), m_surfr(NULL), m_sol_bd(NULL), m_sol_z(NULL),
+m_nCells(-1), m_cellWidth(-1), m_nSolLyrs(3), m_sedimentYield(NULL), m_surfr(NULL), m_sol_bd(NULL), m_sol_z(NULL),
 	m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL),
 	//output 
 	m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL)
@@ -181,7 +181,7 @@ void SurrunoffTransfer::OrgnRemoveinSr(){
 	//enrichment ratio (enratio)
 	float* enratio = CalculateEnrRatio();
 	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nLayers; k++) {
+		for(int k = 0; k < m_nSolLyrs; k++) {
 			//amount of organic N in first soil layer (orgninfl)
 			float orgninfl = 0;
 			//conversion factor (wt)
@@ -218,7 +218,7 @@ void SurrunoffTransfer::OrgnRemoveinSr(){
 void SurrunoffTransfer::OrgpAttachedtoSed(){
 	float* enratio = CalculateEnrRatio();
 	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nLayers; k++) {
+		for(int k = 0; k < m_nSolLyrs; k++) {
 			//amount of phosphorus attached to sediment in soil (sol_attp)
 			float sol_attp = 0;
 			//fraction of active mineral/organic/stable mineral phosphorus in soil (sol_attp_o, sol_attp_a, sol_attp_s)
@@ -301,7 +301,7 @@ void SurrunoffTransfer::Get1DData(const char* key, int* n, float** data) {
 }
 void SurrunoffTransfer::Get2DData(const char* key, int *nRows, int *nCols, float*** data) {
 	string sk(key);
-	*nRows = m_nLayers;
+	*nRows = m_nSolLyrs;
 	*nCols = m_nCells;
 	if (StringMatch(sk, VAR_SOL_AORGN)) {
 		*data = this -> m_sol_aorgn; 

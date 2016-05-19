@@ -44,7 +44,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("Density_2D", "g/cm3", "Soil density", "ParameterDB_WaterBalance", DT_Array2D);
 	mdi.AddParameter("FieldCap_2D", "%", "Field capacity","ParameterDB_WaterBalance", DT_Array2D);
 
-	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);
+	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster1D);
 	mdi.AddInput("D_Nitrate", "kg N/ha", "amount of nitrate", "Module", DT_Array2D);
 	mdi.AddInput("D_SOMO_2D","%","Soil Moisture","Module", DT_Array2D);
 	mdi.AddInput("D_Depth","mm","depth of the layer","Module", DT_Array2D);

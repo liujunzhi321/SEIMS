@@ -32,6 +32,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//3 grid parameter
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+
 	mdi.AddParameter(VAR_USLE_K,UNIT_NON_DIM,DESC_USLE_K,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_USLE_C,UNIT_NON_DIM,DESC_USLE_C,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_USLE_P,UNIT_NON_DIM,DESC_USLE_P,Source_ParameterDB,DT_Raster1D);
