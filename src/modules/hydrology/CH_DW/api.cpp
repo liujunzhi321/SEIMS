@@ -54,10 +54,10 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	//mdi.AddParameter("ID_UPREACH", "", "the cell adjacent to channel of the upstream subbasin", "main", DT_Single);
 	//mdi.AddParameter("Q_UPREACH", "m2/s", "channel flow in discharge from the upstream subbasin", "main", DT_Single);	
-	mdi.AddParameter("DEM","m","Elevation","Parameter", DT_Raster);
-	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster); 
-	mdi.AddParameter("FLOW_DIR", "", "Flow direction  by the rule of ArcGIS", "ParameterDB_Discharge", DT_Raster);
-	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster); 
+	mdi.AddParameter("DEM","m","Elevation","Parameter", DT_Raster1D);
+	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster1D); 
+	mdi.AddParameter("FLOW_DIR", "", "Flow direction  by the rule of ArcGIS", "ParameterDB_Discharge", DT_Raster1D);
+	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster1D); 
 	// reach information
 	//mdi.AddParameter("Reach_Layers", "", "Routing layers according to the flow direction"
 	//	"There are not flow relationships within each layer, and the first element in each layer is the number of cells in the layer", "subbasins.shp", DT_Array2D);
@@ -67,14 +67,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("FLOWOUT_INDEX_D8", "", "The index of flow in cell in the compressed array", "ParameterDB_Discharge", DT_Array1D);
 	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
 		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
-	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster);
+	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster1D);
 	mdi.AddParameter(Tag_ReachParameter, "", "Reach parameters such stream order, manning's n and downstream subbasin id", "ParameterDB_Discharge", DT_Array2D);
 
 	// from other module
 	//mdi.AddInput("D_ID_OUTLET", "", "ID of watershed outlet", "Module", DT_Single);
-	mdi.AddInput("D_QOverland","m3/s","discharge added to channel flow from overland flow","Module", DT_Raster);
-	mdi.AddInput("D_QSoil","m3/s","discharge added to channel flow from interflow","Module", DT_Raster);
-	mdi.AddInput("D_P","mm","Precipitation","Module", DT_Raster);
+	mdi.AddInput("D_QOverland","m3/s","discharge added to channel flow from overland flow","Module", DT_Raster1D);
+	mdi.AddInput("D_QSoil","m3/s","discharge added to channel flow from interflow","Module", DT_Raster1D);
+	mdi.AddInput("D_P","mm","Precipitation","Module", DT_Raster1D);
 
 	// output
 	mdi.AddOutput("QCH", "m3/s", "Flux in the downslope boundary of cells", DT_Array2D); /// \param[out] QCH "Flux in the downslope boundary of cells"
@@ -83,8 +83,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput("HCH", "mm", "Water depth in the downslope boundary of cells", DT_Array2D);
 
 	//test output
-	mdi.AddOutput("CHWATH", "mm", "Water depth in the downslope boundary of cells", DT_Raster);
-	mdi.AddOutput("CHQCH", "m3/s", "Flux in the downslope boundary of cells", DT_Raster);
+	mdi.AddOutput("CHWATH", "mm", "Water depth in the downslope boundary of cells", DT_Raster1D);
+	mdi.AddOutput("CHQCH", "m3/s", "Flux in the downslope boundary of cells", DT_Raster1D);
 
 	res = mdi.GetXMLDocument();
 

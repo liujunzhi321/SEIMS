@@ -40,11 +40,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("Poreindex_2D","-","pore size distribution index","ParameterDB_WaterBalance",DT_Array2D);
 	mdi.AddParameter("FieldCap_2D","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Array2D);
 
-	mdi.AddParameter("Rootdepth","mm","Root depth","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("Slope","%","Soil field capacity","ParameterDB_WaterBalance", DT_Raster);		
+	mdi.AddParameter("Rootdepth","mm","Root depth","ParameterDB_WaterBalance",DT_Raster1D);
+	mdi.AddParameter("Slope","%","Soil field capacity","ParameterDB_WaterBalance", DT_Raster1D);		
 
-	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster); 
-	mdi.AddParameter("STREAM_LINK", "", "Stream link", "ParameterDB_Discharge", DT_Raster); 
+	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster1D); 
+	mdi.AddParameter("STREAM_LINK", "", "Stream link", "ParameterDB_Discharge", DT_Raster1D); 
 	//mdi.AddParameter("FLOWOUT_INDEX_DINF", "", "The index of flow in cell in the compressed array", "ParameterDB_Discharge", DT_Array2D);
 	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
 		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
@@ -52,11 +52,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("ROUTING_LAYERS", "", "Routing layers according to the flow direction"
 		"There are not flow relationships within each layer","ParameterDB_Discharge", DT_Array2D);
 
-	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster);
+	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster1D);
 
 	// set the parameters (non-time series)
-	mdi.AddInput("D_GRRE","mm","percolation","Module",DT_Raster);
-	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);
+	mdi.AddInput("D_GRRE","mm","percolation","Module",DT_Raster1D);
+	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster1D);
 	mdi.AddInput("D_SOMO_2D","mm","Distribution of soil moisture","Module",DT_Array2D);
 
 	// set the output variables

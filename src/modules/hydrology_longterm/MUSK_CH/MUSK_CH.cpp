@@ -270,7 +270,7 @@ bool MUSK_CH::CheckInputSize(const char* key, int n)
 //void MUSK_CH::GetValue(const char* key, float* value)
 //{
 //	string sk(key);
-//	if (StringMatch(sk, "QOUTLET"))
+//	if (StringMatch(sk, VAR_QOUTLET))
 //	{
 //		map<int, vector<int> >::iterator it = m_reachLayers.end();
 //		it--;
@@ -287,11 +287,11 @@ void MUSK_CH::SetValue(const char* key, float value)
 {
 	string sk(key);
 
-	if(StringMatch(sk, "QUPREACH"))
+	if(StringMatch(sk, VAR_QUPREACH))
 		m_qUpReach = value;
-	else if(StringMatch(sk, "VelScaleFactor"))
+	else if(StringMatch(sk, VAR_VSF))
 		m_vScalingFactor = value;
-	else if (StringMatch(sk, "DT_CH"))
+	else if (StringMatch(sk, Tag_ChannelTimeStep))
 	{
 		m_dt = (int) value;
 	}
@@ -299,43 +299,43 @@ void MUSK_CH::SetValue(const char* key, float value)
 	{
 		omp_set_num_threads((int)value);
 	}
-	else if (StringMatch(sk, "K_chb"))
+	else if (StringMatch(sk, VAR_K_CHB))
 	{
 		m_Kchb = value;
 	}
-	else if (StringMatch(sk, "K_bank"))
+	else if (StringMatch(sk, VAR_K_BANK))
 	{
 		m_Kbank = value;
 	}
-	else if (StringMatch(sk, "Ep_ch"))
+	else if (StringMatch(sk, VAR_EP_CH))
 	{
 		m_Epch = value;
 	}
-	else if (StringMatch(sk, "Bnk0"))
+	else if (StringMatch(sk, VAR_BNK0))
 	{
 		m_Bnk0 = value;
 	}
-	else if (StringMatch(sk, "Chs0"))
+	else if (StringMatch(sk, VAR_CHS0))
 	{
 		m_Chs0 = value;
 	}
-	else if (StringMatch(sk, "Vseep0"))
+	else if (StringMatch(sk, VAR_VSEEP0))
 	{
 		m_Vseep0 = value;
 	}
-	else if (StringMatch(sk, "a_bnk"))
+	else if (StringMatch(sk, VAR_A_BNK))
 	{
 		m_aBank = value;
 	}
-	else if (StringMatch(sk, "b_bnk"))
+	else if (StringMatch(sk, VAR_B_BNK))
 	{
 		m_bBank = value;
 	}
-	else if (StringMatch(sk, "MSK_X"))
+	else if (StringMatch(sk, VAR_MSK_X))
 	{
 		m_x = value;
 	}
-	else if (StringMatch(sk, "MSK_co1"))
+	else if (StringMatch(sk, VAR_MSK_CO1))
 	{
 		m_co1 = value;
 	}
@@ -349,33 +349,33 @@ void MUSK_CH::Set1DData(const char* key, int n, float* value)
 {
 	string sk(key);
 	//check the input data
-	if(StringMatch(sk,"subbasin"))
+	if(StringMatch(sk, VAR_SUBBSN))
 	{
 		m_subbasin = value;   //m_subbasin
 	}
-	else if(StringMatch(sk,"D_SBOF"))
+	else if(StringMatch(sk,VAR_SBOF))
 	{
 		CheckInputSize(key,n);
 		m_qsSub = value;   
 	}
-	else if (StringMatch(sk,"D_SBIF"))
+	else if (StringMatch(sk,VAR_SBIF))
 	{
 		CheckInputSize(key,n);
 		m_qiSub = value;
 	}
-	else if (StringMatch(sk, "D_SBQG"))
+	else if (StringMatch(sk, VAR_SBQG))
 	{
 		m_qgSub = value;
 	}
-	else if (StringMatch(sk, "D_SBPET"))
+	else if (StringMatch(sk, VAR_SBPET))
 	{
 		m_petCh = value;
 	}
-	else if (StringMatch(sk, "D_SBGS"))
+	else if (StringMatch(sk, VAR_SBGS))
 	{
 		m_gwStorage = value;
 	}
-	else if (StringMatch(sk, "Vpoint"))
+	else if (StringMatch(sk, VAR_VPOINT))
 	{
 		m_Vpoint = value;
 	}
@@ -389,13 +389,13 @@ void MUSK_CH::GetValue(const char* key, float* value)
 {
 	string sk(key);
 	int iOutlet = m_reachLayers.rbegin()->second[0];
-	if (StringMatch(sk, "QOUTLET"))
+	if (StringMatch(sk, VAR_QOUTLET))
 	{
 		//*value = m_qsCh[iOutlet];
 		m_qOut[0] = m_qOut[iOutlet] + m_deepGroudwater;
 		*value = m_qOut[0];
 	}
-	else if (StringMatch(sk, "QSOUTLET"))
+	else if (StringMatch(sk, VAR_QSOUTLET))
 	{
 		*value = m_qsCh[iOutlet];
 	}
@@ -407,42 +407,42 @@ void MUSK_CH::Get1DData(const char* key, int* n, float** data)
 	string sk(key);
 	*n = m_nreach+1;
 	int iOutlet = m_reachLayers.rbegin()->second[0];
-	if (StringMatch(sk, "QRECH"))
+	if (StringMatch(sk, VAR_QRECH))
 	{
 		m_qOut[0] = m_qOut[iOutlet] + m_deepGroudwater;
 		*data = m_qOut;
 	}
-	else if (StringMatch(sk, "QS"))
+	else if (StringMatch(sk, VAR_QS))
 	{
 		m_qsCh[0] = m_qsCh[iOutlet];
 		*data = m_qsCh;
 	}
-	else if (StringMatch(sk, "QI"))
+	else if (StringMatch(sk, VAR_QI))
 	{
 		m_qiCh[0] = m_qiCh[iOutlet];
 		*data = m_qiCh;
 	}
-	else if (StringMatch(sk, "QG"))
+	else if (StringMatch(sk, VAR_QG))
 	{
 		m_qgCh[0] = m_qgCh[iOutlet];
 		*data = m_qgCh;
 	}
-	else if (StringMatch(sk, "BKST"))
+	else if (StringMatch(sk, VAR_BKST))
 	{
 		m_bankStorage[0] = m_bankStorage[iOutlet];
 		*data = m_bankStorage;
 	}
-	else if (StringMatch(sk, "CHST"))
+	else if (StringMatch(sk, VAR_CHST))
 	{
 		m_chStorage[0] = m_chStorage[iOutlet];
 		*data = m_chStorage;
 	}
-	else if (StringMatch(sk, "SEEPAGE"))
+	else if (StringMatch(sk, VAR_SEEPAGE))
 	{
 		m_seepage[0] = m_seepage[iOutlet];
 		*data = m_seepage;
 	}
-	else if (StringMatch(sk, "CHWTDEPTH"))
+	else if (StringMatch(sk, VAR_CHWTDEPTH))
 	{
 		m_chWTdepth[0] = m_chWTdepth[iOutlet];
 		*data = m_chWTdepth;

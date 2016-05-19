@@ -35,11 +35,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single);
 	mdi.AddParameter("Omega","","calibration coefficient of splash erosion","ParameterDB_Sediment",DT_Single);
-	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("USLE_C","","the cover management factor","ParameterDB_Sediment",DT_Raster);
+	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster1D);
+	mdi.AddParameter("USLE_C","","the cover management factor","ParameterDB_Sediment",DT_Raster1D);
 	//mdi.AddParameter("Hplant","m","the height of the plants","ParameterDB_Sediment",DT_Raster);
 	//mdi.AddParameter("GRAD","","slope gradient (sine of slope angle)","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster); 
+	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster1D); 
 	//mdi.AddParameter("StoneFrac","","the fraction of stones on the surface, affects splash","ParameterDB_Sediment",DT_Raster);
 	//mdi.AddParameter("GrassFrac","","the fraction of grasstrip in a cell","ParameterDB_Sediment",DT_Raster);
 	//mdi.AddParameter("CoverFrac","","the fraction of vegetation cover","ParameterDB_Interception",DT_Raster);
@@ -48,15 +48,15 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	//input from other module	
 	//WaterDepth = Depression + SurfaceRunoffDepth
-	mdi.AddInput("D_DPST","mm","The depression storage","Module",DT_Raster);
-	mdi.AddInput("D_SURU","mm","surface runoff","Module",DT_Raster);		
-	mdi.AddInput("D_QOverland","m3/s","Water discharge in the downslope boundary of cells","Module",DT_Raster);	
+	mdi.AddInput("D_DPST","mm","The depression storage","Module",DT_Raster1D);
+	mdi.AddInput("D_SURU","mm","surface runoff","Module",DT_Raster1D);		
+	mdi.AddInput("D_QOverland","m3/s","Water discharge in the downslope boundary of cells","Module",DT_Raster1D);	
 	//mdi.AddInput("D_SNAC","mm","snow accumulation","Module",DT_Raster);	//SnowCover, from snow water balance module
-	mdi.AddInput("D_NEPR","mm","The net precipitation obtained from the interception module","Module",DT_Raster);	//Rain, from interception module
+	mdi.AddInput("D_NEPR","mm","The net precipitation obtained from the interception module","Module",DT_Raster1D);	//Rain, from interception module
 	//mdi.AddInput("D_LeafDrain","m","leaf drainage from canopy","Module",DT_Raster);			//from Interception module
 
 	// set the output variables
-	mdi.AddOutput("DETSplash","kg", "distribution of splash detachment", DT_Raster);
+	mdi.AddOutput("DETSplash","kg", "distribution of splash detachment", DT_Raster1D);
 
 	mdi.AddDependency("Interception","Interception module");      //for pNet, Leafdrain
 	mdi.AddDependency("Overland routing","Overland routing module");          // cellh

@@ -215,7 +215,7 @@ void IUH_IF::SetValue(const char* key, float value)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "TimeStep"))
+	if (StringMatch(sk, Tag_TimeStep))
 	{
 		m_TimeStep =(int) value;
 	}
@@ -243,11 +243,11 @@ void IUH_IF::Set1DData(const char* key, int n, float* data)
 
 	//set the value
 	string sk(key);
-	if (StringMatch(sk,"subbasin"))
+	if (StringMatch(sk, VAR_SUBBSN))
 	{
 		m_subbasin = data;
 	}
-	else if (StringMatch(sk, "D_SSRU"))
+	else if (StringMatch(sk, VAR_SSRU))
 	{
 		m_ssru = data;
 	}
@@ -260,9 +260,9 @@ void IUH_IF::Set2DData(const char* key, int nRows, int nCols, float** data)
 {
 	
 	string sk(key);
-	if (StringMatch(sk,"Ol_iuh"))
+	if (StringMatch(sk,VAR_OL_IUH))
 	{
-		this->CheckInputSize("Ol_iuh",nRows);
+		this->CheckInputSize(VAR_OL_IUH, nRows);
 
 		m_iuhCell = data;
 		m_iuhCols = nCols;
@@ -274,7 +274,7 @@ void IUH_IF::Set2DData(const char* key, int nRows, int nCols, float** data)
 void IUH_IF::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
-	if (StringMatch(sk, "SBIF"))  
+	if (StringMatch(sk, VAR_SBIF))  
 	{
 		*data = this->m_Q_SBIF;
 	}

@@ -64,8 +64,8 @@ sandList = []
 clayList = []
 orgList = []
 nlyrs = 2   # soil layers
-RD = 0   # initial rootDepth
-nlyrs_thick = [100, RD]   #soil layer thick, unit is mm
+nlyrs_thick=[]
+nlyrs_thick = [100, DEFAULT_NODATA]   #soil layer thick, unit is mm
 for i in range(1, nlyrs + 1):
     densityFile = SPATIAL_DATA_DIR + os.sep + "Density" + str(i) + ".tif"
     sandFile = SPATIAL_DATA_DIR + os.sep + "sand" + str(i) + ".tif" 

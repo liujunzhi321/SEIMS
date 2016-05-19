@@ -38,7 +38,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 
-	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster); 
+	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster1D); 
 	mdi.AddParameter(Tag_RchParam,"","reach parameters", "reachparameters.txt",DT_Array2D);
 
 	mdi.AddParameter("DT_HS", "second", "time step for storm simulation","ParameterDB_WaterBalance", DT_Single);
@@ -49,7 +49,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("gw0", "mm", "Initial groundwater storage", "ParameterDB_WaterBalance", DT_Single);
 	//mdi.AddParameter("gwmax", "mm", "", "ParameterDB_WaterBalance", DT_Single);
 
-	mdi.AddInput("D_PERCOLATION","mm", "Distribution of groundwater recharge (percolation)", "Module", DT_Raster);
+	mdi.AddInput("D_PERCOLATION","mm", "Distribution of groundwater recharge (percolation)", "Module", DT_Raster1D);
 
 	mdi.AddOutput("SBQG", "m3/s", "ground water outflow at each subbasin",DT_Array1D);	
 	mdi.AddOutput("SBGS", "mm", "ground water storage",DT_Array1D);	

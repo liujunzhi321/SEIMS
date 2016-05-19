@@ -30,19 +30,19 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("PI_MSM.chm");
 
 	// set the input variables (time series)
-	mdi.AddInput("D_P","mm","Precipitation","Module", DT_Raster);/// ITP_P
-	mdi.AddInput("D_PET","mm", "Potential Evapotranspiration", "Module", DT_Raster); ///ITP_PET
+	mdi.AddInput("D_P","mm","Precipitation","Module", DT_Raster1D);/// ITP_P
+	mdi.AddInput("D_PET","mm", "Potential Evapotranspiration", "Module", DT_Raster1D); ///ITP_PET
 
 	// set the parameters (non-time series)
-	mdi.AddParameter("Interc_max","mm", "Maximum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster);
-	mdi.AddParameter("Interc_min","mm", "Minimum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster);
+	mdi.AddParameter("Interc_max","mm", "Maximum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster1D);
+	mdi.AddParameter("Interc_min","mm", "Minimum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster1D);
 	mdi.AddParameter("Pi_b","", "Interception Storage Capacity Exponent", "ParameterDB_Interception", DT_Single);
 	mdi.AddParameter("Init_IS","", "Initial interception storage", "ParameterDB_Interception", DT_Single);
 
 	// set the output variables
-	mdi.AddOutput("INLO","mm", "Interception Loss Distribution", DT_Raster);
-	mdi.AddOutput("INET","mm", "Evaporation From Interception Storage", DT_Raster);
-	mdi.AddOutput("NEPR","mm", "Net Precipitation Distribution", DT_Raster);
+	mdi.AddOutput("INLO","mm", "Interception Loss Distribution", DT_Raster1D);
+	mdi.AddOutput("INET","mm", "Evaporation From Interception Storage", DT_Raster1D);
+	mdi.AddOutput("NEPR","mm", "Net Precipitation Distribution", DT_Raster1D);
 
 	// set the dependencies
 	mdi.AddDependency("Interpolation", "Interpolation Module");

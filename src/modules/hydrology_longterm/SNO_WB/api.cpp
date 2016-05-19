@@ -35,19 +35,19 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("T_snow","oC","snowfall temperature","ParameterDB_Snow",DT_Single);	
 	mdi.AddParameter("swe0","mm","Initial snow water equivalent","ParameterDB_Snow",DT_Single);
 	mdi.AddParameter("subbasinSelected","","The subbasion ids listed in file.out","file.out",DT_Array1D); //this list is used to contrain the output size. Its name must be subbasinSelected.
-	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster); //this list is used to contrain the output size
+	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster1D); //this list is used to contrain the output size
 
-	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster);
-	mdi.AddInput("D_SNRD","mm","snow redistribution","Module",DT_Raster);
-	mdi.AddInput("D_SNSB","mm","snow sublimation","Module",DT_Raster);
-	mdi.AddInput("D_SNME","mm","snow melt","Module",DT_Raster);
-	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster);
-	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster);
-	mdi.AddInput("D_P","mm","precipitation","Module",DT_Raster);
+	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster1D);
+	mdi.AddInput("D_SNRD","mm","snow redistribution","Module",DT_Raster1D);
+	mdi.AddInput("D_SNSB","mm","snow sublimation","Module",DT_Raster1D);
+	mdi.AddInput("D_SNME","mm","snow melt","Module",DT_Raster1D);
+	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster1D);
+	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster1D);
+	mdi.AddInput("D_P","mm","precipitation","Module",DT_Raster1D);
 	mdi.AddInput("T_WS","m/s","wind speed","Module",DT_Array1D);
 
 	// set the output variables
-	mdi.AddOutput("SNAC","mm", "distribution of snow accumulation", DT_Raster);
+	mdi.AddOutput("SNAC","mm", "distribution of snow accumulation", DT_Raster1D);
 	mdi.AddOutput("SNWB","mm", "snow water balance for selected subbasins", DT_Array2D);
 	mdi.AddOutput("SWE","mm", "average SA of the watershed", DT_Single);
 

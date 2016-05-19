@@ -171,7 +171,7 @@ dimensionTypes ModulesIOList::MatchType(string strType)
 	if (StringMatch(strType,Type_Array2D)) typ = DT_Array2D;
 	if (StringMatch(strType,Type_Array3D)) typ = DT_Array3D;
 	if (StringMatch(strType,Type_Array1DDateValue)) typ = DT_Array1DDateValue;
-	if (StringMatch(strType,Type_MapWindowRaster)) typ = DT_Raster;
+	if (StringMatch(strType,Type_MapWindowRaster)) typ = DT_Raster1D;
 	if (StringMatch(strType,Type_SiteInformation)) typ = DT_SiteInformation;
 	if (StringMatch(strType,Type_LapseRateArray)) typ = DT_LapseRateArray;
 	if (StringMatch(strType,Type_Scenario)) typ = DT_Scenario;
@@ -987,7 +987,7 @@ string DimentionType2String(dimensionTypes dimType)
 		case DT_Array3D:
 			strTmp = "Array3D";
 			break;
-		case DT_Raster:
+		case DT_Raster1D:
 			strTmp = "MapWindowRaster";
 			break;
 		case DT_Single:

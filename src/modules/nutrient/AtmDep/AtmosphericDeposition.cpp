@@ -14,11 +14,11 @@
 
 using namespace std;
 
-/// In nutrient modules, m_nLayers is 3, 0~10mm, 10~100mm, and 100~rootDepth. 
-/// In SEIMS, m_nLayers is 2, 0~100mm, 100~rootDepth.
+/// In nutrient modules, m_nSolLyrs is 3, 0~10mm, 10~100mm, and 100~rootDepth. 
+/// In SEIMS, m_nSolLyrs is 2, 0~100mm, 100~rootDepth.
 AtmosphericDeposition::AtmosphericDeposition(void):
 	//input
-	m_nLayers(3), m_nCells(-1), m_cellWidth(-1), m_rcn(-1.0f), m_rca(-1.0f), m_sol_z(NULL), m_preci(NULL), m_drydep_no3(NULL), m_drydep_nh4(NULL),
+	m_nSolLyrs(3), m_nCells(-1), m_cellWidth(-1), m_rcn(-1.0f), m_rca(-1.0f), m_sol_z(NULL), m_preci(NULL), m_drydep_no3(NULL), m_drydep_nh4(NULL),
 	//output
 	m_sol_no3(NULL), m_sol_nh3(NULL), m_addrno3(NULL), m_addrnh3(NULL), m_wshd_rno3(NULL)
 {
@@ -123,7 +123,7 @@ int AtmosphericDeposition::Execute() {
 	//check the data
 	CheckInputData();
 	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nLayers; k++) {
+		for(int k = 0; k < m_nSolLyrs; k++) {
 			// Calculate the amount of nitrite and ammonia added to the soil in rainfall, 
 		    m_addrno3 = 0.01 * m_rcn * m_preci[i];
 		    m_addrnh3 = 0.01 * m_rca * m_preci[i];
@@ -150,7 +150,7 @@ void AtmosphericDeposition::GetValue(const char* key, float* value) {
 
 void AtmosphericDeposition::Get2DData(const char* key, int *nRows, int *nCols, float*** data) {
 	string sk(key);
-	*nRows = m_nLayers;
+	*nRows = m_nSolLyrs;
 	*nCols = m_nCells;
 	if (StringMatch(sk, VAR_SOL_NO3)) {
 		*data = m_sol_no3;

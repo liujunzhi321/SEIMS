@@ -32,21 +32,21 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//3 grid parameter
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
-	mdi.AddParameter("USLE_C","","the cover management factor","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("USLE_P","","the erosion control practice factor ","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("acc","","the number of flow accumulation cells of each cell","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("slope","%","slope of the cell","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Snow", DT_Raster);
-	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster);
+	mdi.AddParameter("USLE_C","","the cover management factor","ParameterDB_Sediment",DT_Raster1D);
+	mdi.AddParameter("USLE_P","","the erosion control practice factor ","ParameterDB_Sediment",DT_Raster1D);
+	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster1D);
+	mdi.AddParameter("acc","","the number of flow accumulation cells of each cell","ParameterDB_Sediment",DT_Raster1D);
+	mdi.AddParameter("slope","%","slope of the cell","ParameterDB_WaterBalance",DT_Raster1D);
+	mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Snow", DT_Raster1D);
+	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster1D);
 	
 	//input from other module	
-	mdi.AddInput("D_SURU","mm","surface runoff","Module",DT_Raster);		//from depression module
-	mdi.AddInput("D_SNAC","mm","snow accumulation","Module",DT_Raster);	//from snow water balance module
+	mdi.AddInput("D_SURU","mm","surface runoff","Module",DT_Raster1D);		//from depression module
+	mdi.AddInput("D_SNAC","mm","snow accumulation","Module",DT_Raster1D);	//from snow water balance module
 
 	// set the output variables
-	mdi.AddOutput("SOER","metric tons", "distribution of soil erosion", DT_Raster);
-	mdi.AddOutput("USLE_LS","USLE LS factor", "USLE LS factor", DT_Raster);
+	mdi.AddOutput("SOER","metric tons", "distribution of soil erosion", DT_Raster1D);
+	mdi.AddOutput("USLE_LS","USLE LS factor", "USLE LS factor", DT_Raster1D);
 
 	mdi.AddOutput("SEDTOCH","metric tons", "sediment to channel", DT_Array1D);  // added by wu hui
 	mdi.AddOutput("SEDTOCH_T","kg", "Total sediment flowing to channel", DT_Single); // added by wu hui

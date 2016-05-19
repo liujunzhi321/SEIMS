@@ -40,17 +40,17 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("c_snow6","mm/oC/day","Melt factor on June 21","ParameterDB_Snow",DT_Single);
 	mdi.AddParameter("c_snow12","mm/oC/day","Melt factor on Decemeber 21","ParameterDB_Snow",DT_Single);
 
-	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster);								// from interception module
-	mdi.AddInput("D_SNAC","mm", "distribution of snow accumulation", "Module",DT_Raster);				// from snow water balance module
+	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster1D);								// from interception module
+	mdi.AddInput("D_SNAC","mm", "distribution of snow accumulation", "Module",DT_Raster1D);				// from snow water balance module
 	mdi.AddInput("SWE","mm","average SA of the watershed","Module",DT_Single);									// from snow water balance module
-	mdi.AddInput("D_SNRD","mm", "distribution of snow blowing in or out the cell","Module", DT_Raster); // from snow redistribution module
-	mdi.AddInput("D_SNSB","mm", "Distribution of snow sublimation (water equivalent) for a user defined period","Module",DT_Raster); //from snow sublimation module
-	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster);									// from interpolation module
-	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster);									// from interpolation module
+	mdi.AddInput("D_SNRD","mm", "distribution of snow blowing in or out the cell","Module", DT_Raster1D); // from snow redistribution module
+	mdi.AddInput("D_SNSB","mm", "Distribution of snow sublimation (water equivalent) for a user defined period","Module",DT_Raster1D); //from snow sublimation module
+	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster1D);									// from interpolation module
+	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster1D);									// from interpolation module
 
 
 	// set the output variables
-	mdi.AddOutput("SNME","mm", "distribution of snowmelt", DT_Raster);
+	mdi.AddOutput("SNME","mm", "distribution of snowmelt", DT_Raster1D);
 
 	// write out the XML file.
 

@@ -30,22 +30,22 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SET_LM.chm");
 
-	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance",DT_Raster);
+	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance",DT_Raster1D);
 	mdi.AddParameter("T_Soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);					//
 
 	mdi.AddParameter("FieldCap_2D","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Array2D);
 	mdi.AddParameter("Wiltingpoint_2D","m3/m3","Plant wilting point moisture","ParameterDB_WaterBalance", DT_Array2D);					//0w				
 	
 	// set the parameters (non-time series)
-	mdi.AddInput("D_PET","mm","pet","Module",DT_Raster);
-	mdi.AddInput("D_INET","mm","Evaporation From Interception Storage","Module",DT_Raster);
-	mdi.AddInput("D_DEET","mm","Distribution of depression ET","Module",DT_Raster);
-	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);
+	mdi.AddInput("D_PET","mm","pet","Module",DT_Raster1D);
+	mdi.AddInput("D_INET","mm","Evaporation From Interception Storage","Module",DT_Raster1D);
+	mdi.AddInput("D_DEET","mm","Distribution of depression ET","Module",DT_Raster1D);
+	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster1D);
 
 	mdi.AddInput("D_SOMO_2D", "mm", "Distribution of soil moisture", "Module", DT_Array2D);
 
 	// set the output variables
-	mdi.AddOutput("SOET","mm", "Distribution of soil evapotranspiration for a user defined period.", DT_Raster);
+	mdi.AddOutput("SOET","mm", "Distribution of soil evapotranspiration for a user defined period.", DT_Raster1D);
 
 	// write out the XML file.
 	res = mdi.GetXMLDocument();
