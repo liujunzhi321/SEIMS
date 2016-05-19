@@ -15,13 +15,7 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-/** \defgroup PET_H
- * \ingroup Hydrology_longterm
- * \brief Calculate potential evapotranspiration using Hargreaves method
- *
- *
- *
- */
+
 //! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {

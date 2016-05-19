@@ -13,7 +13,7 @@
 #include "ModelException.h"
 #include "util.h"
 #include "omp.h"
-#include "math.h"
+#include <cmath>
 
 DepressionFS::DepressionFS(void):m_size(-1),
 	m_depCo(NODATA), m_depCap(NULL), m_pet(NULL), m_ei(NULL),

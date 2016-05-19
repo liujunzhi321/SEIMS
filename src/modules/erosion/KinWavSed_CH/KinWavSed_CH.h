@@ -1,12 +1,11 @@
-/** 
-*	@file
-*	@version	1.0
-*	@author		Hui Wu
-*	@date		27-February-2012
-*
-*	@brief	Kinematic wave method for channel flow erosion and deposition
-*
-*/
+/*!
+ * \file KinWavSed_CH.h
+ * \brief Kinematic wave method for channel flow erosion and deposition
+ * \author Hui Wu
+ * \date Feb. 2012
+ * \revised LiangJun Zhu
+ * \revised date May. 2016
+ */
 
 #ifndef SEIMS_KinWavSed_CH_INCLUDE
 #define SEIMS_KinWavSed_CH_INCLUDE
@@ -19,13 +18,25 @@
 #include <vector>
 #include "SimulationModule.h"
 using namespace std;
-
+/** \defgroup KinWavSed_CH
+ * \ingroup Erosion
+ * \brief Kinematic wave method for channel flow erosion and deposition
+ */
+/*!
+ * \class KinWavSed_CH
+ * \ingroup KinWavSed_CH
+ *
+ * \brief Kinematic wave method for channel flow erosion and deposition
+ *
+ */
 class KinWavSed_CH : public SimulationModule
 {
 public:
+	//! Constructor
 	KinWavSed_CH(void);
+	//! Destructor
 	~KinWavSed_CH(void);
-
+	//! Execute 
 	virtual int Execute();
 
 	virtual void SetValue(const char* key, float value);
@@ -43,7 +54,7 @@ public:
 	bool CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension
@@ -59,12 +70,11 @@ private:
 	/// calibration coefficient
 	float m_eco2;*/
 	/**
-	*	@brief 2d array of reach layers
+	*	@brief reach layers map
 	*
 	*	The first element in each sub-array is the number of reaches in this sub-array
 	*	The following elements are the index of reach array
 	*/
-	//float **m_reachLayers;
 	map<int, vector<int> > m_reachLayers;
 	/**
 	*	@brief 2d array of flow in cells
@@ -92,7 +102,7 @@ private:
 	*/
 	map<int, vector<int> > m_reachs;
 
-	//time_t m_Date;  //not used
+
 	/// cell width of grid map (m)
 	float m_CellWith;
 	/// number of valid cells
@@ -121,14 +131,14 @@ private:
 	float* m_ChManningN;
 
 	//input from modules
-	/// water depth for channel cell [mm]
+	/// water depth for channel cell [mm], i.e., "HCH" from channel routing module
 	float** m_ChannelWH;
 	/// sediment flow into the channel [kg]
 	float* m_SedToChannel;
 
-	/// channel flow of each cell, £¨m3/s£©
+	/// channel flow of each cell, [m3/s]
 	float** m_ChQkin;
-	/*/// overland flow for last time step, £¨m3/s£©
+	/*/// overland flow for last time step, [m3/s]
 	float** m_Qlastt;*/
 	/// water volume in cell m3
 	float** m_ChVol;
@@ -149,8 +159,8 @@ private:
 	float** m_CHSed_kg;
 	/// outgoing sediment flux of the cell (kg/s), first is channel Id
 	float** m_Qsn;
-	/// sediment flux at subbasin (kg/s)
-	float* m_SedSubbasin;
+	/// sediment flux at subbasin (kg/s), useless? by LJ
+	//float* m_SedSubbasin;
 
 	//output for test
 	float* m_detCH;

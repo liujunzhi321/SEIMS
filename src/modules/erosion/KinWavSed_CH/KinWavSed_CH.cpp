@@ -1,3 +1,11 @@
+/*!
+ * \file KinWavSed_CH.cpp
+ * \brief Kinematic wave method for channel flow erosion and deposition
+ * \author Hui Wu
+ * \date Feb. 2012
+ * \revised LiangJun Zhu
+ * \revised date May. 2016
+ */
 #include "KinWavSed_CH.h"
 #include "MetadataInfo.h"
 #include "util.h"
@@ -9,15 +17,14 @@
 #include <cstdio>
 
 #include <omp.h>
-//#define NODATA_VALUE -99
 using namespace std;
 
-KinWavSed_CH::KinWavSed_CH(void):m_CellWith(-1),m_nCells(-1), m_TimeStep(-99.0f), m_chNumber(-1), m_Slope(NULL),
+KinWavSed_CH::KinWavSed_CH(void):m_CellWith(-1),m_nCells(-1), m_TimeStep(NODATA), m_chNumber(-1), m_Slope(NULL),
 	m_chWidth(NULL), m_ChannelWH(NULL), m_flowInIndex(NULL), m_flowOutIndex(NULL), m_reachId(NULL), m_streamOrder(NULL),
 	m_sourceCellIds(NULL), m_streamLink(NULL), m_ChQkin(NULL), m_ChVol(NULL), m_Qsn(NULL), m_CHDETFlow(NULL), m_CHSedDep(NULL),
-	m_CHSed_kg(NULL), m_SedSubbasin(NULL), m_ChDetCo(-99.0f), m_USLE_K(NULL),m_SedToChannel(NULL), m_ChV(NULL),
-	m_ChManningN(NULL), m_ChTcCo(-99.0f), m_CHSedConc(NULL), m_depCh(NULL)
-{
+	m_CHSed_kg(NULL),  m_ChDetCo(NODATA), m_USLE_K(NULL),m_SedToChannel(NULL), m_ChV(NULL),
+	m_ChManningN(NULL), m_ChTcCo(NODATA), m_CHSedConc(NULL), m_depCh(NULL)
+{//m_SedSubbasin(NULL), deprecated by LJ
 }
 
 KinWavSed_CH::~KinWavSed_CH(void)
@@ -66,8 +73,8 @@ KinWavSed_CH::~KinWavSed_CH(void)
 	}
 	if (m_sourceCellIds != NULL)
 		delete[] m_sourceCellIds;
-	if(m_SedSubbasin !=NULL)
-		delete[] m_SedSubbasin;
+	//if(m_SedSubbasin !=NULL)
+	//	delete[] m_SedSubbasin;
 
 	//test
 	if(m_detCH !=NULL)
@@ -84,56 +91,23 @@ KinWavSed_CH::~KinWavSed_CH(void)
 		delete[] m_chanVol;
 }
 
-//int KinWavSed_CH::getResults(const char* key, float** data)
-//{
-//	string s(key);
-//	if(StringMatch(s,"D_CHDETFlow"))				
-//	{
-//		*data = m_CHDETFlow;
-//	}									
-//	else if(StringMatch(s,"D_CHSedDep"))				
-//	{
-//		*data = m_CHSedDep;
-//	}
-//	else if(StringMatch(s,"D_CHSedConc"))				
-//	{
-//		*data = m_CHSedConc;
-//	}
-//	else if(StringMatch(s,"D_CHSEDKG"))				
-//	{
-//		*data = m_CHSed_kg;
-//	}
-//	else if(StringMatch(s,"SEDSUBBASIN"))				
-//	{
-//		*data = m_SedSubbasin;
-//	}
-//	else									throw ModelException("KinWavSed_CH","getResult","Result " + s + " does not exist in KinWavSed_CH method. Please contact the module developer.");
-//
-//	return m_nCells;
-//}
 void KinWavSed_CH::SetValue(const char* key, float data)
 {
 	string s(key);
 	if(StringMatch(s,Tag_CellWidth))			m_CellWith = data;
 	else if(StringMatch(s, Tag_CellSize))		m_nCells = (int)data;
-	else if(StringMatch(s,"DT_HS"))		m_TimeStep = data;
-	else if(StringMatch(s,"ChTcCo"))		m_ChTcCo = data;
-	/*else if(StringMatch(s,"eco1"))		m_eco1 = data;
-	else if(StringMatch(s,"eco2"))		m_eco2 = data;*/
-	else if(StringMatch(s,"ChDetCo"))		m_ChDetCo = data;
-	else if (StringMatch(s, VAR_OMP_THREADNUM))
-	{
-		omp_set_num_threads((int)data);
-	}
+	else if(StringMatch(s,Tag_HillSlopeTimeStep))		m_TimeStep = data;
+	else if(StringMatch(s,VAR_CH_TCCO))		m_ChTcCo = data;
+	else if(StringMatch(s,VAR_CH_DETCO))		m_ChDetCo = data;
+	else if (StringMatch(s, VAR_OMP_THREADNUM)) omp_set_num_threads((int)data);
 	else							
-		throw ModelException("KinWavSed_CH","SetValue","Parameter " + s + " does not exist in KinWavSed_CH method. Please contact the module developer.");
-
+		throw ModelException(MID_KINWAVSED_CH,"SetValue","Parameter " + s + " does not exist in current module.\n");
 }
 
 void KinWavSed_CH::GetValue(const char* key, float* value)
 {
 	string sk(key);
-	if (StringMatch(sk, "SEDOUTLET"))
+	if (StringMatch(sk, VAR_SED_OUTLET))
 	{
 		map<int, vector<int> >::iterator it = m_reachLayers.end();
 		it--;
@@ -143,8 +117,8 @@ void KinWavSed_CH::GetValue(const char* key, float* value)
 		//*value = m_CHSedConc[reachId][iLastCell];  //kg/m3
 	}
 	else 
-		throw ModelException("KinWavSed_CH", "GetValue", "Output " + sk 
-		+ " does not exist in the KinWavSed_CH module. Please contact the module developer.");
+		throw ModelException(MID_KINWAVSED_CH, "GetValue", "Output " + sk 
+		+ " does not exist in the current module. Please contact the module developer.");
 }
 
 void KinWavSed_CH::Set1DData(const char* key, int nRows, float* data)
@@ -153,17 +127,15 @@ void KinWavSed_CH::Set1DData(const char* key, int nRows, float* data)
 
 	CheckInputSize(key,nRows);
 
-	if(StringMatch(s,"Slope"))		        m_Slope = data;
-	//else if(StringMatch(s, "Manning_nCh"))    m_ChManningN = data;
-	else if(StringMatch(s, "D_SEDTOCH"))    m_SedToChannel = data;
-	else if(StringMatch(s, "CHWIDTH"))          m_chWidth = data; 
-	else if(StringMatch(s, "STREAM_LINK"))     m_streamLink = data;
-	else if(StringMatch(s, "FlowOut_Index_D8"))   m_flowOutIndex = data;
-	else if(StringMatch(s,"USLE_K"))		m_USLE_K = data;
+	if(StringMatch(s,VAR_SLOPE))		        m_Slope = data;
+	else if(StringMatch(s, VAR_CHWIDTH))          m_chWidth = data; 
+	else if(StringMatch(s, VAR_STREAM_LINK))     m_streamLink = data;
+	else if(StringMatch(s,VAR_USLE_K))		m_USLE_K = data;
+	else if(StringMatch(s, Tag_FLOWOUT_INDEX_D8))   m_flowOutIndex = data;
+	else if(StringMatch(s, VAR_SED_TO_CH))    m_SedToChannel = data;
 	
 	else				
-		throw ModelException("KinWavSed_CH","SetValue","Parameter " + s + " does not exist in KinWavSed_CH method. Please contact the module developer.");
-
+		throw ModelException(MID_KINWAVSED_CH,"SetValue","Parameter " + s + " does not exist in current module. Please contact the module developer.");
 }
 
 void KinWavSed_CH::Get1DData(const char* key, int* n, float** data)
@@ -174,34 +146,33 @@ void KinWavSed_CH::Get1DData(const char* key, int* n, float** data)
 	{
 	*data = m_SedSubbasin;
 	}*/
-	if (StringMatch(sk, "DEP"))
+	if (StringMatch(sk, VAR_CH_DEP))
 	{
 		*data = m_depCh;
 	}
-	else if (StringMatch(sk, "DET"))
+	else if (StringMatch(sk, VAR_CH_DET))
 	{
 		*data = m_detCH;
 	}
-	else if (StringMatch(sk, "QSN"))
+	else if (StringMatch(sk, VAR_CH_SEDRATE))
 	{
 		*data = m_routQs;
 	}
-	else if (StringMatch(sk, "CAP"))
+	else if (StringMatch(sk, VAR_CH_FLOWCAP))
 	{
 		*data = m_cap;
 	}
-	else if (StringMatch(sk, "CHANV"))
+	else if (StringMatch(sk, VAR_CH_V))
 	{
 		*data = m_chanV;  // this is the problem
 	}
-	else if (StringMatch(sk, "CHANVOL"))
+	else if (StringMatch(sk, VAR_CH_VOL))
 	{
 		*data = m_chanVol;  // this is the problem
 	}
 	else
-		throw ModelException("KinWavSed_CH", "Get1DData", "Output " + sk 
+		throw ModelException(MID_KINWAVSED_CH, "Get1DData", "Output " + sk 
 		+ " does not exist in the KinWavSed_CH module. Please contact the module developer.");
-
 }
 
 void KinWavSed_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
@@ -228,17 +199,17 @@ void KinWavSed_CH::Set2DData(const char* key, int nrows, int ncols, float** data
 		}
 
 	}
-	else if(StringMatch(sk, "FlowIn_Index_D8"))  
+	else if(StringMatch(sk, Tag_FLOWIN_INDEX_D8))  
 		m_flowInIndex = data;
-	else if(StringMatch(sk, "HCH")){
+	else if(StringMatch(sk, VAR_HCH)){
 		m_ChannelWH = data;
 	}
-	else if(StringMatch(sk, "QRECH")) {
+	else if(StringMatch(sk, VAR_QRECH)) {
 		m_ChQkin = data;
 		cout << m_ChQkin << endl;
 	}
 	else
-		throw ModelException("KinWavSed_CH", "Set2DData", "Parameter " + sk 
+		throw ModelException(MID_KINWAVSED_CH, "Set2DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 
 }
@@ -252,7 +223,7 @@ void KinWavSed_CH::Get2DData(const char *key, int *nRows, int *nCols, float ***d
 	else if (StringMatch(sk, "SEDINFLOW"))
 		*data = m_CHSed_kg;
 	else
-		throw ModelException("KinWavSed_CH", "Get2DData", "Output " + sk 
+		throw ModelException(MID_KINWAVSED_CH, "Get2DData", "Output " + sk 
 		+ " does not exist in the KinWavSed_CH module. Please contact the module developer.");*/
 
 }
@@ -268,87 +239,87 @@ bool KinWavSed_CH::CheckInputData()
 {
 	if(m_flowInIndex == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The parameter: flow in index has not been set.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The parameter: flow in index has not been set.");
 		return false;
 	}
 	if(m_date < 0)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","You have not set the time.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","You have not set the time.");
 		return false;
 	}
 	if(m_CellWith <= 0)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The cell width can not be less than zero.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The cell width can not be less than zero.");
 		return false;
 	}
 	if(m_nCells <= 0)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The cell number can not be less than zero.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The cell number can not be less than zero.");
 		return false;
 	}
 	if(m_chNumber <= 0)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The channel reach number can not be less than zero.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The channel reach number can not be less than zero.");
 		return false;
 	}
 	if(m_TimeStep < 0)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","You have not set the time step.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","You have not set the time step.");
 		return false;
 	}
 	if(m_ChTcCo < 0)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","You have not set calibration coefficient of transport capacity.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","You have not set calibration coefficient of transport capacity.");
 		return false;
 	}
 	if(m_ChDetCo < 0)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","You have not set calibration coefficient of channel flow detachment.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","You have not set calibration coefficient of channel flow detachment.");
 		return false;
 	}
 	if (m_Slope == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The slope£¨%£©can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The slope£¨%£©can not be NULL.");
 		return false;
 	}
 	if (m_ChManningN == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","Manning N can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","Manning N can not be NULL.");
 		return false;
 	}
 	if (m_chWidth == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","Channel width can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","Channel width can not be NULL.");
 		return false;
 	}
 	if (m_ChannelWH == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The channel water depth can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The channel water depth can not be NULL.");
 		return false;
 	}
 	if (m_ChQkin == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The channel flow can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The channel flow can not be NULL.");
 		return false;
 	}
 	if (m_streamLink == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The stream link can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The stream link can not be NULL.");
 		return false;
 	}
 	if (m_flowOutIndex == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The flow out index can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The flow out index can not be NULL.");
 		return false;
 	}
 	if (m_streamOrder == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The stream order of reach parameter can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The stream order of reach parameter can not be NULL.");
 		return false;
 	}
 	if (m_reachDownStream == NULL)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputData","The downstream of reach in reach parameter can not be NULL.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The downstream of reach in reach parameter can not be NULL.");
 		return false;
 	}
 
@@ -359,7 +330,7 @@ bool KinWavSed_CH::CheckInputSize(const char* key, int n)
 {
 	if(n<=0)
 	{
-		throw ModelException("KinWavSed_CH","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_KINWAVSED_CH,"CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(m_nCells != n)
@@ -367,7 +338,7 @@ bool KinWavSed_CH::CheckInputSize(const char* key, int n)
 		if(m_nCells <=0) m_nCells = n;
 		else
 		{
-			throw ModelException("KinWavSed_CH","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
+			throw ModelException(MID_KINWAVSED_CH,"CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			return false;
 		}
 	}
@@ -396,8 +367,8 @@ void KinWavSed_CH::initial()
 			m_chanVol[i] = 0.0f;
 		}
 		//allocate the output variable
-		if(m_nCells <= 0) throw ModelException("KinWavSed_CH","initalOutputs","The cell number of the input can not be less than zero.");
-		if(m_chNumber <= 0) throw ModelException("KinWavSed_CH","initalOutputs","The channel number of the input can not be less than zero.");
+		if(m_nCells <= 0) throw ModelException(MID_KINWAVSED_CH,"initalOutputs","The cell number of the input can not be less than zero.");
+		if(m_chNumber <= 0) throw ModelException(MID_KINWAVSED_CH,"initalOutputs","The channel number of the input can not be less than zero.");
 
 		if(m_CHSed_kg == NULL)
 		{
@@ -458,12 +429,12 @@ void KinWavSed_CH::initial()
 			m_Qsn = new float*[m_chNumber];
 			//m_Qlastt = new float[m_chNumber];
 			m_CHSed_kg = new float*[m_chNumber]; 
-			m_SedSubbasin = new float[m_chNumber];
+			//m_SedSubbasin = new float[m_chNumber];
 			m_ChVol = new float*[m_chNumber];
 			m_ChV = new float*[m_chNumber];
 			for (int i = 0; i < m_chNumber; ++i)
 			{
-				m_SedSubbasin[i] = 0.0f;
+				//m_SedSubbasin[i] = 0.0f;
 				int n = m_reachs[i].size();
 				m_CHDETFlow[i] = new float[n];
 				m_CHSedDep[i] = new float[n];
@@ -780,7 +751,7 @@ void KinWavSed_CH::ChannelflowSedRouting(int iReach, int iCell, int id)
 //{
 //	if(m_nCells <= 0)
 //	{
-//		throw ModelException("KinWavSed_CH","CheckInputData","The cell number can not be less than zero.");
+//		throw ModelException(MID_KINWAVSED_CH,"CheckInputData","The cell number can not be less than zero.");
 //		//exit(-1);
 //	}
 //	if(m_COH == NULL)
@@ -820,7 +791,7 @@ int KinWavSed_CH::Execute()
 			{
 				ChannelflowSedRouting(reachIndex, iCell, vecCells[iCell]);
 			}
-			m_SedSubbasin[reachIndex] = m_Qsn[reachIndex][n-1]/1000;   //kg/s -> ton/s
+			//m_SedSubbasin[reachIndex] = m_Qsn[reachIndex][n-1]/1000;   //kg/s -> ton/s
 		}
 	}
 	//StatusMsg("end of executing KinWavSed_CH");

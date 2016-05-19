@@ -25,17 +25,33 @@ TODO LISTS
 
 ## 3.1模型结构
 
-+ 1. 土壤层数问题
++ 1. 土壤数据问题
 
-目前是2层，程序中有些地方明确写死为2层，比如`MongoUtil.cpp`里的`Read2DSoilAttr`函数，这样不够合理，应改为可支持多层土壤层数。
+目前土壤数据的的输入为机械组成和有机质含量的TIFF，这样做可扩展性太差。而且，土层默认为2层，程序中有些地方明确写死为2层，比如`MongoUtil.cpp`里的`Read2DSoilAttr`函数，这样不够合理。应改为可支持多层土壤层数。
 
 + 2.
 
+> 2016-5-18 已完成 `DT_Rater2D`的读写，详见`clsRaterData`类
+> 
+
++ 2. 河道数据结构
+
+目前有两个河道相关的AddParameter，即Tag_ReachParameter和Tag_RchParam，但是读取的均是reaches表。因此，有必要进行合并，用一个clsReach类替代。
 
 
 
-======
-# TODO by Gao
+## TODO by Zhu
+
+### KINWAVSED_CH模块
+
++ 1. Tag_ReachParameter问题
+
+### MUSLE_AS模块
+
++ 1. SEDTOCH和SEDTOCH_T单位到底是吨还是千克？
+
+## TODO by Gao
+
 ##1.代码整理
 + 1 nReach等变量赋值问题
 	+ 未直接赋值，通过相关变量间接赋值，
@@ -57,14 +73,3 @@ GWA_RE|VAR_GWWB
 + 4 add*()与set*()、get*()中变量不一致的问题
 	+ Hydrology_longterm - IKW_REACH: VAR_QUPREACH
 
-
-
-
-
-
-
-
-
-
-	
-	

@@ -881,7 +881,7 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 		Set2DData(dbName, name, nSubbasin, remoteFileName, templateRaster, pModule);
 		break;
 	case DT_Array3D:
-		
+		/// Currently, no 3D array data encountered
 		break;
 	case DT_Array1DDateValue:
 		break;
@@ -921,7 +921,7 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 	{
 		param->Value = settingsInput->getDtDaily();
 	}
-	else if (StringMatch(param->Name, Tag_StormTimeStep))
+	else if (StringMatch(param->Name, Tag_HillSlopeTimeStep))
 	{
 		param->Value = settingsInput->getDtHillslope();
 	}
@@ -960,7 +960,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		return;
 	}
 
-	if (StringMatch(paraName, Tag_FLOWOUT_INDEX))
+	if (StringMatch(paraName, Tag_FLOWOUT_INDEX_D8))
 	{
 		try
 		{
@@ -1092,7 +1092,7 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 			Read2DArray(ossRoutingLayers.str().c_str(), nRows, data);*/
 		#endif
 		}
-		else if(StringMatch(paraName, Tag_FLOWIN_INDEX) || StringMatch(paraName, Tag_FLOWIN_INDEX_DINF)
+		else if(StringMatch(paraName, Tag_FLOWIN_INDEX_D8) || StringMatch(paraName, Tag_FLOWIN_INDEX_DINF)
 			|| StringMatch(paraName, Tag_FLOWIN_PERCENTAGE_DINF) || StringMatch(paraName, Tag_FLOWOUT_INDEX_DINF)
 			|| StringMatch(paraName, Tag_ROUTING_LAYERS_DINF))
 		{

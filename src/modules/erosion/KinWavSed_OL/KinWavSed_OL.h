@@ -1,12 +1,11 @@
-/** 
-*	@file
-*	@version	1.0
-*	@author		Hui Wu
-*	@date		22-February-2012
-*
-*	@brief	Kinematic wave routing method for overland erosion and deposition
-*
-*/
+/*!
+ * \file KinWavSed_OL.h
+ * \brief Kinematic wave routing method for overland erosion and deposition
+ * \author Hui Wu
+ * \date Feb. 2012
+ * \revised LiangJun Zhu
+ * \revised date May. 2016
+ */
 
 #ifndef SEIMS_KinWavSed_OL_INCLUDE
 #define SEIMS_KinWavSed_OL_INCLUDE
@@ -16,7 +15,17 @@
 #include "api.h"
 #include "SimulationModule.h"
 using namespace std;
-
+/** \defgroup KinWavSed_OL
+ * \ingroup Erosion
+ * \brief Kinematic wave method for overland flow erosion and deposition
+ */
+/*!
+ * \class KinWavSed_OL
+ * \ingroup KinWavSed_OL
+ *
+ * \brief Kinematic wave method for overland flow erosion and deposition
+ *
+ */
 class KinWavSed_OL : public SimulationModule
 {
 public:
@@ -37,7 +46,7 @@ public:
 	bool CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension
@@ -47,7 +56,7 @@ public:
 
 private:
 
-	static string toString(float value);
+	/// static string toString(float value); replaced by ValueToString() defined in util module. by LJ
 
 	void initial();
 

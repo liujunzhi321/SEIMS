@@ -1,10 +1,8 @@
 /*!
  * \file PETHargreaves.h
  *
- * \author Junzhi Liu
+ * \author Junzhi Liu, LiangJun Zhu
  * \date Nov. 2010
- *
- * 
  */
 #ifndef SEIMS_PET_HARGREAVES_INCLUDE
 #define SEIMS_PET_HARGREAVES_INCLUDE
@@ -14,6 +12,10 @@
 #include "SimulationModule.h"
 
 using namespace std;
+/** \defgroup PET_H
+ * \ingroup Hydrology_longterm
+ * \brief Calculate potential evapotranspiration using Hargreaves method
+ */
 /*!
  * \class PETHargreaves
  * \ingroup PET_H
