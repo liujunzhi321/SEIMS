@@ -32,21 +32,21 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("PI_STORM.chm");
 
 	// set the input variables (time series)
-	mdi.AddInput("D_P","mm","Precipitation","Module",DT_Raster);
-	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster); 
+	mdi.AddInput("D_P","mm","Precipitation","Module",DT_Raster1D);
+	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster1D); 
 	//mdi.AddInput("D_PET","mm", "Potential Evapotranspiration", "Module", MapWindowRaster);
 	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
 	// set the parameters (non-time series)
-	mdi.AddParameter("Interc_max","mm", "Maximum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster);
-	mdi.AddParameter("Interc_min","mm", "Minimum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster);
+	mdi.AddParameter("Interc_max","mm", "Maximum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster1D);
+	mdi.AddParameter("Interc_min","mm", "Minimum Interception Storage Capacity", "ParameterDB_Interception", DT_Raster1D);
 	mdi.AddParameter("Pi_b","", "Interception Storage Capacity Exponent", "ParameterDB_Interception", DT_Single);
 	//mdi.AddParameter("K_pet","", "Correction Factor of PET", "ParameterDB_Interception", Single);
 	mdi.AddParameter("Init_IS","", "Initial interception storage", "ParameterDB_Interception", DT_Single);
 
 	// set the output variables
-	mdi.AddOutput("INLO","mm", "Interception Loss Distribution", DT_Raster);
+	mdi.AddOutput("INLO","mm", "Interception Loss Distribution", DT_Raster1D);
 	//mdi.AddOutput("INET","mm", "Evaporation From Interception Storage", MapWindowRaster);
-	mdi.AddOutput("NEPR","mm", "Net Precipitation Distribution", DT_Raster);
+	mdi.AddOutput("NEPR","mm", "Net Precipitation Distribution", DT_Raster1D);
 
 	// set the dependencies
 	mdi.AddDependency("Interpolation", "Interpolation Module");

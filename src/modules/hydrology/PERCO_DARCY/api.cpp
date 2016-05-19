@@ -34,19 +34,19 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single); 
 
-	mdi.AddParameter("Conductivity","mm/h","saturation hydraulic conductivity","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("Porosity","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Raster);
+	mdi.AddParameter("Conductivity","mm/h","saturation hydraulic conductivity","ParameterDB_WaterBalance",DT_Raster1D);
+	mdi.AddParameter("Porosity","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Raster1D);
 	//mdi.AddParameter("Residual","m3/m3","residual moisture content","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("Poreindex","-","pore size distribution index","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("FieldCap","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("RootDepth", "mm", "Root depth","ParameterDB_WaterBalance", DT_Raster);
+	mdi.AddParameter("Poreindex","-","pore size distribution index","ParameterDB_WaterBalance",DT_Raster1D);
+	mdi.AddParameter("FieldCap","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Raster1D);
+	mdi.AddParameter("RootDepth", "mm", "Root depth","ParameterDB_WaterBalance", DT_Raster1D);
 
 	//mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);						//soil temperature
-	mdi.AddInput("D_SOMO","mm","Distribution of soil moisture","Module",DT_Raster);			//from soil water balance module	0
+	mdi.AddInput("D_SOMO","mm","Distribution of soil moisture","Module",DT_Raster1D);			//from soil water balance module	0
 	//mdi.AddInput("D_ES","mm","ES","Module",DT_Raster);											//from actual evapotranspiration module, the output id may not be correct.
 
 	// set the output variables
-	mdi.AddOutput("PERCOLATION","mm", "Distribution of groundwater recharge (percolation)", DT_Raster);
+	mdi.AddOutput("PERCOLATION","mm", "Distribution of groundwater recharge (percolation)", DT_Raster1D);
 
 	// write out the XML file.
 	string res = mdi.GetXMLDocument();

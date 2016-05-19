@@ -33,12 +33,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("TimeStep","hr","time step of the simulation","file.in",DT_Single); 
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single); 
-	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster); 
+	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster1D); 
 	mdi.AddParameter("Ol_iuh","","IUH of each grid cell","ParameterDB_Discharge",DT_Array2D);
 	//mdi.AddParameter("uhminCell","","start time of IUH for each grid cell","ParameterDB_Discharge",DT_Array1D);
 	//mdi.AddParameter("uhmaxCell","","end time of IUH for each grid cell","ParameterDB_Discharge",DT_Array1D);
 
-	mdi.AddInput("D_SURU","mm","The depression storage","Module",DT_Raster);					//from depression module
+	mdi.AddInput("D_SURU","mm","The depression storage","Module",DT_Raster1D);					//from depression module
 
 	mdi.AddOutput("SBOF", "mm","Overland flow to streams for each subbasin", DT_Array1D);
 

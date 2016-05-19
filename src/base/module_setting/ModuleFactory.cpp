@@ -358,7 +358,7 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 	if (StringMatch(strType,Type_Array2D))			typ = DT_Array2D;
 	if (StringMatch(strType,Type_Array3D))			typ = DT_Array3D;
 	if (StringMatch(strType,Type_Array1DDateValue))	typ = DT_Array1DDateValue;
-	if (StringMatch(strType,Type_MapWindowRaster))	typ = DT_Raster;
+	if (StringMatch(strType,Type_MapWindowRaster))	typ = DT_Raster1D;
 	if (StringMatch(strType,Type_SiteInformation))	typ = DT_SiteInformation;
 	if (StringMatch(strType,Type_LapseRateArray))	typ = DT_LapseRateArray;
 	if (StringMatch(strType,Type_Scenario))			typ = DT_Scenario;
@@ -881,11 +881,11 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 		Set2DData(dbName, name, nSubbasin, remoteFileName, templateRaster, pModule);
 		break;
 	case DT_Array3D:
-		
+		/// Currently, no 3D array data encountered
 		break;
 	case DT_Array1DDateValue:
 		break;
-	case DT_Raster:
+	case DT_Raster1D:
 		SetRaster(dbName, name, remoteFileName, templateRaster, pModule);
 		break;
 	case DT_SiteInformation:
@@ -921,7 +921,7 @@ void ModuleFactory::SetValue(ParamInfo* param, clsRasterData* templateRaster, Se
 	{
 		param->Value = settingsInput->getDtDaily();
 	}
-	else if (StringMatch(param->Name, Tag_StormTimeStep))
+	else if (StringMatch(param->Name, Tag_HillSlopeTimeStep))
 	{
 		param->Value = settingsInput->getDtHillslope();
 	}
@@ -960,7 +960,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		return;
 	}
 
-	if (StringMatch(paraName, Tag_FLOWOUT_INDEX))
+	if (StringMatch(paraName, Tag_FLOWOUT_INDEX_D8))
 	{
 		try
 		{
@@ -1092,7 +1092,7 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 			Read2DArray(ossRoutingLayers.str().c_str(), nRows, data);*/
 		#endif
 		}
-		else if(StringMatch(paraName, Tag_FLOWIN_INDEX) || StringMatch(paraName, Tag_FLOWIN_INDEX_DINF)
+		else if(StringMatch(paraName, Tag_FLOWIN_INDEX_D8) || StringMatch(paraName, Tag_FLOWIN_INDEX_DINF)
 			|| StringMatch(paraName, Tag_FLOWIN_PERCENTAGE_DINF) || StringMatch(paraName, Tag_FLOWOUT_INDEX_DINF)
 			|| StringMatch(paraName, Tag_ROUTING_LAYERS_DINF))
 		{
@@ -1292,7 +1292,7 @@ void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationM
 		}
 		string compareName = GetComparableName(dependParam->Name);
 		int dataLen;
-		if (dependParam->Dimension == DT_Array1D || dependParam->Dimension == DT_Raster)
+		if (dependParam->Dimension == DT_Array1D || dependParam->Dimension == DT_Raster1D)
 		{
 			float* data;
 			modules[k]->Get1DData(compareName.c_str(), &dataLen, &data);

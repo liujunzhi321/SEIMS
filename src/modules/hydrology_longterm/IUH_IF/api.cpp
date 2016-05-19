@@ -33,11 +33,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_CellSize,UNIT_LEN_M,DESC_CellSize,Source_ParameterDB,DT_Single); 
 	mdi.AddParameter(Tag_CellWidth,UNIT_LEN_M,DESC_CellWidth,Source_ParameterDB,DT_Single); 
 	mdi.AddParameter("Ol_iuh","","IUH of each grid cell","ParameterDB_Discharge",DT_Array2D);
-	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster);
+	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster1D);
 	//mdi.AddParameter("uhminCell","","start time of IUH for each grid cell","ParameterDB_Discharge",DT_Array1D);
 	//mdi.AddParameter("uhmaxCell","","end time of IUH for each grid cell","ParameterDB_Discharge",DT_Array1D);
 
-	mdi.AddInput("D_SSRU","mm","The subsurface runoff","Module",DT_Raster);					
+	mdi.AddInput("D_SSRU","mm","The subsurface runoff","Module",DT_Raster1D);					
 
 	mdi.AddOutput("SBIF", "mm","Interflow to streams for each subbasin", DT_Array1D);
 

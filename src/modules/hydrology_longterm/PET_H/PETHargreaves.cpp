@@ -1,5 +1,4 @@
 /*!
- * \ingroup PET_H
  * \file PETHargreaves.cpp
  *
  * \author Junzhi Liu
@@ -73,7 +72,7 @@ void PETHargreaves::Set1DData(const char* key,int n, float *value)
 	else if (StringMatch(sk, VAR_SR_MAX))
 		this->m_srMax = value;
 	else
-		throw ModelException("PET_H","Set1DValue","Parameter " + sk + " does not exist in PETHargreaves method. Please contact the module developer.");
+		throw ModelException(MID_PET_H,"Set1DValue","Parameter " + sk + " does not exist in PETHargreaves method. Please contact the module developer.");
 }
 
 // int PETHargreaves::JulianDay(time_t date)
@@ -157,28 +156,28 @@ void PETHargreaves::Get1DData(const char* key, int* n, float **data)
 {
 	string sk(key);
 	if(this->m_pet == NULL) 
-		throw ModelException("PET_H","getPET","The result is NULL. Please first execute the module.");
+		throw ModelException(MID_PET_H,"GetPET","The result is NULL. Please first execute the module.");
 	if (StringMatch(sk, VAR_PET_T) || StringMatch(sk, "PET"))
 	{
 		*data = this->m_pet;
 		*n = this->m_size;
 	}
 	else
-		throw ModelException("PET_H", "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException(MID_PET_H, "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
 bool PETHargreaves::CheckInputSize(const char* key, int n)
 {
 	if(n<=0)
 	{
-		throw ModelException("PET_H","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_PET_H,"CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 	}
 	if(this->m_size != n)
 	{
 		if(this->m_size <=0) this->m_size = n;
 		else
 		{
-			throw ModelException("PET_H","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
+			throw ModelException(MID_PET_H,"CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
 		}
 	}
 
@@ -189,35 +188,35 @@ bool PETHargreaves::CheckInputData()
 {
 	if(this->m_date == -1)
 	{
-		throw ModelException("PET_H","CheckInputData","You have not set the time.");
+		throw ModelException(MID_PET_H,"CheckInputData","You have not set the time.");
 		return false;
 	}
 
 	if(m_size <= 0)
 	{
-		throw ModelException("PET_H","CheckInputData","The dimension of the input data can not be less than zero.");
+		throw ModelException(MID_PET_H,"CheckInputData","The dimension of the input data can not be less than zero.");
 	}
 
 	if(this->m_tMax == NULL)
 	{
-		throw ModelException("PET_H","CheckInputData","The maximum temperature can not be NULL.");
+		throw ModelException(MID_PET_H,"CheckInputData","The maximum temperature can not be NULL.");
 	}
 
 	if(this->m_tMin == NULL)
 	{
-		throw ModelException("PET_H","CheckInputData","The minimum temperature can not be NULL.");
+		throw ModelException(MID_PET_H,"CheckInputData","The minimum temperature can not be NULL.");
 	}
 	if(this->m_srMax == NULL)
 	{
-		throw ModelException("PET_H","CheckInputData","The maximum solar radiation can not be NULL.");
+		throw ModelException(MID_PET_H,"CheckInputData","The maximum solar radiation can not be NULL.");
 	}
 	if(this->m_tMean == NULL)
 	{
-		throw ModelException("PET_H","CheckInputData","The mean temperature can not be NULL.");
+		throw ModelException(MID_PET_H,"CheckInputData","The mean temperature can not be NULL.");
 	}
 	if(this->m_jday <= 0)
 	{
-		throw ModelException("PET_H","CheckInputData","The Julian day must be greater than 0.");
+		throw ModelException(MID_PET_H,"CheckInputData","The Julian day must be greater than 0.");
 	}
 	return true;
 }

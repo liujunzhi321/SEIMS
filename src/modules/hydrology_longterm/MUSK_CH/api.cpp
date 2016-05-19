@@ -73,7 +73,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_RchParam,"","reach parameters", "reachparameters.txt",DT_Array2D);
 	//mdi.AddParameter("Vdiv","m3","diversion loss of the river reach", "diversionloss.txt",DT_Array1D);
 	//mdi.AddParameter("Vpoint","m3"," point source discharge", "diversionloss.txt",DT_Array1D);
-	mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Discharge", DT_Raster);
+	mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Discharge", DT_Raster1D);
 
 	mdi.AddInput("D_SBOF","m3/s","overland flow to streams from each subbasin","Module", DT_Array1D);
 	mdi.AddInput("D_SBIF","m3/s","interflow to streams from each subbasin","Module", DT_Array1D);

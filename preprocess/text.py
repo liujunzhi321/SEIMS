@@ -112,6 +112,7 @@ DIR_SUBBASIN = "subbasins"
 DIR_TIFF = "tif_files"
 DIR_LAYERING = "layering_info"
 DIR_METIS = "metis_output"
+DIR_LOOKUP = "lookup"
 ## intermediate data files' names
 filledDem = "demFilledTau.tif"
 flowDir = "flowDirTauD8.tif"

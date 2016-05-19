@@ -2,7 +2,7 @@
  * \file util.h
  * \ingroup util
  * \brief Utility functions to handle numeric, string and file
- * \author Junzhi Liu
+ * \author Junzhi Liu, LiangJun Zhu
  * \version 1.1
  * \date Jul. 2010
  *
@@ -39,7 +39,7 @@ using namespace std;
  * \def MINI_SLOPE
  * \brief Minimum slope gradient
  */
-#define MINI_SLOPE			0.0001f
+#define MINI_SLOPE			0.0001
 
 /*!
  * \ingroup util
@@ -225,3 +225,16 @@ extern string& trim(string& s);
     extern int copyfile_linux(const char* srcfile, const char* dstfile);
 #endif
 #endif
+/*!
+* \brief Convert value to string
+*
+* \param[in] val value, e.g., a int, or float
+* \return converted string
+*/
+template<typename T>
+string ValueToString(T &val)
+{
+	ostringstream oss;
+	oss << val;
+	return oss.str();
+}

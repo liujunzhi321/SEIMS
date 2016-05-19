@@ -85,9 +85,9 @@ CROP_ATTR_LIST  = ["IDC", "EXT_COEF",  "BMX_TREES", "BLAI", "HVSTI",\
 LANDUSE_ATTR_LIST = ["Manning", "Interc_max", "Interc_min", "RootDepth", \
                     "USLE_C", "SOIL_T10","USLE_P"]
 LANDUSE_ATTR_DB = ["manning","i_max","i_min", "root_depth", "usle_c", "SOIL_T10"]
-## Be caution, the sequence from "Sand" to "Poreindex" if fixed because of soil_param.py.
+## Be caution, the sequence from "Sand" to "Poreindex" is fixed because of soil_param.py.
 SOIL_ATTR_LIST = ["Sand", "Clay", "WiltingPoint", "FieldCap", "Porosity","Density",\
-                "Conductivity", "Poreindex", "USLE_K", "Residual", ]
+                "Conductivity", "Poreindex", "USLE_K", "Residual"]
 SOIL_ATTR_DB  = ["sand", "clay","wp", "fc", "porosity","B_DENSITY","ks", "P_INDEX",\
                 "usle_k", "rm"]
 

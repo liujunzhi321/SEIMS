@@ -1,3 +1,11 @@
+/*!
+ * \file MUSLE_AS.cpp
+ * \brief use MUSLE method to calculate sediment yield of each cell
+ * \author Zhiqiang Yu
+ * \date Feb. 2012
+ * \revised LiangJun Zhu
+ * \revised date May. 2016
+ */
 #include <cmath>
 #include "MUSLE_AS.h"
 #include "MetadataInfo.h"
@@ -28,23 +36,23 @@ MUSLE_AS::~MUSLE_AS(void)
 
 bool MUSLE_AS::CheckInputData(void)
 {
-	if(m_nCells <= 0)				throw ModelException("MUSLE_AS","CheckInputData","The dimension of the input data can not be less than zero.");
-	if(m_cellWidth <= 0)			throw ModelException("MUSLE_AS","CheckInputData","The cell width can not be less than zero.");
-	if(m_usle_c == NULL)			throw ModelException("MUSLE_AS","CheckInputData","The factor C can not be NULL.");
-	if(m_usle_k == NULL)			throw ModelException("MUSLE_AS","CheckInputData","The factor K can not be NULL.");
-	if(m_usle_p == NULL)			throw ModelException("MUSLE_AS","CheckInputData","The factor P can not be NULL.");
-	if(m_flowacc == NULL)			throw ModelException("MUSLE_AS","CheckInputData","The flow accumulation can not be NULL.");
-	if(m_slope == NULL)				throw ModelException("MUSLE_AS","CheckInputData","The slope can not be NULL.");
-	if(m_snowAccumulation == NULL)	throw ModelException("MUSLE_AS","CheckInputData","The snow accumulation can not be NULL.");
-	if(m_surfaceRunoff == NULL)		throw ModelException("MUSLE_AS","CheckInputData","The surface runoff can not be NULL.");
+	if(m_nCells <= 0)				throw ModelException(MID_MUSLE_AS,"CheckInputData","The dimension of the input data can not be less than zero.");
+	if(m_cellWidth <= 0)			throw ModelException(MID_MUSLE_AS,"CheckInputData","The cell width can not be less than zero.");
+	if(m_usle_c == NULL)			throw ModelException(MID_MUSLE_AS,"CheckInputData","The factor C can not be NULL.");
+	if(m_usle_k == NULL)			throw ModelException(MID_MUSLE_AS,"CheckInputData","The factor K can not be NULL.");
+	if(m_usle_p == NULL)			throw ModelException(MID_MUSLE_AS,"CheckInputData","The factor P can not be NULL.");
+	if(m_flowacc == NULL)			throw ModelException(MID_MUSLE_AS,"CheckInputData","The flow accumulation can not be NULL.");
+	if(m_slope == NULL)				throw ModelException(MID_MUSLE_AS,"CheckInputData","The slope can not be NULL.");
+	if(m_snowAccumulation == NULL)	throw ModelException(MID_MUSLE_AS,"CheckInputData","The snow accumulation can not be NULL.");
+	if(m_surfaceRunoff == NULL)		throw ModelException(MID_MUSLE_AS,"CheckInputData","The surface runoff can not be NULL.");
 	if(m_streamLink == NULL)
-		throw ModelException("IKW_CH","CheckInputData","The parameter: STREAM_LINK has not been set.");
+		throw ModelException(MID_MUSLE_AS,"CheckInputData","The parameter: STREAM_LINK has not been set.");
 	return true;
 }
 
 void MUSLE_AS::initalOutputs()
 {
-	if(m_nCells <= 0)				throw ModelException("MUSLE_AS","CheckInputData","The dimension of the input data can not be less than zero.");
+	if(m_nCells <= 0)				throw ModelException(MID_MUSLE_AS,"CheckInputData","The dimension of the input data can not be less than zero.");
 	// allocate the output variables
 	if(m_nsub <= 0)
 	{
@@ -183,7 +191,7 @@ bool MUSLE_AS::CheckInputSize(const char* key, int n)
 {
 	if(n<=0)
 	{
-		throw ModelException("MUSLE_AS","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_MUSLE_AS,"CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(m_nCells != n)
@@ -191,7 +199,7 @@ bool MUSLE_AS::CheckInputSize(const char* key, int n)
 		if(m_nCells <=0) m_nCells = n;
 		else
 		{
-			throw ModelException("MUSLE_AS","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
+			throw ModelException(MID_MUSLE_AS,"CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			return false;
 		}
 	}
@@ -211,9 +219,8 @@ void MUSLE_AS::SetValue(const char* key, float data)
 		omp_set_num_threads((int)data);
 	}
 	else									
-		throw ModelException("MUSLE_AS","SetValue","Parameter " + sk 
-		+ " does not exist in MUSLE_AS method. Please contact the module developer.");
-	
+		throw ModelException(MID_MUSLE_AS,"SetValue","Parameter " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 }
 
 void MUSLE_AS::Set1DData(const char* key, int n, float* data)
@@ -224,52 +231,51 @@ void MUSLE_AS::Set1DData(const char* key, int n, float* data)
 	//set the value
 	string s(key);
 
-	if(StringMatch(s,"USLE_C"))				m_usle_c = data;
-	else if(StringMatch(s,"USLE_P"))		m_usle_p = data;
-	else if(StringMatch(s,"USLE_K"))		m_usle_k = data;
-	else if(StringMatch(s,"acc"))		m_flowacc = data;
-	else if(StringMatch(s,"slope"))			m_slope = data;
-	else if(StringMatch(s,"subbasin"))			m_subbasin = data;
-	else if(StringMatch(s,"D_SURU"))		m_surfaceRunoff = data;
-	else if(StringMatch(s,"D_SNAC"))		m_snowAccumulation = data;
-	else if(StringMatch(s, "STREAM_LINK"))
+	if(StringMatch(s,VAR_USLE_C))				m_usle_c = data;
+	else if(StringMatch(s,VAR_USLE_P))		m_usle_p = data;
+	else if(StringMatch(s,VAR_USLE_K))		m_usle_k = data;
+	else if(StringMatch(s,VAR_ACC))		m_flowacc = data;
+	else if(StringMatch(s,VAR_SLOPE))			m_slope = data;
+	else if(StringMatch(s, VAR_SUBBSN))			m_subbasin = data;
+	else if(StringMatch(s,VAR_SURU))		m_surfaceRunoff = data;
+	else if(StringMatch(s,VAR_SNAC))		m_snowAccumulation = data;
+	else if(StringMatch(s, VAR_STREAM_LINK))
 		m_streamLink = data;
 	else									
-		throw ModelException("MUSLE_AS","SetValue","Parameter " + s + 
-		" does not exist in MUSLE_AS method. Please contact the module developer.");
+		throw ModelException(MID_MUSLE_AS,"SetValue","Parameter " + s + 
+		" does not exist in current module. Please contact the module developer.");
 
 }
 
 void MUSLE_AS::GetValue(const char* key, float* value)
 {
 	string s(key);								
-	if(StringMatch(s,"SEDTOCH_T"))				
+	if(StringMatch(s,VAR_SED_TO_CH_T))				
 	{
 		*value = m_sedtoCh_T; // ton, // * 1000;    // metric tons convert to kg
 	}
 	else			
-		throw ModelException("MUSLE_AS","getResult","Result " + s + " does not exist in MUSLE_AS method. Please contact the module developer.");
+		throw ModelException(MID_MUSLE_AS,"GetValue","Result " + s + " does not exist in current module. Please contact the module developer.");
 }
 
 void MUSLE_AS::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
-	if(StringMatch(sk,"SOER"))				
+	if(StringMatch(sk,VAR_SOER))				
 	{
 		*data = m_sedimentYield;
 	}
-	else if(StringMatch(sk,"USLE_LS"))
+	else if(StringMatch(sk,VAR_USLE_LS))
 	{
 		*data = m_usle_ls;
 	}
-	else if (StringMatch(sk,"SEDTOCH"))
+	else if (StringMatch(sk,VAR_SED_TO_CH))
 	{
 		*data = m_sedtoCh;   // from each subbasin to channel
 		*n = m_nsub+1;
 	}
 	else									
-		throw ModelException("MUSLE_AS","getResult","Result " + sk + " does not exist in MUSLE_AS method. Please contact the module developer.");
-
+		throw ModelException(MID_MUSLE_AS,"Get1DData","Result " + sk + " does not exist in current module. Please contact the module developer.");
 	*n = m_nCells;
 }
 

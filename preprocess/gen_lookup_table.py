@@ -7,6 +7,7 @@
 import os
 import sqlite3
 from numpy import *
+from util import *
 
 def CreateLookupTable(dbname, property_namelist, str_sql,dstdir):
     property_map = {}
@@ -33,8 +34,8 @@ def CreateLookupTable(dbname, property_namelist, str_sql,dstdir):
     n = len(property_map)
     os.chdir(dstdir)
     for propertyName in property_namelist:
-        if not os.path.exists('lookup'):
-            os.mkdir("lookup")
+        if not os.path.exists(DIR_LOOKUP):
+            os.mkdir(DIR_LOOKUP)
         f = open("lookup/%s.txt" % (propertyName,), 'w')
         f.write("%d\n"%(n))
         for id in property_map:

@@ -34,27 +34,27 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster); 
-	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster); 
+	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster1D); 
+	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster1D); 
 
-	mdi.AddParameter("STREAM_LINK", "", "Stream link", "ParameterDB_Discharge", DT_Raster); 
+	mdi.AddParameter("STREAM_LINK", "", "Stream link", "ParameterDB_Discharge", DT_Raster1D); 
 	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
 		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
 	mdi.AddParameter("ROUTING_LAYERS", "", "Routing layers according to the flow direction"
 		"There are not flow relationships within each layer, and the first element in each layer is the number of cells in the layer", "ParameterDB_Discharge", DT_Array2D);
 	
-	mdi.AddParameter("Conductivity","mm/h","Soil hydraulic conductivity","ParameterDB_WaterBalance", DT_Raster); 
-	mdi.AddParameter("Porosity", "%", "Soil porosity","ParameterDB_WaterBalance", DT_Raster);
-	mdi.AddParameter("FieldCap", "%", "Field capacity","ParameterDB_WaterBalance", DT_Raster);
-	mdi.AddParameter("RootDepth", "mm", "Root depth","ParameterDB_WaterBalance", DT_Raster);
-	mdi.AddParameter("Poreindex","-","pore size distribution index","ParameterDB_WaterBalance",DT_Raster);
+	mdi.AddParameter("Conductivity","mm/h","Soil hydraulic conductivity","ParameterDB_WaterBalance", DT_Raster1D); 
+	mdi.AddParameter("Porosity", "%", "Soil porosity","ParameterDB_WaterBalance", DT_Raster1D);
+	mdi.AddParameter("FieldCap", "%", "Field capacity","ParameterDB_WaterBalance", DT_Raster1D);
+	mdi.AddParameter("RootDepth", "mm", "Root depth","ParameterDB_WaterBalance", DT_Raster1D);
+	mdi.AddParameter("Poreindex","-","pore size distribution index","ParameterDB_WaterBalance",DT_Raster1D);
 	mdi.AddParameter("Ki","-","Interflow scale factor","ParameterDB_WaterBalance",DT_Single);
 
-	mdi.AddInput("D_SOMO","%","Soil Moisture","Module", DT_Raster);
-	mdi.AddInput("D_SURU", "mm", "surface runoff (considering return flow)", "Module", DT_Raster);
+	mdi.AddInput("D_SOMO","%","Soil Moisture","Module", DT_Raster1D);
+	mdi.AddInput("D_SURU", "mm", "surface runoff (considering return flow)", "Module", DT_Raster1D);
 	
-	mdi.AddOutput("QSoil", "m3/s", "Flux in the downslope boundary of cells", DT_Raster);
-	mdi.AddOutput("ReturnFlow", "mm", "water depth of return flow", DT_Raster);
+	mdi.AddOutput("QSoil", "m3/s", "Flux in the downslope boundary of cells", DT_Raster1D);
+	mdi.AddOutput("ReturnFlow", "mm", "water depth of return flow", DT_Raster1D);
 
 	res = mdi.GetXMLDocument();
 

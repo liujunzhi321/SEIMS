@@ -75,22 +75,24 @@ enum dimensionTypes
 	DT_Unknown			= -1,
 	/// Single numeric
 	DT_Single			= 0, 
-	/// 1D array, e.g., valid cells of raster data
+	/// 1D array, e.g., 
 	DT_Array1D			= 1,
-	/// 2D array, e.g., multi-layers of soil properties
+	/// 2D array
 	DT_Array2D			= 2, 
 	/// 3D array, currently not used
 	DT_Array3D			= 3, 
 	/// 1D date array
 	DT_Array1DDateValue = 4, 
 	/// Raster data, same as DT_Array1D
-	DT_Raster	        = 5,  
+	DT_Raster1D	        = 5,  
 	/// Hydrological or meteorological site information
 	DT_SiteInformation	= 6, 
 	/// Lapse rate array
 	DT_LapseRateArray	= 7, 
 	/// Scenario used by BMPs
-	DT_Scenario			= 8 
+	DT_Scenario			= 8 ,
+	/// 2D raster, e.g., multi-layers of soil properties
+	DT_Raster2D			= 9
 };
 
 

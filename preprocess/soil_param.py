@@ -64,7 +64,7 @@ def GetValue(geoMask, geoMap, data, i, j):
     return data[iMap][jMap]
 
     
-def GenerateSoilAttributes(outputFolder, layerNum, sandFile=None, clayFile=None, somFile=None):
+def GenerateSoilAttributes(outputFolder, layerNum, sandFile=None, clayFile=None, orgFile=None):
     maskFile = outputFolder + os.sep + mask_to_ext
 #    if sandFile is None:
 #        sandFile = '%s/sand%d_albers.img' % (SPATIAL_DATA_DIR, layerNum)
@@ -72,8 +72,8 @@ def GenerateSoilAttributes(outputFolder, layerNum, sandFile=None, clayFile=None,
 #        clayFile = '%s/clay%d_albers.img' % (SPATIAL_DATA_DIR, layerNum)
 
     dataSom = None
-    if somFile is not None and os.path.exists(somFile):
-        dsSom = gdal.Open(somFile)
+    if orgFile is not None and os.path.exists(orgFile):
+        dsSom = gdal.Open(orgFile)
         bandSom = dsSom.GetRasterBand(1)
         dataSom = bandSom.ReadAsArray()
 
@@ -149,9 +149,9 @@ def GenerateSoilAttributes(outputFolder, layerNum, sandFile=None, clayFile=None,
                 attrMapList[iAttr][i][j] = attrs[iAttr]
 
     attrList = []
-    layerStr = str(layerNum) if layerNum > 1 else ''
+    ##layerStr = str(layerNum) if layerNum > 1 else ''
     for i in range(n):
-        filename = outputFolder + os.sep + r"%s%s.tif" % (SOIL_ATTR_LIST[i+2], layerStr)
+        filename = outputFolder + os.sep + r"%s_%s.tif" % (SOIL_ATTR_LIST[i+2], str(layerNum))
         WriteGTiffFile(filename, ySizeMask, xSizeMask, attrMapList[i], \
                                    geoMask, srs, NODATA, gdal.GDT_Float32)
         attrList.append(filename)

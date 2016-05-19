@@ -1,3 +1,11 @@
+/*!
+ * \file MUSLE_AS.h
+ * \brief use MUSLE method to calculate sediment yield of each cell
+ * \author Zhiqiang Yu
+ * \date Feb. 2012
+ * \revised LiangJun Zhu
+ * \revised date May. 2016
+ */
 #pragma once
 #include <string>
 #include <ctime>
@@ -5,7 +13,17 @@
 
 using namespace std;
 #include "SimulationModule.h"
-
+/** \defgroup MUSLE_AS
+ * \ingroup Erosion
+ * \brief use MUSLE method to calculate sediment yield of each cell
+ */
+/*!
+ * \class MUSLE_AS
+ * \ingroup MUSLE_AS
+ *
+ * \brief use MUSLE method to calculate sediment yield of each cell
+ *
+ */
 class MUSLE_AS:public SimulationModule
 {
 public:

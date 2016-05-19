@@ -530,7 +530,7 @@ void ModelMain::Output(time_t time)
 						item->AggregateData2D(time, nRows, nCols, data);
 					}
 				}
-				else if(param->Dimension == DT_Raster) //spatial distribution, calculate average,sum,min or max
+				else if(param->Dimension == DT_Raster1D) //spatial distribution, calculate average,sum,min or max
 				{
 					int n;
 					float *data;

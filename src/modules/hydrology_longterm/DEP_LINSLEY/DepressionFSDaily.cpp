@@ -12,7 +12,7 @@
 #include "MetadataInfo.h"
 #include "ModelException.h"
 #include "util.h"
-#include "math.h"
+#include <cmath>
 #include <omp.h>
 
 DepressionFSDaily::DepressionFSDaily(void): m_size(-1),

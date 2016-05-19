@@ -35,16 +35,16 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("T_snow","oC","snowfall temperature","ParameterDB_Snow",DT_Single);
 	mdi.AddParameter("swe0","mm","Initial snow water equivalent","ParameterDB_Snow",DT_Single);
 
-	mdi.AddInput("D_PET","mm","PET grid","Module",DT_Raster);											// from interpolation module
-	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster);								// from interception module
-	mdi.AddInput("D_SNAC","mm", "distribution of snow accumulation", "Module",DT_Raster);				// from snow water balance module
+	mdi.AddInput("D_PET","mm","PET grid","Module",DT_Raster1D);											// from interpolation module
+	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster1D);								// from interception module
+	mdi.AddInput("D_SNAC","mm", "distribution of snow accumulation", "Module",DT_Raster1D);				// from snow water balance module
 	mdi.AddInput("SWE","mm","average SA of the watershed","Module",DT_Single);									// from snow water balance module
-	mdi.AddInput("D_SNRD","mm", "distribution of snow blowing in or out the cell","Module", DT_Raster); // from snow redistribution module
-	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster);									// from interpolation module
-	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster);									// from interpolation module
+	mdi.AddInput("D_SNRD","mm", "distribution of snow blowing in or out the cell","Module", DT_Raster1D); // from snow redistribution module
+	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster1D);									// from interpolation module
+	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster1D);									// from interpolation module
 
 	// set the output variables
-	mdi.AddOutput("SNSB","mm", "Distribution of snow sublimation (water equivalent) for a user defined period",DT_Raster);
+	mdi.AddOutput("SNSB","mm", "Distribution of snow sublimation (water equivalent) for a user defined period",DT_Raster1D);
 
 	// write out the XML file.
 

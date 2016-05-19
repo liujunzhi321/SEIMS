@@ -101,15 +101,15 @@
 #define Tag_CellSize "CELLSIZE" /// by LJ, have not been tested!
 #define Tag_Mask "MASK"
 #define Tag_TimeStep "TimeStep"
-#define Tag_StormTimeStep "DT_HS"
+#define Tag_HillSlopeTimeStep "DT_HS"
 #define Tag_ChannelTimeStep "DT_CH"
 #define Tag_CellWidth "CELLWIDTH" // this is the size of a single CELL
 #define Tag_PStat "P_STAT"
 
 
 // D8 Flow model
-#define Tag_FLOWIN_INDEX "FLOWIN_INDEX_D8"
-#define Tag_FLOWOUT_INDEX "FLOWOUT_INDEX_D8"
+#define Tag_FLOWIN_INDEX_D8 "FLOWIN_INDEX_D8"
+#define Tag_FLOWOUT_INDEX_D8 "FLOWOUT_INDEX_D8"
 #define Tag_ROUTING_LAYERS "ROUTING_LAYERS"
 
 // TODO: Dinf, MFD, MFD-md integrated into SEIMS.
@@ -133,6 +133,7 @@
 #define Tag_ROUTING_LAYERS_MFD_MD "ROUTING_LAYERS_MFD_MD"
 /// Replaced by VAR_RCHPARAM
 #define Tag_ReachParameter	"ReachParameter"
+#define DESC_REACH_PARAMETER "Reach parameters such as stream order, manning's n and downstream subbasin id (Array2D)"
 #define Tag_RchParam		"RchParam"
 #define VAR_RCHPARAM	"ReachParameters"
 
@@ -305,29 +306,71 @@
 #define MID_PET_PM "PET_PM"
 #define MDESC_PET_PM "Penman Monteith method for calculating the potential evapotranspiration."
 
+/// Erosion related modules
+#define MCLS_OL_EROSION						"Overland erosion"
+#define MCLS_CH_EROSION					"Channel Erosion"
+#define MCLSDESC_OL_EROSION			"Calculate the amount sediment yield of overland erosion."
+#define MCLSDESC_CH_EROSION			"Calculate the amount channel erosion."
+#define MID_KINWAVSED_OL					"KinWavSed_OL"
+#define MID_KINWAVSED_CH					"KinWavSed_CH"
+#define MDESC_KINWAVSED_OL			"Use energy function(Govers) method to calculate sediment yield routing of each hillslope cell"	
+#define MDESC_KINWAVSED_CH			"Srinivasan & Galvao function to calculate sediment yield routing of each channel cell"
+#define MID_MUSLE_AS								"MUSLE_AS"
+#define MDESC_MUSLE_AS						"use MUSLE method to calculate sediment yield of each cell"
+/// Overland routing related modules
+#define MCLS_OL_ROUTING						"Overland routing"
+#define MCLSDESC_OL_ROUTING			"Overland routing module"
 
+/// Channel routing related modules
+#define MCLS_CH_ROUTING						"Channel routing"
+#define MCLSDESC_CH_ROUTING			"Channel routing modules"
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-
+#define VAR_ACC "acc"
 #define VAR_CDN "cdn"                               /// rate coefficient for denitrification
+#define VAR_CHWIDTH "CHWIDTH"
+#define VAR_CH_DEP "DEP"
+#define VAR_CH_DET "DET"
+#define VAR_CH_FLOWCAP "CAP"
+#define VAR_CH_SEDRATE "QSN"
+#define VAR_CH_VOL "CHANVOL"
+#define VAR_CH_V "CHANV"
 #define VAR_CO2 "Co2"                               /// CO2 Concentration
 #define VAR_COND_MAX "Cond_max"                     /// "Maximum automata's conductance"
 #define VAR_COND_RATE "Cond_rate"                   /// Rate of decline in automata's conductance per unit increase in vapor pressure deficit
 #define VAR_CMN "cmn"                               /// Rate coefficient for mineralization of the humus active organic nutrients
+#define VAR_CH_DETCO "ChDetCo"
+#define VAR_CH_TCCO "ChTcCo"					/// Calibration coefficient of transport capacity calculation
 #define VAR_DEM "DEM"                               /// Digital Elevation Model
+#define VAR_HCH "HCH"
 #define VAR_JULIAN_DAY "JDay"                       /// Julian day (int)
 #define VAR_LAP_RATE "LapseRate"                    /// Lapse rate
+#define VAR_MANNING "Manning"
+#define VAR_OL_SED_CCOE "ccoe"
+#define VAR_OL_SED_ECO1 "eco1"
+#define VAR_OL_SED_ECO2 "eco2"
+#define VAR_OL_DET "DETOverland"
 #define VAR_OMP_THREADNUM "ThreadNum"               /// Thread numbers for OMP
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PET_K "K_pet"                           /// Correction factor for PET
 #define VAR_PET_T "T_PET"                           /// Potential Evapotranspiration of day
 #define VAR_PL_RSDCO "rsdco_pl"                     /// Plant residue decomposition coefficient
+#define VAR_QRECH "QRECH"
 #define VAR_VP_SAT "svp"                            /// Saturated vapor pressure
 #define VAR_VP_ACT "avp"                            /// actual vapor pressure
+#define VAR_SED_TO_CH "SEDTOCH"
+#define VAR_SED_TO_CH_T "SEDTOCH_T"
+#define VAR_SLOPE "slope"
+#define VAR_SNAC "D_SNAC"
 #define VAR_SNOW_TEMP "T_snow"                      /// Snowfall temperature
 #define VAR_SR_MAX "srMax"                          /// Max solar radiation
+#define VAR_STREAM_LINK "STREAM_LINK"
+#define VAR_USLE_C "USLE_C"
+#define VAR_USLE_LS "USLE_LS"
+#define VAR_USLE_K "USLE_K"
+#define VAR_USLE_P "USLE_P"
 #define VAR_WSHD_DNIT "wshd_dnit"                   /// average annual amount of nitrogen lost from nitrate pool due to denitrification in watershed(kg N/km2)
 #define VAR_WSHD_HMN "wshd_hmn"                     /// average annual amount of nitrogen moving from active organic to nitrate pool in watershed(kg N/km2)
 #define VAR_WSHD_HMP "wshd_hmp"                     /// average annual amount of phosphorus moving from organic to labile pool in watershed(kg P/km2)
@@ -362,7 +405,6 @@
 #define VAR_SOL_MP "sol_mp" 
 #define VAR_SOER "SOER"                             /// soil loss caused by water erosion (t)
 #define VAR_SURU "D_SURU"                           /// surface runoff generated
-#define VAR_SURU "D_SURU"                           /// surface runoff generated
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
 #define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
 #define VAR_RMN2TL "rmn2tl"                         /// amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/km2)
@@ -374,13 +416,15 @@
 #define VAR_RMP1TL "rmp1tl"                         /// amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell
 #define VAR_ROCTL "roctl"                           /// amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell
 #define VAR_TSD_DT "data_type"                      /// Time series data type
+#define VAR_SED_DEP "SEDDEP"
+#define VAR_SED_OUTLET "SEDOUTLET"
 #define VAR_SEDORGN "sedorgn"						/// amount of organic nitrogen in surface runoff
 #define VAR_SEDORGP "sedorgp"                       /// amount of organic phosphorus in surface runoff
-#define VAR_SEDMINPA "sedminpa"                     /// amount of active mineral phosphorus sorbed to sediment in surface runoff
-#define VAR_SEDMINPS "sedminps"                     /// amount of stable mineral phosphorus sorbed to sediment in surface runoff
+#define VAR_SEDMINPA "sedminpa"                     /// amount of active mineral phosphorus adsorbed to sediment in surface runoff
+#define VAR_SEDMINPS "sedminps"                     /// amount of stable mineral phosphorus adsorbed to sediment in surface runoff
 #define VAR_ADDRNO3 "addrno3"                       /// nitrate added by rainfall (kg/km2)
 #define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/km2)
-#define VAR_DRYDEP_NO3 "drydep_no3"                 /// tmospheric dry deposition of nitrates (kg/km2)
+#define VAR_DRYDEP_NO3 "drydep_no3"                 /// atmospheric dry deposition of nitrates (kg/km2)
 #define VAR_DRYDEP_NH4 "drydep_nh4"                 /// atmospheric dry deposition of ammonia (kg/km2)
 #define VAR_PRECI "D_P"                             /// precipitation for the day (mm)
 #define VAR_RCN "rcn"                               /// concentration of nitrate in the rain (mg N/m3)  L -> 0.001 * m3
@@ -395,7 +439,9 @@
 #define UNIT_AREA_KM2 "km2"                         /// Square kilometer of area
 #define UNIT_CONDRATE_MSPA "m/s/kPa"                /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
 #define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
+#define UNIT_KGM3 "kg/m3"
 #define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
+#define UNIT_VOL_CM "m3"
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
 #define UNIT_GAS_PPMV "ppmv"                        /// Concentration of gas, e.g., CO2
 #define UNIT_LAP_RATE "/100m"                       /// Lapse rate
@@ -409,29 +455,63 @@
 #define UNIT_WTRDLT_MMD "mm/d"                      /// Millimeter per day of water changes
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_TONS "t"                               /// metric tons
+#define UNIT_KG "kg"
+#define UNIT_KG_S "kg/s"
 #define UNIT_DENSITY "mg/m3"                        /// density
+#define UNIT_SECOND	"second"
 
 //////////////////////////////////////////////////////////////////////////
 /// Define description of units common used in SEIMS            //////////
 /// By LiangJun Zhu, Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-
+#define DESC_ACC "the number of flow accumulation cells of each cell"
+#define DESC_CH_DETCO "Calibration coefficient of channel flow detachment"
+#define DESC_CH_DEP "distribution of channel sediment deposition"
+#define DESC_CH_DET "distribution of channel flow detachment"
+#define DESC_CH_FLOWCAP "distribution of channel flow capacity"
+#define DESC_CH_SEDRATE "distribution of channel sediment rate"
+#define DESC_CH_TCCO "Calibration coefficient of transport capacity calculation"
+#define DESC_CH_VOL "water volume"
+#define DESC_CH_V "flow velocity"
+#define DESC_CHWIDTH "Channel width"
 #define DESC_CO2 "CO2 Concentration"
 #define DESC_CONDRATE "Rate of decline in stomatal conductance per unit increase in vapor pressure deficit"
 #define DESC_DEM "Digital Elevation Model"
+#define DESC_DT_HS "Time step of the simulation"
+#define DESC_FLOWIN_INDEX "The index of flow in (D8) cell in the compressed array, and the first element in each sub-array is the number of flow in cells in this sub-array"
+#define DESC_FLOWOUT_INDEX "The index of flow out (D8) cell of each cells in the compressed array"
+#define DESC_HCH "Water depth in the downslope boundary of cells"
 #define DESC_JULIAN_DAY "Julian day (int)"
 #define DESC_LAP_RATE "Lapse Rate"
+#define DESC_MANNING "Manning's roughness"
 #define DESC_MAXCOND "Maximum stomatal conductance"
 #define DESC_MAXTEMP "Maximum Celsius degree of air temperature"
 #define DESC_MEANTEMP "Mean Celsius degree of air temperature"
 #define DESC_METEOLAT "Latitude of MeteoClimate station"
 #define DESC_MINTEMP "Minimum Celsius degree of air temperature"
 #define DESC_NONE ""
+#define DESC_OL_DET "distribution of overland flow detachment"
+#define DESC_OL_SED_ECO1 "calibration coefficient of transport capacity calculation"
+#define DESC_OL_SED_ECO2 "calibration coefficient of transport capacity calculation"
+#define DESC_OL_SED_CCOE "calibration coefficient of overland flow detachment erosion"
 #define DESC_PET_HCOEF "Coefficient related to radiation used in Hargreaves method"
 #define DESC_PET_K "Correction factor for PET"
 #define DESC_PET_T "Potential Evapotranspiration of day"
 #define DESC_PL_RSDCO "Plant residue decomposition coefficient"
 #define DESC_RM "Relative humidity"
+#define DESC_ROUTING_LAYERS "Routing layers according to the flow direction, there are no flow relationships within each layer, and the first element in each layer is the number of cells in the layer"
+#define DESC_QRECH "Flux in the downslope boundary of cells"
+#define DESC_SED_DEP "distribution of sediment deposition"
+#define DESC_SED_TO_CH "Distribution of sediment flowing to channel"
+#define DESC_SED_TO_CH_T  "Total sediment flowing to channel"
+#define DESC_SED_OUTLET "Sediment concentration at the watershed outlet"
+#define DESC_SLOPE "Slope gradient (percentage)"
+#define DESC_SNAC "snow accumulation"
+#define DESC_STREAM_LINK "Stream link (id of reaches)"
+#define DESC_USLE_C "the cover management factor"
+#define DESC_USLE_K "The soil erodibility factor used in USLE"
+#define DESC_USLE_P "the erosion control practice factor "
+#define DESC_USLE_LS "USLE LS factor"
 #define DESC_CDN "rate coefficient for denitrification"
 #define DESC_CMN "Rate coefficient for mineralization of the humus active organic nutrients"
 #define DESC_SNOW_TEMP "Snowfall temperature"

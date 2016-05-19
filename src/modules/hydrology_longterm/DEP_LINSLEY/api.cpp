@@ -56,16 +56,16 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter("Depre_in","-","initial depression storage coefficient","ParameterDB_WaterBalance", DT_Single); 
-	mdi.AddParameter("Depression","mm","Depression storage capacity","ParameterDB_WaterBalance", DT_Raster);
+	mdi.AddParameter("Depression","mm","Depression storage capacity","ParameterDB_WaterBalance", DT_Raster1D);
 
-	mdi.AddInput("D_INET","mm","evaporation from the interception storage obtained from the interception module","Module", DT_Raster);	//EI
-	mdi.AddInput("D_PET", "mm","PET calculated from the spatial interpolation module", "Module", DT_Raster);							//PET
+	mdi.AddInput("D_INET","mm","evaporation from the interception storage obtained from the interception module","Module", DT_Raster1D);	//EI
+	mdi.AddInput("D_PET", "mm","PET calculated from the spatial interpolation module", "Module", DT_Raster1D);							//PET
 	//mdi.AddInput("D_INFIL","mm","Infiltration calculated in the infiltration module", "Module", DT_Raster);							//Infiltration
-	mdi.AddInput("D_EXCP","mm","excess precipitation calculated in the infiltration module", "Module", DT_Raster);						//PE
+	mdi.AddInput("D_EXCP","mm","excess precipitation calculated in the infiltration module", "Module", DT_Raster1D);						//PE
 
-	mdi.AddOutput("DPST", "mm", "Distribution of depression storage", DT_Raster);
-	mdi.AddOutput("DEET", "mm", "Distribution of evaporation from depression storage", DT_Raster);
-	mdi.AddOutput("SURU", "mm", "Distribution of surface runoff", DT_Raster);
+	mdi.AddOutput("DPST", "mm", "Distribution of depression storage", DT_Raster1D);
+	mdi.AddOutput("DEET", "mm", "Distribution of evaporation from depression storage", DT_Raster1D);
+	mdi.AddOutput("SURU", "mm", "Distribution of surface runoff", DT_Raster1D);
 
 	// set the dependencies
 	mdi.AddDependency("Interpolation","Interpolation module");
