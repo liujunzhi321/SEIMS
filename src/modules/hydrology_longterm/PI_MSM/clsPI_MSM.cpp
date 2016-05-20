@@ -37,13 +37,13 @@ void clsPI_MSM::Set1DData(const char* key, int nRows, float* data)
 	this->CheckInputSize(key,nRows);
 
 	string s(key);
-	if(StringMatch(s,"D_P") || StringMatch(s,"P"))				
+	if(StringMatch(s, VAR_PRECI) || StringMatch(s,"P"))				
 		m_P = data;
-	else if(StringMatch(s,"D_PET") || StringMatch(s,"PET"))			
+	else if(StringMatch(s,VAR_PET) || StringMatch(s,"PET"))			
 		m_PET = data;
-	else if(StringMatch(s,"Interc_max"))	
+	else if(StringMatch(s, VAR_INTERC_MAX))	
 		m_maxSt = data;
-	else if(StringMatch(s,"Interc_min"))	
+	else if(StringMatch(s,VAR_INTERC_MIN))	
 		m_minSt = data;	
 	else									
 		throw ModelException("PI_MSM","SetValue","Parameter " + s + " does not exist in PI_MSM method. Please contact the module developer.");
@@ -53,8 +53,8 @@ void clsPI_MSM::Set1DData(const char* key, int nRows, float* data)
 void clsPI_MSM::SetValue(const char* key, float data)
 {
 	string s(key);
-	if(StringMatch(s,"Pi_b"))				this->m_Pi_b = data;
-	else if(StringMatch(s,"Init_IS"))		this->m_Init_IS = data;
+	if(StringMatch(s,VAR_PI_B))				this->m_Pi_b = data;
+	else if(StringMatch(s, VAR_INIT_IS))		this->m_Init_IS = data;
 	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
@@ -65,11 +65,11 @@ void clsPI_MSM::SetValue(const char* key, float data)
 void clsPI_MSM::Get1DData(const char* key, int* nRows, float** data)
 {
 	string s(key);
-	if(StringMatch(s,"INLO"))				
+	if(StringMatch(s, VAR_INLO))				
 		*data = m_interceptionLoss;
-	else if(StringMatch(s,"INET"))			
+	else if(StringMatch(s, VAR_INET))			
 		*data = m_evaporation;
-	else if(StringMatch(s,"NEPR"))			
+	else if(StringMatch(s, VAR_NEPR))			
 		*data = m_netPrecipitation;
 	else									
 		throw ModelException("PI_MSM","SetValue","Result " + s + " does not exist in PI_MSM method. Please contact the module developer.");

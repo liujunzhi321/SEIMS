@@ -64,13 +64,16 @@ TODO LISTS
 	+ 模块：Hydrology_longterm - IKW_REACH
 	+ 模块：Hydrology_longterm - IUH_IF
 	+ 模块：Hydrology_longterm - IUH_OF
+	
 + 2 DT_Array2D变量及所在模块
 
-模块|变量名
----|---
-GWA_RE|VAR_PERCO
-GWA_RE|VAR_SOMO
-GWA_RE|VAR_GWWB
+模块|子模块|变量名|类型
+---|---|---|---
+Hydrology_longterm|GWA_RE|VAR_PERCO|AddInput
+Hydrology_longterm|GWA_RE|VAR_SOMO|AddInput
+Hydrology_longterm|PEI_PI|VAR_SOMO|AddInput
+Hydrology_longterm|PEI_STR|VAR_SOMO|AddInput
+Hydrology_longterm|SET_LM|VAR_SOMO|AddInput
 	
 + 3 变量定义不明确问题
 	+ Hydrology_longterm - IKW_REACH: VAR_QOUTLET & VAR_QSOUTLET
@@ -78,4 +81,19 @@ GWA_RE|VAR_GWWB
 
 + 4 add*()与set*()、get*()中变量不一致的问题
 	+ Hydrology_longterm - IKW_REACH: VAR_QUPREACH
+	
++ 5 变量单位不明确问题
+	+ Hydrology_longterm - SON_DD: VAR_C_SNOW
+	+ Hydrology_longterm - SON_DD: VAR_C_RAIN
+
+
+
+
+
+
+
+
+
+
+
 
