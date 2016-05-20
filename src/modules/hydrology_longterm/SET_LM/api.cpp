@@ -30,22 +30,23 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SET_LM.chm");
 
-	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance",DT_Raster1D);
-	mdi.AddParameter("T_Soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);					//
+	mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter("FieldCap_2D","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Array2D);
-	mdi.AddParameter("Wiltingpoint_2D","m3/m3","Plant wilting point moisture","ParameterDB_WaterBalance", DT_Array2D);					//0w				
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_LEN_M, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster1D);					//
+
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_STRG_M3M, DESC_FIELDCAP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_WILTPOINT, UNIT_STRG_M3M, DESC_WILTPOINT, Source_ParameterDB, DT_Array2D);					//0w				
 	
 	// set the parameters (non-time series)
-	mdi.AddInput("D_PET","mm","pet","Module",DT_Raster1D);
-	mdi.AddInput("D_INET","mm","Evaporation From Interception Storage","Module",DT_Raster1D);
-	mdi.AddInput("D_DEET","mm","Distribution of depression ET","Module",DT_Raster1D);
-	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster1D);
+	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module,DT_Raster1D);
+	mdi.AddInput(VAR_INET, UNIT_DEPTH_MM, DESC_INET, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_DEET, UNIT_DEPTH_MM, DESC_DEET, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SOTE, UNIT_TEMP_DEG, DESC_SOTE, Source_Module, DT_Raster1D);
 
-	mdi.AddInput("D_SOMO_2D", "mm", "Distribution of soil moisture", "Module", DT_Array2D);
+	mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);
 
 	// set the output variables
-	mdi.AddOutput("SOET","mm", "Distribution of soil evapotranspiration for a user defined period.", DT_Raster1D);
+	mdi.AddOutput(VAR_SOTE, UNIT_DEPTH_MM, DESC_SOTE, DT_Raster1D);
 
 	// write out the XML file.
 	res = mdi.GetXMLDocument();

@@ -50,8 +50,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_GWNEW, UNIT_DEPTH_MM, DESC_GWNEW, Source_Module, DT_Array1D);//from IUH_CH or other channel routing module
 
-	mdi.AddInput(VAR_PERCO,UNIT_DEPTH_MM, DESC_PERCO,Source_Module,DT_Array2D);
-	mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Array2D);
+	mdi.AddInput(VAR_PERCO,UNIT_DEPTH_MM, DESC_PERCO, Source_Module,DT_Raster2D);
+	mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);
 
 	mdi.AddOutput(VAR_GWWB, UNIT_NON_DIM, DESC_NONE, DT_Array2D);					//used for output file
 	mdi.AddOutput(VAR_REVAP, UNIT_NON_DIM, DESC_NONE, DT_Raster1D);		//used by soil water balance module

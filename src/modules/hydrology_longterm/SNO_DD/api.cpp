@@ -41,25 +41,25 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SNO_DD.chm");
 
-	mdi.AddParameter("c_snow","mm/oC/delta_t","temperature impact factor ","ParameterDB_Snow",DT_Single);
-	mdi.AddParameter("c_rain","mm/mm/oC/delta_t","Rainfall impact factor","ParameterDB_Snow",DT_Single);
-	mdi.AddParameter("T0","oC","the snowmelt threshold temperature ","ParameterDB_Snow",DT_Single);	
-	//mdi.AddParameter("K_blow","-"," a fraction coefficient of snow blowing into or out of the watershed","ParameterDB_Snow",DT_Single);
-	mdi.AddParameter("T_snow","oC","snowfall temperature","ParameterDB_Snow",DT_Single);
-	mdi.AddParameter("swe0","mm","Initial snow water equivalent","ParameterDB_Snow",DT_Single);
+	mdi.AddParameter(VAR_C_SNOW, UNIT_TEMP_FACTOR, DESC_C_SNOW, Source_ParameterDB,DT_Single);
+	mdi.AddParameter(VAR_C_RAIN, UNIT_TEMP_FACTOR, DESC_C_RAIN, Source_ParameterDB,DT_Single);
+	mdi.AddParameter(VAR_T0, UNIT_TEMP_DEG, DESC_T0, Source_ParameterDB,DT_Single);	
+	//mdi.AddParameter(VAR_K_BLOW, UNIT_NON_DIM, DESC_K_BLOW, Source_ParameterDB,DT_Single);
+	mdi.AddParameter(VAR_SNOW_TEMP, UNIT_TEMP_DEG, DESC_SNOW_TEMP, Source_ParameterDB,DT_Single);
+	mdi.AddParameter(VAR_SWE0, UNIT_DEPTH_MM, DESC_SWE0, Source_ParameterDB,DT_Single);
 
-	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster1D);								// from interception module
-	//mdi.AddInput("D_SNAC","mm", "distribution of snow accumulation", "Module",DT_Raster);				// from snow water balance module
-	//mdi.AddInput("SWE","mm","average SA of the watershed","Module",DT_Single);									// from snow water balance module
-	//mdi.AddInput("D_SNRD","mm", "distribution of snow blowing in or out the cell","Module", DT_Raster); // from snow redistribution module
-	//mdi.AddInput("D_SNSB","mm", "Distribution of snow sublimation (water equivalent) for a user defined period","Module",DT_Raster); //from snow sublimation module
-	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster1D);									// from interpolation module
-	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster1D);									// from interpolation module
+	mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module,DT_Raster1D);								// from interception module
+	//mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module,DT_Raster1D);				// from snow water balance module
+	//mdi.AddInput(VAR_SWE, UNIT_DEPTH_MM, DESC_SWE, Source_Module,DT_Single);									// from snow water balance module
+	//mdi.AddInput(VAR_SNRD, UNIT_DEPTH_MM, DESC_SNRD, Source_Module, DT_Raster1D); // from snow redistribution module
+	mdi.AddInput(VAR_SNSB, UNIT_DEPTH_MM, DESC_SNSB, Source_Module, DT_Raster1D); //from snow sublimation module
+	mdi.AddInput(VAR_TMIN, UNIT_TEMP_DEG, DESC_TMIN, Source_Module, DT_Raster1D);									// from interpolation module
+	mdi.AddInput(VAR_TMAX, UNIT_TEMP_DEG, DESC_TMAX, Source_Module, DT_Raster1D);									// from interpolation module
 
 
 	// set the output variables
-	mdi.AddOutput("SNME","mm", "distribution of snowmelt", DT_Raster1D);
-	mdi.AddOutput("SNAC","mm", "distribution of snow accumulation", DT_Raster1D);
+	mdi.AddOutput(VAR_SNME, UNIT_DEPTH_MM, DESC_SNME, DT_Raster1D);
+	mdi.AddOutput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, DT_Raster1D);
 	// write out the XML file.
 
 	string res = mdi.GetXMLDocument();

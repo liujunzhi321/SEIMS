@@ -92,7 +92,7 @@ int SET_LM::Execute()
 void SET_LM::Get1DData(const char* key, int* nRows, float** data)
 {
 	string s(key);
-	if(StringMatch(s,"SOET"))				
+	if(StringMatch(s, VAR_SOET))				
 		*data = m_soilET;
 	else									
 		throw ModelException("SET_LM","getResult","Result " + s + " does not exist in SET_LM method. Please contact the module developer.");
@@ -103,7 +103,7 @@ void SET_LM::Get1DData(const char* key, int* nRows, float** data)
 void SET_LM::SetValue(const char* key, float data)
 {
 	string s(key);
-	if(StringMatch(s,"T_Soil"))				
+	if(StringMatch(s, VAR_T_SOIL))				
 		m_frozenT = data;
 	else if (StringMatch(s, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
@@ -117,15 +117,15 @@ void SET_LM::Set1DData(const char* key, int nRows, float* data)
 
 	CheckInputSize(key,nRows);
 
-	if(StringMatch(s,"RootDepth"))		
+	if(StringMatch(s, VAR_ROOTDEPTH))		
 		m_rootDepth = data;
-	else if(StringMatch(s,"D_INET"))		
+	else if(StringMatch(s,VAR_INET))		
 		m_EI = data;
-	else if(StringMatch(s,"D_PET"))			
+	else if(StringMatch(s,VAR_PET))			
 		m_PET = data;	
-	else if(StringMatch(s,"D_DEET"))		
+	else if(StringMatch(s, VAR_DEET))		
 		m_ED = data;
-	else if(StringMatch(s,"D_SOTE"))		
+	else if(StringMatch(s, VAR_SOTE))		
 		m_soilT = data;
 	else									
 		throw ModelException("SET_LM","SetValue","Parameter " + s + " does not exist in SET_LM method. Please contact the module developer.");
@@ -138,11 +138,11 @@ void SET_LM::Set2DData(const char* key, int nrows, int ncols, float** data)
 	CheckInputSize(key, nrows);
 	m_nSoilLayers = ncols;
 
-	if (StringMatch(sk, "fieldCap_2D"))
+	if (StringMatch(sk, VAR_FIELDCAP))
 		m_fc = data;
-	else if(StringMatch(sk, "Wiltingpoint_2D"))		
+	else if(StringMatch(sk, VAR_WILTPOINT))		
 		m_wp = data;	
-	else if(StringMatch(sk, "D_SOMO_2D"))		
+	else if(StringMatch(sk, VAR_SOMO))		
 		m_sm = data;
 	else
 		throw ModelException("PER_PI", "Set1DData", 
