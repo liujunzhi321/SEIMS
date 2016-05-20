@@ -46,6 +46,12 @@ TODO LISTS
 
 + 1. Tag_ReachParameter问题
 
+### KINWAVSED_OL模块
+
++ 1. mdi.AddInput("QRECH", "m3/s", "Flux in the downslope boundary of cells", "Module",DT_Array2D); QRECH变量名与MUSK_CH中河道出口流量冲突，而且DimensionType也不相符
++ 
+
+
 ### MUSLE_AS模块
 
 + 1. SEDTOCH和SEDTOCH_T单位到底是吨还是千克？

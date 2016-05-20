@@ -50,8 +50,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	// input from other module
 	mdi.AddInput(VAR_SED_TO_CH,UNIT_KG, DESC_SED_TO_CH, Source_Module,DT_Raster1D);
 	mdi.AddInput(VAR_HCH,UNIT_DEPTH_MM, DESC_HCH,Source_Module,DT_Array2D);
-	mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module,DT_Array2D);
-	
+	//mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module,DT_Array2D);
+	mdi.AddInput("QRECH", "m3/s", "Flux in the downslope boundary of cells", "Module",DT_Array2D);// from which module? By LJ
 	/// set the output variables
 	
 	mdi.AddOutput(VAR_SED_OUTLET, UNIT_KGM3, DESC_SED_OUTLET, DT_Single);
