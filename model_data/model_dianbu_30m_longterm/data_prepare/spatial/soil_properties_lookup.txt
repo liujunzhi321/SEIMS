@@ -1,24 +1,29 @@
 ## Soil physical properties (required) and chemical properties (optional) lookup table ##
 ## Pre-released version prepared by LiangJun Zhu, May., 2016
 ## Reference: Arnold, J.G., Kiniry, J.R., Srinivasan, R., Williams, J.R., Haney, E.B., Neitsch, S.L., 2013. SWAT 2012 Input/Output Documentation. Texas Water Resources Institute.
-### Data formate: 1) Each field are splited by TAB; 2) Values are concatenated by COMMA in individual field; 3) Values number of multi-values fields should be equal to NLAYERS.
+### Data formate: 1) Each field are splited by TAB; 2) Values are concatenated by COMMA in individual field; 3) Values number of multi-values fields should be equal to NLAYERS; 4) Just provide the fields that have values, REQUIRED fields are necessary.
 ### Here is a brief description of the variables adopted in SEIMS.
 ### Variable Name	Definition
-### SEQN			Sequence number of soil catogory, CAUTION: No need to be consistent with SOIL CLASS.
-### NAME			Soil name, CAUTION: a soil name may have multi SEQN to represent heterogeneity according to LANDUSE or SLOPE, etc.
-### NLAYERS			Soil layers, BE AWARE that NLAYERS could be different in this lookup table.
-### SOL_ZMX			Maximum rooting depth of soil profile(mm)
+### SEQN			(required) Sequence number of soil catogory, CAUTION: No need to be consistent with SOIL CLASS.
+### NAME			(required)Soil name, CAUTION: a soil name may have multi SEQN to represent heterogeneity according to LANDUSE or SLOPE, etc.
+### NLAYERS			(required) Soil layers number, BE AWARE that NLAYERS could be different in this lookup table.
+### SOL_Z			(required, multi-values) Depth from soil surface to bottom of layer (mm), e.g., 100, 400, 800.
+### SOL_OM			(required, multi-values) Organic matter content (% soil weight)
+### SOL_CLAY		(required, multi-values) Clay content (% soil weight), diameter < 0.002 mm
+### SOL_SILT		(required, multi-values) Silt content (% soil weight), diameter between 0.002 mm and 0.05 mm
+### SOL_SAND		(required, multi-values) Sand content (% soil weight), diameter between 0.05 mm and 2 mm
+### SOL_ROCK		(required, multi-values) Rock fragment content (% total weight), diameter > 2 mm
+### SOL_ZMX			(optional)Maximum rooting depth of soil profile(mm)
 ### ANION_EXCL		(optional) Fraction of porosity (void space) from which anions are excluded, default is 0.5.
 ### SOL_CRK			(optional) Potential or maximum crack volume of the soil profile expressed as a fraction of the total soil volume. 
-### SOL_Z			(multi-values) Depth from soil surface to bottom of layer (mm), e.g., 100, 400, 800.
-### SOL_BD			(multi-values) Moist bulk density (Mg/m3 or g/cm3), value should between 1.1 and 1.9
-### SOL_AWC			(multi-values) Available water capacity of the soil layer (mm H2O/mm Soil)
-### SOL_K			(multi-values) Saturated hydraulic conductivity (mm/hr)
-### SOL_OM			(multi-values) Organic matter content (% soil weight)
-### SOL_CLAY		(multi-values) Clay content (% soil weight), diameter < 0.002 mm
-### SOL_SILT		(multi-values) Silt content (% soil weight), diameter between 0.002 mm and 0.05 mm
-### SOL_SAND		(multi-values) Sand content (% soil weight), diameter between 0.05 mm and 2 mm
-### SOL_ROCK		(multi-values) Rock fragment content (% total weight), diameter > 2 mm
+### SOL_BD			(optional, multi-values) Moist bulk density (Mg/m3 or g/cm3), value should between 1.1 and 1.9
+### SOL_K			(optional, multi-values) Saturated hydraulic conductivity (mm/hr)
+### SOL_WP			(optional, multi-values) Wilting point
+### SOL_FC			(optional, multi-values) Field capacity
+### SOL_AWC			(optional, multi-values) Available water capacity
+### SOL_POROSITY	(optional, multi-values) Porosity
+### SOL_USLE_K		(optional, multi-values) USLE K factor
+### SOL_ALB			(optional, multi-values) Soil albedo
 SEQN	SNAM	NLAYERS	SOL_ZMX	ANION_EXCL	SOL_CRK	SOL_Z	SOL_BD	SOL_AWC	SOL_K	SOL_OM	CLAY	SILT	SAND	ROCK
 1	Chengbaitutian	2	180	0.5	0.387	130,180	1.58,1.67	0.164,0.154	16.38,9.9	1.66,0.57	14.22,16.9	53.59,50.6	32.191,32.5	0,0
 2	Huangbaitutian_h	2	230	0.5	0.452	140,230	1.38,1.49	0.161,0.158	12.68,10.31	1.18,0.76	15.64,16.95	52.62,51.93	31.74,31.12	0,0
