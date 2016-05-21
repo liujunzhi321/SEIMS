@@ -8,7 +8,7 @@ from osgeo import gdal,osr
 from gdalconst import *
 import shutil
 from text import *
-
+import numpy
 ####  Climate Utility Functions  ####
 def IsLeapYear(year):
     if( (year%4 == 0 and year%100 != 0) or (year%400 == 0)):
@@ -309,3 +309,42 @@ def ReadDataItemsFromTxt(txtFile):
             dataItems.append(lineList)
     f.close()
     return dataItems
+def StripStr(str):
+    ### @Function: Remove space(' ') and indent('\t') at the begin and end of the string
+    oldStr = ''
+    newStr = str
+    while oldStr != newStr:
+        oldStr = newStr
+        newStr = oldStr.strip('\t')
+        newStr = newStr.strip(' ')
+    return newStr
+def SplitStr(str, spliter=None):
+    ### @Function: Split string by spliter space(' ') and indent('\t') as default
+    spliters = [' ','\t']
+    if spliter is not None:
+        spliters.append(spliter)
+    destStrs = []
+    srcStrs = [str]
+    while True:
+        oldDestStrs = srcStrs[:]
+        for s in spliters:
+            for srcS in srcStrs:
+                tempStrs = srcS.split(s)
+                for tempS in tempStrs:
+                    tempS = StripStr(tempS)
+                    if tempS != '':
+                        destStrs.append(tempS)
+            srcStrs = destStrs[:]
+            destStrs = []
+        if oldDestStrs == srcStrs:
+            destStrs = srcStrs[:]
+            break
+    return destStrs
+
+def replaceByDict(srcfile, vDict, dstfile):
+    srcR = ReadRaster(srcfile)
+    srcData = srcR.data
+    dstData = numpy.copy(srcData)
+    for k, v in vDict.iteritems():
+        dstData[srcData==k] = v
+    WriteGTiffFile(dstfile,srcR.nRows,srcR.nCols,dstData,srcR.geotrans,srcR.srs,srcR.noDataValue,GDT_Float32)

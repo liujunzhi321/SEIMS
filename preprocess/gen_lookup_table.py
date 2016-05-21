@@ -43,13 +43,13 @@ def CreateLookupTable(dbname, property_namelist, str_sql,dstdir):
             f.write(s)
         f.close()
 
-if __name__ == "__main__":
-    dbname = "../../spatial_data/Parameter.db3" 
-    property_namelist = ["Manning", "Interc_max", "Interc_min", "RootDepth", "USLE_C", "SOIL_T10", "USLE_P"]
-    str_sql = 'select landuse_id,manning,i_max,i_min, root_depth, usle_c, SOIL_T10 from LanduseLookup'
-    CreateLookupTable(dbname, property_namelist, str_sql)
-
-    property_namelist = ["Sand", "Clay", "FieldCap", "Conductivity", "Porosity", "USLE_K", "WiltingPoint", "Poreindex", "Residual", "Density"]
-    str_sql = 'select soilcode,sand,clay, fc, ks,porosity, usle_k, wp, P_INDEX, rm, B_DENSITY  from SoilLookup'
-    CreateLookupTable(dbname, property_namelist, str_sql)
+# if __name__ == "__main__":
+#     dbname = "../../spatial_data/Parameter.db3"
+#     property_namelist = ["Manning", "Interc_max", "Interc_min", "RootDepth", "USLE_C", "SOIL_T10", "USLE_P"]
+#     str_sql = 'select landuse_id,manning,i_max,i_min, root_depth, usle_c, SOIL_T10 from LanduseLookup'
+#     CreateLookupTable(dbname, property_namelist, str_sql)
+#
+#     property_namelist = ["Sand", "Clay", "FieldCap", "Conductivity", "Porosity", "USLE_K", "WiltingPoint", "Poreindex", "Residual", "Density"]
+#     str_sql = 'select soilcode,sand,clay, fc, ks,porosity, usle_k, wp, P_INDEX, rm, B_DENSITY  from SoilLookup'
+#     CreateLookupTable(dbname, property_namelist, str_sql)
 

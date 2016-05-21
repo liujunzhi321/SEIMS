@@ -59,7 +59,7 @@ from util import *
 #                                FC REAL DEFAULT NULL,
 #                                P_INDEX REAL DEFAULT NULL,
 #                                RM REAL DEFAULT NULL,
-#                                WP REAL DEFAULT NULL,
+#                                WiltingPoint REAL DEFAULT NULL,
 #                                B_DENSITY REAL DEFAULT NULL,
 #                                SAND REAL DEFAULT NULL,
 #                                CLAY REAL DEFAULT NULL,

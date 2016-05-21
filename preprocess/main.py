@@ -32,6 +32,6 @@ if __name__ == "__main__":
     ## Soil chemical properties initialization
 
     ## Extract parameters from landuse, soil properties etc.
-    ExtractParameters(landuseFile, sandList, clayList, orgList, WORKING_DIR, True, True, True, True)
+    ExtractParameters(landuseFile, WORKING_DIR, True, True, True, True)
     ## Import to MongoDB database
     BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesThiessen, MeteorSitesThiessen)

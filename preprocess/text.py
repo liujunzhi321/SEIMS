@@ -24,9 +24,37 @@ lookup_tabs = ['SoilLookup','LanduseLookup','TillageLookup',\
 CROP_FILE = TXT_DB_DIR + os.sep + 'crop.txt'
 sqliteFile = TXT_DB_DIR + os.sep + "Parameter.db3"
 
+## SOIL PARAMETERS NAMES, which will be appeared in MongoDB
+SOL_SEQN    = "SEQN"
+SOL_NAME    = "SNAM"
+## required inputs
+SOL_NLYRS = "SoilLAYERS"
+SOL_Z       = "SoilDepth"
+SOL_OM      = "OM"
+SOL_CLAY    = "Clay"
+SOL_SILT    = "Silt"
+SOL_SAND    = "Sand"
+SOL_ROCK    = "Rock"
+## optional inputs, which can be auto-calculated
+SOL_ZMX     = "Sol_ZMX"
+SOL_ANIONEXCL = "ANION_EXCL"
+SOL_CRK     = "Sol_CRK"
+SOL_BD      = "Density"
+SOL_K       = "Conductivity"
+SOL_WP      = "WiltingPoint"
+SOL_FC      = "FieldCap"
+SOL_AWC     = "Sol_AWC"
+SOL_POROSITY= "Porosity"
+SOL_P_INDEX = "Poreindex"
+SOL_USLE_K  = "USLE_K"
+SOL_ALB     = "Sol_ALB"
+SOL_RM      = "Residual"
+SOL_TEXTURE = "Texture"
+## soil chemical properties
+
 ## Climate datatype tags, MUST BE coincident with text.h in SEIMS
 ## /src/base/util/text.h
-## BE AWARE: TMIN, TMAX, WS, RM is required, and TMEAN, PET, SR is optional
+## BE AWARE: TMIN, TMAX, WS, Residual is required, and TMEAN, PET, SR is optional
 ##           WHEN SR is not provided, the SSD MUST be there!
 
 Tag_ClimateDB_Data = "DataValues"
@@ -159,6 +187,7 @@ basinVec = "basin.shp"
 chwidthName = "chwidth.tif"
 
 landuseMFile = "landuse.tif"
+soiltypeMFile = "soiltype.tif"
 
 soilTexture = "soil_texture.tif"
 hydroGroup = "hydro_group.tif"
@@ -191,7 +220,7 @@ HEADER_RS_NCOLS =	"NCOLS"
 HEADER_RS_CELLSIZE ="CELLSIZE"
 
 ## Fields in parameter table of MongoDB
-PARAM_FLD_NAME =    "NAME"
+PARAM_FLD_NAME =    "SNAM"
 PARAM_FLD_DESC =    "DESCRIPTION"
 PARAM_FLD_UNIT =    "UNIT"
 PARAM_FLD_MODS =    "MODULE"
