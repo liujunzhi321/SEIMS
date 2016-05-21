@@ -143,23 +143,23 @@ void SoilTemperatureFINPL::SetValue(const char* key, float value)
 	{
 		omp_set_num_threads((int)value);
 	}
-	else if (StringMatch(sk, "soil_ta0"))
+	else if (StringMatch(sk, VAR_SOL_TA0))
 		m_a0 = value;
-	else if (StringMatch(sk, "soil_ta1"))
+	else if (StringMatch(sk,VAR_SOL_TA1))
 		m_a1 = value;
-	else if (StringMatch(sk, "soil_ta2"))
+	else if (StringMatch(sk, VAR_SOL_TA2))
 		m_a2 = value;
-	else if (StringMatch(sk, "soil_ta3"))
+	else if (StringMatch(sk, VAR_SOL_TA3))
 		m_a3 = value;
-	else if (StringMatch(sk, "soil_tb1"))
+	else if (StringMatch(sk, VAR_SOL_TB1))
 		m_b1 = value;
-	else if (StringMatch(sk, "soil_tb2"))
+	else if (StringMatch(sk, VAR_SOL_TB2))
 		m_b2 = value;
-	else if (StringMatch(sk, "soil_td1"))
+	else if (StringMatch(sk, VAR_SOL_TD1))
 		m_d1 = value;
-	else if (StringMatch(sk, "soil_td2"))
+	else if (StringMatch(sk, VAR_SOL_TD2))
 		m_d2 = value;
-	else if (StringMatch(sk, "k_soil10"))
+	else if (StringMatch(sk, VAR_K_SOIL10))
 		m_kSoil10 = value;
 
 }
@@ -169,19 +169,19 @@ void SoilTemperatureFINPL::Set1DData(const char* key, int n, float* data)
 	//check the input data
 	CheckInputSize(key,n);
 	string sk(key);
-	if (StringMatch(sk, "SOIL_T10"))
+	if (StringMatch(sk, VAR_SOIL_T10))
 		m_relativeFactor = data;
-	else if(StringMatch(sk, "D_Tmin"))
+	else if(StringMatch(sk, VAR_TMIN))
 		m_tMin = data;
-	else if (StringMatch(sk, "D_Tmax"))
+	else if (StringMatch(sk, VAR_TMAX))
 		m_tMax = data;
-	//else if(StringMatch(sk, "Tmin1"))
+	//else if(StringMatch(sk, VAR_TMIN1))
 	//	m_tMin1 = data;
-	//else if (StringMatch(sk, "Tmax1"))
+	//else if (StringMatch(sk, VAR_TMAX1))
 	//	m_tMax1 = data;
-	//else if(StringMatch(sk, "Tmin2"))
+	//else if(StringMatch(sk, VAR_TMIN2))
 	//	m_tMin2 = data;
-	//else if (StringMatch(sk, "Tmax2"))
+	//else if (StringMatch(sk, VAR_TMAX2))
 	//	m_tMax2 = data;
 	else
 		throw ModelException("STP_FP", "Set1DData", "Parameter " + sk 
@@ -194,21 +194,21 @@ void SoilTemperatureFINPL::Get1DData(const char* key, int* n, float** data)
 	string sk(key);
 	*n = m_size;
 	*data = m_soilTemp;
-	//if (StringMatch(sk, "D_SOTE"))
+	//if (StringMatch(sk, VAR_SOTE))
 	//	*data = m_soilTemp;
-	//else if (StringMatch(sk, "SOIL_T10"))
+	//else if (StringMatch(sk, VAR_SOIL_T10))
 	//	*data = m_relativeFactor;
-	//else if(StringMatch(sk, "Tmin"))
+	//else if(StringMatch(sk, VAR_TMIN))
 	//	*data = m_tMin;
-	//else if (StringMatch(sk, "Tmax"))
+	//else if (StringMatch(sk, VAR_TMAX))
 	//	*data = m_tMax;
-	//else if(StringMatch(sk, "Tmin1"))
+	//else if(StringMatch(sk, VAR_TMIN1))
 	//	*data = m_tMin1;
-	//else if (StringMatch(sk, "Tmax1"))
+	//else if (StringMatch(sk, VAR_TMAX1))
 	//	*data = m_tMax1;
-	//else if(StringMatch(sk, "Tmin2"))
+	//else if(StringMatch(sk, VAR_TMIN2))
 	//	*data = m_tMin2;
-	//else if (StringMatch(sk, "Tmax2"))
+	//else if (StringMatch(sk, VAR_TMAX2))
 	//	*data = m_tMax2;
 	//else
 	//	throw ModelException("STP_FP", "Get1DData", "Parameter " + sk 
@@ -220,7 +220,7 @@ void SoilTemperatureFINPL::Set2DData(const char *key, int nRows, int nCols, floa
 {
 	//CheckInputSize(key, nRows);
 	//string sk(key);
-	//if (StringMatch(sk, "Mask"))
+	//if (StringMatch(sk, Tag_Mask))
 	//	m_mask = data;
 	//else
 	//	throw ModelException("STP_FP", "Set2DData", "Parameter " + sk 

@@ -121,7 +121,7 @@ void PER_PI::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 	*nRows = m_nCells;
 	*nCols = m_nSoilLayers;
 
-	if (StringMatch(sk, "Percolation_2D"))   // excess precipitation
+	if (StringMatch(sk, VAR_PERCO))   // excess precipitation
 	{
 		*data = m_perc;
 	}
@@ -137,11 +137,11 @@ void PER_PI::Set1DData(const char* key, int nRows, float* data)
 
 	CheckInputSize(key,nRows);
 
-	if(StringMatch(s,"Rootdepth"))		
+	if(StringMatch(s,VAR_ROOTDEPTH))		
 		m_rootDepth = data;
-	else if(StringMatch(s,"D_SOTE"))		
+	else if(StringMatch(s,VAR_SOTE))		
 		m_soilT = data;
-	else if(StringMatch(s,"D_INFIL"))		
+	else if(StringMatch(s,VAR_INFIL))		
 		m_infil = data;
 	else									
 		throw ModelException("PER_PI","Set1DData",
@@ -155,15 +155,15 @@ void PER_PI::Set2DData(const char* key, int nrows, int ncols, float** data)
 	CheckInputSize(key, nrows);
 	m_nSoilLayers = ncols;
 
-	if(StringMatch(sk,"Conductivity_2D"))		
+	if(StringMatch(sk, VAR_CONDUCT))		
 		m_ks = data;
-	else if (StringMatch(sk, "porosity_2D"))
+	else if (StringMatch(sk, VAR_POROST))
 		m_porosity = data;
-	else if (StringMatch(sk, "fieldCap_2D"))
+	else if (StringMatch(sk, VAR_FIELDCAP))
 		m_fc = data;
-	else if(StringMatch(sk, "Poreindex_2D"))		
+	else if(StringMatch(sk, VAR_POREID))		
 		m_poreIndex = data;	
-	else if(StringMatch(sk, "D_SOMO_2D"))		
+	else if(StringMatch(sk, VAR_SOMO))		
 		m_sm = data;
 	else
 		throw ModelException("PER_PI", "Set2DData", 
@@ -173,9 +173,9 @@ void PER_PI::Set2DData(const char* key, int nrows, int ncols, float** data)
 void PER_PI::SetValue(const char* key, float data)
 {
 	string s(key);
-	if(StringMatch(s,"TimeStep"))			
+	if(StringMatch(s, Tag_TimeStep))			
 		m_dt = int(data);
-	else if(StringMatch(s,"t_soil"))		
+	else if(StringMatch(s, VAR_T_SOIL))		
 		m_frozenT = data;
 	else if (StringMatch(s, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
