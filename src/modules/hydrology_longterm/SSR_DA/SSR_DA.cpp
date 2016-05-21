@@ -211,17 +211,17 @@ void SSR_DA::SetValue(const char* key, float data)
 	string s(key);
 	if (StringMatch(s, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
-	else if(StringMatch(s,"T_Soil"))				
+	else if(StringMatch(s, VAR_T_SOIL))				
 		m_frozenT = data;
-	else if(StringMatch(s,"Ki"))			
+	else if(StringMatch(s, VAR_KI))			
 		m_ki = data;
-	else if (StringMatch(s,Tag_CellSize))
+	else if (StringMatch(s, Tag_CellSize))
 		m_nCells = int(data);
-	else if(StringMatch(s,Tag_CellWidth))		
+	else if(StringMatch(s, Tag_CellWidth))		
 		m_CellWidth = data;
-	else if(StringMatch(s,"TimeStep"))		
+	else if(StringMatch(s, Tag_TimeStep))		
 		m_dt = int(data);
-	//else if(StringMatch(s,"UpperSoilDepth"))		
+	//else if(StringMatch(s, VAR_UPSOLDEP))		
 	//s	m_upSoilDepth = data;
 	else									
 		throw ModelException("SSR_DA","SetValue",
@@ -233,17 +233,17 @@ void SSR_DA::Set1DData(const char* key, int nRows, float* data)
 	string s(key);
 	CheckInputSize(key,nRows);
 
-	if(StringMatch(s, "Rootdepth"))		
+	if(StringMatch(s, VAR_ROOTDEPTH))		
 		m_rootDepth = data;
-	else if(StringMatch(s, "Slope"))			
+	else if(StringMatch(s, VAR_SLOPE))			
 		m_slope = data;
-	else if(StringMatch(s, "CHWIDTH"))			
+	else if(StringMatch(s, VAR_CHWIDTH))			
 		m_chWidth = data;
-	else if(StringMatch(s, "Stream_Link"))			
+	else if(StringMatch(s, VAR_STREAM_LINK))			
 		m_streamLink = data;
-	else if(StringMatch(s, "D_SOTE"))		
+	else if(StringMatch(s, VAR_SOTE))		
 		m_soilT = data;
-	else if (StringMatch(s, "subbasin"))
+	else if (StringMatch(s, VAR_SUBBSN))
 		m_subbasin = data;
 	else									
 		throw ModelException("SSR_DA", "SetValue",
@@ -255,47 +255,47 @@ void SSR_DA::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
 
-	if(StringMatch(sk,"Conductivity_2D"))
+	if(StringMatch(sk, VAR_CONDUCT))
 	{
 		CheckInputSize(key, nrows);
 		m_nSoilLayers = ncols;
 		m_ks = data;
 	}
-	else if (StringMatch(sk, "Porosity_2D"))
+	else if (StringMatch(sk, VAR_POROST))
 	{
 		CheckInputSize(key, nrows);
 		m_nSoilLayers = ncols;
 		m_porosity = data;
 	}
-	else if (StringMatch(sk, "FieldCap_2D"))
+	else if (StringMatch(sk, VAR_FIELDCAP))
 	{
 		CheckInputSize(key, nrows);
 		m_nSoilLayers = ncols;
 		m_fc = data;
 	}
-	else if(StringMatch(sk, "Poreindex_2D"))		
+	else if(StringMatch(sk, VAR_POREID))		
 	{
 		CheckInputSize(key, nrows);
 		m_nSoilLayers = ncols;
 		m_poreIndex = data;	
 	}
-	else if(StringMatch(sk, "D_SOMO_2D"))		
+	else if(StringMatch(sk, VAR_SOMO))		
 	{
 		CheckInputSize(key, nrows);
 		m_nSoilLayers = ncols;
 		m_sm = data;
 	}
-	else if(StringMatch(sk, "ROUTING_LAYERS"))
+	else if(StringMatch(sk, Tag_ROUTING_LAYERS))
 	{
 		m_nRoutingLayers = nrows;
 		m_routingLayers = data;
 	}
-	else if (StringMatch(sk, "FLOWIN_INDEX_D8"))
+	else if (StringMatch(sk, Tag_FLOWIN_INDEX_D8))
 	{
 		CheckInputSize(key, nrows);
 		m_flowInIndex = data;
 	}
-	else if (StringMatch(sk, "FLOWIN_PERCENTAGE_D8"))
+	else if (StringMatch(sk, Tag_FLOWIN_PERCENTAGE_D8))
 	{
 		CheckInputSize(key, nrows);
 		m_flowInPercentage = data;
@@ -309,7 +309,7 @@ void SSR_DA::Set2DData(const char* key, int nrows, int ncols, float** data)
 void SSR_DA::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
-	if (StringMatch(sk, "SBIF"))  
+	if (StringMatch(sk, VAR_SBIF))  
 		*data = m_qiSubbasin;
 	else									
 		throw ModelException("SSR_DA", "Get1DData", "Result " + sk + " does not exist in Get1DData method.");
@@ -324,11 +324,11 @@ void SSR_DA::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 	*nRows = m_nCells;
 	*nCols = m_nSoilLayers;
 
-	if (StringMatch(sk, "SSRU_2D"))   // excess precipitation
+	if (StringMatch(sk, VAR_SSRU))   // excess precipitation
 	{
 		*data = m_qi;
 	}
-	else if (StringMatch(sk, "SSRUVOL_2D"))   // excess precipitation
+	else if (StringMatch(sk, VAR_SSRUVOL))   // excess precipitation
 	{
 		*data = m_qiVol;
 	}

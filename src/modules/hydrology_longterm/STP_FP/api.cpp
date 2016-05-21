@@ -30,42 +30,31 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("STP_FP.html");
 
 	/// from parameter database
-	mdi.AddParameter("soil_ta0","","Coefficient a0 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_ta1","","Coefficient a1 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_ta2","","Coefficient a2 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_ta3","","Coefficient a3 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_tb1","","Coefficient b1 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_tb2","","Coefficient b2 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_td1","","Coefficient d1 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_td2","","Coefficient d2 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
+	mdi.AddParameter(VAR_SOL_TA0, UNIT_NON_DIM, DESC_SOL_TA0,  Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_SOL_TA1, UNIT_NON_DIM, DESC_SOL_TA1,  Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_SOL_TA2, UNIT_NON_DIM, DESC_SOL_TA2,  Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_SOL_TA3, UNIT_NON_DIM, DESC_SOL_TA3,  Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_SOL_TB1, UNIT_NON_DIM, DESC_SOL_TB1,  Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_SOL_TB2, UNIT_NON_DIM, DESC_SOL_TB2,  Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_SOL_TD1, UNIT_NON_DIM, DESC_SOL_TD1,  Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_SOL_TD2, UNIT_NON_DIM, DESC_SOL_TD2,  Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter("k_soil10","","Ratio between soil temperature at 10 cm and the mean",
-		"ParameterDB_WaterBalance", DT_Single);
+	mdi.AddParameter(VAR_K_SOIL10, UNIT_NON_DIM, DESC_K_SOIL10,  Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter("soil_t10","","Factor of soil temperature relative to short grass (degree)",
-		"ParameterDB_WaterBalance", DT_Raster1D);
-	//mdi.AddParameter("Mask", "", "Array containing the row and column numbers for valid cells",
-	//	"ParameterDB_WaterBalance", DT_Raster);
+	mdi.AddParameter(VAR_SOIL_T10, UNIT_NON_DIM, DESC_SOIL_T10,  Source_ParameterDB, DT_Raster1D);
+	//mdi.AddParameter(Tag_Mask,  UNIT_NON_DIM, DESC_MASK,  Source_ParameterDB, DT_Raster);
 
 	/// from interpolation module
 	/// air temperature
-	mdi.AddInput("D_Tmin","oC","Minimum air temperature","Module", DT_Raster1D);
-	mdi.AddInput("D_Tmax","oC","Maximum air temperature","Module", DT_Raster1D);
-	//mdi.AddInput("Tmin1","oC","Minimum air temperature of the (d-1)th day","Module", DT_Raster);
-	//mdi.AddInput("Tmax1","oC","Maximum air temperature of the (d-1)th day","Module", DT_Raster);
-	//mdi.AddInput("Tmin2","oC","Minimum air temperature of the (d-2)th day","Module", DT_Raster);
-	//mdi.AddInput("Tmax2","oC","Maximum air temperature of the (d-2)th day","Module", DT_Raster);
+	mdi.AddInput(VAR_TMIN, UNIT_TEMP_DEG, "Minimum air temperature", Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_TMAX, UNIT_TEMP_DEG, "Maximum air temperature", Source_Module, DT_Raster1D);
+	//mdi.AddInput(VAR_TMIN1, UNIT_TEMP_DEG, DESC_TMIN1, Source_Module, DT_Raster);
+	//mdi.AddInput(VAR_TMAX1, UNIT_TEMP_DEG, DESC_TMAX1, Source_Module, DT_Raster);
+	//mdi.AddInput(VAR_TMIN2, UNIT_TEMP_DEG, DESC_TMIN2, Source_Module, DT_Raster);
+	//mdi.AddInput(VAR_TMAX2, UNIT_TEMP_DEG, DESC_TMAX2, Source_Module, DT_Raster);
 
 	/// output soil temperature
-	mdi.AddOutput("SOTE","oC", "Soil Temperature", DT_Raster1D);
+	mdi.AddOutput( VAR_SOTE, UNIT_TEMP_DEG, DESC_SOTE, DT_Raster1D);
 
 	string res = mdi.GetXMLDocument();
 

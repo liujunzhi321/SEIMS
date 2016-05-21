@@ -245,19 +245,19 @@ void SUR_MR::SetValue(const char* key, float value)
 
 	if (StringMatch(key, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)value);
-	else if (StringMatch(sk, "DT_HS"))	
+	else if (StringMatch(sk, Tag_HillSlopeTimeStep))	
 		m_dt = value;
-	else if (StringMatch(sk,"T_snow"))
+	else if (StringMatch(sk, VAR_SNOW_TEMP))
 		m_tSnow = value;
-	else if (StringMatch(sk,"t_soil"))
+	else if (StringMatch(sk, VAR_T_SOIL))
 		m_tFrozen = value;
-	else if (StringMatch(sk,"T0"))
+	else if (StringMatch(sk, VAR_T0))
 		m_t0 = value;
-	else if (StringMatch(sk,"K_run"))
+	else if (StringMatch(sk, VAR_K_RUN))
 		m_kRunoff = value;
-	else if (StringMatch(sk,"P_max"))
+	else if (StringMatch(sk, VAR_P_MAX))
 		m_pMax = value;
-	else if (StringMatch(sk,"s_frozen"))
+	else if (StringMatch(sk, VAR_S_FROZEN))
 		m_sFrozen = value;
 	else									
 		throw ModelException("SUR_MR","SetValue","Parameter " + sk 
@@ -272,7 +272,7 @@ void SUR_MR::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 	*nRows = m_nCells;
 	*nCols = m_nSoilLayers;
 
-	if (StringMatch(sk, "SOMO_2D"))   // excess precipitation
+	if (StringMatch(sk, VAR_SOMO))   // excess precipitation
 		*data = m_soilMoisture;
 	else
 		throw ModelException("SUR_MR", "Get2DData", "Output " + sk 
@@ -285,11 +285,11 @@ void SUR_MR::Set2DData(const char* key, int nrows, int ncols, float** data)
 	CheckInputSize(key, nrows);
 	m_nSoilLayers = ncols;
 
-	if (StringMatch(sk, "porosity_2D"))
+	if (StringMatch(sk, VAR_POROST))
 	{
 		m_porosity = data;
 	}
-	else if (StringMatch(sk,"fieldCap_2D"))
+	else if (StringMatch(sk, VAR_FIELDCAP))
 	{
 		m_fieldCap = data;
 	}
@@ -308,44 +308,44 @@ void SUR_MR::Set1DData(const char* key, int n, float* data)
 	//set the value
 	string sk(key);
 
-	if (StringMatch(sk,"Runoff_co"))
+	if (StringMatch(sk, VAR_RUNOFF_CO))
 	{
 		m_runoffCo = data;
 	}
-	else if (StringMatch(sk,"RootDepth"))
+	else if (StringMatch(sk, VAR_ROOTDEPTH))
 	{
 		m_rootDepth = data;
 	}
-	else if (StringMatch(sk,"D_NEPR"))
+	else if (StringMatch(sk,VAR_NEPR))
 	{
 		m_pNet = data;
 	}
-	else if (StringMatch(sk,"D_Tmin"))
+	else if (StringMatch(sk,VAR_TMIN))
 	{
 		m_tMin = data;
 	}
-	else if (StringMatch(sk,"D_Tmax"))
+	else if (StringMatch(sk, VAR_TMAX))
 	{
 		m_tMax = data;
 	}
-	else if (StringMatch(sk,"Moist_in"))
+	else if (StringMatch(sk, VAR_MOIST_IN))
 	{
 		m_initSoilMoisture = data;
 	}
 
-	else if (StringMatch(sk,"D_DPST"))
+	else if (StringMatch(sk, VAR_DPST))
 	{
 		m_sd = data;
 	}
-	else if (StringMatch(sk,"D_SOTE"))
+	else if (StringMatch(sk, VAR_SOTE))
 	{
 		m_soilTemp = data;
 	}
-	else if (StringMatch(sk,"D_SNAC"))
+	else if (StringMatch(sk, VAR_SNAC))
 	{
 		m_snowAccu = data;
 	}
-	else if (StringMatch(sk,"D_SNME"))
+	else if (StringMatch(sk, VAR_SNME))
 	{
 		m_snowMelt = data;
 	}
@@ -358,11 +358,11 @@ void SUR_MR::Set1DData(const char* key, int n, float* data)
 void SUR_MR::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
-	if (StringMatch(sk, "Infil"))   //infiltration
+	if (StringMatch(sk, VAR_INFIL))   //infiltration
 	{
 		* data = m_infil;	
 	}
-	else if (StringMatch(sk, "EXCP"))   // excess precipitation
+	else if (StringMatch(sk, VAR_EXCP))   // excess precipitation
 	{
 		* data = m_pe;
 	}

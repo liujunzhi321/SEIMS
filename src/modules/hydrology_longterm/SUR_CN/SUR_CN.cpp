@@ -343,19 +343,19 @@ void SUR_CN::SetValue(const char* key, float value)
 	{
 		omp_set_num_threads((int)value);
 	}
-	else if (StringMatch(sk,"T_snow"))
+	else if (StringMatch(sk, VAR_SNOW_TEMP))
 	{
 		m_Tsnow = value;
 	}
-	else if (StringMatch(sk,"t_soil"))
+	else if (StringMatch(sk, VAR_T_SOIL))
 	{
 		m_Tsoil = value;
 	}
-	else if (StringMatch(sk,"T0"))
+	else if (StringMatch(sk, VAR_T0))
 	{
 		m_T0 = value;
 	}
-	else if (StringMatch(sk,"s_frozen"))
+	else if (StringMatch(sk, VAR_S_FROZEN))
 	{
 		m_Sfrozen = value;
 	}
@@ -372,51 +372,51 @@ void SUR_CN::Set1DData(const char* key, int n, float* data)
 	//set the value
 	string sk(key);
 
-	if(StringMatch(sk,"rootDepth"))
+	if(StringMatch(sk, VAR_ROOTDEPTH))
 	{
 		m_rootDepth = data;
 	}
-	else if (StringMatch(sk,"cn2"))
+	else if (StringMatch(sk, VAR_CN2))
 	{
 		m_CN2 = data;
 	}
-	else if (StringMatch(sk,"D_NEPR"))
+	else if (StringMatch(sk, VAR_NEPR))
 	{
 		m_P_NET = data;
 	}
-	else if (StringMatch(sk,"Moist_in"))
+	else if (StringMatch(sk, VAR_MOIST_IN))
 	{
 		m_initSoilMoisture = data;
 	}
-	//else if (StringMatch(sk,"S_M_frozen"))
+	//else if (StringMatch(sk, "S_M_frozen"))
 	//{
 	//	m_S_M_frozen = data;
 	//}
-	//else if (StringMatch(sk,"depression"))
+	//else if (StringMatch(sk, VAR_DEPRESSION))
 	//{
 	//	m_Depression = data;
 	//}
-	else if (StringMatch(sk,"D_DPST"))  //depression storage 
+	else if (StringMatch(sk, VAR_DPST))  //depression storage 
 	{
 		m_SD = data;
 	}
-	else if (StringMatch(sk,"D_TMin"))
+	else if (StringMatch(sk,VAR_TMIN))
 	{
 		m_tMin = data;
 	}
-	else if (StringMatch(sk,"D_TMax"))
+	else if (StringMatch(sk, VAR_TMAX))
 	{
 		m_tMax = data;
 	}
-	else if (StringMatch(sk,"D_SNME"))
+	else if (StringMatch(sk, VAR_SNME))
 	{
 		m_SM = data;
 	}
-	else if (StringMatch(sk,"D_SNAC"))
+	else if (StringMatch(sk, VAR_SNAC))
 	{
 		m_SA = data;
 	}
-	else if (StringMatch(sk,"D_SOTE"))
+	else if (StringMatch(sk, VAR_SOTE))
 	{
 		m_TS = data;
 	}
@@ -433,15 +433,15 @@ void SUR_CN::Set2DData(const char* key, int nrows, int ncols, float** data)
 	CheckInputSize(key, nrows);
 	m_nLayers = ncols;
 
-	if (StringMatch(sk, "porosity_2D"))
+	if (StringMatch(sk, VAR_POROST))
 	{
 		m_porosity = data;
 	}
-	else if (StringMatch(sk,"fieldCap_2D"))
+	else if (StringMatch(sk, VAR_FIELDCAP))
 	{
 		m_fieldCap = data;
 	}
-	else if (StringMatch(sk,"Wiltingpoint_2D"))
+	else if (StringMatch(sk, VAR_WILTPOINT))
 	{
 		m_wiltingPoint = data;
 	}
@@ -455,11 +455,11 @@ void SUR_CN::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
 	
-	if (StringMatch(sk,"INFIL"))
+	if (StringMatch(sk, VAR_INFIL))
 	{
 		*data = m_INFIL;
 	}
-	else if (StringMatch(sk,"EXCP"))
+	else if (StringMatch(sk, VAR_EXCP))
 	{
 		*data = m_PE;
 	}
@@ -476,7 +476,7 @@ void SUR_CN::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
     *nRows = m_nCells;
     *nCols = m_nLayers;
 
-    if (StringMatch(sk, "SOMO_2D"))   // excess precipitation
+    if (StringMatch(sk, VAR_SOMO))   // excess precipitation
     {
         *data = m_soilMoisture;
     }

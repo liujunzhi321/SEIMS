@@ -74,17 +74,26 @@ Hydrology_longterm|GWA_RE|VAR_SOMO|AddInput
 Hydrology_longterm|PEI_PI|VAR_SOMO|AddInput
 Hydrology_longterm|PEI_STR|VAR_SOMO|AddInput
 Hydrology_longterm|SET_LM|VAR_SOMO|AddInput
+Hydrology_longterm|SOL_WB|VAR_PERCO|AddInput
+Hydrology_longterm|SOL_WB|VAR_SOMO|AddInput
+Hydrology_longterm|SOL_WB|VAR_SSRU|AddInput
+Hydrology_longterm|SSR_DA|VAR_SOMO|AddInput
+Hydrology_longterm|SUR_CN|VAR_SOMO|AddOutput
+
 	
 + 3 变量定义不明确问题
 	+ Hydrology_longterm - IKW_REACH: VAR_QOUTLET & VAR_QSOUTLET
 	+ Hydrology_longterm - IKW_REACH: VAR_MSF & MUSK_CH: VAR_VSF
 
-+ 4 add*()与set*()、get*()中变量不一致的问题
++ 4 add-()与set-()、get-()中变量不一致的问题
 	+ Hydrology_longterm - IKW_REACH: VAR_QUPREACH
+	+ Hydrology_longterm - SSR_DA: Tag_FLOWIN_PERCENTAGE_D8
 	
 + 5 变量单位不明确问题
 	+ Hydrology_longterm - SON_DD: VAR_C_SNOW
 	+ Hydrology_longterm - SON_DD: VAR_C_RAIN
+	+ Hydrology_longterm - SON_SP: VAR_C_SNOW6 ("mm/oC/day")
+	+ Hydrology_longterm - SON_SP: VAR_C_SNOW12 ("mm/oC/day")
 
 
 

@@ -19,7 +19,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	MetadataInfo mdi;
 
 	mdi.SetAuthor("Zhiqiang Yu; Junzhi Liu");
-	mdi.SetClass("Subsurface Runoff", "");
+	mdi.SetClass("Subsurface Runoff",  UNIT_NON_DIM);
 	mdi.SetDescription("Darcy's law and the kinematic approximation; Water is routed cell-to-cell according to D8 or Dinf flow direction");
 	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetID("SSR_DA");
@@ -30,39 +30,37 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
-	mdi.AddParameter("TimeStep","h","","file.in",DT_Single);
-	//mdi.AddParameter("UpperSoilDepth", "mm", "depth of the upper soil layer", "ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("Ki","-","Interflow scale factor","ParameterDB_WaterBalance",DT_Single);
-	mdi.AddParameter("T_Soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);				
+	mdi.AddParameter(Tag_TimeStep, UNIT_TIMESTEP_HOUR, UNIT_NON_DIM, File_Input, DT_Single);
+	//mdi.AddParameter(VAR_UPSOLDEP, UNIT_DEPTH_MM, DESC_UPSOLDEP, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_KI, UNIT_NON_DIM, DESC_KI, Source_ParameterDB,DT_Single);
+	mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);				
 
-	mdi.AddParameter("Conductivity_2D","mm/h","saturation hydraulic conductivity","ParameterDB_WaterBalance",DT_Array2D);
-	mdi.AddParameter("Porosity_2D","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Array2D);
-	mdi.AddParameter("Poreindex_2D","-","pore size distribution index","ParameterDB_WaterBalance",DT_Array2D);
-	mdi.AddParameter("FieldCap_2D","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Array2D);
+	mdi.AddParameter(VAR_CONDUCT, UNIT_WTRDLT_MMH, DESC_CONDUCT, Source_ParameterDB,DT_Array2D);
+	mdi.AddParameter(VAR_POROST, UNIT_SOLCOEF_M3M3, DESC_POROST, Source_ParameterDB,DT_Array2D);
+	mdi.AddParameter(VAR_POREID, UNIT_NON_DIM, DESC_POREID, Source_ParameterDB,DT_Array2D);
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_SOLCOEF_M3M3, DESC_FIELDCAP, Source_ParameterDB,DT_Array2D);
 
-	mdi.AddParameter("Rootdepth","mm","Root depth","ParameterDB_WaterBalance",DT_Raster1D);
-	mdi.AddParameter("Slope","%","Soil field capacity","ParameterDB_WaterBalance", DT_Raster1D);		
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter(VAR_SLOPE, UNIT_PERCENT, DESC_SLOPE, Source_ParameterDB, DT_Raster1D);		
+	mdi.AddParameter(VAR_CHWIDTH, UNIT_LEN_M, DESC_CHWIDTH,  Source_ParameterDB, DT_Raster1D); 
+	mdi.AddParameter(VAR_STREAM_LINK, UNIT_NON_DIM, DESC_STREAM_LINK,  Source_ParameterDB, DT_Raster1D); 
+	//mdi.AddParameter(Tag_FLOWOUT_INDEX_DINF, UNIT_NON_DIM, DESC_FLOWOUT_INDEX_DINF,  Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(Tag_FLOWIN_INDEX_D8, UNIT_NON_DIM, DESC_FLOWIN_INDEX_D8, Source_ParameterDB, DT_Array2D);
+	//mdi.AddParameter(Tag_FLOWIN_PERCENTAGE_DINF, UNIT_NON_DIM, DESC_Tag_FLOWIN_PERCENTAGE_DINF,  Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(Tag_ROUTING_LAYERS, UNIT_NON_DIM, DESC_ROUTING_LAYERS, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(Tag_FLOWIN_PERCENTAGE_D8, UNIT_NON_DIM, DESC_FLOWIN_PERCENTAGE_D8, Source_ParameterDB, DT_Array2D);
 
-	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster1D); 
-	mdi.AddParameter("STREAM_LINK", "", "Stream link", "ParameterDB_Discharge", DT_Raster1D); 
-	//mdi.AddParameter("FLOWOUT_INDEX_DINF", "", "The index of flow in cell in the compressed array", "ParameterDB_Discharge", DT_Array2D);
-	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
-		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
-	//mdi.AddParameter("FLOWIN_PERCENTAGE_DINF", "", "Percentage of flow in", "ParameterDB_Discharge", DT_Array2D);
-	mdi.AddParameter("ROUTING_LAYERS", "", "Routing layers according to the flow direction"
-		"There are not flow relationships within each layer","ParameterDB_Discharge", DT_Array2D);
-
-	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster1D);
+	mdi.AddParameter(VAR_SUBBSN, UNIT_NON_DIM, DESC_SUBBSN, Source_ParameterDB,DT_Raster1D);
 
 	// set the parameters (non-time series)
-	mdi.AddInput("D_GRRE","mm","percolation","Module",DT_Raster1D);
-	mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster1D);
-	mdi.AddInput("D_SOMO_2D","mm","Distribution of soil moisture","Module",DT_Array2D);
+	mdi.AddInput(VAR_GRRE, UNIT_DEPTH_MM, DESC_GRRE, Source_Module,DT_Raster1D);
+	mdi.AddInput(VAR_SOTE, UNIT_TEMP_DEG, DESC_SOTE, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module,DT_Raster2D);
 
 	// set the output variables
-	mdi.AddOutput("SSRU_2D","mm", "Distribution of subsurface runoff (mm).", DT_Array2D);
-	mdi.AddOutput("SSRUVOL_2D","mm", "Distribution of subsurface runoff (m3).", DT_Array2D);
-	mdi.AddOutput("SBIF", "mm","Interflow to streams for each subbasin", DT_Array1D);
+	mdi.AddOutput(VAR_SSRU, UNIT_DEPTH_MM, DESC_SSRU, DT_Array2D);
+	mdi.AddOutput(VAR_SSRUVOL, UNIT_DEPTH_MM, DESC_SSRUVOL, DT_Array2D);
+	mdi.AddOutput(VAR_SBIF,  UNIT_DEPTH_MM, DESC_SBIF, DT_Array1D);
 
 	string res = mdi.GetXMLDocument();
 

@@ -191,16 +191,16 @@ bool SNO_SP::CheckInputSize(const char* key, int n)
 void SNO_SP::SetValue(const char* key, float data)
 {
 	string s(key);
-	if(StringMatch(s,"K_blow"))				this->m_kblow = data;
-	//else if(StringMatch(s,"c_snow"))		this->m_csnow = data;
-	//else if(StringMatch(s,"c_rain"))		this->m_crain = data;
-	else if(StringMatch(s,"T0"))			this->m_t0 = data;
-	else if(StringMatch(s,"T_snow"))		this->m_tsnow = data;
-	else if(StringMatch(s,"SWE"))			this->m_swe = data;
-	else if(StringMatch(s,"swe0"))			this->m_swe0 = data;
-	else if(StringMatch(s,"lag_snow"))		this->m_lagSnow = data;
-	else if(StringMatch(s,"c_snow6"))		this->m_csnow6 = data;
-	else if(StringMatch(s,"c_snow12"))		this->m_csnow12 = data;
+	if(StringMatch(s, VAR_K_BLOW))				this->m_kblow = data;
+	//else if(StringMatch(s, VAR_C_SNOW))		this->m_csnow = data;
+	//else if(StringMatch(s, VAR_C_RAIN))		this->m_crain = data;
+	else if(StringMatch(s, VAR_T0))			this->m_t0 = data;
+	else if(StringMatch(s, VAR_SNOW_TEMP))		this->m_tsnow = data;
+	else if(StringMatch(s, VAR_SWE))			this->m_swe = data;
+	else if(StringMatch(s, VAR_SWE0))			this->m_swe0 = data;
+	else if(StringMatch(s, VAR_LAG_SNOW))		this->m_lagSnow = data;
+	else if(StringMatch(s, VAR_C_SNOW6))		this->m_csnow6 = data;
+	else if(StringMatch(s, VAR_C_SNOW12))		this->m_csnow12 = data;
 	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
@@ -217,12 +217,12 @@ void SNO_SP::Set1DData(const char* key, int n, float* data)
 
 	this->CheckInputSize(key,n);
 
-	if(StringMatch(s,"D_TMIN"))				this->m_tMin = data;
-	else if(StringMatch(s,"D_TMAX"))		this->m_tMax = data;
-	else if(StringMatch(s,"D_NEPR"))		this->m_Pnet = data;
-	else if(StringMatch(s,"D_SNAC"))		this->m_SA = data;	
-	else if(StringMatch(s,"D_SNRD"))		this->m_SR = data;
-	else if(StringMatch(s,"D_SNSB"))		this->m_SE = data;
+	if(StringMatch(s,VAR_TMIN))				this->m_tMin = data;
+	else if(StringMatch(s, VAR_TMAX))		this->m_tMax = data;
+	else if(StringMatch(s, VAR_NEPR))		this->m_Pnet = data;
+	else if(StringMatch(s, VAR_SNAC))		this->m_SA = data;	
+	else if(StringMatch(s, VAR_SNRD))		this->m_SR = data;
+	else if(StringMatch(s, VAR_SNSB))		this->m_SE = data;
 	else									throw ModelException("SNO_SP","SetValue","Parameter " + s + 
 		" does not exist in SNO_SP method. Please contact the module developer.");
 
@@ -231,7 +231,7 @@ void SNO_SP::Set1DData(const char* key, int n, float* data)
 void SNO_SP::Get1DData(const char* key, int* n, float** data)
 {
 	string s(key);
-	if(StringMatch(s,"SNME"))				
+	if(StringMatch(s, VAR_SNME))				
 	{
 		*data = this->m_SM;
 	}

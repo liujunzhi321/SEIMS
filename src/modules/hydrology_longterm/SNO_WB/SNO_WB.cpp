@@ -193,11 +193,11 @@ void SNO_WB::getSubbasinList(int cellCount, float* subbasinGrid, int subbasinSel
 void SNO_WB::SetValue(const char* key, float data)
 {
 	string s(key);
-	if(StringMatch(s,"K_blow"))				this->m_kblow = data;
-	else if(StringMatch(s,"T0"))			this->m_t0 = data;
-	else if(StringMatch(s,"T_snow"))		this->m_tsnow = data;
-	else if(StringMatch(s,"swe0"))			this->m_swe0 = data;
-	else if(StringMatch(s,Tag_CellSize))	this->m_nCells = int(data);
+	if(StringMatch(s, VAR_K_BLOW))				this->m_kblow = data;
+	else if(StringMatch(s, VAR_T0))			this->m_t0 = data;
+	else if(StringMatch(s, VAR_SNOW_TEMP))		this->m_tsnow = data;
+	else if(StringMatch(s, VAR_SWE0))			this->m_swe0 = data;
+	else if(StringMatch(s, Tag_CellSize))	this->m_nCells = int(data);
 	else if (StringMatch(s, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
@@ -217,7 +217,7 @@ void SNO_WB::Set1DData(const char* key, int n, float* data)
 		return;
 	}
 
-	if(StringMatch(s,"T_WS"))
+	if(StringMatch(s, VAR_T_WS))
 	{
 		this->m_WindSpeed = data;
 		this->m_wsSize = n;
@@ -226,14 +226,14 @@ void SNO_WB::Set1DData(const char* key, int n, float* data)
 
 	this->CheckInputSize(key,n);
 
-	if(StringMatch(s,"D_NEPR"))				this->m_Pnet = data;
-	else if(StringMatch(s,"D_SNRD"))		this->m_SR = data;
-	else if(StringMatch(s,"D_SNSB"))		this->m_SE = data;
-	else if(StringMatch(s,"D_SNME"))		this->m_SM = data;	
-	else if(StringMatch(s,"D_TMIN"))		this->m_tMin = data;
-	else if(StringMatch(s,"D_TMAX"))		this->m_tMax = data;	
-	else if(StringMatch(s,"D_P"))			this->m_P = data;	
-	else if(StringMatch(s,"subbasin"))		this->m_subbasin = data;
+	if(StringMatch(s, VAR_NEPR))				this->m_Pnet = data;
+	else if(StringMatch(s, VAR_SNRD))		this->m_SR = data;
+	else if(StringMatch(s, VAR_SNSB))		this->m_SE = data;
+	else if(StringMatch(s, VAR_SNME))		this->m_SM = data;	
+	else if(StringMatch(s, VAR_TMIN))		this->m_tMin = data;
+	else if(StringMatch(s, VAR_TMAX))		this->m_tMax = data;	
+	else if(StringMatch(s, VAR_PRECI))			this->m_P = data;	
+	else if(StringMatch(s, VAR_SUBBSN))		this->m_subbasin = data;
 	else									throw ModelException("SNO_WB","SetValue","Parameter " + s 
 		+ " does not exist in SNO_WB method. Please contact the module developer.");
 
@@ -242,7 +242,7 @@ void SNO_WB::Set1DData(const char* key, int n, float* data)
 void SNO_WB::Get1DData(const char* key, int* n, float** data)
 {
 	string s(key);
-	if(StringMatch(s,"SNAC"))				
+	if(StringMatch(s, VAR_SNAC))				
 	{		
 		if(this->m_SA == NULL) 
 		{
@@ -263,7 +263,7 @@ void SNO_WB::Get1DData(const char* key, int* n, float** data)
 void SNO_WB::Get2DData(const char* key, int* nRows, int* nCols, float*** data)
 {
 	string s(key);
-	if(StringMatch(s,"SNWB"))
+	if(StringMatch(s, VAR_SNWB))
 	{
 		setValueToSubbasin();
 		*nRows = this->m_subbasinSelectedCount;
@@ -276,7 +276,7 @@ void SNO_WB::Get2DData(const char* key, int* nRows, int* nCols, float*** data)
 void SNO_WB::GetValue(const char* key, float* data)
 {
 	string s(key);
-	if(StringMatch(s,"SWE"))				*data = this->m_SWE;
+	if(StringMatch(s, VAR_SWE))				*data = this->m_SWE;
 	else									throw ModelException("SNO_WB","getResult","Result " + s + 
 		" does not exist in SNO_WB method. Please contact the module developer.");	
 }

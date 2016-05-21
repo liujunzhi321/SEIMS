@@ -193,14 +193,14 @@ void SOL_WB::setValueToSubbasin()
 void SOL_WB::Set1DData(const char* key, int nRows, float* data)
 {
 	string s(key);
-	if(StringMatch(s,"subbasinSelected"))
+	if(StringMatch(s, Tag_SubbasinSelected))
 	{
 		m_subbasinSelected = data;
 		m_subbasinSelectedCount = nRows;
 		return;
 	}
 
-	if(StringMatch(s,"T_RG"))
+	if(StringMatch(s, VAR_T_RG))
 	{
 		m_RG = data;
 		m_subbasinTotalCount = nRows;		
@@ -210,39 +210,39 @@ void SOL_WB::Set1DData(const char* key, int nRows, float* data)
 
 	CheckInputSize(key,nRows);
 
-	if(StringMatch(s,"D_INLO"))				
+	if(StringMatch(s, VAR_INLO))				
 		m_Interception = data;
-	else if(StringMatch(s,"D_P"))			
+	else if(StringMatch(s, VAR_PRECI))			
 		m_Precipitation = data;
-	else if(StringMatch(s,"D_INET"))		
+	else if(StringMatch(s, VAR_INET))		
 		m_EI = data;
-	else if(StringMatch(s,"D_DPST"))		
+	else if(StringMatch(s, VAR_DPST))		
 		m_Depression = data;
-	else if(StringMatch(s,"D_DEET"))		
+	else if(StringMatch(s, VAR_DEET))		
 		m_ED = data;	
-	else if(StringMatch(s,"D_INFIL"))
+	else if(StringMatch(s, VAR_INFIL))
 		m_Infil = data;
-	else if(StringMatch(s,"D_SOET"))	
+	else if(StringMatch(s, VAR_SOET))	
 		m_ES = data;
-	else if(StringMatch(s,"D_Revap"))		
+	else if(StringMatch(s, VAR_REVAP))		
 		m_Revap = data;	
-	else if(StringMatch(s,"D_SURU"))		
+	else if(StringMatch(s, VAR_SURU))		
 		m_RS = data;
-	else if(StringMatch(s,"T_RG"))			
+	else if(StringMatch(s, VAR_T_RG))			
 		m_RG = data;
-	else if(StringMatch(s,"D_SNSB"))		
+	else if(StringMatch(s, VAR_SNSB))		
 		m_SE = data;
-	else if(StringMatch(s,"D_TMIN"))		
+	else if(StringMatch(s, VAR_TMIN))		
 		m_tMin = data;	
-	else if(StringMatch(s,"D_TMAX"))		
+	else if(StringMatch(s, VAR_TMAX))		
 		m_tMax = data;	
-	else if(StringMatch(s,"D_SOTE"))		
+	else if(StringMatch(s, VAR_SOTE))		
 		m_SoilT = data;
-	else if(StringMatch(s,"subbasin"))		
+	else if(StringMatch(s, VAR_SUBBSN))		
 		m_subbasin = data;
-	else if(StringMatch(s,"Rootdepth"))		
+	else if(StringMatch(s, VAR_ROOTDEPTH))		
 		m_Rootdepth = data;	
-	else if(StringMatch(s, "D_NEPR"))	
+	else if(StringMatch(s, VAR_NEPR))	
 		m_pNet = data;
 	else
 		throw ModelException("SOL_WB", "Set1DData", "Parameter " + s + " does not exist in the SOL_WB module.");
@@ -255,11 +255,11 @@ void SOL_WB::Set2DData(const char* key, int nrows, int ncols, float** data)
 	CheckInputSize(key, nrows);
 	m_nSoilLayers = ncols;
 
-	if(StringMatch(s,"D_Percolation_2D"))		
+	if(StringMatch(s, VAR_PERCO))		
 		m_Percolation = data;	
-	else if(StringMatch(s,"D_SSRU_2D"))		
+	else if(StringMatch(s, VAR_SSRU))		
 		m_RI = data;
-	else if(StringMatch(s,"D_SOMO_2D"))		
+	else if(StringMatch(s, VAR_SOMO))		
 		m_sm = data;	
 	else
 		throw ModelException("SOL_WB", "Set2DData", "Parameter " + s
@@ -270,7 +270,7 @@ void SOL_WB::Set2DData(const char* key, int nrows, int ncols, float** data)
 void SOL_WB::Get2DData(const char* key, int* nRows, int* nCols, float*** data)
 {
 	string s(key);
-	if(StringMatch(s,"SOWB"))
+	if(StringMatch(s, VAR_SOWB))
 	{
 		setValueToSubbasin();
 		*nRows = m_subbasinSelectedCount;
