@@ -148,12 +148,12 @@ void SSM_PE::SetValue(const char* key, float data)
 	{
 		omp_set_num_threads((int)data);
 	}
-	else if(StringMatch(s,"K_blow"))				this->m_kblow = data;
-	else if(StringMatch(s,"K_subli"))		this->m_ksubli = data;
-	else if(StringMatch(s,"SWE"))			this->m_swe = data;
-	else if(StringMatch(s,"swe0"))			this->m_swe0 = data;
-	else if(StringMatch(s,"T0"))			this->m_t0 = data;
-	else if(StringMatch(s,"T_snow"))		this->m_tsnow = data;
+	else if(StringMatch(s, VAR_K_BLOW))				this->m_kblow = data;
+	else if(StringMatch(s, VAR_K_SUBLI))		this->m_ksubli = data;
+	else if(StringMatch(s, VAR_SWE))			this->m_swe = data;
+	else if(StringMatch(s, VAR_SWE0))			this->m_swe0 = data;
+	else if(StringMatch(s, VAR_T0))			this->m_t0 = data;
+	else if(StringMatch(s, VAR_SNOW_TEMP))		this->m_tsnow = data;
 	else									throw ModelException("SSM_PE","SetValue","Parameter " + s 
 		+ " does not exist in SSM_PE method. Please contact the module developer.");
 	
@@ -166,12 +166,12 @@ void SSM_PE::Set1DData(const char* key, int n, float* data)
 
 	this->CheckInputSize(key,n);
 
-	if(StringMatch(s,"D_PET"))				this->m_PET = data;
-	else if(StringMatch(s,"D_NEPR"))		this->m_Pnet = data;
-	else if(StringMatch(s,"D_SNAC"))		this->m_SA = data;	
-	else if(StringMatch(s,"D_SNRD"))		this->m_SR = data;
-	else if(StringMatch(s,"D_TMIN"))		this->m_tMin = data;
-	else if(StringMatch(s,"D_TMAX"))		this->m_tMax = data;
+	if(StringMatch(s, VAR_PET))				this->m_PET = data;
+	else if(StringMatch(s, VAR_NEPR))		this->m_Pnet = data;
+	else if(StringMatch(s, VAR_SNAC))		this->m_SA = data;	
+	else if(StringMatch(s, VAR_SNRD))		this->m_SR = data;
+	else if(StringMatch(s, VAR_TMIN))		this->m_tMin = data;
+	else if(StringMatch(s, VAR_TMAX))		this->m_tMax = data;
 	else									throw ModelException("SSM_PE","SetValue","Parameter " + s + 
 		" does not exist in SSM_PE method. Please contact the module developer.");
 
@@ -180,7 +180,7 @@ void SSM_PE::Set1DData(const char* key, int n, float* data)
 void SSM_PE::Get1DData(const char* key, int* n, float** data)
 {
 	string s(key);
-	if(StringMatch(s,"SNSB"))				
+	if(StringMatch(s, VAR_SNSB))				
 	{
 		*data = this->m_SE;
 	}

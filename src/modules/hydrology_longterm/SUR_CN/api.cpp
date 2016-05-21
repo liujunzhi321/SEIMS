@@ -29,31 +29,31 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 
-	mdi.AddParameter("T_snow","degree Celsius","snowfall temperature","ParameterDB_Snow",DT_Single); //Tsnow->T_snow
-	mdi.AddParameter("t_soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("T0","degree Celsius","snowmelt threshold temperature","ParameterDB_Snow",DT_Single);
-	//mdi.AddParameter("Depre_in","","Initial depression storage coefficient","ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("s_frozen","","Frozen moisture relative to porosity with no infiltration","ParameterDB_WaterBalance", DT_Single);  
+	mdi.AddParameter(VAR_SNOW_TEMP, UNIT_TEMP_DEG, DESC_SNOW_TEMP, Source_ParameterDB,DT_Single); //Tsnow->T_snow
+	mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_T0, UNIT_TEMP_DEG, DESC_T0, Source_ParameterDB,DT_Single);
+	//mdi.AddParameter(VAR_DEPREIN, UNIT_NON_DIM, DESC_DEPREIN, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_S_FROZEN, UNIT_NON_DIM, DESC_S_FROZEN, Source_ParameterDB, DT_Single);  
 
-	mdi.AddParameter("Fieldcap_2D","m3/m3","Soil field capacity","ParameterDB_WaterBalance", DT_Array2D);
-	mdi.AddParameter("porosity_2D", "-", "Soil porosity","ParameterDB_WaterBalance", DT_Array2D);
-	mdi.AddParameter("Wiltingpoint_2D","m3/m3","Plant wilting point moisture","ParameterDB_WaterBalance", DT_Array2D);
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_SOLCOEF_M3M3, DESC_FIELDCAP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_POROST,  UNIT_NON_DIM, DESC_POROST, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_WILTPOINT, UNIT_SOLCOEF_M3M3, DESC_WILTPOINT, Source_ParameterDB, DT_Array2D);
 
-	mdi.AddParameter("Rootdepth","m","Root depth","ParameterDB_WaterBalance", DT_Raster1D);
-	mdi.AddParameter("CN2","-","CN under moisture condition II","ParameterDB_WaterBalance", DT_Raster1D);
-	mdi.AddParameter("Moist_in","m3/m3","Initial soil moisture","ParameterDB_WaterBalance", DT_Raster1D);	
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_LEN_M, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_CN2, UNIT_NON_DIM, DESC_CN2, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_MOIST_IN, UNIT_SOLCOEF_M3M3, DESC_MOIST_IN, Source_ParameterDB, DT_Raster1D);	
 	
-	mdi.AddInput("D_NEPR","mm","The net precipitation","Module",DT_Raster1D);					//from interception module
-	mdi.AddInput("D_TMin","degree Celsius","The minimum air temperature","Module",DT_Raster1D);	//from interpolation module
-	mdi.AddInput("D_TMax","degree Celsius","The maximum air temperature","Module",DT_Raster1D);	//from interpolation module
-	mdi.AddInput("D_DPST","mm","The depression storage","Module",DT_Raster1D);					//from depression module
-	mdi.AddInput("D_SOTE","degree Celsius","The soil temperature","Module",DT_Raster1D);			//from soil temperature module
-	mdi.AddInput("D_SNAC","mm","The snow accumulation","Module",DT_Raster1D);					//from snow accumulation module
-	mdi.AddInput("D_SNME","mm","The snowmelt","Module",DT_Raster1D);								//from snowmelt module
+	mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module,DT_Raster1D);					//from interception module
+	mdi.AddInput(VAR_TMIN, UNIT_TEMP_DEG, DESC_TMIN, Source_Module,DT_Raster1D);	//from interpolation module
+	mdi.AddInput(VAR_TMAX, UNIT_TEMP_DEG, DESC_TMAX, Source_Module,DT_Raster1D);	//from interpolation module
+	mdi.AddInput(VAR_DPST, UNIT_DEPTH_MM, DESC_DPST, Source_Module,DT_Raster1D);					//from depression module
+	mdi.AddInput(VAR_SOTE, UNIT_TEMP_DEG, DESC_SOTE, Source_Module,DT_Raster1D);			//from soil temperature module
+	mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module,DT_Raster1D);					//from snow accumulation module
+	mdi.AddInput(VAR_SNME, UNIT_DEPTH_MM, DESC_SNME, Source_Module,DT_Raster1D);								//from snowmelt module
 
-	mdi.AddOutput("EXCP", "mm","The excess precipitation", DT_Raster1D);// just for depression module.
-	mdi.AddOutput("INFIL","mm","Infiltratio n map of watershed", DT_Raster1D);
-	mdi.AddOutput("SOMO_2D","m3/m3", "Average soil moisture distribution for a user defined period.", DT_Array2D);
+	mdi.AddOutput(VAR_EXCP,  UNIT_DEPTH_MM, DESC_EXCP, DT_Raster1D);// just for depression module.
+	mdi.AddOutput(VAR_INFIL, UNIT_DEPTH_MM, DESC_INFIL, DT_Raster1D);
+	mdi.AddOutput(VAR_SOMO, UNIT_SOLCOEF_M3M3, DESC_SOMO, DT_Raster2D);
 
 	// set the dependencies
 	mdi.AddDependency("Interpolation","Interpolation module");      //for pNet,T,
