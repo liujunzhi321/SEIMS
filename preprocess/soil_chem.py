@@ -70,7 +70,185 @@ from config import *
 ###    labfrac     |none          |fraction of total soil mineral P which is labile
 ###    soil_TP	   |kg/ha         |Total Soil Mineral P
 ###    sol_mass, FBM, FHP, RTNO, FHS, X1, RTO, sol_min_n
-###    
+###
+
+### Revised by LiangJun Zhu, 2016-5-21
+### @param[in] nlyrs Soil layers number
+### @param[in] depth Depth from soil surface to bottom of layer (mm), e.g., 100, 400, 800.
+### @param[in]
+def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
+    ## Calculate thick of each layer
+    sol_thick = [depth[0]]
+    for k in range(1, nlyrs):
+        sol_thick.append(depth[k] - depth[k - 1])
+    cbn = numpy.multiply(om, 0.58) ## van bemmelen coefficient
+    ## Define some const values
+    nactfr = .02
+    ## Initialize some layer-based temporary and output variables
+    sol_mass = numpy.zeros((nlyrs))
+    sol_cmass = numpy.zeros((nlyrs))
+
+
+    ## Initialize some single temporary and output variables
+    cmup_kgh = 0.  ## kg/ha  current soil carbon for first soil layer
+    cmtot_kgh = 0. ## kg/ha  current soil carbon integrated - aggregating all soil layers
+    sumno3 = 0.
+    sumorgn = 0.
+    summinp = 0.
+    sumorgp = 0.
+    ## Calculate by layer
+    ## calculate sol_cbn for lower layers if only have upper layer's data
+    if nlyrs >= 3 and cbn[3] <= 0:
+        for i in range(2,nlyrs):
+            tmpDepth = depth[i] - depth[1]
+            cbn[i] = cbn[i-1] * numpy.exp(-.001 * tmpDepth)
+
+    for lyr in range(nlyrs):
+        sol_mass[lyr] = (sol_thick[lyr] / 1000.) * 10000. * 1000. *  bd[lyr] * (1 - rock[lyr]/100.)  ## soil mass of current layer (kg)
+        sol_cmass[lyr] = sol_mass[lyr] * (cbn[lyr] / 100.) ## Carbon mass of current layer (kg)
+        if lyr == 0:
+            cmup_kgh = sol_cmass[lyr]
+        cmtot_kgh = cmtot_kgh + sol_cmass[lyr]
+
+
+    ##    calculate initial nutrient contents of layers, profile and
+    ##    average in soil for the entire watershed
+    ##    convert mg/kg (ppm) to kg/ha
+    xx = 0.
+    sol_fop = numpy.ones((nlyrs, nRows, nCols)) # phosphorus stored in the fresh organic (residue) pool
+    sol_fon = numpy.ones((nlyrs, nRows, nCols)) # nitrogen stored in the fresh organic (residue) pool
+    sol_cov = numpy.ones((nRows, nCols)) # residue on soil surface
+
+    sol_orgn = numpy.ones((nlyrs, nRows, nCols))
+    sol_no3 = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_aorgn = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_orgp = numpy.ones((nlyrs, nRows,  nCols))
+    sol_solp = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_actp = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_stap = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_P_model = numpy.zeros((nlyrs, nRows,  nCols))
+    sol_hum = numpy.zeros((nlyrs, nRows,  nCols))
+    #sol_rsd is organic matter in the soil layer classified as residue
+    sol_rsd = numpy.random.random_sample((nlyrs, nRows, nCols)) * .3  ##先随机生成sol_rsd，0~0.3的随机数
+    solp = numpy.zeros((nRows, nCols))
+    actp = numpy.zeros((nRows, nCols))
+
+    sumno3  = numpy.zeros((nRows, nCols))
+    sumorgn = numpy.zeros((nRows, nCols))
+    summinp = numpy.zeros((nRows, nCols))
+    sumorgp = numpy.zeros((nRows, nCols))
+
+    for j in range(nlyrs):
+        dg = 0.
+        wt1 = 0.
+        dg = (sol_z - xx)
+        wt1 = bd[j] * dg / 100.              ## mg/kg => kg/ha
+        conv_wt = 1.e6 * wt1                    ## kg/kg => kg/ha
+        #writeTIFF(conv_wt, conv_wt_file)
+
+        sol_fop[j] = sol_rsd[j] * .0010
+        sol_fon[j] = sol_rsd[j] * .0055
+        sol_cov = sol_rsd[1]
+
+        #if (sol_no3[j] <= 0.) :
+        zdst = numpy.zeros((nRows,  nCols))
+        for m in range(nRows):
+            for n in range(nCols):
+                zdst[m][n] = math.exp(-sol_z[m][n] / 1000.)
+        sol_no3[j] = 10. * zdst * .7
+        sol_no3[j] = sol_no3[j] * wt1          ## mg/kg => kg/ha
+        sumno3 = sumno3 + sol_no3[j]
+
+        sol_orgn[j] = sol_orgn[j] * wt1
+        for m in range(nRows):
+            for n in range(nCols):
+                if (sol_orgn[j][m][n] > 0.0001):
+                    sol_orgn[j][m][n] = sol_orgn[j][m][n] * wt1[m][n]      ## mg/kg => kg/ha
+                else:
+                    ## assume C:N ratio of 10:1
+                    sol_orgn[j][m][n] = 10000. * (cbn[j][m][n] / 14.) * wt1[m][n]  ## CN ratio changed back to 14 cibin 03022012
+        sol_aorgn[j] = sol_orgn[j] * nactfr
+        sol_orgn[j] = sol_orgn[j] * (1. - nactfr)
+
+        sumorgn = sumorgn + sol_aorgn[j] + sol_orgn[j] + sol_fon[j]
+
+        sol_orgp[j] = sol_orgp[j] * wt1
+        sol_solp[j] = sol_solp[j] * wt1
+        for m in range(nRows):
+            for n in range(nCols):
+                if (sol_orgp[j][m][n] > 0.0001):
+                    sol_orgp[j][m][n] = sol_orgp[j][m][n] * wt1[m][n]      ## mg/kg => kg/ha
+                else:
+                    ## assume N:P ratio of 8:1
+                    sol_orgp[j][m][n] = .125 * sol_orgn[j][m][n]
+                if (sol_solp[j][m][n] > 0.0001) :
+                    sol_solp[j][m][n] = sol_solp[j][m][n] * wt1[m][n]     ## mg/kg => kg/ha
+                else:
+                    ## assume initial concentration of 5 mg/kg
+                    sol_solp[j][m][n] = 5. * wt1[m][n]
+
+        ## Set active pool based on dynamic PSP MJW
+        for m in range(nRows):
+            for n in range(nCols):
+                if (conv_wt[m][n] != 0):
+                    solp[m][n] = (sol_solp[j][m][n] / conv_wt[m][n]) * 1000000.
+                    if (clay[j][m][n] > 0.):
+                        psp = -0.045 * math.log(clay[j][m][n])+ (0.001 * solp[m][n])
+                        psp = psp - (0.035  * cbn[j][m][n]) + 0.43
+                    else:
+                        psp = 0.4
+                    ## Limit PSP range
+                    if (psp <.05) :
+                        psp = 0.05
+                    elif (psp > 0.9):
+                        psp = 0.9
+
+                sol_actp[j][m][n] = sol_solp[j][m][n] * (1. - psp) / psp
+
+                ## Set Stable pool based on dynamic coefficant
+                if (conv_wt[m][n] != 0) :  ## From White et al 2009
+                    ## convert to concentration for ssp calculation
+                    actp[m][n] = sol_actp[j][m][n] / conv_wt[m][n] * 1000000.
+                    solp[m][n] = sol_solp[j][m][n] / conv_wt[m][n] * 1000000.
+                    ## estimate Total Mineral P in this soil based on data from sharpley 2004
+                    ssp = 25.044 * ((actp[m][n] + solp[m][n]) ** -0.3833)
+                    ##limit SSP Range
+                    if (ssp > 7.):
+                        ssp = 7.
+                    if (ssp < 1.):
+                        ssp = 1.
+                    sol_stap[j][m][n] = ssp * (sol_actp[j][m][n] + sol_solp[j][m][n])  #define stableP
+                else:
+                    ## The original code
+                    sol_stap[j] = 4. * sol_actp[j]
+
+        sol_hum[j] = cbn[j] * wt1 * 17200.
+        xx = sol_z[j]
+        summinp = summinp + sol_solp[j] + sol_actp[j] + sol_stap[j]
+        sumorgp = sumorgp + sol_orgp[j] + sol_fop[j]
+
+
+        ##output files
+        #layered
+        OutputFD_lyrd = [sol_fop[j], sol_fon[j], sol_no3[j], sol_orgn[j], sol_aorgn[j], sol_orgp[j], sol_solp[j], sol_actp[j], sol_stap[j], sol_hum[j]]
+        OutputFN_lyrd = ["sol_fop", "sol_fon", "sol_no3", "sol_orgn", "sol_aorgn", "sol_orgp", "sol_solp", "sol_actp", "sol_stap", "sol_hum"]
+        for f in range(len(OutputFN_lyrd)):
+                OutputFP = workingDir + os.sep + OutputFN_lyrd[f] + "_%d.tif" % (j + 1)
+                writeTIFF(OutputFD_lyrd[f], OutputFP, workingDir)
+                #print OutputFN_lyrd[f]
+
+    #basno3i = basno3i + sumno3 * / da_km
+    #basorgni = basorgni + sumorgn * / da_km
+    #basminpi = basminpi + summinp * / da_km
+    #basorgpi = basorgpi + sumorgp * / da_km
+
+    #single-layer
+    OutputFD_slyr = [conv_wt, sol_cov, sumno3, sumorgn, summinp, sumorgp]
+    OutputFN_slyr = ["conv_wt", "sol_cov", "sumno3", "sumorgn", "summinp", "sumorgp"]
+    for f in range(len(OutputFN_slyr)):
+                OutputFP = workingDir + os.sep + OutputFN_slyr[f] + ".tif"
+                writeTIFF(OutputFD_slyr[f], OutputFP, workingDir)
+
 def Soil_Chemical(workingDir):
     headFile = ReadRaster(densityList[0])
     headdata = headFile.data
@@ -267,8 +445,9 @@ def Soil_Chemical(workingDir):
     for f in range(len(OutputFN_slyr)):
                 OutputFP = workingDir + os.sep + OutputFN_slyr[f] + ".tif"
                 writeTIFF(OutputFD_slyr[f], OutputFP, workingDir)
-	
-	
+
+
+## Deprecated by LJ, 2016-5-21
 def writeTIFF(file, fpath, workingDir):
     tiffile = workingDir + os.sep + "Density1.tif"
     nRows = ReadRaster(tiffile).nRows
@@ -281,5 +460,5 @@ def writeTIFF(file, fpath, workingDir):
 if __name__ == "__main__":
     #print WORKING_DIR
     #nactfr = 0.5;
-    Soil_Chemical(WORKING_DIR);
+    Soil_Chemical(WORKING_DIR)
     print "Soil chemical properties initialized done!"

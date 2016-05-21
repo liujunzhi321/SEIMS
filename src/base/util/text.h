@@ -572,7 +572,7 @@
 #define UNIT_NON_DIM ""                             /// Non dimension  
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_PRESSURE "kPa"                         /// Vapor pressure
-#define UNIT_SECOND
+#define UNIT_SECOND "second"
 #define UNIT_SOLCOEF_M3M3 "m3/m3"                           /// Solar Radiation
 #define UNIT_SPEED_MS "m/s"                         /// Speed related
 #define UNIT_SR "MJ/m2/d"                           /// Solar Radiation

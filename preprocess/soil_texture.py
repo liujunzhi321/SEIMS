@@ -6,8 +6,8 @@ from osgeo import gdal
 from numpy import zeros
 from util import *
 from text import *
-def GetTexture(clay, sand):
-    silt = 100 - sand - clay
+def GetTexture(clay, silt, sand):
+    #silt = 100 - sand - clay
     if (clay >= 40 and silt <= 40 and sand <= 45):
         return [12, 1, 0.22] # clay / nian tu
     elif (clay >= 40 and silt >= 40):
@@ -34,7 +34,7 @@ def GetTexture(clay, sand):
         return [1, 4, 0.02] # sand / sha tu
 
 
-
+## Deprecated by LJ, 2016-5-21
 def SoilTexture(workingDir):
     ## TODO: these should be defined elsewhere
     sandFile = workingDir + os.sep + "sand_1.tif"
@@ -56,11 +56,11 @@ def SoilTexture(workingDir):
     for i in range(nRows):
         for j in range(nCols):
             if abs(dataSand[i][j] - noDataValue) < DELTA:
-                st[i][j] = -9999
-                hg[i][j] = -9999
-                usleK_array[i][j] = -9999
+                st[i][j] = DEFAULT_NODATA
+                hg[i][j] = DEFAULT_NODATA
+                usleK_array[i][j] = DEFAULT_NODATA
             else:
-                values = GetTexture(dataClay[i][j], dataSand[i][j])
+                values = GetTexture(dataClay[i][j], 100 - dataClay[i][j]- dataSand[i][j],dataSand[i][j])
                 #values = GetTexture(dataClay[i][j]*100, dataSand[i][j]*100)
                 st[i][j] = values[0]
                 hg[i][j] = values[1]
@@ -77,19 +77,19 @@ def SoilTexture(workingDir):
                           sandRaster.srs, -9999, gdal.GDT_Float32)
 
     print "Soil texture is generated."
-
+    ## TextureIndex, HydroGroup, USLE_K factor
     return [textureFile, hgFile, kFile]
 
-if __name__ == "__main__":
-    print GetTexture(60, 30)
-    print GetTexture(50, 5)
-    print GetTexture(36, 55)
-    print GetTexture(36, 30)
-    print GetTexture(36, 10)
-    print GetTexture(25, 60)
-    print GetTexture(15, 45)
-    print GetTexture(10, 20)
-    print GetTexture(5, 5)
-    print GetTexture(10, 60)
-    print GetTexture(5, 85)
-    print GetTexture(5, 92)
+# if __name__ == "__main__":
+#     print GetTexture(60, 30)
+#     print GetTexture(50, 5)
+#     print GetTexture(36, 55)
+#     print GetTexture(36, 30)
+#     print GetTexture(36, 10)
+#     print GetTexture(25, 60)
+#     print GetTexture(15, 45)
+#     print GetTexture(10, 20)
+#     print GetTexture(5, 5)
+#     print GetTexture(10, 60)
+#     print GetTexture(5, 85)
+#     print GetTexture(5, 92)

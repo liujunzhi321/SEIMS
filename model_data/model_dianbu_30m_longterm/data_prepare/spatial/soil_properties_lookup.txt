@@ -1,0 +1,28 @@
+## Soil physical properties (required) and chemical properties (optional) lookup table ##
+## Pre-released version prepared by LiangJun Zhu, May., 2016
+## Reference: Arnold, J.G., Kiniry, J.R., Srinivasan, R., Williams, J.R., Haney, E.B., Neitsch, S.L., 2013. SWAT 2012 Input/Output Documentation. Texas Water Resources Institute.
+### Data formate: 1) Each field are splited by TAB; 2) Values are concatenated by COMMA in individual field; 3) Values number of multi-values fields should be equal to NLAYERS.
+### Here is a brief description of the variables adopted in SEIMS.
+### Variable Name	Definition
+### SEQN			Sequence number of soil catogory, CAUTION: No need to be consistent with SOIL CLASS.
+### NAME			Soil name, CAUTION: a soil name may have multi SEQN to represent heterogeneity according to LANDUSE or SLOPE, etc.
+### NLAYERS			Soil layers, BE AWARE that NLAYERS could be different in this lookup table.
+### SOL_ZMX			Maximum rooting depth of soil profile(mm)
+### ANION_EXCL		(optional) Fraction of porosity (void space) from which anions are excluded, default is 0.5.
+### SOL_CRK			(optional) Potential or maximum crack volume of the soil profile expressed as a fraction of the total soil volume. 
+### SOL_Z			(multi-values) Depth from soil surface to bottom of layer (mm), e.g., 100, 400, 800.
+### SOL_BD			(multi-values) Moist bulk density (Mg/m3 or g/cm3), value should between 1.1 and 1.9
+### SOL_AWC			(multi-values) Available water capacity of the soil layer (mm H2O/mm Soil)
+### SOL_K			(multi-values) Saturated hydraulic conductivity (mm/hr)
+### SOL_OM			(multi-values) Organic matter content (% soil weight)
+### SOL_CLAY		(multi-values) Clay content (% soil weight), diameter < 0.002 mm
+### SOL_SILT		(multi-values) Silt content (% soil weight), diameter between 0.002 mm and 0.05 mm
+### SOL_SAND		(multi-values) Sand content (% soil weight), diameter between 0.05 mm and 2 mm
+### SOL_ROCK		(multi-values) Rock fragment content (% total weight), diameter > 2 mm
+SEQN	SNAM	NLAYERS	SOL_ZMX	ANION_EXCL	SOL_CRK	SOL_Z	SOL_BD	SOL_AWC	SOL_K	SOL_OM	CLAY	SILT	SAND	ROCK
+1	Chengbaitutian	2	180	0.5	0.387	130,180	1.58,1.67	0.164,0.154	16.38,9.9	1.66,0.57	14.22,16.9	53.59,50.6	32.191,32.5	0,0
+2	Huangbaitutian_h	2	230	0.5	0.452	140,230	1.38,1.49	0.161,0.158	12.68,10.31	1.18,0.76	15.64,16.95	52.62,51.93	31.74,31.12	0,0
+3	Huangbaitutian_s	2	230	0.5	0.397	150,230	1.54,1.66	0.165,0.16	6.75,5.08	1.65,0.55	25.92,23.66	51.07,50.72	23.01,25.62	0,0
+4	Magantian	2	440	0.5	0.432	140,240	1.36,1.56	0.139,0.136	17.36,14.69	2.22,1.57	26.2,30	49.33,45.53	24.47,24.47	0,0
+5	Magantu	2	200	0.5	0.372	120,200	1.58,1.75	0.151,0.147	3.9,2.18	1.54,0.5	33,36.5	43.33,42.44	23.67,21.06	0,0
+6	Zishanitian	2	520	0.5	0.4435	150,240	1.37,1.58	0.146,0.14	21.41,16.35	1.37,0.78	16.61,18.51	42.38,43.41	41.01,38.08	0,0
