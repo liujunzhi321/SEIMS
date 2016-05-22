@@ -28,7 +28,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	string res;
 
 	mdi.SetAuthor("Zhiqiang Yu");
-	mdi.SetClass(MCLS_TSD,MDESC_TSD_RD);
+	mdi.SetClass(MCLS_CLIMATE,MCLSDESC_CLIMATE);
 	mdi.SetDescription(MDESC_TSD_RD);
 	mdi.SetID(MID_TSD_RD);
 	mdi.SetName(MID_TSD_RD);

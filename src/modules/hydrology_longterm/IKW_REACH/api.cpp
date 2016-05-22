@@ -58,9 +58,9 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, DT_Array1D);
 	mdi.AddOutput(VAR_QOUTLET,  UNIT_FLOW_CMS, DESC_QOUTLET, DT_Single);
 	mdi.AddOutput(VAR_QSOUTLET,  UNIT_FLOW_CMS, DESC_QSOUTLET, DT_Single);
-	mdi.AddOutput(VAR_QS, UNIT_NON_DIM, DESC_QS, DT_Array1D);
-	mdi.AddOutput(VAR_QI, UNIT_NON_DIM, DESC_QI, DT_Array1D);
-	mdi.AddOutput(VAR_QG, UNIT_NON_DIM, DESC_QG, DT_Array1D);
+	mdi.AddOutput(VAR_QS, UNIT_FLOW_CMS, DESC_QS, DT_Array1D);
+	mdi.AddOutput(VAR_QI, UNIT_FLOW_CMS, DESC_QI, DT_Array1D);
+	mdi.AddOutput(VAR_QG, UNIT_FLOW_CMS, DESC_QG, DT_Array1D);
 	mdi.AddOutput(VAR_CHST, UNIT_VOL_M3, DESC_CHST, DT_Array1D);
 	mdi.AddOutput(VAR_BKST, UNIT_VOL_M3, DESC_BKST, DT_Array1D);
 	mdi.AddOutput(VAR_SEEPAGE, UNIT_VOL_M3, DESC_SEEPAGE, DT_Array1D);

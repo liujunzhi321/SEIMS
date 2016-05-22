@@ -1,12 +1,9 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Overland routing using 4-point implicit finite difference method
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file Muskingum.cpp
+ * \brief Routing in the channel cells using 4-point implicit finite difference method
+ * \author Junzhi Liu
+ * \date Feb. 2011
+ */
 //#include "vld.h"
 #include "Muskingum.h"
 #include "MetadataInfo.h"
@@ -157,49 +154,49 @@ bool Muskingum::CheckInputData(void)
 {
 	if(this->m_date <= 0)
 	{
-		throw ModelException("CH_MSK","CheckInputData","You have not set the Date variable.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","You have not set the Date variable.");
 		return false;
 	}
 
 	if(this->m_nCells <= 0)
 	{
-		throw ModelException("CH_MSK","CheckInputData","The cell number of the input can not be less than zero.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","The cell number of the input can not be less than zero.");
 		return false;
 	}
 
 	if(this->m_dt <= 0)
 	{
-		throw ModelException("CH_MSK","CheckInputData","You have not set the TimeStep variable.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","You have not set the TimeStep variable.");
 		return false;
 	}
 
 	if(this->m_CellWidth <= 0)
 	{
-		throw ModelException("CH_MSK","CheckInputData","You have not set the CellWidth variable.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","You have not set the CellWidth variable.");
 		return false;
 	}
 
 	if(m_s0 == NULL)
-		throw ModelException("CH_MSK","CheckInputData","The parameter: slope has not been set.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","The parameter: slope has not been set.");
 	if(m_direction == NULL)
-		throw ModelException("CH_MSK","CheckInputData","The parameter: flow direction has not been set.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","The parameter: flow direction has not been set.");
 	if(m_qs == NULL)
-		throw ModelException("CH_MSK","CheckInputData","The parameter: H_TOCHANNEL has not been set.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","The parameter: H_TOCHANNEL has not been set.");
 	
 	if(m_chWidth == NULL)
-		throw ModelException("CH_MSK","CheckInputData","The parameter: CHWIDTH has not been set.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","The parameter: CHWIDTH has not been set.");
 	if(m_streamLink == NULL)
-		throw ModelException("CH_MSK","CheckInputData","The parameter: STREAM_LINK has not been set.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","The parameter: STREAM_LINK has not been set.");
 
 	if(m_prec == NULL)
-		throw ModelException("CH_MSK","CheckInputData","The parameter: D_P(precipitation) has not been set.");
+		throw ModelException(MID_CH_MSK,"CheckInputData","The parameter: D_P(precipitation) has not been set.");
 
 	return true;
 }
 
 void  Muskingum::initalOutputs()
 {
-	if(this->m_nCells <= 0) throw ModelException("CH_MSK","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException(MID_CH_MSK,"initalOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_chStorage == NULL)
 	{
@@ -369,7 +366,7 @@ void Muskingum::ChannelFlow(int iReach, int iCell, int id, float qgEachCell)
 			cout << "Error in function Muskingum::ChannelFlow. \n";
 			cout << "The weights are: " << weights.c1 << ", " << weights.c2 << ", " << weights.c3 << endl;
 			cout << "qUpNew: " << qUpNew << "\tqUpPre: " << m_qUpCh[iReach][iCell] << "\tqNew: " << qNew << endl;
-			throw ModelException("CH_MSK","ChannelFlow","Error occurred.");
+			throw ModelException(MID_CH_MSK,"ChannelFlow","Error occurred.");
 		}
 
 		float tmp = m_chStorage[iReach][iCell] + (qUpNew - qNew) * weights.dt;
@@ -441,7 +438,7 @@ bool Muskingum::CheckInputSize(const char* key, int n)
 			//this->StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
 			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
-			throw ModelException("CH_MSK","CheckInputSize",oss.str());
+			throw ModelException(MID_CH_MSK,"CheckInputSize",oss.str());
 		}
 	}
 
@@ -471,7 +468,7 @@ bool Muskingum::CheckInputSizeChannel(const char* key, int n)
 void Muskingum::GetValue(const char* key, float* value)
 {
 	string sk(key);
-	if (StringMatch(sk, "QOUTLET"))
+	if (StringMatch(sk, VAR_QOUTLET))
 	{
 		map<int, vector<int> >::iterator it = m_reachLayers.end();
 		it--;
@@ -489,26 +486,26 @@ void Muskingum::GetValue(const char* key, float* value)
 void Muskingum::SetValue(const char* key, float data)
 {
 	string sk(key);
-	if (StringMatch(sk, "DT_HS"))
+	if (StringMatch(sk, Tag_HillSlopeTimeStep))
 		m_dt = data;
 	else if(StringMatch(sk,Tag_CellSize))
 		m_nCells = (int)data;
 	else if (StringMatch(sk, Tag_CellWidth))
 		m_CellWidth = data;
-	else if (StringMatch(sk, "Chs0"))
+	else if (StringMatch(sk, VAR_CHS0))
 		m_chS0 = data;
-	else if (StringMatch(sk, "ID_UPREACH"))
-		m_idUpReach = (int)data;
-	else if(StringMatch(sk, "QUPREACH"))
-		m_qUpReach = data;
-	else if(StringMatch(sk, "MSK_X"))
+	//else if (StringMatch(sk, "ID_UPREACH"))
+	//	m_idUpReach = (int)data;
+	//else if(StringMatch(sk, "QUPREACH"))
+	//	m_qUpReach = data;
+	else if(StringMatch(sk, VAR_MSK_X))
 		m_msk_x = data;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
-	else if (StringMatch(sk, "VelocityScalingFactor"))
+	else if (StringMatch(sk, "VelocityScalingFactor")) /// TODO, add to mongodb database
 		m_vScalingFactor = data;
 	else
-		throw ModelException("CH_MSK", "SetSingleData", "Parameter " + sk 
+		throw ModelException(MID_CH_MSK, "SetValue", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 
 }
@@ -516,7 +513,7 @@ void Muskingum::SetValue(const char* key, float data)
 void Muskingum::Set1DData(const char* key, int n, float* data)
 {
 	string sk(key);
-	if(StringMatch(sk, "SBQG"))
+	if(StringMatch(sk, VAR_SBQG))
 	{
 		m_qg = data;
 		return;
@@ -525,23 +522,23 @@ void Muskingum::Set1DData(const char* key, int n, float* data)
 	//check the input data
 	CheckInputSize(key,n);
 	
-	if(StringMatch(sk, "Slope"))
+	if(StringMatch(sk, VAR_SLOPE))
 		m_s0 = data;
-	else if(StringMatch(sk, "Flow_Dir"))
+	else if(StringMatch(sk, VAR_FLOWDIR))
 		m_direction = data;
-	else if(StringMatch(sk, "D_P"))
+	else if(StringMatch(sk, VAR_D_P))
 		m_prec = data;
 
-	else if(StringMatch(sk, "D_QSoil"))
+	else if(StringMatch(sk, VAR_QSOIL))
 		m_qi = data;
-	else if(StringMatch(sk, "D_QOverland"))
+	else if(StringMatch(sk, VAR_QOVERLAND))
 		m_qs = data;
 
-	else if(StringMatch(sk, "CHWIDTH"))
+	else if(StringMatch(sk, VAR_CHWIDTH))
 		m_chWidth = data;
-	else if(StringMatch(sk, "STREAM_LINK"))
+	else if(StringMatch(sk, VAR_STREAM_LINK))
 		m_streamLink = data;
-	else if(StringMatch(sk, "FlowOut_Index_D8"))
+	else if(StringMatch(sk, Tag_FLOWOUT_INDEX_D8))
 	{
 		m_flowOutIndex = data;
 		for (int i = 0; i < m_nCells; i++)
@@ -554,7 +551,7 @@ void Muskingum::Set1DData(const char* key, int n, float* data)
 		}
 	}
 	else
-		throw ModelException("CH_MSK", "Set1DData", "Parameter " + sk 
+		throw ModelException(MID_CH_MSK, "Set1DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 	
 }
@@ -563,13 +560,13 @@ void Muskingum::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
 	*n = m_chNumber;
-	if (StringMatch(sk, "QSUBBASIN"))
+	if (StringMatch(sk, VAR_QSUBBASIN))
 	{
 		*data = m_qSubbasin;
 	}
 	else
-		throw ModelException("CH_MSK", "Get1DData", "Output " + sk 
-		+ " does not exist in the CH_MSK module. Please contact the module developer.");
+		throw ModelException(MID_CH_MSK, "Get1DData", "Output " + sk 
+		+ " does not exist in the current module. Please contact the module developer.");
 
 }
 
@@ -577,13 +574,13 @@ void Muskingum::Get2DData(const char* key, int *nRows, int *nCols, float*** data
 {
 	string sk(key);
 	*nRows = m_chNumber;
-	if (StringMatch(sk, "QCH"))
+	if (StringMatch(sk, VAR_QCH))
 		*data = m_qCh;
-	else if (StringMatch(sk, "CHST"))
+	else if (StringMatch(sk, VAR_CHST))
 		*data = m_chStorage;
 	else
-		throw ModelException("CH_MSK", "Get2DData", "Output " + sk 
-		+ " does not exist in the CH_MSK module. Please contact the module developer.");
+		throw ModelException(MID_CH_MSK, "Get2DData", "Output " + sk 
+		+ " does not exist in the current module. Please contact the module developer.");
 
 }
 
@@ -616,11 +613,10 @@ void Muskingum::Set2DData(const char* key, int nrows, int ncols, float** data)
 		}
 
 	}
-	else if (StringMatch(sk, "FlowIn_Index_D8"))
+	else if (StringMatch(sk, Tag_FLOWIN_INDEX_D8))
 		m_flowInIndex = data;
 	else
-		throw ModelException("CH_MSK", "Set1DData", "Parameter " + sk 
+		throw ModelException(MID_CH_MSK, "Set1DData", "Parameter " + sk 
 			+ " does not exist. Please contact the module developer.");
-	
 }
 

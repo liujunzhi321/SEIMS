@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	sediment routing using variable channel dimension(VCD) method at daily time scale
-*
-*	Created:	Wu Hui
-*	Date:		26-Jule-2012
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file SEDR_VCD.h
+ * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
+ * \author Hui Wu
+ * \date Jul. 2012
+ * \revised LiangJun Zhu
+ * \date May/ 2016
+ */
+
 #ifndef REACH_SEDIMENT_ROUTING_CONST
 #define REACH_SEDIMENT_ROUTING_CONST
 
@@ -52,12 +52,23 @@
 #include "SimulationModule.h"
 
 using namespace std;
-
-
+/** \defgroup SEDR_VCD
+ * \ingroup Erosion
+ * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
+ */
+/*!
+ * \class SEDR_VCD
+ * \ingroup SEDR_VCD
+ *
+ * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
+ *
+ */
 class SEDR_VCD : public SimulationModule
 {
 public:
+	//! Constructor
 	SEDR_VCD(void);
+	//! Destructor
 	~SEDR_VCD(void);
 
 	virtual int Execute();
@@ -73,19 +84,16 @@ public:
 	bool CheckInputSizeChannel(const char* key, int n);
 	bool CheckInputData(void);
 
-	virtual TimeStepType GetTimeStepType()
-	{
-		return TIMESTEP_CHANNEL;
-	};
+	virtual TimeStepType GetTimeStepType(){	return TIMESTEP_CHANNEL;	};
 private:
-	/// time step (hr)
+	/// time step (sec)
 	int m_dt;
 	/// reach number (= subbasin number)
 	int m_nreach;
 	
-	/// diversion loss (Vdiv) of the river reach .. m_Vid[id], id is the reach id
+	/// diversion loss (Vdiv) of the river reach, m_Vid[id], id is the reach id
 	float* m_Vdiv;
-	/// The point source discharge .. m_Vpoint[id], id is the reach id
+	/// The point source discharge, m_Vpoint[id], id is the reach id
 	float* m_Vpoint;
 	
 	/// the peak rate adjustment factor
@@ -94,11 +102,11 @@ private:
 	float m_spcon;
 	/// Exponent in sediment transport equation
 	float m_spexp;
-	/// critical veloctiy for sediment deposition
+	/// critical velocity for sediment deposition
 	float m_vcrit;
 	/// reach cover factor
 	float m_coverFactor;
-	/// channel erodibility factor (cm/hr/Pa)
+	/// channel erodibility factor (cm/hr/Pa)  TODO: this should be an input parameter from database, LJ
 	float m_erodibilityFactor;
 
 	/// inverse of flood plain side slope of channel, is a fixed number:  1/slope
@@ -144,7 +152,7 @@ private:
 	/// downstream id (The value is 0 if there if no downstream reach)
 	float *m_reachDownStream;
 	/// upstream id (The value is -1 if there if no upstream reach)
-	vector< vector<int> > m_reachUpStream;
+	vector<vector<int> > m_reachUpStream;
 
 	// id the reaches
 	float* m_reachId;

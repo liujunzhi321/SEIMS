@@ -81,7 +81,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_SBPET, UNIT_DEPTH_MM, DESC_SBPET, Source_Module, DT_Array1D);
 	mdi.AddInput(VAR_SBGS, UNIT_DEPTH_MM, DESC_SBGS, Source_Module, DT_Array1D);
 
-	mdi.AddOutput(VAR_QRECH, UNIT_NON_DIM, DESC_QRECH, DT_Array1D);
+	mdi.AddOutput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, DT_Array1D);
 	mdi.AddOutput(VAR_QOUTLET,  UNIT_FLOW_CMS, DESC_QOUTLET, DT_Single);
 	mdi.AddOutput(VAR_QSOUTLET,  UNIT_FLOW_CMS, DESC_QSOUTLET, DT_Single);
 	mdi.AddOutput(VAR_QS, UNIT_NON_DIM, DESC_QS, DT_Array1D);
