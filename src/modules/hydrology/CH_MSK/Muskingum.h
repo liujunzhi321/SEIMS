@@ -1,12 +1,9 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	routing in the channel cells using 4-point implicit finite difference method
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file Muskingum.h
+ * \brief Routing in the channel cells using Muskingum-Cunge method.
+ * \author Junzhi Liu
+ * \date Feb. 2011
+ */
 
 #pragma once
 
@@ -17,7 +14,22 @@
 #include <vector>
 #include "SimulationModule.h"
 using namespace std;
-
+/** \defgroup CH_MSK
+ * \ingroup Hydrology
+ * \brief Routing in the channel cells using Muskingum method
+ */
+/*!
+ * \class Muskingum
+ * \ingroup CH_MSK
+ *
+ * \brief Channel routing using Muskingum-Cunge method.
+ *
+ */
+/*!
+ * \struct MuskWeights
+ * \ingroup CH_MSK
+ * \brief 
+ */
 struct MuskWeights{
 	float c1;
 	float c2;
@@ -29,7 +41,9 @@ struct MuskWeights{
 class Muskingum : public SimulationModule
 {
 public:
+	//! Constructor
 	Muskingum(void);
+	//! Destructor
 	~Muskingum(void);
 
 	virtual int Execute();

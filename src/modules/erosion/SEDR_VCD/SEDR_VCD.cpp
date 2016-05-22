@@ -1,13 +1,12 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Channel sediment routing
-*
-*	Created:	Wu Hui
-*	Date:		21-Dec.-2012
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
-//#include "vld.h"
+/*!
+ * \file SEDR_VCD.cpp
+ * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
+ * \author Hui Wu
+ * \date Jul. 2012
+ * \revised LiangJun Zhu
+ * \date May/ 2016
+ */
+
 #include "SEDR_VCD.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
@@ -18,11 +17,7 @@
 #include <set>
 #include <sstream>
 #include <algorithm> 
-
 #include <omp.h>
-
-//#define MINI_SLOPE 0.0001f
-//#define NODATA_VALUE -99
 
 using namespace std;
 
@@ -77,69 +72,69 @@ bool SEDR_VCD::CheckInputData(void)
 {
 	if (m_dt < 0)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_dt has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_dt has not been set.");
 	}
 
 	if (m_nreach < 0)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_nreach has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_nreach has not been set.");
 	}
 
 	if (FloatEqual(m_Chs0,NODATA))
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: Chs0 has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: Chs0 has not been set.");
 	}
 	if (FloatEqual(m_prf,NODATA))
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_prf has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_prf has not been set.");
 	}
 	if (FloatEqual(m_spcon,NODATA))
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_spcon has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_spcon has not been set.");
 	}
 	if (FloatEqual(m_spexp,NODATA))
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_spexp has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_spexp has not been set.");
 	}
 	if (FloatEqual(m_vcrit,NODATA))
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_vcrit has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_vcrit has not been set.");
 	}
 	if (m_sedtoCh == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_sedtoCh has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_sedtoCh has not been set.");
 	}
 	if (m_chWidth == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: ReachParameter has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: ReachParameter has not been set.");
 	}
 	/*if (m_CrAreaCh == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_CrAreaCh has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_CrAreaCh has not been set.");
 	}*/
 	if (m_qgSub == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_qgSub has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_qgSub has not been set.");
 	}
 	if (m_qiSub == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_qiSub has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_qiSub has not been set.");
 	}
 	if (m_qgSub == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_qgSub has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_qgSub has not been set.");
 	}
 	if (m_chStorage == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_chStorage has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_chStorage has not been set.");
 	}
 	if (m_chWTdepth == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_chWTdepth has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_chWTdepth has not been set.");
 	}
 	if (m_qchOut == NULL)
 	{
-		throw ModelException("SEDR_VCD","CheckInputData","The parameter: m_qchOut has not been set.");
+		throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_qchOut has not been set.");
 	}
 	return true;
 }
@@ -148,7 +143,7 @@ void  SEDR_VCD::initalOutputs()
 {
 	
 	if(m_nreach <= 0) 
-		throw ModelException("SEDR_VCD","initalOutputs","The cell number of the input can not be less than zero.");
+		throw ModelException(MID_SEDR_VCD,"initalOutputs","The cell number of the input can not be less than zero.");
 
 	if (m_reachLayers.empty())
 	{
@@ -243,7 +238,7 @@ bool SEDR_VCD::CheckInputSize(const char* key, int n)
 			//this->StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
 			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nreach << ".\n";  
-			throw ModelException("SEDR_VCD","CheckInputSize",oss.str());
+			throw ModelException(MID_SEDR_VCD,"CheckInputSize",oss.str());
 		}
 	}
 
@@ -254,7 +249,7 @@ void SEDR_VCD::GetValue(const char* key, float* value)
 {
 	string sk(key);
 	int iOutlet = m_reachLayers.rbegin()->second[0];
-	if (StringMatch(sk, "SEDOUTLET"))
+	if (StringMatch(sk, VAR_SED_OUTLET))
 	{
 		*value = m_SedOut[iOutlet];
 	}
@@ -270,38 +265,38 @@ void SEDR_VCD::SetValue(const char* key, float value)
 		omp_set_num_threads((int)value);
 	}
 #ifdef STORM_MODEL
-	else if (StringMatch(sk, "DT_CH"))
+	else if (StringMatch(sk, Tag_ChannelTimeStep))
 	{
 		m_dt = (int) value;
 	}
 #else
-	else if (StringMatch(sk, "TimeStep"))
+	else if (StringMatch(sk, Tag_TimeStep))
 	{
 		m_dt = (int) value;
 	}
 #endif
-	else if (StringMatch(sk, "p_rf"))
+	else if (StringMatch(sk, VAR_P_RF))
 	{
 		m_prf = value;
 	}
-	else if (StringMatch(sk, "spcon"))
+	else if (StringMatch(sk, VAR_SPCON))
 	{
 		m_spcon = value;
 	}
-	else if (StringMatch(sk, "spexp"))
+	else if (StringMatch(sk, VAR_SPEXP))
 	{
 		m_spexp = value;
 	}
-	else if (StringMatch(sk, "vcrit"))
+	else if (StringMatch(sk,VAR_VCRIT))
 	{
 		m_vcrit = value;
 	}
-	else if (StringMatch(sk, "Chs0"))
+	else if (StringMatch(sk,VAR_CHS0))
 	{
 		m_Chs0 = value;
 	}
 	else
-		throw ModelException("SEDR_VCD", "SetSingleData", "Parameter " + sk 
+		throw ModelException(MID_SEDR_VCD, "SetSingleData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 
 }
@@ -310,35 +305,35 @@ void SEDR_VCD::Set1DData(const char* key, int n, float* value)
 {
 	string sk(key);
 	//check the input data
-	if(StringMatch(sk,"SEDTOCH"))
+	if(StringMatch(sk,VAR_SED_TO_CH))
 	{
 		m_sedtoCh = value;   //for longterm model
 	}
-	else if(StringMatch(sk,"SubSEDTOCH"))
+	else if(StringMatch(sk,VAR_SUB_SEDTOCH))
 	{
 		m_sedtoCh = value;   //for storm model
 	}
-	else if (StringMatch(sk, "QRECH"))
+	else if (StringMatch(sk, VAR_QRECH))
 	{
 		m_qchOut = value;
 	}
-	else if (StringMatch(sk, "QS"))
+	else if (StringMatch(sk, VAR_QS))
 	{
 		m_qsSub = value;
 	}
-	else if (StringMatch(sk, "QI"))
+	else if (StringMatch(sk, VAR_QI))
 	{
 		m_qiSub = value;
 	}
-	else if (StringMatch(sk, "QG"))
+	else if (StringMatch(sk,VAR_QG))
 	{
 		m_qgSub = value;
 	}
-	else if (StringMatch(sk, "CHST"))
+	else if (StringMatch(sk, VAR_CHST))
 	{
 		m_chStorage = value;
 	}
-	else if (StringMatch(sk, "CHWTDEPTH"))
+	else if (StringMatch(sk,VAR_CHWTDEPTH))
 	{
 		m_chWTdepth = value;
 	}
@@ -347,7 +342,7 @@ void SEDR_VCD::Set1DData(const char* key, int n, float* value)
 	m_CrAreaCh = value;
 	}*/
 	else
-		throw ModelException("SEDR_VCD", "Set1DData", "Parameter " + sk 
+		throw ModelException(MID_SEDR_VCD, "Set1DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 	
 }
@@ -357,15 +352,15 @@ void SEDR_VCD::Get1DData(const char* key, int* n, float** data)
 	string sk(key);
 	*n = m_nreach+1;
 	int iOutlet = m_reachLayers.rbegin()->second[0];
-	if (StringMatch(sk, "SEDRECH"))
+	if (StringMatch(sk, VAR_SED_RECH))
 	{
 		//m_SedOut[0] = m_SedOut[iOutlet] * 1000/24/3600;    // ton/day coverts to kg/s
  		m_SedOut[0] = m_SedOut[iOutlet];    // ton
 		*data = m_SedOut;
 	}
 	else
-		throw ModelException("SEDR_VCD", "Get1DData", "Output " + sk 
-		+ " does not exist in the SEDR_VCD module. Please contact the module developer.");
+		throw ModelException(MID_SEDR_VCD, "Get1DData", "Output " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 
 }
 
@@ -379,7 +374,7 @@ void SEDR_VCD::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 	*nCols = SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_COUNT;
 	}
 	else
-		throw ModelException("SEDR_VCD", "Get2DData", "Output " + sk 
+		throw ModelException(MID_SEDR_VCD, "Get2DData", "Output " + sk 
 		+ " does not exist in the SEDR_VCD module. Please contact the module developer.");*/
 
 }
@@ -415,45 +410,8 @@ void SEDR_VCD::Set2DData(const char* key, int nrows, int ncols, float** data)
 		}
 	}
 	else
-		throw ModelException("SEDR_VCD", "Set2DData", "Parameter " + sk 
+		throw ModelException(MID_SEDR_VCD, "Set2DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
-	//--------------for phd work
-	//if(StringMatch(sk, Tag_ReachParameter))
-	//{
-	//	m_nreach = ncols;
-
-	//	m_reachId = data[0];
-	//	m_chOrder = data[2];
-	//	m_reachDownStream = data[1];
-	//	//m_chVel = data[4];
-	//	//m_area = data[8];
-	//	m_chManning = data[3];
-	//	
-	//	m_chWidth = data[4];
-	//	m_chLen = data[5];
-	//	m_chDepth = data[6];
-	//	m_chSlope = data[9];
-
-	//	for (int i = 0; i < m_nreach; i++)
-	//		m_idToIndex[(int)m_reachId[i]] = i;
-
-	//	m_reachUpStream.resize(m_nreach);
-	//	for (int i = 0; i < m_nreach; i++)
-	//	{
-	//		int downStreamId = int(m_reachDownStream[i]);
-	//		if(downStreamId == 0)
-	//			continue;
-	//		if (m_idToIndex.find(downStreamId) != m_idToIndex.end())
-	//		{
-	//			int downStreamIndex = m_idToIndex.at(downStreamId);
-	//			m_reachUpStream[downStreamIndex].push_back(m_reachId[i]);
-	//		}
-	//	}
-	//}
-	/*else if (StringMatch(sk,"C_WABA"))
-	{
-		m_C_WABA = data;
-	}*/
 }
 
 void SEDR_VCD::reset(int id)

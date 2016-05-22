@@ -55,7 +55,30 @@ TODO LISTS
 
 ### MUSLE_AS模块
 
-+ 1. SEDTOCH和SEDTOCH_T单位到底是吨还是千克？
++ 1. SEDTOCH和SEDTOCH_T单位到底是吨还是千克？，是DT_Raster1D还是DT_Array1D
++ SEDR_VCD中AddInput原写的是tons
+
+### SEDR_VCD模块
+
+SWAT 最新版中内置了4种泥沙河道汇流模拟方法，后续可以补充
+
++ 1. CHSB  Get2DData 注释掉了，WHY？
+
+### SplashEro_Park模块
++ 1. float m_Ccoe;并未使用，是否删掉
+
+### CH_DW模块
++ 1. m_manningScalingFactor 模块初始化时赋值为1，但是SetValue中依然有，是否需要在数据库中添加？
++ 
+### CH_MSK模块
++ 1. TWO_THIRDS(2.f/3.f), m_msk_x(0.2f), m_vScalingFactor（即"VelocityScalingFactor"）(3.0f), m_chS0(0.f), m_beta(5.0f/3), m_delta(1e-6f)，，模块初始化时赋值，是否需要在数据库中添加？
++ 2. 与其他几个河道汇流模块类似，m_diagonal到底应该用ArcGIS的流向编码还是TauDEM的呢？
+
+
+### 单位转换问题
+
+有必要在util模块中加入多个单位之间转换的代码。
+
 
 ## TODO by Gao
 
@@ -95,6 +118,8 @@ Hydrology_longterm|SUR_CN|VAR_SOMO|AddOutput
 	+ Hydrology_longterm - SON_DD: VAR_C_RAIN
 	+ Hydrology_longterm - SON_SP: VAR_C_SNOW6 ("mm/oC/day")
 	+ Hydrology_longterm - SON_SP: VAR_C_SNOW12 ("mm/oC/day")
+
+
 
 
 

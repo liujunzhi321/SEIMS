@@ -1,15 +1,11 @@
-/** 
-*	@file
-*	@version	1.0
-*	@author		Hui Wu
-*	@date		16-February-2012
-*
-*	@brief	Park Equation for splash erosion, and Foster Equation for overland flow soil detachment
-*           use the USLE_C, USLE_K in the calculation of splash erosion.
-*           
-*
-*/
-
+/*!
+ * \file SplashEro_Park.h
+ * \brief Park Equation for splash erosion, and Foster Equation for overland flow soil detachment
+ *           use the USLE_C, USLE_K in the calculation of splash erosion.
+ * \author Hui Wu
+ * \date Feb. 2012
+ */
+#pragma once
 #ifndef SEIMS_SplashEro_Park_INCLUDE
 #define SEIMS_SplashEro_Park_INCLUDE
 
@@ -18,11 +14,24 @@
 #include "api.h"
 #include "SimulationModule.h"
 using namespace std;
-
+/** \defgroup SplashEro_Park
+ * \ingroup Erosion
+ * \brief Park Equation for splash erosion
+ */
+/*!
+ * \class SplashEro_Park
+ * \ingroup SplashEro_Park
+ *
+ * \brief Park Equation for splash erosion, and Foster Equation for overland flow soil detachment
+ *           use the USLE_C, USLE_K in the calculation of splash erosion.//
+ *
+ */
 class SplashEro_Park : public SimulationModule
 {
 public:
+	//! Constructor
 	SplashEro_Park(void);
+	//! Destructor
 	~SplashEro_Park(void);
 
 	virtual int Execute();
@@ -37,7 +46,7 @@ public:
 	bool CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension
@@ -47,7 +56,7 @@ public:
 
 private:
 
-	static string toString(float value);
+	//static string toString(float value);
 
 	void initial();
 
@@ -63,7 +72,7 @@ private:
 
 	///parameter calibration coefficient of splash erosion (-)
 	float m_Omega; 
-	///parameter calibration coefficient of splash erosion (-)
+	///parameter calibration coefficient of splash erosion (-)  /// NOT USED, deleted? LJ
 	float m_Ccoe;
 	/// slope of map, to calculate slope gradient.
 	float* m_Slope;   

@@ -98,7 +98,7 @@
 #define Tag_ReservoirCount "RESERVOIRCOUNT"
 #define Tag_ReservoirId "RESERVOIRID"
 #define Tag_SubbasinSelected "subbasinSelected"
-#define Tag_CellSize "CELLSIZE" /// by LJ, have not been tested!
+#define Tag_CellSize "CELLSIZE"
 #define Tag_Mask "MASK"
 #define Tag_TimeStep "TimeStep"
 #define Tag_HillSlopeTimeStep "DT_HS"
@@ -271,14 +271,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 /// Climate related Modules
-#define MCLS_CLIMATE "Climate Variables"
-#define MCLSDESC_CLIMATE "Calculate climate related intermediate parameters."
-#define MID_ICLIM "ICLIM"
-#define MDESC_ICLIM "Calculate climate related intermediate parameters."
-#define MCLS_TSD "Time series data"
+#define MCLS_CLIMATE "HydroClimate data"
+#define MCLSDESC_CLIMATE "HydroClimate data modules"
 #define MID_TSD_RD "TSD_RD"
 #define MDESC_TSD_RD "Read time series data from HydroClimate database."
-#define MCLS_ITP "Interpolation module"
 #define MID_ITP "ITP"
 #define MDESC_ITP "Interpolation of P, E, PET, etc."
 #define MCLS_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization"
@@ -308,11 +304,17 @@
 #define MID_PET_PM "PET_PM"
 #define MDESC_PET_PM "Penman Monteith method for calculating the potential evapotranspiration."
 
+
+/// Interception
+#define MCLS_INTERC	"Interception"
+#define MCLSDESC_INTERC "Interception module"
 /// Erosion related modules
 #define MCLS_OL_EROSION						"Overland erosion"
-#define MCLS_CH_EROSION					"Channel Erosion"
+#define MCLS_CH_EROSION					"Channel erosion"
 #define MCLSDESC_OL_EROSION			"Calculate the amount sediment yield of overland erosion."
 #define MCLSDESC_CH_EROSION			"Calculate the amount channel erosion."
+#define MID_SplashEro_Park						"SplashEro_Park"
+#define MDESC_SplashEro_Park				"use Park equation to calculate sediment yield of each cell"
 #define MID_KINWAVSED_OL					"KinWavSed_OL"
 #define MID_KINWAVSED_CH					"KinWavSed_CH"
 #define MDESC_KINWAVSED_OL			"Use energy function(Govers) method to calculate sediment yield routing of each hillslope cell"	
@@ -326,7 +328,15 @@
 /// Channel routing related modules
 #define MCLS_CH_ROUTING						"Channel routing"
 #define MCLSDESC_CH_ROUTING			"Channel routing modules"
-
+#define MID_CH_DW									"CH_DW"
+#define MDESC_CH_DW							"Channel routing using diffusive wave equation."
+#define MID_CH_MSK									"CH_MSK"
+#define MDESC_CH_MSK							"Channel routing using Muskingum-Cunge method."
+/// Sediment routing related modules
+#define MCLS_SED_ROUTING					"Sediment routing"
+#define MCLSDESC_SED_ROUTING		"Sediment channel routing modules."
+#define MID_SEDR_VCD							"SEDR_VCD"
+#define MDESC_SEDR_VCD						"Sediment channel routing using variable channel dimension method as used in SWAT."
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
 /// By LiangJun Zhu, HuiRan Gao ///
@@ -356,6 +366,7 @@
 #define VAR_CH_V "CHANV"
 #define VAR_CH_VOL "CHANVOL"
 #define VAR_CHS0 "Chs0"                               /// initial channel storage per meter of reach length
+#define VAR_CHSB "CHSB"
 #define VAR_CHST "CHST"                               /// channel storage
 #define VAR_CHWIDTH "CHWIDTH"
 #define VAR_CHWTDEPTH "CHWTDEPTH"                     /// channel water depth
@@ -365,11 +376,13 @@
 #define VAR_COND_MAX "Cond_max"                       /// "Maximum automata's conductance"
 #define VAR_COND_RATE "Cond_rate"                     /// Rate of decline in automata's conductance per unit increase in vapor pressure deficit
 #define VAR_CONDUCT "Conductivity"
+#define VAR_D_P "D_P" /// Distrubution of precipitation
 #define VAR_DEET "DEET"                               /// Distribution of evaporation from depression storage
 #define VAR_DEET "DEET"                               /// evaporation from the depression storage
 #define VAR_DEM "DEM"                                 /// Digital Elevation Model
 #define VAR_DEPREIN "Depre_in"                        /// initial depression storage coefficient
 #define VAR_DEPRESSION "Depression"                   /// Depression storage capacity
+#define VAR_DETSPLASH "DETSplash"
 #define VAR_DF_COEF "df_coef"                         /// Deep percolation coefficient
 #define VAR_DPST "DPST"                               /// Distribution of depression storage
 #define VAR_DRYDEP_NH4 "drydep_nh4"                 /// atmospheric dry deposition of ammonia (kg/km2)
@@ -377,6 +390,7 @@
 #define VAR_EP_CH "Ep_ch"                           /// reach evaporation adjustment factor
 #define VAR_EXCP "EXCP"                             /// excess precipitation calculated in the infiltration module
 #define VAR_FIELDCAP "FieldCap"                     /// Soil field capacity" 
+#define VAR_FLOWDIR "FLOW_DIR"
 #define VAR_GRRE "GRRE"
 #define VAR_GW0 "GW0"                               /// initial ground water storage
 #define VAR_GWMAX "GWMAX"                           /// maximum ground water storage
@@ -416,8 +430,10 @@
 #define VAR_OL_SED_CCOE "ccoe"
 #define VAR_OL_SED_ECO1 "eco1"
 #define VAR_OL_SED_ECO2 "eco2"
+#define VAR_OMEGA "Omega"
 #define VAR_OMP_THREADNUM "ThreadNum"               /// Thread numbers for OMP
 #define VAR_P_MAX "P_max"
+#define VAR_P_RF "p_rf"
 #define VAR_PERCO "Percolation"                     /// the amount of water percolated from the soil water reservoir
 #define VAR_PET "PET"                               /// PET calculated from the spatial interpolation module
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
@@ -429,12 +445,16 @@
 #define VAR_POROST "Porosity"                       /// soil porosity
 #define VAR_PRECI "D_P"                             /// precipitation for the day (mm)
 #define VAR_PSP "psp"                               /// Phosphorus availability index
+#define VAR_QCH "QCH"
 #define VAR_QG "QG"                                 /// Groundwater discharge at each reach outlet and at each time step
 #define VAR_QI "QI"                                 /// Interflow at each reach outlet and at each time step
 #define VAR_QOUTLET "QOUTLET"                       /// discharge at the watershed outlet
+#define VAR_QOVERLAND "QOverland"
 #define VAR_QRECH "QRECH"                           /// Discharge in a text format at each reach outlet and at each time step
 #define VAR_QS "QS"                                 /// Overland discharge at each reach outlet and at each time step
+#define VAR_QSOIL "QSoil"
 #define VAR_QSOUTLET "QSOUTLET"                     /// discharge at the watershed outlet
+#define VAR_QSUBBASIN "QSUBBASIN"
 #define VAR_QUPREACH "QUPREACH"                     /// upreach
 #define VAR_RCA "rca"                               /// concentration of ammonia in the rain (mg N/m3)  L -> 0.001 * m3
 #define VAR_RCN "rcn"                               /// concentration of nitrate in the rain (mg N/m3)  L -> 0.001 * m3
@@ -458,6 +478,7 @@
 #define VAR_SBQG "SBQG"                             /// groundwater flow out of the subbasin
 #define VAR_SED_DEP "SEDDEP"
 #define VAR_SED_OUTLET "SEDOUTLET"
+#define VAR_SED_RECH "SEDRECH"
 #define VAR_SED_TO_CH "SEDTOCH"
 #define VAR_SED_TO_CH_T "SEDTOCH_T"
 #define VAR_SEDMINPA "sedminpa"                     /// amount of active mineral phosphorus adsorbed to sediment in surface runoff
@@ -505,11 +526,14 @@
 #define VAR_SOMO "SOMO"                             /// Distribution of soil moisture
 #define VAR_SOTE "SOTE"                             /// Soil Temperature
 #define VAR_SOWB "SOWB"
+#define VAR_SPCON "spcon"
+#define VAR_SPEXP "spexp"
 #define VAR_SR_MAX "srMax"                          /// Max solar radiation
 #define VAR_SSRU "SSRU"                             /// The subsurface runoff
 #define VAR_SSRUVOL "SSRUVOL"
 #define VAR_STREAM_LINK "STREAM_LINK"
 #define VAR_SUBBSN "subbasin"                       /// The subbasin grid
+#define VAR_SUB_SEDTOCH	"SubSEDTOCH"
 #define VAR_SURU "SURU"                             /// surface runoff generated
 #define VAR_SWE "SWE"
 #define VAR_SWE0 "swe0"
@@ -529,6 +553,7 @@
 #define VAR_USLE_K "USLE_K"
 #define VAR_USLE_LS "USLE_LS"
 #define VAR_USLE_P "USLE_P"
+#define VAR_VCRIT "vcrit"
 #define VAR_VDIV "Vdiv"                             /// diversion loss of the river reach
 #define VAR_VP_ACT "avp"                            /// actual vapor pressure
 #define VAR_VP_SAT "svp"                            /// Saturated vapor pressure
@@ -572,7 +597,7 @@
 #define UNIT_NON_DIM ""                             /// Non dimension  
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_PRESSURE "kPa"                         /// Vapor pressure
-#define UNIT_SECOND "second"
+#define UNIT_SECOND "sec"
 #define UNIT_SOLCOEF_M3M3 "m3/m3"                           /// Solar Radiation
 #define UNIT_SPEED_MS "m/s"                         /// Speed related
 #define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
@@ -619,6 +644,7 @@
 #define DESC_CH_V "flow velocity"
 #define DESC_CH_VOL "water volume"
 #define DESC_CHS0 "initial channel storage per meter of reach length"
+#define DESC_CHSB "Channel sediment balance in a text format for each reach and at each time step (unit?)"
 #define DESC_CHST "channel storage"
 #define DESC_CHWIDTH "Channel width"
 #define DESC_CHWTDEPTH "channel water depth"
@@ -627,10 +653,12 @@
 #define DESC_CO2 "CO2 Concentration"
 #define DESC_CONDRATE "Rate of decline in stomatal conductance per unit increase in vapor pressure deficit"
 #define DESC_CONDUCT "saturation hydraulic conductivity"
+#define DESC_D_P "Precipitation distrubution raster"
 #define DESC_DEET "Distribution of evaporation from depression storage"
 #define DESC_DEM "Digital Elevation Model"
 #define DESC_DEPREIN "initial depression storage coefficient"
 #define DESC_DEPRESSION "Depression storage capacity"
+#define DESC_DETSPLASH "distribution of splash detachment"
 #define DESC_DF_COEF "Deep percolation coefficient"
 #define DESC_DPST "Distribution of depression storage"
 #define DESC_DRYDEP_NH4 "atmospheric dry deposition of ammonia"
@@ -639,10 +667,10 @@
 #define DESC_EP_CH "reach evaporation adjustment factor"
 #define DESC_EXCP "excess precipitation calculated in the infiltration module"
 #define DESC_FIELDCAP "Soil field capacity"
-#define DESC_FLOWIN_INDEX "The index of flow in (D8) cell in the compressed array, and the first element in each sub-array is the number of flow in cells in this sub-array"
-#define DESC_FLOWIN_INDEX_D8 "The index of flow in cell in the compressed array, and the first element in each sub-array is the number of flow in cells in this sub-array"
+#define DESC_FLOWDIR "Flow direction by the rule of ArcGIS"
+#define DESC_FLOWIN_INDEX_D8 "The index of flow in (D8) cell in the compressed array, and the first element in each sub-array is the number of flow in cells in this sub-array"
 #define DESC_FLOWIN_PERCENTAGE_D8 "percentage of flow out to current cell from each upstream cells"
-#define DESC_FLOWOUT_INDEX "The index of flow out (D8) cell of each cells in the compressed array"
+#define DESC_FLOWOUT_INDEX_D8 "The index of flow out (D8) cell of each cells in the compressed array"
 #define DESC_FLOWOUT_INDEX_DINF "The index of flow in cell in the compressed array"
 #define DESC_GRRE ""
 #define DESC_GW0 "initial ground water storage"
@@ -688,7 +716,9 @@
 #define DESC_OL_SED_CCOE "calibration coefficient of overland flow detachment erosion"
 #define DESC_OL_SED_ECO1 "calibration coefficient of transport capacity calculation"
 #define DESC_OL_SED_ECO2 "calibration coefficient of transport capacity calculation"
+#define DESC_OMEGA "calibration coefficient of splash erosion"
 #define DESC_P_MAX "Maximum P corresponding to runoffCo"
+#define DESC_P_RF "Peak rate adjustment factor"
 #define DESC_PERCO "the amount of water percolated from the soil water reservoir"
 #define DESC_PET "PET calculated from the spatial interpolation module"
 #define DESC_PET_HCOEF "Coefficient related to radiation used in Hargreaves method"
@@ -700,12 +730,16 @@
 #define DESC_POROST "soil porosity"
 #define DESC_PRECI "precipitation for the day"
 #define DESC_PSP "Phosphorus availability index"
+#define DESC_QCH "Flux in the downslope boundary of cells"
 #define DESC_QG "Groundwater discharge at each reach outlet and at each time step"
 #define DESC_QI "Interflow at each reach outlet and at each time step"
 #define DESC_QOUTLET "discharge at the watershed outlet"
+#define DESC_QOVERLAND "Water discharge in the downslope boundary of cells"
 #define DESC_QRECH "Discharge in a text format at each reach outlet and at each time step"
 #define DESC_QS "Overland discharge at each reach outlet and at each time step"
+#define DESC_QSOIL "discharge added to channel flow from interflow"
 #define DESC_QSOUTLET "discharge at the watershed outlet"
+#define DESC_QSUBBASIN "discharge at the subbasin outlet"
 #define DESC_QUPREACH "Upreach"
 #define DESC_RCA "concentration of ammonia in the rain"
 #define DESC_RCN "concentration of nitrate in the rain"
@@ -728,6 +762,7 @@
 #define DESC_SBQG "groundwater flow out of the subbasin"
 #define DESC_SED_DEP "distribution of sediment deposition"
 #define DESC_SED_OUTLET "Sediment concentration at the watershed outlet"
+#define DESC_SED_RECH "Sediment in a text format at each reach outlet and at each time step"
 #define DESC_SED_TO_CH "Distribution of sediment flowing to channel"
 #define DESC_SED_TO_CH_T  "Total sediment flowing to channel"
 #define DESC_SEDMINPA " amount of active mineral phosphorus sorbed to sediment in surface runoff"
@@ -775,6 +810,8 @@
 #define DESC_SOMO "Distribution of soil moisture"
 #define DESC_SOTE "Soil Temperature"
 #define DESC_SOWB "soil water balance"
+#define DESC_SPCON "Coefficient in sediment transport equation"
+#define DESC_SPEXP "Exponent in sediment transport equation"
 #define DESC_SR "Solar radiation"
 #define DESC_SR_MAX "Max solar radiation"
 #define DESC_SSRU "The subsurface runoff"
@@ -782,6 +819,7 @@
 #define DESC_STREAM_LINK "Stream link (id of reaches)"
 #define DESC_SubbasinSelected "The subbasion ids listed in file.out"
 #define DESC_SUBBSN "The subbasion grid"
+#define DESC_SUB_SEDTOCH "sediment to streams from each subbasin"
 #define DESC_SURU "surface runoff generated"
 #define DESC_SWE "average SA of the watershed"
 #define DESC_SWE0 "Initial snow water equivalent"
@@ -804,6 +842,7 @@
 #define DESC_USLE_K "The soil erodibility factor used in USLE"
 #define DESC_USLE_LS "USLE LS factor"
 #define DESC_USLE_P "the erosion control practice factor "
+#define DESC_VCRIT "critical velocity for sediment deposition"
 #define DESC_VDIV "diversion loss of the river reach"
 #define DESC_VER_ITP "Execute vertical interpolation (1) or not (0), defined in config.fig"
 #define DESC_VP_ACT "actual vapor pressure"

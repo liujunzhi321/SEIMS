@@ -21,43 +21,41 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Channel routing", "Channel routing.");
-	mdi.SetDescription("Channel routing using Muskingum-Cunge method.");
+	mdi.SetClass(MCLS_CH_ROUTING, MCLSDESC_CH_ROUTING);
+	mdi.SetDescription(MDESC_CH_MSK);
 	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("CH_MSK.chm");
-	mdi.SetID("CH_MSK");
-	mdi.SetName("CH_MSK");
+	mdi.SetID(MID_CH_MSK);
+	mdi.SetName(MID_CH_MSK);
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 
-	mdi.AddParameter("DT_HS", "second", "Time step of the simulation", "file.in", DT_Single); 
+	mdi.AddParameter(Tag_HillSlopeTimeStep,UNIT_SECOND,DESC_TIMESTEP,File_Input, DT_Single); 
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
-	mdi.AddParameter("MSK_X", "", "Muskingum weighting factor", "ParameterDB_Discharge", DT_Single); 
+	mdi.AddParameter(VAR_MSK_X, UNIT_NON_DIM,DESC_MSK_X,Source_ParameterDB, DT_Single); 
 
-	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster1D); 
-	mdi.AddParameter("FLOW_DIR", "", "Flow direction  by the rule of ArcGIS", "ParameterDB_Discharge", DT_Raster1D);
-	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster1D); 
+	mdi.AddParameter(VAR_SLOPE,UNIT_PERCENT,DESC_SLOPE,Source_ParameterDB, DT_Raster1D); 
+	mdi.AddParameter(VAR_FLOWDIR,UNIT_NON_DIM,DESC_FLOWDIR,Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_CHWIDTH,UNIT_LEN_M,DESC_CHWIDTH,Source_ParameterDB, DT_Raster1D); 
 	// reach information
-	mdi.AddParameter("FLOWOUT_INDEX_D8", "", "The index of flow in cell in the compressed array", "ParameterDB_Discharge", DT_Array1D);
-	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
-		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
-	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster1D);
-	mdi.AddParameter(Tag_ReachParameter, "", "Reach parameters such stream order, manning's n and downstream subbasin id", "ParameterDB_Discharge", DT_Array2D);
-	
-	mdi.AddParameter("Chs0","m3/m","initial channel storage per meter of reach length","ParameterDB_Discharge", DT_Single);
+	mdi.AddParameter(Tag_FLOWOUT_INDEX_D8, UNIT_NON_DIM, DESC_FLOWOUT_INDEX_D8, Source_ParameterDB, DT_Array1D);
+	mdi.AddParameter(Tag_FLOWIN_INDEX_D8,UNIT_NON_DIM,DESC_FLOWIN_INDEX_D8,Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_STREAM_LINK, UNIT_NON_DIM,DESC_STREAM_LINK, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(Tag_ReachParameter, UNIT_NON_DIM, DESC_REACH_PARAMETER, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_CHS0,UNIT_STRG_M3M,DESC_CHS0,Source_ParameterDB, DT_Single);
 	
 	// from other module
-	mdi.AddInput("SBQG","m3/s","groundwater flow to channel","Module", DT_Array1D);
-	mdi.AddInput("D_QSoil","m3/s","interflow to channel","Module", DT_Raster1D);
-	mdi.AddInput("D_QOverland","m3/s","overland flow to channel","Module", DT_Raster1D);
-	mdi.AddInput("D_P","mm","Precipitation","Module", DT_Raster1D);
+	mdi.AddInput(VAR_SBQG,UNIT_FLOW_CMS,DESC_SBQG,Source_Module, DT_Array1D);
+	mdi.AddInput(VAR_QSOIL,UNIT_FLOW_CMS,DESC_QSOIL,Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_QOVERLAND,UNIT_FLOW_CMS,DESC_QOVERLAND,Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_D_P,UNIT_DEPTH_MM,DESC_D_P,Source_Module, DT_Raster1D);
 
 	// output
-	mdi.AddOutput("QCH", "m3/s", "Flux in the downslope boundary of cells", DT_Array2D);
-	mdi.AddOutput("QOUTLET", "m3/s", "discharge at the watershed outlet", DT_Single);
-	mdi.AddOutput("QSUBBASIN", "m3/s", "discharge at the subbasin outlet", DT_Array1D);
-	mdi.AddOutput("HCH", "mm", "Water depth in the downslope boundary of cells", DT_Array2D);
+	mdi.AddOutput(VAR_QCH,UNIT_FLOW_CMS,DESC_QCH, DT_Array2D);
+	mdi.AddOutput(VAR_QOUTLET,UNIT_FLOW_CMS,DESC_QOUTLET, DT_Single);
+	mdi.AddOutput(VAR_QSUBBASIN,UNIT_FLOW_CMS, DESC_QSUBBASIN, DT_Array1D);
+	mdi.AddOutput(VAR_HCH,UNIT_DEPTH_MM, DESC_HCH, DT_Array2D);
 
 	res = mdi.GetXMLDocument();
 
