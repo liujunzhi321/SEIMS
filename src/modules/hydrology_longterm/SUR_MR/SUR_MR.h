@@ -34,7 +34,18 @@
 
 using namespace std;
 #include "SimulationModule.h"
+/** \defgroup SUR_MR
+ * \ingroup Hydrology_longterm
+ * \brief Modified Rational Method to calculate infiltration and excess precipitation
+ *
+ */
 
+/*!
+ * \class SUR_MR
+ * \ingroup SUR_MR
+ * \brief Modified Rational Method to calculate infiltration and excess precipitation
+ * 
+ */
 class SUR_MR:public SimulationModule
 {
 public:

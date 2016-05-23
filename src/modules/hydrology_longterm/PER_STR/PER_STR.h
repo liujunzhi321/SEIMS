@@ -7,7 +7,18 @@
 #include <string>
 #include <sstream>
 using namespace std;
+/** \defgroup PER_STR
+ * \ingroup Hydrology_longterm
+ * \brief Calculate the amount of water percolated from the soil water reservoir
+ *
+ */
 
+/*!
+ * \class PER_STR
+ * \ingroup PER_STR
+ * \brief Calculate water percolated
+ * 
+ */
 class PER_STR : public SimulationModule
 {
 private:

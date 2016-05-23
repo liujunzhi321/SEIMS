@@ -7,7 +7,18 @@
 #include "SimulationModule.h"
 using namespace std;
 
+/** \defgroup SET_LM
+ * \ingroup Hydrology_longterm
+ * \brief Calculate soil Temperature
+ *
+ */
 
+/*!
+ * \class SET_LM
+ * \ingroup SET_LM
+ * \brief Calculate soil Temperature
+ * 
+ */
 
 class SET_LM : public SimulationModule
 {

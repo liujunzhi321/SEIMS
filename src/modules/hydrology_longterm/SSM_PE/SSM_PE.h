@@ -5,7 +5,18 @@
 
 using namespace std;
 #include "SimulationModule.h"
+/** \defgroup SSM_PE
+ * \ingroup Hydrology_longterm
+ * \brief Distribution of snow sublimation (water equivalent) for a user defined period
+ *
+ */
 
+/*!
+ * \class SSM_PE
+ * \ingroup SSM_PE
+ * \brief Calculate distribution of snow sublimation
+ * 
+ */
 class SSM_PE:public SimulationModule
 {
 public:
