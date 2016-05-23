@@ -28,7 +28,18 @@
 
 using namespace std;
 #include "SimulationModule.h"
+/** \defgroup SUR_CN
+ * \ingroup Hydrology_longterm
+ * \brief SCS Curve Number Method to calculate infiltration and excess precipitation
+ *
+ */
 
+/*!
+ * \class SUR_CN
+ * \ingroup SUR_CN
+ * \brief SCS Curve Number Method to calculate infiltration and excess precipitation
+ * 
+ */
 class SUR_CN:public SimulationModule
 {
 public:

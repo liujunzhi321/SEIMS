@@ -7,7 +7,18 @@
 #include "SimulationModule.h"
 
 using namespace std;
+/** \defgroup SNO_WB
+ * \ingroup Hydrology_longterm
+ * \brief --
+ *
+ */
 
+/*!
+ * \class SNO_WB
+ * \ingroup SNO_WB
+ * \brief --
+ * 
+ */
 class SNO_WB:public SimulationModule
 {
 public:

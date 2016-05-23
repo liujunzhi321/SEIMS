@@ -60,7 +60,7 @@ int PER_STR::Execute()
 		{
 			ostringstream oss;
 			oss << "The root depth at cell(" << i << ") is " << m_rootDepth[i] << ", and is less than the upper soil depth (" << m_upSoilDepth << endl;
-			throw ModelException("SSR_DA", "Execute",  oss.str());
+			throw ModelException("PER_STR", "Execute",  oss.str());
 		}
 
 

@@ -21,10 +21,17 @@
 
 using namespace std;
 
-/*!
- * \ingroup MUSKINGUM_CH
- * \struct MuskWeights
+/** \defgroup MUSK_CH
+ * \ingroup Hydrology_longterm
+ * \brief channel flow routing using Muskingum method
  *
+ */
+
+/*!
+ * \class MUSK_CH
+ * \ingroup MUSK_CH
+ * \brief Overland routing using 4-point implicit finite difference method
+ * 
  */
 struct MuskWeights{
 	float c1;

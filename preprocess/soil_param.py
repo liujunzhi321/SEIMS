@@ -14,6 +14,7 @@ import numpy
 from util import *
 from text import *
 from soil_texture import *
+from soil_chem import *
 import os
 
 class SoilProperty:
@@ -187,8 +188,7 @@ class SoilProperty:
         ### Revised by LiangJun Zhu
         ### Date: 2016-5-21
 
-
-
+        SoilChemProperties(self.SoilLAYERS, self.SoilDepth, self.OM, self.CLAY, self.ROCK, self.Density)
 
 
 ## Calculate soil properties from sand, clay and organic matter.

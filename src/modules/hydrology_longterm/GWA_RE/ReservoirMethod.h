@@ -42,7 +42,18 @@
 #include "SimulationModule.h"
 
 using namespace std;
+/** \defgroup GWA_RE
+ * \ingroup Hydrology_longterm
+ * \brief Reservoir Method to calculate groundwater balance and baseflow
+ *
+ */
 
+/*!
+ * \class ReservoirMethod
+ * \ingroup GWA_RE
+ * \brief Reservoir Method to calculate groundwater balance and baseflow
+ * 
+ */
 class ReservoirMethod : public SimulationModule
 {
 public:

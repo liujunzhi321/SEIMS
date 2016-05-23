@@ -5,8 +5,20 @@
 #include "api.h"
 #include "SimulationModule.h"
 using namespace std;
+/** \defgroup PI_MSM
+ * \ingroup Hydrology_longterm
+ * \brief Class for the Precipitation Interception module
+ *
+ */
 
 ///typedef vector<vector<float> > double2DArray; /// NOT USED? LJ
+
+/*!
+ * \class clsPI_MSM
+ * \ingroup PI_MSM
+ * \brief Calculate the Precipitation Interception
+ * 
+ */
 
 class clsPI_MSM : public SimulationModule
 {
