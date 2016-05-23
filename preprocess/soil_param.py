@@ -58,7 +58,6 @@ class SoilProperty:
         self.Sol_actp = []
         self.Sol_stap = []
         self.Sol_hum = []
-        self.conv_wt = DEFAULT_NODATA
         self.sol_cov = DEFAULT_NODATA
         self.sumno3 = DEFAULT_NODATA
         self.sumorgn = DEFAULT_NODATA
@@ -186,10 +185,26 @@ class SoilProperty:
         ### Here after is initialization of soil chemical properties. Algorithms from SWAT.
         ### Prepared by Huiran Gao
         ### Revised by LiangJun Zhu
-        ### Date: 2016-5-21
-
-        SoilChemProperties(self.SoilLAYERS, self.SoilDepth, self.OM, self.CLAY, self.ROCK, self.Density)
-
+        ### Date: 2016-5-23
+        ### sol_fop, sol_fon, sol_no3, sol_orgn, sol_aorgn, sol_orgp, sol_solp, sol_actp,
+        ###    sol_stap, sol_hum, sol_cov, sumno3, sumorgn, summinp, sumorgp
+        tmpSolChem = SoilChemProperties(self.SoilLAYERS, self.SoilDepth, self.OM, self.CLAY, self.ROCK, self.Density)
+        self.Sol_FOP = tmpSolChem[0]
+        self.Sol_fon = tmpSolChem[1]
+        self.Sol_no3 = tmpSolChem[2]
+        self.Sol_orgn = tmpSolChem[3]
+        self.Sol_aorgn = tmpSolChem[4]
+        self.Sol_orgp = tmpSolChem[5]
+        self.Sol_solp = tmpSolChem[6]
+        self.Sol_actp = tmpSolChem[7]
+        self.Sol_stap = tmpSolChem[8]
+        self.Sol_hum = tmpSolChem[9]
+        self.sol_cov = tmpSolChem[10]
+        self.sumno3 = tmpSolChem[11]
+        self.sumorgn = tmpSolChem[12]
+        self.summinp = tmpSolChem[13]
+        self.sumorgp = tmpSolChem[14]
+        ### SOIL CHEMICAL PROPERTIES INITIALIATION DONE
 
 ## Calculate soil properties from sand, clay and organic matter.
 ## TODO, add reference.
@@ -243,99 +258,99 @@ def GetValue(geoMask, geoMap, data, i, j):
     return data[iMap][jMap]
 
 ## Deprecated by LJ, 2016-5-21
-def GenerateSoilAttributes(outputFolder, layerNum, sandFile=None, clayFile=None, orgFile=None):
-    maskFile = outputFolder + os.sep + mask_to_ext
-#    if sandFile is None:
-#        sandFile = '%s/sand%d_albers.img' % (SPATIAL_DATA_DIR, layerNum)
-#    if clayFile is None:
-#        clayFile = '%s/clay%d_albers.img' % (SPATIAL_DATA_DIR, layerNum)
-
-    dataSom = None
-    if orgFile is not None and os.path.exists(orgFile):
-        dsSom = gdal.Open(orgFile)
-        bandSom = dsSom.GetRasterBand(1)
-        dataSom = bandSom.ReadAsArray()
-
-    print sandFile
-    print clayFile
-    dsSand = gdal.Open(sandFile)
-    if dsSand is None:
-        print "Open file:", sandFile, " failed.\n"
-        return
-    bandSand = dsSand.GetRasterBand(1)
-    dataSand = bandSand.ReadAsArray()
-    geoSand = dsSand.GetGeoTransform()
-    
-    dsClay = gdal.Open(clayFile)
-    if dsClay is None:
-        print "Open file:", clayFile, " failed.\n"
-        return
-    bandClay = dsClay.GetRasterBand(1)
-    dataClay = bandClay.ReadAsArray()
-    
-    dsMask = gdal.Open(maskFile)
-    bandMask = dsMask.GetRasterBand(1)
-    dataMask = bandMask.ReadAsArray()
-    xSizeMask = bandMask.XSize
-    ySizeMask = bandMask.YSize
-    geoMask = dsMask.GetGeoTransform()
-    noDataValue = bandMask.GetNoDataValue()
-    print noDataValue
-
-    srs = osr.SpatialReference()
-    srs.ImportFromWkt(dsMask.GetProjection())
-
-    attrMapList = []
-    n = 6 
-    for i in range(n):
-        attrMapList.append(numpy.zeros((ySizeMask, xSizeMask)))
-    
-    attrPool = {}
-    lastKey = None
-    for i in range(ySizeMask):
-        #print "soil", i
-        for j in range(xSizeMask):
-            if abs(dataMask[i][j] - noDataValue) < DELTA:
-                for iAttr in range(n):
-                    attrMapList[iAttr][i][j] = DEFAULT_NODATA
-                continue
-            s = GetValue(geoMask, geoSand, dataSand, i, j) 
-            c = GetValue(geoMask, geoSand, dataClay, i, j) 
-
-            k = "%d_%d_%d" % (int(s*1000), int(c*1000), layerNum)
-            #print s, c
-
-            if dataSom is not None:
-                om = dataSom[i][j]
-            else:
-                om = defaultOrg  # om=2.5
-                if layerNum >= 1:
-                    om = 1.0
-
-            if s < 0 or c < 0:
-                attrs = attrPool[lastKey]
-                k = lastKey
-            elif k in attrPool.keys():
-                attrs = attrPool[k]
-            else:
-                attrs = GetProperties(s * 0.01, c * 0.01, om)
-                print dataMask[i][j], s, c
-                #attrs = GetProperties(s, c, om)
-                attrPool[k] = attrs
-            lastKey = k
-
-            for iAttr in range(n):
-                attrMapList[iAttr][i][j] = attrs[iAttr]
-
-    attrList = []
-    ##layerStr = str(layerNum) if layerNum > 1 else ''
-    for i in range(n):
-        filename = outputFolder + os.sep + r"%s_%s.tif" % (SOIL_ATTR_LIST[i+2], str(layerNum))
-        WriteGTiffFile(filename, ySizeMask, xSizeMask, attrMapList[i], \
-                                   geoMask, srs, DEFAULT_NODATA, gdal.GDT_Float32)
-        attrList.append(filename)
-
-    return attrList
+# def GenerateSoilAttributes(outputFolder, layerNum, sandFile=None, clayFile=None, orgFile=None):
+#     maskFile = outputFolder + os.sep + mask_to_ext
+# #    if sandFile is None:
+# #        sandFile = '%s/sand%d_albers.img' % (SPATIAL_DATA_DIR, layerNum)
+# #    if clayFile is None:
+# #        clayFile = '%s/clay%d_albers.img' % (SPATIAL_DATA_DIR, layerNum)
+#
+#     dataSom = None
+#     if orgFile is not None and os.path.exists(orgFile):
+#         dsSom = gdal.Open(orgFile)
+#         bandSom = dsSom.GetRasterBand(1)
+#         dataSom = bandSom.ReadAsArray()
+#
+#     print sandFile
+#     print clayFile
+#     dsSand = gdal.Open(sandFile)
+#     if dsSand is None:
+#         print "Open file:", sandFile, " failed.\n"
+#         return
+#     bandSand = dsSand.GetRasterBand(1)
+#     dataSand = bandSand.ReadAsArray()
+#     geoSand = dsSand.GetGeoTransform()
+#
+#     dsClay = gdal.Open(clayFile)
+#     if dsClay is None:
+#         print "Open file:", clayFile, " failed.\n"
+#         return
+#     bandClay = dsClay.GetRasterBand(1)
+#     dataClay = bandClay.ReadAsArray()
+#
+#     dsMask = gdal.Open(maskFile)
+#     bandMask = dsMask.GetRasterBand(1)
+#     dataMask = bandMask.ReadAsArray()
+#     xSizeMask = bandMask.XSize
+#     ySizeMask = bandMask.YSize
+#     geoMask = dsMask.GetGeoTransform()
+#     noDataValue = bandMask.GetNoDataValue()
+#     print noDataValue
+#
+#     srs = osr.SpatialReference()
+#     srs.ImportFromWkt(dsMask.GetProjection())
+#
+#     attrMapList = []
+#     n = 6
+#     for i in range(n):
+#         attrMapList.append(numpy.zeros((ySizeMask, xSizeMask)))
+#
+#     attrPool = {}
+#     lastKey = None
+#     for i in range(ySizeMask):
+#         #print "soil", i
+#         for j in range(xSizeMask):
+#             if abs(dataMask[i][j] - noDataValue) < DELTA:
+#                 for iAttr in range(n):
+#                     attrMapList[iAttr][i][j] = DEFAULT_NODATA
+#                 continue
+#             s = GetValue(geoMask, geoSand, dataSand, i, j)
+#             c = GetValue(geoMask, geoSand, dataClay, i, j)
+#
+#             k = "%d_%d_%d" % (int(s*1000), int(c*1000), layerNum)
+#             #print s, c
+#
+#             if dataSom is not None:
+#                 om = dataSom[i][j]
+#             else:
+#                 om = defaultOrg  # om=2.5
+#                 if layerNum >= 1:
+#                     om = 1.0
+#
+#             if s < 0 or c < 0:
+#                 attrs = attrPool[lastKey]
+#                 k = lastKey
+#             elif k in attrPool.keys():
+#                 attrs = attrPool[k]
+#             else:
+#                 attrs = GetProperties(s * 0.01, c * 0.01, om)
+#                 print dataMask[i][j], s, c
+#                 #attrs = GetProperties(s, c, om)
+#                 attrPool[k] = attrs
+#             lastKey = k
+#
+#             for iAttr in range(n):
+#                 attrMapList[iAttr][i][j] = attrs[iAttr]
+#
+#     attrList = []
+#     ##layerStr = str(layerNum) if layerNum > 1 else ''
+#     for i in range(n):
+#         filename = outputFolder + os.sep + r"%s_%s.tif" % (SOIL_ATTR_LIST[i+2], str(layerNum))
+#         WriteGTiffFile(filename, ySizeMask, xSizeMask, attrMapList[i], \
+#                                    geoMask, srs, DEFAULT_NODATA, gdal.GDT_Float32)
+#         attrList.append(filename)
+#
+#     return attrList
 
 
 

@@ -16,7 +16,7 @@ def InitMoisture(dstdir):
     ysize = band.YSize
     noDataValue = band.GetNoDataValue()
     if noDataValue is None:
-        noDataValue = -9999
+        noDataValue = DEFAULT_NODATA
     
     srs = osr.SpatialReference()
     srs.ImportFromWkt(ds.GetProjection())    
@@ -34,7 +34,7 @@ def InitMoisture(dstdir):
     for i in range(0, ysize):
         for j in range(0, xsize):
             if(abs(dataAcc[i][j] - noDataValue) < util.DELTA):
-                wiGrid[i][j] = -99
+                wiGrid[i][j] = DEFAULT_NODATA
             else:
                 if(abs(dataSlope[i][j]) < util.DELTA):
                     dataSlope[i][j] = 0.1/dx*100
@@ -56,13 +56,13 @@ def InitMoisture(dstdir):
     for i in range(0, ysize):
         for j in range(0, xsize):
             if(abs(dataAcc[i][j] - noDataValue) < util.DELTA):
-                moisture[i][j] = -9999
+                moisture[i][j] = DEFAULT_NODATA
             else:
                 moisture[i][j] =  a*wiGrid[i][j] + b
     
     filename = dstdir + os.sep + initSoilMoist
     WriteGTiffFile(filename, ysize, xsize, moisture, \
-                       geotransform, srs, -9999, gdal.GDT_Float32)
+                       geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
     
     print 'The initial moisture is generated!'
 

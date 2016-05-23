@@ -111,7 +111,6 @@ void SUR_MR::initalOutputs()
 
 			for (int j = 0; j < m_nSoilLayers; j++)
 				m_soilMoisture[i][j] = m_initSoilMoisture[i] * m_fieldCap[i][j];
-			
 		}
 
 		m_pMax = m_pMax * m_dt / 86400.f;
