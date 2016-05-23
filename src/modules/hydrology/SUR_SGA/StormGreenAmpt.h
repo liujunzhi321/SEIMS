@@ -1,25 +1,35 @@
-/** 
-*	@file
-*	@version	1.0
-*	@author    Junzhi Liu
-*	@date	31-Octobor-2011
-*
-*	@brief	Green Ampt Method to calculate infiltration and excess precipitation
-*
-*/
-
-#ifndef SEIMS_STORM_GA_INCLUDE
-#define SEIMS_STORM_GA_INCLUDE
-
+/*!
+ * \file StormGreenAmpt.h
+ * \brief Green Ampt Method to calculate infiltration and excess precipitation
+ * \author Junzhi Liu
+ * \date Oct. 2011
+ * 
+ */
+///USELESS? LJ
+//#ifndef SEIMS_STORM_GA_INCLUDE
+//#define SEIMS_STORM_GA_INCLUDE
+#pragma once
 #include <string>
 #include "SimulationModule.h"
 
 using namespace std;
-
+/** \defgroup SUR_SGA
+ * \ingroup Hydrology
+ * \brief  Green Ampt Method to calculate infiltration and excess precipitation
+ */
+/*!
+ * \class StormGreenAmpt
+ * \ingroup SUR_SGA
+ *
+ * \brief Green Ampt Method to calculate infiltration and excess precipitation
+ *
+ */
 class StormGreenAmpt : public SimulationModule
 {
 public:
+	//! Constructor
 	StormGreenAmpt(void);
+	//! Destructor
 	~StormGreenAmpt(void);
 	
 	virtual void Set1DData(const char* key, int n, float* data);
@@ -132,4 +142,4 @@ private:
 	void initalOutputs();
 
 };
-#endif
+///#endif

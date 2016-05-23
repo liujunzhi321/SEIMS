@@ -11,13 +11,14 @@ using namespace std;
  *
  */
 
+///typedef vector<vector<float> > double2DArray; /// NOT USED? LJ
+
 /*!
  * \class clsPI_MSM
  * \ingroup PI_MSM
  * \brief Calculate the Precipitation Interception
  * 
  */
-typedef vector<vector<float> > double2DArray;
 
 class clsPI_MSM : public SimulationModule
 {

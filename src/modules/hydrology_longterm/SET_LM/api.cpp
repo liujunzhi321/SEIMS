@@ -32,10 +32,10 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_LEN_M, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster1D);					//
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_LEN_M, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster1D);
 
-	mdi.AddParameter(VAR_FIELDCAP, UNIT_STRG_M3M, DESC_FIELDCAP, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_WILTPOINT, UNIT_STRG_M3M, DESC_WILTPOINT, Source_ParameterDB, DT_Array2D);					//0w				
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_SOLCOEF_M3M3, DESC_FIELDCAP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_WILTPOINT, UNIT_SOLCOEF_M3M3, DESC_WILTPOINT, Source_ParameterDB, DT_Array2D);				
 	
 	// set the parameters (non-time series)
 	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module,DT_Raster1D);

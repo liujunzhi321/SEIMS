@@ -48,7 +48,7 @@ SOL_POROSITY= "Porosity"
 SOL_P_INDEX = "Poreindex"
 SOL_USLE_K  = "USLE_K"
 SOL_ALB     = "Sol_ALB"
-SOL_RM      = "Residual"
+#SOL_RM      = "Residual"
 SOL_TEXTURE = "Texture"
 ## soil chemical properties
 

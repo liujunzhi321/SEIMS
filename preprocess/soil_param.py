@@ -46,7 +46,7 @@ class SoilProperty:
         self.Sol_ALB    = []
         self.Texture    = DEFAULT_NODATA
         self.Hydro_Group= DEFAULT_NODATA
-        #self.Residue     = [] TODO: residue should be defined in Management module
+        #self.Residue     = [] TODO: residue should be defined in Management module or dependent on landuse
         ### Here after are soil chemical properties
         self.Sol_FOP = []
         self.Sol_fon = []

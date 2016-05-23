@@ -10,7 +10,7 @@
 
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
-	return new ImplicitKinematicWave();
+	return new ImplicitKinematicWave_OL();
 }
 
 // function to return the XML Metadata document string
@@ -21,49 +21,45 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Overland routing", "Overland routing.");
-	mdi.SetDescription("Overland routing using 4-point implicit finite difference method.");
+	mdi.SetClass(MCLS_OL_ROUTING, MCLSDESC_OL_ROUTING);
+	mdi.SetDescription(MDESC_IKW_OL);
 	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("IKW_OL.chm");
-	mdi.SetID("IKW_OL");
-	mdi.SetName("IKW_OL");
+	mdi.SetID(MID_IKW_OL);
+	mdi.SetName(MID_IKW_OL);
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 
-	mdi.AddParameter("DT_HS", "second", "Time step of overland flow simulation", "file.in", DT_Single); 
+	mdi.AddParameter(Tag_HillSlopeTimeStep,UNIT_SECOND,DESC_TIMESTEP,File_Input, DT_Single); 
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	
-	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster1D); 
-	mdi.AddParameter("CHWIDTH", "m", "Channel width", "ParameterDB_Discharge", DT_Raster1D); 
-	mdi.AddParameter("STREAM_LINK", "", "Stream link", "ParameterDB_Discharge", DT_Raster1D); 
-	mdi.AddParameter("Manning", "", "Manning's roughness", "ParameterDB_Discharge", DT_Raster1D); 
-	mdi.AddParameter("FLOW_DIR", "", "Flow direction  by the rule of ArcGIS", "ParameterDB_Discharge", DT_Raster1D);	
-
-	mdi.AddParameter("FLOWOUT_INDEX_D8", "", "The index of flow in cell in the compressed array", "ParameterDB_Discharge", DT_Array1D);
-	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
-		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
-	mdi.AddParameter("ROUTING_LAYERS", "", "Routing layers according to the flow direction"
-		"There are not flow relationships within each layer, and the first element in each layer is the number of cells in the layer", "ParameterDB_Discharge", DT_Array2D);
-
-	mdi.AddInput("D_SURU", "mm", "Distribution of surface runoff", "Module", DT_Raster1D);
-	mdi.AddInput("D_INFILCAPSURPLUS","mm","surplus of infiltration capacity", "Module", DT_Raster1D);
-	mdi.AddInput("D_INFIL","mm","Infiltration map of watershed", "Module", DT_Raster1D);
-	mdi.AddInput("D_AccumuInfil","mm","accumulative infiltration", "Module", DT_Raster1D);
-
-	mdi.AddOutput("QOverland", "m3/s", "overland runoff", DT_Raster1D);
-
-	mdi.AddOutput("Reinfiltration", "mm", "reinfiltration", DT_Raster1D);
-	//mdi.AddOutput("CELLH", "mm", "Water depth in the downslope boundary of cells", DT_Raster);
-	mdi.AddOutput("FlowWidth", "m", "Flow width of overland plane", DT_Raster1D);
-	mdi.AddOutput("ChWidth", "m", "Flow length of overland plane", DT_Raster1D);  //Flowlen add by Wu hui
+	mdi.AddParameter(VAR_SLOPE, UNIT_PERCENT, DESC_SLOPE, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_CHWIDTH,UNIT_LEN_M,DESC_CHWIDTH,Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_STREAM_LINK,UNIT_NON_DIM,DESC_STREAM_LINK,Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_MANNING,UNIT_NON_DIM,DESC_MANNING,Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter(VAR_FLOWDIR,UNIT_NON_DIM,DESC_FLOWDIR,Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(Tag_FLOWIN_INDEX_D8, UNIT_NON_DIM, DESC_FLOWIN_INDEX_D8, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(Tag_ROUTING_LAYERS, UNIT_NON_DIM, DESC_ROUTING_LAYERS, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(Tag_FLOWOUT_INDEX_D8, UNIT_NON_DIM, DESC_FLOWOUT_INDEX_D8, Source_ParameterDB, DT_Array1D);
 	
-	mdi.AddOutput("RadianSlope", "", "radian slope", DT_Raster1D);
+	mdi.AddInput(VAR_SURU,UNIT_DEPTH_MM,DESC_SURU,Source_Module,DT_Raster1D);
+	mdi.AddInput(VAR_INFILCAPSURPLUS,UNIT_DEPTH_MM,DESC_INFILCAPSURPLUS,Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_INFIL, UNIT_DEPTH_MM, DESC_INFIL, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_ACC_INFIL,UNIT_DEPTH_MM,DESC_ACC_INFIL,Source_Module, DT_Raster1D);
 
-	mdi.AddOutput("ID_OUTLET", "", "index of outlet in the compressed array", DT_Single);
+	mdi.AddOutput(VAR_QOVERLAND,UNIT_FLOW_CMS,DESC_QOVERLAND, DT_Raster1D);
+
+	mdi.AddOutput(VAR_Reinfiltration, UNIT_DEPTH_MM,DESC_Reinfiltration, DT_Raster1D);
+	mdi.AddOutput(VAR_FLOWWIDTH,UNIT_LEN_M,DESC_FLOWWIDTH , DT_Raster1D);
+	mdi.AddOutput("ChWidth", "m", "Flow length of overland plane", DT_Raster1D);  //Flowlen add by Wu hui  /// TODO Figure out what's meaning? LJ
+	
+	mdi.AddOutput(VAR_RadianSlope, UNIT_NON_DIM,DESC_RadianSlope, DT_Raster1D);
+
+	mdi.AddOutput(VAR_ID_OUTLET,UNIT_NON_DIM,DESC_ID_OUTLET, DT_Single);
 
 	// set the dependencies
-	mdi.AddDependency("Depression","Depression module");
+	mdi.AddDependency(MCLS_DEP,MCLSDESC_DEP);
 
 	res = mdi.GetXMLDocument();
 
@@ -71,3 +67,4 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	strprintf(tmp, res.size()+1, "%s", res.c_str());
 	return tmp;
 }
+	//mdi.AddOutput("CELLH", "mm", "Water depth in the downslope boundary of cells", DT_Raster);

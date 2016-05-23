@@ -1,3 +1,9 @@
+/*!
+ * \file Percolation.h
+ * \brief
+ * \author Junzhi Liu
+ * \date May 2013
+ */
 #pragma once
 
 #include <string>
@@ -6,8 +12,18 @@
 #include <sstream>
 #include "SimulationModule.h"
 using namespace std;
-
-class Percolation : public SimulationModule
+/** \defgroup PERCO_DARCY
+ * \ingroup Hydrology
+ * \brief Calculate percolation using Darcy law
+ */
+/*!
+ * \class Percolation_DARCY
+ * \ingroup PERCO_DARCY
+ *
+ * \brief Calculate percolation using Darcy law
+ *
+ */
+class Percolation_DARCY : public SimulationModule
 {
 private:
 	int m_timestep;
@@ -30,8 +46,10 @@ private:
 	
 
 public:
-	Percolation(void);
-	~Percolation(void);
+	//! Constructor
+	Percolation_DARCY(void);
+	//! Destructor
+	~Percolation_DARCY(void);
 
 	virtual void Set1DData(const char* key, int n, float* data);
 	virtual void Get1DData(const char* key, int* n, float **data);
@@ -47,7 +65,7 @@ private:
 	bool CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension

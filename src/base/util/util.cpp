@@ -184,6 +184,13 @@ void Output2DArray(int nRows, int nCols, float** data, const char* filename)
 	ofs.close();
 }
 
+float Power(float a, float n)
+{
+	if (a >= 0)
+		return pow(a, n);
+	else
+		return -pow(-a, n);
+}
 void Read1DArray(const char* filename, int& nRows, float*& data)
 {
 	ifstream ifs(filename);

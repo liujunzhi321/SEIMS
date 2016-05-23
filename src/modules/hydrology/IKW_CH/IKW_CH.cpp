@@ -1,12 +1,10 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Channel routing using implicit finite difference method (kinematic wave method in the LISEM model)
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file IKW_CH.h
+ * \brief Routing in the channel cells using implicit finite difference method
+ * kinematic wave method in LISEM model
+ * \author Junzhi Liu
+ * \date Feb. 2011 
+ */
 //#include "vld.h"
 #include "IKW_CH.h"
 #include "MetadataInfo.h"
@@ -29,7 +27,7 @@ const float SQ2 = sqrt(2.f);
 
 using namespace std;
 
-ImplicitKinematicWave::ImplicitKinematicWave(void):m_nCells(-1), m_chNumber(-1), m_dt(-1.0f), m_CellWidth(-1.0f),
+ImplicitKinematicWave_CH::ImplicitKinematicWave_CH(void):m_nCells(-1), m_chNumber(-1), m_dt(-1.0f), m_CellWidth(-1.0f),
 	m_sRadian(NULL), m_direction(NULL), m_reachDownStream(NULL), m_chWidth(NULL), 
 	m_qs(NULL), m_hCh(NULL), m_qCh(NULL), m_prec(NULL), m_qSubbasin(NULL), m_qg(NULL),
 	m_flowLen(NULL), m_qi(NULL), m_streamLink(NULL), m_reachId(NULL), m_sourceCellIds(NULL),
@@ -52,12 +50,10 @@ ImplicitKinematicWave::ImplicitKinematicWave(void):m_nCells(-1), m_chNumber(-1),
 	m_diagonal[6] = 1;
 	m_diagonal[7] = 0;
 	m_diagonal[8] = 1;
-
-	
 }
 
 
-ImplicitKinematicWave::~ImplicitKinematicWave(void)
+ImplicitKinematicWave_CH::~ImplicitKinematicWave_CH(void)
 {
 	if (m_hCh != NULL)
 	{
@@ -98,10 +94,10 @@ ImplicitKinematicWave::~ImplicitKinematicWave(void)
 \param qLast    current discharge in the cell
 \param surplus        infiltration surplus flux (in m2/s), has value <= 0
 \param alpha    alpha calculated in LISEM from before kinematic wave
-\param dt   timestep
+\param dt   time step
 \param dx   length of the cell corrected for slope
 */
-float ImplicitKinematicWave::GetNewQ(float qIn, float qLast, float surplus, float alpha, float dt, float dx)
+float ImplicitKinematicWave_CH::GetNewQ(float qIn, float qLast, float surplus, float alpha, float dt, float dx)
 {
     /* Using Newton-Raphson Method */
     float  ab_pQ, dtX, C;  //auxillary vars
@@ -151,7 +147,7 @@ float ImplicitKinematicWave::GetNewQ(float qIn, float qLast, float surplus, floa
     } while(fabs(fQkx) > _epsilon && count < MAX_ITERS_CH);
 
 	if(Qkx != Qkx)
-		throw ModelException("IKW_OL", "GetNewQ", "Error in iteration!");
+		throw ModelException(MID_IKW_CH, "GetNewQ", "Error in iteration!");
 
     //itercount = count;
     return Qkx;
@@ -159,39 +155,39 @@ float ImplicitKinematicWave::GetNewQ(float qIn, float qLast, float surplus, floa
 
 // end code form LISEM 
 
-bool ImplicitKinematicWave::CheckInputData(void)
+bool ImplicitKinematicWave_CH::CheckInputData(void)
 {
 	if(m_date <= 0)
-		throw ModelException("IKW_CH","CheckInputData","You have not set the Date variable.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","You have not set the Date variable.");
 
 	if(m_nCells <= 0)
-		throw ModelException("IKW_CH","CheckInputData","The cell number of the input can not be less than zero.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","The cell number of the input can not be less than zero.");
 
 	if(m_dt <= 0)
-		throw ModelException("IKW_CH","CheckInputData","You have not set the TimeStep variable.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","You have not set the TimeStep variable.");
 
 	if(m_CellWidth <= 0)
-		throw ModelException("IKW_CH","CheckInputData","You have not set the CellWidth variable.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","You have not set the CellWidth variable.");
 
 	if(m_sRadian == NULL)
-		throw ModelException("IKW_CH","CheckInputData","The parameter: RadianSlope has not been set.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","The parameter: RadianSlope has not been set.");
 	if(m_direction == NULL)
-		throw ModelException("IKW_CH","CheckInputData","The parameter: flow direction has not been set.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","The parameter: flow direction has not been set.");
 	
 	if(m_chWidth == NULL)
-		throw ModelException("IKW_CH","CheckInputData","The parameter: CHWIDTH has not been set.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","The parameter: CHWIDTH has not been set.");
 	if(m_streamLink == NULL)
-		throw ModelException("IKW_CH","CheckInputData","The parameter: STREAM_LINK has not been set.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","The parameter: STREAM_LINK has not been set.");
 
 	if(m_prec == NULL)
-		throw ModelException("IKW_CH","CheckInputData","The parameter: D_P(precipitation) has not been set.");
+		throw ModelException(MID_IKW_CH,"CheckInputData","The parameter: D_P(precipitation) has not been set.");
 
 	return true;
 }
 
-void  ImplicitKinematicWave::initalOutputs()
+void  ImplicitKinematicWave_CH::initalOutputs()
 {
-	if(m_nCells <= 0) throw ModelException("IKW_CH","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_nCells <= 0) throw ModelException(MID_IKW_CH,"initalOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_hCh == NULL)
 	{
@@ -294,7 +290,7 @@ void  ImplicitKinematicWave::initalOutputs()
 
 }
 
-void  ImplicitKinematicWave::initalOutputs2()
+void  ImplicitKinematicWave_CH::initalOutputs2()
 {
 	if(m_flowLen != NULL)
 		return;
@@ -321,7 +317,7 @@ void  ImplicitKinematicWave::initalOutputs2()
 	}
 }
 
-void ImplicitKinematicWave::ChannelFlow(int iReach, int iCell, int id, float qgEachCell)
+void ImplicitKinematicWave_CH::ChannelFlow(int iReach, int iCell, int id, float qgEachCell)
 {
 	float qUp = 0.f;
 
@@ -381,11 +377,9 @@ void ImplicitKinematicWave::ChannelFlow(int iReach, int iCell, int id, float qgE
 	float hTest = m_hCh[iReach][iCell] + (qUp - m_qCh[iReach][iCell])*m_dt/m_chWidth[id]/dx;
 	float hNew = (alpha*pow(m_qCh[iReach][iCell], 0.6f)) / m_chWidth[id]; // unit m
 	m_hCh[iReach][iCell] = (alpha*pow(m_qCh[iReach][iCell], 0.6f)) / m_chWidth[id]; // unit m
-	
-
 }
 
-int ImplicitKinematicWave::Execute()
+int ImplicitKinematicWave_CH::Execute()
 {
 	//check the data
 	CheckInputData();	
@@ -434,7 +428,7 @@ int ImplicitKinematicWave::Execute()
 	return 0;
 }
 
-bool ImplicitKinematicWave::CheckInputSize(const char* key, int n)
+bool ImplicitKinematicWave_CH::CheckInputSize(const char* key, int n)
 {
 	if(n <= 0)
 	{
@@ -449,14 +443,13 @@ bool ImplicitKinematicWave::CheckInputSize(const char* key, int n)
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
 			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
-			throw ModelException("IKW_CH","CheckInputSize",oss.str());
+			throw ModelException(MID_IKW_CH,"CheckInputSize",oss.str());
 		}
 	}
-
 	return true;
 }
 
-bool ImplicitKinematicWave::CheckInputSizeChannel(const char* key, int n)
+bool ImplicitKinematicWave_CH::CheckInputSizeChannel(const char* key, int n)
 {
 	if(n <= 0)
 	{
@@ -476,10 +469,10 @@ bool ImplicitKinematicWave::CheckInputSizeChannel(const char* key, int n)
 	return true;
 }
 
-void ImplicitKinematicWave::GetValue(const char* key, float* value)
+void ImplicitKinematicWave_CH::GetValue(const char* key, float* value)
 {
 	string sk(key);
-	if (StringMatch(sk, "QOUTLET"))
+	if (StringMatch(sk, VAR_QOUTLET))
 	{
 		map<int, vector<int> >::iterator it = m_reachLayers.end();
 		it--;
@@ -490,7 +483,7 @@ void ImplicitKinematicWave::GetValue(const char* key, float* value)
 		//*value = m_qs[m_idOutlet];
 		//*value = m_qs[m_idOutlet] + m_qCh[reachId][iLastCell];
 	}
-	else if (StringMatch(sk, "QTotal"))
+	else if (StringMatch(sk, VAR_QTOTAL))
 	{
 		map<int, vector<int> >::iterator it = m_reachLayers.end();
 		it--;
@@ -504,36 +497,34 @@ void ImplicitKinematicWave::GetValue(const char* key, float* value)
 
 }
 
-void ImplicitKinematicWave::SetValue(const char* key, float data)
+void ImplicitKinematicWave_CH::SetValue(const char* key, float data)
 {
 	string sk(key);
-	if (StringMatch(sk, "DT_HS"))
+	if (StringMatch(sk, Tag_HillSlopeTimeStep))
 		m_dt = data;
 	else if (StringMatch(sk, Tag_CellWidth))
 		m_CellWidth = data;
-	else if (StringMatch(sk, Tag_CellSize))
-		m_nCells = int(data);
-	else if (StringMatch(sk, "ID_UPREACH"))
-		m_idUpReach = (int)data;
-	else if(StringMatch(sk, "QUPREACH"))
-		m_qUpReach = data;
+	//else if (StringMatch(sk, "ID_UPREACH"))
+	//	m_idUpReach = (int)data;
+	//else if(StringMatch(sk, "QUPREACH"))
+	//	m_qUpReach = data;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}
-	else if (StringMatch(sk, "CH_ManningFactor"))
+	else if (StringMatch(sk, VAR_CH_MANNING_F))
 		m_manningScalingFactor = data;	
 	else
-		throw ModelException("IKW_CH", "SetValue", "Parameter " + sk 
+		throw ModelException(MID_IKW_CH, "SetValue", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 
 }
 
-void ImplicitKinematicWave::Set1DData(const char* key, int n, float* data)
+void ImplicitKinematicWave_CH::Set1DData(const char* key, int n, float* data)
 {
 	string sk(key);
 
-	if (StringMatch(sk, "SBQG"))
+	if (StringMatch(sk, VAR_SBQG))
 	{
 		m_qg = data;
 		return;
@@ -542,23 +533,21 @@ void ImplicitKinematicWave::Set1DData(const char* key, int n, float* data)
 	//check the input data
 	CheckInputSize(key,n);
 	
-	if(StringMatch(sk, "RadianSlope"))
+	if(StringMatch(sk, VAR_RadianSlope))
 		m_sRadian = data;
-	else if(StringMatch(sk, "Flow_Dir"))
+	else if(StringMatch(sk, VAR_FLOWDIR))
 		m_direction = data;
-	else if(StringMatch(sk, "D_P"))
+	else if(StringMatch(sk, VAR_D_P))
 		m_prec = data;
-	else if(StringMatch(sk, "D_QSoil"))
+	else if(StringMatch(sk, VAR_QSOIL))
 		m_qi = data;
-	else if(StringMatch(sk, "D_QOverland"))
+	else if(StringMatch(sk,VAR_QOVERLAND))
 		m_qs = data;
-	else if(StringMatch(sk, "Manning_nCh"))
-		m_reachN = data;
-	else if(StringMatch(sk, "CHWIDTH"))
+	else if(StringMatch(sk, VAR_CHWIDTH))
 		m_chWidth = data;
-	else if(StringMatch(sk, "STREAM_LINK"))
+	else if(StringMatch(sk, VAR_STREAM_LINK))
 		m_streamLink = data;
-	else if(StringMatch(sk, "FlowOut_Index_D8"))
+	else if(StringMatch(sk, Tag_FLOWOUT_INDEX_D8))
 	{
 		m_flowOutIndex = data;
 		for (int i = 0; i < m_nCells; i++)
@@ -571,18 +560,15 @@ void ImplicitKinematicWave::Set1DData(const char* key, int n, float* data)
 		}
 	}
 	else
-		throw ModelException("IKW_CH", "Set1DData", "Parameter " + sk 
+		throw ModelException(MID_IKW_CH, "Set1DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
-	
-
 }
 
-void ImplicitKinematicWave::Get1DData(const char* key, int* n, float** data)
+void ImplicitKinematicWave_CH::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
-	//*n = m_nCells;
 	*n = m_chNumber;
-	if (StringMatch(sk, "QRECH"))
+	if (StringMatch(sk, VAR_QRECH))
 	{
 		*data = m_qSubbasin;
 	}
@@ -599,28 +585,28 @@ void ImplicitKinematicWave::Get1DData(const char* key, int* n, float** data)
 	*data = m_chwath;
 	}*/
 	else
-		throw ModelException("IKW_CH", "Get1DData", "Output " + sk 
-		+ " does not exist in the IKW_CH module. Please contact the module developer.");
+		throw ModelException(MID_IKW_CH, "Get1DData", "Output " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 
 }
 
-void ImplicitKinematicWave::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
+void ImplicitKinematicWave_CH::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
 	if(m_hCh == NULL || m_qCh == NULL)
 		initalOutputs();
 	string sk(key);
 	*nRows = m_chNumber;
-	if (StringMatch(sk, "QRECH"))
+	if (StringMatch(sk, VAR_QRECH))  //TODO QRECH is DT_array1D? LJ
 		*data = m_qCh;
-	else if (StringMatch(sk, "HCH"))
+	else if (StringMatch(sk, VAR_HCH))
 		*data = m_hCh;
 	else
-		throw ModelException("IKW_CH", "Get2DData", "Output " + sk 
-		+ " does not exist in the IKW_CH module. Please contact the module developer.");
+		throw ModelException(MID_IKW_CH, "Get2DData", "Output " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 
 }
 
-void ImplicitKinematicWave::Set2DData(const char* key, int nrows, int ncols, float** data)
+void ImplicitKinematicWave_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	string sk(key);
 	if(StringMatch(sk, Tag_ReachParameter))
@@ -647,12 +633,10 @@ void ImplicitKinematicWave::Set2DData(const char* key, int nrows, int ncols, flo
 				m_reachUpStream[downStreamIndex].push_back(i);
 			}
 		}
-
 	}
-	else if (StringMatch(sk, "FlowIn_Index_D8"))
+	else if (StringMatch(sk, Tag_FLOWIN_INDEX_D8))
 		m_flowInIndex = data;
 	else
-		throw ModelException("IKW_CH", "Set1DData", "Parameter " + sk 
+		throw ModelException(MID_IKW_CH, "Set1DData", "Parameter " + sk 
 			+ " does not exist. Please contact the module developer.");
-	
 }

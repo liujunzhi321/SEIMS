@@ -1,13 +1,10 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Overland routing using 4-point implicit finite difference method
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
-
+/*!
+ * \file InterFlow_IKW.h
+ * \brief Interflow routing using implicit finite difference method
+ * kinematic wave method in LISEM model
+ * \author Junzhi Liu
+ * \date Feb. 2011 
+ */
 #pragma once
 
 #include <string>
@@ -16,12 +13,24 @@
 #include <map>
 #include "SimulationModule.h"
 using namespace std;
-
-class InterFlow : public SimulationModule
+/** \defgroup InterFlow_IKW
+ * \ingroup Hydrology
+ * \brief Interflow routing using implicit finite difference method
+ */
+/*!
+ * \class InterFlow_IKW
+ * \ingroup InterFlow_IKW
+ *
+ * \brief Interflow routing using implicit finite difference method
+ *
+ */
+class InterFlow_IKW : public SimulationModule
 {
 public:
-	InterFlow(void);
-	~InterFlow(void);
+	//! Constructor
+	InterFlow_IKW(void);
+	//! Destructor
+	~InterFlow_IKW(void);
 
 	virtual int Execute();
 
@@ -34,14 +43,14 @@ public:
 	bool CheckInputData(void);
 
 private:
-	/// deal with positive and negative float numbers
-	float Power(float a, float n)
-	{
-		if (a >= 0)
-			return pow(a, n);
-		else
-			return -pow(-a, n);
-	}
+	///// deal with positive and negative float numbers
+	//float Power(float a, float n)
+	//{
+	//	if (a >= 0)
+	//		return pow(a, n);
+	//	else
+	//		return -pow(-a, n);
+	//}
 
 	void FlowInSoil(int id);
 
@@ -59,8 +68,10 @@ private:
 
 	/// slope (percent)
 	float *m_s0;
-	/// root depth (m)
+	/// root depth (m)  /// mm? LJ
 	float *m_rootDepth;
+	/// soil depth (mm)
+	float *m_soilDepth;
 	/// conductivity (mm/h)
 	float *m_ks;
 	/// scaling factor depending on land use (Ki)

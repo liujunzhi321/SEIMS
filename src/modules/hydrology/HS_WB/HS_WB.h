@@ -1,3 +1,9 @@
+/*!
+ * \file HS_WB.h
+ * \brief
+ * \author Junzhi Liu
+ * \date May 2011
+ */
 #pragma once
 #include <string>
 #include <vector>
@@ -5,18 +11,25 @@
 #include <sstream>
 #include <map>
 #include "api.h"
-using namespace std;
-
 #include "SimulationModule.h"
-
-//typedef vector<vector<double>> double2DArray;
-
+using namespace std;
+/** \defgroup HS_WB
+ * \ingroup Hydrology
+ * \brief
+ */
+/*!
+ * \class HS_WB
+ * \ingroup HS_WB
+ *
+ * \brief 
+ *
+ */
 class HS_WB : public SimulationModule
 {
 private:
 
 	int m_nCells;
-	time_t m_date;//
+	time_t m_date;
 
 	/// for routing calculation
 	/// inputs
@@ -49,23 +62,25 @@ private:
 
 	//result
 	float* m_soilMoisture;			//distribution of soil moisture		
-	float** m_soilWaterBalance;	//time seriese result
+	float** m_soilWaterBalance;	//time series result
 
 	//variables used to output
-	float* m_precipitation;
-	float* m_interception;
-	float* m_depression;
-	float* m_ei;
-	float* m_ed;
+	//float* m_precipitation;
+	//float* m_interception;
+	//float* m_depression;
+	//float* m_ei;
+	//float* m_ed;
 
-	float* m_se;
-	float* m_tMax;
-	float* m_tMin;
-	float* m_soilT;
+	//float* m_se;
+	//float* m_tMax;
+	//float* m_tMin;
+	//float* m_soilT;
 
 
 public:
+	//! Constructor
 	HS_WB(void);
+	//! Destructor
 	~HS_WB(void);
 
 	virtual void SetValue(const char* key, float data);
@@ -88,15 +103,12 @@ private:
 	bool CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension
 	*	@return bool The validity of the dimension
 	*/
 	bool CheckInputSize(const char*,int);
-
-
-
 };
 

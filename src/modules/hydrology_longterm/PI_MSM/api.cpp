@@ -20,11 +20,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Alex Storey");
-	mdi.SetClass("Precipitation Interception", "Calculate precipitation interception.");
-	mdi.SetDescription("Module to calculate precipitation interception using the maximum storage method.");
+	mdi.SetClass(MCLS_INTERC, MCLSDESC_INTERC);
+	mdi.SetDescription(MDESC_PI_MSM);
 	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetID("PI_MSM");
-	mdi.SetName("PI_MSM");
+	mdi.SetID(MID_PI_MSM);
+	mdi.SetName(MID_PI_MSM);
 	mdi.SetVersion("0.4");
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("PI_MSM.chm");
@@ -45,7 +45,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, DT_Raster1D);
 
 	// set the dependencies
-	mdi.AddDependency("Interpolation", "Interpolation Module");
+	mdi.AddDependency(MCLS_CLIMATE, MCLSDESC_CLIMATE);
 
 	string res = mdi.GetXMLDocument();
 

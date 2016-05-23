@@ -21,7 +21,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Wu Hui");
-	mdi.SetClass("Groundwater", "Calculate groundwater balance and baseflow.");
+	mdi.SetClass(MCLS_GW, MCLSDESC_GW);
 	mdi.SetDescription("Reservoir Method to calculate groundwater balance and baseflow.");
 	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("GWA_RE.chm");

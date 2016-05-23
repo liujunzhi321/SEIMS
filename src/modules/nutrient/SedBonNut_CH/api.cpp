@@ -39,8 +39,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter("FLOWIN_INDEX_D8", "", "The index of flow in cell in the compressed array,"
 		" and the first element in each sub-array is the number of flow in cells in this sub-array", "ParameterDB_Discharge", DT_Array2D);
 	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster1D);
-	mdi.AddParameter(Tag_ReachParameter, "", "Reach parameters such stream order, manning's n and downstream subbasin id", "ParameterDB_Discharge", DT_Array2D);
-	
+	mdi.AddParameter(Tag_ReachParameter, UNIT_NON_DIM, DESC_REACH_PARAMETER, Source_ParameterDB, DT_Array2D);
 	mdi.AddInput("D_SedBonPToCh", "m3/s", "Flux in the downslope boundary of cells", "Module",DT_Raster1D);
 	mdi.AddInput("D_SedBonAmmoniumToCh","mm","Water depth in the downslope boundary of cells","Module",DT_Raster1D);	
 	mdi.AddInput("HCH","mm", "Water depth in the downslope boundary of cells","Module",DT_Array2D);

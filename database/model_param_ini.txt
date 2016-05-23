@@ -81,7 +81,7 @@ WaterBalance	soil_td1	Empirical coefficient for estimating soil temperature	oC	S
 WaterBalance	soil_td2	Empirical coefficient for estimating soil temperature	oC	STP_FP	0.339	0	AC	1	0	Y
 WaterBalance	k_soil10	ratio between soil temperature at 10 cm and the mean		STP_FP	1	0	AC	3	0	Y
 WaterBalance	soil_t10	soil temperature relative to short grass cover	oC	STP_FP	-99	1	RC	2	0	Y
-WaterBalance	rv_co	Groundwater revap coefficient		GWA_RE	0	0	AC	0.2	0	Y
+WaterBalance	rv_co	Groundwater revap coefficient		GW_RSVR	0	0	AC	0.2	0	Y
 WaterBalance	t_soil	Soil freezing temperature	oC	ALL	-5	0	AC	0	-15	Y
 WaterBalance	s_frozen	Frozen moisture relative to porosity with no infiltration		ALL	0.5	0	AC	1	0.1	Y
 WaterBalance	Residual	soil residual moisture	m3/m3	ALL	-99	1	RC	1.2	0.8	Y
@@ -90,11 +90,11 @@ Discharge	Ol_iuh	Overland flow IUH		ALL	-999		NC			Y
 Discharge	Ch_iuh	Channel flow IUH		ChannelRouting	-999		NC			Y
 Discharge	Reach	Reach properties		ALL	-99	0	NC	0	0	Y
 Discharge	Ki	Interflow scaling factor		SSR_DA	3	0	AC	10	0	Y
-Discharge	Kg	Baseflow recession coefficient		GWA_RE	5E-5	0	AC	0.1	0.001	Y
-Discharge	Base_ex	Baseflow exponent		GWA_RE	1	1	AC	4	1	Y
-Discharge	df_coef	Deep percolation coefficient		GWA_RE	0	0	AC	1	0	
-Discharge	gw0	Initial groundwater storage	mm	GWA_RE	100	0	AC	1000	0	Y
-Discharge	gwmax	Maximum groundwater storage	mm	GWA_RE	300	0	AC	1000	0	Y
+Discharge	Kg	Baseflow recession coefficient		GW_RSVR	5E-5	0	AC	0.1	0.001	Y
+Discharge	Base_ex	Baseflow exponent		GW_RSVR	1	1	AC	4	1	Y
+Discharge	df_coef	Deep percolation coefficient		GW_RSVR	0	0	AC	1	0	
+Discharge	gw0	Initial groundwater storage	mm	GW_RSVR	100	0	AC	1000	0	Y
+Discharge	gwmax	Maximum groundwater storage	mm	GW_RSVR	300	0	AC	1000	0	Y
 Discharge	k_chb	channel bottom hydraulic conductivity	mm/hr	ALL	0.5	0	AC	150	0	Y
 Discharge	k_bank	channel bank hydraulic conductivity	mm/hr	ALL	20	0	AC	150	0	Y
 Discharge	ep_ch	reach evaporation adjustment factor		ALL	1	0	AC	1	0	Y

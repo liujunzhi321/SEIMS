@@ -136,6 +136,8 @@ extern void Output1DArray(int n, float* data, const char* filename);
  * \param[in] nRows, nCols, data, filename
  */
 extern void Output2DArray(int nRows, int nCols, float** data, const char* filename);
+/// deal with positive and negative float numbers
+float Power(float a, float n);
 /*!
  * \brief Read 1D array from file
  *

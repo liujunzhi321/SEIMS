@@ -1,34 +1,35 @@
-/** 
-*	@file
-*	@version	1.0
-*	@author    Junzhi Liu
-*	@date	31-Octobor-2011
-*
-*	@brief	Green Ampt Method to calculate infiltration and excess precipitation
-*
-*/
+/*!
+ * \file GWaterReservoir.h
+ * \brief Calculate groundwater using reservoir method
+ * \author Junzhi Liu
+ * \date Oct. 2011
+ * \revesed LiangJun Zhu
+ * \note Change the module name from GWATER_RESERVOIR to GW_RSVR
+ */
 
 #pragma once
 #include <string>
 #include "SimulationModule.h"
 
 using namespace std;
-/** \defgroup GWATER_RESERVOIR
+/** \defgroup GW_RSVR
  * \ingroup Hydrology
  * \brief Calculate groundwater using reservoir method
  *
  */
 /*!
  * \class GWaterReservoir
- * \ingroup GWATER_RESERVOIR
+ * \ingroup GW_RSVR
  *
- * \brief 
+ * \brief Calculate groundwater using reservoir method
  *
  */
 class GWaterReservoir : public SimulationModule
 {
 public:
+	//! Constructor
 	GWaterReservoir(void);
+	//! Destructor
 	~GWaterReservoir(void);
 	
 	virtual void Set1DData(const char* key, int n, float* data);
