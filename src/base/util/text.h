@@ -270,7 +270,7 @@
 /// By LiangJun Zhu, Apr. 26, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-/// Climate related Modules
+/// HydroClimate related Modules
 #define MCLS_CLIMATE "HydroClimate"
 #define MCLSDESC_CLIMATE "HydroClimate data modules"
 #define MID_TSD_RD "TSD_RD"

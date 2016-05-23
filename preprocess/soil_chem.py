@@ -75,7 +75,10 @@ from config import *
 ### Revised by LiangJun Zhu, 2016-5-21
 ### @param[in] nlyrs Soil layers number
 ### @param[in] depth Depth from soil surface to bottom of layer (mm), e.g., 100, 400, 800.
-### @param[in]
+### @param[in] om organic matter
+### @param[in] clay
+### @param[in] rock
+### @param[in] bd bulk density
 def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
     ## Calculate thick of each layer
     sol_thick = [depth[0]]
@@ -100,13 +103,8 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
     sol_actp = numpy.zeros((nlyrs))
     sol_stap = numpy.zeros((nlyrs))
     sol_hum = numpy.zeros((nlyrs))
-    #sol_rsd is organic matter in the soil layer classified as residue
-    sol_rsd = numpy.zeros((nlyrs))
+    sol_rsd = numpy.zeros((nlyrs)) # Organic matter in the soil layer classified as residue, currently assigned 0. TODO
 
-    sumno3  = numpy.zeros((nlyrs))
-    sumorgn = numpy.zeros((nlyrs))
-    summinp = numpy.zeros((nlyrs))
-    sumorgp = numpy.zeros((nlyrs))
     ## Initialize some single temporary and output variables
     cmup_kgh = 0.  ## kg/ha  current soil carbon for first soil layer
     cmtot_kgh = 0. ## kg/ha  current soil carbon integrated - aggregating all soil layers
@@ -122,7 +120,7 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
             cbn[i] = cbn[i-1] * numpy.exp(-.001 * tmpDepth)
 
     for lyr in range(nlyrs):
-        sol_mass[lyr] = (sol_thick[lyr] / 1000.) * 10000. * 1000. *  bd[lyr] * (1 - rock[lyr]/100.)  ## soil mass of current layer (kg)
+        sol_mass[lyr] = (sol_thick[lyr] / 1000.) * 10000. * 1000. * bd[lyr] * (1 - rock[lyr]/100.)  ## soil mass of current layer (kg)
         sol_cmass[lyr] = sol_mass[lyr] * (cbn[lyr] / 100.) ## Carbon mass of current layer (kg)
         if lyr == 0:
             cmup_kgh = sol_cmass[lyr]
@@ -134,17 +132,14 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
     ##    convert mg/kg (ppm) to kg/ha
 
     for j in range(nlyrs):
-        wt1 = 0.
         wt1 = bd[j] * sol_thick[j] / 100.              ## mg/kg => kg/ha
         conv_wt = 1.e6 * wt1                    ## kg/kg => kg/ha
-        #writeTIFF(conv_wt, conv_wt_file)
 
         sol_fop[j] = sol_rsd[j] * .0010
         sol_fon[j] = sol_rsd[j] * .0055
         sol_cov = sol_rsd[1]
 
         #if (sol_no3[j] <= 0.) :
-        zdst = 0.
         zdst = math.exp(-depth[j] / 1000.)
         sol_no3[j] = 10. * zdst * .7
         sol_no3[j] = sol_no3[j] * wt1          ## mg/kg => kg/ha
@@ -155,7 +150,7 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
             sol_orgn[j] = sol_orgn[j] * wt1      ## mg/kg => kg/ha
         else:
             ## assume C:N ratio of 10:1
-            sol_orgn[j] = 10000. * (cbn[j] / 14.) * wt1  ## CN ratio changed back to 14 cibin 03022012
+            sol_orgn[j] = 10000. * (cbn[j] / 14.) * wt1  ## CN ratio changed back to 14
         sol_aorgn[j] = sol_orgn[j] * nactfr
         sol_orgn[j] = sol_orgn[j] * (1. - nactfr)
 
@@ -214,47 +209,30 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
         summinp = summinp + sol_solp[j] + sol_actp[j] + sol_stap[j]
         sumorgp = sumorgp + sol_orgp[j] + sol_fop[j]
 
-        ##output files
-        #layered
-        #OutputFD_lyrd = [sol_fop[j], sol_fon[j], sol_no3[j], sol_orgn[j], sol_aorgn[j], sol_orgp[j], sol_solp[j], sol_actp[j], sol_stap[j], sol_hum[j]]
-        #OutputFN_lyrd = ["sol_fop", "sol_fon", "sol_no3", "sol_orgn", "sol_aorgn", "sol_orgp", "sol_solp", "sol_actp", "sol_stap", "sol_hum"]
-        #for f in range(len(OutputFN_lyrd)):
-            #OutputFP = workingDir + os.sep + OutputFN_lyrd[f] + "_%d.tif" % (j + 1)
-            #writeTIFF(OutputFD_lyrd[f], OutputFP, workingDir)
-            #print OutputFN_lyrd[f]
-
-    #basno3i = basno3i + sumno3 * / da_km
-    #basorgni = basorgni + sumorgn * / da_km
-    #basminpi = basminpi + summinp * / da_km
-    #basorgpi = basorgpi + sumorgp * / da_km
-
-    #single-layer
-    #OutputFD_slyr = [conv_wt, sol_cov, sumno3, sumorgn, summinp, sumorgp]
-    #OutputFN_slyr = ["conv_wt", "sol_cov", "sumno3", "sumorgn", "summinp", "sumorgp"]
-    #for f in range(len(OutputFN_slyr)):
-        #OutputFP = workingDir + os.sep + OutputFN_slyr[f] + ".tif"
-        #writeTIFF(OutputFD_slyr[f], OutputFP, workingDir)
-    return (sol_fop, sol_fon, sol_no3, sol_orgn, sol_aorgn, sol_orgp, sol_solp, sol_actp, sol_stap, sol_hum, conv_wt, sol_cov, sumno3, sumorgn, summinp, sumorgp)
+    return (list(sol_fop), list(sol_fon), list(sol_no3), list(sol_orgn), list(sol_aorgn), list(sol_orgp),
+            list(sol_solp), list(sol_actp), list(sol_stap), list(sol_hum), sol_cov, sumno3,
+            sumorgn, summinp, sumorgp)
 
 ## Deprecated by LJ, 2016-5-21
-def writeTIFF(file, fpath, workingDir):
-    tiffile = workingDir + os.sep + "Density1.tif"
-    nRows = ReadRaster(tiffile).nRows
-    nCols = ReadRaster(tiffile).nCols
-    geotrans = ReadRaster(tiffile).geotrans
-    srs = ReadRaster(tiffile).srs
-    WriteGTiffFile(fpath, nRows, nCols, file, geotrans, srs, -9999, gdal.GDT_Float32)
-    print "%s" % fpath
+# def writeTIFF(file, fpath, workingDir):
+#     tiffile = workingDir + os.sep + "Density1.tif"
+#     nRows = ReadRaster(tiffile).nRows
+#     nCols = ReadRaster(tiffile).nCols
+#     geotrans = ReadRaster(tiffile).geotrans
+#     srs = ReadRaster(tiffile).srs
+#     WriteGTiffFile(fpath, nRows, nCols, file, geotrans, srs, -9999, gdal.GDT_Float32)
+#     print "%s" % fpath
 
 ## Test
-#if __name__ == "__main__":
-    #print WORKING_DIR
-    #nactfr = 0.5;
-    #nlyrs = 2
-    #depth = numpy.ones((nlyrs))
-    #om = numpy.random.random_sample((nlyrs)) * .3
-    #clay = numpy.ones((nlyrs)) * 2
-    #rock = numpy.ones((nlyrs))
-    #bd = numpy.ones((nlyrs))
-    #SoilChemProperties(nlyrs, depth, om, clay, rock, bd)
-    #print "Soil chemical properties initialized done!"
+if __name__ == "__main__":
+    print WORKING_DIR
+    nactfr = 0.5
+    nlyrs = 2
+    depth = [100,400]
+    om = [1.1, 0.7]
+    clay = [20,18]
+    rock = [0,0]
+    bd = [1.5,1.7]
+    a = SoilChemProperties(nlyrs, depth, om, clay, rock, bd)
+    print a
+    print "Soil chemical properties initialized done!"
