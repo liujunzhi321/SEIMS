@@ -18,7 +18,18 @@
 #include "SimulationModule.h"
 
 using namespace std;
+/** \defgroup IKW_REACH
+ * \ingroup Hydrology_longterm
+ * \brief channel flow routing using Muskingum method
+ *
+ */
 
+/*!
+ * \class IKW_REACH
+ * \ingroup IKW_REACH
+ * \brief Overland routing using 4-point implicit finite difference method
+ * 
+ */
 struct MuskWeights{
 	float c1;
 	float c2;

@@ -9,7 +9,18 @@
 using namespace std;
 
 #include "SimulationModule.h"
+/** \defgroup SOL_WB
+ * \ingroup Hydrology_longterm
+ * \brief Soil water balance
+ *
+ */
 
+/*!
+ * \class SOL_WB
+ * \ingroup SOL_WB
+ * \brief Soil water balance
+ * 
+ */
 //typedef vector<vector<double>> double2DArray;
 
 class SOL_WB : public SimulationModule

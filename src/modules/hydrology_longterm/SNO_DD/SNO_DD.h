@@ -6,6 +6,18 @@
 using namespace std;
 #include "SimulationModule.h"
 
+/** \defgroup SNO_DD
+ * \ingroup Hydrology_longterm
+ * \brief Calculate snow accumulation and istribution of snowmelt
+ *
+ */
+
+/*!
+ * \class SNO_DD
+ * \ingroup SNO_DD
+ * \brief Calculate snow accumulation and istribution of snowmelt
+ * 
+ */
 class SNO_DD:public SimulationModule
 {
 public:

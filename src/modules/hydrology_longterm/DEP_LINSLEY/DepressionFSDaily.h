@@ -29,7 +29,18 @@
 
 using namespace std;
 #include "SimulationModule.h"
+/** \defgroup DEP_LINSLEY
+ * \ingroup Hydrology_longterm
+ * \brief A simple fill and spill method method to calculate depression storage
+ *
+ */
 
+/*!
+ * \class DepressionFSDaily
+ * \ingroup DEP_LINSLEY
+ * \brief function to return the XML Metadata document string
+ * 
+ */
 class DepressionFSDaily:public SimulationModule
 {
 public:

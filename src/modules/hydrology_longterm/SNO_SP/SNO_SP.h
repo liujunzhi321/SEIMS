@@ -5,7 +5,18 @@
 
 using namespace std;
 #include "SimulationModule.h"
+/** \defgroup SNO_SP
+ * \ingroup Hydrology_longterm
+ * \brief Calculate distribution of snowmelt
+ *
+ */
 
+/*!
+ * \class SNO_SP
+ * \ingroup SNO_SP
+ * \brief Calculate distribution of snowmelt
+ * 
+ */
 class SNO_SP:public SimulationModule
 {
 public:

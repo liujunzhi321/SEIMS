@@ -30,6 +30,18 @@
 
 using namespace std;
 #include "SimulationModule.h"
+/** \defgroup IUH_IF
+ * \ingroup Hydrology_longterm
+ * \brief IUH overland method to calculate interflow routing
+ *
+ */
+
+/*!
+ * \class IUH_IF
+ * \ingroup IUH_IF
+ * \brief IUH overland method to calculate interflow routing
+ * 
+ */
 
 class IUH_IF:public SimulationModule
 {

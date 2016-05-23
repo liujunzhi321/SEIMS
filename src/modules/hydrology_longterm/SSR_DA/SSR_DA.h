@@ -7,7 +7,18 @@
 using namespace std;
 
 #include "SimulationModule.h"
+/** \defgroup SSR_DA
+ * \ingroup Hydrology_longterm
+ * \brief --
+ *
+ */
 
+/*!
+ * \class SSR_DA
+ * \ingroup SSR_DA
+ * \brief --
+ * 
+ */
 class SSR_DA : public SimulationModule
 {
 private:
