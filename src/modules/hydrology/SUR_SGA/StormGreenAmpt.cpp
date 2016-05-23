@@ -1,3 +1,10 @@
+/*!
+ * \file StormGreenAmpt.cpp
+ * \brief Green Ampt Method to calculate infiltration and excess precipitation
+ * \author Junzhi Liu
+ * \date Oct. 2011
+ * 
+ */
 #include "StormGreenAmpt.h"
 #include "MetadataInfo.h"
 #include <cmath>
@@ -64,25 +71,25 @@ void StormGreenAmpt::Get1DData(const char* key, int* n, float **data)
 
 	*n = m_nCells;
 	string sk(key);
-	if (StringMatch(sk, "Infil"))   //infiltration
+	if (StringMatch(sk, VAR_INFIL))   //infiltration
 	{
 		*data = m_infil;	
 	}
-	else if (StringMatch(sk, "INFILCAPSURPLUS")) 
+	else if (StringMatch(sk, VAR_INFILCAPSURPLUS)) 
 	{
 		*data = m_infilCapacitySurplus;
 	}
-	else if (StringMatch(sk, "AccumuInfil"))
+	else if (StringMatch(sk, VAR_ACC_INFIL))
 	{
 		*data = m_accumuDepth;
 	}
-	else if (StringMatch(sk, "SOMO")) // soil moisture
+	else if (StringMatch(sk, VAR_SOMO)) // soil moisture
 	{
 		*data = m_soilMoisture;
 	}
 	else
 	{
-		throw ModelException("SUR_SGA","getResults","Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException(MID_SUR_SGA,"Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
 		
 	}
 }
@@ -96,87 +103,87 @@ bool StormGreenAmpt::CheckInputData()
 {
 	if(m_date < 0)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","You have not set the time.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","You have not set the time.");
 		return false;
 	}
 	if(m_dt < 0)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","You have not set the time step.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","You have not set the time step.");
 		return false;
 	}
 	if(m_nCells <= 0)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The cell number can not be less than zero.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The cell number can not be less than zero.");
 		return false;
 	}
 
 	if (m_pNet == NULL)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The net precipitation can not be NULL.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The net precipitation can not be NULL.");
 		return false;
 	}
 
 	if (m_porosity == NULL)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The soil porosity can not be NULL.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The soil porosity can not be NULL.");
 		return false;
 	}
 	//if (m_soilMoisture == NULL)
 	//{
-	//	throw ModelException("SUR_SGA","CheckInputData","The soil moisture can not be NULL.");
+	//	throw ModelException(MID_SUR_SGA,"CheckInputData","The soil moisture can not be NULL.");
 	//	return false;
 	//}
 	if (m_sd == NULL)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The depression storage can not be NULL.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The depression storage can not be NULL.");
 		return false;
 	}
 
 	//if (m_t == NULL)
 	//{
-	//	throw ModelException("SUR_SGA","CheckInputData","The temperature can not be NULL.");
+	//	throw ModelException(MID_SUR_SGA,"CheckInputData","The temperature can not be NULL.");
 	//	return false;
 	//}
 	//if (m_snowAccu == NULL)
 	//{
-	//	throw ModelException("SUR_SGA","CheckInputData","The snow accumulation data can not be NULL.");
+	//	throw ModelException(MID_SUR_SGA,"CheckInputData","The snow accumulation data can not be NULL.");
 	//	return false;
 	//}
 	//if (m_snowMelt == NULL)
 	//{
-	//	throw ModelException("SUR_SGA","CheckInputData","The snow melt can not be NULL.");
+	//	throw ModelException(MID_SUR_SGA,"CheckInputData","The snow melt can not be NULL.");
 	//	return false;
 	//}
 	//if (m_soilTemp == NULL)
 	//{
-	//	throw ModelException("SUR_SGA","CheckInputData","The soil temperature can not be NULL.");
+	//	throw ModelException(MID_SUR_SGA,"CheckInputData","The soil temperature can not be NULL.");
 	//	return false;
 	//}
 
 	if (m_ks == NULL)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The hydraulic conductivity can not be NULL.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The hydraulic conductivity can not be NULL.");
 		return false;
 	}
 
 	if (m_clay == NULL)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The clay percentage can not be NULL.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The clay percentage can not be NULL.");
 		return false;
 	}
 	if (m_sand == NULL)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The sand percentage can not be NULL.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The sand percentage can not be NULL.");
 		return false;
 	}
 	if (m_initSoilMoisture == NULL)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The initial soil temperature can not be NULL.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The initial soil temperature can not be NULL.");
 		return false;
 	}
 	if (m_fieldCap == NULL)
 	{
-		throw ModelException("SUR_SGA","CheckInputData","The field capacity can not be NULL.");
+		throw ModelException(MID_SUR_SGA,"CheckInputData","The field capacity can not be NULL.");
 		return false;
 	}
 
@@ -187,7 +194,7 @@ bool StormGreenAmpt::CheckInputSize(const char* key,int n)
 {
 	if(n<=0)
 	{
-		throw ModelException("SUR_SGA","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_SUR_SGA,"CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(m_nCells != n)
@@ -195,7 +202,7 @@ bool StormGreenAmpt::CheckInputSize(const char* key,int n)
 		if(m_nCells <=0) m_nCells = n;
 		else
 		{
-			throw ModelException("SUR_SGA","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
+			throw ModelException(MID_SUR_SGA,"CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
 		}
 	}
 
@@ -372,7 +379,7 @@ void StormGreenAmpt::SetValue(const char* key, float value)
 	//	m_sFrozen = value;
 	//}
 	//else 
-	if (StringMatch(sk,"DT_HS"))
+	if (StringMatch(sk,Tag_HillSlopeTimeStep))
 	{
 		m_dt = value;
 	}
@@ -382,7 +389,7 @@ void StormGreenAmpt::SetValue(const char* key, float value)
 	}
 	else
 	{
-		throw ModelException("SUR_SGA","SetValue","Parameter " + sk + " does not exist in SetValue method.");
+		throw ModelException(MID_SUR_SGA,"SetValue","Parameter " + sk + " does not exist in SetValue method.");
 	}
 
 }
@@ -397,7 +404,7 @@ void StormGreenAmpt::Set1DData(const char* key, int n, float* data)
 
 	//set the value
 	string sk(key);
-	if (StringMatch(sk,"D_NEPR"))
+	if (StringMatch(sk,VAR_NEPR))
 	{
 		m_pNet = data;
 	}
@@ -409,19 +416,19 @@ void StormGreenAmpt::Set1DData(const char* key, int n, float* data)
 	//{
 	//	m_soilMoisture = data;
 	//}
-	else if (StringMatch(sk,"D_DPST"))
+	else if (StringMatch(sk,VAR_DPST))
 	{
 		m_sd = data;
 	}
-	else if (StringMatch(sk,"D_SURU"))
+	else if (StringMatch(sk,VAR_SURU))
 	{
 		m_sr = data;
 	}
-	else if (StringMatch(sk,"RootDepth"))
+	else if (StringMatch(sk,VAR_ROOTDEPTH))
 	{
 		m_rootDepth = data;
 	}
-	else if (StringMatch(sk,"FieldCap"))
+	else if (StringMatch(sk,VAR_FIELDCAP))
 	{
 		m_fieldCap = data;
 	}
@@ -437,28 +444,28 @@ void StormGreenAmpt::Set1DData(const char* key, int n, float* data)
 	//{
 	//	m_snowMelt = data;
 	//}
-	else if (StringMatch(sk,"Moist_in"))
+	else if (StringMatch(sk,VAR_MOIST_IN))
 	{
 		m_initSoilMoisture = data;
 	}
-	else if (StringMatch(sk,"porosity"))
+	else if (StringMatch(sk,VAR_POROST))
 	{
 		m_porosity = data;
 	}
-	else if (StringMatch(sk,"Conductivity"))
+	else if (StringMatch(sk,VAR_CONDUCT))
 	{
 		m_ks = data;
 	}
-	else if (StringMatch(sk,"clay"))
+	else if (StringMatch(sk,VAR_CLAY))
 	{
 		m_clay = data;
 	}
-	else if (StringMatch(sk,"sand"))
+	else if (StringMatch(sk,VAR_SAND))
 	{
 		m_sand = data;
 	}
 	else
 	{
-		throw ModelException("SUR_SGA","SetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException(MID_SUR_SGA,"SetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }

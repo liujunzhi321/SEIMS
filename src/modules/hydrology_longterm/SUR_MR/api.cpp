@@ -56,7 +56,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddOutput(VAR_EXCP,  UNIT_DEPTH_MM, DESC_EXCP, DT_Raster1D);
 	mdi.AddOutput(VAR_INFIL, UNIT_DEPTH_MM, DESC_INFIL, DT_Raster1D);
-	mdi.AddOutput(VAR_SOMO, UNIT_SOLCOEF_M3M3, DESC_SOMO, DT_Array2D);
+	mdi.AddOutput(VAR_SOMO, UNIT_SOLCOEF_M3M3, DESC_SOMO, DT_Raster2D);
 
 	// write out the XML file.
 

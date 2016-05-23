@@ -74,12 +74,28 @@ SWAT 最新版中内置了4种泥沙河道汇流模拟方法，后续可以补�
 + 1. TWO_THIRDS(2.f/3.f), m_msk_x(0.2f), m_vScalingFactor（即"VelocityScalingFactor"）(3.0f), m_chS0(0.f), m_beta(5.0f/3), m_delta(1e-6f)，，模块初始化时赋值，是否需要在数据库中添加？
 + 2. 与其他几个河道汇流模块类似，m_diagonal到底应该用ArcGIS的流向编码还是TauDEM的呢？
 
+### GWA_RE和GW_RSVR什么关系？
+为什么会有2个reservoir method的地下水模块
+
+### HS_WB模块
++ 1. Get2DData中，*nCols=17？ HOW TO FIX？
+
+### IKW_CH模块
++ 1. “QRECH” 为何在Get1DData和Get2DData中均有？
+
+### IKW_OL模块
++ 1. m_FlowLen
 
 ### 单位转换问题
 
 有必要在util模块中加入多个单位之间转换的代码。
 
+### RootDepth和SoilDepth的问题
++ 1. 之前代码中认为rootDepth即为soilDepth，这是不对的，目前数据准备提供了soilDepth，具体模块还未改过来，如IKW_IF模块
 
+### ValueToString()
++ 1. 许多模块中都有一个函数toString()，用于将float转换为string输出，造成代码冗余，TODO：均用util下的ValueToString()替换，该函数为模板函数
++ 
 ## TODO by Gao
 
 ##1.代码整理

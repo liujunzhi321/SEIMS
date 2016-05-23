@@ -1,12 +1,10 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	routing in the channel cells using implicit finite difference method (kinematic wave method in LISEM model)
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file IKW_CH.h
+ * \brief Routing in the channel cells using implicit finite difference method
+ * kinematic wave method in LISEM model
+ * \author Junzhi Liu
+ * \date Feb. 2011 
+ */
 
 #pragma once
 
@@ -17,12 +15,24 @@
 #include <vector>
 #include "SimulationModule.h"
 using namespace std;
-
-class ImplicitKinematicWave : public SimulationModule
+/** \defgroup IKW_CH
+ * \ingroup Hydrology
+ * \brief Routing in the channel cells using implicit finite difference method
+ */
+/*!
+ * \class ImplicitKinematicWave_CH
+ * \ingroup IKW_CH
+ *
+ * \brief kinematic wave method in LISEM model
+ *
+ */
+class ImplicitKinematicWave_CH : public SimulationModule
 {
 public:
-	ImplicitKinematicWave(void);
-	~ImplicitKinematicWave(void);
+	//! Constructor
+	ImplicitKinematicWave_CH(void);
+	//! Destructor
+	~ImplicitKinematicWave_CH(void);
 
 	virtual int Execute();
 	
@@ -43,21 +53,21 @@ public:
 	};
 
 private:
-	/// deal with positive and negative float numbers
-	float Power(float a, float n)
-	{
-		if (a >= 0)
-			return pow(a, n);
-		else
-			return -pow(-a, n);
-	}
+	///// deal with positive and negative float numbers
+	//float Power(float a, float n)
+	//{
+	//	if (a >= 0)
+	//		return pow(a, n);
+	//	else
+	//		return -pow(-a, n);
+	//}
 
 	float GetNewQ(float qIn, float qLast, float surplus, float alpha, float dt, float dx);
 
 	void ChannelFlow(int iReach, int iCell, int id, float qgEachCell);
 	void initalOutputs();
 	void initalOutputs2();
-	/// size
+	/// valid cells number
 	int m_nCells;
 
 	/// cell width of the grid (m)

@@ -10,7 +10,7 @@
 
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
-	return new Percolation();
+	return new Percolation_DARCY();
 }
 
 // function to return the XML Metadata document string
@@ -20,33 +20,29 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Chunping Ou");
-	mdi.SetClass("Percolation", "Calculate the amount of water percolated out of the root zone within the time step.");
-	mdi.SetDescription("The method relating percolation with soil moisture and pore size distribution index used in the original WetSpa will be the default method to estimate percolation out of the root zone.");
+	mdi.SetClass(MCLS_PERCO, MCLSDESC_PERCO);
+	mdi.SetDescription(MDESC_PERCO_DARCY);
 	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetID("Percolation");
-	mdi.SetName("Percolation");
+	mdi.SetID(MID_PERCO_DARCY);
+	mdi.SetName(MID_PERCO_DARCY);
 	mdi.SetVersion("0.5");
 	mdi.SetWebsite(SEIMS_SITE);
-	mdi.SetHelpfile("Percolation.chm");
+	mdi.SetHelpfile("PERCO_DARCY.chm");
 
-	//mdi.AddParameter("t_soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);							//
-	mdi.AddParameter("DT_HS", "second", "time step for storm simulation","ParameterDB_WaterBalance", DT_Single);
+	mdi.AddParameter(Tag_HillSlopeTimeStep,UNIT_SECOND,DESC_TIMESTEP,File_Input, DT_Single); 
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single); 
 
-	mdi.AddParameter("Conductivity","mm/h","saturation hydraulic conductivity","ParameterDB_WaterBalance",DT_Raster1D);
-	mdi.AddParameter("Porosity","m3/m3","soil porosity","ParameterDB_WaterBalance",DT_Raster1D);
-	//mdi.AddParameter("Residual","m3/m3","residual moisture content","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("Poreindex","-","pore size distribution index","ParameterDB_WaterBalance",DT_Raster1D);
-	mdi.AddParameter("FieldCap","m3/m3","Soil field capacity","ParameterDB_WaterBalance",DT_Raster1D);
-	mdi.AddParameter("RootDepth", "mm", "Root depth","ParameterDB_WaterBalance", DT_Raster1D);
+	mdi.AddParameter(VAR_CONDUCT, UNIT_WTRDLT_MMH, DESC_CONDUCT, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_POROST, UNIT_STRG_M3M, DESC_POROST, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_POREID, UNIT_NON_DIM, DESC_POREID, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_STRG_M3M, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D);
 
-	//mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);						//soil temperature
-	mdi.AddInput("D_SOMO","mm","Distribution of soil moisture","Module",DT_Raster1D);			//from soil water balance module	0
-	//mdi.AddInput("D_ES","mm","ES","Module",DT_Raster);											//from actual evapotranspiration module, the output id may not be correct.
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster1D);
 
+	mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);		//from soil water balance module	0
 	// set the output variables
-	mdi.AddOutput("PERCOLATION","mm", "Distribution of groundwater recharge (percolation)", DT_Raster1D);
+	mdi.AddOutput(VAR_PERCO, UNIT_DEPTH_MM, DESC_PERCO, DT_Raster1D);
 
 	// write out the XML file.
 	string res = mdi.GetXMLDocument();
@@ -55,3 +51,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	strprintf(tmp, res.size()+1, "%s", res.c_str());
 	return tmp;
 }
+	//mdi.AddParameter("t_soil","oC","threshold soil freezing temperature","ParameterDB_WaterBalance", DT_Single);	
+	//mdi.AddInput("D_ES","mm","ES","Module",DT_Raster);											//from actual evapotranspiration module, the output id may not be correct.
+
+	//mdi.AddInput("D_SOTE","oC", "Soil Temperature","Module", DT_Raster);						//soil temperature
+	//mdi.AddParameter("Residual","m3/m3","residual moisture content","ParameterDB_WaterBalance",DT_Raster);

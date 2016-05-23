@@ -1,5 +1,12 @@
+/*!
+ * \file Interception.h
+ * \brief
+ * \author Alex Storey, Junzhi Liu
+ * \date May 2013
+ *
+ * 
+ */
 #pragma once
-
 #include <string>
 #include <vector>
 #include "api.h"
@@ -7,9 +14,19 @@
 
 using namespace std;
 
-typedef vector<vector<float> > double2DArray;
-
-class clsPI_MSM : public SimulationModule
+///typedef vector<vector<float> > double2DArray; /// NOT USED? LJ
+/** \defgroup PI_STORM
+ * \ingroup Hydrology
+ * \brief
+ */
+/*!
+ * \class clsPI_STORM
+ * \ingroup PI_STORM
+ *
+ * \brief Precipitation interception for STORM model
+ *
+ */
+class clsPI_STORM : public SimulationModule
 {
 private:
 	//---------------------
@@ -42,8 +59,10 @@ private:
 	time_t m_dateLastTimeStep;
 	//---------------------
 public:
-	clsPI_MSM(void);
-	virtual ~clsPI_MSM(void);
+	//! Constructor
+	clsPI_STORM(void);
+	//! Destructor
+	virtual ~clsPI_STORM(void);
 
 	virtual int Execute(void);
 	virtual void Set1DData(const char* key, int n, float* data);
@@ -51,6 +70,7 @@ public:
 	virtual void Get1DData(const char* key, int* n, float** data);
 	virtual void SetDate(time_t date);
 private:
+	//! Julian Day
 	int DayOfYear(time_t);
 
 	/**
@@ -61,7 +81,7 @@ private:
 	bool CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension

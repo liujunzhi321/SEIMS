@@ -1,12 +1,10 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Overland routing using implicit finite difference method (the LISEM algorithm)
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file ImplicitKinematicWave.cpp
+ * \brief Routing in the overland cells using implicit finite difference method
+ * kinematic wave method in LISEM model
+ * \author Junzhi Liu
+ * \date Feb. 2011 
+ */
 
 //#include "vld.h"
 #include "ImplicitKinematicWave.h"
@@ -23,7 +21,7 @@ using namespace std;
 
 //#define MINI_SLOPE 0.0001f
 
-ImplicitKinematicWave::ImplicitKinematicWave(void):m_nCells(-1), m_CellWidth(-1.0f),
+ImplicitKinematicWave_OL::ImplicitKinematicWave_OL(void):m_nCells(-1), m_CellWidth(-1.0f),
 	m_s0(NULL), m_n(NULL), m_flowInIndex(NULL), m_flowOutIndex(NULL), m_direction(NULL), m_routingLayers(NULL), m_nLayers(-1),
 	m_q(NULL), m_sr(NULL), m_flowWidth(NULL), m_flowLen(NULL), m_alpha(NULL), m_streamLink(NULL),
 	m_sRadian(NULL), m_vel(NULL), m_reInfil(NULL), m_idOutlet(-1),
@@ -52,7 +50,7 @@ ImplicitKinematicWave::ImplicitKinematicWave(void):m_nCells(-1), m_CellWidth(-1.
 }
 
 
-ImplicitKinematicWave::~ImplicitKinematicWave(void)
+ImplicitKinematicWave_OL::~ImplicitKinematicWave_OL(void)
 {
 	if(m_q != NULL)
 		delete [] m_q;
@@ -75,44 +73,44 @@ ImplicitKinematicWave::~ImplicitKinematicWave(void)
 
 }
 
-bool ImplicitKinematicWave::CheckInputData(void)
+bool ImplicitKinematicWave_OL::CheckInputData(void)
 {
 	if(m_date <= 0)
-		throw ModelException("IKW_OL","CheckInputData","You have not set the Date variable.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","You have not set the Date variable.");
 
 	if(m_nCells <= 0)
-		throw ModelException("IKW_OL","CheckInputData","The cell number of the input can not be less than zero.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The cell number of the input can not be less than zero.");
 
 	if(m_dtStorm <= 0)
-		throw ModelException("IKW_OL","CheckInputData","You have not set the TimeStep variable of the overland flow routing.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","You have not set the TimeStep variable of the overland flow routing.");
 
 	if(m_CellWidth <= 0)
-		throw ModelException("IKW_OL","CheckInputData","You have not set the CellWidth variable.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","You have not set the CellWidth variable.");
 
 	if(m_s0 == NULL)
-		throw ModelException("IKW_OL","CheckInputData","The parameter: slope has not been set.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The parameter: slope has not been set.");
 	if(m_n == NULL)
-		throw ModelException("IKW_OL","CheckInputData","The parameter: manning's roughness has not been set.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The parameter: manning's roughness has not been set.");
 	if(m_flowInIndex == NULL)
-		throw ModelException("IKW_OL","CheckInputData","The parameter: flow in index has not been set.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The parameter: flow in index has not been set.");
 	if(m_flowOutIndex == NULL)
-		throw ModelException("IKW_OL","CheckInputData","The parameter: flow out index has not been set.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The parameter: flow out index has not been set.");
 	if(m_direction == NULL)
-		throw ModelException("IKW_OL","CheckInputData","The parameter: flow direction has not been set.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The parameter: flow direction has not been set.");
 	if(m_routingLayers == NULL)
-		throw ModelException("IKW_OL","CheckInputData","The parameter: routingLayers has not been set.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The parameter: routingLayers has not been set.");
 	if(m_streamLink == NULL)
-		throw ModelException("IKW_OL","CheckInputData","The parameter: Stream_link has not been set.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The parameter: Stream_link has not been set.");
 	
 	if(m_sr == NULL)
-		throw ModelException("IKW_OL","CheckInputData","The parameter: D_SURU(surface runoff) has not been set.");
+		throw ModelException(MID_IKW_OL,"CheckInputData","The parameter: D_SURU(surface runoff) has not been set.");
 
 	return true;
 }
 
-void  ImplicitKinematicWave::initalOutputs()
+void  ImplicitKinematicWave_OL::initalOutputs()
 {
-	if(m_nCells <= 0) throw ModelException("IKW_OL","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_nCells <= 0) throw ModelException(MID_IKW_OL,"initalOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_q == NULL)
 	{
@@ -164,7 +162,7 @@ void  ImplicitKinematicWave::initalOutputs()
 \param dt   timestep
 \param dx   length of the cell corrected for slope
 */
-float ImplicitKinematicWave::GetNewQ(float qIn, float qLast, float surplus, float alpha, float dt, float dx)
+float ImplicitKinematicWave_OL::GetNewQ(float qIn, float qLast, float surplus, float alpha, float dt, float dx)
 {
     /* Using Newton-Raphson Method */
     float  ab_pQ, dtX, C;  //auxillary vars
@@ -214,7 +212,7 @@ float ImplicitKinematicWave::GetNewQ(float qIn, float qLast, float surplus, floa
     } while(fabs(fQkx) > _epsilon && count < MAX_ITERS);
 
 	if(Qkx != Qkx)
-		throw ModelException("IKW_OL", "GetNewQ", "Error in iteration!");
+		throw ModelException(MID_IKW_OL, "GetNewQ", "Error in iteration!");
 
     //itercount = count;
     return Qkx;
@@ -222,7 +220,7 @@ float ImplicitKinematicWave::GetNewQ(float qIn, float qLast, float surplus, floa
 
 // end code form LISEM 
 
-void ImplicitKinematicWave::OverlandFlow(int id)
+void ImplicitKinematicWave_OL::OverlandFlow(int id)
 {
 	const float beta = 0.6f;
 	const float _23 = 2.0f/3.0f;
@@ -294,7 +292,7 @@ void ImplicitKinematicWave::OverlandFlow(int id)
 	//	reInfil = m_infilCapacitySurplus[id];
 
 	//if (reInfil < 0.f || reInfil > m_infilCapacitySurplus[id])
-	//	throw  ModelException("IKW_OL", "OverlandFlow", "Reinfiltration exceeded range!");
+	//	throw  ModelException(MID_IKW_OL, "OverlandFlow", "Reinfiltration exceeded range!");
 
 	if (reInfil < 0.f)
 		reInfil = 0.f;
@@ -324,7 +322,7 @@ void ImplicitKinematicWave::OverlandFlow(int id)
 
 }
 
-int ImplicitKinematicWave::Execute()
+int ImplicitKinematicWave_OL::Execute()
 {
 	initalOutputs();
 
@@ -346,7 +344,7 @@ int ImplicitKinematicWave::Execute()
 	return 0;
 }
 
-bool ImplicitKinematicWave::CheckInputSize(const char* key, int n)
+bool ImplicitKinematicWave_OL::CheckInputSize(const char* key, int n)
 {
 	if(n <= 0)
 	{
@@ -361,17 +359,17 @@ bool ImplicitKinematicWave::CheckInputSize(const char* key, int n)
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
 			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
-			throw ModelException("IKW_OL","CheckInputSize",oss.str());
+			throw ModelException(MID_IKW_OL,"CheckInputSize",oss.str());
 		}
 	}
 
 	return true;
 }
 
-void ImplicitKinematicWave::SetValue(const char* key, float data)
+void ImplicitKinematicWave_OL::SetValue(const char* key, float data)
 {
 	string sk(key);
-	if (StringMatch(sk, "DT_HS"))
+	if (StringMatch(sk,Tag_HillSlopeTimeStep))
 		m_dtStorm = data;
 	else if (StringMatch(sk, Tag_CellWidth))
 		m_CellWidth = data;
@@ -380,27 +378,27 @@ void ImplicitKinematicWave::SetValue(const char* key, float data)
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 		omp_set_num_threads((int)data);
 	else
-		throw ModelException("IKW_OL", "SetSingleData", "Parameter " + sk 
+		throw ModelException(MID_IKW_OL, "SetSingleData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 	
 }
 
-void ImplicitKinematicWave::Set1DData(const char* key, int n, float* data)
+void ImplicitKinematicWave_OL::Set1DData(const char* key, int n, float* data)
 {
 	//check the input data
 	CheckInputSize(key,n);
 	string sk(key);
-	if(StringMatch(sk, "Slope"))
+	if(StringMatch(sk, VAR_SLOPE))
 		m_s0 = data;
-	else if (StringMatch(sk, "Manning"))
+	else if (StringMatch(sk, VAR_MANNING))
 	{
 		m_n = data;
 	}
-	else if(StringMatch(sk, "Flow_Dir"))
+	else if(StringMatch(sk, VAR_FLOWDIR))
 		m_direction = data;
-	else if(StringMatch(sk, "D_SURU"))
+	else if(StringMatch(sk, VAR_SURU))
 		m_sr = data;
-	else if(StringMatch(sk, "FlowOut_Index_D8"))
+	else if(StringMatch(sk, Tag_FLOWOUT_INDEX_D8))
 	{
 		m_flowOutIndex = data;
 		for (int i = 0; i < m_nCells; i++)
@@ -412,67 +410,67 @@ void ImplicitKinematicWave::Set1DData(const char* key, int n, float* data)
 			}
 		}
 	}
-	else if(StringMatch(sk, "D_INFILCAPSURPLUS"))
+	else if(StringMatch(sk, VAR_INFILCAPSURPLUS))
 		m_infilCapacitySurplus = data;
-	else if(StringMatch(sk, "D_INFIL"))
+	else if(StringMatch(sk, VAR_INFIL))
 		m_infil = data;
-	else if(StringMatch(sk, "D_AccumuInfil"))
+	else if(StringMatch(sk,VAR_ACC_INFIL))
 		m_accumuDepth = data;
-	else if(StringMatch(sk, "CHWIDTH"))
+	else if(StringMatch(sk,VAR_CHWIDTH))
 		m_chWidth = data;
-	else if(StringMatch(sk, "STREAM_LINK"))
+	else if(StringMatch(sk,VAR_STREAM_LINK))
 		m_streamLink = data;
 	else
-		throw ModelException("IKW_OL", "Set1DData", "Parameter " + sk 
+		throw ModelException(MID_IKW_OL, "Set1DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 	
 }
 
-void ImplicitKinematicWave::GetValue(const char* key, float* data)
+void ImplicitKinematicWave_OL::GetValue(const char* key, float* data)
 {
 	string sk(key);
-	if(StringMatch(sk, "ID_OUTLET"))
+	if(StringMatch(sk, VAR_ID_OUTLET))
 		*data = (float)m_idOutlet;
 	else
-		throw ModelException("IKW_OL", "GetValue", "Output " + sk 
-		+ " does not exist in the IKW_OL module. Please contact the module developer.");
+		throw ModelException(MID_IKW_OL, "GetValue", "Output " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 	
 }
 
-void ImplicitKinematicWave::Get1DData(const char* key, int* n, float** data)
+void ImplicitKinematicWave_OL::Get1DData(const char* key, int* n, float** data)
 {
 	initalOutputs();
 
 	string sk(key);
 	*n = m_nCells;
-	if (StringMatch(sk, "QOverland"))
+	if (StringMatch(sk, VAR_QOVERLAND))
 		*data = m_q;
-	else if (StringMatch(sk, "Reinfiltration"))
+	else if (StringMatch(sk, VAR_Reinfiltration))
 		*data = m_reInfil;
-	else if (StringMatch(sk, "FlowWidth"))
+	else if (StringMatch(sk, VAR_FLOWWIDTH))
 		*data = m_flowWidth;
-	else if (StringMatch(sk, "RadianSlope"))
+	else if (StringMatch(sk, VAR_RadianSlope))
 		*data = m_sRadian;
-	else if (StringMatch(sk, "ChWidth"))   //FlowLen
+	else if (StringMatch(sk, "ChWidth"))   //FlowLen   TODO WHY TO DO SO?
 		*data = m_chWidth;                 //add by Wu Hui
 	else
-		throw ModelException("IKW_OL", "Get1DData", "Output " + sk 
-		+ " does not exist in the IKW_OL module. Please contact the module developer.");
+		throw ModelException(MID_IKW_OL, "Get1DData", "Output " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 }
 
-void ImplicitKinematicWave::Set2DData(const char* key, int nrows, int ncols, float** data)
+void ImplicitKinematicWave_OL::Set2DData(const char* key, int nrows, int ncols, float** data)
 {
 	//check the input data
 	//m_nLayers = nrows;
 	string sk(key);
-	if(StringMatch(sk, "Routing_Layers"))
+	if(StringMatch(sk,Tag_ROUTING_LAYERS))
 	{
 		m_routingLayers = data;
 		m_nLayers = nrows;
 	}
-	else if (StringMatch(sk, "FlowIn_Index_D8"))
+	else if (StringMatch(sk, Tag_FLOWIN_INDEX_D8))
 		m_flowInIndex = data;
 	else
-		throw ModelException("IKW_OL", "Set2DData", "Parameter " + sk 
+		throw ModelException(MID_IKW_OL, "Set2DData", "Parameter " + sk 
 		+ " does not exist. Please contact the module developer.");
 }

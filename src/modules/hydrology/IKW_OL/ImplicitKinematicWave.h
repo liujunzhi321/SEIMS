@@ -1,12 +1,10 @@
-/*----------------------------------------------------------------------
-*	Purpose: 	Overland routing using 4-point implicit finite difference method
-*
-*	Created:	Junzhi Liu
-*	Date:		23-Febrary-2011
-*
-*	Revision:
-*   Date:
-*---------------------------------------------------------------------*/
+/*!
+ * \file ImplicitKinematicWave.h
+ * \brief Routing in the overland cells using implicit finite difference method
+ * kinematic wave method in LISEM model
+ * \author Junzhi Liu
+ * \date Feb. 2011 
+ */
 
 #pragma once
 
@@ -19,12 +17,24 @@ using namespace std;
 
 #define MIN_FLUX 1e-12f /// \def minimum flux (m3/s) in kinematic wave
 #define MAX_ITERS 10
-
-class ImplicitKinematicWave : public SimulationModule
+/** \defgroup IKW_OL
+ * \ingroup Hydrology
+ * \brief Routing in the overland cells using implicit finite difference method
+ */
+/*!
+ * \class ImplicitKinematicWave_OL
+ * \ingroup IKW_OL
+ *
+ * \brief kinematic wave method in LISEM model
+ *
+ */
+class ImplicitKinematicWave_OL : public SimulationModule
 {
 public:
-	ImplicitKinematicWave(void);
-	~ImplicitKinematicWave(void);
+	//! Constructor
+	ImplicitKinematicWave_OL(void);
+	//! Destructor
+	~ImplicitKinematicWave_OL(void);
 
 	virtual int Execute();
 
@@ -38,14 +48,14 @@ public:
 	bool CheckInputData(void);
 
 private:
-	/// deal with positive and negative float numbers
-	float Power(float a, float n)
-	{
-		if (a >= 0)
-			return pow(a, n);
-		else
-			return -pow(-a, n);
-	}
+	///// deal with positive and negative float numbers
+	//float Power(float a, float n)
+	//{
+	//	if (a >= 0)
+	//		return pow(a, n);
+	//	else
+	//		return -pow(-a, n);
+	//}
 
 	float GetNewQ(float qIn, float qLast, float surplus, float alpha, float dt, float dx);
 

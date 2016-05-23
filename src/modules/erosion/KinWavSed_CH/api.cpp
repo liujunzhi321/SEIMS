@@ -59,7 +59,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_CH_DET,UNIT_KG, DESC_CH_DET, DT_Raster1D);
 	mdi.AddOutput(VAR_CH_SEDRATE,UNIT_KG_S, DESC_CH_SEDRATE, DT_Raster1D);
 	mdi.AddOutput(VAR_CH_FLOWCAP,UNIT_KG, DESC_CH_FLOWCAP, DT_Raster1D);
-	mdi.AddOutput(VAR_CH_VOL,UNIT_VOL_CM, DESC_CH_VOL, DT_Raster1D);
+	mdi.AddOutput(VAR_CH_VOL,UNIT_VOL_M3, DESC_CH_VOL, DT_Raster1D);
 	mdi.AddOutput(VAR_CH_V,UNIT_SPEED_MS, DESC_CH_V, DT_Raster1D);
 
 	mdi.AddDependency(MCLS_OL_EROSION,MCLSDESC_OL_EROSION);  

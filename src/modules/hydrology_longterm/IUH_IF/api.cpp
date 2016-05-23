@@ -20,12 +20,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Wu Hui");
-	mdi.SetClass("Interflow", "Calculate interflow routing.");
-	mdi.SetDescription("IUH overland method to calculate interflow routing.");
+	mdi.SetClass(MCLS_INTERFLOW, MCLSDESC_INTERFLOW);
+	mdi.SetDescription(MDESC_IUH_IF);
 	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("IUH_IF.chm");
-	mdi.SetID("IUH_IF");
-	mdi.SetName("IUH_IF");
+	mdi.SetID(MID_IUH_IF);
+	mdi.SetName(MID_IUH_IF);
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 

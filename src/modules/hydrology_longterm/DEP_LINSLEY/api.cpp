@@ -46,19 +46,18 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Depression", "Calculate depression storage.");
-	mdi.SetDescription("A simple fill and spill method method to calculate depression storage.");
+	mdi.SetClass(MCLS_DEP, MCLSDESC_DEP);
+	mdi.SetDescription(MDESC_DEP_LINSLEY);
 	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetHelpfile("DEP_LINSLEY.chm");
-	mdi.SetID("DEP_LINSLEY");
-	mdi.SetName("DEP_LINSLEY");
+	mdi.SetID(MID_DEP_LINSLEY);
+	mdi.SetName(MID_DEP_LINSLEY);
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	//mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_DEPREIN, UNIT_NON_DIM, DESC_DEPREIN, Source_ParameterDB, DT_Single); 
-
 	mdi.AddParameter(VAR_DEPRESSION,UNIT_DEPTH_MM,DESC_DEPRESSION,Source_ParameterDB, DT_Raster1D);
 	mdi.AddInput(VAR_INET, UNIT_DEPTH_MM, DESC_INET, Source_Module, DT_Raster1D);	//EI
 	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);							//PET
