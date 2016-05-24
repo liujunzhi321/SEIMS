@@ -1,6 +1,11 @@
 OpenMP version example:
-E:\github-zlj\SEIMS_OMP\Debug\seims_omp E:\code\Hydro\SEIMS\model_data\model_dianbu_30m_longterm 6 0 127.0.0.1 27017
+..\seims_omp ..\model_data\model_dianbu_30m_longterm 6 0 127.0.0.1 27017
 
-E:\github-zlj\SEIMS_OMP\Debug\seims_omp E:\github-zlj\model_data\model_fenkeng_500m 6 0 127.0.0.1 27017
+..\seims_omp ..\model_data\model_fenkeng_500m 6 0 127.0.0.1 27017
 MPI version example:
-mpiexec -n 4 E:\github-zlj\SEIMS_VS\Debug\seims E:\github-zlj\SEIMS-2015\model_data\cluster_model_fenkeng_90m\parallel.config 
+mpiexec -n 4 E:\github-zlj\SEIMS_VS\Debug\seims ..\model_data\cluster_model_fenkeng_90m\parallel.config 
+
+
+TEST COMMAND BY ZHULJ:
+
+D:\Compile\SEIMS_OMP\Release\seims_omp E:\code\Hydro\SEIMS\model_data\model_dianbu_30m_longterm  6 0 127.0.0.1 27017
