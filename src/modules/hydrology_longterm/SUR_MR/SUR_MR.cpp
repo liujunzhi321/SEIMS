@@ -4,8 +4,6 @@
 #include "MetadataInfo.h"
 #include "ModelException.h"
 #include "util.h"
-
-
 #include <omp.h>
 
 SUR_MR::SUR_MR(void):m_infil(NULL),m_pe(NULL), m_dt(-1), m_nSoilLayers(2),
