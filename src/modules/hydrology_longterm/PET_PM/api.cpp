@@ -86,7 +86,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//mdi.AddInput("IGRO","","Land cover status code","Management database", Array1D);
 
 	// set the output variables
-	mdi.AddOutput(VAR_PET_T,UNIT_WTRDLT_MMD, DESC_PET_T, DT_Array1D);
+	mdi.AddOutput(VAR_PET,UNIT_WTRDLT_MMD, DESC_PET, DT_Array1D);
 
 	string res = mdi.GetXMLDocument();
 

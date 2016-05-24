@@ -41,21 +41,18 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("PET_H.html");
 
 	// set the parameters (non-time series)
-	//mdi.AddInput("T_MEAN","degree","Mean Air Temperature","interpolation module", Array1D);
 	mdi.AddParameter(VAR_PET_K, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_PET_HCOEF, UNIT_NON_DIM, DESC_PET_HCOEF, Source_ParameterDB, DT_Single);
-	mdi.AddParameter(Tag_Latitude_Meteorology,UNIT_LONLAT_DEG,DESC_METEOLAT,Source_HydroClimateDB, DT_Array1D);
+	mdi.AddParameter(VAR_CELL_LAT, UNIT_LONLAT_DEG, DESC_CELL_LAT, Source_ParameterDB, DT_Raster1D);
 
-	mdi.AddInput(VAR_JULIAN_DAY,UNIT_NON_DIM,DESC_JULIAN_DAY,Source_Module,DT_Single); /// ICLIM
-	mdi.AddInput(VAR_SR_MAX,UNIT_SR,DESC_SR_MAX,Source_Module,DT_Array1D);/// ICLIM
-	mdi.AddInput(DataType_MeanTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Array1D);
-	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Array1D);
-	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_MeanTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Raster1D);
+	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Raster1D);
+	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Raster1D);
 	
 	// set the output variables
-	mdi.AddOutput(VAR_PET_T,UNIT_WTRDLT_MMD, DESC_PET_T, DT_Array1D);
+	mdi.AddOutput(VAR_PET,UNIT_WTRDLT_MMD, DESC_PET, DT_Raster1D);
 
-	// set the dependencies, does this necessary? LJ
+	// set the dependencies module classes
 	mdi.AddDependency(MCLS_CLIMATE, MCLSDESC_CLIMATE);
 
 	string res = mdi.GetXMLDocument();
@@ -64,3 +61,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	strprintf(tmp, res.size()+1, "%s", res.c_str());
 	return tmp;
 }
+	//mdi.AddParameter(Tag_Latitude_Meteorology,UNIT_LONLAT_DEG,DESC_METEOLAT,Source_HydroClimateDB, DT_Array1D);
+	//mdi.AddInput(VAR_JULIAN_DAY,UNIT_NON_DIM,DESC_JULIAN_DAY,Source_Module,DT_Single); /// ICLIM
+	//mdi.AddInput(VAR_SR_MAX,UNIT_SR,DESC_SR_MAX,Source_Module,DT_Array1D);/// ICLIM
