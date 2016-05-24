@@ -114,7 +114,14 @@ string GetCoreFileName(const string& fullFileName)
 
 	return fullFileName.substr(start+1, end-start-1);
 }
-
+string GetSuffix(const string& fullFileName)
+{
+	vector<string> tokens = utils::SplitString(fullFileName,'.');
+	if(tokens.size() == 2)
+		return tokens[1];
+	else
+		return "";
+}
 string GetPathFromFullName(string& fullFileName)
 {
 	string::size_type i = fullFileName.find_last_of("\\");
