@@ -21,17 +21,17 @@ import types
 def soil_parameters2(dstdir, maskFile, soilSEQNTif, soilSEQNTxt):
     soilSEQNData = ReadDataItemsFromTxt(soilSEQNText)
     defaultSoilType = float(soilSEQNData[1][0])
-    # ## Mask soil_SEQN tif
-    # configFile = "%s%smaskSoilConfig.txt" % (dstdir, os.sep)
-    # fMask = open(configFile, 'w')
-    # fMask.write(maskFile+"\n")
-    # fMask.write("%d\n" % (1,))
+    ## Mask soil_SEQN tif
+    configFile = "%s%smaskSoilConfig.txt" % (dstdir, os.sep)
+    fMask = open(configFile, 'w')
+    fMask.write(maskFile+"\n")
+    fMask.write("%d\n" % (1,))
     soiltypeFile = dstdir + os.sep + soiltypeMFile
-    # s = "%s\t%d\t%s\n" % (soilSEQNTif, defaultSoilType, soiltypeFile)
-    # fMask.write(s)
-    # fMask.close()
-    # s = "%s/mask_raster %s" % (CPP_PROGRAM_DIR, configFile)
-    # os.system(s)
+    s = "%s\t%d\t%s\n" % (soilSEQNTif, defaultSoilType, soiltypeFile)
+    fMask.write(s)
+    fMask.close()
+    s = "%s/mask_raster %s" % (CPP_PROGRAM_DIR, configFile)
+    os.system(s)
 
     ## Read soil properties from txt file
     soilInstances = []
