@@ -807,7 +807,7 @@
 #define DESC_RadianSlope  "radian slope"
 #define DESC_RCA "concentration of ammonia in the rain"
 #define DESC_RCN "concentration of nitrate in the rain"
-#define DESC_Reinfiltration 
+#define DESC_Reinfiltration "TODO: meaning?"
 #define DESC_RETURNFLOW "water depth of return flow"
 #define DESC_REVAP "Revap"
 #define DESC_RM "Relative humidity"
@@ -817,7 +817,6 @@
 #define DESC_ROCTL "amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell"
 #define DESC_ROOTDEPTH "depth to bottom of soil layer"
 #define DESC_ROUTING_LAYERS "Routing layers according to the flow direction, there are no flow relationships within each layer, and the first element in each layer is the number of cells in the layer"
-#define DESC_ROUTING_LAYERS "Routing layers according to the flow direction. There are not flow relationships within each layer"
 #define DESC_RUNOFF_CO "Potential runoff coefficient"
 #define DESC_RWNTL "amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell"
 #define DESC_SAND "Percent of sand content"

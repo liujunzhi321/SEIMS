@@ -56,7 +56,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_PET_T,UNIT_WTRDLT_MMD, DESC_PET_T, DT_Array1D);
 
 	// set the dependencies, does this necessary? LJ
-	mdi.AddDependency(MID_ICLIM, MDESC_ICLIM);
+	mdi.AddDependency(MCLS_CLIMATE, MCLSDESC_CLIMATE);
 
 	string res = mdi.GetXMLDocument();
 

@@ -44,7 +44,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_QOVERLAND,UNIT_FLOW_CMS,DESC_QOVERLAND,Source_Module,DT_Raster1D);	
 	mdi.AddInput(VAR_NEPR,UNIT_DEPTH_MM,DESC_NEPR,Source_Module,DT_Raster1D);	//Rain, from interception module
 	// set the output variables
-	mdi.AddOutput(VAR_DETSPLASH,UNIT_KG, , DT_Raster1D);
+	mdi.AddOutput(VAR_DETSPLASH,UNIT_KG,DESC_DETSPLASH , DT_Raster1D);
 
 	mdi.AddDependency(MCLSDESC_INTERC, MCLSDESC_INTERC);      //for pNet, Leafdrain
 	mdi.AddDependency(MCLS_OL_ROUTING, MCLSDESC_OL_ROUTING); 
