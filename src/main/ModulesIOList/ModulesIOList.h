@@ -4,7 +4,7 @@
  *
  *
  *
- * \author Liangjun Zhu
+ * \author Junzhi Liu, Liangjun Zhu
  * \version 1.0
  * \date July 2015
  *
@@ -49,14 +49,8 @@ public:
 	map<string, vector<string> > moduleParamsInfoList; ///< map<paramId, veector<unit,description,dimentionType,inputModuleIDs,outputModuleIDs> >
 	map<string, vector<string> > paramsInfoList;
 	void FindOutputParameter(string& outputID, int& iModule, ParamInfo*& paraInfo);
-	string GetModuleID(int i)
-	{
-		return m_moduleIDs[i];
-	}
-	vector<string> GetModuleIDs()
-	{
-		return m_moduleIDs;
-	}
+	string GetModuleID(int i)	{		return m_moduleIDs[i];	}
+	vector<string> GetModuleIDs()	{		return m_moduleIDs;	}
 private:
 	typedef SimulationModule* (*InstanceFunction)(void);
 	typedef const char* (*MetadataFunction)(void);
@@ -85,6 +79,7 @@ private:
 	
 	bool LoadModuleInfoFromFile(const char* filename, vector< vector<string> >& settings);
 	void ReadModulesListFile(const char* configFileName);
+
 	void ReadDLL(string& moduleID, string& dllID);
 	SimulationModule* GetInstance(string& moduleID);
 

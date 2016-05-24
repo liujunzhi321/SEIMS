@@ -56,6 +56,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	strprintf(tmp, res.size()+1, "%s", res.c_str());
 	return tmp;
 }
-	//mdi.AddInput("D_PET","mm", "Potential Evapotranspiration", "Module", MapWindowRaster);
-	//mdi.AddOutput("INET","mm", "Evaporation From Interception Storage", MapWindowRaster);
+	//mdi.AddInput("D_PET","mm", "Potential Evapotranspiration", "Module", DT_Raster1D);
+	//mdi.AddOutput("INET","mm", "Evaporation From Interception Storage", DT_Raster1D);
 	//mdi.AddParameter("K_pet","", "Correction Factor of PET", "ParameterDB_Interception", Single);
