@@ -41,7 +41,7 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
         conn.drop_database(modelName)
     db = conn[modelName]
 
-    ImportParameters(sqliteFile, db)
+    ImportParameters(sqliteFile, db)  ## import parameters.db3 to mongoDB
     f.write("10, Generating reach table...\n")
     f.flush()
     GenerateReachTable(workingDir, db, forCluster)
