@@ -13,13 +13,13 @@
 #include <map>
 #include "SimulationModule.h"
 using namespace std;
-/** \defgroup InterFlow_IKW
+/** \defgroup IKW_IF
  * \ingroup Hydrology
  * \brief Interflow routing using implicit finite difference method
  */
 /*!
  * \class InterFlow_IKW
- * \ingroup InterFlow_IKW
+ * \ingroup IKW_IF
  *
  * \brief Interflow routing using implicit finite difference method
  *

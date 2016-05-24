@@ -49,7 +49,7 @@ SOL_P_INDEX = "Poreindex"
 SOL_USLE_K  = "USLE_K"
 SOL_ALB     = "Sol_ALB"
 #SOL_RM      = "Residual"
-SOL_TEXTURE = "Texture"
+SOL_TEXTURE = "soil_Texture"
 ## soil chemical properties
 
 ## Climate datatype tags, MUST BE coincident with text.h in SEIMS
@@ -108,7 +108,7 @@ DB_TAB_LOOKUP_SOIL = "SoilLookup"
 DB_TAB_SPATIAL = "spatial"
 DB_TAB_SITES = "Sites"
 DB_TAB_DATAVALUES = "DataValues"
-DB_TAB_MEASUREMENT = "measurement"
+DB_TAB_MEASUREMENT = "Measurements"
 DB_TAB_SITELIST = "SiteList"
 DB_TAB_REACH = "reaches"
 

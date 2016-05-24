@@ -44,7 +44,7 @@ class SoilProperty:
         self.Poreindex= []
         self.USLE_K = []
         self.Sol_ALB    = []
-        self.Texture    = DEFAULT_NODATA
+        self.Soil_Texture    = DEFAULT_NODATA
         self.Hydro_Group= DEFAULT_NODATA
         #self.Residue     = [] TODO: residue should be defined in Management module or dependent on landuse
         ### Here after are soil chemical properties
@@ -178,9 +178,9 @@ class SoilProperty:
                 d = (1-0.25*sn/(sn+exp(-5.51+22.9*sn)))
                 k = a * b * c * d
                 self.USLE_K.append(k)
-        if self.Texture == DEFAULT_NODATA or self.Hydro_Group == DEFAULT_NODATA:
+        if self.Soil_Texture == DEFAULT_NODATA or self.Hydro_Group == DEFAULT_NODATA:
             st, hg, uslek = GetTexture(self.CLAY[0], self.SILT[0], self.SAND[0])
-            self.Texture = st
+            self.Soil_Texture = st
             self.Hydro_Group = hg
         ### Here after is initialization of soil chemical properties. Algorithms from SWAT.
         ### Prepared by Huiran Gao
