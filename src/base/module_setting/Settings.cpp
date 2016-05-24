@@ -96,7 +96,7 @@ bool Settings::LoadSettingsFromFile(string filename)
 	catch (...)
 	{
 		myfile.close();
-		throw ModelException("Settings","LoadSettingsFromFile","Load setting file: " + string(filename) + "failed!\n");
+		throw ModelException("Settings","LoadSettingsFromFileOutFile","Load output setting file: " + string(filename) + "failed!\n");
 	}
 	return bStatus;
 }

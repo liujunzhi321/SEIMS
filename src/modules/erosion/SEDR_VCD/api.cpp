@@ -71,7 +71,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//mdi.AddParameter("Vpoint","m3"," point source discharge", "diversionloss.txt",DT_Array1D);
 
 	//mdi.AddInput("CROSS_AREA", "m2", "the cross-sectional area of flow in the channel","Module", DT_Array1D);
-	//mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Discharge", DT_MapWindowRaster);
+	//mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Discharge", DT_Raster1D);
 
 	//mdi.AddInput("SEEPAGE", "m3", "seepage", "Module",DT_Array1D);
 	//mdi.AddInput("C_WABA","","Channel water balance in a text format for each reach and at each time step","Module",DT_Array2D);

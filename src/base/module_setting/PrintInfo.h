@@ -115,7 +115,9 @@ public:
 	time_t m_endTime;
 	//! Get end time  \a time_t
 	time_t getEndTime();
-	//! output filename in GridFS
+	//! file suffix, e.g., txt, tif, asc, etc.
+	string Suffix;
+	//! output filename
 	string Filename;
 	//! create "output" folder to store all results
 	void Flush(string,clsRasterData*,string);
@@ -185,11 +187,11 @@ public:
 	//! Get the interval units
 	string getIntervalUnits(void);
 	//! Add an output item with the given start time, end time and file name
-	void AddPrintItem(string start, string end, string file); // used for all non-PET_TS
+	void AddPrintItem(string start, string end, string file, string sufi); 
 	//! Add an output item with the given start time, end time and file name, for MongoDB
-	void AddPrintItem(string type,string start, string end, string file, mongoc_client_t* conn, mongoc_gridfs_t* gfs); // used for all non-PET_TS
+	void AddPrintItem(string type,string start, string end, string file,string sufi, mongoc_client_t* conn, mongoc_gridfs_t* gfs); 
 	//! Add an output item with the given start time, end time and file name, Overloaded method
-	void AddPrintItem(string start, string end, string file, string sitename,bool isSubbasin);	// used for PET_TS
+	void AddPrintItem(string start, string end, string file, string sitename, string sufi, bool isSubbasin);
 	//! Get a reference to the output item located at the given index position
 	PrintInfoItem* getPrintInfoItem(int index);
 	//! Get the number of output items

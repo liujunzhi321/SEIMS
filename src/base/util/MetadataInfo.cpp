@@ -102,7 +102,10 @@ void MetadataInfo::DimensionTag(string tag, int indent, dimensionTypes dimType, 
 		strTmp = "Array3D";
 		break;
 	case DT_Raster1D:
-		strTmp = "MapWindowRaster";
+		strTmp = "Raster1D";
+		break;
+	case DT_Raster2D:
+		strTmp = "Raster2D";
 		break;
 	case DT_Single:
 		strTmp = "Single";

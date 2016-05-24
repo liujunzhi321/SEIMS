@@ -42,7 +42,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 	oss << subBasinID << "_";
 	string strSubbasinID = oss.str();
 
-	for (size_t i=0; i<m_Settings.size(); i++)
+	for (size_t i = 0; i < m_Settings.size(); i++)
 	{
 		// Sample output entries from the FILE.OUT file
 		// placed here for reference
@@ -92,7 +92,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 				string starttm = "";
 				string endtm = "";
 				string fname = "";
-
+				string suffix = "";
 				// check to see if we have all 4 values we need
 				for (int flag=0; flag<4; flag++)
 				{
@@ -119,9 +119,10 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 						// get the filename, but not include the suffix.
 						// modified by ZhuLJ, 2015/6/16
 						fname = strSubbasinID + GetCoreFileName(m_Settings[i][1]);
+						suffix = GetSuffix(m_Settings[i][1]);
 					}
 				}
-				pi->AddPrintItem(starttm, endtm, fname);
+				pi->AddPrintItem(starttm, endtm, fname,suffix);
 			}
 		}
 		// INTERVAL is used only for the PET_TS output
@@ -143,10 +144,10 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 			string starttm = "";
 			string endtm = "";
 			string fname = "";
-
+			string suffix = "";
 			// get the number of sites in the list
 			int cnt = atoi(m_Settings[i][1].c_str());
-			// for each site int he list
+			// for each site in the list
 			for (int idx=0; idx<cnt; idx++)
 			{
 				// reset values
@@ -154,7 +155,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 				endtm = "";
 				starttm = "";
 				fname = "";
-
+				
 				// check to see if we have all 4 values we need
 				for (int flag=0; flag<4; flag++)
 				{
@@ -178,6 +179,8 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 					{
 						// get the filename
 						fname = strSubbasinID + GetCoreFileName(m_Settings[i][1]);
+						//get suffix
+						suffix = GetSuffix(m_Settings[i][1]);
 					}
 				}
 
@@ -185,7 +188,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 				if (sitename.size() > 0)
 				{
 					// add the print item
-					pi->AddPrintItem(starttm, endtm, fname, sitename,false);
+					pi->AddPrintItem(starttm, endtm, fname, sitename,suffix, false);
 				}
 
 			}
@@ -198,7 +201,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 			string starttm = "";
 			string endtm = "";
 			string fname = "";
-
+			string suffix = "";
 			// get the number of sites in the list
 			int cnt = atoi(m_Settings[i][1].c_str());
 			// for each site int he list
@@ -209,7 +212,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 				endtm = "";
 				starttm = "";
 				fname = "";
-
+				suffix = "";
 				// check to see if we have all 4 values we need
 				for (int flag=0; flag<4; flag++)
 				{
@@ -220,20 +223,22 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 						// get the sitename
 						subbasinname = m_Settings[i][1];
 					}
-					if (StringMatch(m_Settings[i][0], Tag_StartTime))
+					else if (StringMatch(m_Settings[i][0], Tag_StartTime))
 					{
 						// get the start time
 						starttm = m_Settings[i][1];
 					}
-					if (StringMatch(m_Settings[i][0], Tag_EndTime))
+					else if (StringMatch(m_Settings[i][0], Tag_EndTime))
 					{
 						// get the end time
 						endtm = m_Settings[i][1];
 					}
-					if (StringMatch(m_Settings[i][0], Tag_FileName))
+					else if (StringMatch(m_Settings[i][0], Tag_FileName))
 					{
 						// get the filename
 						fname = strSubbasinID + GetCoreFileName(m_Settings[i][1]);
+						// get the suffix
+						suffix = GetSuffix(m_Settings[i][1]);
 					}
 				}
 
@@ -241,7 +246,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 				if (subbasinname.size() > 0)
 				{
 					// add the print item
-					pi->AddPrintItem(starttm, endtm, fname, subbasinname,true);
+					pi->AddPrintItem(starttm, endtm, fname, subbasinname,suffix,true);
 				}
 			}
 		}
@@ -251,7 +256,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 			string starttm = "";
 			string endtm = "";
 			string fname = "";
-
+			string suffix = "";
 			// get the number of sites in the list
 			int cnt = atoi(m_Settings[i][1].c_str());
 			// for each site int he list
@@ -260,7 +265,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 				endtm = "";
 				starttm = "";
 				fname = "";
-
+				suffix = "";
 				// check to see if we have all 3 values we need
 				for (int flag=0; flag<4; flag++)
 				{
@@ -270,20 +275,22 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 						// get the type
 						type = m_Settings[i][1];
 					}
-					if (StringMatch(m_Settings[i][0], Tag_StartTime))
+					else if (StringMatch(m_Settings[i][0], Tag_StartTime))
 					{
 						// get the start time
 						starttm = m_Settings[i][1];
 					}
-					if (StringMatch(m_Settings[i][0], Tag_EndTime))
+					else if (StringMatch(m_Settings[i][0], Tag_EndTime))
 					{
 						// get the end time
 						endtm = m_Settings[i][1];
 					}
-					if (StringMatch(m_Settings[i][0], Tag_FileName))
+					else if (StringMatch(m_Settings[i][0], Tag_FileName))
 					{
 						// get the filename
 						fname = strSubbasinID + GetCoreFileName(m_Settings[i][1]);
+						// get the suffix
+						suffix = GetSuffix(m_Settings[i][1]);
 					}
 				}
 
@@ -291,9 +298,8 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 				if (starttm.size() > 0)
 				{
 					// add the print item					
-					pi->AddPrintItem(type,starttm, endtm, fname, m_conn, m_outputGfs);
+					pi->AddPrintItem(type,starttm, endtm, fname,suffix, m_conn, m_outputGfs);
 				}
-
 			}
 		}
 	}
@@ -318,22 +324,22 @@ void SettingsOutput::checkDate(time_t startTime, time_t endTime)
 		for(itemIt=(*it)->m_PrintItems.begin();itemIt<(*it)->m_PrintItems.end();itemIt++)
 		{
 			if((*itemIt)->getStartTime() < startTime)  
-				throw ModelException("SettingsOutput","checkDate","The start time of output " + (*it)->getOutputID() + " to " + (*itemIt)->Filename + " is "+ (*itemIt)->StartTime +". It's earlier than start time of time series data "+util.ConvertToString(&startTime)+". Please check time setting of file.in and file.out.");
+				throw ModelException("SettingsOutput","CheckDate","The start time of output " + (*it)->getOutputID() + " to " + (*itemIt)->Filename + " is "+ (*itemIt)->StartTime +". It's earlier than start time of time series data "+util.ConvertToString(&startTime)+". Please check time setting of file.in and file.out.");
 			if((*itemIt)->getEndTime() > endTime)  
-				throw ModelException("SettingsOutput","checkDate","The end time of output " + (*it)->getOutputID() + " to " + (*itemIt)->Filename + " is "+ (*itemIt)->EndTime +". It's later than end time of time series data "+util.ConvertToString(&endTime)+". Please check time setting of file.in and file.out.");
+				throw ModelException("SettingsOutput","CheckDate","The end time of output " + (*it)->getOutputID() + " to " + (*itemIt)->Filename + " is "+ (*itemIt)->EndTime +". It's later than end time of time series data "+util.ConvertToString(&endTime)+". Please check time setting of file.in and file.out.");
 		}
 	}
 }
-//! output is ASCII file?
-bool SettingsOutput::isOutputASCFile()
-{
-	vector<PrintInfo*>::iterator it;
-	for(it=m_printInfos.begin();it<m_printInfos.end();it++)
-	{
-		if((*it)->m_OutputID.find_first_of("D") != string::npos) return true;
-	}
-	return false;
-}
+//! output is ASCII file? The output should be dependent on Data type and suffix, so this function should be deprecated. LJ
+//bool SettingsOutput::isOutputASCFile()
+//{
+//	vector<PrintInfo*>::iterator it;
+//	for(it=m_printInfos.begin();it<m_printInfos.end();it++)
+//	{
+//		if((*it)->m_OutputID.find_first_of("D") != string::npos) return true;
+//	}
+//	return false;
+//}
 //! set specific cell raster output
 //void SettingsOutput::setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData)
 //{

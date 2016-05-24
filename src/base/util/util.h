@@ -88,7 +88,14 @@ string GetAppPath();
  * \sa GetPathFromFullName
  */
 extern string GetCoreFileName(const string& fullFileName);
-
+/*!
+ * \brief Return the suffix of a given file's path
+ *
+ * \param[in] fullFileName 
+ * \return Suffix
+ * \sa GetPathFromFullName
+ */
+extern string GetSuffix(const string& fullFileName);
 /*!
  * \brief Get Path From full file path string
  *

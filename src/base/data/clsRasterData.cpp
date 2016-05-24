@@ -301,7 +301,7 @@ void clsRasterData::outputASCFile(map<string,float> header,int nRows,float** pos
 	for (int lyr = 0; lyr < nLyrs; lyr++)
 	{
 		stringstream oss;
-		oss<<prePath<<coreName<<"_"<<(lyr+1)<<".asc";
+		oss<<prePath<<coreName<<"_"<<(lyr+1)<<ASCIIExtension;
 		ofstream rasterFile(oss.str().c_str());
 		/// write header
 		rasterFile << HEADER_RS_NCOLS << " " << header[HEADER_RS_NCOLS] << "\n";
@@ -435,7 +435,7 @@ void clsRasterData::outputGTiff(map<string,float> header, string &srs, int nVali
 	for (int lyr = 0; lyr < nLyrs; lyr++)
 	{
 		stringstream oss;
-		oss<<prePath<<coreName<<"_"<<(lyr+1)<<".tif";
+		oss<<prePath<<coreName<<"_"<<(lyr+1)<<GTiffExtension;
 		float *data = new float[n];
 		int index = 0;
 		for (int i = 0; i < nRows; ++i)
@@ -477,17 +477,6 @@ void clsRasterData::outputGTiff(map<string,float> header, string &srs, int nVali
 		geoTrans[5] = -dx;
 		poDstDS->SetGeoTransform(geoTrans);
 		poDstDS->SetProjection(srs.c_str());
-		/// the Spatial reference is hard to define. Just leave it blank? LJ
-		/*OGRSpatialReference srs;
-	
-		srs.SetACEA(25, 47, 0, 105, 0, 0);
-		srs.SetWellKnownGeogCS("WGS84");
-
-		char *pSrsWkt = NULL;
-		srs.exportToWkt(&pSrsWkt);
-		poDstDS->SetProjection(pSrsWkt);
-		CPLFree(pSrsWkt);*/
-
 		GDALClose(poDstDS);
 
 		delete[] data;
