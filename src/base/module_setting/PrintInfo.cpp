@@ -138,7 +138,6 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	/// Get filenames existed in GridFS, i.e., "output.files"
 	vector<string> outputExisted = GetGridFsFileNames(conn,dbName,"output.files");
 
-
 	StatusMessage(("Creating output file " + Filename + "...").c_str());
 	// Don't forget add appropriate suffix to Filename... ZhuLJ, 2015/6/16 
 	if(m_AggregationType == AT_SpecificCells)
@@ -155,7 +154,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	{
 		ofstream fs;
 		utils util;
-		string filename = projectPath + Filename + ".txt";
+		string filename = projectPath + Filename + TextExtension;
 		fs.open(filename.c_str(), ios::out);
 		if (fs.is_open())
 		{
@@ -175,7 +174,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	{
 		ofstream fs;
 		utils util;
-        string filename = projectPath + Filename+ ".txt";
+        string filename = projectPath + Filename+ TextExtension;
 		fs.open(filename.c_str(), ios::out);
 		if (fs.is_open())
 		{
@@ -191,7 +190,6 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 				}
 				fs << endl;
 			}		
-			
 			fs.close();
 			StatusMessage(("Create " + filename + " successfully!").c_str());
 		}
@@ -201,15 +199,16 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	{
 		if(templateRaster == NULL) 
 			throw ModelException("PrintInfoItem", "Flush", "The templateRaster is NULL.");
-
-
         //cout << projectPath << Filename << endl;
 		bson_error_t *err = NULL;
 		if(find(outputExisted.begin(), outputExisted.end(), Filename.c_str()) != outputExisted.end())
 			mongoc_gridfs_remove_by_filename(gfs, Filename.c_str(), err);
 		clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
-		//clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename + ".asc");
-		clsRasterData::outputGTiff(templateRaster, RasterData, projectPath + Filename + ".tif");
+		string ascii(ASCIIExtension);
+		if(ascii.find(Suffix) != ascii.npos)
+			clsRasterData::outputASCFile(templateRaster,RasterData,projectPath + Filename + ASCIIExtension);
+		else
+			clsRasterData::outputGTiff(templateRaster, RasterData, projectPath + Filename + GTiffExtension);
 		return;
 	}
 
@@ -225,7 +224,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			for(int i = 0; i < ValidCellCount; i++)
 				tmpData[i] = m_2dData[i][j];
 			oss.str("");
-			oss << projectPath << Filename << "_" << (j+1) << ".tif";  // Filename_1.tif means layer 1
+			oss << projectPath << Filename << "_" << (j+1) << GTiffExtension;  // Filename_1.tif means layer 1
 			clsRasterData::outputGTiff(templateRaster, tmpData, oss.str());
 		}
 		bson_error_t *err = NULL;
@@ -251,14 +250,13 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			{
 				fs << util.ConvertToString2(&(it->first)) << " " << right << fixed << setw(15) << setfill(' ') << setprecision(8) << it->second <<  endl;
 			}		
-
 			fs.close();
 			StatusMessage(("Create " + filename + " successfully!").c_str());
 		}
 		return;
 	}
 
-	throw ModelException("PrintInfoItem","flush","Creating " + Filename + " is failed. There is not result data for this file. Please check ouput varaibles of modules.");
+	throw ModelException("PrintInfoItem","Flush","Creating " + Filename + " is failed. There is not result data for this file. Please check output variables of modules.");
 }
 
 void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float** data)
@@ -368,7 +366,6 @@ void PrintInfoItem::AggregateData(time_t time,int numrows, float* data)
                 default:
                     break;
 			}							
-
 		}
 		m_Counter++;
 	}
@@ -476,13 +473,6 @@ void PrintInfoItem::AggregateData(int numrows, float** data, AggregationType typ
 
 AggregationType PrintInfoItem::MatchAggregationType(string type)
 {
-	//AT_Sum = 1,
-	//AT_Average = 2,
-	//AT_Minimum = 3,
-	//AT_Maximum = 4
-
-	// TODO - should convert the given string to UPPERCASE for comparison
-
 	AggregationType res = AT_Unknown;
 	if (StringMatch(type, Tag_Unknown))
 	{
@@ -492,7 +482,7 @@ AggregationType PrintInfoItem::MatchAggregationType(string type)
 	{
 		res = AT_Sum;
 	}
-	if (StringMatch(type, Tag_Average) || StringMatch(type, Tag_Average2))
+	if (StringMatch(type, Tag_Average) || StringMatch(type, Tag_Average2) || StringMatch(type, Tag_Average3))
 	{
 		res = AT_Average;
 	}
@@ -508,7 +498,6 @@ AggregationType PrintInfoItem::MatchAggregationType(string type)
 	{
 		res = AT_SpecificCells;
 	}
-
 	return res;
 }
 
@@ -558,7 +547,6 @@ PrintInfo::~PrintInfo(void)
 	m_IntervalUnits = "";
 	m_OutputID = "";
 	m_PrintItems.clear();
-
 	if(m_subbasinSelectedArray!=NULL) delete [] m_subbasinSelectedArray;
 }
 
@@ -706,7 +694,7 @@ string PrintInfo::getIntervalUnits(void)
 	return m_IntervalUnits;
 }
 
-void PrintInfo::AddPrintItem(string start, string end, string file)
+void PrintInfo::AddPrintItem(string start, string end, string file, string sufi)
 {
 	// create a new object instance
 	PrintInfoItem* itm = new PrintInfoItem();
@@ -716,6 +704,7 @@ void PrintInfo::AddPrintItem(string start, string end, string file)
 	itm->StartTime = start;
 	itm->EndTime = end;
 	itm->Filename = file;
+	itm->Suffix = sufi;
 	/// TODO  do check if the date time has hours
 	itm->m_startTime = utils::ConvertToTime2(start, "%d-%d-%d %d:%d:%d",true);
 	itm->m_endTime = utils::ConvertToTime2(end, "%d-%d-%d %d:%d:%d",true);
@@ -724,7 +713,7 @@ void PrintInfo::AddPrintItem(string start, string end, string file)
 }
 
 
-void PrintInfo::AddPrintItem(string type,string start, string end, string file, mongoc_client_t* conn, mongoc_gridfs_t* gfs)
+void PrintInfo::AddPrintItem(string type,string start, string end, string file,string sufi, mongoc_client_t* conn, mongoc_gridfs_t* gfs)
 {
 	// create a new object instance
 	PrintInfoItem* itm = new PrintInfoItem();
@@ -734,6 +723,7 @@ void PrintInfo::AddPrintItem(string type,string start, string end, string file, 
 	itm->StartTime = start;
 	itm->EndTime = end;
 	itm->Filename = file;
+	itm->Suffix = sufi;
 	itm->conn = conn;
 	itm->gfs = gfs;
 
@@ -743,7 +733,8 @@ void PrintInfo::AddPrintItem(string type,string start, string end, string file, 
 
     type = trim(type);
 	AggregationType enumType = PrintInfoItem::MatchAggregationType(type);
-	if(enumType == AT_Unknown) throw ModelException("PrintInfo","AddPrintItem","The type of output " + m_OutputID + " can't be unknown. Please check file.out. The type should be MIN, MAX, SUM or AVERAGE.");
+	if(enumType == AT_Unknown) 
+		throw ModelException("PrintInfo","AddPrintItem","The type of output " + m_OutputID + " can't be unknown. Please check file.out. The type should be MIN, MAX, SUM or AVERAGE (AVE or MEAN).");
 
 	itm->setAggregationType(enumType);
 
@@ -752,7 +743,7 @@ void PrintInfo::AddPrintItem(string type,string start, string end, string file, 
 }
 
 
-void PrintInfo::AddPrintItem(string start, string end, string file, string sitename, bool isSubbasin)
+void PrintInfo::AddPrintItem(string start, string end, string file, string sitename, string sufi, bool isSubbasin)
 {
 	PrintInfoItem* itm = new PrintInfoItem();
 
@@ -766,7 +757,7 @@ void PrintInfo::AddPrintItem(string start, string end, string file, string siten
 	itm->StartTime = start;
 	itm->EndTime = end;
 	itm->Filename = file;
-
+	itm->Suffix = sufi;
 	itm->m_startTime = utils::ConvertToTime2(start, "%d-%d-%d %d:%d:%d",true);
 	itm->m_endTime = utils::ConvertToTime2(end, "%d-%d-%d %d:%d:%d",true);
 

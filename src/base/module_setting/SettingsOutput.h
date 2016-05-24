@@ -35,8 +35,8 @@ public:
 	void Dump(string);
 	//! Check date of output settings
 	void checkDate(time_t,time_t);
-	//! is output be an ASC file?
-	bool isOutputASCFile(void);
+	//! is output be an ASC file? Deprecated by LJ
+	//bool isOutputASCFile(void);
 	
 	///void setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData);
 public:
