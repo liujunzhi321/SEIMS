@@ -37,7 +37,7 @@ PETHargreaves::~PETHargreaves(void)
 void PETHargreaves::SetValue(const char* key, float value)
 {
 	string sk(key);
-	if (StringMatch(sk,VAR_PET_K)) m_petFactor  = value;
+	if (StringMatch(sk,VAR_K_PET)) m_petFactor  = value;
 	else if (StringMatch(sk, VAR_PET_HCOEF)) m_HCoef_pet = value;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM)) omp_set_num_threads((int)value);
 	else

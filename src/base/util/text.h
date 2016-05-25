@@ -383,6 +383,7 @@
 ///Apr. , 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 #define VAR_A_BNK "a_bnk"                           /// bank flow recession constant
+#define VAR_ALBDAY "ALBDAY"
 #define VAR_ACC "acc"
 #define VAR_ACC_INFIL "AccumuInfil"
 #define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/km2)
@@ -411,6 +412,7 @@
 #define VAR_CHS0 "Chs0"                               /// initial channel storage per meter of reach length
 #define VAR_CHSB "CHSB"
 #define VAR_CHST "CHST"                               /// channel storage
+#define VAR_CHT "CHT" /// canopy height for the day(m)
 #define VAR_CHWIDTH "CHWIDTH"
 #define VAR_CHWTDEPTH "CHWTDEPTH"                     /// channel water depth
 #define VAR_CLAY "CLAY"
@@ -446,6 +448,7 @@
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
 #define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
 #define VAR_ID_OUTLET "ID_OUTLET"
+#define VAR_IGRO "IGRO"
 #define VAR_INET "INET"                             /// evaporation from the interception storage obtained from the interception module
 #define VAR_INFIL "INFIL"                           /// Infiltration calculated in the infiltration module
 #define VAR_INFILCAPSURPLUS "INFILCAPSURPLUS" 
@@ -463,6 +466,7 @@
 #define VAR_KG "Kg"                                 /// Baseflow recession coefficient
 #define VAR_KI "Ki"
 #define VAR_LAG_SNOW "lag_snow"
+#define VAR_LAIDAY "LAIDAY"
 #define VAR_LAP_RATE "LapseRate"                    /// Lapse rate
 #define VAR_LCC "idplt"                             /// land cover code
 #define VAR_MANNING "Manning"
@@ -485,12 +489,13 @@
 #define VAR_PERCO "Percolation"                     /// the amount of water percolated from the soil water reservoir
 #define VAR_PET "PET"                               /// PET 
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
-#define VAR_PET_K "K_pet"                           /// Correction factor for PET
+#define VAR_K_PET "K_pet"                           /// Correction factor for PET
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
 #define VAR_PI_B "Pi_b"
 #define VAR_PL_RSDCO "rsdco_pl"                     /// Plant residue decomposition coefficient
 #define VAR_POREID "Poreindex"                      /// pore size distribution index
 #define VAR_POROST "Porosity"                       /// soil porosity
+#define VAR_PPT "PPT"
 #define VAR_PRECI "D_P"                             /// precipitation for the day (mm)
 #define VAR_PSP "psp"                               /// Phosphorus availability index
 #define VAR_QCH "QCH"
@@ -594,6 +599,7 @@
 #define VAR_SWE0 "swe0"
 #define VAR_T_RG "T_RG"
 #define VAR_T_SOIL "t_soil"                         /// threshold soil freezing temperature
+#define VAR_T_SNOW "T_snow"
 #define VAR_T_WS "T_WS"
 #define VAR_T0 "T0"
 #define VAR_TMAX "TMAX"
@@ -674,6 +680,7 @@
 ///               Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 #define DESC_A_BNK "bank flow recession constant"
+#define DESC_ALBDAY "Albedo of the current day"
 #define DESC_ACC "the number of flow accumulation cells of each cell"
 #define DESC_ACC_INFIL "accumulative infiltration"
 #define DESC_ADDRNH3 "ammonium added by rainfall"
@@ -703,6 +710,7 @@
 #define DESC_CHS0 "initial channel storage per meter of reach length"
 #define DESC_CHSB "Channel sediment balance in a text format for each reach and at each time step (unit?)"
 #define DESC_CHST "channel storage"
+#define DESC_CHT "canopy height for the day(m)"
 #define DESC_CHWIDTH "Channel width"
 #define DESC_CHWTDEPTH "channel water depth"
 #define DESC_CLAY "Percent of clay content"
@@ -757,6 +765,7 @@
 #define DESC_KG "Baseflow recession coefficient"
 #define DESC_KI "Interflow scale factor"
 #define DESC_LAG_SNOW "Snow temperature lag factor"
+#define DESC_LAI "Leaf area index of current day"
 #define DESC_LAP_RATE "Lapse Rate"
 #define DESC_LCC "land cover code"
 #define DESC_MANNING "Manning's roughness"
@@ -789,6 +798,7 @@
 #define DESC_PL_RSDCO "Plant residue decomposition coefficient"
 #define DESC_POREID "pore size distribution index"
 #define DESC_POROST "soil porosity"
+#define DESC_PPT "potential plant transpiration"
 #define DESC_PRECI "precipitation for the day"
 #define DESC_PSP "Phosphorus availability index"
 #define DESC_QCH "Flux in the downslope boundary of cells"

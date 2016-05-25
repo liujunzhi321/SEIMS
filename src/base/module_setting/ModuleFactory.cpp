@@ -1286,7 +1286,7 @@ void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInpu
 				{
 					for (int iData = 0; iData < n; iData++)
 					{
-						data[iData] *= m_parametersInDB[VAR_PET_K]->GetAdjustedValue();
+						data[iData] *= m_parametersInDB[VAR_K_PET]->GetAdjustedValue();
 					}
 				}
 				pModule->Set1DData("T", n, data);   /// TODO why "T"?   LJ
