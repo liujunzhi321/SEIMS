@@ -1,24 +1,26 @@
+/*!
+ * \file PETPenmanMonteith.h
+ * \author Junzhi Liu
+ * \date Nov. 2010
+ * \revised LiangJun Zhu
+ * \date May. 2016
+ * \note: 1. Add m_tMean from database, which may be measurement value or the mean of tMax and tMin;
+              2. The PET calculate is changed from site-based to cell-based, because PET is not only dependent on Climate site data;
+			  3. Add ecology related parameters (initialized value).
+			  4. Add potential plant transpiration as output.
+ */
+
+#ifndef SEIMS_PET_PM_INCLUDE
+#define SEIMS_PET_PM_INCLUDE
+
+#include <string>
+#include "api.h"
+#include "SimulationModule.h"
 /** \defgroup PET_PM
  * \ingroup Hydrology_longterm
  * \brief Penman Monteith Method to Compute PET
  *  
  */
-/*!
- * \file PETPenmanMonteith.h
- * \ingroup PET_PM
- * \author Junzhi Liu, LiangJun Zhu
- * \date Nov. 2010
- * \revision date Apr. 2016
- * 
- */
-
-#ifndef SEIMS_PET_PENMAN_MONTEITH_INCLUDE
-#define SEIMS_PET_PENMAN_MONTEITH_INCLUDE
-
-#include <string>
-#include "api.h"
-#include "SimulationModule.h"
-
 using namespace std;
 /*!
  * \class PETPenmanMonteith
@@ -30,7 +32,9 @@ using namespace std;
 class PETPenmanMonteith : public SimulationModule
 {
 public:
+	//! Constructor
 	PETPenmanMonteith(void);
+	//! Destructor
 	~PETPenmanMonteith(void);
 
 	virtual void Set1DData(const char* key, int n, float *value);
@@ -40,14 +44,6 @@ public:
 
 private:
 	/**
-	*	@brief calculates saturation vapor pressure at a given air temperature.
-	*
-	*	@param float t: mean air temperature(deg C)
-	*	@return saturation vapor pressure(kPa)
-	*/
-	float SaturationVaporPressure(float t);
-
-	/**
 	*	@brief check the input data. Make sure all the input data is available.
 	*
 	*	@return bool The validity of the input data.
@@ -55,48 +51,35 @@ private:
 	bool CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension
 	*	@return bool The validity of the dimension
 	*/
 	bool CheckInputSize(const char*,int);
-
-	/**
-	*	@brief Calculate the max solar radiation for a station of one day
-	*
-	*	@param day Julian day.
-	*	@param lat Latitude of the station
-	*	
-	*	@return float The max solar radiation.
-	*/
-	float MaxSolarRadiation(int,float);
-
-	/**
-	*	@brief Get the Julian day of one day
-	*/
-	int JulianDay(time_t);
-
+	
 	void clearInputs(void);
 private:
-	/// mean air temperature for a given day(degree)
-	//float *m_tMean;
-	float *m_tMin;		//now the mean T is calculated by minT and maxT. They can be obtained from database directly
+	/// Mean air temperature for a given day (deg C)
+	float *m_tMean;
+	/// Minimum air temperature for a given day (deg C)
+	float *m_tMin;	
+	/// Maximum air temperature for a given day (deg C)
 	float *m_tMax;
-	/// maximum solar radiation(MJ/m2/d)
-	///The max solar radiation is calculated from Julian day and latitude now.
-	///float *m_srMax;
 	/// solar radiation(MJ/m2/d)
 	float *m_sr;
 	/// relative humidity(%)
 	float *m_rhd;
 	/// wind speed
 	float *m_ws;
-	/// amount of water in snow(mm)
-	///float *m_snow;
 	/// elevation(m)
 	float *m_elev;
+	/// temporary variables
+	/// maximum solar radiation(MJ/m2/d), calculated from Julian day and latitude.
+	float m_srMax;
+	/// Julian day
+	int m_jday;
 	/**
 	* @brief land cover status code
 	*
@@ -104,33 +87,54 @@ private:
 	* 1 land cover growing
 	*/
 	float *m_growCode;
-	/// CO2 concentration(ppmv)
-	float m_co2;
 	/// canopy height for the day(m)
 	float *m_cht;
+	/// leaf area index(m2/m2)
+	float *m_lai;
+	/// albedo in the day
+	float *m_albedo;
+	/// valid cells number
+	int m_nCells;
+	///latitude of each valid cells
+	float *m_cellLat;
+
+	/// CO2 concentration(ppmv)
+	float m_co2;
 	/// rate of decline in stomatal conductance per unit increase in vapor pressure deficit(m/s/kPa)
 	float m_vpd2;
 	/// maximum stomatal conductance(m/s)
 	float m_gsi;
-	/// leaf area index(m2/m2)
-	float *m_lai;
-	/// albedo in the day
-	///float *m_albedo;
-
-	/// size of the input array
-	int m_size;
-
-	/// Correction Factor for PET
-	float m_petFactor;
-
-	/// output pet array
-	float *m_pet;
-
-	///latitude of the stations
-	float *m_latitude;
-
 	///The temperature of snow melt
 	float m_tSnow;
+	/// Correction Factor for PET
+	float m_petFactor;
+	/// output pet array
+	float *m_pet;
+	/// maximum amount of transpiration (plant et)  that can occur on current day in HRU
+	float *m_ppt;
 };
-
 #endif
+
+
+
+///**
+	//*	@brief calculates saturation vapor pressure at a given air temperature.
+	//*
+	//*	@param float t: mean air temperature(deg C)
+	//*	@return saturation vapor pressure(kPa)
+	//*/
+	//float SaturationVaporPressure(float t);
+	///**
+	//*	@brief Calculate the max solar radiation for a station of one day
+	//*
+	//*	@param day Julian day.
+	//*	@param lat Latitude of the station
+	//*	
+	//*	@return float The max solar radiation.
+	//*/
+	//float MaxSolarRadiation(int,float);
+
+	///**
+	//*	@brief Get the Julian day of one day
+	//*/
+	//int JulianDay(time_t);

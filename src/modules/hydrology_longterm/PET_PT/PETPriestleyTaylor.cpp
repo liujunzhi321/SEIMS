@@ -85,25 +85,6 @@ bool PETPriestleyTaylor::CheckInputData()
 	return true;
 }
 
-//float PETPriestleyTaylor::SaturationVaporPressure(float t)
-//{
-//	/// Calculate saturation vapor pressure, equation 1:2.3.2 in SWAT Theory 2009, p54
-//	/// Tetens (1930) and Murray (1967), ee.f in SWAT src.
-//	if (!FloatEqual(t + 237.3f, UTIL_ZERO))
-//	{
-//		float ee = (16.78f * t - 116.9f) / (t + 237.3f);
-//		return exp(ee);
-//	}
-//	return 0.0f;
-//}
-
-//int PETPriestleyTaylor::JulianDay(time_t date)
-//{
-//	struct tm dateInfo;
-//	LocalTime(date, &dateInfo);
-//	return dateInfo.tm_yday + 1;
-//}
-
 int PETPriestleyTaylor::Execute()
 {
 	if(!this->CheckInputData()) return false;
@@ -176,7 +157,7 @@ void PETPriestleyTaylor::SetValue(const char* key, float value)
 {
 	string sk(key);
 	if (StringMatch(sk,VAR_SNOW_TEMP)) this->m_tSnow = value;
-	else if (StringMatch(sk,VAR_PET_K)) m_petFactor = value;
+	else if (StringMatch(sk,VAR_K_PET)) m_petFactor = value;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM)) omp_set_num_threads((int)value);
 	else
 		throw ModelException(MID_PET_PT,"SetValue","Parameter " + sk + " does not exist in current module. Please contact the module developer.");
