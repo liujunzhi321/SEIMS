@@ -171,7 +171,8 @@ dimensionTypes ModulesIOList::MatchType(string strType)
 	if (StringMatch(strType,Type_Array2D)) typ = DT_Array2D;
 	if (StringMatch(strType,Type_Array3D)) typ = DT_Array3D;
 	if (StringMatch(strType,Type_Array1DDateValue)) typ = DT_Array1DDateValue;
-	if (StringMatch(strType,Type_MapWindowRaster)) typ = DT_Raster1D;
+	if (StringMatch(strType,Type_Raster1D)) typ = DT_Raster1D;
+	if (StringMatch(strType,Type_Raster2D)) typ = DT_Raster2D;
 	if (StringMatch(strType,Type_SiteInformation)) typ = DT_SiteInformation;
 	if (StringMatch(strType,Type_LapseRateArray)) typ = DT_LapseRateArray;
 	if (StringMatch(strType,Type_Scenario)) typ = DT_Scenario;
@@ -548,7 +549,8 @@ bool ModulesIOList::LoadModuleInfoFromFile(const char* filename, vector< vector<
 	ifstream myfile;
 	string line;
 	utils utl;
-	string T_variables[8] = { DataType_Precipitation,DataType_MeanTemperature,DataType_MaximumTemperature,DataType_PotentialEvapotranspiration,DataType_SolarRadiation,DataType_WindSpeed,DataType_RelativeAirMoisture};
+	string T_variables[8] = { DataType_Precipitation,DataType_MeanTemperature,DataType_MaximumTemperature,
+		DataType_PotentialEvapotranspiration,DataType_SolarRadiation,DataType_WindSpeed,DataType_RelativeAirMoisture};
 	try
 	{
 		// open the file
@@ -576,7 +578,7 @@ bool ModulesIOList::LoadModuleInfoFromFile(const char* filename, vector< vector<
 							{
 								// there is something to add so resize the header list to append it
 								int sz = infos.size(); // get the current number of rows
-								if (tokens[2].find("ITP") != string::npos || tokens[2].find("TSD_RD") != string::npos)
+								if (tokens[2].find(MID_ITP) != string::npos || tokens[2].find(MID_TSD_RD) != string::npos)
 								{
 									infos.resize(sz+7);
 									
@@ -584,7 +586,7 @@ bool ModulesIOList::LoadModuleInfoFromFile(const char* filename, vector< vector<
 									{
 										vector<string> tokensTemp(tokens);
 										tokensTemp[2] += "_" + T_variables[j];
-										if(tokens[2].find("ITP") != string::npos){
+										if(tokens[2].find(MID_ITP) != string::npos){
 											tokensTemp[3] += "_" + T_variables[j];
 										}
 										else{
@@ -988,7 +990,10 @@ string DimentionType2String(dimensionTypes dimType)
 			strTmp = "Array3D";
 			break;
 		case DT_Raster1D:
-			strTmp = "MapWindowRaster";
+			strTmp = "Raster1D";
+			break;
+		case DT_Raster2D:
+			strTmp = "Raster2D";
 			break;
 		case DT_Single:
 			strTmp = "Single";

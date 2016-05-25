@@ -10,9 +10,9 @@ if platform.system() == "Windows":
     BASE_DATA_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\model_data\model_dianbu_30m_longterm\data_prepare'
     TXT_DB_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\database'
     PREPROC_SCRIPT_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\preprocess'
-    CPP_PROGRAM_DIR = r'D:\Compile\SEIMS_Preprocess\Release'
-    METIS_DIR = r'D:\Compile\SEIMS_Preprocess\metis\programs\Release'
-    MPIEXEC_DIR = None
+    CPP_PROGRAM_DIR = r'D:\SEIMS_model\SEIMS_preprocessing\build\Release'
+    METIS_DIR = r'D:\SEIMS_model\SEIMS_preprocessing\build\metis\programs'
+    MPIEXEC_DIR = r'"D:\Program Files\Microsoft HPC Pack 2012\Bin"'
 elif platform.system() == "Linux": ### Hasn't tested yet, Apr.,2016, LJ.
     BASE_DATA_DIR = r'/data/liujz/data'
     TXT_DB_DIR = r'/data/liujz/data/database'

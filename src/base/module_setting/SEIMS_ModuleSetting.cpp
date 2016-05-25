@@ -54,7 +54,7 @@ float SEIMSModuleSetting::dataType()
 
 bool SEIMSModuleSetting::needDoVerticalInterpolation()
 {
-	if(m_moduleId.find("ITP") == string::npos ) 
+	if(m_moduleId.find(MID_ITP) == string::npos ) 
 		return false;
 	else
 	{

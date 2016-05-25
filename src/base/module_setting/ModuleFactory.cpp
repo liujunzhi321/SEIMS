@@ -358,7 +358,8 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 	if (StringMatch(strType,Type_Array2D))			typ = DT_Array2D;
 	if (StringMatch(strType,Type_Array3D))			typ = DT_Array3D;
 	if (StringMatch(strType,Type_Array1DDateValue))	typ = DT_Array1DDateValue;
-	if (StringMatch(strType,Type_MapWindowRaster))	typ = DT_Raster1D;
+	if (StringMatch(strType,Type_Raster1D))	typ = DT_Raster1D;
+	if (StringMatch(strType,Type_Raster2D))	typ = DT_Raster2D;
 	if (StringMatch(strType,Type_SiteInformation))	typ = DT_SiteInformation;
 	if (StringMatch(strType,Type_LapseRateArray))	typ = DT_LapseRateArray;
 	if (StringMatch(strType,Type_Scenario))			typ = DT_Scenario;
@@ -739,6 +740,8 @@ bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<st
 	ifstream myfile;
 	string line;
 	utils utl;
+	string T_variables[7] = { DataType_Precipitation,DataType_MeanTemperature,DataType_MaximumTemperature,
+		DataType_MinimumTemperature,DataType_SolarRadiation,DataType_WindSpeed,DataType_RelativeAirMoisture};
 	try
 	{
 		// open the file
@@ -768,10 +771,33 @@ bool ModuleFactory::LoadSettingsFromFile(const char* filename, vector< vector<st
 							{
 								// there is something to add so resize the header list to append it
 								int sz = settings.size(); // get the current number of rows
-								settings.resize(sz+1);		// resize with one more row
+								if (tokens[3].find(MID_ITP) != string::npos || tokens[3].find(MID_TSD_RD) != string::npos)
+								{
+									settings.resize(sz+7);
 
-								settings[sz] = tokens;
-
+									for (size_t j = 0; j < 7; j++)
+									{
+										vector<string> tokensTemp(tokens);
+										tokensTemp[1] += "_" + T_variables[j];
+										if(tokens[3].find(MID_ITP) != string::npos){
+											vector<string> ITPProperty = utl.SplitString(line, '_');
+											if(ITPProperty.size() == 2)
+											{
+												int isVertical = atoi(ITPProperty[1].c_str());
+												if(isVertical)
+													tokensTemp[1] += "_1";
+												else
+													tokensTemp[1] += "_0";
+											}
+										}
+										settings[sz+j] = tokensTemp;
+									}
+								}
+								else
+								{
+									settings.resize(sz+1);		// resize with one more row
+									settings[sz] = tokens;
+								}
 								bStatus = true; // consider this a success
 							} // if there is nothing in the first item of the token list there is nothing to add to the header list
 						}
@@ -1260,7 +1286,7 @@ void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInpu
 				{
 					for (int iData = 0; iData < n; iData++)
 					{
-						data[iData] *= m_parametersInDB[VAR_PET_K]->GetAdjustedValue();
+						data[iData] *= m_parametersInDB[VAR_K_PET]->GetAdjustedValue();
 					}
 				}
 				pModule->Set1DData("T", n, data);   /// TODO why "T"?   LJ

@@ -16,10 +16,10 @@ IF(WIN32)
 	SET (MONGO_HOME ${CMAKE_CURRENT_SOURCE_DIR}/../include/mongo-c-driver-0.6)
 	## SET MPI
 	#For MS-MPI in Windows, version v6 and above.
-	set(MPIEXEC "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe")
+	set(MPIEXEC "D:/Program Files/Microsoft HPC Pack 2012/Bin/mpiexec.exe")
 	# For building MPI programs the selected Visual Studio compiler is used, namely cl.exe.
 	# So there is no need to set a specific MPI compiler.
-	set(MPI_CXX_INCLUDE_PATH "C:/Program Files (x86)/Microsoft SDKs/MPI/Include")
+	set(MPI_CXX_INCLUDE_PATH "D:/Program Files/Microsoft HPC Pack 2012/Inc")
 	# Make sure the correct libraries (64-bit or 32-bit) are selected.
 	# Decide between 32-bit and 64-bit libraries for Microsoft's MPI
 	if("${CMAKE_SIZEOF_VOID_P}" EQUAL 8)
@@ -27,8 +27,8 @@ IF(WIN32)
 	else()
 		set(MS_MPI_ARCH_DIR x86)
 	endif()
-	set(MPI_CXX_LIBRARIES "C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/${MS_MPI_ARCH_DIR}/msmpi.lib")
-	SET(MPI_LIBDIR "C:/Program Files (x86)/Microsoft SDKs/MPI/Lib/${MS_MPI_ARCH_DIR}")
+	set(MPI_CXX_LIBRARIES "D:/Program Files/Microsoft HPC Pack 2012/Lib/i386/msmpi.lib")
+	SET(MPI_LIBDIR "D:/Program Files/Microsoft HPC Pack 2012/Lib/i386")
 	set(MPI_INCLUDE "${MPI_CXX_INCLUDE_PATH}")
 	set(MPI_LIB "${MPI_CXX_LIBRARIES}")
 	## END SETTING MPI

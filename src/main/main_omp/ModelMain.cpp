@@ -64,7 +64,6 @@ ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath, S
 			break;
 		case TIMESTEP_ECOLOGY:
 			m_ecoModules.push_back(i);
-
 		}
 	}
 

@@ -114,7 +114,7 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
     sumorgp = 0.
     ## Calculate by layer
     ## calculate sol_cbn for lower layers if only have upper layer's data
-    if nlyrs >= 3 and cbn[3] <= 0:
+    if nlyrs >= 3 and cbn[2] <= 0:
         for i in range(2,nlyrs):
             tmpDepth = depth[i] - depth[1]
             cbn[i] = cbn[i-1] * numpy.exp(-.001 * tmpDepth)

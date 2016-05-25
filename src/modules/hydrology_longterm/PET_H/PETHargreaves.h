@@ -1,11 +1,15 @@
 /*!
  * \file PETHargreaves.h
  *
- * \author Junzhi Liu, LiangJun Zhu
+ * \author Junzhi Liu
  * \date Nov. 2010
+ * \revised LiangJun Zhu
+ * \date May. 2016
+ * \note: 1. Add m_tMean from database, which may be measurement value or the mean of tMax and tMin;
+			  2. The PET calculate is changed from site-based to cell-based, because PET is not only dependent on Climate site data;
  */
-#ifndef SEIMS_PET_HARGREAVES_INCLUDE
-#define SEIMS_PET_HARGREAVES_INCLUDE
+#ifndef SEIMS_PET_H_INCLUDE
+#define SEIMS_PET_H_INCLUDE
 
 #include <string>
 #include "api.h"
@@ -26,7 +30,9 @@ using namespace std;
 class PETHargreaves : public SimulationModule
 {
 public:
+	//! Constructor
 	PETHargreaves(void);
+	//! Destructor
 	~PETHargreaves(void);
 
 	virtual void SetValue(const char* key, float value);
@@ -35,24 +41,29 @@ public:
 	virtual int Execute();
 
 private:
-	// input from Database
+	/// Parameters from Database
+	/// mean air temperature for a given day(degree)
+	float *m_tMean;
 	/// maximum air temperature for a given day(degree)
 	float *m_tMax;
 	/// minimum air temperature for a given day(degree)
 	float *m_tMin;
-	///latitude of the stations
-	float *m_latitude;
-	// input from other module
-	/// mean air temperature for a given day(degree)
-	float *m_tMean;
-	/// maximum solar radiation
-	float *m_srMax;
-	/// size of the input array, i.e., the HydroClimate sites number
-	int m_size;
+	/// latitude of each valid cells
+	float *m_cellLat;
+	/////latitude of the stations   /// deprecated by LJ, May. 24, 2016
+	//float *m_latitude;
+	///// size of the input array, i.e., the HydroClimate sites number 
+	//int m_size;
+	/// valid cell number
+	int m_nCells;
 	/// coefficient related to radiation used in Hargreaves method
 	float m_HCoef_pet;
 	/// Correction Factor for PET
 	float m_petFactor;
+
+	/// temporary variables and output
+	/// maximum solar radiation of current day
+	float m_srMax;
 	/// Julian day
 	int m_jday;
 	/// output PET array
@@ -75,7 +86,8 @@ private:
 	 * \return bool The validity of the dimension
 	 */
 	bool CheckInputSize(const char*,int);
-
+	
+	/// MaxSolarRadiation() and JulianDay() are moved to data module to reduce code redundancy. By LJ, May., 2016
 // 	/*!
 // 	 * \brief Calculate the max solar radiation for a station of one day
 // 	 *
