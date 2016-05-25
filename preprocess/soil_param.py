@@ -71,17 +71,22 @@ class SoilProperty:
     def CheckData(self): ## check the required input, and calculate all physical and chemical properties
         if self.SoilLAYERS == DEFAULT_NODATA:
             raise ValueError("Soil layers number must be provided, please check the input file!")
-        if self.SoilDepth == [] or len(self.SoilDepth) != self.SoilLAYERS:
+        if self.SoilDepth == [] or len(self.SoilDepth) != self.SoilLAYERS or DEFAULT_NODATA in self.SoilDepth:
             raise IndexError("Soil depth must have a size equal to soil layers number!")
         if self.OM == [] or len(self.OM) != self.SoilLAYERS:
             raise IndexError("Soil organic matter must have a size equal to soil layers number!")
-        if self.CLAY == [] or len(self.CLAY) != self.SoilLAYERS:
+        elif DEFAULT_NODATA in self.OM and self.OM.index(DEFAULT_NODATA) >= 2 and self.SoilLAYERS >= 3:
+            for i in range(2,self.SoilLAYERS):
+                if self.OM[i] == DEFAULT_NODATA:
+                    tmpDepth = self.SoilDepth[i] - self.SoilDepth[1]
+                    self.OM[i] = self.OM[i-1] * numpy.exp(-.001 * tmpDepth)
+        if self.CLAY == [] or len(self.CLAY) != self.SoilLAYERS or DEFAULT_NODATA in self.CLAY:
             raise IndexError("Soil Clay content must have a size equal to soil layers number!")
-        if self.SILT == [] or len(self.SILT) != self.SoilLAYERS:
+        if self.SILT == [] or len(self.SILT) != self.SoilLAYERS or DEFAULT_NODATA in self.SILT:
             raise IndexError("Soil Silt content must have a size equal to soil layers number!")
-        if self.SAND == [] or len(self.SAND) != self.SoilLAYERS:
+        if self.SAND == [] or len(self.SAND) != self.SoilLAYERS or DEFAULT_NODATA in self.SAND:
             raise IndexError("Soil Sand content must have a size equal to soil layers number!")
-        if self.ROCK == [] or len(self.ROCK) != self.SoilLAYERS:
+        if self.ROCK == [] or len(self.ROCK) != self.SoilLAYERS or DEFAULT_NODATA in self.ROCK:
             raise IndexError("Soil Rock content must have a size equal to soil layers number!")
         ### temperory variables
         tmp_fc = []
@@ -108,18 +113,30 @@ class SoilProperty:
             raise IndexError("Wilting point must have a size equal to soil layers number!")
         elif self.WiltingPoint == []:
             self.WiltingPoint = tmp_wp[:]
+        elif DEFAULT_NODATA in self.WiltingPoint:
+            for i in range(self.SoilLAYERS):
+                if self.WiltingPoint[i] == DEFAULT_NODATA:
+                    self.WiltingPoint[i] = tmp_wp[i]
         if self.Density != [] and len(self.Density) != self.SoilLAYERS:
             raise IndexError("Bulk density must have a size equal to soil layers number!")
-        elif self.Density == []:
+        elif self.Density == [] or DEFAULT_NODATA in self.Density:
+            tmp_bd = []
             for i in range(self.SoilLAYERS):
                 sat = tmp_sat[i]
                 fc = tmp_fc[i]
                 if self.FieldCap != [] and len(self.FieldCap) == self.SoilLAYERS:
                     sat = sat - fc + self.FieldCap[i]
-                self.Density.append(2.65 * (1.0 - sat))
+                tmp_bd.append(2.65 * (1.0 - sat))
+            if DEFAULT_NODATA in self.Density:
+                for i in range(self.SoilLAYERS):
+                    if self.Density[i] == DEFAULT_NODATA:
+                        self.Density[i] = tmp_bd[i]
+            elif self.Density == []:
+                self.Density = tmp_bd[:]
         if self.FieldCap != [] and len(self.FieldCap) != self.SoilLAYERS:
             raise IndexError("Field capacity must have a size equal to soil layers number!")
-        elif self.FieldCap == []:
+        elif self.FieldCap == [] or DEFAULT_NODATA in self.FieldCap:
+            tmp_fc_bdeffect = []
             for i in range(self.SoilLAYERS):
                 fc = tmp_fc[i]
                 sat = tmp_sat[i]
@@ -128,12 +145,22 @@ class SoilProperty:
                 else:
                     p_df = 2.65*(1.0 - sat)
                 sat_df = 1 - p_df/2.65
-                self.FieldCap.append(fc - 0.2 * (sat - sat_df))
+                tmp_fc_bdeffect.append(fc - 0.2 * (sat - sat_df))
+            if DEFAULT_NODATA in self.FieldCap:
+                for i in range(self.SoilLAYERS):
+                    if self.FieldCap[i] == DEFAULT_NODATA:
+                        self.FieldCap[i] = tmp_fc_bdeffect[i]
+            elif self.FieldCap == []:
+                self.FieldCap = tmp_fc_bdeffect[:]
         if self.Sol_AWC != [] and len(self.Sol_AWC) != self.SoilLAYERS:
             raise IndexError("Available water capacity must have the size equal to soil layers number!")
         elif self.Sol_AWC == []:
             for i in range(self.SoilLAYERS):
                 self.Sol_AWC.append(self.FieldCap[i] - self.WiltingPoint[i])
+        elif DEFAULT_NODATA in self.Sol_AWC:
+            for i in range(self.SoilLAYERS):
+                if self.Sol_AWC[i] == DEFAULT_NODATA:
+                    self.Sol_AWC[i] = self.FieldCap[i] - self.WiltingPoint[i]
         if self.Poreindex != [] and len(self.Poreindex) != self.SoilLAYERS:
             raise IndexError("Pore disconnectedness index must have a size equal to soil layers number!")
         elif self.Poreindex == []:
@@ -147,25 +174,44 @@ class SoilProperty:
         elif self.POROSITY == []:
             for i in range(self.SoilLAYERS):
                 self.POROSITY.append(1 - self.Density[i] / 2.65)
+        elif DEFAULT_NODATA in self.POROSITY:
+            for i in range(self.SoilLAYERS):
+                if self.POROSITY[i] == DEFAULT_NODATA:
+                    self.POROSITY[i] = 1 - self.Density[i] / 2.65
         if self.Sol_CRK == DEFAULT_NODATA:
             self.Sol_CRK = numpy.mean(self.POROSITY)
         if self.Conductivity != [] and len(self.Conductivity) != self.SoilLAYERS:
             raise IndexError("Saturated conductivity must have a size equal to soil layers number!")
-        elif self.Conductivity == []:
+        elif self.Conductivity == [] or DEFAULT_NODATA in self.Conductivity:
+            tmp_k = []
             for i in range(self.SoilLAYERS):
                 lamda = self.Poreindex[i]
                 fc = tmp_fc[i]
                 sat = tmp_sat[i]
-                self.Conductivity.append(1930 * pow(sat - fc, 3 - lamda))
+                tmp_k.append(1930 * pow(sat - fc, 3 - lamda))
+            if self.Conductivity == []:
+                self.Conductivity = tmp_k[:]
+            elif DEFAULT_NODATA in self.Conductivity:
+                for i in range(self.SoilLAYERS):
+                    if self.Conductivity[i] == DEFAULT_NODATA:
+                        self.Conductivity[i] = tmp_k[i]
         if self.Sol_ALB != [] and len(self.Sol_ALB) != self.SoilLAYERS:
             raise IndexError("Soil albedo must have a size equal to soil layers number!")
-        elif self.Sol_ALB == []:
+        elif self.Sol_ALB == [] or DEFAULT_NODATA in self.Sol_ALB:
+            tmp_alb = []
             for i in range(self.SoilLAYERS):
                 cbn = self.OM[i] * 0.58
-                self.Sol_ALB.append(0.2227 * exp(-1.8672 * cbn))
+                tmp_alb.append(0.2227 * exp(-1.8672 * cbn))
+            if self.Sol_ALB == []:
+                self.Sol_ALB = tmp_alb[:]
+            elif DEFAULT_NODATA in self.Sol_ALB:
+                for i in range(self.SoilLAYERS):
+                    if self.Sol_ALB[i] == DEFAULT_NODATA:
+                        self.Sol_ALB[i] = tmp_alb[i]
         if self.USLE_K != [] and len(self.USLE_K) != self.SoilLAYERS:
             raise IndexError("USLE K factor must have a size equal to soil layers number!")
-        elif self.USLE_K == []:
+        elif self.USLE_K == [] or DEFAULT_NODATA in self.USLE_K:
+            tmp_usle_k = []
             for i in range(self.SoilLAYERS): ## According to Liu BY et al., (1999)
                 sand = self.SAND[i]
                 silt = self.SILT[i]
@@ -177,7 +223,13 @@ class SoilProperty:
                 c = (1-0.25*cbn/(cbn+exp(3.72-2.95*cbn)))
                 d = (1-0.25*sn/(sn+exp(-5.51+22.9*sn)))
                 k = a * b * c * d
-                self.USLE_K.append(k)
+                tmp_usle_k.append(k)
+            if self.USLE_K == []:
+                self.USLE_K = tmp_usle_k[:]
+            elif DEFAULT_NODATA in self.USLE_K:
+                for i in range(self.SoilLAYERS):
+                    if self.USLE_K[i] == DEFAULT_NODATA:
+                        self.USLE_K[i] = tmp_usle_k[i]
         if self.Soil_Texture == DEFAULT_NODATA or self.Hydro_Group == DEFAULT_NODATA:
             st, hg, uslek = GetTexture(self.CLAY[0], self.SILT[0], self.SAND[0])
             self.Soil_Texture = st
