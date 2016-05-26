@@ -6,8 +6,13 @@
 #1 | PET
 #1 | PET | Hargreaves | PET_H
 1 | PET | PriestleyTaylor | PET_PT
-#6 | Interception|  | PI_MSM
-#7 | Snow melt |  | SNO_DD
+#2 | Precipitation Interception by Canopy
+2 | Interception| Maximum Storage Method | PI_MSM
+#3 | Snow accumulation and melt
+3 | Snow | Degree-Day method | SNO_DD
+#3 | Snow | Water balance | SNO_WB
+#3 | Snow | Snowpeak Daily method | SNO_SP
+### 4 | 
 #8 | Soil Temperature |  | STP_FP
 #9 | Infiltration |  | SUR_MR
 #9 | Depression|  | DEP_LINSLEY 

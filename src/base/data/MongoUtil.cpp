@@ -1,5 +1,4 @@
 /*!
- * \ingroup base
  * \file MongoUtil.cpp
  * \brief Implementation of utility functions of mongoDB
  * \author Junzhi Liu, LiangJun Zhu

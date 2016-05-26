@@ -19,13 +19,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	MetadataInfo mdi;
 
 	// set the information properties
-	// set the information properties
 	mdi.SetAuthor("Zhiqiang Yu");
-	mdi.SetClass("Snowmelt", "Calculate the amount of snow melt.");
-	mdi.SetDescription("Snowpack Daily, SWAT p57-59");
+	mdi.SetClass(MCLS_SNOW, MCLSDESC_SNOW);
+	mdi.SetDescription(MDESC_SNO_SP);
 	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetID("SNO_SP");
-	mdi.SetName("SNO_SP");
+	mdi.SetID(MID_SNO_SP);
+	mdi.SetName(MID_SNO_SP);
 	mdi.SetVersion("0.5");
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SNO_SP.chm");
@@ -41,17 +40,18 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_C_SNOW12, UNIT_MELT_FACTOR, DESC_C_SNOW12, Source_ParameterDB,DT_Single);
 
 	mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module,DT_Raster1D);								// from interception module
-	mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module,DT_Raster1D);				// from snow water balance module
+	//TODO: SNAC is used as unknown variable in the execut() funtion, so why it here as Input, otherwise in Output? By LJ
+	//mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module,DT_Raster1D);				// from snow water balance module
 	mdi.AddInput(VAR_SWE, UNIT_DEPTH_MM, DESC_SWE, Source_Module,DT_Single);									// from snow water balance module
+	// TODO: SNRD and SNSB currently have not incoming modules, therefore initialized as zero.By LJ
 	mdi.AddInput(VAR_SNRD, UNIT_DEPTH_MM, DESC_SNRD, Source_Module, DT_Raster1D); // from snow redistribution module
 	mdi.AddInput(VAR_SNSB, UNIT_DEPTH_MM, DESC_SNSB, Source_Module,DT_Raster1D); //from snow sublimation module
-	mdi.AddInput(VAR_TMIN, UNIT_TEMP_DEG, DESC_TMIN, Source_Module,DT_Raster1D);									// from interpolation module
 	mdi.AddInput(VAR_TMAX, UNIT_TEMP_DEG, DESC_TMAX, Source_Module,DT_Raster1D);									// from interpolation module
-
+	mdi.AddInput(VAR_TMEAN, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module,DT_Raster1D);	
 
 	// set the output variables
 	mdi.AddOutput(VAR_SNME, UNIT_DEPTH_MM, DESC_SNME, DT_Raster1D);
-
+	mdi.AddOutput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, DT_Raster1D);
 	// write out the XML file.
 
 	string res = mdi.GetXMLDocument();

@@ -31,7 +31,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the input variables (time series)
 	mdi.AddInput(VAR_PRECI, UNIT_DEPTH_MM, DESC_PRECI, Source_Module, DT_Raster1D);/// ITP_P
-	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET,  Source_Module, DT_Raster1D); ///ITP_PET
+	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET,  Source_Module, DT_Raster1D); ///PET
 
 	// set the parameters (non-time series)
 	mdi.AddParameter(VAR_INTERC_MAX, UNIT_DEPTH_MM, DESC_INTERC_MAX,  Source_ParameterDB, DT_Raster1D);

@@ -268,30 +268,31 @@
 /// By LiangJun Zhu, Apr. 26, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-/// HydroClimate related Modules
+/// Hydro-Meteorological data
 #define MCLS_CLIMATE "HydroClimate"
 #define MCLSDESC_CLIMATE "HydroClimate data modules"
 #define MID_TSD_RD "TSD_RD"
 #define MDESC_TSD_RD "Read time series data from HydroClimate database."
 #define MID_ITP "ITP"
 #define MDESC_ITP "Interpolation of P, E, PET, etc."
-#define MCLS_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization"
-#define MCLSDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
-#define MID_NMINRL "NMINRL"
-#define MDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
-#define MCLS_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
-#define MCLSDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
-#define MID_SurTra "SurTra"
-#define MDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
-#define MCLS_ATMDEP "AtmosphericDeposition"
-#define MCLSDESC_ATMDEP "AtmosphericDeposition"
-#define MID_ATMDEP "ATMDEP"
-#define MDESC_ATMDEP "AtmosphericDeposition"
-#define MCLS_NutRemv "Nutrient remove"
-#define MCLSDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
-#define MID_NutRemv "NutRemv"
-#define MDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
 
+/// Interception
+#define MCLS_INTERC								"Interception"
+#define MCLSDESC_INTERC						"Precipation interception module"
+#define MID_PI_STORM								"PI_STORM"
+#define MDESC_PI_STORM						"Calculate precipitation interception for STORM model."
+#define MID_PI_MSM									"PI_MSM"
+#define MDESC_PI_MSM							"Calculate precipitation interception using the maximum storage method."
+
+/// Snow melt
+#define MCLS_SNOW									"Snow accumulation and melt"
+#define MCLSDESC_SNOW						"Calculate the amount of snow  accumulation andmelt."
+#define MID_SNO_WB									"SNO_WB"
+#define MDESC_SNO_WB							"Calculate snow water balance"
+#define MID_SNO_DD									"SNO_DD"
+#define MDESC_SNO_DD							"Degree-Day method (Martinec et al., 1983) for snow melt modeling"
+#define MID_SNO_SP									"SNO_SP"
+#define MDESC_SNO_SP							"Snowpack Daily method from SWAT"
 /// Potential Evapotranspiration Modules
 #define MCLS_PET "Potential Evapotranspiration"
 #define MCLSDESC_PET "Calculate the potential evapotranspiration for an array of climate inputs."
@@ -302,13 +303,6 @@
 #define MID_PET_PM "PET_PM"
 #define MDESC_PET_PM "Penman Monteith method for calculating the potential evapotranspiration."
 
-/// Interception
-#define MCLS_INTERC								"Interception"
-#define MCLSDESC_INTERC						"Precipation interception module"
-#define MID_PI_STORM								"PI_STORM"
-#define MDESC_PI_STORM						"Calculate precipitation interception for STORM model."
-#define MID_PI_MSM									"PI_MSM"
-#define MDESC_PI_MSM							"Calculate precipitation interception using the maximum storage method."
 
 /// Depression
 #define MCLS_DEP										"Depression"
@@ -377,6 +371,24 @@
 #define MCLSDESC_SED_ROUTING		"Sediment channel routing modules."
 #define MID_SEDR_VCD							"SEDR_VCD"
 #define MDESC_SEDR_VCD						"Sediment channel routing using variable channel dimension method as used in SWAT."
+
+/// Nutrient
+#define MCLS_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization"
+#define MCLSDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
+#define MID_NMINRL "NMINRL"
+#define MDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
+#define MCLS_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MCLSDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MID_SurTra "SurTra"
+#define MDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MCLS_ATMDEP "AtmosphericDeposition"
+#define MCLSDESC_ATMDEP "AtmosphericDeposition"
+#define MID_ATMDEP "ATMDEP"
+#define MDESC_ATMDEP "AtmosphericDeposition"
+#define MCLS_NutRemv "Nutrient remove"
+#define MCLSDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
+#define MID_NutRemv "NutRemv"
+#define MDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
 /// By LiangJun Zhu, HuiRan Gao ///
@@ -545,7 +557,7 @@
 #define VAR_SEDORGP "sedorgp"                       /// amount of organic phosphorus in surface runoff
 #define VAR_SEEPAGE "SEEPAGE"                               /// seepage
 #define VAR_SLOPE "slope"
-#define VAR_SNAC "D_SNAC"
+#define VAR_SNAC "SNAC"
 #define VAR_SNME "SNME"
 #define VAR_SNOW_TEMP "T_snow"                      /// Snowfall temperature
 #define VAR_SNRD "SNRD"
@@ -600,11 +612,12 @@
 #define VAR_T_RG "T_RG"
 #define VAR_T_SOIL "t_soil"                         /// threshold soil freezing temperature
 #define VAR_T_SNOW "T_snow"
-#define VAR_T_WS "T_WS"
+#define VAR_WS "WS"
 #define VAR_T0 "T0"
 #define VAR_TMAX "TMAX"
 #define VAR_TMAX1 "TMAX1"
 #define VAR_TMAX2 "TMAX2"
+#define VAR_TMEAN "TMEAN"
 #define VAR_TMIN "TMIN"
 #define VAR_TMIN1 "TMIN1"
 #define VAR_TMIN2 "TMIN2"
@@ -643,6 +656,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #define UNIT_AREA_KM2 "km2"                         /// Square kilometer of area
+#define UNIT_AREA_RATIO "m2/m2"
 #define UNIT_CONDRATE_MSPA "m/s/kPa"                /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
 #define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
 #define UNIT_DENSITY "mg/m3"                        /// density
@@ -748,6 +762,7 @@
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"
 #define DESC_HMPTL "amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell"
 #define DESC_ID_OUTLET  "index of outlet in the compressed array"
+#define DESC_IGRO "Land cover status code"
 #define DESC_INET "evaporation from the interception storage obtained from the interception module"
 #define DESC_INFIL "Infiltration calculated in the infiltration module"
 #define DESC_INFILCAPSURPLUS "surplus of infiltration capacity"
@@ -765,7 +780,7 @@
 #define DESC_KG "Baseflow recession coefficient"
 #define DESC_KI "Interflow scale factor"
 #define DESC_LAG_SNOW "Snow temperature lag factor"
-#define DESC_LAI "Leaf area index of current day"
+#define DESC_LAIDAY "Leaf area index of current day"
 #define DESC_LAP_RATE "Lapse Rate"
 #define DESC_LCC "land cover code"
 #define DESC_MANNING "Manning's roughness"
@@ -902,13 +917,14 @@
 #define DESC_SWE0 "Initial snow water equivalent"
 #define DESC_T_RG "groundwater runoff"
 #define DESC_T_SOIL "threshold soil freezing temperature"
-#define DESC_T_WS "wind speed"
+#define DESC_WS "wind speed"
 #define DESC_T0 "the snowmelt threshold temperature"
 #define DESC_Tag_FLOWIN_PERCENTAGE_DINF "Percentage of flow in"
 #define DESC_TIMESTEP "time step"
 #define DESC_TMAX "max temperature"
 #define DESC_TMAX1 "Maximum air temperature of the (d-1)th day"
 #define DESC_TMAX2 "Maximum air temperature of the (d-2)th day"
+#define DESC_TMEAN "mean temperature"
 #define DESC_TMIN "min temperature"
 #define DESC_TMIN1 "Minimum air temperature of the (d-1)th day"
 #define DESC_TMIN2 "Minimum air temperature of the (d-2)th day"

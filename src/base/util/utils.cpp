@@ -1,6 +1,5 @@
 /*!
  * \file utils.cpp
- * \ingroup util
  * \brief methods of utils class
  *
  * Implementation of the methods for the utils class

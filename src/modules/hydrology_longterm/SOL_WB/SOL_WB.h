@@ -29,7 +29,7 @@ private:
 
 	int m_nCells;
 	int m_nSoilLayers;
-	time_t m_Date;
+	//time_t m_Date; there is no need to define date here. By LJ.
 
 	float m_upSoilDepth;
 

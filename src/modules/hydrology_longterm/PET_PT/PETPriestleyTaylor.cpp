@@ -1,5 +1,4 @@
 /*!
- * \ingroup PET_PT
  * \file PETPriestleyTaylor.cpp
  *
  * \author Junzhi Liu
