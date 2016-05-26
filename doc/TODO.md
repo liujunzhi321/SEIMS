@@ -142,6 +142,12 @@ Hydrology_longterm|SUR_CN|VAR_SOMO|AddOutput
 
 
 
+###   file.out
+
+
+#### Snow accumulate and melt
+SNO_DD is required, SNO_WB dependent on SNO_DD, and SNO_SP dependent on SNO_WB
+
 
 
 

@@ -62,18 +62,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(DataType_RelativeAirMoisture,UNIT_NON_DIM,DESC_RM,Source_Module, DT_Array1D);
 	mdi.AddInput(DataType_SolarRadiation,UNIT_SR,DESC_SR,Source_Module, DT_Array1D);
 	mdi.AddInput(DataType_WindSpeed,UNIT_SPEED_MS,DESC_WS,Source_Module, DT_Array1D);
-	//Now the canopy height is assumed as constant for everyday and is consider as a parameter and read from asc file.
-	//After the plant growth module is completed, this should be converted to input variable.
-	//mdi.AddParameter("CHT","m","Canopy height for the day","file_height.asc", Array1D);	
-	//LAI needs to be calculated by other modules.
-	//mdi.AddInput("LAIDAY","m2/m2","Leaf area index","Plant growth module", Array1D); //Wetspa Manual P17, need min LAI,max LAI and Julian day?
-
-	//The albedo also needs plant growth module. 
-	//Now, for testing, its value is determined by T_snow and T_MEAN.
-	//mdi.AddInput("ALBDAY","","Albedo in the day","Plant growth module", Array1D);
+	
+	/// these three parameters all from plant growth module.
+	mdi.AddInput(VAR_CHT,UNIT_LEN_M,DESC_CHT,Source_Module, DT_Raster1D);	
+	mdi.AddInput(VAR_LAIDAY,UNIT_AREA_RATIO,DESC_LAIDAY,Source_Module,DT_Raster1D);
+	mdi.AddInput(VAR_ALBDAY,UNIT_NON_DIM,DESC_ALBDAY,Source_Module,DT_Array1D);
 
 	//Now, assume the grow code of all the stations is 1.
-	//mdi.AddInput("IGRO","","Land cover status code","Management database", Array1D);
+	mdi.AddInput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO,Source_Module,DT_Raster1D);
 
 	// set the output variables
 	mdi.AddOutput(VAR_PET,UNIT_WTRDLT_MMD, DESC_PET, DT_Raster1D);

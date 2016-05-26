@@ -1,6 +1,5 @@
 /*!
  * \file util.cpp
- * \ingroup util
  * \brief Utility functions to handle numeric, string and file
  *
  * Utility functions for all SEIMS modules

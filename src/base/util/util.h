@@ -188,6 +188,7 @@ extern void StatusMessage(const char* msg);
  *
  * \param[in] a, b \a char* 
  * \return true or false
+ * \sa StringMatch()
  */
 extern bool StrEqualIgnoreCase(const char*, const char*);
 /*!
@@ -204,6 +205,7 @@ extern bool StringMatch(string text1, string text2);
  *
  * \param[in] a,n
  * \return sum
+ * \sa StrEqualIgnoreCase()
  */
 extern double Sum(double *a, int n);
 /*!

@@ -1,6 +1,5 @@
 /*!
  * \file SimulationModule.cpp
- * \ingroup util
  * \brief Initialization of SimulationModule class
  *
  * \author Junzhi Liu

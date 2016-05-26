@@ -7,20 +7,22 @@ using namespace std;
 #include "SimulationModule.h"
 /** \defgroup SNO_SP
  * \ingroup Hydrology_longterm
- * \brief Calculate distribution of snowmelt
+ * \brief Calculate snow melt by snowpack daily method from SWAT
  *
  */
 
 /*!
  * \class SNO_SP
  * \ingroup SNO_SP
- * \brief Calculate distribution of snowmelt
+ * \brief Calculate snow melt by snowpack daily method from SWAT
  * 
  */
 class SNO_SP:public SimulationModule
 {
 public:
+	//! Constructor
 	SNO_SP(void);
+	//! Destructor
 	~SNO_SP(void);
 	virtual int Execute();
 	virtual void SetValue(const char* key, float data);
@@ -31,9 +33,10 @@ public:
 	bool CheckInputData(void);
 
 private:
-
-	int m_cellSize;
-	time_t m_Date;//
+	//! Valid cells number
+	int m_nCells;
+	//! Current date
+	///time_t m_Date; No need to define date again! By LJ
 
 	float m_t0;
 	//float m_csnow;
@@ -47,7 +50,7 @@ private:
 	float m_csnow6;
 	float m_csnow12;
 
-	float* m_tMin;
+	float* m_tMean;
 	float* m_tMax;
 	float* m_Pnet;
 	float* m_SA;	
@@ -61,11 +64,6 @@ private:
 	float* m_SM;
 
 	bool m_isInitial;
-
-	/**
-	*	@brief Get the Julian day of one day
-	*/
-	int JulianDay(time_t);
 
 	float CMelt();
 

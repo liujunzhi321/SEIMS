@@ -1,6 +1,5 @@
 /*!
  * \file clsRasterData.cpp
- * \ingroup data
  * \brief Implementation of clsRasterData class
  *
  * 1. Using GDAL and MongoDB (currently, mongo-c-driver 1.3.5)

@@ -111,4 +111,4 @@ LANDUSE_ATTR_DB = ["manning","i_max","i_min", "root_depth", "usle_c", "SOIL_T10"
 
 
 ## Hydrological parameters
-coeTable = {"T2":[0.05, 0.48],"T10":[0.12, 0.52], "T100":[0.18,0.55]} ## used in radius.py, TODO: what's meaning
+coeTable = {"T2":[0.05, 0.48],"T10":[0.12, 0.52], "T100":[0.18,0.55]} ## Adopted from WetSpa, used in radius.py, TODO: what's meaning

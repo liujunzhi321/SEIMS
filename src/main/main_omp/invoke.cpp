@@ -1,5 +1,4 @@
 /*!
- * \ingroup main
  * \file invoke.cpp
  * \brief Implementation of invoking SEIMS
  * \author Junzhi Liu
