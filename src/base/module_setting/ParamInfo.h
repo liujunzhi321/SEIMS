@@ -35,6 +35,12 @@ public:
 	float GetAdjustedValue();
 	//! Adjust 1D array
 	void Adjust1DArray(int n, float* data);
+	//! Adjust 1D Raster, \sa Adjust1DArray()
+	void Adjust1DRaster(int n, float* data);
+	//! Adjust 2D array
+	void Adjust2DArray(int n, float** data);
+	//! Adjust 2D Raster
+	void Adjust2DRaster(int n, int lyr, float** data);
 	//! Name
 	string Name;
 	//! Units

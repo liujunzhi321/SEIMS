@@ -1,17 +1,15 @@
 ### FORMAT
 ### MODULE CLASS NO. | PROCESS NAME | METHOD NAME | MODULE ID
-### -1 | Module Test
-0 | IO test| IO | moduletest
 #0 | Climate
-#0 | TimeSeries | | TSD_RD
-#0 | Interpolation | Thiessen_0 | ITP
+0 | TimeSeries | | TSD_RD
+0 | Interpolation | Thiessen_0 | ITP
 #1 | PET
 #1 | PET | Hargreaves | PET_H
-#1 | PET | PriestleyTaylor | PET_PT
+1 | PET | PriestleyTaylor | PET_PT
 #2 | Precipitation Interception by Canopy
-#2 | Interception| Maximum Storage Method | PI_MSM
+2 | Interception| Maximum Storage Method | PI_MSM
 #3 | Snow accumulation and melt
-#3 | Snow | Degree-Day method | SNO_DD
+3 | Snow | Degree-Day method | SNO_DD
 #3 | Snow | Water balance | SNO_WB
 #3 | Snow | Snowpeak Daily method | SNO_SP
 ### 4 | 

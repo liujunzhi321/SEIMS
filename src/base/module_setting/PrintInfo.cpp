@@ -121,14 +121,14 @@ void PrintInfoItem::add1DTimeSeriesResult(time_t t,int n,float* data)
 void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, string header)
 {
 #ifndef linux
-	projectPath = projectPath + "output\\";
+	projectPath = projectPath + DB_TAB_OUT_SPATIAL + "\\";
 	if(::GetFileAttributes(projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
 	{
 		LPSECURITY_ATTRIBUTES att = NULL;
 		::CreateDirectory(projectPath.c_str(),att);
 	}
 #else
-	projectPath = projectPath + "output/";
+	projectPath = projectPath + DB_TAB_OUT_SPATIAL + "/";
 	if(access(projectPath.c_str(), F_OK) != 0)
 	{
 		mkdir(projectPath.c_str(), 0777);
@@ -136,7 +136,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 #endif
 	
 	/// Get filenames existed in GridFS, i.e., "output.files"
-	vector<string> outputExisted = GetGridFsFileNames(conn,dbName,"output.files");
+	vector<string> outputExisted = GetGridFsFileNames(gfs,DB_TAB_OUT_SPATIAL);
 
 	StatusMessage(("Creating output file " + Filename + "...").c_str());
 	// Don't forget add appropriate suffix to Filename... ZhuLJ, 2015/6/16 
@@ -164,7 +164,6 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 			{
 				fs << util.ConvertToString2(&(it->first)) << " " << right << fixed << setw(15) << setfill(' ') << setprecision(8) << it->second <<  endl;
 			}		
-
 			fs.close();
 			StatusMessage(("Create " + filename + " successfully!").c_str());
 		}
@@ -195,7 +194,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 		}
 		return;
 	}
-	if(RasterData != NULL && ValidCellCount > -1)	//GeoTIFF file
+	if(RasterData != NULL && ValidCellCount > -1)	// ASC or GeoTIFF file
 	{
 		if(templateRaster == NULL) 
 			throw ModelException("PrintInfoItem", "Flush", "The templateRaster is NULL.");
@@ -212,27 +211,30 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 		return;
 	}
 
-	if(m_2dData != NULL && ValidCellCount > 0)
+	if(m_2dData != NULL && ValidCellCount > -1 && m_nCols > 0) /// Multi-Layers raster data
 	{
 		if(templateRaster == NULL) 
 			throw ModelException("PrintInfoItem", "Flush", "The templateRaster is NULL.");
 
 		float *tmpData = new float[ValidCellCount];
 		ostringstream oss;
-		for(int j = 0; j < 2; j++)//For soil properties output, presuming the number of layers is 2, TODO change to nlyrs, LJ
+		for(int j = 0; j < m_nCols; j++)
 		{
 			for(int i = 0; i < ValidCellCount; i++)
 				tmpData[i] = m_2dData[i][j];
 			oss.str("");
-			oss << projectPath << Filename << "_" << (j+1) << GTiffExtension;  // Filename_1.tif means layer 1
-			clsRasterData::outputGTiff(templateRaster, tmpData, oss.str());
+			oss << projectPath << Filename << "_" << (j+1) ;  // Filename_1.tif means layer 1
+			string ascii(ASCIIExtension);
+			if(ascii.find(Suffix) != ascii.npos)
+				clsRasterData::outputASCFile(templateRaster,tmpData,oss.str() + ASCIIExtension);
+			else
+				clsRasterData::outputGTiff(templateRaster, tmpData,oss.str() + GTiffExtension);
 		}
+		delete[] tmpData;
 		bson_error_t *err = NULL;
 		if(find(outputExisted.begin(), outputExisted.end(), Filename.c_str()) != outputExisted.end())
 			mongoc_gridfs_remove_by_filename(gfs, Filename.c_str(), err);
-		clsRasterData::outputToMongoDB(templateRaster,RasterData,Filename, gfs);
-
-		delete[] tmpData;
+		clsRasterData::outputToMongoDB(templateRaster,m_2dData,m_nCols,Filename, gfs);
 		return;
 	}
 
@@ -240,7 +242,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 	{
 		ofstream fs;
 		utils util;
-        string filename = projectPath + Filename + ".txt";
+        string filename = projectPath + Filename + TextExtension;
 		fs.open(filename.c_str(), ios::out);
 		if (fs.is_open())
 		{
@@ -315,8 +317,6 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float** d
             default:
                 break;
 		}
-
-
 		m_Counter++;
 	}
 }
