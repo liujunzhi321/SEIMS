@@ -164,7 +164,7 @@ double Max(double *a, int n)
 	return m;
 }
 
-void Output1DArray(int n, float* data, const char* filename)
+void Output1DArrayToTxtFile(int n, float* data, const char* filename)
 {
 	ofstream ofs(filename);
 
@@ -174,7 +174,7 @@ void Output1DArray(int n, float* data, const char* filename)
 	ofs.close();
 }
 
-void Output2DArray(int nRows, int nCols, float** data, const char* filename)
+void Output2DArrayToTxtFile(int nRows, int nCols, float** data, const char* filename)
 {
 	ofstream ofs(filename);
 
@@ -197,7 +197,7 @@ float Power(float a, float n)
 	else
 		return -pow(-a, n);
 }
-void Read1DArray(const char* filename, int& nRows, float*& data)
+void Read1DArrayFromTxtFile(const char* filename, int& nRows, float*& data)
 {
 	ifstream ifs(filename);
 	string tmp;
@@ -210,7 +210,7 @@ void Read1DArray(const char* filename, int& nRows, float*& data)
 	ifs.close();
 }
 
-void Read2DArray(const char* filename, int& nRows, float**& data)
+void Read2DArrayFromTxtFile(const char* filename, int& nRows, float**& data)
 {
 	ifstream ifs(filename);
 	string tmp;

@@ -44,7 +44,7 @@ enum AggregationType
 
 /*!
  * \ingroup module_setting
- * \class PringInfoItem
+ * \class PrintInfoItem
  *
  * \brief Class stores output information 
  *
@@ -78,13 +78,13 @@ public:
 	float**				Data;	
 	//! rows number
 	int Numrows;
-	//! For ASC file
+	//! For 1D raster data
 	float*				RasterData;
-	//! For 2D data
+	//! For 2D raster data
 	float **			m_2dData;
 	//! number of valid cells
 	int					ValidCellCount;
-	//! 
+	//! number of layer of 2D raster data
 	int m_nCols;
 	//! For time series data file
 	map<time_t,float>	TimeSeriesData;
@@ -127,7 +127,7 @@ public:
 	void AggregateData(int numrows, float** data, AggregationType type, float NoDataValue);
 	//! Aggregate the data from the given data parameter using the given method type
 	void AggregateData(time_t time,int numrows, float* data);
-	//! Aggregate the data from the given data parameter using the given method type
+	//! Aggregate the 2D raster data from the given data parameter using the given method type
 	void AggregateData2D(time_t time, int nRows, int nCols, float** data);
 	//! Set the Aggregation type
 	void setAggregationType(AggregationType type);

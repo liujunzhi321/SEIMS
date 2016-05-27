@@ -62,39 +62,68 @@ int			GetCollectionNames(mongoc_client_t* conn, string& dbName, vector<string>& 
 /*!
  * \brief Get GridFs file names in MongoDB database
  *
- * \param[in] conn \a mongoc_client_t
- * \param[in] dbName \string database name
- * \param[in] gridfsname \char* GridFS name, e.g., spatial.files
+ * \param[in] gfs \mongoc_gridfs_t GridFS
  * \return filenames vector<string>
  */
-vector<string> GetGridFsFileNames(mongoc_client_t *conn, string& dbName, char* gridfsname);
+vector<string> GetGridFsFileNames(mongoc_gridfs_t *gfs, char* gridfsname);
 /*!
  * \brief Read 1D array data from MongoDB database
  *
  * \param[in] spatialData \a mongoc_gridfs_t
  * \param[in] remoteFilename \string data file name
- * \param[in] templateRaster \clsRasterData*
  * \param[out] num \int&, data length
  * \param[out] data \float*&, returned data
  */
-extern void Read1DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& num, float*& data);
+extern void Read1DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, int& num, float*& data);
+///*!
+// * \brief Read 1D raster data from MongoDB database
+// *
+// * \param[in] spatialData \a mongoc_gridfs_t
+// * \param[in] remoteFilename \string data file name
+// * \param[in] templateRaster \clsRasterData*
+// * \param[out] num \int&, data length
+// * \param[out] data \float*&, returned data
+// * \sa Read1DArrayFromMongoDB()
+// */
+//extern void Read1DRasterFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& num, float*& data);
+
 /*!
  * \brief Read 2D array data from MongoDB database
- *
+ * The matrix format is as follows:
+ *          RowIdx\ColIdx	0	1 2	3	4
+					0					1	9.
+					1					2	8.	1.
+					2					3	5.	2.
+					3					1	2.
+					4					4	2.	5.	1.	8.
+	i.e., the first element in each row is the valid number of the current row.
+            
  * \param[in] spatialData \a mongoc_gridfs_t
  * \param[in] remoteFilename \string data file name
- * \param[in] templateRaster \clsRasterData*
- * \param[out] n \int&, valid cell number
- * \param[out] data \float*&, returned data
+ * \param[out] n \int&, first dimension of the 2D Array, i.e., Rows
+ * \param[out] data \float**&, returned data
  */
-extern void Read2DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& n, float**& data);
+extern void Read2DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, int& n, float**& data);
+///*!
+// * \brief Read 2D raster data from MongoDB database
+// *
+// * \param[in] spatialData \a mongoc_gridfs_t
+// * \param[in] remoteFilename \string data file name
+// * \param[in] templateRaster \clsRasterData*
+// * \param[out] num \int&,  valid cell numbers of single layer raster
+// * \param[out] lyrs \int&,  valid cell numbers of single layer raster
+// * \param[out] data \float**&, returned data
+// * \sa Read2DArrayFromMongoDB()
+// */
+//extern void Read2DRasterFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& num, int& lyrs, float*& data);
+
 /*!
  * \brief Read 2D soil attribute data from MongoDB database
  *
  * \param[in] spatialData \a mongoc_gridfs_t
  * \param[in] remoteFilename \string data file name
  * \param[in] templateRaster \clsRasterData*
- * \param[out] n \int&, valid cell number
+ * \param[out] n \int&, valid cell number 
  * \param[out] data \float*&, returned data
  * \deprecated Replaced by \sa Read2DArrayFromMongoDB()
  */

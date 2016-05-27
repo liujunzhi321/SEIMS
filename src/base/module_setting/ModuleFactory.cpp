@@ -866,17 +866,6 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 		name = param->Name;
 		//cout << param->Name << " " << param->BasicName << endl;
 	}
-	//if(setting->dataTypeString().size()>0 && StringMatch(param->BasicName,param->Name) && param->IsOutput && param->OutputToOthers) //one genetic module needs output of one non-genetic module
-	//{
-	//	if(param->Dimension == DT_Array1D) name = "T";
-	//	if(param->Dimension == DT_Raster) name = "D";
-	//}
-	//else if(param->IsOutput && param->Name.find("D_") != 0 && param->Name.find("T_") != 0)
-	//{
-	//	if(param->Dimension == DT_Array1D || param->Dimension == DT_Array2D) name = "T_" + param->Name;
-	//	if(param->Dimension == DT_Raster || param->Dimension == DT_Single) name = "D_" + param->Name;
-	//}
-
 	//cout << "set " + name + " for module " + m_ModuleID << endl;
 	//clock_t start = clock();
 	const char* paramName = name.c_str();
@@ -912,6 +901,10 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	case DT_Array1DDateValue:
 		break;
 	case DT_Raster1D:
+		SetRaster(dbName, name, remoteFileName, templateRaster, pModule);
+		break;
+	case DT_Raster2D:
+		/// Fix by LiangJun Zhu, 5-27-2016
 		SetRaster(dbName, name, remoteFileName, templateRaster, pModule);
 		break;
 	case DT_SiteInformation:
@@ -991,20 +984,16 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		try
 		{
 #ifdef USE_MONGODB
-			Read1DArrayFromMongoDB(m_spatialData, remoteFileName, templateRaster, n, data);
-			
+			Read1DArrayFromMongoDB(m_spatialData, remoteFileName, n, data);
 //#else
 //			ostringstream oss;
 //			oss << dbName << remoteFileName << TextExtension;
 //			//cout << oss.str() << endl;
-//			Read1DArray(oss.str().c_str(), n, data);
-//			if(templateRaster->getCellNumber() != n)
-//			{
-//				oss.str("");
-//				oss << "The data length in " << remoteFileName << "(" << n << ")" << " is not the same as the template(" << templateRaster->getCellNumber() << ").\n";
-//				throw ModelException("Set1DData","Read1DArray", oss.str());
-//			}
+//			Read1DArrayFromTxtFile(oss.str().c_str(), n, data);
 #endif
+			if(templateRaster->getCellNumber() != n)
+				throw ModelException("ModuleFactory","Set1DArray","The data length derived from Read1DArrayFromMongoDB in " + remoteFileName
+				+ " is not the same as the template.");
 		}
 		catch (ModelException e)
 		{
@@ -1085,18 +1074,17 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 		pModule->Set2DData(paraName.c_str(), nRows, nCols, data);
 		return;
 	}
-
 	try
 	{
-		if (StringMatch(paraName, Print_2D_CONDUCTIVITY) || StringMatch(paraName, Print_2D_POROSITY) ||
-			StringMatch(paraName, Print_2D_POREINDEX) || StringMatch(paraName, Print_2D_FIELDCAP) ||
-			StringMatch(paraName, Print_2D_WILTINGPOINT) || StringMatch(paraName, Print_2D_DENSITY))
-		{
-			Read2DSoilAttr(m_spatialData, remoteFileName.substr(0, remoteFileName.size()-3), templateRaster, nRows, data);
-			nCols = 2;
-		}
-		// routing files
-		else if (StringMatch(paraName,Tag_ROUTING_LAYERS))
+		//if (StringMatch(paraName, Print_2D_CONDUCTIVITY) || StringMatch(paraName, Print_2D_POROSITY) ||
+		//	StringMatch(paraName, Print_2D_POREINDEX) || StringMatch(paraName, Print_2D_FIELDCAP) ||
+		//	StringMatch(paraName, Print_2D_WILTINGPOINT) || StringMatch(paraName, Print_2D_DENSITY))
+		//{
+		//	Read2DSoilAttr(m_spatialData, remoteFileName.substr(0, remoteFileName.size()-3), templateRaster, nRows, data);
+		//	nCols = 2;
+		//}
+		// Routing layering files
+		if (StringMatch(paraName,Tag_ROUTING_LAYERS))
 		{
 			//string ascFileName = projectPath + Name + TextExtension;
 			ostringstream oss;
@@ -1111,7 +1099,7 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 				remoteFileName = oss.str();
 			}
 		#ifdef USE_MONGODB
-			Read2DArrayFromMongoDB(m_spatialData, remoteFileName, templateRaster, nRows, data);
+			Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
 		/*#else
 			ostringstream ossRoutingLayers;
 			ossRoutingLayers << dbName << remoteFileName << TextExtension;
@@ -1123,7 +1111,7 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 			|| StringMatch(paraName, Tag_ROUTING_LAYERS_DINF))
 		{
 		#ifdef USE_MONGODB
-			Read2DArrayFromMongoDB(m_spatialData, remoteFileName, templateRaster, nRows, data);
+			Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
 		//#else
 		//	ostringstream ossFlowIn;
 		//	ossFlowIn << dbName << remoteFileName << TextExtension;
@@ -1161,22 +1149,26 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 			ReadLongTermMutltiReachInfo(m_conn,m_dbName, nRows, nCols, data);
 #endif
 		}
-		else if (StringMatch(paraName, Tag_LapseRate))
+		else if (StringMatch(paraName, Tag_LapseRate)) /// Match to the format of DT_Array2D, By LJ.
 		{
 			nRows = 12;
-			nCols = 3;
+			nCols = 4;
 			data = new float *[nRows];
 			for (int i = 0; i < nRows; i++)
 			{
 				data[i] = new float[nCols];
-				data[i][0] = 0.03f; // P
-				data[i][1] = -0.65f; // T
-				data[i][2] = 0.f;    // PET
+				data[i][0] = 3; /// element number
+				data[i][1] = 0.03f; // P
+				data[i][2] = -0.65f; // T
+				data[i][3] = 0.f;    // PET
 			}
 		}
 		else
 		{
-			throw ModelException("ModuleFactory", "Set2DData", "Failed reading file " + remoteFileName);
+#ifdef USE_MONGODB
+			Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
+#endif
+			//throw ModelException("ModuleFactory", "Set2DData", "Failed reading file " + remoteFileName);
 		}
 	}
 	catch (ModelException e)
@@ -1194,9 +1186,9 @@ void ModuleFactory::Set2DData(string& dbName, string& paraName, int nSubbasin, s
 
 void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule)
 {
-	int n;
-	float* data;
-
+	int n, lyrs;
+	float* data = NULL;
+	float** data2D = NULL;
 	clsRasterData *raster = NULL;
 	if (m_rsMap.find(remoteFileName) == m_rsMap.end())
 	{
@@ -1205,19 +1197,19 @@ void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFi
 #ifdef USE_MONGODB
 			raster = new clsRasterData(m_spatialData, remoteFileName.c_str(), templateRaster);
 			string upperName = GetUpper(paraName);
-			raster->getRasterData(&n, &data);
-			if (data != NULL && m_parametersInDB.find(upperName) != m_parametersInDB.end())
-				m_parametersInDB[upperName]->Adjust1DArray(n, data);
-//#else
-//			ostringstream oss;
-//			raster = new clsRasterData();
-//			//oss << dbName << remoteFileName << GTiffExtension;
-//			//raster->ReadFromGDAL(oss.str(), templateRaster);
-//			oss << dbName << remoteFileName << RasterExtension;
-//			raster->readASCFile(oss.str(), templateRaster);
-//			//oss.str("");
-//			//oss << dbName << remoteFileName << "_COPY" << RasterExtension;
-//			//raster->outputAAIGrid(oss.str());	
+			/// 1D or 2D raster data
+			if (raster->is2DRaster())
+			{
+				raster->get2DRasterData(&n,&lyrs,&data2D);
+				if (data2D != NULL && m_parametersInDB.find(upperName) != m_parametersInDB.end())
+					m_parametersInDB[upperName]->Adjust2DRaster(n, raster->getLayers(), data2D);
+			}
+			else
+			{
+				raster->getRasterData(&n, &data);
+				if (data != NULL && m_parametersInDB.find(upperName) != m_parametersInDB.end())
+					m_parametersInDB[upperName]->Adjust1DRaster(n, data);
+			}
 #endif
 		}
 		catch (ModelException e)
@@ -1232,13 +1224,25 @@ void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFi
 		raster = m_rsMap[remoteFileName];
 		//cout << remoteFileName << endl;
 	}
-
-	raster->getRasterData(&n, &data);
-	
-	if (data != NULL)
+	if (raster->is2DRaster())
 	{
-		string upperName = GetUpper(paraName);
-		pModule->Set1DData(paraName.c_str(), n, data);
+		raster->get2DRasterData(&n, &lyrs, &data2D);
+
+		if (data2D != NULL)
+		{
+			string upperName = GetUpper(paraName);
+			pModule->Set2DData(paraName.c_str(), n, lyrs, data2D);
+		}
+	}
+	else
+	{
+		raster->getRasterData(&n, &data);
+
+		if (data != NULL)
+		{
+			string upperName = GetUpper(paraName);
+			pModule->Set1DData(paraName.c_str(), n, data);
+		}
 	}
 }
 
@@ -1289,20 +1293,18 @@ void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInpu
 						data[iData] *= m_parametersInDB[VAR_K_PET]->GetAdjustedValue();
 					}
 				}
-				pModule->Set1DData("T", n, data);   /// TODO why "T"?   LJ
+				pModule->Set1DData(DataType_Prefix_TS, n, data);   /// TODO why "T"?   LJ
 			}
 		}
-
 	}
-
 }
-
+/// Revised LiangJun Zhu
+/// Fix code of DT_Raster2D related
+/// 5-27-2016
 void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationModule*>& modules)
 {
 	size_t n = m_moduleIDs.size();
 	string id = m_moduleIDs[iModule];
-	//if(StringMatch(id,"SSR_DA"))
-	//	cout<<"SSR_DA"<<endl;
 	vector<ParamInfo>& inputs = m_inputs[id];
 	for (size_t j = 0; j < inputs.size(); j++)
 	{
@@ -1324,7 +1326,7 @@ void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationM
 			modules[k]->Get1DData(compareName.c_str(), &dataLen, &data);
 			modules[iModule]->Set1DData(inputs[j].Name.c_str(), dataLen, data);
 		}
-		else if (dependParam->Dimension == DT_Array2D)
+		else if (dependParam->Dimension == DT_Array2D || dependParam->Dimension == DT_Raster2D)
 		{
 			int nCol;
 			float** data;
@@ -1343,16 +1345,12 @@ void ModuleFactory::GetValueFromDependencyModule(int iModule, vector<SimulationM
 			oss << "Dimension type: " << dependParam->Dimension << " is currently not supported.";
 			throw ModelException("ModuleFactory", "GetValueFromDependencyModule", oss.str());
 		}
-
 	}
 }
 
 void ModuleFactory::FindOutputParameter(string& outputID, int& iModule, ParamInfo*& paraInfo)
 {
 	string compareName = outputID;
-	//if (!StringMatch(compareName, "D_P"))
-	//	compareName = GetComparableName(outputID);
-
 	size_t n = m_moduleIDs.size();
 	for (size_t i = 0; i < n; i++)
 	{

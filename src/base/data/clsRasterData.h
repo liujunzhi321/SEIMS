@@ -221,20 +221,23 @@ public:
 	 * \param[in] srs spatial reference string
 	 * \param[in] nValidCells \a int, valid cell number
 	 * \param[in] position \a float**, position index
+	 * \param[in] value \a 2D RasterData
+	 * \param[in] lyrs \a layer number
 	 * \param[in] filename \a string, output file name
 	 * \param[in] gfs \a mongoc_gridfs_t
 	 */
-	static void			outputToMongoDB(map<string,float> header, string& srs, int nValid, float** position, float** value,string remoteFilename, mongoc_gridfs_t* gfs);
+	static void			outputToMongoDB(map<string,float> header, string& srs, int nValid, float** position, float** value,int lyrs, string remoteFilename, mongoc_gridfs_t* gfs);
 	
 	/*!
 	 * \brief Write 2D raster data into MongoDB
 	 *
 	 * \param[in] templateRasterData \a clsRasterData
 	 * \param[in] value \a float**, Raster data with multi-layers, e.g., soil properties
+	 * \param[in] lyrs \a layer number
 	 * \param[in] filename \a string, output file name
 	 * \param[in] gfs \a mongoc_gridfs_t
 	 */
-	static void			outputToMongoDB(clsRasterData* templateRasterData, float** value, string filename, mongoc_gridfs_t* gfs);
+	static void			outputToMongoDB(clsRasterData* templateRasterData, float** value, int lyrs, string filename, mongoc_gridfs_t* gfs);
 	
 	/*!
 	 * \brief Write weight file according the weight value
