@@ -156,8 +156,8 @@ private:
 	//! Set raster data
 	void SetRaster(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule);
 	//! Read multiply reach information from file
-	void ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nRows, int& nCols, float**& data);
+	//void ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nRows, int& nCols, float**& data);
 	//! Read single reach information 
-	void ReadSingleReachInfo(int nSubbasin, const string &filename, LayeringMethod layeringMethod, int& nAttr, int& nReaches, float**& data);
+	//void ReadSingleReachInfo(int nSubbasin, const string &filename, LayeringMethod layeringMethod, int& nAttr, int& nReaches, float**& data);
 };
 

@@ -32,7 +32,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_LEN_M, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_SOILDEPTH, UNIT_LEN_M, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster1D);
 
 	mdi.AddParameter(VAR_FIELDCAP, UNIT_SOLCOEF_M3M3, DESC_FIELDCAP, Source_ParameterDB, DT_Array2D);
 	mdi.AddParameter(VAR_WILTPOINT, UNIT_SOLCOEF_M3M3, DESC_WILTPOINT, Source_ParameterDB, DT_Array2D);				
@@ -46,7 +46,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);
 
 	// set the output variables
-	mdi.AddOutput(VAR_SOTE, UNIT_DEPTH_MM, DESC_SOTE, DT_Raster1D);
+	mdi.AddOutput(VAR_SOET, UNIT_DEPTH_MM, DESC_SOET, DT_Raster1D);
 
 	// write out the XML file.
 	res = mdi.GetXMLDocument();

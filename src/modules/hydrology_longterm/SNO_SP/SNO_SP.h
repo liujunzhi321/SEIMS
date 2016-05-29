@@ -1,3 +1,13 @@
+/*!
+ * \file SNO_SP.h
+ * \brief
+ * \author Zhiqiang Yu
+ * \date May 2011
+ * \revised LiangJun Zhu
+ * \date 2016-5-29
+ *  1. Remove m_isInitial and add initialOutputs()
+ * 
+ */
 #pragma once
 #include <string>
 #include <ctime>
@@ -62,8 +72,8 @@ private:
 
 	//result
 	float* m_SM;
-
-	bool m_isInitial;
+	/// removed by LJ
+	///bool m_isInitial;
 
 	float CMelt();
 

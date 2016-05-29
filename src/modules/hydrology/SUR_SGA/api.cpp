@@ -36,7 +36,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_MOIST_IN, UNIT_SOLCOEF_M3M3, DESC_MOIST_IN, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_CLAY,UNIT_PERCENT,DESC_CLAY,Source_ParameterDB,DT_Raster2D);
 	mdi.AddParameter(VAR_SAND,UNIT_PERCENT,DESC_SAND,Source_ParameterDB,DT_Raster2D);
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_LEN_M, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_SOILDEPTH, UNIT_LEN_M, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_FIELDCAP, UNIT_SOLCOEF_M3M3, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_POROST,  UNIT_NON_DIM, DESC_POROST, Source_ParameterDB, DT_Raster2D);
 

@@ -233,7 +233,7 @@ void SSR_DA::Set1DData(const char* key, int nRows, float* data)
 	string s(key);
 	CheckInputSize(key,nRows);
 
-	if(StringMatch(s, VAR_ROOTDEPTH))		
+	if(StringMatch(s, VAR_SOILDEPTH))		
 		m_rootDepth = data;
 	else if(StringMatch(s, VAR_SLOPE))			
 		m_slope = data;

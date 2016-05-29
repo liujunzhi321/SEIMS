@@ -9,16 +9,20 @@
 *	Revision: Zhiqiang Yu	
 *   Date:     2011-2-14
 *   1. Because w1 and w2 in equation 2:1.1.6 is fixed, add two variable to store these
-*      two coeffiences to avoid repeating calculation.
+*      two coefficients to avoid repeating calculation.
 *   2. When w1 and w2 is calculated using equation 2:1.1.7 and 2:1.1.8, FC and SAT should
 *	   be FC*rootdepth and SAT*rootdepth rather than (FC-WP)*rootdepth and (SAT-WP)*rootdepth.
 *	   And the unit conversion of rootdepth would be from m to mm.
-*   3. Overload the funtion Calculate_CN to calculate the CN of one cell.
+*   3. Overload the function Calculate_CN to calculate the CN of one cell.
 *   4. Delete some parameters and input variables. They are Depre_in,Moist_in and Depression.
 *      D_SOMO from soil water balance module and D_DPST from depression module is enough. The 
-*      initalization of soil moisture and depression storage is the task of soil water balance 
+*      initialization of soil moisture and depression storage is the task of soil water balance 
 *	   module and depression module.
 *	5. Modify the name of input and output variables to make it consistent with other modules.
+*
+* Revised LiangJun Zhu
+*	1. Add the support of dynamic multi-layers soil, rather than the fixed 2 layers in previous version.
+*   2.The unit of soil depth and root depth are both mm.
 */
 
 #pragma once
@@ -43,7 +47,9 @@ using namespace std;
 class SUR_CN:public SimulationModule
 {
 public:
+	//! Constructor
 	SUR_CN(void);
+	//! Destructor
 	~SUR_CN(void);
 	virtual int Execute();
 	virtual void SetValue(const char* key, float data);
@@ -56,12 +62,15 @@ public:
 	bool CheckInputData(void);
 
 private:
-	/// number of soil layers
-	int m_nLayers;
-	/// depth of the up two layers(The depth are 10mm and 100 mm, respectively).
-	float m_depth[2];
-
-	/// count of valid cells
+	/// number of soil layers, i.e., the maximum soil layers number of all soil types
+	int m_nSoilLayers;
+	/// soil depth 
+	float **m_soilDepth;
+	///// depth of the up two layers(The depth are 10mm and 100 mm, respectively).
+	//float m_depth[2];
+	/// soil depth of the current layer, replace float m_depth[2] in previous version.
+	float* m_upSoilDepth;
+	/// valid cells number
 	int m_nCells;
 	/// soil porosity
 	float** m_porosity;
@@ -70,57 +79,63 @@ private:
 	/// plant wilting point moisture
 	float** m_wiltingPoint;
 
-	/// root depth of plants (m)
+	/// root depth of plants (mm)
 	float* m_rootDepth;
 	/// CN under moisture condition II    
 	float* m_CN2;
 	/// Net precipitation calculated in the interception module (mm)
 	float* m_P_NET;
-	/// Initial soil moisture or
-	/// soil moisture of each time step
-	float** m_soilMoisture;
+	/// Initial soil moisture
 	float* m_initSoilMoisture;
-	/// Initial depression storage coefficient
-	//float m_Depre_in;
-	/// Depression storage capacity
-	//float* m_Depression;
+	
 	/// depression storage  
 	float* m_SD;    // SD(t-1) from the depression storage module
 	/// from interpolation module
-	/// air temperature of the current day
-	float *m_tMin, *m_tMax;
-	/// snowfall temperature from the parameter database (¡æ)
+	/// mean air temperature of the current day
+	float *m_tMean;
+	/// snowfall temperature from the parameter database (deg C)
 	float m_Tsnow;
-	/// threshold soil freezing temperature (¡æ)
+	/// threshold soil freezing temperature (deg C)
 	float m_Tsoil;
 	/// frozen soil moisture relative to saturation above which no infiltration occur (m3/m3)
 	float m_Sfrozen;
-	/// snowmelt threshold temperature from the parameter database (¡æ)
+	/// snowmelt threshold temperature from the parameter database (deg C)
 	float m_T0;
 	/// snowmelt from the snowmelt module  (mm)
 	float* m_SM; 
 	/// snow accumulation from the snow balance module (mm) at t+1 timestep
 	float* m_SA;
-	/// soil temperature obtained from the soil temperature module (¡æ)
+	/// soil temperature obtained from the soil temperature module (deg C)
 	float* m_TS;
 
-	/// from GIS interface Project/model subdirectory
-	/// Julian day
-	int m_julianDay;
+	/// Julian day, not used? by LJ
+	//int m_julianDay;
 
 	// output
 	/// the excess precipitation (mm) of the total nCells
 	float* m_PE;
+	/// soil moisture of each soil layer in current time step
+	float** m_soilMoisture;
 	/// infiltration map of watershed (mm) of the total nCells
 	float* m_INFIL;
 
 	//add by Zhiqiang
+	/// the first shape coefficient in eq. 2:1.1.7 and 2:1.1.8 in SWAT theory 2009, p104
 	float* m_w1;
+	/// the second shape coefficient in eq. 2:1.1.7 and 2:1.1.8 in SWAT theory 2009, p104
 	float* m_w2;
+	/// the retention parameter for the moisture condition I curve number 
 	float* m_sMax;
+	/// initialize m_w1 and m_w2
 	void   initalW1W2();
+	/// Calculation SCS-CN number
 	float  Calculate_CN(float sm, int cell);
-
+	/// initial outputs before execute main function
 	void initalOutputs();
 };
 
+
+	/// Initial depression storage coefficient
+	//float m_Depre_in;
+	/// Depression storage capacity
+	//float* m_Depression;

@@ -142,7 +142,7 @@ void HS_WB::Set1DData(const char* key, int nRows, float* data)
 	else if(StringMatch(s,"D_TMAX"))		this->m_tMax = data;	
 	else if(StringMatch(s,"D_SOTE"))		this->m_soilT = data;*/
 	
-	else if(StringMatch(s,VAR_ROOTDEPTH))		this->m_rootdepth = data;	
+	else if(StringMatch(s,VAR_SOILDEPTH))		this->m_rootdepth = data;	
 	//else if(StringMatch(s,VAR_SOMO))		this->m_soilMoisture = data;	
 
 	else if(StringMatch(s,VAR_POROST))		this->m_porosity = data;

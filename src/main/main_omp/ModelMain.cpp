@@ -300,7 +300,7 @@ void ModelMain::Execute()
 	int nHs = 0;
 	for(time_t t = m_input->getStartTime(); t < endTime; t += m_dtCh)
 	{
-		//cout << util.ConvertToString2(&t) << endl;
+		cout << util.ConvertToString2(&t) << endl;
 		nHs = int(m_dtCh/m_dtHs);
 		for (int i = 0; i < nHs; i++)
 			StepHillSlope(t+i*m_dtHs, i);

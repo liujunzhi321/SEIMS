@@ -110,6 +110,7 @@ int GetCollectionNames(mongoc_client_t* conn, string& dbName, vector<string>& co
 	vector<string>(collNameList).swap(collNameList);
 	return 0;
 }
+
 vector<string> GetGridFsFileNames(mongoc_gridfs_t *gfs, char* gridfsname)
 {
 	vector<string> filesExisted;
@@ -126,6 +127,7 @@ vector<string> GetGridFsFileNames(mongoc_gridfs_t *gfs, char* gridfsname)
 	vector<string>(filesExisted).swap(filesExisted);
 	return filesExisted;
 }
+
 void Read1DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, int& num, float*& data)
 {
 	mongoc_gridfs_file_t	*gfile;
@@ -187,23 +189,23 @@ void Read2DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename
 	free(floatValues);
 }
 
-void Read2DSoilAttr(mongoc_gridfs_t* spatialData, string remoteFileName, clsRasterData* templateRaster, int& n, float**& data)
-{
-	string remoteFile2 = remoteFileName + "2";
-	clsRasterData raster1(spatialData, remoteFileName.c_str(), templateRaster);
-	clsRasterData raster2(spatialData, remoteFile2.c_str(), templateRaster);
-
-	float *data1, *data2;
-	raster1.getRasterData(&n, &data1);
-	raster2.getRasterData(&n, &data2);
-
-	data = new float*[n];
-	for(int i = 0; i < n; i++){
-		data[i] = new float[2];
-		data[i][0] = data1[i];
-		data[i][1] = data2[i];
-	}
-}
+//void Read2DSoilAttr(mongoc_gridfs_t* spatialData, string remoteFileName, clsRasterData* templateRaster, int& n, float**& data)
+//{
+//	string remoteFile2 = remoteFileName + "2";
+//	clsRasterData raster1(spatialData, remoteFileName.c_str(), templateRaster);
+//	clsRasterData raster2(spatialData, remoteFile2.c_str(), templateRaster);
+//
+//	float *data1, *data2;
+//	raster1.getRasterData(&n, &data1);
+//	raster2.getRasterData(&n, &data2);
+//
+//	data = new float*[n];
+//	for(int i = 0; i < n; i++){
+//		data[i] = new float[2];
+//		data[i][0] = data1[i];
+//		data[i][1] = data2[i];
+//	}
+//}
 
 void ReadIUHFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& n, float**& data)
 {
@@ -325,6 +327,7 @@ void ReadLongTermMutltiReachInfo(mongoc_client_t *conn,string& dbName, int& nr, 
 	mongoc_collection_destroy(collection);
 	mongoc_cursor_destroy(cursor);
 }
+
 void ReadLongTermReachInfo(mongoc_client_t *conn,string& dbName, int subbasinID, int& nr, int& nc, float**& data)
 {
 	bson_t		*b = bson_new();
@@ -451,10 +454,10 @@ void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client
 		if (layeringMethod == UP_DOWN)
 			vec[1] = upDownOrder;//order
 		else
-			vec[1] = downUpOrder;//downstream id
-		vec[2] = downStreamID;
+			vec[1] = downUpOrder;
+		vec[2] = downStreamID;//downstream id
 		vec[3] = manning;//manning's n
-		vec[4] = v0;
+		vec[4] = v0; // v0
 
 		vecReaches.push_back(vec);
 	}
@@ -467,11 +470,11 @@ void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client
 	}
 	for (int i = 0; i < numRec; ++i)
 	{
-		data[0][i] = vecReaches[i][0];
+		data[0][i] = vecReaches[i][0];//subbasin id
 		data[1][i] = vecReaches[i][1];//order
-		data[2][i] = vecReaches[i][2];
+		data[2][i] = vecReaches[i][2];//downstream id
 		data[3][i] = vecReaches[i][3];//manning's n
-		data[4][i] = vecReaches[i][4];
+		data[4][i] = vecReaches[i][4];//v0
 	}
 	nr = nAttr;
 	nc = numRec;
@@ -479,7 +482,6 @@ void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client
 	mongoc_collection_destroy(collection);
 	mongoc_cursor_destroy(cursor);
 }
-
 
 void ReadReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *conn, string& dbName, int nSubbasin, int& nr, int& nc, float**& data)
 {

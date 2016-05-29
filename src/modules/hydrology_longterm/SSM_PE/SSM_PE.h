@@ -20,7 +20,9 @@ using namespace std;
 class SSM_PE:public SimulationModule
 {
 public:
+	//! Constructor
 	SSM_PE(void);
+	//! Destructor
 	~SSM_PE(void);
 	virtual int Execute();
 	virtual void SetValue(const char* key, float data);
@@ -31,8 +33,8 @@ public:
 	bool CheckInputData(void);
 
 private:
-
-	int	  m_cellSize;
+	//! Valid cells number
+	int	  m_nCells;
 
 	float m_t0;
 	float m_tsnow;
@@ -46,8 +48,7 @@ private:
 	float  m_swe;
 	float  m_swe0;
 	float* m_SR;
-	float* m_tMin;
-	float* m_tMax;
+	float* m_tMean;
 
 	//result
 	float* m_SE;

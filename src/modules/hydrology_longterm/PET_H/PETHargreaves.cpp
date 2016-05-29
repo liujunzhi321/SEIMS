@@ -22,16 +22,12 @@ using namespace std;
 
 PETHargreaves::PETHargreaves(void):m_nCells(-1), m_petFactor(1.f),m_HCoef_pet(0.0023f), 
 	m_tMean(NULL), m_tMin(NULL), m_tMax(NULL), m_pet(NULL)
-	/// m_size(-1)
 {
 }
 
 PETHargreaves::~PETHargreaves(void)
 {
-	if(this->m_pet != NULL)
-	{
-		delete [] this->m_pet;
-	}
+	if(this->m_pet != NULL) delete [] this->m_pet;
 }
 
 void PETHargreaves::SetValue(const char* key, float value)

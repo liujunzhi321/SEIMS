@@ -20,19 +20,19 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Chunping Ou");
-	mdi.SetClass("Snow redistribution", "Snow redistribution");
-	mdi.SetDescription("For simplicity purpose for the time being, the algorithm used in the original WetSpa is incorporated in the SEIMS.");
-	mdi.SetEmail("");
-	mdi.SetID("SRD_MB");
-	mdi.SetName("SRD_MB");
+	mdi.SetClass(MCLS_SNO_RD, MCLSDESC_SNO_RD);
+	mdi.SetDescription(MDESC_SRD_MB);
+	mdi.SetEmail(SEIMS_EMAIL);
+	mdi.SetID(MID_SRD_MB);
+	mdi.SetName(MID_SRD_MB);
 	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
+	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SRD_MB.chm");
 
 	//3 grid parameter
-	mdi.AddParameter("slope_wind","%","Slope along wind direction","ParameterDB_Snow",DT_Raster);
-	mdi.AddParameter("curva_wind","%","curvature along wind direction","ParameterDB_Snow",DT_Raster);
-	mdi.AddParameter("shc","m","snow holding capacity","ParameterDB_Snow",DT_Raster);
+	mdi.AddParameter("slope_wind","%","Slope along wind direction","ParameterDB_Snow",DT_Raster1D);
+	mdi.AddParameter("curva_wind","%","curvature along wind direction","ParameterDB_Snow",DT_Raster1D);
+	mdi.AddParameter("shc","m","snow holding capacity","ParameterDB_Snow",DT_Raster1D);
 	mdi.AddParameter("T_snow","oC","snowfall temperature","ParameterDB_Snow",DT_Single);
 	mdi.AddParameter("swe0","mm","Initial snow water equivalent","ParameterDB_Snow",DT_Single);
 
@@ -49,14 +49,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	//input from other module	
 	mdi.AddInput("T_WS","m/s","wind speed measured at 10 m height","Module",DT_Array1D);			// from time series data module
-	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster);					// from interception module
-	mdi.AddInput("D_SNAC","mm", "distribution of snow accumulation", "Module",DT_Raster);	// from snow water balance module
+	mdi.AddInput("D_NEPR","mm","net precipitation","Module",DT_Raster1D);					// from interception module
+	mdi.AddInput("D_SNAC","mm", "distribution of snow accumulation", "Module",DT_Raster1D);	// from snow water balance module
 	mdi.AddInput("SWE","mm","average SA of the watershed","Module",DT_Single);						// from snow water balance module
-	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster);
-	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster);
+	mdi.AddInput("D_TMIN","oC","min temperature","Module",DT_Raster1D);
+	mdi.AddInput("D_TMAX","oC","max temperature","Module",DT_Raster1D);
 
 	// set the output variables
-	mdi.AddOutput("SNRD","mm", "distribution of snow blowing in or out the cell", DT_Raster);
+	mdi.AddOutput(VAR_SNRD,UNIT_DEPTH_MM, DESC_SNRD, DT_Raster1D);
 
 	// write out the XML file.
 
