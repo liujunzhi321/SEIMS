@@ -20,26 +20,23 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the information properties
 	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Percolation", "Calculate the amount of water percolated out of the root zone within the time step.");
-	mdi.SetDescription("The method in DHSVM was adopted.");
+	mdi.SetClass(MCLS_PERCO, MCLSDESC_PERCO);
+	mdi.SetDescription(MDESC_PER_PI);
 	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetID("PER_PI");
-	mdi.SetName("PER_PI");
+	mdi.SetID(MID_PER_PI);
+	mdi.SetName(MID_PER_PI);
 	mdi.SetVersion("0.5");
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("PER_PI.chm");
 
-
 	mdi.AddParameter(Tag_TimeStep, UNIT_TIMESTEP_SEC, UNIT_NON_DIM, File_Input, DT_Single);
-	//mdi.AddParameter(VAR_UPSOLDEP, UNIT_DEPTH_MM, DESC_UPSOLDEP,  Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_LEN_M, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster1D);
-
-	mdi.AddParameter(VAR_CONDUCT, UNIT_WTRDLT_MMH, DESC_CONDUCT, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_POROST, UNIT_STRG_M3M, DESC_POROST, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_POREID, UNIT_NON_DIM, DESC_POREID, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_FIELDCAP, UNIT_STRG_M3M, DESC_FIELDCAP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOILDEPTH, UNIT_LEN_M, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_CONDUCT, UNIT_WTRDLT_MMH, DESC_CONDUCT, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_POROST, UNIT_STRG_M3M, DESC_POROST, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_POREID, UNIT_NON_DIM, DESC_POREID, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_STRG_M3M, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D);
 
 	mdi.AddInput(VAR_SOTE, UNIT_TEMP_DEG, DESC_SOTE, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_INFIL, UNIT_DEPTH_MM, DESC_INFIL, Source_Module, DT_Raster1D);	
@@ -47,7 +44,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);
 
 	// set the output variables
-	mdi.AddOutput(VAR_PERCO, UNIT_DEPTH_MM, DESC_PERCO, DT_Array2D);
+	mdi.AddOutput(VAR_PERCO, UNIT_DEPTH_MM, DESC_PERCO, DT_Raster2D);
 
 	string res = mdi.GetXMLDocument();
 

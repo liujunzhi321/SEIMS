@@ -117,17 +117,17 @@ extern void Read2DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteF
 // */
 //extern void Read2DRasterFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& num, int& lyrs, float*& data);
 
-/*!
- * \brief Read 2D soil attribute data from MongoDB database
- *
- * \param[in] spatialData \a mongoc_gridfs_t
- * \param[in] remoteFilename \string data file name
- * \param[in] templateRaster \clsRasterData*
- * \param[out] n \int&, valid cell number 
- * \param[out] data \float*&, returned data
- * \deprecated Replaced by \sa Read2DArrayFromMongoDB()
- */
-extern void Read2DSoilAttr(mongoc_gridfs_t* spatialData, string remoteFilename, clsRasterData* templateRaster, int& n, float**& data);
+///*!
+// * \brief Read 2D soil attribute data from MongoDB database
+// *
+// * \param[in] spatialData \a mongoc_gridfs_t
+// * \param[in] remoteFilename \string data file name
+// * \param[in] templateRaster \clsRasterData*
+// * \param[out] n \int&, valid cell number 
+// * \param[out] data \float*&, returned data
+// * \deprecated Replaced by \sa Read2DArrayFromMongoDB()
+// */
+//extern void Read2DSoilAttr(mongoc_gridfs_t* spatialData, string remoteFilename, clsRasterData* templateRaster, int& n, float**& data);
 /*!
  * \brief Read IUH data from MongoDB database
  * Not sure the different with \sa Read2DArrayFromMongoDB

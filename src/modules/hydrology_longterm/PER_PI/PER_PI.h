@@ -1,5 +1,12 @@
+/*!
+ * \file PER_PI.h
+ * \brief Percolation calculated by Darcy's law and Brooks-Corey equation.
+ * \author Junzhi Liu
+ * \date May 2011
+ * \revised LiangJun Zhu
+ * \date 2016-5-29
+ */
 #pragma once
-
 #include "api.h"
 #include "SimulationModule.h"
 #include <string>
@@ -16,7 +23,7 @@ using namespace std;
 /*!
  * \class PER_PI
  * \ingroup PER_PI
- * \brief Calculate water percolated
+ * \brief Calculate water percolated from the soil water reservoir
  * 
  */
 class PER_PI : public SimulationModule
@@ -24,28 +31,38 @@ class PER_PI : public SimulationModule
 private:
 	/// number of soil layers
 	int m_nSoilLayers;
-	/// depth of the up two layers(The depth are 10mm and 100 mm, respectively).
-	float m_upSoilDepth;
-
+	/// soil depth
+	float** m_soilDepth;
+	/// depth of the up soil layer
+	float* m_upSoilDepth;
+	/// time step
 	int m_dt;
+	/// valid cells number
 	int m_nCells;
+	/// threshold soil freezing temperature
 	float  m_frozenT;
-
+	/// saturated conductivity
 	float **m_ks;
+	/// soil porosity
 	float **m_porosity;
+	/// field capacity
 	float **m_fc;
+	/// pore index
 	float **m_poreIndex;
-	float **m_sm;
-	
-	float *m_rootDepth;
+	/// soil moisture
+	float **m_somo;
+	/// soil temperature
 	float *m_soilT;
-	
+	/// infiltration
 	float *m_infil;
 
+	/// Output: percolation
 	float **m_perc;
 	
 public:
+	//! Constructor
 	PER_PI(void);
+	//! Destructor
 	~PER_PI(void);
 
 	virtual int Execute();
@@ -71,8 +88,6 @@ private:
 	*	@return bool The validity of the dimension
 	*/
 	bool CheckInputSize(const char*,int);
-
-	static string toString(float value);	
-	
 };
+
 

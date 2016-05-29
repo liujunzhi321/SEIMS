@@ -23,7 +23,7 @@ SNO_DD::SNO_DD(void)
 	this->m_SR = NULL;
 	this->m_SE = NULL;
 	this->m_SM = NULL;
-	m_isInitial = true;
+	///m_isInitial = true;
 }
 
 SNO_DD::~SNO_DD(void)
@@ -38,7 +38,7 @@ bool SNO_DD::CheckInputData(void)
 	if(this->m_date <=0)			throw ModelException(MID_SNO_DD,"CheckInputData","You have not set the time.");
 	if(this->m_nCells <= 0)				throw ModelException(MID_SNO_DD,"CheckInputData","The dimension of the input data can not be less than zero.");
 	if(this->m_Pnet == NULL)		throw ModelException(MID_SNO_DD,"CheckInputData","The net precipitation data can not be NULL.");
-	if(this->m_tMean == NULL)		throw ModelException(MID_SNO_DD,"CheckInputData","The mean temperature data can not be NULL.");
+	if(this->m_tMean == NULL)		throw ModelException(MID_SNO_DD,"CheckInputData","The mean air temperature data can not be NULL.");
 	if(this->m_swe0 == NODATA)			throw ModelException(MID_SNO_DD,"CheckInputData","The swe0 can not be -99.");
 	if(this->m_csnow == NODATA)		throw ModelException(MID_SNO_DD,"CheckInputData","The temperature impact factor can not be -99.");
 	if(this->m_crain == NODATA)		throw ModelException(MID_SNO_DD,"CheckInputData","The rainfall impact factor can not be -99.");
@@ -54,10 +54,17 @@ void SNO_DD::initalOutputs()
 	{
 		m_SM = new float[this->m_nCells];
 		m_SA = new float[this->m_nCells];
-		for (int i = 0; i < this->m_nCells; i++) 
+#pragma omp parallel for
+		for(int i=0; i<m_nCells; i++) 
 		{
-			m_SM[i] = 0.0f;
+			m_SM[i] = 0.f;
 			m_SA[i] = 0.f;
+			/// Since m_tMean is output of other modules, m_tMean is NULL when the first run invoked by the modules 
+			/// ahead of SNO_DD. LJ
+			//if(this->m_tMean[i]  < this->m_tsnow)	
+			//	m_SA[i] = this->m_swe0; //winter
+			//else
+			//	this->m_SA[i] = 0.0f;		   // other seasons
 		}
 	}
 }
@@ -68,23 +75,23 @@ int SNO_DD::Execute()
 
 	this->initalOutputs();
 
-	if(m_isInitial)
-	{
-		int count = 0;
+	//if(m_isInitial)
+	//{
+	//	int count = 0;
 
-		#pragma omp parallel for
-		for(int i=0; i<m_nCells; i++) 
-		{
-			if(this->m_tMean[i]  < this->m_tsnow)	
-			{
-				m_SA[i] = this->m_swe0; 
-				count++;
-			}	//winter
-			else
-				this->m_SA[i] = 0.0f;						// other seasons
-		}
-		m_isInitial = false;
-	}
+	//	#pragma omp parallel for
+	//	for(int i=0; i<m_nCells; i++) 
+	//	{
+	//		if(this->m_tMean[i]  < this->m_tsnow)	
+	//		{
+	//			m_SA[i] = this->m_swe0; 
+	//			count++;
+	//		}	//winter
+	//		else
+	//			this->m_SA[i] = 0.0f;						// other seasons
+	//	}
+	//	m_isInitial = false;
+	//}
 
 	#pragma omp parallel for
 	for (int i = 0; i < m_nCells; i++) 
@@ -162,6 +169,7 @@ void SNO_DD::SetValue(const char* key, float data)
 	else if(StringMatch(s,VAR_SNOW_TEMP))		this->m_tsnow = data;
 	else if(StringMatch(s, VAR_SWE0))			this->m_swe0 = data;
 	else if (StringMatch(s, VAR_OMP_THREADNUM)) omp_set_num_threads((int)data);
+	else if (StringMatch(s, Tag_CellSize)) this->m_nCells = (int)data;
 	else									
 		throw ModelException(MID_SNO_DD,"SetValue","Parameter " + s 
 		+ " does not exist in current module. Please contact the module developer.");
@@ -171,7 +179,6 @@ void SNO_DD::Set1DData(const char* key, int n, float* data)
 {
 	//check the input data
 	string s(key);
-
 	this->CheckInputSize(key,n);
 	if(StringMatch(s,VAR_TMEAN))				this->m_tMean = data;
 	else if(StringMatch(s, VAR_NEPR))		this->m_Pnet = data;
@@ -184,6 +191,7 @@ void SNO_DD::Set1DData(const char* key, int n, float* data)
 
 void SNO_DD::Get1DData(const char* key, int* n, float** data)
 {
+	initalOutputs();
 	string s(key);
 	if(StringMatch(s, VAR_SNME))		*data = this->m_SM;		
 	else if (StringMatch(s, VAR_SNAC)) *data = this->m_SA;

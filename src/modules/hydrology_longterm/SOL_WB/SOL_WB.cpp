@@ -240,7 +240,7 @@ void SOL_WB::Set1DData(const char* key, int nRows, float* data)
 		m_SoilT = data;
 	else if(StringMatch(s, VAR_SUBBSN))		
 		m_subbasin = data;
-	else if(StringMatch(s, VAR_ROOTDEPTH))		
+	else if(StringMatch(s, VAR_SOILDEPTH))		
 		m_Rootdepth = data;	
 	else if(StringMatch(s, VAR_NEPR))	
 		m_pNet = data;

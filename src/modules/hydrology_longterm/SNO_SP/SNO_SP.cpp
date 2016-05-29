@@ -31,7 +31,7 @@ SNO_SP::SNO_SP(void)
 	this->m_SE = NULL;
 
 	this->m_SM = NULL;
-	m_isInitial = true;
+	///m_isInitial = true;
 
 	this->m_packT = NULL;
 }
@@ -64,37 +64,22 @@ bool SNO_SP::CheckInputData(void)
 	if(this->m_csnow12 == NODATA)		throw ModelException(MID_SNO_SP,"CheckInputData","The csnow12 can not be NODATA.");
 
 	//if(this->m_SR == NULL)			throw ModelException(MID_SNO_SP,"CheckInputData","The snow redistribution data can not be NULL.");
-	//if(this->m_SE == NULL)			throw ModelException(MID_SNO_SP,"CheckInputData","The snow sublimation data can not be NULL.");
-	if(this->m_SR == NULL)
-	{
-		this->m_SR = new float[m_nCells];
-		for(int i = 0; i < m_nCells; i++)
-			this->m_SR[i] = 0.f;
-	}
-	if(this->m_SE == NULL)
-	{
-		this->m_SE = new float[m_nCells];
-		for(int i = 0; i < m_nCells; i++)
-			this->m_SE[i] = 0.f;
-	}
+	if(this->m_SE == NULL)			throw ModelException(MID_SNO_SP,"CheckInputData","The snow sublimation data can not be NULL.");
 	return true;
 }
 
 void SNO_SP::initalOutputs()
 {
 	if(m_nCells <= 0)				throw ModelException(MID_SNO_SP,"CheckInputData","The dimension of the input data can not be less than zero.");
-	if(m_SM == NULL) 
+	if(m_SM == NULL || m_SA == NULL) 
 	{
 		m_SM = new float[this->m_nCells];
-		m_packT = new float[this->m_nCells];
-		m_SA = new float[this->m_nCells];   /// m_SA should be output
+		m_SA = new float[this->m_nCells];
 		for (int rw = 0; rw < this->m_nCells; rw++) 
 		{
 			m_SM[rw] = 0.0f;
-			m_packT[rw] = 0.0f;
-			m_SA[rw] = 0.0f;
+			m_SA[rw] = 0.0f;	
 		}
-
 	}
 }
 
@@ -103,27 +88,33 @@ int SNO_SP::Execute()
 	this->CheckInputData();
 
 	this->initalOutputs();
-
-	//the first time
-	if(m_isInitial)
+	if (m_SR == NULL)  /// the initialization should be removed when snow redistribution module is accomplished. LJ
 	{
-		int count = 0;
-		for(int i=0;i<this->m_nCells;i++) 
-		{
-			if(this->m_tMean[i] < this->m_tsnow)	{this->m_SA[i] = this->m_swe0; count++;}	//winter
-			else		
-				this->m_SA[i] = 0.0f;						// other seasons
-			m_packT[i] = this->m_tMean[i];	//initial pack T as average air temperature
-		}
-
-		m_swe =  this->m_swe0 * count / this->m_nCells;
-		m_isInitial = false;
+		m_SR = new float[m_nCells];
+		for(int i=0;i<this->m_nCells;i++)
+			m_SR[i] = 0.f;
 	}
-	else	//not the first time, update pack T using eq. 1:2.5.1 SWAT p57
-	{
-		for(int i=0;i<this->m_nCells;i++) m_packT[i] = m_packT[i] * (1 - this->m_lagSnow) + this->m_tMean[i] * this->m_lagSnow;
-	}
+	////the first time
+	//if(m_isInitial)
+	//{
+	//	int count = 0;
+	//	for(int i=0;i<this->m_nCells;i++) 
+	//	{
+	//		if(this->m_tMean[i] < this->m_tsnow)	{this->m_SA[i] = this->m_swe0; count++;}	//winter
+	//		else		
+	//			this->m_SA[i] = 0.0f;						// other seasons
+	//		m_packT[i] = this->m_tMean[i];	//initial pack T as average air temperature
+	//	}
 
+	//	m_swe =  this->m_swe0 * count / this->m_nCells;
+	//	m_isInitial = false;
+	//}
+	//else	//not the first time, update pack T using eq. 1:2.5.1 SWAT p57
+	//{
+	//	for(int i=0;i<this->m_nCells;i++) m_packT[i] = m_packT[i] * (1 - this->m_lagSnow) + this->m_tMean[i] * this->m_lagSnow;
+	//}
+	for(int i=0;i<this->m_nCells;i++) 
+		m_packT[i] = m_packT[i] * (1 - this->m_lagSnow) + this->m_tMean[i] * this->m_lagSnow;
 	//begin
 	if(this->m_lastSWE == NODATA) this->m_lastSWE = this->m_swe; 
 	if(m_swe < 0.01)	//all cells have not snow, so snowmelt is 0.
@@ -187,7 +178,6 @@ bool SNO_SP::CheckInputSize(const char* key, int n)
 			return false;
 		}
 	}
-
 	return true;
 }
 void SNO_SP::SetValue(const char* key, float data)
@@ -202,6 +192,7 @@ void SNO_SP::SetValue(const char* key, float data)
 	else if(StringMatch(s, VAR_C_SNOW6))		this->m_csnow6 = data;
 	else if(StringMatch(s, VAR_C_SNOW12))		this->m_csnow12 = data;
 	else if (StringMatch(s, VAR_OMP_THREADNUM)) omp_set_num_threads((int)data);
+	else if (StringMatch(s, Tag_CellSize)) this->m_nCells = (int)data;
 	else									throw ModelException(MID_SNO_SP,"SetValue","Parameter " + s 
 		+ " does not exist in current module. Please contact the module developer.");
 }
@@ -210,7 +201,6 @@ void SNO_SP::Set1DData(const char* key, int n, float* data)
 {
 	//check the input data
 	string s(key);
-
 	this->CheckInputSize(key,n);
 	if(StringMatch(s,VAR_TMEAN))				this->m_tMean = data;
 	else if(StringMatch(s, VAR_TMAX))		this->m_tMax = data;
@@ -220,20 +210,14 @@ void SNO_SP::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(s, VAR_SNSB))		this->m_SE = data;
 	else									throw ModelException(MID_SNO_SP,"Set1DData","Parameter " + s + 
 		" does not exist in current module. Please contact the module developer.");
-
 }
 
 void SNO_SP::Get1DData(const char* key, int* n, float** data)
 {
+	initalOutputs();
 	string s(key);
-	if(StringMatch(s, VAR_SNME))				
-	{
-		*data = this->m_SM;
-	}
-	else if(StringMatch(s, VAR_SNAC))				
-	{
-		*data = this->m_SR;
-	}
+	if(StringMatch(s, VAR_SNME))		*data = this->m_SM;		
+	else if(StringMatch(s, VAR_SNAC))		*data = this->m_SR;		
 	else									
 		throw ModelException(MID_SNO_SP,"Get1DData","Result " + s 
 		+ " does not exist in current module. Please contact the module developer.");

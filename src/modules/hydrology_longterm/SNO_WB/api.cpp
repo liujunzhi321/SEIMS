@@ -28,7 +28,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetVersion("0.5");
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("SNO_WB.chm");
-
+	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_T0, UNIT_TEMP_DEG, DESC_T0, Source_ParameterDB,DT_Single);	
 	mdi.AddParameter(VAR_K_BLOW, UNIT_NON_DIM, DESC_K_BLOW, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_SNOW_TEMP, UNIT_TEMP_DEG, DESC_SNOW_TEMP, Source_ParameterDB, DT_Single);
@@ -39,8 +39,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//mdi.AddParameter(VAR_SUBBSN,  UNIT_NON_DIM, DESC_SUBBSN,  Source_ParameterDB, DT_Raster1D); //this list is used to constrain the output size
 
 	mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module, DT_Raster1D);
-	// TODO: SNRD and SNSB currently have not incoming modules, therefore initialized as zero.By LJ
-	mdi.AddInput(VAR_SNRD, UNIT_DEPTH_MM, DESC_SNRD, Source_Module, DT_Raster1D);
+	// TODO: SNRD currently have not incoming modules, therefore initialized as zero.By LJ
+	//mdi.AddInput(VAR_SNRD, UNIT_DEPTH_MM, DESC_SNRD, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SNSB, UNIT_DEPTH_MM, DESC_SNSB, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SNME, UNIT_DEPTH_MM, DESC_SNME, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_TMEAN, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module, DT_Raster1D);
@@ -50,7 +50,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the output variables
 	mdi.AddOutput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, DT_Raster1D);
-	//mdi.AddOutput(VAR_SNWB, UNIT_DEPTH_MM, DESC_SNWB, DT_Array2D);
 	mdi.AddOutput(VAR_SWE, UNIT_DEPTH_MM, DESC_SWE, DT_Single);
 
 	// set the dependencies
@@ -70,3 +69,4 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	strprintf(tmp, res.size()+1, "%s", res.c_str());
 	return tmp;
 }
+	//mdi.AddOutput(VAR_SNWB, UNIT_DEPTH_MM, DESC_SNWB, DT_Array2D);

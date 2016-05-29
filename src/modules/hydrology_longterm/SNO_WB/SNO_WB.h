@@ -1,3 +1,13 @@
+/*!
+ * \file SNO_WB.h
+ * \brief
+ * \author Chunping Ou
+ * \date May 2011
+ * \revised LiangJun Zhu
+ * \date 2016-5-29
+ *  1. Remove m_isInitial and add initialOutputs()
+ *  2. Wind speed is DT_Raster1D
+ */
 #pragma once
 #include <string>
 #include <ctime>
@@ -61,14 +71,14 @@ private:
 	float* m_tMean;
 
 	float* m_WindSpeed;
-	int m_wsSize;
+	//int m_nCells;
 
 	//float* m_subbasin;	//subbasin grid
 	//int m_subbasinSelectedCount;
 	//float* m_subbasinSelected;	//subbasin selected to output
 	//map<int,subbasin*>* m_subbasinList;
-
-	bool m_isInitial;
+	/// removed by LJ
+	///bool m_isInitial;
 
 	void initalOutputs();
 

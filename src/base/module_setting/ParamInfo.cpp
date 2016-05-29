@@ -13,9 +13,6 @@
 #include <iostream>
 using namespace std;
 
-
-
-
 ParamInfo::ParamInfo(void)
 {
 	Reset();
@@ -44,7 +41,6 @@ float ParamInfo::GetAdjustedValue()
 			res = Value + Impact;
 		}
 	}
-
 	return res;
 }
 

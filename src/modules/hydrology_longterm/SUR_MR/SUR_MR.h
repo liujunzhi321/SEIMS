@@ -1,6 +1,6 @@
 /** 
 *	@file
-*	@version	1.0
+*	@version	1.3
 *	@author    Junzhi Liu
 *	@date	19-January-2011
 *
@@ -25,6 +25,10 @@
 *	Revision:	Junzhi Liu
 *   Date:		2013-10-28
 *	1.	Add multi-layers support for soil parameters
+*
+*   Revision: LiangJun Zhu
+*   Date:        2016-5-27
+*   1. Update the support for multi-layers soil parameters
 */
 
 #pragma once
@@ -49,7 +53,9 @@ using namespace std;
 class SUR_MR:public SimulationModule
 {
 public:
+	//! Constructor
 	SUR_MR(void);
+	//! Destructor
 	~SUR_MR(void);
 	virtual int Execute();
 	virtual void SetValue(const char* key, float data);
@@ -62,6 +68,7 @@ public:
 	void CheckInputData(void);
 
 private:
+	/// time step
 	float m_dt;
 	/// count of valid cells
 	int m_nCells;
@@ -69,13 +76,15 @@ private:
 	float *m_pNet;
 	/// potential runoff coefficient
 	float *m_runoffCo;
-	/// root depth
-	float *m_rootDepth;
 
-	/// number of soil layers
+	/// number of soil layers, i.e., the maximum soil layers of all soil types
 	int m_nSoilLayers;
+	/// soil layers number of each cell
+	float* m_soilLayers;
+	/// soil depth 
+	float **m_soilDepth;
 	/// depth of the up soil layer
-	float m_upSoilDepth;
+	float* m_upSoilDepth;
 
 	/// soil porosity
 	float **m_porosity; 
@@ -83,7 +92,7 @@ private:
 	float **m_soilMoisture;
 	/// water content of soil at field capacity 
 	float **m_fieldCap;
-
+	/// initial soil moisture
 	float *m_initSoilMoisture;
 
 	/// runoff exponent
@@ -93,25 +102,22 @@ private:
 	/// depression storage
 	float* m_sd;    // SD(t-1) from the depression storage module
 
-
-	/// maximum temperature
-	float *m_tMax;
-	/// minimum temperature
-	float *m_tMin;
+	/// mean air temperature
+	float* m_tMean;
 	/// snow fall temperature
 	float m_tSnow;
 	/// snow melt threshold temperature
 	float m_t0;
 	/// snow melt from the snow melt module  (mm)
 	float* m_snowMelt; 
-	/// snow accumulation from the snow balance module (mm) at t+1 timestep
+	/// snow accumulation from the snow balance module (mm) at t+1 time step
 	float* m_snowAccu;
 
-	/// threshold soil freezing temperature (¡æ)
+	/// threshold soil freezing temperature (deg C)
 	float m_tFrozen;
 	/// frozen soil moisture relative to saturation above which no infiltration occur (m3/m3)
 	float m_sFrozen;
-	/// soil temperature obtained from the soil temperature module (¡æ)
+	/// soil temperature obtained from the soil temperature module (deg C)
 	float* m_soilTemp;
 
 	// output
@@ -119,7 +125,12 @@ private:
 	float* m_pe;
 	/// infiltration map of watershed (mm) of the total nCells
 	float* m_infil;
-
+	/// initial output for the first run
 	void initalOutputs();
 };
 
+
+	/*/// maximum temperature
+	float *m_tMax;
+	/// minimum temperature
+	float *m_tMin;*/

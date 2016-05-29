@@ -1,3 +1,11 @@
+/*!
+ * \file SRD_MB.h
+ * \brief Snow redistribution calculated by the original WetSpa algorithm.
+ * \author Chunping Ou
+ * \date May 2011
+ * \revised LiangJun Zhu
+ * \date 2016-5-29
+ */
 #pragma once
 #include <string>
 #include <ctime>
@@ -5,11 +13,23 @@
 
 using namespace std;
 #include "SimulationModule.h"
-
+/** \defgroup SRD_MB
+ * \ingroup Hydrology_longterm
+ * \brief Soil redistribution calculation
+ */
+/*!
+ * \class SRD_MB
+ * \ingroup SRD_MB
+ *
+ * \brief Soil redistribution calculation
+ *
+ */
 class SRD_MB:public SimulationModule
 {
 public:
+	//! Constructor
 	SRD_MB(void);
+	//! Destructor
 	~SRD_MB(void);
 	virtual int Execute();
 	virtual void SetValue(const char* key, float data);
@@ -21,11 +41,11 @@ public:
 
 private:
 
-	time_t m_Date;//
+	time_t m_Date;
+	/// valid cells number
+	int m_nCells;
 
-	int m_cellSize;
-
-	//single from parameter
+	//single values from parameter database
 	float m_ut0;
 	float m_u0;
 	float m_t_wind;
@@ -42,17 +62,18 @@ private:
 	bool m_isInitial;
 
 	//time series from module
-	float* m_ws;	//wind speed time series data
+	float* m_ws;	//wind speed
 	int m_wsSize;	//number of wind speed sites
 
-	//grid from parameter
+	//grid from parameter database
 	float* m_curva_wind;
 	float* m_slope_wind;
 	float* m_shc;
+	
+	//grid from other modules
 	float* m_tMin;
 	float* m_tMax;
-
-	//grid from module
+	float* m_tMean;
 	float* m_SA;
 	float* m_Pnet;
 
@@ -60,8 +81,8 @@ private:
 	float* m_SR;
 
 	//temp array
-	float* m_w;	//w array
-	float* m_wt; // wt array
+	float* m_w;
+	float* m_wt; 
 
 	void initalOutputs();
 };
