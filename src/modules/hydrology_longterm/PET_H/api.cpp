@@ -1,11 +1,3 @@
-/*!
- * \file api.cpp
- *
- * \author JunZhi Liu, LiangJun Zhu
- * \date April 2016
- *
- * 
- */
 #include <stdio.h>
 #include <string>
 #include "api.h"

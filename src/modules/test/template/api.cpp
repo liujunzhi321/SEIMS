@@ -2,7 +2,7 @@
 #include <string>
 #include "util.h"
 #include "api.h"
-#include "moduletest.h"
+#include "template.h"
 #include <iostream>
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
@@ -19,7 +19,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	MetadataInfo mdi;
 	string res;
 
-	mdi.SetAuthor("LiangJun Zhu");
+	mdi.SetAuthor("Name");
 	mdi.SetClass("TEST", "Base functionality test!");
 	mdi.SetDescription("Module test.");
 	mdi.SetID("moduletest");
@@ -28,14 +28,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("");
-
-	mdi.AddParameter(VAR_CN2, UNIT_NON_DIM, DESC_CN2, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_CONDUCT, UNIT_WTRDLT_MMH, DESC_CONDUCT, Source_ParameterDB, DT_Raster2D);
-	//mdi.AddParameter(Tag_ROUTING_LAYERS, UNIT_NON_DIM, DESC_ROUTING_LAYERS, Source_ParameterDB, DT_Array2D);
+	/// set parameters from database
+	mdi.AddParameter("VAR_NAME", "UNIT", "DESC", "Source", "DT");
+	/// set input from other modules
+	mdi.AddInput("VAR_NAME", "UNIT", "DESC", "Source", "DT");
 	/// set the output variables
-	mdi.AddOutput("CN2_M",UNIT_NON_DIM, DESC_CN2, DT_Raster1D);
-	mdi.AddOutput("K_M",UNIT_WTRDLT_MMH,DESC_CONDUCT,DT_Raster2D);
-	//mdi.AddOutput("ROUTE",UNIT_NON_DIM,DESC_ROUTING_LAYERS,DT_Array2D);
+	mdi.AddOutput("VAR_NAME","UNIT", "DESC", "DT");
 	/// write out the XML file.
 	res = mdi.GetXMLDocument();
 
