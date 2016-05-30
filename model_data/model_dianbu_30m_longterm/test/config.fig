@@ -1,7 +1,7 @@
 ### FORMAT
 ### MODULE CLASS NO. | PROCESS NAME | METHOD NAME | MODULE ID
 ### -1 | Module Test
-0 | IO test| IO | moduletest
+0 | IO test| IO | IO_TEST
 #0 | Climate
 #0 | TimeSeries | | TSD_RD
 #0 | Interpolation | Thiessen_0 | ITP

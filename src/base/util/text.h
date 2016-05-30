@@ -189,7 +189,6 @@
 #define Source_HydroClimateDB	"HydroClimateDB"
 #define Source_ParameterDB		"ParameterDB"
 #define Source_Module			"Module"
-#define File_ReachPara			"reachparameters.txt"
 
 ///////// Table Names required in MongoDB /////////
 #define DB_TAB_PARAMETERS		"parameters"
@@ -309,14 +308,14 @@
 #define MDESC_SNO_SP							"Snowpack Daily method from SWAT"
 
 /// Potential Evapotranspiration Modules
-#define MCLS_PET "Potential Evapotranspiration"
-#define MCLSDESC_PET "Calculate the potential evapotranspiration for an array of climate inputs."
-#define MID_PET_H "PET_H"
-#define MDESC_PET_H "Hargreaves method for calculating the potential evapotranspiration."
-#define MID_PET_PT "PET_PT"
-#define MDESC_PET_PT "PriestleyTaylor method for calculating the potential evapotranspiration."
-#define MID_PET_PM "PET_PM"
-#define MDESC_PET_PM "Penman Monteith method for calculating the potential evapotranspiration."
+#define MCLS_PET										"Potential Evapotranspiration"
+#define MCLSDESC_PET							"Calculate the potential evapotranspiration"
+#define MID_PET_H										"PET_H"
+#define MDESC_PET_H								"Hargreaves method for calculating the potential evapotranspiration."
+#define MID_PET_PT									"PET_PT"
+#define MDESC_PET_PT							"PriestleyTaylor method for calculating the potential evapotranspiration."
+#define MID_PET_PM									"PET_PM"
+#define MDESC_PET_PM							"Penman Monteith method for calculating the potential evapotranspiration."
 
 
 /// Depression
