@@ -273,7 +273,7 @@
 #define MID_TSD_RD									"TSD_RD"
 #define MDESC_TSD_RD							"Read time series data from HydroClimate database."
 #define MID_ITP											"ITP"
-#define MDESC_ITP									"Interpolation of P, E, PET, etc."
+#define MDESC_ITP									"Interpolation of P, T, etc."
 
 /// Soil temperature
 #define MCLS_SOLT									"Soil Temperature"

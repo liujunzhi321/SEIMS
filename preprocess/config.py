@@ -35,11 +35,6 @@ stormMode = False
 if forCluster and 'cluster_' not in SpatialDBName.lower():
     SpatialDBName = 'cluster_' + SpatialDBName
 ## Climate Input
-PrecSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor.shp'
-if stormMode:
-    PrecStormSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor_storm.shp'
-MeteorSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Metero_hefei_Vor.shp'
-
 HydroClimateVarFile = CLIMATE_DATA_DIR + os.sep + 'Variables.txt'
 MetroSiteFile = CLIMATE_DATA_DIR + os.sep + 'Sites_M.txt'
 PrecSiteFile = CLIMATE_DATA_DIR + os.sep + 'Sites_P.txt'
@@ -51,6 +46,10 @@ DischargeYear = [2014]
 
 
 ## Spatial Input
+PrecSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Preci_dianbu_Vor.shp'
+if stormMode:
+    PrecStormSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Preci_dianbu_Vor_storm.shp'
+MeteorSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Metero_hefei_Vor.shp'
 dem = SPATIAL_DATA_DIR + os.sep + 'dem_30m.tif'
 outlet_file = SPATIAL_DATA_DIR + os.sep + 'outlet_30m.shp'
 

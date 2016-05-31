@@ -6,7 +6,7 @@
 ### Variable Name	Definition
 ### SEQN			(required) Sequence number of soil catogory, CAUTION: No need to be consistent with SOIL CLASS.
 ### NAME			(required) Soil name, CAUTION: a soil name may have multi SEQN to represent heterogeneity according to LANDUSE or SLOPE, etc.
-### NLAYERS			(required) Soil layers number, BE AWARE that NLAYERS could be different in this lookup table.
+### NLAYERS			(required) Soil layers number, BE AWARE that NLAYERS may be different in this lookup table.
 ### SOL_Z			(required, multi-values) Depth from soil surface to bottom of layer (mm), e.g., 100, 400, 800.
 ### SOL_OM			(required, multi-values) Organic matter content (% soil weight)
 ### SOL_CLAY		(required, multi-values) Clay content (% soil weight), diameter < 0.002 mm
