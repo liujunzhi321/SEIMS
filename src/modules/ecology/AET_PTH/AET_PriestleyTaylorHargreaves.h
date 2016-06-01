@@ -14,7 +14,18 @@
 #include "SimulationModule.h"
 
 using namespace std;
-
+/** \defgroup AET_PTH
+ * \ingroup Ecology
+ * \brief Potential plant transpiration for Priestley-Taylor and Hargreaves ET methods
+ *Actual soil evaporation is also calculated.
+ */
+/*!
+ * \class AET_PT_H
+ * \ingroup AET_PTH
+ *
+ * \brief Potential plant transpiration for Priestley-Taylor and Hargreaves ET methods
+ * Actual soil evaporation is also calculated.
+ */
 class AET_PT_H : public SimulationModule
 {
 private:
