@@ -9,6 +9,7 @@
 #include "Interception.h"
 #include "MetadataInfo.h"
 #include "api.h"
+#include "ClimateParams.h"
 
 #define _USE_MATH_DEFINES
 
@@ -27,7 +28,7 @@ clsPI_STORM::clsPI_STORM(void):m_s0(NULL), m_P(NULL), m_maxInterception(NULL),
 	m_minInterception(NULL),m_interceptionLast(NULL), m_interceptionLoss(NULL)
 {
 	m_date = -1;
-	m_size = -1;
+	m_nCells = -1;
 	m_dt = -1;
 	this->m_Pi_b = 1.35f;
 	//this->m_K_pet = -1.0f;
@@ -59,7 +60,7 @@ void clsPI_STORM::Set1DData(const char* key, int n, float* data)
 	{
 		this->m_P = data;
 
-		//Output1DArray(m_size, m_P, "f:\\p.txt");
+		//Output1DArray(m_nCells, m_P, "f:\\p.txt");
 	}
 	else if(StringMatch(key, VAR_SLOPE))
 		m_s0 = data;
@@ -102,14 +103,14 @@ void clsPI_STORM::Get1DData(const char* key, int* n, float** data)
 	else									
 		throw ModelException(MID_PI_STORM,"Get1DData","Result " + s + " does not exist in current module. Please contact the module developer.");
 
-	*n = this->m_size;
+	*n = this->m_nCells;
 }
 
 //! 
 int clsPI_STORM::Execute()
 {
 	#pragma omp parallel for
-	for (int i = 0; i < m_size; ++i)
+	for (int i = 0; i < m_nCells; ++i)
 	{
 		//m_P[i] = m_P[i] * m_dt / 3600;
 		if (m_P[i] > 0.f)
@@ -123,19 +124,19 @@ int clsPI_STORM::Execute()
 	{
 		CheckInputData();
 		
-		m_interceptionLast = new float[m_size];
-		//this->m_evaporation = new float[m_size];
-		this->m_interceptionLoss = new float[m_size];
-		this->m_netPrecipitation = new float[m_size];
+		m_interceptionLast = new float[m_nCells];
+		//this->m_evaporation = new float[m_nCells];
+		this->m_interceptionLoss = new float[m_nCells];
+		this->m_netPrecipitation = new float[m_nCells];
 		#pragma omp parallel for
-		for(int i = 0 ;i<this->m_size;i++) 
+		for(int i = 0 ;i<this->m_nCells;i++) 
 		{
 			m_interceptionLast[i] = this->m_Init_IS;
 		}
 	}
-	int yday = DayOfYear(this->m_date);
+	int jday = JulianDay(this->m_date);
 #pragma omp parallel for
-	for(int i = 0 ; i < this->m_size; i ++)
+	for(int i = 0 ; i < this->m_nCells; i ++)
 	{
 		//float PE = this->m_PET[i] * this->m_K_pet;
 		
@@ -146,7 +147,7 @@ int clsPI_STORM::Execute()
 
 		//interception storage capacity
 		//int julian = 100;
-		double degree = 2 * PI * (yday - 87) /365.f;
+		double degree = 2 * PI * (jday - 87) /365.f;
 		float min = this->m_minInterception[i];
 		float max = this->m_maxInterception[i];
 		double capacity = min + (max - min)*pow(0.5 + 0.5*sin(degree),double(this->m_Pi_b));
@@ -169,17 +170,6 @@ int clsPI_STORM::Execute()
 	return 0;
 }
 
-int clsPI_STORM::DayOfYear(time_t date)
-{
-	struct tm dateInfo;
-#ifndef linux
-	localtime_s(&dateInfo,&date);
-#else
-    localtime_r(&date, &dateInfo);
-#endif
-	return dateInfo.tm_yday + 1;
-}
-
 bool clsPI_STORM::CheckInputData()
 {
 	if(this->m_date == -1)
@@ -188,7 +178,7 @@ bool clsPI_STORM::CheckInputData()
 		return false;
 	}
 
-	if(m_size <= 0)
+	if(m_nCells <= 0)
 	{
 		throw ModelException(MID_PI_STORM,"CheckInputData","The dimension of the input data can not be less than zero.");
 		return false;
@@ -253,14 +243,14 @@ bool clsPI_STORM::CheckInputSize(const char* key, int n)
 		throw ModelException(MID_PI_STORM,"CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_size != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_size <=0) this->m_size = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			throw ModelException(MID_PI_STORM,"CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
 			throw ModelException(MID_PI_STORM,"CheckInputSize",oss.str());
 		}
 	}

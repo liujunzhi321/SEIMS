@@ -15,7 +15,7 @@
 
 clsPI_MSM::clsPI_MSM(void):m_st(NULL)
 {
-	m_cellSize = -1;
+	m_nCells = -1;
 	this->m_Pi_b = -1.0f;
 	this->m_dateLastTimeStep = -1;
 	this->m_Init_IS = 0.0f;
@@ -67,7 +67,7 @@ void clsPI_MSM::Get1DData(const char* key, int* nRows, float** data)
 		*data = m_netPrecipitation;
 	else									
 		throw ModelException(MID_PI_MSM,"Get1DData","Result " + s + " does not exist in current module. Please contact the module developer.");
-	*nRows = this->m_cellSize;
+	*nRows = this->m_nCells;
 }
 
 //! 
@@ -79,13 +79,13 @@ int clsPI_MSM::Execute()
 	//initial the state variable
 	if(this->m_st == NULL)
 	{
-		m_st = new float[this->m_cellSize];
-		this->m_evaporation = new float[this->m_cellSize];
-		this->m_interceptionLoss = new float[this->m_cellSize];
-		this->m_netPrecipitation = new float[this->m_cellSize];
+		m_st = new float[this->m_nCells];
+		this->m_evaporation = new float[this->m_nCells];
+		this->m_interceptionLoss = new float[this->m_nCells];
+		this->m_netPrecipitation = new float[this->m_nCells];
 		
 		#pragma omp parallel for
-		for(int i = 0 ;i<this->m_cellSize;i++) 
+		for(int i = 0 ;i<this->m_nCells;i++) 
 		{
 			m_st[i] = this->m_Init_IS;
 			m_evaporation[i] = 0.f;
@@ -96,7 +96,7 @@ int clsPI_MSM::Execute()
 
 	int julian = JulianDay(m_date);
 	#pragma omp parallel for
-	for(int i = 0 ; i < this->m_cellSize; i ++)
+	for(int i = 0 ; i < this->m_nCells; i ++)
 	{
 		if (m_P[i] > 0)
 		{
@@ -144,7 +144,7 @@ bool clsPI_MSM::CheckInputData()
 		return false;
 	}
 
-	if(m_cellSize <= 0)
+	if(m_nCells <= 0)
 	{
 		throw ModelException(MID_PI_MSM,"CheckInputData","The dimension of the input data can not be less than zero.");
 		return false;
@@ -196,9 +196,9 @@ bool clsPI_MSM::CheckInputSize(const char* key, int n)
 		throw ModelException(MID_PI_MSM,"CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_cellSize != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_cellSize <=0) this->m_cellSize = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			throw ModelException(MID_PI_MSM,"CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");

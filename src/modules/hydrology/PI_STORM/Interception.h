@@ -51,7 +51,7 @@ private:
 	float* m_netPrecipitation;
 
 	// number of valid cells 
-	int m_size;
+	int m_nCells;
 
 	// slope
 	float *m_s0;
@@ -70,8 +70,8 @@ public:
 	virtual void Get1DData(const char* key, int* n, float** data);
 	virtual void SetDate(time_t date);
 private:
-	//! Julian Day
-	int DayOfYear(time_t);
+	////! Julian Day /// removed by LJ. Defined in ClimateParameters.h
+	//int DayOfYear(time_t);
 
 	/**
 	*	@brief check the input data. Make sure all the input data is available.
