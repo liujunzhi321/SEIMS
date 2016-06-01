@@ -190,7 +190,6 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 					// add the print item
 					pi->AddPrintItem(starttm, endtm, fname, sitename,suffix, false);
 				}
-
 			}
 		}
 		// SUBBASINCOUNT is used only for the time series output for subbasins
@@ -310,7 +309,6 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
 		m_printInfos.push_back(pi);
 		pi = NULL;
 	}
-
 	return true;
 }
 

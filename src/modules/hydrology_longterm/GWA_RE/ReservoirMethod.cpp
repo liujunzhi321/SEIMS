@@ -267,7 +267,7 @@ void ReservoirMethod::Set1DData(const char* key, int n, float *data)
 	{
 		m_Slope = data;
 	}	
-	else if (StringMatch(sk, VAR_ROOTDEPTH))
+	else if (StringMatch(sk, VAR_SOILDEPTH))
 	{
 		m_rootDepth = data;
 	}	

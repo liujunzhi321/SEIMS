@@ -1,6 +1,5 @@
 /*!
  * \file clsRasterData.cpp
- * \ingroup data
  * \brief Implementation of clsRasterData class
  *
  * 1. Using GDAL and MongoDB (currently, mongo-c-driver 1.3.5)
@@ -500,8 +499,8 @@ void clsRasterData::outputGTiff(clsRasterData* templateRasterData, float** value
 }
 void clsRasterData::outputToMongoDB(string remoteFilename, mongoc_gridfs_t* gfs)
 {
-	if(m_is2DRaster)
-		clsRasterData::outputToMongoDB(m_headers, m_srs, m_nCells, m_rasterPositionData, m_raster2DData, remoteFilename, gfs);
+	if(m_is2DRaster && m_nLyrs > 0)
+		clsRasterData::outputToMongoDB(m_headers, m_srs, m_nCells, m_rasterPositionData, m_raster2DData, m_nLyrs, remoteFilename, gfs);
 	else
 		clsRasterData::outputToMongoDB(m_headers, m_srs, m_nCells, m_rasterPositionData, m_rasterData, remoteFilename, gfs);
 }
@@ -563,12 +562,12 @@ void clsRasterData::outputToMongoDB(map<string,float> header, string &srs, int n
 	free(p);
 	delete data;
 }
-void clsRasterData::outputToMongoDB(map<string,float> header, string &srs, int inValid, float** position, float** value,string remoteFilename, mongoc_gridfs_t* gfs)
+void clsRasterData::outputToMongoDB(map<string,float> header, string &srs, int inValid, float** position, float** value, int lyrs, string remoteFilename, mongoc_gridfs_t* gfs)
 {
 	/// Prepare binary data
 	int rows = int(header[HEADER_RS_NROWS]);
 	int cols = int(header[HEADER_RS_NCOLS]);
-	int nLyrs = int(header[HEADER_RS_LAYERS]);
+	int nLyrs = lyrs;
 	float *data = new float[rows*cols*nLyrs];
 
 	int index = 0;
@@ -633,13 +632,14 @@ void clsRasterData::outputToMongoDB(clsRasterData* templateRasterData, float* va
 	string srs(templateRasterData->getSRS());
 	clsRasterData::outputToMongoDB(*(templateRasterData->getRasterHeader()), srs, nRows, position, value, filename, gfs);
 }
-void clsRasterData::outputToMongoDB(clsRasterData* templateRasterData, float** value, string filename, mongoc_gridfs_t* gfs)
+
+void clsRasterData::outputToMongoDB(clsRasterData* templateRasterData, float** value, int lyrs, string filename, mongoc_gridfs_t* gfs)
 {
 	int nRows;
 	float** position; 
 	templateRasterData->getRasterPositionData(&nRows,&position);
 	string srs(templateRasterData->getSRS());
-	clsRasterData::outputToMongoDB(*(templateRasterData->getRasterHeader()), srs, nRows, position, value, filename, gfs);
+	clsRasterData::outputToMongoDB(*(templateRasterData->getRasterHeader()), srs, nRows, position, value,lyrs, filename, gfs);
 }
 void clsRasterData::outputWeightFile(clsRasterData* templateRasterData,int nCols, float weight,string filename)
 {
@@ -746,7 +746,7 @@ void clsRasterData::ReadASCFile(string ascFileName,clsRasterData* mask)
 		rasterFile >> tmp >> tmp; /// rows
 		rasterFile >> tmp >> tmp; /// xll
 		rasterFile >> tmp >> tmp; /// yll
-		rasterFile >> tmp >> tmp; /// cellsize
+		rasterFile >> tmp >> tmp; /// cell size
 		rasterFile >> tmp >> noDataValue; /// nodata
 		/// Set header
 		map<string, float> *maskHeader = mask->getRasterHeader();
@@ -953,7 +953,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char* remoteFilen
 	gfile = mongoc_gridfs_find_one_by_filename(gfs,remoteFilename,err);
 	if (err != NULL)
 	{
-		throw ModelException("clsRasterData", "ReadFromMongoDB", "The file " + string(remoteFilename) + " does not exist.");
+		throw ModelException("clsRasterData", "ReadRasterFromMongoDB", "The file " + string(remoteFilename) + " does not exist.");
 	}
 	size_t length = (size_t)mongoc_gridfs_file_get_length(gfile);
 	char* buf = (char*)malloc(length);
@@ -976,13 +976,13 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char* remoteFilen
 			m_headers[string(bson_iter_key (&iter))] = GetFloatFromBSONITER(&iter);
 		}
 		else
-			throw ModelException("clsRasterData", "Read2DFromMongoDB", "Failed in get FLOAT value: " + string(headers[i]) + "\n");
+			throw ModelException("clsRasterData", "ReadRasterFromMongoDB", "Failed in get FLOAT value: " + string(headers[i]) + "\n");
 	}
 	if (bson_iter_init (&iter, bmeta) && bson_iter_find (&iter, HEADER_RS_SRS)) {
 		m_srs = GetStringFromBSONITER(&iter);
 	}
 	else
-		throw ModelException("clsRasterData", "Read2DFromMongoDB", "Failed in get SRS String value.\n");
+		throw ModelException("clsRasterData", "ReadRasterFromMongoDB", "Failed in get SRS String value.\n");
 	int nRows = (int)m_headers[HEADER_RS_NROWS];
 	int nCols = (int)m_headers[HEADER_RS_NCOLS];
 	m_nLyrs = (int)m_headers[HEADER_RS_LAYERS];
@@ -1082,7 +1082,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char* remoteFilen
 		gfile = mongoc_gridfs_find_one_by_filename(gfs,remoteFilename,err);
 		if (err != NULL)
 		{
-			throw ModelException("clsRasterData", "ReadFromMongoDB", "The file " + string(remoteFilename) + " does not exist.");
+			throw ModelException("clsRasterData", "ReadRasterFromMongoDB", "The file " + string(remoteFilename) + " does not exist.");
 		}
 		/// Get metadata
 		const bson_t *bmeta;
@@ -1092,7 +1092,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char* remoteFilen
 		if (bson_iter_init (&iter, bmeta) && bson_iter_find (&iter, HEADER_RS_LAYERS)) \
 			m_nLyrs = GetFloatFromBSONITER(&iter);
 		else
-			throw ModelException("clsRasterData", "ReadFromMongoDB", "Failed in get FLOAT value: LAYERS.\n");
+			throw ModelException("clsRasterData", "ReadRasterFromMongoDB", "Failed in get FLOAT value: LAYERS.\n");
 		size_t length = (size_t)mongoc_gridfs_file_get_length(gfile);
 		char* buf = (char*)malloc(length);
 		mongoc_iovec_t iov;

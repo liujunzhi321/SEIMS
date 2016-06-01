@@ -18,7 +18,7 @@ SRD_MB::SRD_MB(void)
 	this->m_shc_crop=-99.0f;
 	this->m_k_slope=-99.0f;
 	this->m_k_curvature=-99.0f;
-	this->m_cellSize = -1;
+	this->m_nCells = -1;
 	this->m_wsSize = -1;
 	this->m_swe = -99.0f;
 	this->m_swe0 = -99.0f;
@@ -53,7 +53,7 @@ SRD_MB::~SRD_MB(void)
 bool SRD_MB::CheckInputData(void)
 {
 	if(this->m_Date <=0)			throw ModelException("SRD_MB","CheckInputData","You have not set the time.");
-	if(m_cellSize <= 0)				throw ModelException("SRD_MB","CheckInputData","The dimension of the input data can not be less than zero.");
+	if(m_nCells <= 0)				throw ModelException("SRD_MB","CheckInputData","The dimension of the input data can not be less than zero.");
 	if(this->m_tMin == NULL)		throw ModelException("SRD_MB","CheckInputData","The min temperature data can not be NULL.");
 	if(this->m_tMax == NULL)		throw ModelException("SRD_MB","CheckInputData","The max temperature data can not be NULL.");
 	if(this->m_ws == NULL)			throw ModelException("SRD_MB","CheckInputData","The wind speed data can not be NULL.");
@@ -81,11 +81,11 @@ bool SRD_MB::CheckInputData(void)
 
 void SRD_MB::initalOutputs()
 {
-	if(m_cellSize <= 0)				throw ModelException("SRD_MB","CheckInputData","The dimension of the input data can not be less than zero.");
+	if(m_nCells <= 0)				throw ModelException("SRD_MB","CheckInputData","The dimension of the input data can not be less than zero.");
 	if(m_SR == NULL)
 	{
-		m_SR = new float[this->m_cellSize];
-		for (int rw = 0; rw < this->m_cellSize; rw++) 				
+		m_SR = new float[this->m_nCells];
+		for (int rw = 0; rw < this->m_nCells; rw++) 				
 		{
 			m_SR[rw] = 0.0f;	
 		}					
@@ -102,13 +102,13 @@ int SRD_MB::Execute()
 	if(m_isInitial)
 	{
 		int count = 0;
-		for(int i=0;i<this->m_cellSize;i++) 
+		for(int i=0;i<this->m_nCells;i++) 
 		{
 			if((this->m_tMin[i] + this->m_tMax[i]) / 2 < this->m_tsnow)	{this->m_SA[i] = this->m_swe0; count++;}	//winter
 			else														this->m_SA[i] = 0.0f;						// other seasons
 		}
 
-		m_swe =  this->m_swe0 * count / this->m_cellSize;
+		m_swe =  this->m_swe0 * count / this->m_nCells;
 		m_isInitial = false;
 	}
 
@@ -117,7 +117,7 @@ int SRD_MB::Execute()
 	{
 		if(this->m_lastSWE >= 0.01)
 		{
-			for (int rw = 0; rw < this->m_cellSize; rw++) 
+			for (int rw = 0; rw < this->m_nCells; rw++) 
 				m_SR[rw] = 0.0f;
 		}
 
@@ -127,16 +127,16 @@ int SRD_MB::Execute()
 
 
 	//if some cells have snow, start to calculate snow redistribution.
-	if(m_w == NULL) m_w = new float[this->m_cellSize];
+	if(m_w == NULL) m_w = new float[this->m_nCells];
 	if(m_wt == NULL)   //get wt. wt is constant for the watershed, so save it in m_wt to save time.
 	{
-		m_wt = new float[this->m_cellSize];
-		for (int rw = 0; rw < this->m_cellSize; rw++) 
+		m_wt = new float[this->m_nCells];
+		for (int rw = 0; rw < this->m_nCells; rw++) 
 			m_wt[rw] = 1.0f + 1 / this->m_k_slope * this->m_slope_wind[rw] + 1 / this->m_k_curvature * this->m_curva_wind[rw];			
 	}
 
 	float totalW = 0.0f;
-	for ( int rw = 0; rw < this->m_cellSize; rw++)
+	for ( int rw = 0; rw < this->m_nCells; rw++)
 	{ 
 		float wl = 1.0f;
 		float shc = this->m_shc[rw] * 1000;
@@ -149,12 +149,12 @@ int SRD_MB::Execute()
 		totalW += m_w[rw];			
 	}
 
-	float weight = this->m_cellSize / totalW;		//weight
+	float weight = this->m_nCells / totalW;		//weight
 	float u = 0.0f;									//average wind speed
 	for (int rw = 0; rw < this->m_wsSize; rw++) u+=this->m_ws[rw];
 	u /= this->m_wsSize;
 
-	for ( int rw = 0; rw < this->m_cellSize; rw++)
+	for ( int rw = 0; rw < this->m_nCells; rw++)
 	{
 		float snow = this->m_SA[rw];
 		float tmean = (this->m_tMin[rw] + this->m_tMax[rw]) / 2; //if the temperature is higher than t0, the redistribution is 0
@@ -197,9 +197,9 @@ bool SRD_MB::CheckInputSize(const char* key, int n)
 		throw ModelException("SRD_MB","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(this->m_cellSize != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_cellSize <=0) this->m_cellSize = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			throw ModelException("SRD_MB","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
@@ -268,6 +268,6 @@ void SRD_MB::Get1DData(const char* key, int* n, float** data)
 	else									throw ModelException("SRD_MB","getResult","Result " + s + 
 		" does not exist in SRD_MB method. Please contact the module developer.");
 
-	*n = this->m_cellSize;
+	*n = this->m_nCells;
 }
 

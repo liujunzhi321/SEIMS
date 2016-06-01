@@ -1,3 +1,12 @@
+/*!
+ * \file clsPI_MSM.h
+ * \brief Compute canopy interception of rainfall using Maximum Storage Method
+ * \author Alex Storey
+ * \date May 2011
+ * \revised LiangJun Zhu
+ * \date May 2016
+ * 
+ */
 #pragma once
 
 #include <string>
@@ -43,7 +52,7 @@ private:
 	float* m_netPrecipitation;
 
 	// number of valid cells 
-	int m_cellSize;
+	int m_nCells;
 
 	//previous date
 	time_t m_dateLastTimeStep;
@@ -54,10 +63,7 @@ public:
 	virtual void Get1DData(const char* key, int* nRows, float** data);
 	virtual int Execute(void);
 private:
-	/**
-	*	@brief Get the Julian day of one day
-	*/
-	int JulianDay(time_t);
+
 
 	/**
 	*	@brief check the input data. Make sure all the input data is available.
@@ -67,7 +73,7 @@ private:
 	bool CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension
@@ -75,12 +81,10 @@ private:
 	*/
 	bool CheckInputSize(const char*,int);
 
-
-	static string toString(float value);
 public:
+	//! Constructor
 	clsPI_MSM(void);
+	//! Destructor
 	~clsPI_MSM(void);
-
-
 };
 

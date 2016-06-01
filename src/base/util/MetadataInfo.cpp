@@ -1,6 +1,5 @@
 /*!
  * \file MetadataInfo.cpp
- * \ingroup util
  * \brief methods for MetadataInfo class
  *
  * \author Junzhi Liu
@@ -10,7 +9,7 @@
  * 
  */
 #include "MetadataInfo.h"
-
+#include "text.h"
 // private methods
 void MetadataInfo::OpenTag(string name, string attributes, int indent, string* sb)
 {
@@ -90,28 +89,34 @@ void MetadataInfo::DimensionTag(string tag, int indent, dimensionTypes dimType, 
 	switch (dimType)
 	{
 	case DT_Array1D:
-		strTmp = "Array1D";
+		strTmp = Type_Array1D;
 		break;
 	case DT_Array1DDateValue:
-		strTmp = "Array1DDateValue";
+		strTmp = Type_Array1DDateValue;
 		break;
 	case DT_Array2D:
-		strTmp = "Array2D";
+		strTmp = Type_Array2D;
 		break;
 	case DT_Array3D:
-		strTmp = "Array3D";
+		strTmp = Type_Array3D;
 		break;
 	case DT_Raster1D:
-		strTmp = "Raster1D";
+		strTmp = Type_Raster1D;
 		break;
 	case DT_Raster2D:
-		strTmp = "Raster2D";
+		strTmp = Type_Raster2D;
 		break;
 	case DT_Single:
-		strTmp = "Single";
+		strTmp = Type_Single;
 		break;
 	case DT_SiteInformation:
-		strTmp = "SiteInformation";
+		strTmp = Type_SiteInformation;
+		break;
+	case DT_LapseRateArray:
+		strTmp = Type_LapseRateArray;
+		break;
+	case DT_Scenario:
+		strTmp = Type_Scenario;
 		break;
     default:
         break;

@@ -1,5 +1,4 @@
 /*!
- * \ingroup main
  * \file main.cpp
  * \brief Entry point for SEIMS application.
  * \author Junzhi Liu

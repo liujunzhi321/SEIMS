@@ -35,11 +35,6 @@ stormMode = False
 if forCluster and 'cluster_' not in SpatialDBName.lower():
     SpatialDBName = 'cluster_' + SpatialDBName
 ## Climate Input
-PrecSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor.shp'
-if stormMode:
-    PrecStormSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Preci_dianbu_Vor_storm.shp'
-MeteorSitesThiessen = CLIMATE_DATA_DIR + os.sep + 'shp' + os.sep + 'Metero_hefei_Vor.shp'
-
 HydroClimateVarFile = CLIMATE_DATA_DIR + os.sep + 'Variables.txt'
 MetroSiteFile = CLIMATE_DATA_DIR + os.sep + 'Sites_M.txt'
 PrecSiteFile = CLIMATE_DATA_DIR + os.sep + 'Sites_P.txt'
@@ -51,6 +46,10 @@ DischargeYear = [2014]
 
 
 ## Spatial Input
+PrecSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Preci_dianbu_Vor.shp'
+if stormMode:
+    PrecStormSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Preci_dianbu_Vor_storm.shp'
+MeteorSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Metero_hefei_Vor.shp'
 dem = SPATIAL_DATA_DIR + os.sep + 'dem_30m.tif'
 outlet_file = SPATIAL_DATA_DIR + os.sep + 'outlet_30m.shp'
 
@@ -111,4 +110,4 @@ LANDUSE_ATTR_DB = ["manning","i_max","i_min", "root_depth", "usle_c", "SOIL_T10"
 
 
 ## Hydrological parameters
-coeTable = {"T2":[0.05, 0.48],"T10":[0.12, 0.52], "T100":[0.18,0.55]} ## used in radius.py, TODO: what's meaning
+coeTable = {"T2":[0.05, 0.48],"T10":[0.12, 0.52], "T100":[0.18,0.55]} ## Adopted from WetSpa, used in radius.py, TODO: what's meaning

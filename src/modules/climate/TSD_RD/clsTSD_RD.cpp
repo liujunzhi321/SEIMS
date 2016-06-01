@@ -1,6 +1,5 @@
 /*!
  * \file clsTSD_RD.cpp
- * \ingroup TSD_RD
  * \author Zhiqiang Yu
  * \date Apr. 2010
  *

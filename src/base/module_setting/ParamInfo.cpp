@@ -13,9 +13,6 @@
 #include <iostream>
 using namespace std;
 
-
-
-
 ParamInfo::ParamInfo(void)
 {
 	Reset();
@@ -44,14 +41,11 @@ float ParamInfo::GetAdjustedValue()
 			res = Value + Impact;
 		}
 	}
-
 	return res;
 }
 
 void ParamInfo::Adjust1DArray(int n, float* data)
 {
-	float res = Value;
-
 	if (StringMatch(Use, PARAM_USE_Y))
 	{
 		if (StringMatch(Change, PARAM_CHANGE_RC) && !FloatEqual(Impact, 1.0))
@@ -70,7 +64,23 @@ void ParamInfo::Adjust1DArray(int n, float* data)
 		}
 	}
 }
-
+void ParamInfo::Adjust1DRaster(int n, float* data)
+{
+	Adjust1DArray(n, data);
+}
+void ParamInfo::Adjust2DArray(int n, float** data)
+{
+	for (int i = 0; i < n; i++)
+	{
+		int curCols = data[i][0];
+		Adjust1DArray(curCols, data[i]+1);
+	}
+}
+void ParamInfo::Adjust2DRaster(int n, int lyrs, float** data)
+{
+	for (int i = 0; i < n; i++)
+		Adjust1DArray(lyrs, data[i]);
+}
 void ParamInfo::Reset(void)
 {
 	Change = "";

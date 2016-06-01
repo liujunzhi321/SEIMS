@@ -46,7 +46,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//This temperature is used to determine the value of variable m_snow
 	//if T_MEAN is larger than T_snow, then m_snow = 0;
 	//else m_snow = 1.
-	mdi.AddParameter(VAR_SNOW_TEMP,UNIT_DEPTH_MM,DESC_SNOW_TEMP,Source_ParameterDB, DT_Single); 
+	mdi.AddParameter(VAR_T_SNOW,UNIT_DEPTH_MM,DESC_T_SNOW,Source_ParameterDB, DT_Single); 
 	mdi.AddParameter(VAR_K_PET, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
 
 	mdi.AddParameter(VAR_DEM,UNIT_LEN_M,CONS_IN_ELEV,Source_ParameterDB,DT_Raster1D);

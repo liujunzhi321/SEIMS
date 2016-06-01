@@ -1,6 +1,5 @@
 /*!
  * \file api.cpp
- * \ingroup TSD_RD
  * \author Zhiqiang Yu
  * \date Apr. 2010
  *

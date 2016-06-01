@@ -15,7 +15,7 @@
 #include <cmath>
 #include <omp.h>
 
-DepressionFSDaily::DepressionFSDaily(void): m_size(-1),
+DepressionFSDaily::DepressionFSDaily(void): m_nCells(-1),
 	m_depCo(NODATA), m_depCap(NULL), m_pet(NULL), m_ei(NULL), m_pe(NULL),
 	m_sd(NULL),	m_ed(NULL),	m_sr(NULL)
 {
@@ -29,49 +29,46 @@ DepressionFSDaily::~DepressionFSDaily(void)
 		delete[] m_ed;
 	if(m_sr != NULL)
 		delete[] m_sr;
-
 }
 
 bool DepressionFSDaily::CheckInputData(void)
 {
 	if(this->m_date == -1)
 	{
-		throw ModelException("DEP_LINSLEY","CheckInputData","You have not set the time.");
+		throw ModelException(MID_DEP_LINSLEY,"CheckInputData","You have not set the time.");
 		return false;
 	}
 
-	if(this->m_size <= 0)
+	if(this->m_nCells <= 0)
 	{
-		throw ModelException("DEP_LINSLEY","CheckInputData","The cell number of the input can not be less than zero.");
+		throw ModelException(MID_DEP_LINSLEY,"CheckInputData","The cell number of the input can not be less than zero.");
 		return false;
 	}
 
 	if(m_depCo == NODATA)
-		throw ModelException("DEP_LINSLEY","CheckInputData","The parameter: initial depression storage coefficient has not been set.");
+		throw ModelException(MID_DEP_LINSLEY,"CheckInputData","The parameter: initial depression storage coefficient has not been set.");
 	if(m_depCap == NULL)
-		throw ModelException("DEP_LINSLEY","CheckInputData","The parameter: depression storage capacity has not been set.");
+		throw ModelException(MID_DEP_LINSLEY,"CheckInputData","The parameter: depression storage capacity has not been set.");
 	if(m_pet == NULL)
-		throw ModelException("DEP_LINSLEY","CheckInputData","The parameter: PET has not been set.");
+		throw ModelException(MID_DEP_LINSLEY,"CheckInputData","The parameter: PET has not been set.");
 	if(m_ei == NULL)
-		throw ModelException("DEP_LINSLEY","CheckInputData","The parameter: evaporation from the interception storage has not been set.");
-
+		throw ModelException(MID_DEP_LINSLEY,"CheckInputData","The parameter: evaporation from the interception storage has not been set.");
 	if(m_pe == NULL)
-		throw ModelException("DEP_LINSLEY","CheckInputData","The parameter: excess precipitation has not been set.");
-
+		throw ModelException(MID_DEP_LINSLEY,"CheckInputData","The parameter: excess precipitation has not been set.");
 	return true;
 }
 
 void  DepressionFSDaily::initalOutputs()
 {
-	if(this->m_size <= 0) throw ModelException("DEP_LINSLEY","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException(MID_DEP_LINSLEY,"initalOutputs","The cell number of the input can not be less than zero.");
 
-	if(m_sd == NULL)
+	if(m_sd == NULL && m_depCap != NULL)
 	{
-		m_sd = new float[m_size];
-		m_ed = new float[m_size];
-		m_sr = new float[m_size];
+		m_sd = new float[m_nCells];
+		m_ed = new float[m_nCells];
+		m_sr = new float[m_nCells];
 		#pragma omp parallel for
-		for (int i = 0; i < m_size; ++i)
+		for (int i = 0; i < m_nCells; ++i)
 		{
 			m_sd[i] = m_depCo* m_depCap[i];
 			m_ed[i] = 0.0f;
@@ -84,11 +81,10 @@ int DepressionFSDaily::Execute()
 {
 	//check the data
 	CheckInputData();	
-
 	initalOutputs();
 
 	#pragma omp parallel for
-	for (int i = 0; i < m_size; ++i)
+	for (int i = 0; i < m_nCells; ++i)
 	{
 		//////////////////////////////////////////////////////////////////////////
 		// runoff
@@ -133,7 +129,6 @@ int DepressionFSDaily::Execute()
 			m_sd[i] = 0.0f;
 		}
  	}
-
 	return true;
 }
 
@@ -143,15 +138,14 @@ bool DepressionFSDaily::CheckInputSize(const char* key, int n)
 	{
 		return false;
 	}
-	if(this->m_size != n)
+	if(this->m_nCells != n)
 	{
-		if(this->m_size <=0) this->m_size = n;
+		if(this->m_nCells <=0) this->m_nCells = n;
 		else
 		{
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -160,15 +154,13 @@ void DepressionFSDaily::SetValue(const char* key, float data)
 	string sk(key);
 	if (StringMatch(sk, VAR_DEPREIN))
 		m_depCo = data;
-	else if (StringMatch(sk, Tag_CellSize))
-		m_size = data;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM))
 	{
 		omp_set_num_threads((int)data);
 	}
 	else
-		throw ModelException("DEP_LINSLEY", "SetSingleData", "Parameter " + sk 
-		+ " does not exist in the DEP_LINSLEY module. Please contact the module developer.");
+		throw ModelException(MID_DEP_LINSLEY, "SetValue", "Parameter " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 }
 
 void DepressionFSDaily::Set1DData(const char* key, int n, float* data)
@@ -185,17 +177,15 @@ void DepressionFSDaily::Set1DData(const char* key, int n, float* data)
 	else if (StringMatch(sk, VAR_EXCP))
 		m_pe = data;
 	else
-		throw ModelException("DEP_LINSLEY", "Set1DData", "Parameter " + sk 
-		+ " does not exist in the DEP_LINSLEY module. Please contact the module developer.");
-
+		throw ModelException(MID_DEP_LINSLEY, "Set1DData", "Parameter " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 }
 
 void DepressionFSDaily::Get1DData(const char* key, int* n, float** data)
 {
 	initalOutputs();
-
 	string sk(key);
-	*n = m_size;
+	*n = m_nCells;
 	if (StringMatch(sk, VAR_DPST))
 		*data = m_sd;
 	else if (StringMatch(sk, VAR_DEET))
@@ -203,7 +193,6 @@ void DepressionFSDaily::Get1DData(const char* key, int* n, float** data)
 	else if (StringMatch(sk, VAR_SURU))
 		*data = m_sr;
 	else
-		throw ModelException("DEP_LINSLEY", "Get1DData", "Output " + sk 
-		+ " does not exist in the DEP_LINSLEY module. Please contact the module developer.");
+		throw ModelException(MID_DEP_LINSLEY, "Get1DData", "Output " + sk 
+		+ " does not exist in current module. Please contact the module developer.");
 }
-

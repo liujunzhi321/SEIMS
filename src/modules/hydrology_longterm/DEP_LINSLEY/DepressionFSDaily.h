@@ -34,17 +34,18 @@ using namespace std;
  * \brief A simple fill and spill method method to calculate depression storage
  *
  */
-
 /*!
  * \class DepressionFSDaily
  * \ingroup DEP_LINSLEY
- * \brief function to return the XML Metadata document string
+ * \brief A simple fill and spill method method to calculate depression storage
  * 
  */
 class DepressionFSDaily:public SimulationModule
 {
 public:
+	//! Constructor
 	DepressionFSDaily(void);
+	//! Destructor
 	~DepressionFSDaily(void);
 
 	virtual int Execute();
@@ -55,10 +56,9 @@ public:
 	bool CheckInputSize(const char* key, int n);
 	bool CheckInputData(void);
 
-
 private:
-	/// size
-	int m_size;
+	/// valid cells number
+	int m_nCells;
 
 	/// initial depression storage coefficient
 	float m_depCo;
@@ -70,8 +70,7 @@ private:
 	/// evaporation from the interception storage
 	float* m_ei;
 
-	/// Infiltration
-	///float* m_infil;
+	/// excess precipitation calculated in the infiltration module
 	float* m_pe;
 
 	// state variables (output)
@@ -81,8 +80,17 @@ private:
 	float* m_ed;
 	/// surface runoff
 	float* m_sr;
-
-
+	/*!
+	 * \brief Initialize output variables
+	 * This module will be called by infiltration module to get the 
+	 *		depression storage. And this module will also use the outputs
+	 *		of infiltration module. The sequence of this two modules is 
+	 *		infiltration->depression. When infiltration first calls the 
+	 *		depression module, the execute function of depression module
+	 *		is not executed before getting the outputs. So, the output 
+	 *		variables should be initial in the Get1DData function. This 
+	 *		initialization is realized by function initalOutputs. 
+	 */
 	void initalOutputs();
 };
 

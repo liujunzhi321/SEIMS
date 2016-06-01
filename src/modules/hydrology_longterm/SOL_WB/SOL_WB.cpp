@@ -240,7 +240,7 @@ void SOL_WB::Set1DData(const char* key, int nRows, float* data)
 		m_SoilT = data;
 	else if(StringMatch(s, VAR_SUBBSN))		
 		m_subbasin = data;
-	else if(StringMatch(s, VAR_ROOTDEPTH))		
+	else if(StringMatch(s, VAR_SOILDEPTH))		
 		m_Rootdepth = data;	
 	else if(StringMatch(s, VAR_NEPR))	
 		m_pNet = data;
@@ -291,6 +291,7 @@ string SOL_WB::toString(float value)
 void SOL_WB::CheckInputData()
 {
 	//if(m_Date <=0)				throw ModelException("SOL_WB","CheckInputData","You have not set the time.");
+	if(m_date <=0)				throw ModelException("SOL_WB","CheckInputData","You have not set the time.");
 	if(m_nCells <= 0)					throw ModelException("SOL_WB","CheckInputData","The dimension of the input data can not be less than zero.");
 	if(m_Precipitation == NULL)	throw ModelException("SOL_WB","CheckInputData","The precipitation data can not be NULL.");
 	if(m_Depression  == NULL)		throw ModelException("SOL_WB","CheckInputData","The depression data can not be NULL.");

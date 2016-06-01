@@ -103,16 +103,16 @@ private:
 	//! 1D array data map
 	map<string, float*>					m_1DArrayMap;
 	//! 1D array data length map
-	map<string, int>					m_1DLenMap;
+	map<string, int>							m_1DLenMap;
 	//! 2D array data map
-	map<string, float**>				m_2DArrayMap;
+	map<string, float**>					m_2DArrayMap;
 	//! Row number of 2D array data map
-	map<string, int>					m_2DRowsLenMap;
-	//! Col number of 2D array data map
-	map<string, int>					m_2DColsLenMap;
+	map<string, int>							m_2DRowsLenMap;
+	//! Col number of 2D array data map /// Since the first element of each row is the ColsLen, Is this m_2DColsLenMap necessary? By LJ.
+	map<string, int>							m_2DColsLenMap;
 	//! Interpolation weight data map
 	map<string, clsInterpolationWeightData*> m_weightDataMap;
-	//! Raster data map
+	//! Raster data (include 1D and/or 2D) map
 	map<string, clsRasterData*>			m_rsMap;
 
 private:
@@ -156,8 +156,8 @@ private:
 	//! Set raster data
 	void SetRaster(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule);
 	//! Read multiply reach information from file
-	void ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nRows, int& nCols, float**& data);
+	//void ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nRows, int& nCols, float**& data);
 	//! Read single reach information 
-	void ReadSingleReachInfo(int nSubbasin, const string &filename, LayeringMethod layeringMethod, int& nAttr, int& nReaches, float**& data);
+	//void ReadSingleReachInfo(int nSubbasin, const string &filename, LayeringMethod layeringMethod, int& nAttr, int& nReaches, float**& data);
 };
 

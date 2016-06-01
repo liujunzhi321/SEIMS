@@ -300,7 +300,7 @@ void ModelMain::Execute()
 	int nHs = 0;
 	for(time_t t = m_input->getStartTime(); t < endTime; t += m_dtCh)
 	{
-		//cout << util.ConvertToString2(&t) << endl;
+		cout << util.ConvertToString2(&t) << endl;
 		nHs = int(m_dtCh/m_dtHs);
 		for (int i = 0; i < nHs; i++)
 			StepHillSlope(t+i*m_dtHs, i);
@@ -431,7 +431,9 @@ void ModelMain::CheckOutput(SettingsOutput* output,SettingsInput* input)
 		//}
 	}
 }
-
+/// Revised LiangJun Zhu
+/// Fix Output code of DT_Raster2D
+/// 5-27-2016
 void ModelMain::Output(time_t time)
 {	
 	vector<PrintInfo *>::iterator it;
@@ -466,13 +468,11 @@ void ModelMain::Output(time_t time)
 				}
 				else if(param->Dimension == DT_Array1D)  //time series data for sites or some time series data for subbasins, such as T_SBOF,T_SBIF
 				{
-					//int index = item->SiteID;				//time series data for sites
 					int index = -1;
 					if(index < 0) 
 						index = item->SubbasinID;		//time series data for some time series data for subbasins
 					if(index < 0) 
 						index = 0;
-					//if(index < 0) throw ModelException("SettingsConfig","Output","The output "+(*it)->getOutputID()+" have some errors. There is no corresponding sites or subbasins.");
 					
 					int n;
 					float *data;
@@ -481,6 +481,9 @@ void ModelMain::Output(time_t time)
 				}
 				else if(param->Dimension == DT_Array2D)  //time series data for subbasins
 				{
+					/// reviewed by LJ, Is there any necessary to list the DT_Array2D directly?
+					/// Since the following code are similar.
+
 					//some modules will calculate result for all subbasins or all reaches, 
 					//regardless of whether they are output to file or not. In this case,
 					//the 2-D array will contain all the results and the subbasinid or reachid
@@ -510,16 +513,6 @@ void ModelMain::Output(time_t time)
 						int nRows, nCols;
 						module->Get2DData(param->BasicName.c_str(), &nRows, &nCols, &data);
 						item->add1DTimeSeriesResult(time, nCols, data[0]);
-
-						//if(subbasinIndex >= param->DataLength) 
-						//{
-						//	char s[20];
-						//	strprintf(s,20,"%d",item->SubbasinID);
-						//	throw ModelException("SettingsConfig","Output","The data index of subbasin "+string(s) + " is larger than data size.");
-						//}
-
-						//float* data = (param->FloatData2D)[subbasinIndex];
-						//item->add1DTimeSeriesResult(time,param->DataWidth,data);
 					}
 					else
 					{
@@ -537,6 +530,13 @@ void ModelMain::Output(time_t time)
 					module->Get1DData(keyName, &n, &data);
 					item->AggregateData(time, n, data);
 				}
+				else if (param->Dimension == DT_Raster2D) // spatial distribution with layers
+				{
+					int n, lyrs;
+					float **data;
+					module->Get2DData(keyName, &n, &lyrs, &data);
+					item->AggregateData2D(time,n,lyrs,data);
+				}
 			}
 		}
 	}
@@ -545,5 +545,5 @@ void ModelMain::Output(time_t time)
 void ModelMain::SetChannelFlowIn(float value)
 {
 	int index = m_channelModules[0];
-	m_simulationModules[index]->SetValue("QUPREACH", value);
+	m_simulationModules[index]->SetValue(VAR_QUPREACH, value);
 }

@@ -1,6 +1,5 @@
 /*!
  * \file MetadataInfoConst.h
- * \ingroup util
  * \brief Define some const variables used by MetadataInfo class
  *
  * This file contains string constants for the MetadataInfo XML Schema.
@@ -85,14 +84,14 @@ enum dimensionTypes
 	DT_Array1DDateValue = 4, 
 	/// Raster data, same as DT_Array1D
 	DT_Raster1D	        = 5,  
-	/// Hydrological or meteorological site information
-	DT_SiteInformation	= 6, 
-	/// Lapse rate array
-	DT_LapseRateArray	= 7, 
-	/// Scenario used by BMPs
-	DT_Scenario			= 8 ,
 	/// 2D raster, e.g., multi-layers of soil properties
-	DT_Raster2D			= 9
+	DT_Raster2D			= 6,
+	/// Hydrological or meteorological site information
+	DT_SiteInformation	= 7, 
+	/// Lapse rate array, TODO need more detail description
+	DT_LapseRateArray	= 8, 
+	/// Scenario used by BMPs
+	DT_Scenario			= 9
 };
 
 

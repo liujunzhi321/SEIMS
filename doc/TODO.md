@@ -1,6 +1,29 @@
 TODO LISTS
 =======
 
+# 1. SEIMS模块
+
+## 功能模块
+
+### 气象数据类
+
++ TSD_RD	读取站点时间序列数据
++ ITP		泰森多边形插值
+
+### 土壤温度类
+
++ STP_FP	Finn Plauborg Method
++ STP_CJ	TODO: Method used in SWAT (solt.f)
+
+### 蒸散发类
+
++ PET_H
++ PET_PT
++ PET_PM
+
+### 截留类
+
+
 # 1.代码注释工作
 
 ## 1.1已完成模块
@@ -145,6 +168,12 @@ Hydrology_longterm|SUR_CN|VAR_SOMO|AddOutput
 
 
 
+
+###   file.out
+
+
+#### Snow accumulate and melt
+SNO_DD is required, SNO_WB dependent on SNO_DD, and SNO_SP dependent on SNO_WB
 
 
 

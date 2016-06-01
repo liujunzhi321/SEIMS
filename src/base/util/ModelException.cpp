@@ -1,6 +1,5 @@
 /*!
  * \file ModelException.cpp
- * \ingroup util
  * \brief Implement of ModelException class
  * \author Junzhi Liu
  * \version 1.1

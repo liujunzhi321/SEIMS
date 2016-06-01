@@ -29,7 +29,7 @@ using namespace std;
  * \def ZERO
  * \brief zero value used in numeric calculation
  */
-#define UTIL_ZERO				0.000001
+#define UTIL_ZERO				1.0e-6
 /**
  * \def PI
  * \brief PI value used in numeric calculation
@@ -61,6 +61,8 @@ enum LayeringMethod
  * \sa ZERO
  */
 extern bool DoubleEqual(double d1, double d2);
+/// Check the argument against upper and lower boundary values prior to taking the Exponential
+extern float Expo(float xx);
 /*!
  * \brief Find files in given paths (Windows version)
  * \param[in] lpPath, expression
@@ -130,19 +132,19 @@ extern double Max(double *a, int n);
 /*!
  * \brief Write 1D array to a file
  *
- * \sa Read1DArray(), Read2DArray(), Output2DArray()
+ * \sa Read1DArrayFromTxtFile(), Read2DArrayFromTxtFile(), Output2DArrayToTxtFile()
  *
  * \param[in] n, data, filename
  */
-extern void Output1DArray(int n, float* data, const char* filename);
+extern void Output1DArrayToTxtFile(int n, float* data, const char* filename);
 /*!
  * \brief Write 2D array to a file
  *
- * \sa Read1DArray(), Read2DArray(), Output1DArray()
+ * \sa Read1DArrayFromTxtFile(), Read2DArrayFromTxtFile(), Output1DArrayToTxtFile()
  *
  * \param[in] nRows, nCols, data, filename
  */
-extern void Output2DArray(int nRows, int nCols, float** data, const char* filename);
+extern void Output2DArrayToTxtFile(int nRows, int nCols, float** data, const char* filename);
 /// deal with positive and negative float numbers
 float Power(float a, float n);
 /*!
@@ -151,22 +153,22 @@ float Power(float a, float n);
  * The input file should follow the format:
  *     a 1D array sized nRows * 1
  * The size of data is nRows
- * \sa Read2DArray(), Output1DArray(), Output2DArray()
+ * \sa Read2DArrayFromTxtFile(), Output1DArrayToTxtFile(), Output2DArrayToTxtFile()
  * \param[in] filename, nRows
  * \param[out] data
  */
-extern void Read1DArray(const char* filename, int& nRows, float*& data);
+extern void Read1DArrayFromTxtFile(const char* filename, int& nRows, float*& data);
 /*!
  * \brief Read 2D array from file
  *
  * The input file should follow the format:
  *     a 2D array sized nRows * nRows
  * The size of data is nRows * (nRows + 1), the first element of each row is the nRows
- * \sa Read1DArray(), Output1DArray(), Output2DArray()
+ * \sa Read1DArrayFromTxtFile(), Output1DArrayToTxtFile(), Output2DArrayToTxtFile()
  * \param[in] filename, nRows
  * \param[out] data
  */
-extern void Read2DArray(const char* filename, int& nRows, float**& data);
+extern void Read2DArrayFromTxtFile(const char* filename, int& nRows, float**& data);
 /*!
  * \brief Read 2D array from string
  *
@@ -188,6 +190,7 @@ extern void StatusMessage(const char* msg);
  *
  * \param[in] a, b \a char* 
  * \return true or false
+ * \sa StringMatch()
  */
 extern bool StrEqualIgnoreCase(const char*, const char*);
 /*!
@@ -204,6 +207,7 @@ extern bool StringMatch(string text1, string text2);
  *
  * \param[in] a,n
  * \return sum
+ * \sa StrEqualIgnoreCase()
  */
 extern double Sum(double *a, int n);
 /*!

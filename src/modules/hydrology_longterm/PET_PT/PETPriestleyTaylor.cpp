@@ -1,5 +1,4 @@
 /*!
- * \ingroup PET_PT
  * \file PETPriestleyTaylor.cpp
  *
  * \author Junzhi Liu
@@ -156,7 +155,7 @@ void PETPriestleyTaylor::Set1DData(const char* key,int n, float *value)
 void PETPriestleyTaylor::SetValue(const char* key, float value)
 {
 	string sk(key);
-	if (StringMatch(sk,VAR_SNOW_TEMP)) this->m_tSnow = value;
+	if (StringMatch(sk,VAR_T_SNOW)) this->m_tSnow = value;
 	else if (StringMatch(sk,VAR_K_PET)) m_petFactor = value;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM)) omp_set_num_threads((int)value);
 	else

@@ -117,7 +117,7 @@ void SET_LM::Set1DData(const char* key, int nRows, float* data)
 
 	CheckInputSize(key,nRows);
 
-	if(StringMatch(s, VAR_ROOTDEPTH))		
+	if(StringMatch(s, VAR_SOILDEPTH))		
 		m_rootDepth = data;
 	else if(StringMatch(s,VAR_INET))		
 		m_EI = data;

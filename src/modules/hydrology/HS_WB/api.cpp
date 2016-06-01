@@ -29,11 +29,11 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("HS_WB.chm");
 
 	mdi.AddParameter(VAR_SUBBSN,UNIT_NON_DIM,DESC_SUBBSN,Source_ParameterDB,DT_Raster1D); 
-	mdi.AddParameter(VAR_ROOTDEPTH,UNIT_DEPTH_MM,DESC_ROOTDEPTH,Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter(VAR_SOILDEPTH,UNIT_DEPTH_MM,DESC_SOILDEPTH,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_STREAM_LINK,UNIT_NON_DIM,DESC_STREAM_LINK,Source_ParameterDB, DT_Raster1D);
 
-	mdi.AddParameter(VAR_POROST,UNIT_SOLCOEF_M3M3,DESC_POROST,Source_ParameterDB,DT_Raster2D);
-	mdi.AddParameter(VAR_FIELDCAP, UNIT_SOLCOEF_M3M3, DESC_FIELDCAP, Source_ParameterDB,DT_Array2D);
+	mdi.AddParameter(VAR_POROST,UNIT_VOL_FRA_M3M3,DESC_POROST,Source_ParameterDB,DT_Raster2D);
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_VOL_FRA_M3M3, DESC_FIELDCAP, Source_ParameterDB,DT_Raster2D);
 	mdi.AddParameter(Tag_RchParam,UNIT_NON_DIM,DESC_REACH_PARAMETER,Source_ParameterDB,DT_Array2D);
 
 	mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module, DT_Raster1D);

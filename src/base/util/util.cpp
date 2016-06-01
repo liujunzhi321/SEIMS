@@ -1,6 +1,5 @@
 /*!
  * \file util.cpp
- * \ingroup util
  * \brief Utility functions to handle numeric, string and file
  *
  * Utility functions for all SEIMS modules
@@ -34,7 +33,14 @@ bool DoubleEqual(double d1, double d2)
 	else
 		return false;
 }
-
+float Expo(float xx)
+{
+	if(xx < -20.)
+		xx = -20.;
+	if(xx > 20.)
+		xx = 20.;
+	return exp(xx);
+}
 int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFiles)
 {
 #ifndef linux
@@ -165,7 +171,7 @@ double Max(double *a, int n)
 	return m;
 }
 
-void Output1DArray(int n, float* data, const char* filename)
+void Output1DArrayToTxtFile(int n, float* data, const char* filename)
 {
 	ofstream ofs(filename);
 
@@ -175,7 +181,7 @@ void Output1DArray(int n, float* data, const char* filename)
 	ofs.close();
 }
 
-void Output2DArray(int nRows, int nCols, float** data, const char* filename)
+void Output2DArrayToTxtFile(int nRows, int nCols, float** data, const char* filename)
 {
 	ofstream ofs(filename);
 
@@ -198,7 +204,7 @@ float Power(float a, float n)
 	else
 		return -pow(-a, n);
 }
-void Read1DArray(const char* filename, int& nRows, float*& data)
+void Read1DArrayFromTxtFile(const char* filename, int& nRows, float*& data)
 {
 	ifstream ifs(filename);
 	string tmp;
@@ -211,7 +217,7 @@ void Read1DArray(const char* filename, int& nRows, float*& data)
 	ifs.close();
 }
 
-void Read2DArray(const char* filename, int& nRows, float**& data)
+void Read2DArrayFromTxtFile(const char* filename, int& nRows, float**& data)
 {
 	ifstream ifs(filename);
 	string tmp;

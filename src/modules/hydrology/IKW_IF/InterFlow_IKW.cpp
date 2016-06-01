@@ -254,7 +254,7 @@ void InterFlow_IKW::Set1DData(const char* key, int n, float* data)
 		m_soilDepth = data;
 	else if(StringMatch(s,VAR_FIELDCAP))			
 		this->m_fieldCapacity = data;
-	else if(StringMatch(s,VAR_ROOTDEPTH))		
+	else if(StringMatch(s,VAR_SOILDEPTH))		
 		this->m_rootDepth = data;
 	else if(StringMatch(s,VAR_CONDUCT))	
 		this->m_ks = data;
