@@ -96,9 +96,11 @@ SWAT 最新版中内置了4种泥沙河道汇流模拟方法，后续可以补�
 ### ValueToString()
 + 1. 许多模块中都有一个函数toString()，用于将float转换为string输出，造成代码冗余，TODO：均用util下的ValueToString()替换，该函数为模板函数
 + 
+
+
 ## TODO by Gao
 
-##1.代码整理
+## 1.代码整理
 + 1 nReach等变量赋值问题
 	+ 未直接赋值，通过相关变量间接赋值，
 	+ 模块：Hydrology_longterm - IKW_REACH
@@ -135,7 +137,9 @@ Hydrology_longterm|SUR_CN|VAR_SOMO|AddOutput
 	+ Hydrology_longterm - SON_SP: VAR_C_SNOW6 ("mm/oC/day")
 	+ Hydrology_longterm - SON_SP: VAR_C_SNOW12 ("mm/oC/day")
 
+## 2. 模块开发
 
+### 涉及土壤层的计算，增加NoData值的判断
 
 
 
