@@ -296,7 +296,7 @@
 #define MCLS_SNO_SB								"Snow sublimation"
 #define MCLSDESC_SNO_SB					"Calculate the amount of snow sublimation ."
 #define MID_SSM_PE									"SSM_PE"
-#define MDESC_SSM_PE							"A simple method that used in the old WetSpa."
+#define MDESC_SSM_PE							"A simple method that used in the old WetSpa to calculate snow sublimation."
 /// Snow melt
 #define MCLS_SNOW									"Snow accumulation and melt"
 #define MCLSDESC_SNOW						"Calculate the amount of snow  accumulation andmelt."
@@ -316,8 +316,11 @@
 #define MDESC_PET_PT							"PriestleyTaylor method for calculating the potential evapotranspiration."
 #define MID_PET_PM									"PET_PM"
 #define MDESC_PET_PM							"Penman Monteith method for calculating the potential evapotranspiration."
-
-
+/// Actual Evapotranspiration
+#define MCLS_AET										"Actual Evapotranspiration"
+#define MCLSDESC_AET							"Calculates potential plant transpiration and potential and actual soil evaporation. "
+#define MID_AET_PTH								"AET_PTH"
+#define MDESC_AET_PTH							"Potential plant transpiration for Priestley-Taylor and Hargreaves ET methods "
 /// Depression
 #define MCLS_DEP										"Depression"
 #define MCLSDESC_DEP							"Calculate depression storage."
@@ -468,6 +471,7 @@
 #define VAR_DRYDEP_NH4 "drydep_nh4"                 /// atmospheric dry deposition of ammonia (kg/km2)
 #define VAR_DRYDEP_NO3 "drydep_no3"                 /// atmospheric dry deposition of nitrates (kg/km2)
 #define VAR_EP_CH "Ep_ch"                           /// reach evaporation adjustment factor
+#define VAR_ESCO "esco"
 #define VAR_EXCP "EXCP"                             /// excess precipitation
 #define VAR_FIELDCAP "FieldCap"                     /// Soil field capacity" 
 #define VAR_FLOWDIR "FLOW_DIR"
@@ -483,8 +487,8 @@
 #define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
 #define VAR_ID_OUTLET "ID_OUTLET"
 #define VAR_IGRO "IGRO"
-#define VAR_INET "INET"                             /// evaporation from the interception storage obtained from the interception module
-#define VAR_INFIL "INFIL"                           /// Infiltration calculated in the infiltration module
+#define VAR_INET "INET"                             /// evaporation from the interception storage
+#define VAR_INFIL "INFIL"                           /// Infiltration
 #define VAR_INFILCAPSURPLUS "INFILCAPSURPLUS" 
 #define VAR_INIT_IS "Init_IS"
 #define VAR_INLO "INLO"
@@ -582,7 +586,7 @@
 #define VAR_SLOPE "slope"
 #define VAR_SNAC "SNAC"
 #define VAR_SNME "SNME"
-#define VAR_SNOW_TEMP "T_snow"                      /// Snowfall temperature
+#define VAR_SNO3UP "sno3up"
 #define VAR_SNRD "SNRD"
 #define VAR_SNSB "SNSB"
 #define VAR_SNRD "SNRD"
@@ -590,20 +594,22 @@
 #define VAR_SOER "SOER"                             /// soil loss caused by water erosion (t)
 #define VAR_SOET "SOET"                             /// evaporation from the soil water storage
 #define VAR_SOIL_T10 "soil_t10"
-#define VAR_SOL_ACTP "sol_actp"                     /// amount of phosphorus stored in the active mineral phosphorus pool(kg P/km2)
-#define VAR_SOL_AORGN "sol_aorgn"                   /// amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/km2)
-#define VAR_SOL_BD "density"                        /// bulk density of the soil (mg/m3)
+#define VAR_SOL_ACTP "sol_actp"                     /// amount of phosphorus stored in the active mineral phosphorus pool(kg P/ha)
+#define VAR_SOL_AORGN "sol_aorgn"                   /// amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/ha)
+#define VAR_SOL_AWC "sol_awc"            /// amount of water available to plants in soil layer at field capacity (FC-WP)
+#define VAR_SOL_BD "density"                         /// bulk density of the soil (mg/m3)
 #define VAR_SOL_CBN "sol_cbn"                       /// percent organic carbon in soil layer(%)
-#define VAR_SOL_FON "sol_fon"                       /// amount of nitrogen stored in the fresh organic (residue) pool(kg N/km2)
-#define VAR_SOL_FOP "sol_fop"                       /// amount of phosphorus stored in the fresh organic (residue) pool(kg P/km2)
+#define VAR_SOL_COV "sol_cov"                    /// amount of residue on soil surface (kg/ha)
+#define VAR_SOL_FON "sol_fon"                       /// amount of nitrogen stored in the fresh organic (residue) pool(kg N/ha)
+#define VAR_SOL_FOP "sol_fop"                       /// amount of phosphorus stored in the fresh organic (residue) pool(kg P/ha)
 #define VAR_SOL_MP "sol_mp" 
 #define VAR_SOL_NH3 "sol_nh3"                       /// amount of nitrogen stored in the ammonium pool in soil layer
-#define VAR_SOL_NO3 "sol_no3"                       /// amount of nitrogen stored in the nitrate pool in soil layer(kg N/km2)
-#define VAR_SOL_ORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/km2)
-#define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/km2)
-#define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/km2)
-#define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/km2)
-#define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/km2)
+#define VAR_SOL_NO3 "sol_no3"                       /// amount of nitrogen stored in the nitrate pool in soil layer(kg N/ha)
+#define VAR_SOL_ORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
+#define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/ha)
+#define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/ha)
+#define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/ha)
+#define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/ha)
 #define VAR_SOL_TA0 "soil_ta0"
 #define VAR_SOL_TA1 "soil_ta1"
 #define VAR_SOL_TA2 "soil_ta2"
@@ -619,6 +625,7 @@
 #define VAR_SOL_WST "sol_st"                        /// amount of water stored in the soil layer on current day(mm H2O)
 #define VAR_SOILLAYERS "soillayers"
 #define VAR_SOMO "SOMO"                             /// Distribution of soil moisture
+#define VAR_SOMO_TOT  "somo_total"          /// Total soil water content in soil profile
 #define VAR_SOTE "SOTE"                             /// Soil Temperature
 #define VAR_SOWB "SOWB"
 #define VAR_SPCON "spcon"
@@ -635,7 +642,7 @@
 #define VAR_SWE0 "swe0"
 #define VAR_T_RG "T_RG"
 #define VAR_T_SOIL "t_soil"                         /// threshold soil freezing temperature
-#define VAR_T_SNOW "T_snow"
+#define VAR_T_SNOW "T_snow"                /// Snowfall temperature
 #define VAR_WS "WS"
 #define VAR_T0 "T0"
 #define VAR_TMAX "TMAX"
@@ -656,18 +663,18 @@
 #define VAR_VPOINT "Vpoint"                         /// point source discharge
 #define VAR_VSEEP0 "Vseep0"                         ///  the initial volume of transmission loss to the deep aquifer over the time interval
 #define VAR_VSF "VelScaleFactor"                    /// flow velocity scaling factor for calibration
-#define VAR_WDNTL "wdntl"                           /// amount of nitrogen lost from nitrate pool by denitrification in soil profile on current day in cell(kg N/km2)
+#define VAR_WDNTL "wdntl"                           /// amount of nitrogen lost from nitrate pool by denitrification in soil profile on current day in cell(kg N/ha)
 #define VAR_WILTPOINT "WiltingPoint"
-#define VAR_WSHD_DNIT "wshd_dnit"                   /// average annual amount of nitrogen lost from nitrate pool due to denitrification in watershed(kg N/km2)
-#define VAR_WSHD_HMN "wshd_hmn"                     /// average annual amount of nitrogen moving from active organic to nitrate pool in watershed(kg N/km2)
-#define VAR_WSHD_HMP "wshd_hmp"                     /// average annual amount of phosphorus moving from organic to labile pool in watershed(kg P/km2)
+#define VAR_WSHD_DNIT "wshd_dnit"                   /// average annual amount of nitrogen lost from nitrate pool due to denitrification in watershed(kg N/ha)
+#define VAR_WSHD_HMN "wshd_hmn"                     /// average annual amount of nitrogen moving from active organic to nitrate pool in watershed(kg N/ha)
+#define VAR_WSHD_HMP "wshd_hmp"                     /// average annual amount of phosphorus moving from organic to labile pool in watershed(kg P/ha)
 #define VAR_WSHD_NITN "wshd_nitn"                   /// average annual amount of nitrogen moving from the NH3 to the NO3 pool by nitrification in the watershed
 #define VAR_WSHD_PAL "wshd_pal"                     /// average annual amount of phosphorus moving from labile mineral to active mineral pool in watershed
 #define VAR_WSHD_PAS "wshd_pas"                     /// average annual amount of phosphorus moving from active mineral to stable mineral pool in watershed
-#define VAR_WSHD_RMN "wshd_rmn"                     /// average annual amount of nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed(kg N/km2)
-#define VAR_WSHD_RMP "wshd_rmp"                     /// average annual amount of phosphorus moving from fresh organic (residue) to labile and organic pools in watershed(kg P/km2)
-#define VAR_WSHD_RNO3 "wshd_rno3"                   /// average annual amount of NO3 added to soil by rainfall in watershed (kg/km2)
-#define VAR_WSHD_RWN "wshd_rwn"                     /// average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/km2)
+#define VAR_WSHD_RMN "wshd_rmn"                     /// average annual amount of nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed(kg N/ha)
+#define VAR_WSHD_RMP "wshd_rmp"                     /// average annual amount of phosphorus moving from fresh organic (residue) to labile and organic pools in watershed(kg P/ha)
+#define VAR_WSHD_RNO3 "wshd_rno3"                   /// average annual amount of NO3 added to soil by rainfall in watershed (kg/ha)
+#define VAR_WSHD_RWN "wshd_rwn"                     /// average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/ha)
 #define VAR_WSHD_VOLN "wshd_voln"                   /// average annual amount if nitrogen lost by ammonia volatilization in watershed
 
 
@@ -681,6 +688,7 @@
 #define UNIT_AREA_RATIO "m2/m2"
 #define UNIT_CONDRATE_MSPA "m/s/kPa"                /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
 #define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
+#define UNIT_CONT_KGHA "ka/ha"                      /// For  convenient, keep consistent with SWAT, need Conversion later.
 #define UNIT_DENSITY "mg/m3"                        /// density
 #define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
@@ -695,7 +703,7 @@
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_PRESSURE "kPa"                         /// Vapor pressure
 #define UNIT_SECOND "sec"
-#define UNIT_SOLCOEF_M3M3 "m3/m3" 
+#define UNIT_VOL_FRA_M3M3 "m3/m3" 
 #define UNIT_SPEED_MS "m/s"                         /// Speed related
 #define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
 #define UNIT_STRG_M3M "m3/m"                       /// storage per meter of reach length
@@ -767,6 +775,7 @@
 #define DESC_DRYDEP_NO3 "atmospheric dry deposition of nitrates"
 #define DESC_DT_HS "Time step of the simulation"
 #define DESC_EP_CH "reach evaporation adjustment factor"
+#define DESC_ESCO "soil evaporation compensation factor"
 #define DESC_EXCP "excess precipitation"
 #define DESC_FIELDCAP "Soil field capacity"
 #define DESC_FLOWDIR "Flow direction by the rule of ArcGIS"
@@ -785,7 +794,7 @@
 #define DESC_HMPTL "amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell"
 #define DESC_ID_OUTLET  "index of outlet in the compressed array"
 #define DESC_IGRO "Land cover status code"
-#define DESC_INET "evaporation from the interception storage obtained from the interception module"
+#define DESC_INET "evaporation from the interception storage"
 #define DESC_INFIL "Infiltration calculated in the infiltration module"
 #define DESC_INFILCAPSURPLUS "surplus of infiltration capacity"
 #define DESC_INIT_IS "Initial interception storage"
@@ -886,7 +895,8 @@
 #define DESC_SLOPE "Slope gradient (percentage)"
 #define DESC_SNAC "snow accumulation"
 #define DESC_SNME "distribution of snowmelt"
-#define DESC_SNOW_TEMP "Snowfall temperature"
+#define DESC_T_SNOW "Snowfall temperature"
+#define DESC_SNO3UP "amount of nitrate moving upward in the soil profile in watershed"
 #define DESC_SNRD "distribution of snow blowing in or out the cell"
 #define DESC_SNSB "Distribution of snow sublimation (water equivalent) for a user defined period"
 #define DESC_SNRD "distribution of snow blowing in or out the cell"
@@ -896,8 +906,10 @@
 #define DESC_SOIL_T10 "Factor of soil temperature relative to short grass (degree)"
 #define DESC_SOL_ACTP "amount of phosphorus stored in the active mineral phosphorus pool"
 #define DESC_SOL_AORGN "amount of nitrogen stored in the active organic (humic) nitrogen pool"
+#define DESC_SOL_AWC "amount of water available to plants in soil layer at field capacity (AWC=FC-WP)"
 #define DESC_SOL_BD "bulk density of the soil"
 #define DESC_SOL_CBN "percent organic carbon in soil layer"
+#define DESC_SOL_COV "amount of residue on soil surface"
 #define DESC_SOL_FON "amount of nitrogen stored in the fresh organic (residue) pool"
 #define DESC_SOL_FOP "amount of phosphorus stored in the fresh organic (residue) pool"
 #define DESC_SOL_MP "??"
@@ -923,6 +935,7 @@
 #define DESC_SOL_WST "amount of water stored in the soil layer on current day"
 #define DESC_SOILLAYERS "Soil layers number"
 #define DESC_SOMO "Distribution of soil moisture"
+#define DESC_SOMO_TOT "amount of water stored in the soil profile"
 #define DESC_SOTE "Soil Temperature"
 #define DESC_SOWB "soil water balance"
 #define DESC_SPCON "Coefficient in sediment transport equation"

@@ -222,7 +222,7 @@ void SUR_MR::SetValue(const char* key, float value)
 	string sk(key);
 	if (StringMatch(key, VAR_OMP_THREADNUM))omp_set_num_threads((int)value);
 	else if (StringMatch(sk, Tag_HillSlopeTimeStep))	m_dt = value;
-	else if (StringMatch(sk, VAR_SNOW_TEMP))m_tSnow = value;
+	else if (StringMatch(sk, VAR_T_SNOW))m_tSnow = value;
 	else if (StringMatch(sk, VAR_T_SOIL))m_tFrozen = value;
 	else if (StringMatch(sk, VAR_T0))m_t0 = value;
 	else if (StringMatch(sk, VAR_K_RUN))m_kRunoff = value;

@@ -32,7 +32,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_K_SUBLI, UNIT_NON_DIM, DESC_K_SUBLI, Source_ParameterDB,DT_Single);
 	mdi.AddParameter(VAR_K_BLOW, UNIT_NON_DIM, DESC_K_BLOW, Source_ParameterDB,DT_Single);
 	mdi.AddParameter(VAR_T0, UNIT_TEMP_DEG, DESC_T0, Source_ParameterDB,DT_Single);
-	mdi.AddParameter(VAR_SNOW_TEMP, UNIT_TEMP_DEG, DESC_SNOW_TEMP, Source_ParameterDB,DT_Single);
+	mdi.AddParameter(VAR_T_SNOW, UNIT_TEMP_DEG, DESC_T_SNOW, Source_ParameterDB,DT_Single);
 	mdi.AddParameter(VAR_SWE0, UNIT_DEPTH_MM, DESC_SWE0, Source_ParameterDB,DT_Single);
 
 	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module,DT_Raster1D);					// from PET module

@@ -1,15 +1,6 @@
 ## Table title (columns are split by Tab!)
 TYPE	NAME	DESCRIPTION	UNIT	MODULE	VALUE	IMPACT	CHANGE	MAX	MIN	USE
 TEXT	TEXT	TEXT	TEXT	TEXT	REAL	REAL	VARCHAR(2)	REAL	REAL	VARCHAR(1)
-## The Header information should be UPDATE in reConstruct SQLite Database. DONE!
-#Header	NCOLS	Number of cell columns		ALL			NC			
-#Header	NROWS	Number of cell rows		ALL			NC			
-#Header	XLLCENTER	X coordinate of the origin by center of the cell.		ALL			NC			
-#Header	YLLCENTER	Y coordinate of the origin by center of the cell		ALL			NC			
-#Header	DX	cell size of horizontal direction		ALL			NC			
-#Header	DY	cell size of vertical direction		ALL			NC			
-#Header	CELLSIZE	cell size		ALL			NC			
-#Header	NODATA_VALUE	The input values to be NoData in the output raster.		ALL			NC			
 
 Climate	DEM	Elevation of each grid cell	m	ALL	-99		NC			
 Climate	K_pet	Correction factor for PET		ALL	1	0	AC	1.3	0.7	Y
@@ -193,3 +184,4 @@ PlantGrowth	frPerennial	perennial biomass loss fraction		PG_EPIC	0.1
 PlantGrowth	startYear	the start year of rotation		PG_EPIC	2000					
 PlantGrowth	landUse	the initial distribution of crops		PG_EPIC	-99					
 PlantGrowth	minGrazingBio	minimum plant biomass for grazing	kg/ha	PG_EPIC	0				0	
+Evapotranspiration	esco	soil evaporation compensation factor		AET_PTH	0.95	1	AC	1	0.01	Y

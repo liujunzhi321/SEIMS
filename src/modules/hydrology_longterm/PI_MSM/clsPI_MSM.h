@@ -52,7 +52,7 @@ private:
 	float* m_netPrecipitation;
 
 	// number of valid cells 
-	int m_cellSize;
+	int m_nCells;
 
 	//previous date
 	time_t m_dateLastTimeStep;
@@ -86,7 +86,5 @@ public:
 	clsPI_MSM(void);
 	//! Destructor
 	~clsPI_MSM(void);
-
-
 };
 

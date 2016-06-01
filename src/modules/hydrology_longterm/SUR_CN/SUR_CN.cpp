@@ -331,7 +331,7 @@ void SUR_CN::SetValue(const char* key, float value)
 {
 	string sk(key);
 	if (StringMatch(sk, VAR_OMP_THREADNUM))omp_set_num_threads((int)value);
-	else if (StringMatch(sk, VAR_SNOW_TEMP))m_Tsnow = value;
+	else if (StringMatch(sk, VAR_T_SNOW))m_Tsnow = value;
 	else if (StringMatch(sk, VAR_T_SOIL))m_Tsoil = value;
 	else if (StringMatch(sk, VAR_T0))m_T0 = value;
 	else if (StringMatch(sk, VAR_S_FROZEN))m_Sfrozen = value;

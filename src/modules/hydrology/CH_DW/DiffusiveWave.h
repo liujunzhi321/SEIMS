@@ -47,14 +47,14 @@ public:
 	bool CheckInputData(void);
 
 private:
-	/// deal with positive and negative float numbers
-	float Power(float a, float n)
-	{
-		if (a >= 0)
-			return pow(a, n);
-		else
-			return -pow(-a, n);
-	}
+	///// deal with positive and negative float numbers /// Defined in util.h
+	//float Power(float a, float n)
+	//{
+	//	if (a >= 0)
+	//		return pow(a, n);
+	//	else
+	//		return -pow(-a, n);
+	//}
 	void ChannelFlow(int iReach, int iCell, int id);
 	void initalOutputs();
 	///< Valid cells number

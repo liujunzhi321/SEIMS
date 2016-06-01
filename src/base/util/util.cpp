@@ -33,7 +33,14 @@ bool DoubleEqual(double d1, double d2)
 	else
 		return false;
 }
-
+float Expo(float xx)
+{
+	if(xx < -20.)
+		xx = -20.;
+	if(xx > 20.)
+		xx = 20.;
+	return exp(xx);
+}
 int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFiles)
 {
 #ifndef linux

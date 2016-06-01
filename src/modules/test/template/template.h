@@ -12,7 +12,9 @@ private:
 	/// valid cells number
 	int m_nCells;
 public:
+	//! Constructor
 	ModulesTest(void);
+	//! Destructor
 	~ModulesTest(void);
 	virtual int Execute();
 	virtual void Set1DData(const char* key, int n, float* data);

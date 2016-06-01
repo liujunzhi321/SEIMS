@@ -29,7 +29,7 @@ using namespace std;
  * \def ZERO
  * \brief zero value used in numeric calculation
  */
-#define UTIL_ZERO				0.000001
+#define UTIL_ZERO				1.0e-6
 /**
  * \def PI
  * \brief PI value used in numeric calculation
@@ -61,6 +61,8 @@ enum LayeringMethod
  * \sa ZERO
  */
 extern bool DoubleEqual(double d1, double d2);
+/// Check the argument against upper and lower boundary values prior to taking the Exponential
+extern float Expo(float xx);
 /*!
  * \brief Find files in given paths (Windows version)
  * \param[in] lpPath, expression

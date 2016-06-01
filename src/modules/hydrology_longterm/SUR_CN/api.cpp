@@ -29,19 +29,19 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 
-	mdi.AddParameter(VAR_SNOW_TEMP, UNIT_TEMP_DEG, DESC_SNOW_TEMP, Source_ParameterDB,DT_Single);
+	mdi.AddParameter(VAR_T_SNOW, UNIT_TEMP_DEG, DESC_T_SNOW, Source_ParameterDB,DT_Single);
 	mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_T0, UNIT_TEMP_DEG, DESC_T0, Source_ParameterDB,DT_Single);
 	mdi.AddParameter(VAR_S_FROZEN, UNIT_NON_DIM, DESC_S_FROZEN, Source_ParameterDB, DT_Single);  
 
 	mdi.AddParameter(VAR_CN2, UNIT_NON_DIM, DESC_CN2, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_MOIST_IN, UNIT_SOLCOEF_M3M3, DESC_MOIST_IN, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_MOIST_IN, UNIT_VOL_FRA_M3M3, DESC_MOIST_IN, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_LEN_M,DESC_ROOTDEPTH,Source_ParameterDB,DT_Raster1D);
 
 	mdi.AddParameter(VAR_SOILDEPTH, UNIT_LEN_M, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_FIELDCAP, UNIT_SOLCOEF_M3M3, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_VOL_FRA_M3M3, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_POROST,  UNIT_NON_DIM, DESC_POROST, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_WILTPOINT, UNIT_SOLCOEF_M3M3, DESC_WILTPOINT, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_WILTPOINT, UNIT_VOL_FRA_M3M3, DESC_WILTPOINT, Source_ParameterDB, DT_Raster2D);
 	
 	mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module,DT_Raster1D);					//from interception module
 	mdi.AddInput(VAR_TMEAN, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module, DT_Raster1D);
@@ -52,7 +52,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddOutput(VAR_EXCP,  UNIT_DEPTH_MM, DESC_EXCP, DT_Raster1D);// just for depression module.
 	mdi.AddOutput(VAR_INFIL, UNIT_DEPTH_MM, DESC_INFIL, DT_Raster1D);
-	mdi.AddOutput(VAR_SOMO, UNIT_SOLCOEF_M3M3, DESC_SOMO, DT_Raster2D);
+	mdi.AddOutput(VAR_SOMO, UNIT_VOL_FRA_M3M3, DESC_SOMO, DT_Raster2D);
 
 	// write out the XML file.
 

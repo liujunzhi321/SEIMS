@@ -1,11 +1,3 @@
-/*!
- * \file api.cpp
- *
- * \author JunZhi Liu, LiangJun Zhu
- * \date April 2016
- *
- * 
- */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -49,7 +41,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_CO2,UNIT_GAS_PPMV,DESC_CO2,Source_ParameterDB,DT_Single);
 	mdi.AddParameter(VAR_COND_RATE,UNIT_CONDRATE_MSPA,DESC_CONDRATE,Source_ParameterDB,DT_Single);
 	mdi.AddParameter(VAR_COND_MAX,UNIT_SPEED_MS,DESC_MAXCOND,Source_ParameterDB,DT_Single);
-	mdi.AddParameter(VAR_SNOW_TEMP,UNIT_DEPTH_MM,DESC_SNOW_TEMP,Source_ParameterDB, DT_Single); 
+	mdi.AddParameter(VAR_T_SNOW,UNIT_DEPTH_MM,DESC_T_SNOW,Source_ParameterDB, DT_Single); 
 	mdi.AddParameter(VAR_K_PET, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
 
 	mdi.AddParameter(VAR_DEM,UNIT_LEN_M,CONS_IN_ELEV,Source_ParameterDB,DT_Raster1D);

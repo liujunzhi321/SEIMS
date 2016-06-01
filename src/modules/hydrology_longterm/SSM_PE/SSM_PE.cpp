@@ -150,7 +150,7 @@ void SSM_PE::SetValue(const char* key, float data)
 	else if(StringMatch(s, VAR_SWE))			this->m_swe = data;
 	else if(StringMatch(s, VAR_SWE0))			this->m_swe0 = data;
 	else if(StringMatch(s, VAR_T0))			this->m_t0 = data;
-	else if(StringMatch(s, VAR_SNOW_TEMP))		this->m_tsnow = data;
+	else if(StringMatch(s, VAR_T_SNOW))		this->m_tsnow = data;
 	else									throw ModelException(MID_SSM_PE,"SetValue","Parameter " + s 
 		+ " does not exist in current module. Please contact the module developer.");
 	
