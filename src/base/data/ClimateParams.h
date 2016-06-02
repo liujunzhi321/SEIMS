@@ -11,33 +11,11 @@
 #include <string>
 
 using namespace std;
-
-	///// mean air temperature for a given day(degree)
-	//float *m_tMean;
-	///// maximum air temperature for a given day(degree)
-	//float *m_tMax;
-	///// minimum air temperature for a given day(degree)
-	//float *m_tMin;
-	///// solar radiation(MJ/m2/d)
-	//float *m_sr;
-	///// relative humidity(%)
-	//float *m_rhd;
-	///// wind speed
-	//float *m_ws;
-	/////latitude of the stations
-	//float *m_latitude;
-	///// data length, maybe HydroClimate sites number
-	//int m_size;
-	//// output variables
-	///// maximum solar radiation
-	//float *m_srMax;
-	///// saturated vapor pressure
-	//float *m_svp;
-	///// actual vapor pressure
-	//float *m_avp;
-	///// Julian day (int)
-	//int m_jday;
-
+/*!
+ * \brief Get the year
+ * \return int year
+*/
+int		GetYear(time_t&);
 /*!
  * \brief Get the Julian day of one day
  * \return int Julian day
