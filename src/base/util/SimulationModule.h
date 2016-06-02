@@ -38,10 +38,11 @@ public:
 	virtual ~SimulationModule(void);
 	//! Execute the simulation
 	virtual int Execute() {return -1;};
-	//! Set date time
-	virtual void SetDate(time_t t)
+	//! Set date time, as well as the sequence number of the entire simulation
+	virtual void SetDate(time_t t, int yearIdx)
 	{
 		m_date = t;
+		m_yearIdx = yearIdx;
 	};
 	//! Set thread number for OpenMP 
 	virtual void SetTheadNumber(int threadNum)
@@ -51,7 +52,6 @@ public:
 	//! Set data type among 
 	virtual void SetDataType(float value)
 	{
-		
 	};
 
 	//! Set data
@@ -96,19 +96,12 @@ public:
 	{
 		m_tsCounter = 1;
 	};
-
-	//virtual void SetID(string& id)
-	//{
-	//	m_id = id;
-	//};
-
-	//virtual string GetID()
-	//{
-	//	return m_id;
-	//};
 protected:
-	time_t m_date; ///< date time
-	//string m_id;
-	int m_tsCounter;  ///< sub-timestep counter
+	/// date time
+	time_t m_date; 
+	/// index of current year of simulation, e.g., the simulation period from 2010 to 2015,  m_yearIdx is 2 when simulate 2012.
+	int m_yearIdx; 
+	/// sub-timestep counter
+	int m_tsCounter;
 };
 
