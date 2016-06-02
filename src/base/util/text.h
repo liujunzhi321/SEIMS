@@ -246,21 +246,22 @@
 #define Type_Array1D			"ARRAY1D"
 #define Type_Single				"SINGLE"
 
-//// Optional Output Data ////
-#define Print_D_PREC "D_PREC"
-#define Print_D_POET "D_POET"
-#define Print_D_TEMP "D_TEMP"
-#define Print_D_INLO "D_INLO"
-#define Print_D_INET "D_INET"
-#define Print_D_NEPR "D_NEPR"
+//// These maybe USELESS, right? by LJ
+////// Optional Output Data ////  
+//#define Print_D_PREC "D_PREC"
+//#define Print_D_POET "D_POET"
+//#define Print_D_TEMP "D_TEMP"
+//#define Print_D_INLO "D_INLO"
+//#define Print_D_INET "D_INET"
+//#define Print_D_NEPR "D_NEPR"
 
-/// 2D Soil Attribute Data ///
-#define Print_2D_CONDUCTIVITY	"Conductivity_2D"
-#define Print_2D_POROSITY		"Porosity_2D"
-#define Print_2D_POREINDEX		"Poreindex_2D"
-#define Print_2D_FIELDCAP		"FieldCap_2D"
-#define Print_2D_WILTINGPOINT	"WiltingPoint_2D"
-#define Print_2D_DENSITY		"Density_2D"
+///// 2D Soil Attribute Data ///
+//#define Print_2D_CONDUCTIVITY	"Conductivity_2D"
+//#define Print_2D_POROSITY		"Porosity_2D"
+//#define Print_2D_POREINDEX		"Poreindex_2D"
+//#define Print_2D_FIELDCAP		"FieldCap_2D"
+//#define Print_2D_WILTINGPOINT	"WiltingPoint_2D"
+//#define Print_2D_DENSITY		"Density_2D"
 
 //////////////////////////////////////////////////////////////////////////
 /// Define models' ID and description in SEIMS  //////////////////////////
@@ -377,6 +378,11 @@
 #define MDESC_KINWAVSED_CH			"Srinivasan & Galvao function to calculate sediment yield routing of each channel cell"
 #define MID_MUSLE_AS								"MUSLE_AS"
 #define MDESC_MUSLE_AS						"use MUSLE method to calculate sediment yield of each cell"
+/// Plant growth
+#define MCLS_POT_BIOM							"Potential Biomass"
+#define MCLSDESC_POT_BIOM				"Calculate the amount of PotentialBiomass."
+#define MID_PBIO_EPIC								"PBIO_EPIC"
+#define MDESC_PBIO_EPIC						"Calculate potential biomass using a simplified version of the EPIC plant growth model as in SWAT"
 /// Overland routing related modules
 #define MCLS_OL_ROUTING						"Overland routing"
 #define MCLSDESC_OL_ROUTING			"Overland routing module"
@@ -640,7 +646,7 @@
 #define VAR_SURU "SURU"                             /// surface runoff generated
 #define VAR_SWE "SWE"
 #define VAR_SWE0 "swe0"
-#define VAR_T_RG "T_RG"
+#define VAR_T_RG "T_RG"   /// groundwater runoff
 #define VAR_T_SOIL "t_soil"                         /// threshold soil freezing temperature
 #define VAR_T_SNOW "T_snow"                /// Snowfall temperature
 #define VAR_WS "WS"
