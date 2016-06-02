@@ -53,7 +53,7 @@ public:
 			float m_secondCO2Concentration;
 			//Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve, BIOEHI
 			float m_secondBiomassEnergyRatio;
-			//Rate of decline in radiation use efficiency per unit increace in vapor pressure dificit, WAVP
+			//Rate of decline in radiation use efficiency per unit increase in vapor pressure deficit, WAVP
 			float radiationUseEfficiencyDeclineRateWithVPD;
 		/****** The following parameters are shape coefficients used by equations, Zhiqiang, 2011-8-10 ***********/
 		private:
@@ -108,7 +108,7 @@ public:
 			//the adjusted radiation-use efficiency by vapor pressure deficit
 			float RadiationUseEfficiencyAdjustByVPD(float vpd,float radiationUseEfficiencyDeclineRateWithVPD) const;
 
-			//amound of biomass a tree can accumulate in a single year, kg/ha
+			//amount of biomass a tree can accumulate in a single year, kg/ha
 			float TreeAnnualBiomass(int age) const;
 
 			//tree height in a single year, m
