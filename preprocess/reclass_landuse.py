@@ -14,8 +14,8 @@ def ReclassLanduse(landuseFile, dbname, dstdir):
     #for example:
     #1:{"clay":0.12, "sand":0.1}
     property_map = {}
-    str_sql = 'select landuse_id, ' + ','.join(LANDUSE_ATTR_DB) + ' from LanduseLookup'
-    property_namelist = LANDUSE_ATTR_LIST 
+    str_sql = 'select landuse_id, ' + ','.join(LANDUSE_ATTR_LIST) + ' from LanduseLookup'
+    property_namelist = LANDUSE_ATTR_LIST
     num_propeties = len(property_namelist)
     
     for i in xrange(num_propeties):
@@ -73,8 +73,7 @@ def ReclassLanduse(landuseFile, dbname, dstdir):
         
         data_prop.shape = (ysize, xsize)
         
-        WriteGTiffFile(filename, ysize, xsize, data_prop, \
-                                    geotransform, srs, noDataValue, gdal.GDT_Float32)
+        WriteGTiffFile(filename, ysize, xsize, data_prop,geotransform, srs, noDataValue, gdal.GDT_Float32)
     
     print 'The landuse parameters are generated!'
 
