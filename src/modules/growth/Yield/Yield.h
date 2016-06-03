@@ -79,6 +79,6 @@ private:
 	//accumulate heat unit to determine the growth stage
 	//it's the base of plant growth
 
-	void initalOutputs();
+	void initialOutputs();
 };
 

@@ -138,10 +138,10 @@ bool IKW_REACH::CheckInputData(void)
 	return true;
 }
 
-void  IKW_REACH::initalOutputs()
+void  IKW_REACH::initialOutputs()
 {
 	if(m_nreach <= 0) 
-		throw ModelException("IKW_REACH","initalOutputs","The cell number of the input can not be less than zero.");
+		throw ModelException("IKW_REACH","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if (m_reachLayers.empty())
 	{
@@ -191,7 +191,7 @@ void  IKW_REACH::initalOutputs()
 
 int IKW_REACH::Execute()
 {
-	initalOutputs();
+	initialOutputs();
 	
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)

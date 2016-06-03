@@ -175,7 +175,7 @@ bool PotentialBiomass::CheckInputSize(const char* key, int n)
 	return true;
 }
 
-void PotentialBiomass::initalOutputs()
+void PotentialBiomass::initialOutputs()
 {
 	if(m_nCells <= 0)				
 		throw ModelException("PotentialBiomass","CheckInputData","The dimension of the input data can not be less than zero.");
@@ -464,7 +464,7 @@ void PotentialBiomass::Set1DData(const char* key, int n, float* data)
 
 void PotentialBiomass::Get1DData(const char* key, int* n, float** data)
 {
-	//initalOutputs();
+	//initialOutputs();
 	string s(key);
 	if(StringMatch(s,"BIOMASS_Delta"))				
 	{
@@ -599,7 +599,7 @@ float PotentialBiomass::NPBiomassFraction(float x1, float x2, float x3, float fr
 int PotentialBiomass::Execute()
 {
 	CheckInputData();
-	initalOutputs();
+	initialOutputs();
 
 	struct tm timeinfo;
 	LocalTime(m_date, &timeinfo);

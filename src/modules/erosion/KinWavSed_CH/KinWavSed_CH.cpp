@@ -367,8 +367,8 @@ void KinWavSed_CH::initial()
 			m_chanVol[i] = 0.0f;
 		}
 		//allocate the output variable
-		if(m_nCells <= 0) throw ModelException(MID_KINWAVSED_CH,"initalOutputs","The cell number of the input can not be less than zero.");
-		if(m_chNumber <= 0) throw ModelException(MID_KINWAVSED_CH,"initalOutputs","The channel number of the input can not be less than zero.");
+		if(m_nCells <= 0) throw ModelException(MID_KINWAVSED_CH,"initialOutputs","The cell number of the input can not be less than zero.");
+		if(m_chNumber <= 0) throw ModelException(MID_KINWAVSED_CH,"initialOutputs","The channel number of the input can not be less than zero.");
 
 		if(m_CHSed_kg == NULL)
 		{

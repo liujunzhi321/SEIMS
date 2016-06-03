@@ -74,7 +74,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, Source_ParameterDB, DT_Array2D);
 	mdi.AddParameter(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, Source_ParameterDB, DT_Array2D);
 	mdi.AddParameter(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, Source_ParameterDB, DT_Array2D); /// Is this should be output from plant growth module? LJ
 	mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
 	mdi.AddParameter(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, Source_ParameterDB, DT_Array2D);
 	mdi.AddParameter(VAR_SOL_WPMM, UNIT_CONT_KGKM2, DESC_SOL_WPMM, Source_ParameterDB, DT_Array2D);

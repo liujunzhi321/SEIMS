@@ -185,9 +185,9 @@ bool ImplicitKinematicWave_CH::CheckInputData(void)
 	return true;
 }
 
-void  ImplicitKinematicWave_CH::initalOutputs()
+void  ImplicitKinematicWave_CH::initialOutputs()
 {
-	if(m_nCells <= 0) throw ModelException(MID_IKW_CH,"initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_nCells <= 0) throw ModelException(MID_IKW_CH,"initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_hCh == NULL)
 	{
@@ -290,7 +290,7 @@ void  ImplicitKinematicWave_CH::initalOutputs()
 
 }
 
-void  ImplicitKinematicWave_CH::initalOutputs2()
+void  ImplicitKinematicWave_CH::initialOutputs2()
 {
 	if(m_flowLen != NULL)
 		return;
@@ -384,8 +384,8 @@ int ImplicitKinematicWave_CH::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
-	initalOutputs2();
+	initialOutputs();
+	initialOutputs2();
 	//Output1DArray(m_size, m_prec, "f:\\p2.txt");
 	map<int, vector<int> >::iterator it;
 	//cout << m_reachLayers.size() << "\t" << m_chNumber << endl;
@@ -593,7 +593,7 @@ void ImplicitKinematicWave_CH::Get1DData(const char* key, int* n, float** data)
 void ImplicitKinematicWave_CH::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
 	if(m_hCh == NULL || m_qCh == NULL)
-		initalOutputs();
+		initialOutputs();
 	string sk(key);
 	*nRows = m_chNumber;
 	if (StringMatch(sk, VAR_QRECH))  //TODO QRECH is DT_array1D? LJ

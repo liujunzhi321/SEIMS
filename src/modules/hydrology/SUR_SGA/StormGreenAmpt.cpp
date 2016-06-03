@@ -46,7 +46,7 @@ StormGreenAmpt::~StormGreenAmpt(void)
 		delete[] m_soilMoisture;
 }
 
-void StormGreenAmpt::initalOutputs()
+void StormGreenAmpt::initialOutputs()
 {
 	// allocate the output variable
 	if (m_infil == NULL)
@@ -67,7 +67,7 @@ void StormGreenAmpt::initalOutputs()
 
 void StormGreenAmpt::Get1DData(const char* key, int* n, float **data)
 {
-	initalOutputs();
+	initialOutputs();
 
 	*n = m_nCells;
 	string sk(key);
@@ -232,7 +232,7 @@ string StormGreenAmpt::getDate(time_t* date)
 
 int StormGreenAmpt::Execute(void)
 {
-	initalOutputs();
+	initialOutputs();
 	
 
 	// allocate intermediate variables

@@ -50,7 +50,7 @@ bool MUSLE_AS::CheckInputData(void)
 	return true;
 }
 
-void MUSLE_AS::initalOutputs()
+void MUSLE_AS::initialOutputs()
 {
 	if(m_nCells <= 0)				throw ModelException(MID_MUSLE_AS,"CheckInputData","The dimension of the input data can not be less than zero.");
 	// allocate the output variables
@@ -119,7 +119,7 @@ int MUSLE_AS::Execute()
 {
 	CheckInputData();
 
-	initalOutputs();
+	initialOutputs();
 
 #pragma omp parallel for
 	for(int i=0;i<m_nCells;i++)
@@ -155,7 +155,7 @@ int MUSLE_AS::Execute()
 //{
 //	CheckInputData();
 //
-//	initalOutputs();
+//	initialOutputs();
 //	omp_lock_t lock;
 //	omp_init_lock(&lock);
 //

@@ -69,9 +69,9 @@ bool Denitrification::CheckInputData(void)
 	return true;
 }
 
-void  Denitrification::initalOutputs()
+void  Denitrification::initialOutputs()
 {
-	if(m_size <= 0) throw ModelException("Denitrification","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_size <= 0) throw ModelException("Denitrification","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_denLostN == NULL)
 	{
@@ -165,7 +165,7 @@ int Denitrification::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 
 	#pragma omp parallel for
 	for(int i=0; i < m_nLayers; i++)

@@ -60,54 +60,10 @@ landuseFile = SPATIAL_DATA_DIR + os.sep + 'landuse_30m.tif'
 soilSEQNFile = SPATIAL_DATA_DIR + os.sep + 'soil_SEQN.tif'
 soilSEQNText = SPATIAL_DATA_DIR + os.sep + 'soil_properties_lookup.txt'
 
-
-#rootDepthFile = SPATIAL_DATA_DIR + os.sep + 'RootDepth.tif'
-# densityList = []
-# sandList = []
-# clayList = []
-# orgList = []
-# nlyrs = 2   # soil layers
-# nlyrs_thick=[]
-#nlyrs_thick = [100, DEFAULT_NODATA]   #soil layer thick, unit is mm
-# for i in range(1, nlyrs + 1):
-#     densityFile = SPATIAL_DATA_DIR + os.sep + "Density" + str(i) + ".tif"
-#     sandFile = SPATIAL_DATA_DIR + os.sep + "sand" + str(i) + ".tif"
-#     clayFile = SPATIAL_DATA_DIR + os.sep + "clay" + str(i) + ".tif"
-#     orgFile = SPATIAL_DATA_DIR + os.sep + "org" + str(i) + ".tif"
-#     densityList.append(densityFile)
-#     sandList.append(sandFile)
-#     clayList.append(clayFile)
-#     orgList.append(orgFile)
-# defaultSand = 40
-# defaultClay = 30
-# defaultOrg = 2.5
-
 ## Predefined variables
-### CROP, LANDUSE, and SOIL attribute are imported to mongoDB
-### TODO: Match to the new lookup table of SWAT 2012 rev.637. LJ
-CROP_ATTR_LIST  = ["IDC", "EXT_COEF",  "BMX_TREES", "BLAI", "HVSTI",\
-                    "MAT_YRS", "T_BASE", "FRGRW1", "FRGRW2", "LAIMX1",\
-                    "LAIMX2", "DLAI", "BN1", "BN2", "BN3", "BP1", "BP2",\
-                    "BP3", "BIO_E", "BIOEHI", "CO2HI", "WAVP", "BIO_LEAF",\
-                    "RDMX","CNYLD", "CPYLD", "WSYF", "DLAI", "T_OPT"]
-                    
-# LANDUSE_ATTR_LIST and SOIL_ATTR_LIST is selected from sqliteFile database
-LANDUSE_ATTR_LIST = ["Manning", "Interc_max", "Interc_min", "RootDepth", \
-                    "USLE_C", "SOIL_T10","USLE_P"]
-LANDUSE_ATTR_DB = ["manning","i_max","i_min", "root_depth", "usle_c", "SOIL_T10"]
-
-## Be caution, the sequence from "Sand" to "Poreindex" is fixed because of soil_param.py.
-# SOIL_ATTR_LIST = ["Sand", "Clay", "WiltingPoint", "FieldCap", "Porosity","Density",\
-#                 "Conductivity", "Poreindex", "USLE_K", "Residual"]
-# SOIL_ATTR_DB  = ["sand", "clay","wp", "fc", "porosity","B_DENSITY","ks", "P_INDEX",\
-#                 "usle_k", "rm"]
-
-### There are 15 attributes in SoilLookup table now. 
-### They are [SOILCODE], [SNAM], [KS](Conductivity), [POROSITY], [FC](field capacity), [P_INDEX](Poreindex), [RM],
-### [WP](wiltingpoint), [B_DENSITY], [SAND], [CLAY], [SILT], [USLE_K], [TEXTURE], [HG]
-
-## Parameters for soil chemical properties initialization
-
 
 ## Hydrological parameters
-coeTable = {"T2":[0.05, 0.48],"T10":[0.12, 0.52], "T100":[0.18,0.55]} ## Adopted from WetSpa, used in radius.py, TODO: what's meaning
+## Adopted from WetSpa, used in radius.py, TODO: what's meaning
+coeTable = {"T2":[0.05, 0.48],
+            "T10":[0.12, 0.52],
+            "T100":[0.18,0.55]}

@@ -58,9 +58,9 @@ bool DepressionFSDaily::CheckInputData(void)
 	return true;
 }
 
-void  DepressionFSDaily::initalOutputs()
+void  DepressionFSDaily::initialOutputs()
 {
-	if(this->m_nCells <= 0) throw ModelException(MID_DEP_LINSLEY,"initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException(MID_DEP_LINSLEY,"initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_sd == NULL && m_depCap != NULL)
 	{
@@ -81,7 +81,7 @@ int DepressionFSDaily::Execute()
 {
 	//check the data
 	CheckInputData();	
-	initalOutputs();
+	initialOutputs();
 
 	#pragma omp parallel for
 	for (int i = 0; i < m_nCells; ++i)
@@ -183,7 +183,7 @@ void DepressionFSDaily::Set1DData(const char* key, int n, float* data)
 
 void DepressionFSDaily::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 	string sk(key);
 	*n = m_nCells;
 	if (StringMatch(sk, VAR_DPST))
