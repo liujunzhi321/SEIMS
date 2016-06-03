@@ -139,11 +139,11 @@ bool SEDR_VCD::CheckInputData(void)
 	return true;
 }
 
-void  SEDR_VCD::initalOutputs()
+void  SEDR_VCD::initialOutputs()
 {
 	
 	if(m_nreach <= 0) 
-		throw ModelException(MID_SEDR_VCD,"initalOutputs","The cell number of the input can not be less than zero.");
+		throw ModelException(MID_SEDR_VCD,"initialOutputs","The cell number of the input can not be less than zero.");
 
 	if (m_reachLayers.empty())
 	{
@@ -202,7 +202,7 @@ int SEDR_VCD::Execute()
 {
 	//check the data
 	CheckInputData();	
-	initalOutputs();
+	initialOutputs();
 	
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)

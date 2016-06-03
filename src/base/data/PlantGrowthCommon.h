@@ -3,6 +3,7 @@ using namespace std;
 #define MAX_CROP_LAND_USE_ID 97
 #define BARE_SOIL_LAND_USE	 98
 #define WATER_LAND_USE_ID	 18
+
 /*!
  * \class PGCommon
  * \ingroup data

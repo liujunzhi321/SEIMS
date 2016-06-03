@@ -159,7 +159,7 @@ private:
 	//it's the base of plant growth
 	//void doHeatUnitAccumulation(Climate* climate);
 
-	void initalOutputs();
+	void initialOutputs();
 	float GrowthStageFactorForNitrogenFixation(float frAccumulatedHeatUnit);
 	float WaterFactorForNitrogenFixation(float totalWater,float totalFieldCapacity);
 	float NitrateFactorForNitrogenFixation(float totalNO3);

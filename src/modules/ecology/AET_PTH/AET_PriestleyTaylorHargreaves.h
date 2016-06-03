@@ -47,7 +47,7 @@ private:
 	/// soil depth
 	float** m_soilDepth;
 	/// amount of water available to plants in soil layer at field capacity (FC-WP)
-	float** m_fieldCap;
+	float** m_solAWC;
 	/// amount of residue on soil surface (kg/ha)
 	float* m_solCov;
 	/// amount of nitrogen stored in the nitrate pool 

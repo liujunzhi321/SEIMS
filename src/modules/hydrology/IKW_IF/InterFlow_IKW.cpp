@@ -95,10 +95,10 @@ bool InterFlow_IKW::CheckInputData(void)
 	return true;
 }
 
-void  InterFlow_IKW::initalOutputs()
+void  InterFlow_IKW::initialOutputs()
 {
 	if(this->m_nCells <= 0) 
-		throw ModelException(MID_IKW_IF,"initalOutputs","The cell number of the input can not be less than zero.");
+		throw ModelException(MID_IKW_IF,"initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_q == NULL)
 	{
@@ -184,7 +184,7 @@ void InterFlow_IKW::FlowInSoil(int id)
 int InterFlow_IKW::Execute()
 {
 
-	initalOutputs();
+	initialOutputs();
 
 	for (int iLayer = 0; iLayer < m_nLayers; ++iLayer)
 	{
@@ -278,7 +278,7 @@ void InterFlow_IKW::Set1DData(const char* key, int n, float* data)
 
 void InterFlow_IKW::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 
 	string sk(key);
 	*n = m_nCells;

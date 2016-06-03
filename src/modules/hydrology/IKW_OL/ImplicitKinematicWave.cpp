@@ -108,9 +108,9 @@ bool ImplicitKinematicWave_OL::CheckInputData(void)
 	return true;
 }
 
-void  ImplicitKinematicWave_OL::initalOutputs()
+void  ImplicitKinematicWave_OL::initialOutputs()
 {
-	if(m_nCells <= 0) throw ModelException(MID_IKW_OL,"initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_nCells <= 0) throw ModelException(MID_IKW_OL,"initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_q == NULL)
 	{
@@ -324,7 +324,7 @@ void ImplicitKinematicWave_OL::OverlandFlow(int id)
 
 int ImplicitKinematicWave_OL::Execute()
 {
-	initalOutputs();
+	initialOutputs();
 
 
 	for (int iLayer = 0; iLayer < m_nLayers; ++iLayer)
@@ -439,7 +439,7 @@ void ImplicitKinematicWave_OL::GetValue(const char* key, float* data)
 
 void ImplicitKinematicWave_OL::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 
 	string sk(key);
 	*n = m_nCells;

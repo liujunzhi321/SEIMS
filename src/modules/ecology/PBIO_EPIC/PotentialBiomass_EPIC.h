@@ -48,18 +48,97 @@ public:
 private:
 	/// valid cells number
 	int m_nCells;
-	time_t m_startDate;
-	time_t m_endDate;
-	/// land cover/plant  classification:1-7
-	float* m_plantClass;
+
+	/**  climate inputs  **/
+
+	/// mean air temperature
+	float* m_tMean;
+	/// min air temperature
+	float* m_tMin;
+	/// max air temperature
+	float* m_tMax;
+	/// solar radiation
+	float* m_SR;
+	/// relative air moisture
+	float* m_RM;
+
+	/**  soil properties  **/
+
+	/// soil layers
+	float* m_nSoilLayers;
+	/// maximum soil layers
+	int m_soilLayers;
+	/// maximum root depth
+	float* m_soilZMX;
+	/// soil depth of all layers
+	float** m_soilDepth;
+	/// amount of organic matter in the soil layer classified as residue
+	float** m_soilRsd;
+	/// amount of water available to plants in soil layer at field capacity (fc - wp water)
+	float** m_soilAWC;
+	/// total m_soilAWC in soil profile
+	float* m_totSoilAWC;
+	/// amount of water held in soil profile at saturation
+	float* m_totSoilSat;
+	/// amount of water stored in soil layers on current day
+	float** m_somo;
+
+	/**  crop or land cover related inputs  **/
+
+	/// land cover status code, 0 means no crop while 1 means land cover growing
+	float* m_igro;
+	/// land cover/crop  classification:1-7, i.e., IDC
+	float* m_landCoverCode;
+	/// maximum (potential) leaf area index (BLAI in cropLookup db)
+	float* m_maxLAI;
+	/// initial Potential Biomass
+	float* m_initBiomass;
+	/// initial LAI
+	float* m_initLAI;
+	/// fraction of plant heat units (PHU) accumulated
+	float* m_frPHUacc;
+	/// plant water uptake compensation factor
+	float* m_epco;
+	/// biomass-energy ratio
+	float* m_bioE;
+	/**  input from other modules  **/
+
+	/// maximum plant et (mm H2O), ep_max in SWAT
+	float* m_ppt;
+
+	/**  intermediate variables  **/
+
+	/// water uptake distribution parameter, NOT ALLOWED TO MODIFIED BY USERS
+	float ubw;
+	/// water uptake normalization parameter, NOT ALLOWED TO MODIFIED BY USERS
+	float uobw;
+	/// soil aeration stress
+	float* m_frStrsAe;
+
+	/**  set output variables  **/
+
+	/// amount of residue on soil surface
+	float* m_soilCov;
+	/// current rooting depth
+	float m_soilRD;
+	/// last soil root depth for use in harvestkillop/killop 
+	float* m_soilStRD;
+	/// amount of water stored in soil profile
+	float* m_totSOMO;
+	/// actual amount of transpiration (mm H2O), ep_day in SWAT
+	float* m_actET;
+	/// fraction of potential plant growth achieved where the reduction is caused by water stress
+	float* m_frStrsWa;
+	/// land cover/crop biomass (dry weight)
+	float* m_biomass;
+
+
+	
 	/// light extinction coefficient
 	float* m_lightExtinctionCoef;
-	//initial Potential Biomass
-	float m_initBiomass;
-	//float* m_maxBiomass;
-	float m_initLAI;
-	float* m_maxLAI;
-	float m_curYear;
+	
+	
+	///float m_curYear; /// replaced by m_yearIdx
 	float* m_fullDevYear;
 	float* m_tBase;
 	//float* m_tOpt;
@@ -70,7 +149,7 @@ private:
 	float* m_frLAI2;
 	float* m_frDPHU;
 	float m_co2;
-	float* m_rueAmb;
+	
 	float* m_co2Hi;
 	float* m_rueHi;
 	float* m_rueDcl;
@@ -89,11 +168,7 @@ private:
 	float* m_activeRadiation;
 	float* m_rue;
 	float* m_ee;
-	float* m_tMean;
-	float* m_tMin;
-	float* m_tMax;
-	float* m_SR;
-	float* m_RM;
+	
 	//float* m_latitude;
 	//the fraction of the plant¡¯s maximum leaf area index for day i-1
 	float* m_prefrLAImx;
@@ -111,7 +186,7 @@ private:
 	//float* m_bioTreeAnnual;
 	float* m_biomassDelta;
 	//float* m_prebiomass;
-	float* m_biomass;
+	
 	float* m_biomassNOpt;
 	float* m_biomassPOpt;
 	//float* m_biomassN;
@@ -131,6 +206,20 @@ private:
 	
 	PGCommon* m_pgCommon;
 
+	//////////////////////////////////////////////////////////////////////////
+	//  The following code is transferred from swu.f of SWAT rev. 637
+	//  Distribute potential plant evaporation through
+	//	the root zone and calculates actual plant water use based on soil
+	//	water availability. Also estimates water stress factor.  
+	//////////////////////////////////////////////////////////////////////////
+	void DistributePlantET(int i);
+	//////////////////////////////////////////////////////////////////////////
+	//  The following code is transferred from grow.f of SWAT rev. 637
+	//  Adjust plant biomass, leaf area index, and canopy height
+	//	taking into account the effect of water, temperature and nutrient stresses  on the plant
+	//////////////////////////////////////////////////////////////////////////
+	void AdjustPlantGrowth(int i);
+
 	//accumulate heat unit to determine the growth stage
 	//it's the base of plant growth
 	float doHeatUnitAccumulation(float potentialHeatUnit, float tMin, float tMax,float tBase);
@@ -140,7 +229,7 @@ private:
 	float getNPFraction(float fr1, float fr3, float shape1, float shape2, float frPHU);
 	float NPBiomassFraction(float x1, float x2, float x3, float frPHU);
 	
-	void initalOutputs();
+	void initialOutputs();
 
 	bool IsTree(int classification); 
 	bool IsAnnual(int classification);
@@ -150,3 +239,7 @@ private:
 	
 };
 
+
+//// Deprecated code original from Cheng Wei.  By LJ.
+//time_t m_startDate;
+//time_t m_endDate;

@@ -12,18 +12,18 @@
 
 using namespace std;
 
-PotentialBiomass_EPIC::PotentialBiomass_EPIC(void):m_prefrLAImx(NULL), m_frLAImx(NULL), m_initBiomass(10.f), m_initLAI(0.1f), m_curYear(10.f), m_PHU(6000.f), m_nCells(-1), m_plantClass(NULL), m_co2(NODATA),
+PotentialBiomass_EPIC::PotentialBiomass_EPIC(void):m_nCells(-1),m_prefrLAImx(NULL), m_frLAImx(NULL), m_initBiomass(10.f), m_initLAI(0.1f), m_PHU(6000.f),  m_landCoverCode(NULL), m_co2(NODATA),
 	m_lightExtinctionCoef(NULL), m_maxLAI(NULL), m_fullDevYear(NULL), m_tBase(NULL),
 	m_frPHU1(NULL), m_frPHU2(NULL), m_ee(NULL), m_tMean(NULL),
-	m_frLAI1(NULL),	m_frLAI2(NULL), m_frDPHU(NULL), m_rueAmb(NULL),	m_co2Hi(NULL), m_rueHi(NULL), m_rueDcl(NULL), m_rue(NULL),m_activeRadiation(NULL),
+	m_frLAI1(NULL),	m_frLAI2(NULL), m_frDPHU(NULL), m_bioE(NULL),	m_co2Hi(NULL), m_rueHi(NULL), m_rueDcl(NULL), m_rue(NULL),m_activeRadiation(NULL),
 	m_tMax(NULL), m_tMin(NULL), m_RM(NULL), m_LAIShapeCoefficient1(NULL), m_LAIShapeCoefficient2(NULL), m_CO2ShapeCoefficient1(NULL), m_CO2ShapeCoefficient2(NULL),
 	m_SR(NULL),m_frN1(NULL), m_frN2(NULL), m_frN3(NULL), m_frP1(NULL), m_frP2(NULL), m_frP3(NULL), m_biomassDelta(NULL), m_biomass(NULL),	
 	m_biomassNOpt(NULL), m_biomassPOpt(NULL), m_VPD(NULL), m_frPHU(NULL), m_preLAI(NULL), m_LAIdelta(NULL), m_LAI(NULL), 
 	m_frN(NULL), m_frP(NULL), m_frRoot(NULL)
 {
-	utils utl;
-	m_startDate = utl.ConvertToTime2("1970-04-20 00:00:00", "%d-%d-%d %d:%d:%d", true);
-	m_endDate = utl.ConvertToTime2("1970-10-02 00:00:00", "%d-%d-%d %d:%d:%d", true);
+	uobw = 0.0;
+	ubw = 10.0; /// the uptake distribution for water is hardwired, users are not allowed to modify
+	uobw = 1. - exp(-ubw);
 }
 
 PotentialBiomass_EPIC::~PotentialBiomass_EPIC(void)
@@ -87,7 +87,7 @@ bool PotentialBiomass_EPIC::CheckInputData(void)
 	if(m_nCells <= 0)				
 		throw ModelException(MID_PBIO_EPIC,"CheckInputData","The dimension of the input data can not be less than zero.");
 
-	if(m_plantClass == NULL)		
+	if(m_landCoverCode == NULL)		
 		throw ModelException(MID_PBIO_EPIC,"CheckInputData","The  land cover/plant classification can not be NULL.");
 
 	if(m_lightExtinctionCoef == NULL)		
@@ -95,11 +95,7 @@ bool PotentialBiomass_EPIC::CheckInputData(void)
 
 	if(m_maxLAI == NULL)			
 		throw ModelException(MID_PBIO_EPIC,"CheckInputData","The max LAI data can not be NULL.");
-	//if(m_startDate == NULL)			
-	//	throw ModelException("UptakeGrowth","CheckInputData","The date begin to plant data can not be NULL.");
-	//if(m_endDate == NULL)			
-	//	throw ModelException("UptakeGrowth","CheckInputData","The date of harvest data can not be NULL.");
-
+	
 
 	if(m_fullDevYear == NULL)			
 		throw ModelException(MID_PBIO_EPIC,"CheckInputData","The full development year data can not be NULL.");
@@ -121,7 +117,7 @@ bool PotentialBiomass_EPIC::CheckInputData(void)
 	if(m_frDPHU == NULL)			
 		throw ModelException(MID_PBIO_EPIC,"CheckInputData","The PHU fraction when senescence becomes dominant data can not be NULL.");
 
-	if(m_rueAmb == NULL)			
+	if(m_bioE == NULL)			
 		throw ModelException(MID_PBIO_EPIC,"CheckInputData","The RUE at ambient atmospheric CO2 concentration data can not be NULL.");
 	if(m_co2Hi == NULL)			
 		throw ModelException(MID_PBIO_EPIC,"CheckInputData","The elevated atmospheric CO2 concentration data can not be NULL.");
@@ -176,7 +172,7 @@ bool PotentialBiomass_EPIC::CheckInputSize(const char* key, int n)
 	return true;
 }
 
-void PotentialBiomass_EPIC::initalOutputs()
+void PotentialBiomass_EPIC::initialOutputs()
 {
 	if(m_nCells <= 0)				
 		throw ModelException(MID_PBIO_EPIC,"CheckInputData","The dimension of the input data can not be less than zero.");
@@ -190,9 +186,9 @@ void PotentialBiomass_EPIC::initalOutputs()
 
 		for (int i = 0; i <m_nCells; i++)
 		{
-			//m_common->m_plantClass = (int)(m_plantClass[i]);
-			if (IsTree((int)(m_plantClass[i])))
-				m_maxLAI[i] *= m_curYear / m_fullDevYear[i];
+			//m_common->m_landCoverCode = (int)(m_landCoverCode[i]);
+			if (IsTree((int)(m_landCoverCode[i])))
+				m_maxLAI[i] *= m_yearIdx / m_fullDevYear[i];
 		}
 	}
 	if (m_LAIShapeCoefficient2 ==NULL)		
@@ -400,7 +396,7 @@ void PotentialBiomass_EPIC::Set1DData(const char* key, int n, float* data)
     if(StringMatch(s,"EXT_COEF"))		
 		m_lightExtinctionCoef = data;
 	else if(StringMatch(s, "IDC"))
-		m_plantClass = data;
+		m_landCoverCode = data;
 
 	else if(StringMatch(s,"MAT_YRS"))	
 	{
@@ -409,9 +405,7 @@ void PotentialBiomass_EPIC::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(s,"BLAI"))
 	{
 		m_maxLAI = data;
-	}
-	//else if(StringMatch(s,"YR_INIT"))		m_curYear = data;
-	
+	}	
 	else if(StringMatch(s,"T_BASE"))		
 		m_tBase = data;
 
@@ -426,7 +420,7 @@ void PotentialBiomass_EPIC::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(s,"DLAI"))		
 		m_frDPHU = data;
 	else if(StringMatch(s,"BIO_E"))		
-		m_rueAmb = data;
+		m_bioE = data;
 	else if(StringMatch(s,"BIOEHI"))		
 		m_rueHi = data;
 	else if(StringMatch(s,"CO2HI"))		
@@ -465,7 +459,7 @@ void PotentialBiomass_EPIC::Set1DData(const char* key, int n, float* data)
 
 void PotentialBiomass_EPIC::Get1DData(const char* key, int* n, float** data)
 {
-	//initalOutputs();
+	initialOutputs();
 	string s(key);
 	if(StringMatch(s,"BIOMASS_Delta"))				
 	{
@@ -596,24 +590,111 @@ float PotentialBiomass_EPIC::NPBiomassFraction(float x1, float x2, float x3, flo
 
 	return getNPFraction(x1, x3, ShapeCoefficient1, ShapeCoefficient2, frPHU);
 }
+void PotentialBiomass_EPIC::DistributePlantET(int i)
+{
+	float sum, sump, gx;
+	/// fraction of water uptake by plants achieved
+	/// where the reduction is caused by low water content
+	float reduc;
+	/// water uptake by plants in each soil layer
+	float* wuse = new float[(int)m_nSoilLayers[i]];
+	/// water uptake by plants from all layers
+	float xx;
+	int j,k,ir;
+	int idc = int(m_landCoverCode[i]);
+	if(idc == 1 || idc == 2 || idc == 4 || idc == 5)
+	{
+		m_soilRD = 2.5 * m_frPHUacc[i] * m_soilZMX[i];
+		if(m_soilRD > m_soilZMX[i]) m_soilRD = m_soilZMX[i];
+		if(m_soilRD < 10.f) m_soilRD = 10.f;   /// minimum root depth is 10mm
+	}
+	else
+		m_soilRD = m_soilZMX[i];
+	m_soilStRD[i] = m_soilRD;
+	if(m_ppt[i] <= 0.01)
+		m_frStrsWa[i] = 1.f;
+	else
+	{
+		/// initialize variables
+		gx = 0.f;
+		ir = 0;
+		sump = 0.f;
+		for(int j = 0; j < (int)m_nSoilLayers[i]; j++)
+			wuse[j] = 0.f;
+		xx = 0.f;
+	}
+	/// compute aeration stress
+	if (m_totSOMO[i] > m_totSoilAWC[i])
+	{
+		float satco = (m_totSOMO[i] - m_totSoilAWC[i])/(m_totSoilSat[i] - m_totSoilAWC[i]);
+		float pl_aerfac = 0.85;
+		float scparm = 100. * (satco - pl_aerfac) / (1.0001 - pl_aerfac);
+		if(scparm > 0.f)
+			m_frStrsAe[i] = 1. - (scparm / (scparm + exp(2.9014 - 0.03867 * scparm)));
+		else
+			m_frStrsAe[i] = 1.f;
+	}
+	for(int j = 0; j < (int)m_nSoilLayers[i]; j++)
+	{
+		if(ir > 0) break;
+		if (m_soilRD <= m_soilDepth[i][j])
+		{
+			gx = m_soilRD;
+			ir = j;
+		}
+		else
+			gx = m_soilDepth[i][j];
+		sum = 0.f;
+		if(m_soilRD <= 0.01)
+			sum = m_ppt[i] / uobw;
+		else
+			sum = m_ppt[i] * (1. - exp(-ubw * gx / m_soilRD)) / uobw;
+		wuse[j] = sum - sump + 1. * m_epco[i];
+		wuse[j] = sum - sump + (sump -xx) * m_epco[i];
+		sump = sum;
+		/// adjust uptake if sw is less than 25% of plant avaliable water
+		reduc = 0.f;
+		if(m_somo[i][j] < m_soilAWC[i][j] / 4.)
+			reduc = exp(5. * (4. * m_somo[i][j] / m_soilAWC[i][j] - 1.));
+		else
+			reduc = 1.f;
+		reduc = 1.f;  ///// Is SWAT wrong here? by LJ
+		wuse[j] *= reduc;
+		if(m_somo[i][j] < wuse[j])
+			wuse[j] = m_somo[i][j];
+		m_somo[i][j] = max(UTIL_ZERO, m_somo[i][j] - wuse[j]);
+		xx += wuse[j];
+	}
+	/// update total soil water in profile 
+	m_totSOMO[i] = 0.f;
+	for(int j = 0; j < m_nSoilLayers[i]; j++)
+		m_totSOMO[i] += m_somo[i][j];
+	m_frStrsWa[i] = xx / m_ppt[i];
+	m_actET[i] = xx;
+}
 
+void PotentialBiomass_EPIC::AdjustPlantGrowth(int i)
+{
+
+}
 int PotentialBiomass_EPIC::Execute()
 {
 	CheckInputData();
-	initalOutputs();
+	/// Initialize 
+	initialOutputs();
+#pragma omp parallel for
+	for (int i = 0; i < m_nCells; i++) 
+	{
+		/// calculate residue on soil surface for current day
+		m_soilCov[i] = 0.8 * m_biomass[i] + m_soilRsd[i][0];
+		m_soilCov[i] = max(m_soilCov[i], 0.f);
+		if (FloatEqual(m_igro[i], 1.0f))   /// land cover growing
+		{
+			DistributePlantET(i);
+			AdjustPlantGrowth(i);
+		}
+	}
 
-	struct tm timeinfo;
-	LocalTime(m_date, &timeinfo);
-	timeinfo.tm_mon = 0;
-	timeinfo.tm_mday = 0;
-	timeinfo.tm_hour = 0;
-	timeinfo.tm_min = 0;
-	timeinfo.tm_sec = 0;
-	timeinfo.tm_isdst = false;
-	time_t tYear = mktime(&timeinfo);
-
-	time_t startDate = tYear + m_startDate;
-	time_t endDate = tYear + m_endDate;
 
 	#pragma omp parallel for
 	for (int i = 0; i < m_nCells; i++) 
@@ -648,18 +729,18 @@ int PotentialBiomass_EPIC::Execute()
 			//rue:Radiation Use Efficiency Adjust By CO2
 			m_rue[i] =0.f;
 
-			if (m_rueAmb != NULL && m_rueHi != NULL && m_co2 != 0 && m_co2Hi != NULL)
+			if (m_bioE != NULL && m_rueHi != NULL && m_co2 != 0 && m_co2Hi != NULL)
 			{
 				if (m_co2Hi[i] == 330.0f)
 				{
 					m_co2Hi[i] = 660.f;
 				}
 
-				getScurveShapeParameter(m_rueAmb[i] * 0.01f, m_rueHi[i] * 0.01f, m_co2, m_co2Hi[i], &(m_CO2ShapeCoefficient1[i]), &(m_CO2ShapeCoefficient2[i]));
+				getScurveShapeParameter(m_bioE[i] * 0.01f, m_rueHi[i] * 0.01f, m_co2, m_co2Hi[i], &(m_CO2ShapeCoefficient1[i]), &(m_CO2ShapeCoefficient2[i]));
 			}
 			if (m_co2 < 330.0f)
 			{
-				m_rue[i] = m_rueAmb[i];
+				m_rue[i] = m_bioE[i];
 			}
 			if(m_co2 = 330)	
 			{
@@ -681,7 +762,7 @@ int PotentialBiomass_EPIC::Execute()
 				//omp_set_lock(&lock);
 				m_rue[i] -= RadiationUseEfficiencyAdjustByVPD(m_VPD[i], m_rueDcl[i]);
 				//omp_unset_lock(&lock);
-				m_rue[i] = max(m_rue[i], 0.27f * m_rueAmb[i]);      //rue is never allowed to fall below 27% of rue ambient
+				m_rue[i] = max(m_rue[i], 0.27f * m_bioE[i]);      //rue is never allowed to fall below 27% of rue ambient
 			}
 			m_biomassDelta[i] = max(0.0f, m_rue[i] * m_activeRadiation[i]);
 		
@@ -731,3 +812,29 @@ bool PotentialBiomass_EPIC::IsCoolSeasonAnnual(int classification)
 {
 	return classification == 2 || classification == 5;
 }
+
+
+
+//// Deprecated code original from Cheng Wei.  By LJ.
+//struct tm timeinfo;
+//LocalTime(m_date, &timeinfo);
+//timeinfo.tm_mon = 0;
+//timeinfo.tm_mday = 0;
+//timeinfo.tm_hour = 0;
+//timeinfo.tm_min = 0;
+//timeinfo.tm_sec = 0;
+//timeinfo.tm_isdst = false;
+//time_t tYear = mktime(&timeinfo);
+
+//time_t startDate = tYear + m_startDate;
+//time_t endDate = tYear + m_endDate;
+
+
+/*utils utl;
+	m_startDate = utl.ConvertToTime2("1970-04-20 00:00:00", "%d-%d-%d %d:%d:%d", true);
+	m_endDate = utl.ConvertToTime2("1970-10-02 00:00:00", "%d-%d-%d %d:%d:%d", true);*/
+
+//if(m_startDate == NULL)			
+//	throw ModelException("UptakeGrowth","CheckInputData","The date begin to plant data can not be NULL.");
+//if(m_endDate == NULL)			
+//	throw ModelException("UptakeGrowth","CheckInputData","The date of harvest data can not be NULL.");

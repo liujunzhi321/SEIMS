@@ -15,7 +15,7 @@
 #include <vector>
 #include <stdio.h>
 #include "text.h"
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 /**
