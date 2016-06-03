@@ -12,6 +12,8 @@ from text import *
 def ImportDayData(db, ClimateDateFile, sitesLoc):
     climDataItems = ReadDataItemsFromTxt(ClimateDateFile)
     climFlds = climDataItems[0]
+    T_mean = []
+    Year = []
     requiredFlds = [Tag_DT_Year, Tag_DT_Month, Tag_DT_Day, \
                     DataType_MaximumTemperature, DataType_MinimumTemperature, \
                     DataType_RelativeAirMoisture, DataType_WindSpeed]
@@ -26,6 +28,7 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 dic[Tag_DT_StationID] = int(climDataItems[i][j])
             elif StringMatch(climFlds[j], Tag_DT_Year):
                 curY = int(climDataItems[i][j])
+
             elif StringMatch(climFlds[j], Tag_DT_Month):
                 curM = int(climDataItems[i][j])
             elif StringMatch(climFlds[j], Tag_DT_Day):
@@ -78,6 +81,21 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 curDic[Tag_DT_LocalT] = dic[Tag_DT_LocalT]
                 curDic[Tag_DT_Type] = fld
                 db[Tag_ClimateDB_Data].insert_one(curDic)
+
+        T_mean.append(dic[DataType_MeanTemperature])
+        Year.append(curY)
+    for i in range(0,len(list(set(Year)))):
+        curDic = {}
+        HU = 0
+        T_base = 0
+        for j in range(0,len(Year)):
+            if(Year[j]==list(set(Year))[i]):
+                HU += T_mean[j] - T_base*1.0
+        curDic[Tag_DT_Value] = HU
+        curDic[Tag_DT_Year] = Year[i]
+        curDic[Tag_VAR_UNIT] = "deg C"
+        curDic[Tag_VAR_Type] = DataType_YearlyHeatUnit
+        db[Tag_ClimateDB_YearlyHeatUnit].insert_one(curDic)
 
 def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     try:
