@@ -28,7 +28,6 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 dic[Tag_DT_StationID] = int(climDataItems[i][j])
             elif StringMatch(climFlds[j], Tag_DT_Year):
                 curY = int(climDataItems[i][j])
-
             elif StringMatch(climFlds[j], Tag_DT_Month):
                 curM = int(climDataItems[i][j])
             elif StringMatch(climFlds[j], Tag_DT_Day):
@@ -92,7 +91,7 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
             if(Year[j]==list(set(Year))[i]):
                 HU += T_mean[j] - T_base*1.0
         curDic[Tag_DT_Value] = HU
-        curDic[Tag_DT_Year] = Year[i]
+        curDic[Tag_DT_Year] = list(set(Year))[i]
         curDic[Tag_VAR_UNIT] = "deg C"
         curDic[Tag_VAR_Type] = DataType_YearlyHeatUnit
         db[Tag_ClimateDB_YearlyHeatUnit].insert_one(curDic)
