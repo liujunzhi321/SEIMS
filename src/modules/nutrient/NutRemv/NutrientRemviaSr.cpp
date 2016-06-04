@@ -1,4 +1,4 @@
-/*!
+/*//
  * \file NutrientRemviaSr.cpp
  * \ingroup NutRemv
  * \author Huiran Gao
@@ -18,8 +18,8 @@ using namespace std;
 
 NutrientRemviaSr::NutrientRemviaSr(void):
 //input 
-m_nCells(-1), m_cellWidth(-1), m_nSolLyrs(3), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_nperco(NULL), m_flat(NULL),
-	m_sol_perco(NULL), m_sol_wsatur(NULL), m_phoskd(NULL), m_pperco(NULL), m_sol_bd(NULL), m_conv_wt(NULL),
+m_nCells(-1), m_cellWidth(-1), m_nSolLyrs(m_nSolLyrs), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_nperco(NULL), m_flat(NULL),
+	m_sol_perco(NULL), m_sol_wsatur(NULL), m_phoskd(NULL), m_sol_crk(NULL), m_pperco(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_conv_wt(NULL),
 	//output 
 	m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(NULL), m_sol_solp(NULL)
 {
@@ -77,9 +77,6 @@ void NutrientRemviaSr::SetValue(const char* key, float value)
 	else if (StringMatch(sk, VAR_QTILE)) {
 		this -> m_qtile = value;
 	}
-	else if (StringMatch(sk, VAR_PHOSKD)) {
-		this -> m_phoskd = value;
-	}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
@@ -107,6 +104,12 @@ void NutrientRemviaSr::Set1DData(const char* key,int n, float *data)
 	else if (StringMatch(sk, VAR_ISEP_OPT)) {
 		this -> m_isep_opt = data;
 	}
+	else if (StringMatch(sk, VAR_PHOSKD)) {
+		this -> m_phoskd = data;
+	}
+	else if (StringMatch(sk, VAR_SOL_CRK)) {
+		this -> m_sol_crk = data;
+	}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -116,7 +119,7 @@ void NutrientRemviaSr::Set2DData(const char* key, int nRows, int nCols, float** 
 	if(!this->CheckInputSize(key,nCols)) return;
 
 	string sk(key);
-	if (StringMatch(sk, VAR_ROOTDEPTH)) {
+	if (StringMatch(sk, VAR_FLAT)) {
 		this -> m_flat = data;
 	}
 	else if (StringMatch(sk, VAR_SOL_NO3)) {
@@ -124,6 +127,9 @@ void NutrientRemviaSr::Set2DData(const char* key, int nRows, int nCols, float** 
 	}
 	else if (StringMatch(sk, VAR_SOL_BD)) {
 		this -> m_sol_bd = data;
+	}
+	else if (StringMatch(sk, VAR_ROOTDEPTH)) {
+		this -> m_sol_z = data;
 	}
 	else if (StringMatch(sk, VAR_SOL_SOLP)) {
 		this -> m_sol_solp = data;
@@ -260,9 +266,49 @@ void NutrientRemviaSr::Nitrateloss(){
 void NutrientRemviaSr::Phosphorusloss(){
 
 	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nSolLyrs; k++) {
+		// amount of P leached from soil layer (vap)
+		float vap = 0.;
+		float vap_tile = 0.;
+		// compute soluble P lost in surface runoff
+		float xx = 0.;  // variable to hold intermediate calculation result
+		xx = m_sol_bd[i][0] * m_sol_z[i][0] * m_phoskd[i];
+		m_surqsolp[i] = m_sol_solp[i][0] * m_surfr[i] / xx;
+		m_surqsolp[i] = min(m_surqsolp[i], m_sol_solp[i][0]);
+		m_surqsolp[i] = max(m_surqsolp[i], 0.);
+		m_sol_solp[i][0] = m_sol_solp[i][0] - m_surqsolp[i];
 
+		// compute soluble P leaching
+		vap = m_sol_solp[i][0] * m_sol_perco[i][0] / ((m_conv_wt[i][0] / 1000.) * m_pperco[i]);
+		vap = min(vap, 0.5 * m_sol_solp[i][0]);
+		m_sol_solp[i][0] = m_sol_solp[i][0] - vap;
+
+		// estimate soluble p in tiles due to crack flow
+		if (m_ldrain[i] > 0) {
+			xx = min(1., m_sol_crk[i] / 3.0);
+			vap_tile = xx * vap;
+			vap = vap - vap_tile;
 		}
+		if (m_nSolLyrs >= 1) {
+			m_sol_solp[i][1] = m_sol_solp[i][1] + vap;
+		}
+		for(int k = 1; k < m_nSolLyrs; k++) {
+			vap = 0.;
+			//if (k != m_i_sep[i]) {  // soil layer where biozone exists (m_i_sep)
+				vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((m_conv_wt[i][k] / 1000.) * m_pperco[i]);
+				vap = min(vap, .2 * m_sol_solp[i][k]);
+				m_sol_solp[i][k] = m_sol_solp[i][k] - vap;
+			//}
+		}
+		//m_percp[i] = vap
+		// summary calculation
+		m_wshd_plch = m_wshd_plch + vap * (1 / m_nCells);
+	}
+}
+
+void NutrientRemviaSr::GetValue(const char* key, float* value) {
+	string sk(key);
+	if (StringMatch(sk, VAR_WSHD_PLCH)) {
+		*value = this -> m_wshd_plch;
 	}
 }
 void NutrientRemviaSr::Get1DData(const char* key, int* n, float** data) {
@@ -279,9 +325,6 @@ void NutrientRemviaSr::Get1DData(const char* key, int* n, float** data) {
 	}
 	if (StringMatch(sk, VAR_SURQSOLP)) {
 		*data = this -> m_surqsolp;
-	}
-	if (StringMatch(sk, VAR_WSHD_PLCH)) {
-		*data = this -> m_wshd_plch;
 	}
 	else {
 		throw ModelException("NutRemv", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");

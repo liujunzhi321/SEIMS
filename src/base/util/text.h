@@ -476,6 +476,7 @@
 #define VAR_ESCO "esco"
 #define VAR_EXCP "EXCP"                             /// excess precipitation
 #define VAR_FIELDCAP "FieldCap"                     /// Soil field capacity" 
+#define VAR_FLAT "flat"
 #define VAR_FLOWDIR "FLOW_DIR"
 #define VAR_FLOWWIDTH "FlowWidth"
 #define VAR_GRRE "GRRE"
@@ -609,6 +610,7 @@
 #define VAR_SOL_BD "density"                         /// bulk density of the soil (mg/m3)
 #define VAR_SOL_CBN "sol_cbn"                       /// percent organic carbon in soil layer(%)
 #define VAR_SOL_COV "sol_cov"                    /// amount of residue on soil surface (kg/ha)
+#define VAR_SOL_CRK "sol_crk"                    /// crack volume potential of soil
 #define VAR_SOL_FON "sol_fon"                       /// amount of nitrogen stored in the fresh organic (residue) pool(kg N/ha)
 #define VAR_SOL_FOP "sol_fop"                       /// amount of phosphorus stored in the fresh organic (residue) pool(kg P/ha)
 #define VAR_SOL_MP "sol_mp" 
@@ -795,6 +797,7 @@
 #define DESC_ESCO "soil evaporation compensation factor"
 #define DESC_EXCP "excess precipitation"
 #define DESC_FIELDCAP "Soil field capacity"
+#define DESC_FLAT "lateral flow in soil layer"
 #define DESC_FLOWDIR "Flow direction by the rule of ArcGIS"
 #define DESC_FLOWIN_INDEX_D8 "The index of flow in (D8) cell in the compressed array, and the first element in each sub-array is the number of flow in cells in this sub-array"
 #define DESC_FLOWIN_PERCENTAGE_D8 "percentage of flow out to current cell from each upstream cells"
@@ -935,6 +938,7 @@
 #define DESC_SOL_BD "bulk density of the soil"
 #define DESC_SOL_CBN "percent organic carbon in soil layer"
 #define DESC_SOL_COV "amount of residue on soil surface"
+#define DESC_SOL_CRK "crack volume potential of soil"
 #define DESC_SOL_FON "amount of nitrogen stored in the fresh organic (residue) pool"
 #define DESC_SOL_FOP "amount of phosphorus stored in the fresh organic (residue) pool"
 #define DESC_SOL_MP "??"

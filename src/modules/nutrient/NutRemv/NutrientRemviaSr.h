@@ -33,7 +33,7 @@ class NutrientRemviaSr : public SimulationModule {
 	virtual void Set2DData(const char* key, int nRows, int nCols, float** data);
 	virtual void SetValue(const char* key, float value);
 	virtual int Execute();
-	// virtual void GetValue(const char* key, float* value);
+	virtual void GetValue(const char* key, float* value);
 	virtual void Get1DData(const char* key, int* n, float** data);
 	virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
 private:
@@ -46,9 +46,9 @@ private:
 	/// input data
 	/// drainage tile flow in soil profile
 	float m_qtile;
-	/// Phosphorus soil partitioning coefficient
-	float m_phoskd;
 
+	/// Phosphorus soil partitioning coefficient
+	float* m_phoskd;
 	/// phosphorus percolation coefficient (0-1)
 	float* m_pperco;
 	/// nitrate percolation coefficient (0-1)
@@ -61,6 +61,8 @@ private:
 	float* m_isep_opt;
 	/// soil layer where drainage tile is located
 	float* m_ldrain;
+	/// crack volume potential of soil
+	float* m_sol_crk;
 
 	/// lateral flow in soil layer
 	float** m_flat;
@@ -68,6 +70,8 @@ private:
 	float** m_sol_perco;
 	/// bulk density of the soil
 	float** m_sol_bd;
+	/// depth to bottom of soil layer
+	float** m_sol_z;
 	/// amount of water held in the soil layer at saturation
 	float** m_sol_wsatur;
 	/// factor which converts kg/kg soil to kg/ha
@@ -85,7 +89,7 @@ private:
 
 	/// input & output
 	/// average annual amount of phosphorus leached into second soil layer
-	float* m_wshd_plch;
+	float m_wshd_plch;
 
 	/// amount of nitrogen stored in the nitrate pool in soil layer
 	float** m_sol_no3;
