@@ -59,28 +59,28 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	// set the input
 
 	mdi.AddParameter(VAR_CDN, UNIT_NON_DIM, DESC_CDN, Source_ParameterDB, DT_Array1D);
-	mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Array1D);
-	mdi.AddParameter(VAR_PL_RSDCO, UNIT_NON_DIM, DESC_PL_RSDCO, Source_ParameterDB, DT_Array1D);
+	mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_PL_RSDCO, UNIT_NON_DIM, DESC_PL_RSDCO, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_PSP, UNIT_NON_DIM, DESC_PSP, Source_ParameterDB, DT_Array1D);
 
-	mdi.AddParameter(VAR_SOL_CBN, UNIT_PERCENT, DESC_SOL_CBN, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_WST, UNIT_DEPTH_MM, DESC_SOL_WST, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_WFC, UNIT_DEPTH_MM, DESC_SOL_WFC, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_TMP, UNIT_TEMP_DEG, DESC_SOL_TMP, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_WH, UNIT_DEPTH_MM, DESC_SOL_WH, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, Source_ParameterDB, DT_Array2D); /// Is this should be output from plant growth module? LJ
-	mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_WPMM, UNIT_CONT_KGKM2, DESC_SOL_WPMM, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_CONT_KGKM2, DESC_ROOTDEPTH, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_SOL_CBN, UNIT_PERCENT, DESC_SOL_CBN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_WST, UNIT_DEPTH_MM, DESC_SOL_WST, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_WFC, UNIT_DEPTH_MM, DESC_SOL_WFC, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_TMP, UNIT_TEMP_DEG, DESC_SOL_TMP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_WH, UNIT_DEPTH_MM, DESC_SOL_WH, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_WPMM, UNIT_CONT_KGKM2, DESC_SOL_WPMM, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_CONT_KGKM2, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, Source_ParameterDB, DT_Raster2D);
 
 	// set the input
 

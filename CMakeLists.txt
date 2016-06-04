@@ -27,7 +27,7 @@ IF(WIN32)
 	SET (MONGO_INC ${MONGO_HOME}/mongo-win/libmongoc-1.0)
 	## SET MPI
 	#For MS-MPI in Windows, version v6 and above.
-	set(MPIEXEC "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe")
+	set(MPIEXEC "D:/Program Files/Microsoft HPC Pack 2012/Bin/mpiexec.exe")
 	# For building MPI programs the selected Visual Studio compiler is used, namely cl.exe.
 	# So there is no need to set a specific MPI compiler.
 	# Make sure the correct libraries (64-bit or 32-bit) are selected.

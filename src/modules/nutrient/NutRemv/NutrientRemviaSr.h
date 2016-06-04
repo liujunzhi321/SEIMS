@@ -33,7 +33,7 @@ class NutrientRemviaSr : public SimulationModule {
 	virtual void Set2DData(const char* key, int nRows, int nCols, float** data);
 	virtual void SetValue(const char* key, float value);
 	virtual int Execute();
-	//virtual void GetValue(const char* key, float* value);
+	virtual void GetValue(const char* key, float* value);
 	virtual void Get1DData(const char* key, int* n, float** data);
 	virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
 private:
@@ -43,43 +43,58 @@ private:
 	int m_nCells;
 	int m_nSolLyrs;
 
-	///input data
-	//distribution of soil loss caused by water erosion
-	float* m_sedimentYield;
-	//distribution of surface runoff generated
+	/// input data
+	/// drainage tile flow in soil profile
+	float m_qtile;
+
+	/// Phosphorus soil partitioning coefficient
+	float* m_phoskd;
+	/// phosphorus percolation coefficient (0-1)
+	float* m_pperco;
+	/// nitrate percolation coefficient (0-1)
+	float* m_nperco;
+	// fraction of porosity from which anions are excluded
+	float* m_anion_excl;
+	// distribution of surface runoff generated
 	float* m_surfr;
-	//bulk density of the soil
+	/// initial septic operational condition (active-1, failing-2, non_septic-0)
+	float* m_isep_opt;
+	/// soil layer where drainage tile is located
+	float* m_ldrain;
+	/// crack volume potential of soil
+	float* m_sol_crk;
+
+	/// lateral flow in soil layer
+	float** m_flat;
+	/// percolation from soil layer
+	float** m_sol_perco;
+	/// bulk density of the soil
 	float** m_sol_bd;
-	//depth to bottom of soil layer
+	/// depth to bottom of soil layer
 	float** m_sol_z;
-	//??
-	float** m_sol_mp;
+	/// amount of water held in the soil layer at saturation
+	float** m_sol_wsatur;
+	/// factor which converts kg/kg soil to kg/ha
+	float** m_conv_wt;
 
-	///output data
-	//amount of organic nitrogen in surface runoff
-	float* m_sedorgn;
-	//amount of organic phosphorus in surface runoff
-	float* m_sedorgp;
-	//amount of active mineral phosphorus sorbed to sediment in surface runoff
-	float* m_sedminpa;
-	//amount of stable mineral phosphorus sorbed to sediment in surface runoff
-	float* m_sedminps;
+	/// output data
+	/// amount of nitrate transported with lateral flow
+	float* m_latno3;
+	/// amount of nitrate percolating past bottom of soil profile
+	float* m_percn;
+	/// amount of nitrate transported with surface runoff
+	float* m_surqno3;
+	/// amount of soluble phosphorus in surface runoff
+	float* m_surqsolp;
 
-	///input & output
-	//amount of nitrogen stored in the active organic (humic) nitrogen pool
-	float** m_sol_aorgn;
-	//amount of nitrogen stored in the fresh organic (residue) pool
-	float** m_sol_fon;
-	//amount of nitrogen stored in the stable organic N pool
-	float** m_sol_orgn;
-	//amount of phosphorus stored in the organic P pool
-	float** m_sol_orgp;
-	//amount of phosphorus stored in the fresh organic (residue) pool
-	float** m_sol_fop;
-	//amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool
-	float** m_sol_stap;
-	//amount of phosphorus stored in the active mineral phosphorus pool
-	float** m_sol_actp;
+	/// input & output
+	/// average annual amount of phosphorus leached into second soil layer
+	float m_wshd_plch;
+
+	/// amount of nitrogen stored in the nitrate pool in soil layer
+	float** m_sol_no3;
+	/// amount of phosphorus stored in solution
+	float** m_sol_solp;
 
 private:
 
@@ -99,26 +114,20 @@ private:
 	bool CheckInputSize(const char*,int);
 
 	/*!
-	* \brief Calculate enrichment ratio.
-	 *
-	 * \return void
-	 */
-	float* CalculateEnrRatio();
+	* \brief Calculate the loss of nitrate via surface runoff, lateral flow, tile flow, and percolation out of the profile.
+	*
+	* \return void
+	*/
+	void Nitrateloss();
 
 	/*!
-	* \brief calculates the amount of organic nitrogen removed in surface runoff.
-	 *
-	 * \return void
-	 */
-	void OrgnRemoveinSr();
-	
-	/*!
-	* \brief Calculates the amount of organic and mineral phosphorus attached to sediment in surface runoff.
-	 *
-	 * \return void
-	 */
-	void OrgpAttachedtoSed();
-
+	* \brief Calculates the amount of phosphorus lost from the soil
+	*        profile in runoff and the movement of soluble phosphorus from the first
+	*        to the second layer via percolation.
+	*
+	* \return void
+	*/
+	void Phosphorusloss();
 	
 };
 #endif
