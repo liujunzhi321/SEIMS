@@ -79,7 +79,7 @@ bool SRD_MB::CheckInputData(void)
 	return true;
 }
 
-void SRD_MB::initalOutputs()
+void SRD_MB::initialOutputs()
 {
 	if(m_nCells <= 0)				throw ModelException("SRD_MB","CheckInputData","The dimension of the input data can not be less than zero.");
 	if(m_SR == NULL)
@@ -96,7 +96,7 @@ int SRD_MB::Execute()
 {
 	this->CheckInputData();
 
-	this->initalOutputs();
+	this->initialOutputs();
 
 	//the first time
 	if(m_isInitial)

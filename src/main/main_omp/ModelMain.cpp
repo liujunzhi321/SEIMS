@@ -10,6 +10,7 @@
 #include "ModelMain.h"
 #include "utils.h"
 #include "util.h"
+#include "ClimateParams.h"
 #include "ModelException.h"
 #include "PrintInfo.h"
 #include "MongoUtil.h"
@@ -136,23 +137,9 @@ void ModelMain::Init(SettingsInput* input, int numThread)
 			m_ecoModules.push_back(i);
 
 		}
-
-		//string id = GetUpper(m_factory->GetModuleID(i));
-		////if (StringMatch(m_factory->GetModuleID(i), CH_ROUTING_MODULE))
-		//if (id.find("CH_") != string::npos || id.find("_CH") != string::npos)
-		//{
-		//	m_channelModules.push_back(i);
-		//}
-		//else
-		//{
-		//	m_hillslopeModules.push_back(i);
-		//}
 	}
 
 	CheckOutput(this->m_output,this->m_input);
-
-	//gridfs_destroy(spatialData);
-
     m_initialized = true;
 	mongoc_gridfs_destroy(spatialData);
 }
@@ -162,7 +149,6 @@ void ModelMain::Init(SettingsInput* input, int numThread)
 ModelMain::~ModelMain(void)
 {
 	StatusMessage("Start to release ModelMain ...");
-
 	try
 	{
 		if(this->m_templateRasterData != NULL) delete this->m_templateRasterData;
@@ -183,41 +169,41 @@ ModelMain::~ModelMain(void)
 		mongoc_client_destroy(m_conn);
 }
 
-void ModelMain::Step(time_t time)
-{
-	m_factory->UpdateInput(m_simulationModules, m_input, time);
-	
-	for (size_t i = 0; i < m_simulationModules.size(); i++)
-	{
-		SimulationModule *pModule = m_simulationModules[i];
-
-		if (m_firstRun)
-			m_factory->GetValueFromDependencyModule(i, m_simulationModules);
-		//cout << m_factory->GetModuleID(i) << endl;
-		clock_t sub_t1 = clock();
-		
-		try
-		{
-			pModule->SetDate(time);
-			pModule->Execute();
-		}
-		catch (ModelException e)
-		{
-			cout << e.toString();
-			exit(-1);
-		}
-
-		clock_t sub_t2 = clock();
-		
-		m_executeTime[i] += (sub_t2 - sub_t1);
-	}
-	
-	Output(time);
-	m_firstRun = false;
-	m_firstRunOverland = false;
-	m_firstRunChannel = false;
-	//cout << m_subBasinID << "Step\n";
-}
+//void ModelMain::Step(time_t time)
+//{
+//	m_factory->UpdateInput(m_simulationModules, m_input, time);
+//	
+//	for (size_t i = 0; i < m_simulationModules.size(); i++)
+//	{
+//		SimulationModule *pModule = m_simulationModules[i];
+//
+//		if (m_firstRun)
+//			m_factory->GetValueFromDependencyModule(i, m_simulationModules);
+//		//cout << m_factory->GetModuleID(i) << endl;
+//		clock_t sub_t1 = clock();
+//		
+//		try
+//		{
+//			pModule->SetDate(time);
+//			pModule->Execute();
+//		}
+//		catch (ModelException e)
+//		{
+//			cout << e.toString();
+//			exit(-1);
+//		}
+//
+//		clock_t sub_t2 = clock();
+//		
+//		m_executeTime[i] += (sub_t2 - sub_t1);
+//	}
+//	
+//	Output(time);
+//	m_firstRun = false;
+//	m_firstRunOverland = false;
+//	m_firstRunChannel = false;
+//	//cout << m_subBasinID << "Step\n";
+//}
 
 float ModelMain::GetQOutlet()
 {
@@ -229,18 +215,18 @@ float ModelMain::GetQOutlet()
 	return value;
 }
 
-void ModelMain::StepOverland(time_t t)
+//void ModelMain::StepOverland(time_t t)
+//{
+//	m_factory->UpdateInput(m_simulationModules, m_input, t);
+//	Step(t, m_hillslopeModules, m_firstRunOverland);
+//	m_firstRunOverland = false;
+//	//cout << m_subBasinID << "StepOverland\n";
+//}
+
+void ModelMain::StepHillSlope(time_t t, int yearIdx, int subIndex)
 {
 	m_factory->UpdateInput(m_simulationModules, m_input, t);
-	Step(t, m_hillslopeModules, m_firstRunOverland);
-	m_firstRunOverland = false;
-	//cout << m_subBasinID << "StepOverland\n";
-}
-
-void ModelMain::StepHillSlope(time_t t, int subIndex)
-{
-	m_factory->UpdateInput(m_simulationModules, m_input, t);
-
+	
 	for (size_t i = 0; i < m_hillslopeModules.size(); i++)
 	{
 		int index = m_hillslopeModules[i];
@@ -252,7 +238,7 @@ void ModelMain::StepHillSlope(time_t t, int subIndex)
 			m_factory->GetValueFromDependencyModule(index, m_simulationModules);
 		if (subIndex == 0)
 			pModule->ResetSubTimeStep();
-		pModule->SetDate(t);
+		pModule->SetDate(t, yearIdx);
 		//cout << "\tHillslope process:" << i << endl;
 		pModule->Execute();
 
@@ -264,15 +250,15 @@ void ModelMain::StepHillSlope(time_t t, int subIndex)
 	m_firstRunOverland = false;
 }
 
-void ModelMain::StepChannel(time_t t)
+void ModelMain::StepChannel(time_t t, int yearIdx)
 {
 	//cout << m_subBasinID << "StepChannelBegin\n";
 	//cout << "Size of channel modules: " << m_channelModules.size() << endl;
-	Step(t, m_channelModules, m_firstRunChannel);
+	Step(t, yearIdx, m_channelModules, m_firstRunChannel);
 	m_firstRunChannel = false;
 }
 
-void ModelMain::Step(time_t t, vector<int>& moduleIndex, bool firstRun)
+void ModelMain::Step(time_t t, int yearIdx, vector<int>& moduleIndex, bool firstRun)
 {
 	for (size_t i = 0; i < moduleIndex.size(); i++)
 	{
@@ -283,7 +269,7 @@ void ModelMain::Step(time_t t, vector<int>& moduleIndex, bool firstRun)
 			m_factory->GetValueFromDependencyModule(index, m_simulationModules);
 
 		clock_t sub_t1 = clock();
-		pModule->SetDate(t);
+		pModule->SetDate(t, yearIdx);
 		pModule->Execute();
 		clock_t sub_t2 = clock();
 
@@ -295,33 +281,28 @@ void ModelMain::Execute()
 {
 	utils util;
 	clock_t t1 = clock();
-
+	time_t startTime = m_input->getStartTime();
 	time_t endTime = m_input->getEndTime();
+	int startYear = GetYear(startTime);
 	int nHs = 0;
-	for(time_t t = m_input->getStartTime(); t < endTime; t += m_dtCh)
+
+	for(time_t t = startTime; t < endTime; t += m_dtCh)
 	{
-		cout << util.ConvertToString2(&t) << endl;
+		//cout << util.ConvertToString2(&t) << endl;
+		/// Calculate index of current year of the entire simulation
+		int curYear = GetYear(t);
+		int yearIdx = curYear - startYear;
 		nHs = int(m_dtCh/m_dtHs);
 		for (int i = 0; i < nHs; i++)
-			StepHillSlope(t+i*m_dtHs, i);
-		StepChannel(t);
+			StepHillSlope(t+i*m_dtHs, yearIdx, i);
+		StepChannel(t, yearIdx);
 
 		Output(t);
 	}
-
-	//int n = m_simulationModules.size();
-	//for(time_t t = m_input->getStartTime(); t <= m_input->getEndTime(); t += m_input->getIntervale())
-	//{
-	//	cout << util.ConvertToString2(&t) << endl;
-	//	//StepOverland(t);
-	//	//StepChannel(t);
-	//	Step(t);
-	//}
 	clock_t t2 = clock();
 	//cout << "time(ms):  " << t2-t1 << endl;
 	cout << "[TIMESPAN][COMPUTING]\tALL\t" << (t2-t1)/1000. << endl;
 	OutputExecuteTime();
-
 }
 
 void ModelMain::Output()
@@ -542,8 +523,8 @@ void ModelMain::Output(time_t time)
 	}
 }
 
-void ModelMain::SetChannelFlowIn(float value)
-{
-	int index = m_channelModules[0];
-	m_simulationModules[index]->SetValue(VAR_QUPREACH, value);
-}
+//void ModelMain::SetChannelFlowIn(float value)
+//{
+//	int index = m_channelModules[0];
+//	m_simulationModules[index]->SetValue(VAR_QUPREACH, value);
+//}

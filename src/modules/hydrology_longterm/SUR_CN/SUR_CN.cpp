@@ -137,7 +137,7 @@ bool SUR_CN::CheckInputData(void)
 	return true;
 }
 
-void SUR_CN::initalOutputs()
+void SUR_CN::initialOutputs()
 {
 	if(m_nCells <= 0)				
 		throw ModelException(MID_SUR_CN,"CheckInputData","The dimension of the input data can not be less than zero.");
@@ -165,7 +165,7 @@ void SUR_CN::initalOutputs()
 int SUR_CN::Execute()
 {
 	CheckInputData();
-	initalOutputs();
+	initialOutputs();
 
 	float cnday;
 	float pNet, surfq, infil;

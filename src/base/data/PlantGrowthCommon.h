@@ -4,11 +4,18 @@ using namespace std;
 #define BARE_SOIL_LAND_USE	 98
 #define WATER_LAND_USE_ID	 18
 
-class Common
+/*!
+ * \class PGCommon
+ * \ingroup data
+ *
+ * \brief A basic class for plant growth modules using a simplified version of EPIC model
+ *
+ */
+class PGCommon
 {
 public:
-	Common(void);
-	~Common(void);
+	PGCommon(void);
+	~PGCommon(void);
 	int m_classification;
 		private:
 			//Land cover/plant classification, IDC

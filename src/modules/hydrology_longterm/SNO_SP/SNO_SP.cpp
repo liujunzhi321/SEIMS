@@ -68,7 +68,7 @@ bool SNO_SP::CheckInputData(void)
 	return true;
 }
 
-void SNO_SP::initalOutputs()
+void SNO_SP::initialOutputs()
 {
 	if(m_nCells <= 0)				throw ModelException(MID_SNO_SP,"CheckInputData","The dimension of the input data can not be less than zero.");
 	if(m_SM == NULL || m_SA == NULL) 
@@ -87,7 +87,7 @@ int SNO_SP::Execute()
 {
 	this->CheckInputData();
 
-	this->initalOutputs();
+	this->initialOutputs();
 	if (m_SR == NULL)  /// the initialization should be removed when snow redistribution module is accomplished. LJ
 	{
 		m_SR = new float[m_nCells];
@@ -214,7 +214,7 @@ void SNO_SP::Set1DData(const char* key, int n, float* data)
 
 void SNO_SP::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 	string s(key);
 	if(StringMatch(s, VAR_SNME))		*data = this->m_SM;		
 	else if(StringMatch(s, VAR_SNAC))		*data = this->m_SR;		

@@ -281,7 +281,7 @@ bool UptakeGrowth::CheckInputSize(const char* key, int n)
 	return true;
 }
 
-void UptakeGrowth::initalOutputs()
+void UptakeGrowth::initialOutputs()
 {
 	if(m_nCells <= 0)				
 		throw ModelException("UptakeGrowth","CheckInputData","The dimension of the input data can not be less than zero.");
@@ -521,7 +521,7 @@ void UptakeGrowth::Set2DData(const char* key, int nRows, int nCols, float** data
 
 void UptakeGrowth::Get1DData(const char* key, int* n, float** data)
 {
-	//initalOutputs();
+	//initialOutputs();
 	string s(key);	
 
 	if (StringMatch(s, "BIOMASS"))
@@ -595,7 +595,7 @@ void UptakeGrowth::Get1DData(const char* key, int* n, float** data)
 
 void UptakeGrowth::Get2DData(const char* key, int* nRows, int* nCols, float*** data)
 {
-	//initalOutputs();
+	//initialOutputs();
 	string s(key);
 	if (StringMatch(s, "Layer_WaterUptake"))
 	{
@@ -700,7 +700,7 @@ float UptakeGrowth::getNPStress(float actual, float optimal)
 int UptakeGrowth::Execute()
 {
 	CheckInputData();
-	initalOutputs();
+	initialOutputs();
 
 	struct tm timeinfo;
 	LocalTime(m_date, &timeinfo);

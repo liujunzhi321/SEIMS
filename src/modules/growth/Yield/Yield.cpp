@@ -111,7 +111,7 @@ bool Yield::CheckInputData(void)
 	return true;
 }
 
-void Yield::initalOutputs()
+void Yield::initialOutputs()
 {
 	if(m_nCells <= 0)				
 		throw ModelException("Yield","CheckInputData","The dimension of the input data can not be less than zero.");
@@ -384,7 +384,7 @@ void Yield::Get1DData(const char* key, int* n, float** data)
 int Yield::Execute()
 {
 	CheckInputData();
-	initalOutputs();
+	initialOutputs();
 
 	struct tm timeinfo;
 	LocalTime(m_date, &timeinfo);

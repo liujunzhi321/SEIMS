@@ -49,10 +49,10 @@ bool DepressionFS::CheckInputData(void)
 	return true;
 }
 
-void  DepressionFS::initalOutputs()
+void  DepressionFS::initialOutputs()
 {
 	if(m_nCells <= 0) 
-		throw ModelException(MID_DEP_FS,"initalOutputs","The cell number of the input can not be less than zero.");
+		throw ModelException(MID_DEP_FS,"initialOutputs","The cell number of the input can not be less than zero.");
 	if(m_sd == NULL)
 	{
 		m_sd = new float[m_nCells];
@@ -69,7 +69,7 @@ void  DepressionFS::initalOutputs()
 
 int DepressionFS::Execute()
 {
-	initalOutputs();
+	initialOutputs();
 	if(m_checkInput)
 	{
 		CheckInputData();	
@@ -147,7 +147,7 @@ void DepressionFS::Set1DData(const char* key, int n, float* data)
 
 void DepressionFS::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 	string sk(key);
 	*n = m_nCells;
 	if (StringMatch(sk, VAR_DPST))

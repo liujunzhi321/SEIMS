@@ -4,7 +4,7 @@
 #include "MetadataInfo.h"
 #include "ModelException.h"
 using namespace std;
-AET_PT_H::AET_PT_H(void):m_nCells(-1), m_esco(NULL), m_nSoilLayers(NULL), m_soilDepth(NULL), m_fieldCap(NULL),
+AET_PT_H::AET_PT_H(void):m_nCells(-1), m_soilLayers(-1),m_esco(NULL), m_nSoilLayers(NULL), m_soilDepth(NULL), m_solAWC(NULL),
 	m_tMean(NULL), m_lai(NULL), m_pet(NULL), m_snowAcc(NULL), m_snowSB(NULL), m_solCov(NULL), m_solNo3(NULL), m_somo(NULL),
 	m_ppt(NULL), m_solAET(NULL), m_no3Up(NODATA), m_totSOMO(NULL)
 {
@@ -53,7 +53,7 @@ void AET_PT_H::Set2DData(const char* key, int n, int col, float** data)
 	CheckInputSize(key, n);
 	m_soilLayers = col;
 	if(StringMatch(sk, VAR_SOILDEPTH)) m_soilDepth = data;
-	else if(StringMatch(sk, VAR_FIELDCAP)) m_fieldCap = data;
+	else if(StringMatch(sk, VAR_FIELDCAP)) m_solAWC = data;
 	else if(StringMatch(sk, VAR_SOL_NO3)) m_solNo3 = data;
 	else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
 	else									throw ModelException(MID_AET_PTH,"Set2DData","Parameter " + sk + 
@@ -91,7 +91,7 @@ bool AET_PT_H::CheckInputData(void)
 	if(this->m_snowSB == NULL)		throw ModelException(MID_AET_PTH,"CheckInputData","The soil evaporation compensation factor can not be NULL.");
 	if(this->m_solCov == NULL)		throw ModelException(MID_AET_PTH,"CheckInputData","The soil evaporation compensation factor can not be NULL.");
 	if(this->m_soilDepth == NULL)		throw ModelException(MID_AET_PTH,"CheckInputData","The soil evaporation compensation factor can not be NULL.");
-	if(this->m_fieldCap == NULL)		throw ModelException(MID_AET_PTH,"CheckInputData","The soil evaporation compensation factor can not be NULL.");
+	if(this->m_solAWC == NULL)		throw ModelException(MID_AET_PTH,"CheckInputData","The soil evaporation compensation factor can not be NULL.");
 	if(this->m_solNo3 == NULL)		throw ModelException(MID_AET_PTH,"CheckInputData","The soil evaporation compensation factor can not be NULL.");
 	if(this->m_somo == NULL)		throw ModelException(MID_AET_PTH,"CheckInputData","The soil evaporation compensation factor can not be NULL.");
 	return true;
@@ -195,9 +195,9 @@ int AET_PT_H::Execute()
 					evz = eosl * m_soilDepth[i][ly] / (m_soilDepth[i][ly] + exp(2.374 - 0.00713 * m_soilDepth[i][ly]));
 					sev = evz - evzp * m_esco[i];
 					evzp = evz;
-					if (m_somo[i][ly] < m_fieldCap[i][ly])
+					if (m_somo[i][ly] < m_solAWC[i][ly])
 					{
-						xx = 2.5 * (m_somo[i][ly] - m_fieldCap[i][ly]) / m_fieldCap[i][ly];
+						xx = 2.5 * (m_somo[i][ly] - m_solAWC[i][ly]) / m_solAWC[i][ly];
 						sev *= Expo(xx);
 					}
 					sev = min(sev, m_somo[i][ly] * etco);

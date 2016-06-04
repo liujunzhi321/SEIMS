@@ -117,9 +117,9 @@ bool DiffusiveWave::CheckInputData(void)
 	return true;
 }
 //! Initial outputs
-void  DiffusiveWave::initalOutputs()
+void  DiffusiveWave::initialOutputs()
 {
-	if(this->m_nCells <= 0) throw ModelException(MID_CH_DW,"initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException(MID_CH_DW,"initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_hCh == NULL)
 	{
@@ -318,7 +318,7 @@ int DiffusiveWave::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 	//Output1DArray(m_nCells, m_prec, "f:\\p2.txt");
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)

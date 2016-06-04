@@ -9,20 +9,21 @@ import sqlite3
 from numpy import *
 from util import *
 
-def CreateLookupTable(dbname, property_namelist, str_sql,dstdir):
+def CreateLanduseLookupTable(dbname, property_namelist, str_sql, dstdir):
     property_map = {}
     num_propeties = len(property_namelist)
     conn = sqlite3.connect(dbname)
     cursor = conn.cursor()
     
     cursor.execute(str_sql)
+    property_namelist.append("USLE_P")
     for row in cursor:
         #print row
         id = int(row[0])
         value_map = {}
-        for i in range(num_propeties):
+        for i in range(len(property_namelist)):
             pName = property_namelist[i]
-            if pName == "USLE_P":
+            if pName == "USLE_P":  ### Currently, USLE_P is set as 1 for all landuse.
                 value_map[pName] = 1
             else:
                 if pName == "Manning":

@@ -135,10 +135,10 @@ bool MUSK_CH::CheckInputData(void)
 	return true;
 }
 //! Initial ouputs
-void  MUSK_CH::initalOutputs()
+void  MUSK_CH::initialOutputs()
 {
 	if(m_nreach <= 0) 
-		throw ModelException("MUSK_CH","initalOutputs","The cell number of the input can not be less than zero.");
+		throw ModelException("MUSK_CH","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if (m_reachLayers.empty())
 	{
@@ -188,7 +188,7 @@ void  MUSK_CH::initalOutputs()
 //! Execute function
 int MUSK_CH::Execute()
 {
-	initalOutputs();
+	initialOutputs();
 	
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)

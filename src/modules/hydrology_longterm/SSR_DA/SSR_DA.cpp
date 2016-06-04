@@ -146,7 +146,7 @@ void SSR_DA::FlowInSoil(int id)
 int SSR_DA::Execute()
 {	
 	CheckInputData();
-	initalOutputs();
+	initialOutputs();
 
 	if(m_qi == NULL)
 	{
@@ -387,7 +387,7 @@ bool SSR_DA::CheckInputData()
 	return true;
 }
 
-void SSR_DA::initalOutputs()
+void SSR_DA::initialOutputs()
 {
 	if(m_nSubbasin <= 0)
 	{

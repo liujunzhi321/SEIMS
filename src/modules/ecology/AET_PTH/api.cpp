@@ -32,7 +32,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_ESCO, UNIT_NON_DIM, DESC_ESCO, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_SOILLAYERS, UNIT_NON_DIM, DESC_SOILLAYERS, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_SOILDEPTH, UNIT_DEPTH_MM, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_FIELDCAP, UNIT_VOL_FRA_M3M3, DESC_FIELDCAP, Source_ParameterDB,DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_AWC, UNIT_VOL_FRA_M3M3, DESC_SOL_AWC, Source_ParameterDB,DT_Raster2D);
 	/// set input from other modules
 	mdi.AddInput(DataType_MeanTemperature, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module,DT_Raster1D);
 	mdi.AddInput(VAR_LAIDAY,UNIT_AREA_RATIO,DESC_LAIDAY,Source_Module,DT_Raster1D);

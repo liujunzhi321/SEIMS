@@ -26,6 +26,12 @@ float LatentHeatVapor(float &tmean)
 	return 2.501f - 0.002361f * tmean;
 }
 
+int GetYear(time_t &date)
+{
+	struct tm dateInfo;
+	LocalTime(date, &dateInfo);
+	return dateInfo.tm_year;
+}
 int JulianDay(time_t &date)
 {
 	struct tm dateInfo;

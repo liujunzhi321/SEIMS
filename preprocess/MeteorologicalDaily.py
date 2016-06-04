@@ -95,3 +95,9 @@ def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     #     db.drop_collection(tb)
     ImportDayData(db, meteofile, siteMLoc)
     connMongo.close()
+
+
+## TODO: Calculate Heat unit of every year according to mean air temperature (named HUTOT).
+##       Reference to SWAT theory 2009, page 306, equation 5:1.1.1
+##       T_base = 0 deg C by default
+##       Import HUTOT to mongoDB as GridFS
