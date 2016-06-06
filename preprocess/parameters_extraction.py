@@ -2,7 +2,7 @@
 #coding=utf-8
 ## @Extract parameters from landuse, soil properties etc.
 #
-from gen_lookup_table import CreateLookupTable
+from gen_lookup_table import CreateLanduseLookupTable
 #from reclass_landuse import ReclassLanduse
 from soil_param import *
 from soil_texture import SoilTexture
@@ -209,8 +209,9 @@ def ExtractParameters(inputLanduse, dstdir, genCN=False, genRunoffCoef=False, ge
     print "[Output] %s, %s" % (dstdir, status)
     f.write("%d,%s\n" % (10, status))
     f.flush()
-    str_sql = 'select landuse_id, ' + ','.join(LANDUSE_ATTR_DB) + ' from LanduseLookup'
-    CreateLookupTable(sqliteFile, LANDUSE_ATTR_LIST, str_sql,dstdir)
+    str_sql = 'select landuse_id, ' + ','.join(LANDUSE_ATTR_LIST) + ' from LanduseLookup'
+    CreateLanduseLookupTable(sqliteFile, LANDUSE_ATTR_LIST, str_sql, dstdir)
+
     # Change soil properties to Raster2D data, 2016-5-20, LJ
     #str_sql = 'select soilcode,' + ','.join(SOIL_ATTR_DB) + ' from SoilLookup'
     #CreateLookupTable(sqliteFile, SOIL_ATTR_LIST, str_sql,dstdir)
@@ -238,24 +239,25 @@ def ExtractParameters(inputLanduse, dstdir, genCN=False, genRunoffCoef=False, ge
     InitMoisture(dstdir)
 
     if genCrop:
-        status = "Generating crop attributes..."
+        status = "Generating crop/landcover attributes..."
         print "[Output] %s, %s" % (dstdir, status) 
         f.write("%d,%s\n" % (50, status))
         f.flush()
-        
-        reclassFile = "%s/reclassCropConfig.txt" % (dstdir)
-        fReclass = open(reclassFile, 'w')
-        fReclass.write("%s\t%d\n" % (landuseFile, 8))
-        fReclass.write("%s/lookup\n" % (dstdir))
-        fReclass.write(dstdir + "\n")
-        attrList = CROP_ATTR_LIST
-        n = len(attrList)
-        fReclass.write("%d\n" % (n))
-        fReclass.write("\n".join(attrList))
-        fReclass.close()
 
-        s = "%s/reclassify %s %s/cpp_src/reclassify/neigh.nbr" % (CPP_PROGRAM_DIR, reclassFile, PREPROC_SCRIPT_DIR)
-        os.system(s)
+        ### THIS seems useless? BY LJ.
+        # reclassFile = "%s/reclassCropConfig.txt" % (dstdir)
+        # fReclass = open(reclassFile, 'w')
+        # fReclass.write("%s\t%d\n" % (landuseFile, 8))
+        # fReclass.write("%s/lookup\n" % (dstdir))
+        # fReclass.write(dstdir + "\n")
+        # attrList = CROP_ATTR_LIST
+        # n = len(attrList)
+        # fReclass.write("%d\n" % (n))
+        # fReclass.write("\n".join(attrList))
+        # fReclass.close()
+        # s = "%s/reclassify %s %s/cpp_src/reclassify/neigh.nbr" % (CPP_PROGRAM_DIR, reclassFile, PREPROC_SCRIPT_DIR)
+        # os.system(s)
+
         ReclassCrop(landuseFile, dstdir)
 
     status = "Calculating depression storage..."

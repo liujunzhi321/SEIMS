@@ -95,17 +95,16 @@ public:
 	void	OutputExecuteTime();
 	//! Set layering method
 	void	SetLayeringMethod(LayeringMethod method){m_layeringMethod = method;}
-	//! Check module input data, date and execute module
-	void	Step(time_t time);
 	//! Execute channel modules in current step
-	void	StepChannel(time_t t);
+	void	StepChannel(time_t t, int yearIdx);
 	//! Execute hillslope modules in current step
-	void	StepHillSlope(time_t t, int subIndex);
-	//! Execute overland modules in current step
-	void	StepOverland(time_t t);
+	void	StepHillSlope(time_t t, int yearIdx, int subIndex);
 	//! Set Flow In Channel data for Channel-related module, e.g., CH_DW
-	void	SetChannelFlowIn(float value);
-	
+	///void	SetChannelFlowIn(float value);/// Deprecated. LJ
+	//! Check module input data, date and execute module
+	///void	Step(time_t time);/// Deprecated. LJ
+	//! Execute overland modules in current step
+	///void	StepOverland(time_t t);/// Deprecated. LJ
 private:
 	//! MongoDB Client
 	mongoc_client_t				*m_conn;
@@ -158,7 +157,7 @@ private:
 	 */
 	void CheckOutput(SettingsOutput* output,SettingsInput* input);
 	//! Check module input data, date and execute module
-	void Step(time_t t, vector<int>& moduleIndex, bool firstRun);
+	void Step(time_t t, int yearIdx, vector<int>& moduleIndex, bool firstRun);
 
 private:
 	//! Is the firt run of SEIMS

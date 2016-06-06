@@ -51,7 +51,7 @@ bool SSM_PE::CheckInputData(void)
 	return true;
 }
 
-void SSM_PE::initalOutputs()
+void SSM_PE::initialOutputs()
 {
 	if(m_nCells <= 0)				throw ModelException(MID_SSM_PE,"CheckInputData","The dimension of the input data can not be less than zero.");
 	if(m_SE == NULL)
@@ -66,7 +66,7 @@ int SSM_PE::Execute()
 {
 	this->CheckInputData();
 
-	this->initalOutputs();
+	this->initialOutputs();
 	if (m_SR == NULL)  /// the initialization should be removed when snow redistribution module is accomplished. LJ
 	{
 		m_SR = new float[m_nCells];
@@ -174,7 +174,7 @@ void SSM_PE::Set1DData(const char* key, int n, float* data)
 
 void SSM_PE::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 	string s(key);
 	if(StringMatch(s, VAR_SNSB))				
 		*data = this->m_SE;

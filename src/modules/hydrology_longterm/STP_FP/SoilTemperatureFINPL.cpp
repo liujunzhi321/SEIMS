@@ -28,7 +28,7 @@ int SoilTemperatureFINPL::Execute()
 	/// check the data
 	CheckInputData();	
 	/// initial output of m_t1 and m_t2 for the first run
-	initalOutputs();
+	initialOutputs();
 	m_julianDay = JulianDay(m_date);
 	if(this->m_soilTemp == NULL)
 	{
@@ -166,7 +166,7 @@ void SoilTemperatureFINPL::Set1DData(const char* key, int n, float* data)
 
 void SoilTemperatureFINPL::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 	string sk(key);
 	*n = m_nCells;
 	if (StringMatch(sk, VAR_SOTE))*data = m_soilTemp;
@@ -178,9 +178,9 @@ void SoilTemperatureFINPL::Get1DData(const char* key, int* n, float** data)
 }
 
 
-void SoilTemperatureFINPL::initalOutputs()
+void SoilTemperatureFINPL::initialOutputs()
 {
-	if(this->m_nCells <= 0) throw ModelException(MID_STP_FP,"initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException(MID_STP_FP,"initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_t1 == NULL && m_tMean != NULL)
 	{

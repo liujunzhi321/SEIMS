@@ -34,7 +34,7 @@ HS_WB::~HS_WB(void)
 		delete[] m_qiTemp;
 }
 
-void  HS_WB::initalOutputs()
+void  HS_WB::initialOutputs()
 {
 	if (m_qsInput == NULL)
 	{
@@ -61,7 +61,7 @@ void  HS_WB::initalOutputs()
 int HS_WB::Execute()
 {	
 	
-	initalOutputs();
+	initialOutputs();
 
 	/// get the input of each subbasin in current step
 	#pragma omp parallel for

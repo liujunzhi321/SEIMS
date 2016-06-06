@@ -2,7 +2,6 @@ using namespace std;
 #ifndef CLIMATE_H
 #define CLIMATE_H
 
-//#include "IClimate.h"
 
 class Climate
 {

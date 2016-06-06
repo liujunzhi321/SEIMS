@@ -72,7 +72,7 @@ void SUR_MR::CheckInputData(void)
 		throw ModelException(MID_SUR_MR,"CheckInputData","The snow melt can not be NULL.");
 }
 
-void SUR_MR::initalOutputs()
+void SUR_MR::initialOutputs()
 {
 	if(m_nCells <= 0)				
 		throw ModelException(MID_SUR_MR,"CheckInputData","The dimension of the input data can not be less than zero.");
@@ -100,7 +100,7 @@ void SUR_MR::initalOutputs()
 int SUR_MR::Execute()
 {
 	CheckInputData();
-	initalOutputs();
+	initialOutputs();
 	m_pMax = m_pMax * m_dt / 86400.f;
 	if(m_upSoilDepth == NULL)
 		m_upSoilDepth = new float[m_nSoilLayers];
@@ -265,7 +265,7 @@ void SUR_MR::Set2DData(const char* key, int nrows, int ncols, float** data)
 
 void SUR_MR::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 	string sk(key);
 	if (StringMatch(sk, VAR_INFIL))  *data = m_infil;	 //infiltration
 	else if (StringMatch(sk, VAR_EXCP))  *data = m_pe; // excess precipitation
@@ -277,7 +277,7 @@ void SUR_MR::Get1DData(const char* key, int* n, float** data)
 
 void SUR_MR::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
 {
-	initalOutputs();
+	initialOutputs();
 	string sk(key);
 	*nRows = m_nCells;
 	*nCols = m_nSoilLayers;

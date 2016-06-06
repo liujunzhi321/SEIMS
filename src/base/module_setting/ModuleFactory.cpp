@@ -884,7 +884,7 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	switch(param->Dimension)
 	{
 	case DT_Unknown:
-		throw ModelException("ModuleFactory","SetValue","Type of " + param->Name + " is unknown.");
+		throw ModelException("ModuleFactory","SetData","Type of " + param->Name + " is unknown.");
 		break;
 	case DT_Single:
 		SetValue(param, templateRaster, settingsInput, pModule);
@@ -962,7 +962,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 {
 	int n;
 	float* data = NULL;
-	/// the data has been readed before, which stored in m_1DArrayMap
+	/// the data has been read before, which stored in m_1DArrayMap
 	if (m_1DArrayMap.find(remoteFileName) != m_1DArrayMap.end())
 	{
 		if (StringMatch(paraName, Tag_Weight))
@@ -979,6 +979,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		return;
 	}
 	/// the data has not been read yet.
+	/// 1. IF FLOWOUT_INDEX_D8
 	if (StringMatch(paraName, Tag_FLOWOUT_INDEX_D8))
 	{
 		try
@@ -1001,6 +1002,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 			return;
 		}
 	}
+	/// 2. IF Weight data
 	else if (StringMatch(paraName, Tag_Weight))
 	{
 		#ifdef USE_MONGODB
@@ -1013,6 +1015,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 			weightData->getWeightData(&n, &data);
 			m_weightDataMap[remoteFileName] = weightData;
 	}
+	/// 3. IF Meteorology sites data
 	else if (StringMatch(paraName, Tag_Elevation_Meteorology))
 	{
 		if (vertitalItp)
@@ -1024,6 +1027,7 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		else
 			return;
 	}
+	/// 4. IF Precipitation sites data
 	else if (StringMatch(paraName, Tag_Elevation_Precipitation))
 	{
 		if (vertitalItp)
@@ -1035,7 +1039,8 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		else
 			return;
 	}
-	else if (StringMatch(paraName, Tag_Latitude_Meteorology) && vertitalItp)
+	/// 5. IF Latitude of sites
+	else if (StringMatch(paraName, Tag_Latitude_Meteorology) )
 	{
 		if (vertitalItp)
 		{
@@ -1045,6 +1050,21 @@ void ModuleFactory::Set1DData(string& dbName, string& paraName, string& remoteFi
 		}
 		else
 			return;
+	}
+	/// 6. IF any other 1D arrays, such as Heat units of all simulation years (HUTOT) 
+	else
+	{
+		try
+		{
+#ifdef USE_MONGODB
+			Read1DArrayFromMongoDB(m_spatialData, remoteFileName, n, data);
+#endif
+		}
+		catch (ModelException e)
+		{
+			cout << e.toString() << endl;
+			return;
+		}
 	}
 
 	if (data == NULL)

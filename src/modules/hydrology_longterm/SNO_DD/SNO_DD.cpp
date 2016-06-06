@@ -47,7 +47,7 @@ bool SNO_DD::CheckInputData(void)
 	return true;
 }
 
-void SNO_DD::initalOutputs()
+void SNO_DD::initialOutputs()
 {
 	if(m_nCells <= 0)				throw ModelException(MID_SNO_DD,"CheckInputData","The dimension of the input data can not be less than zero.");
 	if(m_SM == NULL) 
@@ -73,7 +73,7 @@ int SNO_DD::Execute()
 {
 	this->CheckInputData();
 
-	this->initalOutputs();
+	this->initialOutputs();
 
 	//if(m_isInitial)
 	//{
@@ -191,7 +191,7 @@ void SNO_DD::Set1DData(const char* key, int n, float* data)
 
 void SNO_DD::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 	string s(key);
 	if(StringMatch(s, VAR_SNME))		*data = this->m_SM;		
 	else if (StringMatch(s, VAR_SNAC)) *data = this->m_SA;
