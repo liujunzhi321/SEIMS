@@ -7,44 +7,18 @@
 
 PGCommon::PGCommon()
 {	
-	//get coefficients, Zhiqiang, 2011-8-10
-
-	//N uptake shape coefficient, Line 287-298, readplant.f
-	getNPShapeParameter(&(m_biomassNFraction1),&(m_biomassNFraction2),&(m_biomassNFraction3),
-		&(m_biomassNShapeCoefficient1),&(m_biomassNShapeCoefficient2));
-
-	//P uptake shape coefficient, Line 303-314, readplant.f
-	getNPShapeParameter(&(m_biomassPFraction1),&(m_biomassPFraction2),&(m_biomassPFraction3),
-		&(m_biomassPShapeCoefficient1),&(m_biomassPShapeCoefficient2));
-
-	//CO2 radiation-use efficiency adjust shape coefficient, Line 270-279, readplant.f
-	if(m_secondCO2Concentration == 330.0f) m_secondCO2Concentration = 660.0f;
-	getScurveShapeParameter(
-		m_radiationUseEfficiency * 0.01f,
-		m_secondBiomassEnergyRatio * 0.01f,
-		330.0f,
-		m_secondCO2Concentration,
-		&(m_CO2ShapeCoefficient1),
-		&(m_CO2ShapeCoefficient2));
-
-	//optimal leaf area development curve shape coefficient, Line 264, readplant.f
-	getScurveShapeParameter(
-		m_x1,m_x2,
-		m_y1,m_y2,
-		&(m_LAIShapeCoefficient1),
-		&(m_LAIShapeCoefficient2));
 }
 PGCommon::~PGCommon(void)
 {
 }
 
-void PGCommon::getNPShapeParameter(float* fr1, float* fr2, float* fr3, float* shape1, float* shape2)
+void PGCommon::getNPShapeParameter(float fr1, float fr2, float fr3, float* shape1, float* shape2)
 {
-	if(*fr1 - *fr2 < 0.0001f) *fr2 = *fr1 - 0.0001f;
-	if(*fr2 - *fr3 < 0.0001f) *fr3 *= 0.75f;
+	if(fr1 - fr2 < 0.0001f) fr2 = fr1 - 0.0001f;
+	if(fr2 - fr3 < 0.0001f) fr3 *= 0.75f;
 
-	float t = *fr1 - *fr3;
-	float xMid = 1.0f - (*fr2 - *fr3)/t;
+	float t = fr1 - fr3;
+	float xMid = 1.0f - (fr2 - fr3)/t;
 	float xEnd = 1.0f - 0.00001f/t;
 
 	getScurveShapeParameter(xMid,xEnd,0.5f,1.0f,shape1,shape2);
@@ -59,38 +33,9 @@ void PGCommon::getScurveShapeParameter(float xMid, float xEnd, float yMid, float
 
 float PGCommon::getNPFraction(float fr1, float fr3, float shape1, float shape2, float frPHU) 
 {
-	return (fr1 - fr3) * 
-		(1.0f - frPHU/(frPHU + exp(shape1 - shape2*frPHU)))
-		+ fr3;
+	return (fr1 - fr3) * (1.0f - frPHU/(frPHU + exp(shape1 - shape2*frPHU))) + fr3;
 }
 
-float PGCommon::NBiomassFraction(float frPHU) const
-{
-	return getNPFraction(
-		m_biomassNFraction1,
-		m_biomassNFraction3,
-		m_biomassNShapeCoefficient1,
-		m_biomassNShapeCoefficient2,
-		frPHU);
-}
-
-float PGCommon::PBiomassFraction(float frPHU) const
-{
-	return getNPFraction(
-		m_biomassPFraction1,
-		m_biomassPFraction3,
-		m_biomassPShapeCoefficient1,
-		m_biomassPShapeCoefficient2,
-		frPHU);
-}
-
-float PGCommon::RadiationUseEfficiencyAdjustByCO2(float co2) const
-{
-	float r1 = m_CO2ShapeCoefficient1;
-	float r2 = m_CO2ShapeCoefficient2;
-
-	return 100.0f * co2 / (co2 + exp(r1 - r2 * co2));
-}
 
 float PGCommon::RadiationUseEfficiencyAdjustByVPD(float vpd,float radiationUseEfficiencyDeclineRateWithVPD) const
 {
@@ -99,26 +44,9 @@ float PGCommon::RadiationUseEfficiencyAdjustByVPD(float vpd,float radiationUseEf
 	return radiationUseEfficiencyDeclineRateWithVPD * (vpd - thresholdVPD);
 }
 
-float PGCommon::TreeAnnualBiomass(int age) const
+float PGCommon::getNormalization(float distribution)
 {
-	return 1000.0f * m_maxBiomass * age / m_treeFullDevelopmentYear;
-}
-
-float PGCommon::TreeAnnualHeight(int age) const
-{
-	return m_maxHeight * age / m_treeFullDevelopmentYear;
-}
-
-float PGCommon::LAIFraction(float frPHU) const
-{
-	float l1 = m_LAIShapeCoefficient1;
-	float l2 = m_LAIShapeCoefficient2;
-	return frPHU / (frPHU + exp(l1 - l2 * frPHU));
-}
-
-float PGCommon::getNormalization(float distribution)const
-{
-	return 1-exp(-distribution);
+	return 1.f - exp(-distribution);
 }
 
 float PGCommon::doHeatUnitAccumulation(float potentialHeatUnit, float tMin, float tMax,float tBase)
@@ -130,7 +58,7 @@ float PGCommon::doHeatUnitAccumulation(float potentialHeatUnit, float tMin, floa
 	//tbase = m_param->MinTemperature();
 	if(tMean <= tBase) 
 		return 0.f;
-	frAccumulatedHeatUnit += (tMean - tBase) / potentialHeatUnit; // TODO: make sure this is += or = , 2015.6.5, ZhuLJ
+	frAccumulatedHeatUnit += (tMean - tBase) / potentialHeatUnit;
 	return frAccumulatedHeatUnit;
 }
 
@@ -138,7 +66,22 @@ float PGCommon::NPBiomassFraction(float x1, float x2, float x3, float frPHU)
 {
 	float ShapeCoefficient1= 0.f;
 	float ShapeCoefficient2 = 0.f;
-	getNPShapeParameter(&x1, &x2, &x3, &(ShapeCoefficient1), &(ShapeCoefficient2));
-
+	getNPShapeParameter(x1, x2, x3, &(ShapeCoefficient1), &(ShapeCoefficient2));
 	return getNPFraction(x1, x3, ShapeCoefficient1, ShapeCoefficient2, frPHU);
+}
+
+void PGCommon::calPlantStressByLimitedNP(float u1, float u2, float* uu)
+{
+	float strsf = 200.f * (u1/(u2+0.0001)-0.5);
+	if(strsf <= 0.f)
+		strsf = 0.f;
+	else
+	{
+		if(strsf < 99.)
+			strsf = strsf / (strsf + exp(3.535 - 0.02597 * strsf));
+		else
+			strsf = 1.f;
+	}
+	if(u2 < UTIL_ZERO) strsf = 1.f;
+	*uu = strsf;
 }
