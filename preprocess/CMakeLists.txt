@@ -16,7 +16,8 @@ IF(WIN32)
 	SET (MONGO_HOME ${CMAKE_CURRENT_SOURCE_DIR}/../include/mongo-c-driver-0.6)
 	## SET MPI
 	#For MS-MPI in Windows, version v6 and above.
-	set(MPIEXEC "D:/Program Files/Microsoft HPC Pack 2012/Bin/mpiexec.exe")
+	set(MPIEXEC "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe")
+	#set(MPIEXEC "C:/Program Files/Microsoft HPC Pack 2012/Bin/mpiexec.exe")
 	# For building MPI programs the selected Visual Studio compiler is used, namely cl.exe.
 	# So there is no need to set a specific MPI compiler.
 	set(MPI_CXX_INCLUDE_PATH "D:/Program Files/Microsoft HPC Pack 2012/Inc")
