@@ -55,12 +55,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(DataType_MeanTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Raster1D);
 	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Raster1D);
 	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Raster1D);
-	mdi.AddInput(DataType_RelativeAirMoisture,UNIT_NON_DIM,DESC_RM,Source_Module, DT_Raster1D);
+	mdi.AddInput(DataType_RelativeAirMoisture,UNIT_PERCENT,DESC_RM,Source_Module, DT_Raster1D);
 	mdi.AddInput(DataType_SolarRadiation,UNIT_SR,DESC_SR,Source_Module, DT_Raster1D);
 
 	// set the output variables
 	mdi.AddOutput(VAR_PET,UNIT_WTRDLT_MMD, DESC_PET, DT_Raster1D);
-
+	mdi.AddOutput(VAR_VPD, UNIT_PRESSURE, DESC_VPD, DT_Raster1D);
 	string res = mdi.GetXMLDocument();
 
 	char* tmp = new char[res.size()+1];
