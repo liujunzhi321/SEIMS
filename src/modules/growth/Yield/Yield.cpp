@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <omp.h>
 
-Yield::Yield(void):m_nCells(-1),
+YLD::YLD(void):m_nCells(-1),
 	m_HiOpt(NULL),	m_HiMin(NULL),	m_frNyld(NULL),	m_frPyld(NULL),	m_frDeclineLAI(NULL), m_harvestDate(NULL),m_PET(NULL), m_soilET(NULL), m_biomass(NULL), m_biomassN(NULL),
 	m_biomassP(NULL), m_biomassAG(NULL), m_frPHU(NULL), m_totalWaterUptake(NULL),	m_yield(NULL), m_yieldN(NULL), m_yieldP(NULL),m_classification(NULL),
 	m_biomassRoot(NULL), m_LAI(NULL),	m_HI(NULL), m_totalPlantET(NULL), m_totalPlantPET(NULL), m_wur(NULL), m_Hiact(NULL), m_harvestEfficiency(NULL),
@@ -22,7 +22,7 @@ Yield::Yield(void):m_nCells(-1),
 	m_harvestDate = utl.ConvertToTime2("1970-10-02 00:00:00", "%d-%d-%d %d:%d:%d", true);
 }
 
-Yield::~Yield(void)
+YLD::~YLD(void)
 {
 	//// cleanup
 	if(m_yield != NULL) 
@@ -66,7 +66,7 @@ Yield::~Yield(void)
 		delete [] m_rootRemoveP;
 }
 
-bool Yield::CheckInputData(void)
+bool YLD::CheckInputData(void)
 {
 	if(m_date <=0)			
 		throw ModelException("Yield","CheckInputData","You have not set the time.");
@@ -111,7 +111,7 @@ bool Yield::CheckInputData(void)
 	return true;
 }
 
-void Yield::initialOutputs()
+void YLD::initialOutputs()
 {
 	if(m_nCells <= 0)				
 		throw ModelException("Yield","CheckInputData","The dimension of the input data can not be less than zero.");
@@ -271,7 +271,7 @@ void Yield::initialOutputs()
 
 }
 
-bool Yield::CheckInputSize(const char* key, int n)
+bool YLD::CheckInputSize(const char* key, int n)
 {
 	if(n<=0)
 	{
@@ -290,7 +290,7 @@ bool Yield::CheckInputSize(const char* key, int n)
 	return true;
 }
 
-void Yield::SetValue(const char* key, float data)
+void YLD::SetValue(const char* key, float data)
 {
 	string s(key);
 	
@@ -302,7 +302,7 @@ void Yield::SetValue(const char* key, float data)
 		throw ModelException("Yield","SetValue","Parameter " + s 
 		+ " does not exist in Yield method. Please contact the module developer.");
 }
-void Yield::Set1DData(const char* key, int n, time_t* data)
+void YLD::Set1DData(const char* key, int n, time_t* data)
 {
 	//string s(key);
 	//CheckInputSize(key, n);
@@ -314,7 +314,7 @@ void Yield::Set1DData(const char* key, int n, time_t* data)
 	//	" does not exist in UptakeGrowth method. Please contact the module developer.");
 
 }
-void Yield::Set1DData(const char* key, int n, float* data)
+void YLD::Set1DData(const char* key, int n, float* data)
 {
 	//check the input data
 	string s(key);
@@ -357,7 +357,7 @@ void Yield::Set1DData(const char* key, int n, float* data)
 		" does not exist in Yield method. Please contact the module developer.");
 }
 
-void Yield::Get1DData(const char* key, int* n, float** data)
+void YLD::Get1DData(const char* key, int* n, float** data)
 {
 	string s(key);
 	if(StringMatch(s,"Yield_N"))				
@@ -381,7 +381,7 @@ void Yield::Get1DData(const char* key, int* n, float** data)
 	*n = m_nCells;
 }
 
-int Yield::Execute()
+int YLD::Execute()
 {
 	CheckInputData();
 	initialOutputs();
