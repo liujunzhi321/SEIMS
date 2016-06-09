@@ -36,16 +36,16 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_DRYDEP_NO3, UNIT_CONT_KGKM2, DESC_DRYDEP_NO3, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_DRYDEP_NH4, UNIT_CONT_KGKM2, DESC_DRYDEP_NH4, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Array2D);
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB, DT_Array2D); 
+	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D); 
 
-	mdi.AddInput(VAR_PRECI, UNIT_DEPTH_MM, DESC_PRECI, Source_Module, DT_Array1D);
+	mdi.AddInput(VAR_PRECI, UNIT_DEPTH_MM, DESC_PRECI, Source_Module, DT_Raster1D);
 
 	mdi.AddOutput(VAR_ADDRNO3, UNIT_CONT_KGKM2, DESC_ADDRNO3, DT_Single);
 	mdi.AddOutput(VAR_WSHD_RNO3, UNIT_CONT_KGKM2, DESC_WSHD_RNO3, DT_Single);
 
-	mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, DT_Array2D);
+	mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, DT_Raster2D);
 
 	res = mdi.GetXMLDocument();
 

@@ -1,4 +1,4 @@
-/*!
+/*//
  * \file NutrientRemviaSr.cpp
  * \ingroup NutRemv
  * \author Huiran Gao
@@ -18,10 +18,10 @@ using namespace std;
 
 NutrientRemviaSr::NutrientRemviaSr(void):
 //input 
-m_nCells(-1), m_cellWidth(-1), m_nSolLyrs(3), m_sedimentYield(NULL), m_surfr(NULL), m_sol_bd(NULL), m_sol_z(NULL),
-	m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL),
+m_nCells(-1), m_cellWidth(-1), m_nSolLyrs(m_nSolLyrs), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_nperco(NULL), m_flat(NULL),
+	m_sol_perco(NULL), m_sol_wsatur(NULL), m_phoskd(NULL), m_sol_crk(NULL), m_pperco(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_conv_wt(NULL),
 	//output 
-	m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL)
+	m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(NULL), m_sol_solp(NULL)
 {
 
 }
@@ -59,15 +59,6 @@ bool NutrientRemviaSr::CheckInputData() {
 		throw ModelException("NutRemv","CheckInputData","The relative humidity can not be NULL.");
 		return false;
 	}
-	if(this->m_sedimentYield == NULL) {
-		throw ModelException("NutRemv","CheckInputData","The solar radiation can not be NULL.");
-		return false;
-	}
-	if(this->m_surfr == NULL) {
-		throw ModelException("NutRemv","CheckInputData","The min temperature can not be NULL.");
-		return false;
-	}
-
 	///...
 	return true;
 }
@@ -83,6 +74,9 @@ void NutrientRemviaSr::SetValue(const char* key, float value)
 	else if (StringMatch(sk, Tag_CellWidth)) {
 		this -> m_cellWidth = value;
 	}
+	else if (StringMatch(sk, VAR_QTILE)) {
+		this -> m_qtile = value;
+	}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
@@ -92,11 +86,29 @@ void NutrientRemviaSr::Set1DData(const char* key,int n, float *data)
 	if(!this->CheckInputSize(key,n)) return;
 
 	string sk(key);
-	if (StringMatch(sk, VAR_CDN)) {
-		this -> m_sedimentYield = data;
-	} 
-	else if (StringMatch(sk, VAR_LCC)) {
+	if (StringMatch(sk, VAR_SOER)) {
 		this -> m_surfr = data;
+	}
+	else if (StringMatch(sk, VAR_ANION_EXCL)) {
+		this -> m_anion_excl = data;
+	}
+	else if (StringMatch(sk, VAR_NPERCO)) {
+		this -> m_nperco = data;
+	}
+	else if (StringMatch(sk, VAR_PPERCO)) {
+		this -> m_pperco = data;
+	}
+	else if (StringMatch(sk, VAR_LDRAIN)) {
+		this -> m_ldrain = data;
+	}
+	else if (StringMatch(sk, VAR_ISEP_OPT)) {
+		this -> m_isep_opt = data;
+	}
+	else if (StringMatch(sk, VAR_PHOSKD)) {
+		this -> m_phoskd = data;
+	}
+	else if (StringMatch(sk, VAR_SOL_CRK)) {
+		this -> m_sol_crk = data;
 	}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
@@ -107,35 +119,29 @@ void NutrientRemviaSr::Set2DData(const char* key, int nRows, int nCols, float** 
 	if(!this->CheckInputSize(key,nCols)) return;
 
 	string sk(key);
-	if (StringMatch(sk, VAR_ROOTDEPTH)) {
-		this -> m_sol_z = data;
+	if (StringMatch(sk, VAR_FLAT)) {
+		this -> m_flat = data;
+	}
+	else if (StringMatch(sk, VAR_SOL_NO3)) {
+		this -> m_sol_no3 = data;
 	}
 	else if (StringMatch(sk, VAR_SOL_BD)) {
 		this -> m_sol_bd = data;
 	}
-	else if (StringMatch(sk, VAR_SOL_AORGN)) {
-		this -> m_sol_aorgn = data;
+	else if (StringMatch(sk, VAR_ROOTDEPTH)) {
+		this -> m_sol_z = data;
 	}
-	else if (StringMatch(sk, VAR_SOL_ORGN)) {
-		this -> m_sol_orgn = data;
+	else if (StringMatch(sk, VAR_SOL_SOLP)) {
+		this -> m_sol_solp = data;
 	}
-	else if (StringMatch(sk, VAR_SOL_ORGP)) {
-		this -> m_sol_orgp = data;
+	else if (StringMatch(sk, VAR_CONV_WT)) {
+		this -> m_conv_wt = data;
 	}
-	else if (StringMatch(sk, VAR_SOL_FOP)) {
-		this -> m_sol_fop = data;
+	else if (StringMatch(sk, VAR_SOL_PERCO)) {
+		this -> m_sol_perco = data;
 	}
-	else if (StringMatch(sk, VAR_SOL_FON)) {
-		this -> m_sol_fon = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_ACTP)) {
-		this -> m_sol_actp = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_STAP)) {
-		this -> m_sol_stap = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_MP)) {
-		this -> m_sol_mp = data;
+	else if (StringMatch(sk, VAR_SOL_WSATUR)) {
+		this -> m_sol_wsatur = data;
 	}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
@@ -145,155 +151,180 @@ int NutrientRemviaSr::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
 	}
-	//Calculate daily nitrogen and phosphorus mineralization and immobilization.
-	//CalculateEnrRatio();
-	//Calculates the amount of organic nitrogen removed in surface runoff.
-	OrgnRemoveinSr();
-	//Calculates the amount of organic and mineral phosphorus attached to sediment in surface runoff.
-	OrgpAttachedtoSed();
-
+	//Calculate the loss of nitrate via surface runoff, lateral flow, tile flow, and percolation out of the profile.
+	Nitrateloss();
+	// Calculates the amount of phosphorus lost from the soil.
+	Phosphorusloss();
 	//return ??
 	return 0;
 }
-float* NutrientRemviaSr::CalculateEnrRatio(){
-	//enrichment ratio
-	float* enratio;
-	for(int i = 0; i < m_nCells; i++) {
-		if (m_sedimentYield[i] < 1e-4) {
-			m_sedimentYield[i] = 0;
-		}
-		// CREAMS method for calculating enrichment ratio
-		float cy = 0;
-		// Calculate sediment calculations, equation 4:2.2.3 in SWAT Theory 2009, p272
-		cy = 0.1 * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * 0.0001 * m_surfr[i] + 1e-6);
-		if (cy > 1e-6) {
-			enratio[i] = 0.78 * pow(cy, -0.2468f);
-		} else {
-			enratio[i] = 0;
-		}
-		if (enratio[i] > 3.5) {
-			enratio[i] = 3.5;
-		}
-	}
-	return enratio;
-}
-void NutrientRemviaSr::OrgnRemoveinSr(){
-	//enrichment ratio (enratio)
-	float* enratio = CalculateEnrRatio();
+void NutrientRemviaSr::Nitrateloss(){
+	//percnlyr nitrate moved to next lower layer with percolation (kg/km2)
+	float percnlyr = 0.;
+	float* tileno3;
+	float total_no3 = 0.;
+	// Calculate total no3
 	for(int i = 0; i < m_nCells; i++) {
 		for(int k = 0; k < m_nSolLyrs; k++) {
-			//amount of organic N in first soil layer (orgninfl)
-			float orgninfl = 0;
-			//conversion factor (wt)
-			float wt = 0;
-			orgninfl = m_sol_orgn[i][0] + m_sol_aorgn[i][0] + m_sol_fon[i][0];
-			wt = m_sol_bd[i][0] * m_sol_z[i][0] / 100;
-			//concentration of organic N in soil (concn)
-			float concn = 0;
-			concn = orgninfl * enratio[i] / wt;
-			//Calculate the amount of organic nitrogen transported with sediment to the stream, equation 4:2.2.1 in SWAT Theory 2009, p271
-			m_sedorgn[i] = 0.001 * concn * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * m_nCells);
-			//update soil nitrogen pools
-			if(orgninfl > 1e-6) {
-				m_sol_aorgn[i][0] = m_sol_aorgn[i][0] - m_sedorgn[i] * (m_sol_aorgn[i][0] / orgninfl);
-				m_sol_orgn[i][0] = m_sol_orgn[i][0] - m_sedorgn[i] * (m_sol_orgn[i][0] / orgninfl);
-				m_sol_fon[i][0] = m_sol_fon[i][0] - m_sedorgn[i] * (m_sol_fon[i][0] / orgninfl);
-				if (m_sol_aorgn[i][0] < 0) {
-					m_sedorgn[i] = m_sedorgn[i] + m_sol_aorgn[i][0];
-					m_sol_aorgn[i][0] = 0;
-				}
-				if (m_sol_orgn[i][0] < 0) {
-					m_sedorgn[i] = m_sedorgn[i] + m_sol_orgn[i][0];
-					m_sol_orgn[i][0] = 0;
-				}
-				if (m_sol_fon[i][0] < 0.) {
-					m_sedorgn[i] = m_sedorgn[i] + m_sol_fon[i][0];
-					m_sol_fon[i][0] = 0;
-				}
-			}
-
+			total_no3 += m_sol_no3[i][k];
 		}
 	}
-}
-void NutrientRemviaSr::OrgpAttachedtoSed(){
-	float* enratio = CalculateEnrRatio();
+
 	for(int i = 0; i < m_nCells; i++) {
 		for(int k = 0; k < m_nSolLyrs; k++) {
-			//amount of phosphorus attached to sediment in soil (sol_attp)
-			float sol_attp = 0;
-			//fraction of active mineral/organic/stable mineral phosphorus in soil (sol_attp_o, sol_attp_a, sol_attp_s)
-			float sol_attp_o = 0;
-			float sol_attp_a = 0;
-			float sol_attp_s = 0;
-			//Calculate sediment
-			sol_attp = m_sol_orgp[i][0] + m_sol_fop[i][0] + m_sol_mp[i][0] + m_sol_actp[i][0] + m_sol_stap[i][0];
-			if (sol_attp > 1e-3) {
-				sol_attp_o = (m_sol_orgp[i][0] + m_sol_fop[i][0]+ m_sol_mp[i][0]) / sol_attp;
-				sol_attp_a = m_sol_actp[i][0] / sol_attp;
-				sol_attp_s = m_sol_stap[i][0] / sol_attp;
+			//add nitrate moved from layer above
+			m_sol_no3[i][k] = m_sol_no3[i][k] + percnlyr;
+			if (m_sol_no3[i][k] < 1e-6) {
+				m_sol_no3[i][k] = 0.0;
 			}
-			//conversion factor (mg/kg => kg/ha) (wt)
-			float wt = m_sol_bd[i][0] * m_sol_z[i][0] / 100;
-			//concentration of organic P in soil (concp)
-			float concp = 0;
-			concp = sol_attp * enratio[i] / wt;
-			//total amount of P removed in sediment erosion (sedp)
-			float sedp = 0.001 * concp * m_sedimentYield[i] / (m_cellWidth * m_cellWidth);
-			m_sedorgp[i] = sedp * sol_attp_o;
-			m_sedminpa[i] = sedp * sol_attp_a;
-			m_sedminps[i] = sedp * sol_attp_s;
-			//modify phosphorus pools
-			//total amount of P in mineral sediment pools prior to sediment removal (psedd)
-			float psedd = 0;
-			//total amount of P in organic pools prior to sediment removal (porgg)
-			float porgg = 0;
-			psedd = m_sol_actp[i][0] + m_sol_stap[i][0];
-			porgg = m_sol_orgp[i][0] + m_sol_fop[i][0];
-			if (porgg > 1e-3) {
-				m_sol_orgp[i][0] = m_sol_orgp[i][0] - m_sedorgp[i] * (m_sol_orgp[i][0] / porgg);
-				m_sol_fop[i][0] = m_sol_fop[i][0] - m_sedorgp[i] * (m_sol_fop[i][0] / porgg);
-				m_sol_mp[i][0] = m_sol_mp[i][0] - m_sedorgp[i] * (m_sol_mp[i][0] / porgg);
+			// determine concentration of nitrate in mobile water
+			// surface runoff generated (sro)
+			float sro = 0.;
+			// amount of mobile water in the layer (mw)
+			float mw = 0.;
+			float vno3 = 0.;
+			float con = 0.;
+			float ww = 0.;
+
+			if (k == 0) {
+				sro = m_surfr[i];
+			} else {
+				sro = 0.;
 			}
-			m_sol_actp[i][0] = m_sol_actp[i][0] - m_sedminpa[i];
-			m_sol_stap[i][0] = m_sol_stap[i][0] - m_sedminps[i];
-			if (m_sol_orgp[i][0] < 0) {
-				m_sedorgp[i] = m_sedorgp[i] + m_sol_orgp[i][0];
-				m_sol_orgp[i][0] = 0;
+			if (m_ldrain[i] == k) {
+				mw = mw + m_qtile;
 			}
-			if (m_sol_fop[i][0] < 0) {
-				m_sedorgp[i] = m_sedorgp[i] + m_sol_fop[i][0];
-				m_sol_fop[i][0] = 0;
-			}
-			if (m_sol_mp[i][0] < 0) {
-				m_sedorgp[i] = m_sedorgp[i] + m_sol_mp[i][0];
-				m_sol_mp[i][0] = 0;
-			}
-			if (m_sol_actp[i][0] < 0) {
-				m_sedminpa[i] = m_sedminpa[i] + m_sol_actp[i][0];
-				m_sol_actp[i][0] = 0;
-			}
-			if (m_sol_stap[i][0] < 0) {
-				m_sedminps[i] = m_sedminps[i] + m_sol_stap[i][0];
-				m_sol_stap[i][0] = 0;
+			// Calculate the concentration of nitrate in the mobile water (con), 
+			// equation 4:2.1.2, 4:2.1.3 and 4:2.1.4 in SWAT Theory 2009, p269
+			mw = m_sol_perco[i][k] + sro + m_flat[i][k] + 1.e-10;
+			ww = -mw / ((1. - m_anion_excl[i]) * m_sol_wsatur[i][k]);
+			vno3 = m_sol_no3[i][k] * (1. - exp(ww));
+			if (mw > 1.e-10) {
+				con = max(vno3 / mw, 0.);
 			}
 
+			// calculate nitrate in surface runoff
+			// concentration of nitrate in surface runoff (cosurf)
+			float cosurf = 0.;
+			if (m_isep_opt[i] == 2) {
+				cosurf = 1.0 * con; // N percolation does not apply to failing septic place;
+			} else {
+				cosurf = m_nperco[i] * con;
+			}
+			if (k == 0) {
+				m_surqno3[i] = m_surfr[i] * cosurf;
+				m_surqno3[i] = min(m_surqno3[i], m_sol_no3[i][k]);
+				m_sol_no3[i][k] = m_sol_no3[i][k] - m_surqno3[i];
+			}   
+
+			// calculate nitrate in tile flow 
+			if (m_ldrain[i] == k) {
+					// m_alph_e[i] = exp(-1./(m_n_lag[i] + 1.e-6))
+					// ww1 = -1./ ((1. - m_anion_excl[i]) * m_sol_wsatur[i][k])
+					// m_vno3_c = m_sol_no3[i][k] * (1. - exp(ww1))
+					// if (total_no3 > 1.001) {
+					//	 tno3ln = n_lnco[i] * (log(total_no3)) ** m_n_ln[i]
+					// else
+					//	 tno3ln = 0.
+					// }
+					// vno3_c = tno3ln * (1. - Exp(ww1))
+					// co_p[i] = co_p[i] * (1. - alph_e[i]) + vno3_c * alph_e[i]
+				tileno3[i] = con * m_qtile;
+				tileno3[i] = min(tileno3[i], m_sol_no3[i][k]);
+				m_sol_no3[i][k] = m_sol_no3[i][k] - tileno3[i];       
+			}
+			// calculate nitrate in lateral flow
+			// nitrate transported in lateral flow from layer (ssfnlyr)
+			float ssfnlyr = 0.;
+			if (k == 1) {
+				ssfnlyr = cosurf * m_flat[i][k];
+			} else {
+				ssfnlyr = con * m_flat[i][k];
+			}
+			ssfnlyr = min(ssfnlyr, m_sol_no3[i][k]);
+			m_latno3[i] = m_latno3[i] + ssfnlyr;
+			m_sol_no3[i][k] = m_sol_no3[i][k] - ssfnlyr;
+
+			// calculate nitrate in percolate
+			float percnlyr = 0.;
+			percnlyr = con * m_sol_perco[i][k];
+			percnlyr = min(percnlyr, m_sol_no3[i][k]);
+			m_sol_no3[i][k] = m_sol_no3[i][k] - percnlyr;
 		}
+
+		// calculate nitrate leaching from soil profile
+		m_percn[i] = percnlyr;
+		float nloss = 0.;
+		// average distance to the stream(m), default is 35m.
+		float dis_stream = 35.0;
+		nloss = (2.18 * dis_stream - 8.63) / 100.;
+		nloss = max(0.,nloss);
+		nloss = min(1.,nloss);
+		m_latno3[i] = (1. - nloss) * m_latno3[i];
+	}
+}
+void NutrientRemviaSr::Phosphorusloss(){
+
+	for(int i = 0; i < m_nCells; i++) {
+		// amount of P leached from soil layer (vap)
+		float vap = 0.;
+		float vap_tile = 0.;
+		// compute soluble P lost in surface runoff
+		float xx = 0.;  // variable to hold intermediate calculation result
+		xx = m_sol_bd[i][0] * m_sol_z[i][0] * m_phoskd[i];
+		m_surqsolp[i] = m_sol_solp[i][0] * m_surfr[i] / xx;
+		m_surqsolp[i] = min(m_surqsolp[i], m_sol_solp[i][0]);
+		m_surqsolp[i] = max(m_surqsolp[i], 0.);
+		m_sol_solp[i][0] = m_sol_solp[i][0] - m_surqsolp[i];
+
+		// compute soluble P leaching
+		vap = m_sol_solp[i][0] * m_sol_perco[i][0] / ((m_conv_wt[i][0] / 1000.) * m_pperco[i]);
+		vap = min(vap, 0.5 * m_sol_solp[i][0]);
+		m_sol_solp[i][0] = m_sol_solp[i][0] - vap;
+
+		// estimate soluble p in tiles due to crack flow
+		if (m_ldrain[i] > 0) {
+			xx = min(1., m_sol_crk[i] / 3.0);
+			vap_tile = xx * vap;
+			vap = vap - vap_tile;
+		}
+		if (m_nSolLyrs >= 1) {
+			m_sol_solp[i][1] = m_sol_solp[i][1] + vap;
+		}
+		for(int k = 1; k < m_nSolLyrs; k++) {
+			vap = 0.;
+			//if (k != m_i_sep[i]) {  // soil layer where biozone exists (m_i_sep)
+				vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((m_conv_wt[i][k] / 1000.) * m_pperco[i]);
+				vap = min(vap, .2 * m_sol_solp[i][k]);
+				m_sol_solp[i][k] = m_sol_solp[i][k] - vap;
+			//}
+		}
+		//m_percp[i] = vap
+		// summary calculation
+		m_wshd_plch = m_wshd_plch + vap * (1 / m_nCells);
+	}
+}
+
+void NutrientRemviaSr::GetValue(const char* key, float* value) {
+	string sk(key);
+	if (StringMatch(sk, VAR_WSHD_PLCH)) {
+		*value = this -> m_wshd_plch;
 	}
 }
 void NutrientRemviaSr::Get1DData(const char* key, int* n, float** data) {
 	string sk(key);
 	*n = m_nCells;
-	if (StringMatch(sk, VAR_SEDORGN)) {
-		*data = this -> m_sedorgn;
+	if (StringMatch(sk, VAR_LATNO3)) {
+		*data = this -> m_latno3;
 	}
-	if (StringMatch(sk, VAR_SEDORGP)) {
-		*data = this -> m_sedorgp;
+	if (StringMatch(sk, VAR_PERCN)) {
+		*data = this -> m_percn;
 	}
-	if (StringMatch(sk, VAR_SEDMINPA)) {
-		*data = this -> m_sedminpa;
+	if (StringMatch(sk, VAR_SURQNO3)) {
+		*data = this -> m_surqno3;
 	}
-	if (StringMatch(sk, VAR_SEDMINPS)) {
-		*data = this -> m_sedminps;
+	if (StringMatch(sk, VAR_SURQSOLP)) {
+		*data = this -> m_surqsolp;
 	}
 	else {
 		throw ModelException("NutRemv", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
@@ -303,26 +334,11 @@ void NutrientRemviaSr::Get2DData(const char* key, int *nRows, int *nCols, float*
 	string sk(key);
 	*nRows = m_nSolLyrs;
 	*nCols = m_nCells;
-	if (StringMatch(sk, VAR_SOL_AORGN)) {
-		*data = this -> m_sol_aorgn; 
+	if (StringMatch(sk, VAR_SOL_NO3)) {
+		*data = this -> m_sol_no3; 
 	}
-	if (StringMatch(sk, VAR_SOL_FON)) {
-		*data = this -> m_sol_fon; 
-	}
-	if (StringMatch(sk, VAR_SOL_ORGN)) {
-		*data = this -> m_sol_orgn; 
-	}
-	if (StringMatch(sk, VAR_SOL_ORGP)) {
-		*data = this -> m_sol_orgp; 
-	}
-	if (StringMatch(sk, VAR_SOL_FOP)) {
-		*data = this -> m_sol_fop; 
-	}
-	if (StringMatch(sk, VAR_SOL_STAP)) {
-		*data = this -> m_sol_stap; 
-	}
-	if (StringMatch(sk, VAR_SOL_ACTP)) {
-		*data = this -> m_sol_actp; 
+	if (StringMatch(sk, VAR_SOL_SOLP)) {
+		*data = this -> m_sol_solp;
 	}
 	else
 		throw ModelException("Denitrification", "Get2DData", "Output " + sk 

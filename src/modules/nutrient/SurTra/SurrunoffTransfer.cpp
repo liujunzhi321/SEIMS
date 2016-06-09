@@ -92,10 +92,10 @@ void SurrunoffTransfer::Set1DData(const char* key,int n, float *data)
 	if(!this->CheckInputSize(key,n)) return;
 
 	string sk(key);
-	if (StringMatch(sk, VAR_CDN)) {
+	if (StringMatch(sk, VAR_SOER)) {
 		this -> m_sedimentYield = data;
 	} 
-	else if (StringMatch(sk, VAR_LCC)) {
+	else if (StringMatch(sk, VAR_SURU)) {
 		this -> m_surfr = data;
 	}
 	else {
