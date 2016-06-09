@@ -75,7 +75,7 @@ private:
 	/*!
 	 * \brief Initialize output variables for the first run of the entire simulation
 	 */
-	void initalOutputs();
+	void initialOutputs();
 private:
 	/**
 	*	@brief check the input data. Make sure all the input data is available.

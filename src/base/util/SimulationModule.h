@@ -6,15 +6,14 @@
  * \author Junzhi Liu
  * \version 1.1
  * \date Jul. 2010
+ * \revised Liang-Jun Zhu
+ * \data Jun. 2016
  */
 #pragma once
 #include <string>
 #include "ModelException.h"
 #include <omp.h>
-
-
 using namespace std;
-
 /*!
  * \enum TimeStepType
  */
@@ -54,36 +53,55 @@ public:
 	{
 	};
 
-	//! Set data
+	//! Set data, DT_Single
 	virtual void SetValue(const char* key, float data)
 	{
 		throw ModelException("SimulationModule", "SetValue", "This function is not implemented.");
 	};
-	//! Set 1D data
+	//! Set 1D data, by default, DT_Raster1D
 	virtual void Set1DData(const char* key, int n, float* data)
 	{
 		throw ModelException("SimulationModule", "Set1DData", "This function is not implemented.");
 	};
-	//! Set 2D data
+	//! Set 2D data, by default, DT_Raster2D
 	virtual void Set2DData(const char* key, int nRows, int nCols, float** data)
 	{
 		throw ModelException("SimulationModule", "Set2DData", "This function is not implemented.");
 	};
-
-	//! Get value
+	//! Set 1D array data, DT_Array1D
+	virtual void Set1DArrayData(const char* key, int n, float* data)
+	{
+		throw ModelException("SimulationModule", "Set1DArrayData", "This function is not implemented.");
+	};
+	//! Set 2D array data, by default, DT_Array2D
+	virtual void Set2DArrayData(const char* key, int nRows, int nCols, float** data)
+	{
+		throw ModelException("SimulationModule", "Set2DArrayData", "This function is not implemented.");
+	};
+	//! Get value, DT_Single
 	virtual void GetValue(const char* key, float* value)
 	{
 		throw ModelException("SimulationModule", "GetValue", "This function is not implemented.");
 	};
-	//! Get 1D data
+	//! Get 1D data, by default, DT_Raster1D
 	virtual void Get1DData(const char* key, int* n, float** data)
 	{
 		throw ModelException("SimulationModule", "Get1DData", "This function is not implemented.");
 	};
-	//! Get 2D data
+	//! Get 2D data, by default, DT_Raster2D
 	virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data)
 	{
 		throw ModelException("SimulationModule", "Get2DData", "This function is not implemented.");
+	};
+	//! Get 1D Array data, by default, DT_Array1D
+	virtual void Get1DArrayData(const char* key, int* n, float** data)
+	{
+		throw ModelException("SimulationModule", "Get1DArrayData", "This function is not implemented.");
+	};
+	//! Get 2D Array data, by default, DT_Array2D
+	virtual void Get2DArrayData(const char* key, int* nRows, int* nCols, float*** data)
+	{
+		throw ModelException("SimulationModule", "Get2DArrayData", "This function is not implemented.");
 	};
 	//! Get time step type
 	virtual TimeStepType GetTimeStepType()

@@ -31,7 +31,7 @@ class AET_PT_H : public SimulationModule
 private:
 	/// valid cells number
 	int m_nCells;
-	/// leaf area index(m2/m2)
+	/// leaf area index(m**2/m**2)
 	float *m_lai;
 	/// potential evapotranspiration on current day
 	float *m_pet;
@@ -61,10 +61,10 @@ private:
 	/// soil moisture
 	float** m_somo;
 	/// add output variables
-	/// maximum amount of transpiration (plant et)  that can occur on current day in HRU
+	/// maximum amount of transpiration (plant et)  that can occur on current day in HRU, ep_max in SWAT
 	float* m_ppt;
-	/// actual amount of evaporation (soil et) that occurs on day
-	float* m_solAET;
+	/// actual amount of evaporation (soil et) that occurs on day, es_day in SWAT
+	float* m_soilESDay;
 	/// amount of nitrate moving upward in the soil profile in watershed
 	float m_no3Up;
 	/// total soil water content in soil profile

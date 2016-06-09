@@ -7,6 +7,7 @@
  * \date May. 2016
  * \note: 1. Add m_tMean from database, which may be measurement value or the mean of tMax and tMin;
 			  2. The PET calculate is changed from site-based to cell-based, because PET is not only dependent on Climate site data;
+			  3. Add m_VPD as output, which will be used in PBIO_EPIC module
  */
 #ifndef SEIMS_PET_PRIESTTAYLOR_INCLUDE
 #define SEIMS_PET_PRIESTTAYLOR_INCLUDE
@@ -82,6 +83,7 @@ private:
 	int m_jday;
 	/// output pet array
 	float *m_pet;
+	float *m_vpd;
 };
 
 #endif

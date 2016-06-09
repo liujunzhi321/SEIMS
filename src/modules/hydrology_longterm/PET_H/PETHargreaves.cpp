@@ -21,13 +21,14 @@
 using namespace std;
 
 PETHargreaves::PETHargreaves(void):m_nCells(-1), m_petFactor(1.f),m_HCoef_pet(0.0023f), 
-	m_tMean(NULL), m_tMin(NULL), m_tMax(NULL), m_pet(NULL)
+	m_tMean(NULL), m_tMin(NULL), m_tMax(NULL),m_rhd(NULL), m_pet(NULL), m_vpd(NULL)
 {
 }
 
 PETHargreaves::~PETHargreaves(void)
 {
 	if(this->m_pet != NULL) delete [] this->m_pet;
+	if(this->m_vpd != NULL) delete [] this->m_vpd;
 }
 
 void PETHargreaves::SetValue(const char* key, float value)
@@ -50,6 +51,8 @@ void PETHargreaves::Set1DData(const char* key,int n, float *value)
 		this->m_tMax = value;
 	else if (StringMatch( sk, DataType_MinimumTemperature))
 		this->m_tMin = value;
+	else if(StringMatch(sk, DataType_RelativeAirMoisture))
+		this->m_rhd = value;
 	else if (StringMatch( sk, VAR_CELL_LAT))
 		this->m_cellLat = value;
 	else
@@ -61,6 +64,8 @@ int PETHargreaves::Execute()
 	if(!this->CheckInputData()) return false;
 	if(NULL == m_pet)
 		this->m_pet = new float[m_nCells];
+	if(NULL == m_vpd)
+		this->m_vpd = new float[m_nCells];
 	m_jday = JulianDay(this->m_date);
 	//cout<<m_tMean[0]<<","<<m_tMax[0]<<","<<m_tMin[0]<<endl;
 #pragma omp parallel for
@@ -77,6 +82,14 @@ int PETHargreaves::Execute()
 		float petValue = m_HCoef_pet * h0 * pow(abs(m_tMax[i]-m_tMin[i]), 0.5f)
 			* (m_tMean[i] + 17.8f) / latentHeat;
 		m_pet[i] = m_petFactor * max(0.0f, petValue);
+		/// calculate m_vpd
+		float satVaporPressure = SaturationVaporPressure(m_tMean[i]);
+		float actualVaporPressure = 0.f;
+		if(m_rhd[j] > 1)   /// IF percent unit.
+			actualVaporPressure	 = m_rhd[j] * satVaporPressure * 0.01;
+		else
+			actualVaporPressure = m_rhd[j] * satVaporPressure;
+		m_vpd[i] = satVaporPressure - actualVaporPressure;
 	}
 	return 0;
 }
@@ -90,6 +103,11 @@ void PETHargreaves::Get1DData(const char* key, int* n, float **data)
 	if (StringMatch(sk, VAR_PET))
 	{
 		*data = this->m_pet;
+		*n = this->m_nCells;
+	}
+	else if (StringMatch(sk, VAR_VPD))
+	{
+		*data = this->m_vpd;
 		*n = this->m_nCells;
 	}
 	else
@@ -124,5 +142,7 @@ bool PETHargreaves::CheckInputData()
 		throw ModelException(MID_PET_H,"CheckInputData","The minimum temperature can not be NULL.");
 	if(this->m_tMean == NULL)
 		throw ModelException(MID_PET_H,"CheckInputData","The mean temperature can not be NULL.");
+	if(this->m_rhd == NULL)
+		throw ModelException(MID_PET_H,"CheckInputData","The relative humidity can not be NULL.");
 	return true;
 }

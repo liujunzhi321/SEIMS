@@ -43,10 +43,10 @@ class SoilProperty:
         self.POROSITY = []
         self.Poreindex= []
         self.USLE_K = []
-        self.Sol_ALB    = []
+        self.Sol_ALB    = DEFAULT_NODATA
         self.Soil_Texture    = DEFAULT_NODATA
         self.Hydro_Group= DEFAULT_NODATA
-        #self.Residue     = [] TODO: residue should be defined in Management module or dependent on landuse
+        #self.Residual     = []
         ### Here after are soil chemical properties
         self.Sol_FOP = []
         self.Sol_fon = []
@@ -195,19 +195,13 @@ class SoilProperty:
                 for i in range(self.SoilLAYERS):
                     if self.Conductivity[i] == DEFAULT_NODATA:
                         self.Conductivity[i] = tmp_k[i]
-        if self.Sol_ALB != [] and len(self.Sol_ALB) != self.SoilLAYERS:
-            raise IndexError("Soil albedo must have a size equal to soil layers number!")
-        elif self.Sol_ALB == [] or DEFAULT_NODATA in self.Sol_ALB:
-            tmp_alb = []
-            for i in range(self.SoilLAYERS):
-                cbn = self.OM[i] * 0.58
-                tmp_alb.append(0.2227 * exp(-1.8672 * cbn))
-            if self.Sol_ALB == []:
-                self.Sol_ALB = tmp_alb[:]
-            elif DEFAULT_NODATA in self.Sol_ALB:
-                for i in range(self.SoilLAYERS):
-                    if self.Sol_ALB[i] == DEFAULT_NODATA:
-                        self.Sol_ALB[i] = tmp_alb[i]
+        if self.Sol_ALB != DEFAULT_NODATA:
+            if self.Sol_ALB < 0.1:  ### set default value according to SWAT
+                self.Sol_ALB = 0.1
+        else: ### empirical equation
+            cbn = self.OM[0] * 0.58
+            self.Sol_ALB = 0.2227 * exp(-1.8672 * cbn)
+
         if self.USLE_K != [] and len(self.USLE_K) != self.SoilLAYERS:
             raise IndexError("USLE K factor must have a size equal to soil layers number!")
         elif self.USLE_K == [] or DEFAULT_NODATA in self.USLE_K:

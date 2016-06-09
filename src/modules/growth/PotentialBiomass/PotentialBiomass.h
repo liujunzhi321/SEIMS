@@ -6,7 +6,6 @@
 #include "Common.h"
 #include "Climate.h"
 #include "SimulationModule.h"
-
 using namespace std;
 
 class PotentialBiomass:public SimulationModule
