@@ -97,12 +97,14 @@ private:
 	float* m_igro;
 	/// land cover/crop  classification:1-7, i.e., IDC
 	float* m_landCoverCls;
-	/// minimum LAI during winter dormant period
+	/// minimum LAI during winter dormant period, alai_min
 	float* m_aLAIMin;
 	/// Radiation-use efficicency or biomass-energy ratio ((kg/ha)/(MJ/m**2)), BIO_E in SWAT
 	float* m_BIOE;
 	/// Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve
 	float* m_BIOEHI;
+	/// fraction of biomass that drops during dormancy (for tree only), bio_leaf
+	float* m_frBioLeafDrop;
 	/// maximum (potential) leaf area index (BLAI in cropLookup db)
 	float* m_maxLAI;
 	/// Maximum biomass for a forest (metric tons/ha), BMX_TREES in SWAT

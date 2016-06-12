@@ -52,6 +52,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_ALAIMIN, UNIT_AREA_RATIO, DESC_ALAIMIN, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_BIO_E,UNIT_RAD_USE_EFFI, DESC_BIO_E, Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_BIOEHI, UNIT_RAD_USE_EFFI, DESC_BIOEHI, Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter(VAR_BIOLEAF, UNIT_NON_DIM, DESC_BIOLEAF, Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_BLAI, UNIT_AREA_RATIO, DESC_BLAI, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_BMX_TREES, UNIT_CONT_TONHA, DESC_BMX_TREES, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_BN1, UNIT_NON_DIM, DESC_BN1,Source_ParameterDB,DT_Raster1D);
