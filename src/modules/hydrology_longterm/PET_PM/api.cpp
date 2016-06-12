@@ -65,6 +65,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO,Source_Module,DT_Raster1D);
 
 	// set the output variables
+	mdi.AddOutput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, DT_Raster1D);
 	mdi.AddOutput(VAR_PET,UNIT_WTRDLT_MMD, DESC_PET, DT_Raster1D);
 	mdi.AddOutput(VAR_PPT,UNIT_WTRDLT_MMD, DESC_PPT, DT_Raster1D);
 	mdi.AddOutput(VAR_VPD, UNIT_PRESSURE, DESC_VPD, DT_Raster1D);

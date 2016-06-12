@@ -21,12 +21,13 @@
 using namespace std;
 
 PETHargreaves::PETHargreaves(void):m_nCells(-1), m_petFactor(1.f),m_HCoef_pet(0.0023f), 
-	m_tMean(NULL), m_tMin(NULL), m_tMax(NULL),m_rhd(NULL), m_pet(NULL), m_vpd(NULL)
+	m_tMean(NULL), m_tMin(NULL), m_tMax(NULL),m_rhd(NULL),m_dayLen(NULL), m_pet(NULL), m_vpd(NULL)
 {
 }
 
 PETHargreaves::~PETHargreaves(void)
 {
+	if(this->m_dayLen != NULL) delete [] this->m_dayLen;
 	if(this->m_pet != NULL) delete [] this->m_pet;
 	if(this->m_vpd != NULL) delete [] this->m_vpd;
 }
@@ -66,12 +67,14 @@ int PETHargreaves::Execute()
 		this->m_pet = new float[m_nCells];
 	if(NULL == m_vpd)
 		this->m_vpd = new float[m_nCells];
+	if(NULL == m_dayLen)
+		this->m_dayLen = new float[m_nCells];
 	m_jday = JulianDay(this->m_date);
 	//cout<<m_tMean[0]<<","<<m_tMax[0]<<","<<m_tMin[0]<<endl;
 #pragma omp parallel for
 	for (int i = 0; i < m_nCells; ++i)
 	{	
-		m_srMax = MaxSolarRadiation(m_jday, m_cellLat[i]);
+		MaxSolarRadiation(m_jday, m_cellLat[i], m_dayLen[i], m_srMax);
 		///calculate latent heat of vaporization(from swat)
 		float latentHeat = 2.501f - 0.002361f * m_tMean[i];
 		/// extraterrestrial radiation
@@ -85,10 +88,10 @@ int PETHargreaves::Execute()
 		/// calculate m_vpd
 		float satVaporPressure = SaturationVaporPressure(m_tMean[i]);
 		float actualVaporPressure = 0.f;
-		if(m_rhd[j] > 1)   /// IF percent unit.
-			actualVaporPressure	 = m_rhd[j] * satVaporPressure * 0.01;
+		if(m_rhd[i] > 1)   /// IF percent unit.
+			actualVaporPressure	 = m_rhd[i] * satVaporPressure * 0.01;
 		else
-			actualVaporPressure = m_rhd[j] * satVaporPressure;
+			actualVaporPressure = m_rhd[i] * satVaporPressure;
 		m_vpd[i] = satVaporPressure - actualVaporPressure;
 	}
 	return 0;
@@ -98,18 +101,11 @@ int PETHargreaves::Execute()
 void PETHargreaves::Get1DData(const char* key, int* n, float **data)
 {
 	string sk(key);
-	if(this->m_pet == NULL) 
-		throw ModelException(MID_PET_H,"Get1DData","The result is NULL. Please first execute the module.");
-	if (StringMatch(sk, VAR_PET))
-	{
-		*data = this->m_pet;
-		*n = this->m_nCells;
-	}
-	else if (StringMatch(sk, VAR_VPD))
-	{
-		*data = this->m_vpd;
-		*n = this->m_nCells;
-	}
+	*n = this->m_nCells;
+	if(this->m_pet == NULL) throw ModelException(MID_PET_H,"Get1DData","The result is NULL. Please first execute the module.");
+	if (StringMatch(sk, VAR_PET)) *data = this->m_pet;
+	else if (StringMatch(sk, VAR_VPD)) *data = this->m_vpd;
+	else if (StringMatch(sk, VAR_DAYLEN)) *data = this->m_dayLen;
 	else
 		throw ModelException(MID_PET_H, "Get1DData","Parameter " + sk + " does not exist. Please contact the module developer.");
 }
@@ -144,5 +140,7 @@ bool PETHargreaves::CheckInputData()
 		throw ModelException(MID_PET_H,"CheckInputData","The mean temperature can not be NULL.");
 	if(this->m_rhd == NULL)
 		throw ModelException(MID_PET_H,"CheckInputData","The relative humidity can not be NULL.");
+	if(this->m_cellLat == NULL)
+		throw ModelException(MID_PET_H,"CheckInputData","The latitude can not be NULL.");
 	return true;
 }

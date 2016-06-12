@@ -438,6 +438,7 @@
 #define VAR_Base_ex "Base_ex"                       /// baseflow recession exponent
 #define VAR_BIO_E "BIO_E"
 #define VAR_BIOEHI "BIOEHI" 
+#define VAR_BIOLEAF "BIO_LEAF"
 #define VAR_BIOINIT "BIOINIT"
 #define VAR_BIOMASS "BIOMASS"
 #define VAR_BLAI "BLAI"
@@ -484,6 +485,7 @@
 #define VAR_CONDUCT "Conductivity"
 #define VAR_CONV_WT "conv_wt"
 #define VAR_D_P "D_P" /// Distrubution of precipitation
+#define VAR_DAYLEN "daylength" 
 #define VAR_DEET "DEET"                               /// Distribution of evaporation from depression storage
 #define VAR_DEET "DEET"                               /// evaporation from the depression storage
 #define VAR_DEM "DEM"                                 /// Digital Elevation Model
@@ -819,6 +821,7 @@
 #define DESC_BIO_E "the potential or unstressed growth rate (including roots) per unit of intercepted photsynthetically active radiation"
 #define DESC_BIOMASS "land cover/crop biomass (dry weight)"
 #define DESC_BIOEHI "Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve"
+#define DESC_BIOLEAF "fraction of biomass that drops during dormancy (for tree only)"
 #define DESC_BIOINIT "initial dry weight biomass (kg/ha)"
 #define DESC_BLAI "maximum leaf area index"
 #define DESC_BKST "bank storage"
@@ -864,6 +867,7 @@
 #define DESC_CONDUCT "saturation hydraulic conductivity"
 #define DESC_CONV_WT "factor which converts kg/kg soil to kg/ha"
 #define DESC_D_P "Precipitation distrubution raster"
+#define DESC_DAYLEN "day length"
 #define DESC_DEET "Distribution of evaporation from depression storage"
 #define DESC_DEM "Digital Elevation Model"
 #define DESC_DEPREIN "initial depression storage coefficient"
