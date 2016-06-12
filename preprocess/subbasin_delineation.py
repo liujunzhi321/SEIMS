@@ -70,16 +70,20 @@ def CalLatDependParas():
                    cellLatR.geotrans,cellLatR.srs,cellLatR.noDataValue, GDT_Float32)
     ## calculate day length threshold for dormancy
     dormhrData = numpy.copy(latData)
-    for i in range(cellLatR.nRows):
-        for j in range(cellLatR.nCols):
-            if dormhrData[i][j] != cellLatR.noDataValue:
-                tmpLat = dormhrData[i][j]
-                if tmpLat <= 40. and tmpLat >= 20.:
-                    dormhrData[i][j] = (numpy.abs(tmpLat - 20.)) / 20.
-                elif tmpLat > 40.:
-                    dormhrData[i][j] = 1.
-                elif tmpLat < 20.:
-                    dormhrData[i][j] = -1.
+    if dorm_hr < -UTIL_ZERO:
+        for i in range(cellLatR.nRows):
+            for j in range(cellLatR.nCols):
+                if dormhrData[i][j] != cellLatR.noDataValue:
+                    tmpLat = dormhrData[i][j]
+                    if tmpLat <= 40. and tmpLat >= 20.:
+                        dormhrData[i][j] = (numpy.abs(tmpLat - 20.)) / 20.
+                    elif tmpLat > 40.:
+                        dormhrData[i][j] = 1.
+                    elif tmpLat < 20.:
+                        dormhrData[i][j] = -1.
+    else:
+        defaultNormHr = numpy.ones((cellLatR.nRows, cellLatR.nCols)) * dorm_hr
+        dormhrData = numpy.where(condition2,defaultNormHr,nodata)
     WriteGTiffFile(WORKING_DIR + os.sep + "taudir" + os.sep + dormhr,cellLatR.nRows, cellLatR.nCols,dormhrData,
                    cellLatR.geotrans,cellLatR.srs,cellLatR.noDataValue, GDT_Float32)
 def SubbasinDelineation(np, workingDir, dem, outlet, threshold, mpiexeDir=None,exeDir=None):

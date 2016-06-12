@@ -75,3 +75,5 @@ soilSEQNText = SPATIAL_DATA_DIR + os.sep + 'soil_properties_lookup.txt'
 coeTable = {"T2":[0.05, 0.48],
             "T10":[0.12, 0.52],
             "T100":[0.18,0.55]}
+##time threshold used to define dormant period for plant, default is 0.
+dorm_hr = 0.
