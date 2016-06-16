@@ -17,7 +17,7 @@ namespace MainBMP
 		void Dump(ostream* fs);
 
 		/*
-		** Load time seriese data for some reach structure
+		** Load time series data for some reach structure
 		*/
 		void loadTimeSeriesData(string databasePath, time_t startTime, time_t endTime,int interval);
 		
@@ -27,7 +27,8 @@ namespace MainBMP
 	private:
 		/*
 		** Key is the reach id
-		** Value is the pointer of the BMPbase object
+		** Value is the pointer of the BMPReach object
+		** \sa BMPReach
 		*/ 
 		map<int,BMPReach*> m_bmpReachs;
 	};

@@ -17,7 +17,7 @@ namespace MainBMP
 		BMPFactory(int scenarioId,int bmpId,int bmpType,string distribution,string parameter);
 		~BMPFactory(void);
 
-		virtual void loadBMP(string bmpDatabasePath) = 0;
+		virtual void loadBMP(mongoc_client_t* conn) = 0;
 		
 		int bmpType();
 
