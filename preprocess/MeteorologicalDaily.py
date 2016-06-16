@@ -14,8 +14,8 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
     climFlds = climDataItems[0]
     T_mean = []
     Year = []
-    requiredFlds = [Tag_DT_Year, Tag_DT_Month, Tag_DT_Day, \
-                    DataType_MaximumTemperature, DataType_MinimumTemperature, \
+    requiredFlds = [Tag_DT_Year, Tag_DT_Month, Tag_DT_Day,
+                    DataType_MaximumTemperature, DataType_MinimumTemperature,
                     DataType_RelativeAirMoisture, DataType_WindSpeed]
     for fld in requiredFlds:
         if not StringInList(fld, climFlds):
@@ -67,8 +67,8 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 if dic[Tag_DT_StationID] in sitesLoc.keys():
                     curLon, curLat = sitesLoc[dic[Tag_DT_StationID]].LonLat()
                     dic[DataType_SolarRadiation] = Rs(doy(dt), float(curSSD), curLat * math.pi / 180.0)
-        outputFlds = [DataType_MeanTemperature, DataType_MaximumTemperature, DataType_MinimumTemperature,\
-                      DataType_RelativeAirMoisture, DataType_PotentialEvapotranspiration, DataType_WindSpeed,\
+        outputFlds = [DataType_MeanTemperature, DataType_MaximumTemperature, DataType_MinimumTemperature,
+                      DataType_RelativeAirMoisture, DataType_PotentialEvapotranspiration, DataType_WindSpeed,
                       DataType_SolarRadiation]
         for fld in outputFlds:
             curDic = {}
@@ -108,7 +108,7 @@ def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
 
     if not Tag_ClimateDB_Data in cList:
         db.create_collection(Tag_ClimateDB_Data)
-    # else:
-    #     db.drop_collection(tb)
+    else:
+        db.drop_collection(Tag_ClimateDB_Data)
     ImportDayData(db, meteofile, siteMLoc)
     connMongo.close()

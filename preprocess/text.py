@@ -19,10 +19,14 @@ Tag_Params = "param"
 Tag_Lookup = "lookup"
 init_params = 'model_param_ini'
 lookup_tabs = ['SoilLookup','LanduseLookup','TillageLookup',
-               'UrbanLookup','CropLookup','FertilizerLookup',
-               'ManagementTypeLookup','MgtOpSchedulesLookup']
+               'UrbanLookup','CropLookup','FertilizerLookup']
 CROP_FILE = TXT_DB_DIR + os.sep + 'CropLookup.txt'
 sqliteFile = TXT_DB_DIR + os.sep + "Parameter.db3"
+
+## BMP Scenario database
+BMP_tabs = ['BMP_index','BMP_scenarios','crop_management','crop_management_dist',
+            'fertilizer_management','fertilizer_management_dist','tillage_management',
+            'tillage_management_dist']
 
 ### CROP, LANDUSE, and SOIL attribute are imported to mongoDB
 ### Match to the new lookup table of SWAT 2012 rev.637. LJ
@@ -125,8 +129,8 @@ Tag_ST_Type = 'Type'
 
 ## Table Names required in MongoDB
 DB_TAB_PARAMETERS =	"parameters"
-DB_TAB_LOOKUP_LANDUSE = "LanduseLookup"
-DB_TAB_LOOKUP_SOIL = "SoilLookup"
+# DB_TAB_LOOKUP_LANDUSE = "LanduseLookup"
+# DB_TAB_LOOKUP_SOIL = "SoilLookup"
 DB_TAB_SPATIAL = "spatial"
 DB_TAB_SITES = "Sites"
 DB_TAB_DATAVALUES = "DataValues"

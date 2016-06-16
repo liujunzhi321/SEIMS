@@ -4,13 +4,14 @@ import sys, os, thread
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from import_parameters import ImportParameters
+from import_parameters import ImportLookupTables
 from generate_stream_input import GenerateReachTable
 from find_sites import FindSites
 from weights_mongo import GenerateWeightInfo
 from text import *
 from config import *
 
-def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
+def BuildMongoDB(workingDir, modelName, stormMode, forCluster,
                    hydroDBName=None, thiessenFilePreci=None, thiessenFileMeteo=None):
     genIUH = True
 
@@ -41,7 +42,8 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster, \
         conn.drop_database(modelName)
     db = conn[modelName]
 
-    ImportParameters(sqliteFile, db)  ## import parameters.db3 to mongoDB
+    ImportParameters(sqliteFile, db)   ## import parameters information from parameter.db3 to mongoDB
+    ImportLookupTables(sqliteFile, db) ## import lookup tables from parameter.db3 to mongoDB. By LJ, 2016-6-13
     f.write("10, Generating reach table...\n")
     f.flush()
     GenerateReachTable(workingDir, db, forCluster)
