@@ -84,8 +84,8 @@ void Scenario::loadScenarioName()
 	sceCollection = mongoc_client_get_collection(m_conn, m_bmpDBName.c_str(), TAB_BMP_SCENARIO);
 	/// Find the unique scenario name
 	bson_t		*query = bson_new(), *reply = bson_new();
-	query = BCON_NEW("distinct",BCON_UTF8(TAB_BMP_SCENARIO),"key",BCON_UTF8(FLD_SCENARIO_NAME), 
-		"query","{",BCON_TYPE_UTF8(FLD_SCENARIO_ID),BCON_INT32(m_id),"}");
+	query = BCON_NEW("distinct",BCON_UTF8(TAB_BMP_SCENARIO),"key",FLD_SCENARIO_NAME, 
+		"query","{",FLD_SCENARIO_ID,BCON_INT32(m_id),"}");
 	bson_iter_t iter, sub_iter;
 	bson_error_t *err = NULL;
 	if (mongoc_collection_command_simple(sceCollection,query,NULL,reply,err))
