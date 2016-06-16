@@ -1,0 +1,21 @@
+ID	Name	Type	Priority
+1	Point source	1	1
+2	Stream flow diversion	1	1
+3	Reservoir	1	1
+4	Riparian wetland	1	3
+5	Riparian buffer	1	3
+6	Grass waterway	2	2
+7	Filter strip	2	2
+8	Pond	2	3
+9	Isolated wetland	2	3
+10	Terrace	2	3
+11	Overland flow diversion	2	3
+12	Crop management	3	1
+13	Residual management	3	2
+14	Tillage management	3	1
+15	Fertilizer management	3	1
+16	Grazing management	3	2
+17	Pesticide management	3	3
+18	Irrigation management	3	3
+19	Tile drain management	2	2
+20	Urban management	2	3
