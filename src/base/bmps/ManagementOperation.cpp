@@ -5,16 +5,10 @@
 using namespace MainBMP;
 using namespace NonStructural;
 
-ManagementOperation::ManagementOperation(int location,int year, int month, int day,BMPParameter::ArealParameter* parameter)
+ManagementOperation::ManagementOperation(int location,int year, int month, int day,BMPParameter::ArealParameter* parameter):
+m_location(location), m_year(year), m_month(month), m_day(day), m_parameter(parameter)
 {
-	this->m_location = location;
-	this->m_year = year;
-	this->m_month = month;
-	this->m_day = day;
-
-	this->m_parameter = parameter;
 }
-
 
 ManagementOperation::~ManagementOperation(void)
 {
@@ -38,6 +32,5 @@ string ManagementOperation::ManagementOperation2ID(int location,int year, int mo
 void ManagementOperation::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
-
-	*fs << "opreation:" << UniqueID() << endl;
+	*fs << "operation:" << UniqueID() << endl;
 }

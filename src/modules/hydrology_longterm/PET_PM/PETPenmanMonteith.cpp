@@ -8,7 +8,7 @@
               2. The PET calculate is changed from site-based to cell-based, because PET is not only dependent on Climate site data;
 			  3. Add ecology related parameters (initialized value).
 			  4. Add potential plant transpiration(PPT) as output.
-			  5. Add m_VPD as output, which will be used in BIO_EPIC module
+			  5. Add m_VPD, m_dayLen as outputs, which will be used in BIO_EPIC module
 			  6. change m_vpd2 and m_gsi from DT_Single to DT_Raster1D, see readplant.f of SWAT
  */
 #include "PETPenmanMonteith.h"
@@ -25,19 +25,21 @@ using namespace std;
 
 PETPenmanMonteith::PETPenmanMonteith(void):m_elev(NULL), m_rhd(NULL), m_sr(NULL), m_tMean(NULL),	m_tMin(NULL), 
 	m_tMax(NULL), m_ws(NULL), m_growCode(NULL),m_cht(NULL), m_lai(NULL), m_petFactor(1.f),m_tSnow(-1), m_nCells(-1) , 
-	m_cellLat(NULL), m_albedo(NULL), m_gsi(NULL),m_vpd2(NULL),m_frgmax(NULL),m_vpdfr(NULL),m_pet(NULL),m_vpd(NULL),m_ppt(NULL)
+	m_cellLat(NULL), m_albedo(NULL), m_gsi(NULL),m_vpd2(NULL),m_frgmax(NULL),m_vpdfr(NULL),m_pet(NULL),m_vpd(NULL),m_ppt(NULL),m_dayLen(NULL)
 {
 }
 
 PETPenmanMonteith::~PETPenmanMonteith(void)
 {
+	if(this->m_dayLen != NULL) delete [] this->m_dayLen;
 	if(this->m_pet != NULL)		delete [] this->m_pet;
 	if(this->m_vpd != NULL)	delete [] this->m_vpd;
-	//This code would be removed if the grow code is got from main.  /// Comment these code as m_growCode is provided as Parameters. By LJ
+	/// This code would be removed if the grow code is got from main.
+	/// Comment these code since m_growCode is provided as Parameters and be updated by plant growth module. By LJ
 	//if(this->m_growCode != NULL)
 	//	delete [] this->m_growCode;
 
-	/// Since these two variables will be update by ecology modules, the destruction code are commented. By LJ, May. 2016.
+	/// Since these two variables will be update by plant growth modules, the destruction code are commented. By LJ, May. 2016.
 	//if(this->m_cht != NULL)
 	//	delete [] this->m_cht;
 	//if(this->m_lai != NULL)
@@ -56,31 +58,26 @@ bool PETPenmanMonteith::CheckInputData()
 		throw ModelException(MID_PET_PM,"CheckInputData","You have not set the time.");
 		return false;
 	}
-
 	if(m_nCells <= 0)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The dimension of the input data can not be less than zero.");
 		return false;
 	}
-
 	if(this->m_cht == NULL)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The canopy height can not be NULL.");
 		return false;
 	}
-
 	if(this->m_elev == NULL)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The elevation can not be NULL.");
 		return false;
 	}
-
 	if(this->m_growCode == NULL)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The land cover status code can not be NULL.");
 		return false;
 	}
-
 	if(this->m_lai == NULL)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The leaf area index can not be NULL.");
@@ -96,7 +93,6 @@ bool PETPenmanMonteith::CheckInputData()
 		throw ModelException(MID_PET_PM,"CheckInputData","The relative humidity can not be NULL.");
 		return false;
 	}
-
 	if(this->m_sr == NULL)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The solar radiation can not be NULL.");
@@ -112,16 +108,19 @@ bool PETPenmanMonteith::CheckInputData()
 		throw ModelException(MID_PET_PM,"CheckInputData","The min temperature can not be NULL.");
 		return false;
 	}
-
 	if(this->m_tMax == NULL)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The max temperature can not be NULL.");
 		return false;
 	}
-
 	if(this->m_ws == NULL)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The wind speed can not be NULL.");
+		return false;
+	}
+	if(this->m_cellLat == NULL)
+	{
+		throw ModelException(MID_PET_PM,"CheckInputData","The latitude can not be NULL.");
 		return false;
 	}
 	if(this->m_gsi == NULL)
@@ -217,12 +216,14 @@ void PETPenmanMonteith::initialOutputs()
 {
 	if(NULL == m_pet)	
 	{
+		this->m_dayLen = new float[this->m_nCells];
 		this->m_pet = new float[this->m_nCells];
 		this->m_ppt = new float[this->m_nCells];
 		this->m_vpd = new float[this->m_nCells];
 #pragma omp parallel for
 		for (int i = 0;i < m_nCells; i++)
 		{
+			m_dayLen[i] = 0.f;
 			m_pet[i] = 0.f;
 			m_ppt[i] = 0.f;
 			m_vpd[i] = 0.f;
@@ -230,7 +231,6 @@ void PETPenmanMonteith::initialOutputs()
 	}
 
 	if(NULL == m_vpd2)	this->m_vpd2 = new float[this->m_nCells];
-	
 #pragma omp parallel for
 	for (int i = 0; i < m_nCells; i++)
 	{
@@ -258,7 +258,8 @@ int PETPenmanMonteith::Execute()
 			raShortWave = m_sr[j] * (1.0f - 0.8f);
 
 		//calculate the max solar radiation
-		float srMax = MaxSolarRadiation(d,this->m_cellLat[j]);
+		float srMax = 0.f; 
+		MaxSolarRadiation(d,m_cellLat[j],m_dayLen[j], srMax);
 		//calculate net long-wave radiation
 		//net emissivity  equation 2.2.20 in SWAT manual
 		float satVaporPressure = SaturationVaporPressure(m_tMean[j]);//kPa
@@ -395,6 +396,11 @@ void PETPenmanMonteith::Get1DData(const char* key, int* n, float **data)
 	else if (StringMatch(sk, VAR_VPD))
 	{
 		*data = this->m_vpd;
+		*n = this->m_nCells;
+	}
+	else if (StringMatch(sk, VAR_DAYLEN))
+	{
+		*data = this->m_dayLen;
 		*n = this->m_nCells;
 	}
 }

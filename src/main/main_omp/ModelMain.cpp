@@ -29,7 +29,7 @@ ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath, S
 
 	mongoc_gridfs_t	*spatialData;
 	bson_error_t	*err = NULL;
-	spatialData = mongoc_client_get_gridfs(m_conn,dbName.c_str(),DB_TAB_SPATIAL,err);
+	spatialData = mongoc_client_get_gridfs(m_conn,dbName.c_str(), DB_TAB_SPATIAL, err);
 	if(err != NULL)
 		throw ModelException("MainMongoDB","ModelMain","Failed to get GridFS: " + string(DB_TAB_SPATIAL) + ".\n");
 	m_outputGfs = mongoc_client_get_gridfs(m_conn,dbName.c_str(),DB_TAB_OUT_SPATIAL,err);
@@ -70,8 +70,6 @@ ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath, S
 
 	CheckOutput(this->m_output,this->m_input);
 
-	//gridfs_destroy(spatialData);
-	
 	m_firstRunChannel = true;
 	m_firstRunOverland = true;
 
@@ -296,7 +294,6 @@ void ModelMain::Execute()
 		for (int i = 0; i < nHs; i++)
 			StepHillSlope(t+i*m_dtHs, yearIdx, i);
 		StepChannel(t, yearIdx);
-
 		Output(t);
 	}
 	clock_t t2 = clock();

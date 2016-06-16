@@ -1,6 +1,4 @@
 #include "ManagementOperationPlant.h"
-
-
 using namespace MainBMP;
 using namespace NonStructural;
 
@@ -12,7 +10,6 @@ ManagementOperationPlant::ManagementOperationPlant(
 	m_cropType = crop;
 }
 
-
 ManagementOperationPlant::~ManagementOperationPlant(void)
 {
 }
@@ -20,11 +17,8 @@ ManagementOperationPlant::~ManagementOperationPlant(void)
 void ManagementOperationPlant::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
-
 	ManagementOperation::Dump(fs);
-
 	*fs << "Crop Type : " << this->m_cropType << endl;
-
 	if(this->m_parameter != NULL)
 	{
 		*fs << "*** parameters ***" << endl;

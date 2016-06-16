@@ -13,6 +13,7 @@
 #include <string>
 #include "ModelException.h"
 #include <omp.h>
+#include "Scenario.h"  /// added by LJ. 2016-6-14
 using namespace std;
 /*!
  * \enum TimeStepType
@@ -103,6 +104,11 @@ public:
 	{
 		throw ModelException("SimulationModule", "Get2DArrayData", "This function is not implemented.");
 	};
+	//! Set pointer of class scenario which contains all BMP information. Added by LJ, 2016-6-14
+	virtual void SetScenario(MainBMP::Scenario*)
+	{
+		throw ModelException("SimulationModule", "SetScenario", "This function is not implemented.");
+	}
 	//! Get time step type
 	virtual TimeStepType GetTimeStepType()
 	{

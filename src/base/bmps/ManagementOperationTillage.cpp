@@ -11,7 +11,6 @@ ManagementOperationTillage::ManagementOperationTillage(
 	m_tillCode = code;
 }
 
-
 ManagementOperationTillage::~ManagementOperationTillage(void)
 {
 }
@@ -19,15 +18,11 @@ ManagementOperationTillage::~ManagementOperationTillage(void)
 void ManagementOperationTillage::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
-
 	ManagementOperation::Dump(fs);
-
 	*fs << "Tillage Code : " << this->m_tillCode << endl;
-
 	if(this->m_parameter != NULL)
 	{
 		*fs << "*** parameters ***" << endl;
 		this->m_parameter->Dump(fs);
 	}
-	
 }

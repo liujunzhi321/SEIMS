@@ -432,7 +432,7 @@ int YLD::Execute()
 				m_yield[i] = m_biomassAG[i] * m_HI[i];
 			m_yield[i] = max(0.0f, m_yield[i]);
 			m_harvestEfficiency[i] = 0.5f; //harvestEfficiency read from database
-			//IsGrain should read from databse
+			//IsGrain should read from database
 			if (m_common->IsGrain())//grain harvest, no residue, see harvgrainop.f
 			{
 				m_yield[i] *= m_harvestEfficiency[i];

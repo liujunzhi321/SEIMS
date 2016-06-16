@@ -188,7 +188,6 @@ def ImportDailyPrecData(hostname,port,dbName,precExcelPrefix,precYear,sitesDic):
     cList = db.collection_names()
     if not Tag_ClimateDB_Data in cList:
         db.create_collection(Tag_ClimateDB_Data)
-    #sitesDic = ImportSites(db, precSitesVor, DataType_Precipitation)
 
     for year in precYear:
         xlsFileName = r'%s%d.xls' % (precExcelPrefix, year)

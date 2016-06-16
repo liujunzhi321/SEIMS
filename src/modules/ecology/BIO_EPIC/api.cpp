@@ -31,6 +31,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	/// climate parameters
 	mdi.AddParameter(VAR_CO2, UNIT_GAS_PPMV,DESC_CO2,Source_ParameterDB,DT_Single);  /// in SWAT, CO2 is assigned by subbasin
 	mdi.AddParameter(VAR_TMEAN_ANN, UNIT_TEMP_DEG, DESC_TMEAN_ANN, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_DAYLEN_MIN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN_MIN, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_DORMHR, UNIT_TIMESTEP_HOUR, DESC_DORMHR, Source_ParameterDB, DT_Raster1D);
 	/// Single values
 	mdi.AddParameter(VAR_NUPDIS, UNIT_NON_DIM, DESC_NUPDIS, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_PUPDIS, UNIT_NON_DIM, DESC_PUPDIS, Source_ParameterDB, DT_Single);
@@ -52,6 +54,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_ALAIMIN, UNIT_AREA_RATIO, DESC_ALAIMIN, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_BIO_E,UNIT_RAD_USE_EFFI, DESC_BIO_E, Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_BIOEHI, UNIT_RAD_USE_EFFI, DESC_BIOEHI, Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter(VAR_BIOLEAF, UNIT_NON_DIM, DESC_BIOLEAF, Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_BLAI, UNIT_AREA_RATIO, DESC_BLAI, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_BMX_TREES, UNIT_CONT_TONHA, DESC_BMX_TREES, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_BN1, UNIT_NON_DIM, DESC_BN1,Source_ParameterDB,DT_Raster1D);
@@ -84,10 +87,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	/// nutrient 
 	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
+	/// lookup table as 2D array, such as crop, management, landuse, tillage, etc.
+
 	/// climate parameters INPUT
 	mdi.AddInput(DataType_MeanTemperature,UNIT_TEMP_DEG, DESC_MEANTEMP, Source_Module,DT_Raster1D);
 	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG, DESC_MINTEMP, Source_Module,DT_Raster1D);					
 	mdi.AddInput(DataType_SolarRadiation, UNIT_SR, DESC_SR, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_Module, DT_Raster1D);  /// from PET modules 
 	/// water related INPUT
 	mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module,DT_Raster2D);/// amount of water stored in soil layers
 	mdi.AddInput(VAR_SOMO_TOT, UNIT_DEPTH_MM, DESC_SOMO_TOT,Source_Module, DT_Raster1D);
