@@ -64,7 +64,10 @@ private:
 	float* m_SR;
 	/// average annual air temperature
 	float m_tMeanAnn;
-
+	/// minimum day length
+	float* m_dayLenMin;
+	/// dormancy threshold
+	float* m_dormHr;
 	/**  soil properties  **/
 
 	/// soil layers
@@ -183,6 +186,8 @@ private:
 
 	/**  input from other modules  **/
 
+	/// day length
+	float* m_dayLen;
 	/// vapor pressure deficit (kPa)
 	float* m_VPD;
 	/// potential evapotranspiration, pet_day in SWAT

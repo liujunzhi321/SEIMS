@@ -8,7 +8,7 @@
  * \version 1.0
  * \date June 2010
  * 
- * 
+ * \deprecated By Liangjun
  */
 
 #include "DBManager.h"
