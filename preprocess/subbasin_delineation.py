@@ -46,6 +46,11 @@ def GenerateCellLatRaster():
                    ds.geotrans,ds.srs,ds.noDataValue,GDT_Float32)
     #print lowerLat,upLat
 def CalLatDependParas():
+    '''
+    Calculate latitude dependent parameters, include:
+       1. minimum daylength (daylmn), 2. day length threshold for dormancy (dormhr)
+    :return: GeoTIFF files
+    '''
     ### calculate minimum daylength, from readwgn.f of SWAT
     ## daylength=2*acos(-tan(sd)*tan(lat))/omega
     ## where solar declination, sd, = -23.5 degrees for minimum daylength in

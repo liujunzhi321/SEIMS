@@ -91,7 +91,8 @@ DataType_SolarRadiation = "SR"			    	#6
 DataType_WindSpeed = "WS"						#7
 DataType_RelativeAirMoisture = "RM"			    #8
 DataType_SunDurationHour = "SSD"			    #9
-DataType_YearlyHeatUnit = "HUTOT"
+DataType_YearlyHeatUnit = "PHUTOT"
+Datatype_PHU0           = "PHU0"
 
 DataType_Meteorology = "M"                      # Suffix of meteorology data
 DataType_Prefix_TS = "T"                        # Prefix of time series data
@@ -106,7 +107,7 @@ Tag_DT_Zone = 'UTCOffset'
 Tag_DT_UTC = 'UTCDateTime'
 Tag_DT_Value = 'Value'
 
-Tag_ClimateDB_YearlyHeatUnit = 'YearlyHeatUnit'
+Tag_ClimateDB_PHU0 = 'PHU0'
 Tag_ClimateDB_VARs = 'Variables'
 Tag_VAR_ID = 'ID'
 Tag_VAR_Type = 'Type'

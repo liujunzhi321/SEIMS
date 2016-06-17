@@ -98,8 +98,8 @@ def ImportHydroClimateSitesInfo(hostname,port,dbName,varfile, meteofile, precfil
     for tb in tables:
         if not tb in cList:
             db.create_collection(tb)
-        # else:
-        #     db.drop_collection(tb)
+        else:
+            db.drop_collection(tb)
     ImportVariableTable(db, varfile)
     SiteMLoc = ImportSitesTable(db,meteofile,DataType_Meteorology)
     SitePLoc = ImportSitesTable(db,precfile,DataType_Precipitation)

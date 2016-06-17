@@ -7,7 +7,7 @@ from import_parameters import ImportParameters
 from import_parameters import ImportLookupTables
 from generate_stream_input import GenerateReachTable
 from find_sites import FindSites
-from weights_mongo import GenerateWeightInfo
+from weights_mongo import GenerateWeightInfo,GenerateWeightDependentParameters
 from text import *
 from config import *
 
@@ -94,7 +94,7 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster,
     f.flush()
     for i in range(nSubbasins):
         GenerateWeightInfo(conn, modelName, i+1, stormMode)
-
+        GenerateWeightDependentParameters(conn, i+1)  ##　added by Liangjun, 2016-6-17
     if genIUH:
         f.write("80, Generating IUH (Instantaneous Unit Hydrograph)...\n")
         f.flush()
