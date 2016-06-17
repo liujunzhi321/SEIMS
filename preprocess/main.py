@@ -9,9 +9,8 @@ from txt2db3 import reConstructSQLiteDB
 from hydroclimate_sites import ImportHydroClimateSitesInfo
 from PrecipitationDaily import ImportDailyPrecData
 from MeteorologicalDaily import ImportDailyMeteoData
+from import_measurement import ImportMeasurementData
 from DischargeDaily import ImportDailyDischargeData
-## BMP Scenario
-from import_bmp_scenario import ImportBMPTables
 ## Spatial modules
 from subbasin_delineation import SubbasinDelineation
 from gen_subbasins import GenerateSubbasins
@@ -23,20 +22,16 @@ if __name__ == "__main__":
     ## Update SQLite Parameters.db3 database
     reConstructSQLiteDB()
     ## Climate Data
-    #SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
-    #ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
-    #ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecExcelPrefix,PrecDataYear, SitesPList)
-
+    SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
+    ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
+    ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecDailyFile, SitesPList)
+    ImportMeasurementData(HOSTNAME,PORT,ClimateDBName,MEASUREMENT_DATA_DIR)
     ## TODO: Measurements Data, i.e., DB_TAB_MEASUREMENT, field design refers to DB_TAB_DATAVALUES
-
-    #ImportDailyDischargeData(HOSTNAME,PORT,ClimateDBName,DischargeExcelPrefix,DischargeYear)
-    ## Import BMP scenario database to MongoDB
-    ImportBMPTables()
+    ImportDailyDischargeData(HOSTNAME,PORT,ClimateDBName,DischargeExcelPrefix,DischargeYear)
     ## Spatial Data derived from DEM
-    #SubbasinDelineation(np, WORKING_DIR, dem, outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
-    #GenerateSubbasins(WORKING_DIR, exeDir=CPP_PROGRAM_DIR)
-
+    SubbasinDelineation(np, WORKING_DIR, dem, outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
+    GenerateSubbasins(WORKING_DIR, exeDir=CPP_PROGRAM_DIR)
     ## Extract parameters from landuse, soil properties etc.
-    #ExtractParameters(landuseFile, WORKING_DIR, True, True, True, True)
+    ExtractParameters(landuseFile, WORKING_DIR, True, True, True, True)
     ## Import to MongoDB database
-    #BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesThiessen, MeteorSitesThiessen)
+    BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesThiessen, MeteorSitesThiessen)
