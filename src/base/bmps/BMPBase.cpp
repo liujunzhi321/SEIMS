@@ -1,20 +1,19 @@
 #include "BMPBase.h"
-
 using namespace MainBMP;
+
+BMPBase::BMPBase(string bmpDatabasePath,int id,string name, int type,string parameter):
+	m_bmpDatabasePath(bmpDatabasePath),	m_bmpId(id),m_bmpName(name),m_bmpType(type),m_parameterTableName(parameter)
+{
+}
+
+BMPBase::BMPBase(mongoc_client_t* conn,int id,string name, int type,string parameter):
+m_conn(conn),	m_bmpId(id),m_bmpName(name),m_bmpType(type),m_parameterTableName(parameter)
+{
+}
 
 BMPBase::~BMPBase(void)
 {
 }
-
-BMPBase::BMPBase(string bmpDatabasePath,int id,string name, int type,string parameter)
-{
-	m_bmpDatabasePath = bmpDatabasePath;
-	m_bmpId = id;
-	m_bmpName = name;
-	m_bmpType = type;
-	m_parameterTableName = parameter;
-}
-
 void BMPBase::Dump(ostream* fs)
 {
 	if(fs == NULL) return;

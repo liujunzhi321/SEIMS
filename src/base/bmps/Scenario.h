@@ -28,10 +28,7 @@
 #include <iomanip>
 
 using namespace std;
-/*!
- *  \addtogroup MainBMP
- *  \ingroup bmps
- */
+
 namespace MainBMP
 {
 	/*!

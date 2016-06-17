@@ -4,16 +4,27 @@
 
 namespace MainBMP
 {
-	class BMPReachFactory :
-		public BMPFactory
+	/*!
+	 * \class BMPReachFactory
+	 * \ingroup MainBMP
+	 *
+	 * \brief Initiate a Reach BMP
+	 *
+	 */
+	class BMPReachFactory :	public BMPFactory
 	{
 	public:
+		/// Constructor
 		BMPReachFactory(int scenarioId,int bmpId,int bmpType,string distribution,string parameter);
+		/// Destructor
 		~BMPReachFactory(void);
-
+		/// Load BMP parameters from MongoDB
+		//void loadBMP(mongoc_client_t* conn) = 0;
+		/// Load BMP parameters from SQLite
 		void loadBMP(string bmpDatabasePath);
+		/// Create a reach BMP instance
 		BMPReach* ReachBMP(int reachId);
-
+		/// Output
 		void Dump(ostream* fs);
 
 		/*
