@@ -158,7 +158,7 @@ private:
 
 	map<int, vector<int> > m_reachLayers;
 
-	void initalOutputs();
+	void initialOutputs();
 
 	void ChannelFlow(int i);
 	float GetNewQ(float qIn, float qLast, float surplus, float alpha, float dt, float dx);

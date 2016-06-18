@@ -26,7 +26,7 @@ public:
 
 private:
 
-	void initalOutputs();
+	void initialOutputs();
 	
 	// size of array 
 	int m_size;

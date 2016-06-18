@@ -147,9 +147,9 @@ bool SedBonNutrient_OL::CheckInputData(void)
 	return true;
 }
 
-void  SedBonNutrient_OL::initalOutputs()
+void  SedBonNutrient_OL::initialOutputs()
 {
-	if(this->m_nCells <= 0) throw ModelException("SedBonNutrient_OL","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException("SedBonNutrient_OL","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_SedBonP == NULL)
 	{
@@ -341,7 +341,7 @@ int SedBonNutrient_OL::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 
 	for (int iLayer = 0; iLayer < m_nLayers; ++iLayer)
 	{
@@ -456,7 +456,7 @@ void SedBonNutrient_OL::Set1DData(const char* key, int n, float* data)
 
 void SedBonNutrient_OL::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 
 	string sk(key);
 	*n = m_nCells;

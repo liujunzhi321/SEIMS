@@ -78,9 +78,9 @@ bool NitrogenFixation::CheckInputData(void)
 	return true;
 }
 
-void  NitrogenFixation::initalOutputs()
+void  NitrogenFixation::initialOutputs()
 {
-	if(m_size <= 0) throw ModelException("NitrogenFixation","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_size <= 0) throw ModelException("NitrogenFixation","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_fixN == NULL)
 	{
@@ -150,7 +150,7 @@ void NitrogenFixation::Set1DData(const char* key, int n, float* data)
 
 void NitrogenFixation::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 
 	string sk(key);
 	*n = m_size;
@@ -201,7 +201,7 @@ int NitrogenFixation::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 
 	#pragma omp parallel for
 	for(int i=0; i < m_size; i++)

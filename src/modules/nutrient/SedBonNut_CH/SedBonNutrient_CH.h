@@ -124,7 +124,7 @@ private:
 private:
 
 	static string toString(float value);
-	void initalOutputs();
+	void initialOutputs();
 	void GetNutrientInFlow(int iReach, int iCell, int id);
 
 	/**

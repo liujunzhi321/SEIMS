@@ -111,7 +111,7 @@ private:
 	*/
 	bool CheckInputSize(const char*,int);
 
-	void initalOutputs();
+	void initialOutputs();
 
 	void FlowInSoil(int id);
 };

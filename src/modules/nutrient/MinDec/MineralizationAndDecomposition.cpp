@@ -245,9 +245,9 @@ bool MineralizationAndDecomposition::CheckInputData(void)
 	return true;
 }
 
-void  MineralizationAndDecomposition::initalOutputs()
+void  MineralizationAndDecomposition::initialOutputs()
 {
-	if(this->m_size <= 0) throw ModelException("MineralizationAndDecomposition","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_size <= 0) throw ModelException("MineralizationAndDecomposition","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_TF == NULL)
 	{
@@ -509,7 +509,7 @@ int MineralizationAndDecomposition::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 
 	#pragma omp parallel for
 	for(int i=0; i < m_nLayers; i++)

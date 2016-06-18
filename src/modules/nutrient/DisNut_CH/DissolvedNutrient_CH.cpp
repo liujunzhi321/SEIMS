@@ -298,11 +298,11 @@ void DissolvedNutrient_CH::Get2DData(const char *key, int *nRows, int *nCols, fl
 
 }
 
-void  DissolvedNutrient_CH::initalOutputs()
+void  DissolvedNutrient_CH::initialOutputs()
 {
 	//allocate the output variable
-	if(this->m_nCells <= 0) throw ModelException("DissolvedNutrient_CH","initalOutputs","The cell number of the input can not be less than zero.");
-	if(this->m_chNumber <= 0) throw ModelException("DissolveNutrient_CH","initalOutputs","The channel number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException("DissolvedNutrient_CH","initialOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_chNumber <= 0) throw ModelException("DissolveNutrient_CH","initialOutputs","The channel number of the input can not be less than zero.");
 
 	if(m_DissovP_KG == NULL)
 	{
@@ -483,7 +483,7 @@ int DissolvedNutrient_CH::Execute()
 {
 	this->CheckInputData();
 
-	initalOutputs();
+	initialOutputs();
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
 	{

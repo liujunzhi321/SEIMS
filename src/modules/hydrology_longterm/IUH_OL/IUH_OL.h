@@ -83,7 +83,7 @@ private:
 	/// end time of simulation
 	///time_t m_EndDate;
 
-	//temparory
+	//temporary
 	float** m_cellFlow;	
 	int	    m_cellFlowCols;
 
@@ -91,6 +91,6 @@ private:
 	/// overland flow to streams for each subbasin (m3/s)
 	float* m_Q_SBOF;
 
-	void initalOutputs();
+	void initialOutputs();
 };
 

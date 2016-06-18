@@ -217,9 +217,9 @@ bool NutrientTransport_OL::CheckInputData(void)
 	return true;
 }
 
-void  NutrientTransport_OL::initalOutputs()
+void  NutrientTransport_OL::initialOutputs()
 {
-	if(m_nCells <= 0) throw ModelException("NutrientTransport_OL","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_nCells <= 0) throw ModelException("NutrientTransport_OL","initialOutputs","The cell number of the input can not be less than zero.");
 	if(m_nsub <= 0)
 	{
 		map<int,int> subs;
@@ -419,7 +419,7 @@ void NutrientTransport_OL::Set1DData(const char* key, int n, float* data)
 
 void NutrientTransport_OL::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 
 	string sk(key);
 	*n = m_nCells;
@@ -655,7 +655,7 @@ int NutrientTransport_OL::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 
 	int area = m_CellWidth * m_CellWidth / 10000;
 
