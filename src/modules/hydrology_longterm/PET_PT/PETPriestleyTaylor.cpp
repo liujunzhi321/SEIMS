@@ -18,22 +18,33 @@
 using namespace std;
 
 PETPriestleyTaylor::PETPriestleyTaylor(void):m_tMin(NULL), m_tMax(NULL), m_sr(NULL), 
-	m_rhd(NULL), m_elev(NULL), m_pet(NULL), m_petFactor(1.0f),m_nCells(-1)
+	m_rhd(NULL), m_elev(NULL), m_dayLen(NULL), m_pet(NULL),m_vpd(NULL) ,m_petFactor(1.0f),m_nCells(-1)
 {
 }
 
 PETPriestleyTaylor::~PETPriestleyTaylor(void)
 {
-	if(this->m_pet != NULL)
-		delete [] this->m_pet;
+	if(this->m_dayLen != NULL) delete [] this->m_dayLen;
+	if(this->m_pet != NULL)		delete [] this->m_pet;
+	if(this->m_vpd != NULL)	delete [] this->m_vpd;
 }
 
 void PETPriestleyTaylor::Get1DData(const char* key, int* n, float **data)
 {
 	string sk(key);
-	if (StringMatch(sk, VAR_PET))
+	if (StringMatch(sk, VAR_DAYLEN))
+	{
+		*data = this->m_dayLen;
+		*n = this->m_nCells;
+	}
+	else if (StringMatch(sk, VAR_PET))
 	{
 		*data = this->m_pet;
+		*n = this->m_nCells;
+	}
+	else if (StringMatch(sk, VAR_VPD))
+	{
+		*data = this->m_vpd;
 		*n = this->m_nCells;
 	}
 	else
@@ -70,7 +81,7 @@ bool PETPriestleyTaylor::CheckInputData()
 	if(this->m_elev == NULL)
 		throw ModelException(MID_PET_PT,"CheckInputData","The elevation can not be NULL.");
 	if(this->m_cellLat == NULL)
-		throw ModelException(MID_PET_PT,"CheckInputData","The latitude of meteorology stations can not be NULL.");
+		throw ModelException(MID_PET_PT,"CheckInputData","The latitude can not be NULL.");
 	if(this->m_rhd == NULL)
 		throw ModelException(MID_PET_PT,"CheckInputData","The relative humidity can not be NULL.");
 	if(this->m_sr == NULL)
@@ -81,6 +92,7 @@ bool PETPriestleyTaylor::CheckInputData()
 		throw ModelException(MID_PET_PT,"CheckInputData","The max temperature can not be NULL.");
 	if(this->m_tMean == NULL)
 		throw ModelException(MID_PET_PT,"CheckInputData","The mean temperature can not be NULL.");
+
 	return true;
 }
 
@@ -88,7 +100,17 @@ int PETPriestleyTaylor::Execute()
 {
 	if(!this->CheckInputData()) return false;
 	if(this->m_pet == NULL)
+	{
 		this->m_pet = new float[this->m_nCells];
+		this->m_vpd = new float[m_nCells];
+		this->m_dayLen = new float[m_nCells];
+		for (int i = 0; i < m_nCells; ++i)
+		{
+			this->m_pet[i] = 0.f;
+			this->m_vpd[i] = 0.f;
+			this->m_dayLen[i] = 0.f;
+		}
+	}
 	int d = JulianDay(this->m_date);
 #pragma omp parallel for
 	for (int i = 0; i < m_nCells; ++i)
@@ -101,12 +123,17 @@ int PETPriestleyTaylor::Execute()
 			raShortWave = m_sr[i] * (1.0f - 0.8f);
 
 		/// calculate the max solar radiation
-		m_srMax = MaxSolarRadiation(d, this->m_cellLat[i]);
+		MaxSolarRadiation(d, this->m_cellLat[i],this->m_dayLen[i],m_srMax);
 
 		/// calculate net long-wave radiation
 		/// net emissivity  equation 2.2.20 in SWAT manual
 		float satVaporPressure = SaturationVaporPressure(m_tMean[i]);
-		float actualVaporPressure = m_rhd[i] * satVaporPressure;
+		float actualVaporPressure = 0.f;
+		if(m_rhd[i] > 1)   /// IF percent unit.
+			actualVaporPressure	 = m_rhd[i] * satVaporPressure * 0.01;
+		else
+			actualVaporPressure = m_rhd[i] * satVaporPressure;
+		m_vpd[i] = satVaporPressure - actualVaporPressure;
 		float rbo = -(0.34f - 0.139f * sqrt(actualVaporPressure));
 		//cloud cover factor
 		float rto = 0.0f;

@@ -7,11 +7,11 @@
 using namespace std;
 #include "SimulationModule.h"
 
-class Yield:public SimulationModule
+class YLD:public SimulationModule
 {
 public:
-	Yield(void);
-	~Yield(void);
+	YLD(void);
+	~YLD(void);
 	virtual int Execute();
 	virtual void SetValue(const char* key, float data);
 	virtual void Set1DData(const char* key, int n, float* data);

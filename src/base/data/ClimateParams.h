@@ -11,6 +11,7 @@
 #include <string>
 
 using namespace std;
+
 /*!
  * \brief Get the year
  * \return int year
@@ -31,11 +32,12 @@ float	LatentHeatVapor(float &tmean);
  * \brief Calculate the max solar radiation for a station of one day
  *
  *
- * \param[in] day Julian day.
+ * \param[in] jDay Julian day.
  * \param[in] lat Latitude of the station
- * \return float The max solar radiation.
+ * \param[out] dayL day length (hr)
+ * \param[out] maxSR The max solar radiation.
 */
-float	MaxSolarRadiation(int&,float&);
+void	MaxSolarRadiation(int& jDay,float& lat, float& dayL, float& maxSR);
 /*!
  * \brief Calculate mean barometric pressure
  * \param[in] elev elevation of current cell or site

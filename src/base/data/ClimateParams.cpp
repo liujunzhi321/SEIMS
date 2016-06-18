@@ -38,8 +38,7 @@ int JulianDay(time_t &date)
 	LocalTime(date, &dateInfo);
 	return dateInfo.tm_yday + 1;
 }
-
-float MaxSolarRadiation(int &day,float &lat)
+void MaxSolarRadiation(int &day,float &lat, float &dayL, float &maxSR)
 {
 	lat = lat * PI / 180.;
 	//Calculate Daylength
@@ -50,7 +49,6 @@ float MaxSolarRadiation(int &day,float &lat)
 	//also called the eccentricity correction factor of the orbit, Duffie and Beckman(1980)
 	//equation 1:1.1.1 in SWAT Theory 2009, p30
 	float dd = 1.0f + 0.033f * cos(day / 58.09f);
-
 	//daylength = 2 * Acos(-Tan(sd) * Tan(lat)) / omega
 	//where the angular velocity of the earth's rotation, omega, is equal
 	//to 15 deg/hr or 0.2618 rad/hr and 2/0.2618 = 7.6374
@@ -65,15 +63,13 @@ float MaxSolarRadiation(int &day,float &lat)
 		h = acos(ch);
 	else
 		h = PI; //latitude exceeds +/- 66.5 deg in summer
-
-	float dayl = 7.6394f * h; /// useless?
-
+	dayL = 7.6394f * h;
 	//Calculate Potential (maximum) Radiation !!
 	/// equation 1:1.1.3 in SWAT Theory 2009, p31
 	float ys = sin(lat) * sin(sd);
 	float yc = cos(lat) * cos(sd);
 	/// equation 1:1.1.7 in SWAT Theory 2009, p34
-	return 30.f * dd * (h * ys + yc * sin(h));
+	maxSR = 30.f * dd * (h * ys + yc * sin(h));
 }
 
 float PsychrometricConst(float &tmean, float &elev)

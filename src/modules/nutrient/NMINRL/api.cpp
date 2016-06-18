@@ -59,7 +59,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	// set the input
 
 	mdi.AddParameter(VAR_CDN, UNIT_NON_DIM, DESC_CDN, Source_ParameterDB, DT_Array1D);
-	mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Raster1D);  /// idplt in SWAT is a lookup array. in SEIMS, use landcover
 	mdi.AddParameter(VAR_PL_RSDCO, UNIT_NON_DIM, DESC_PL_RSDCO, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_PSP, UNIT_NON_DIM, DESC_PSP, Source_ParameterDB, DT_Array1D);
 
@@ -114,7 +114,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, DT_Array2D);
 	mdi.AddOutput(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, DT_Array2D);
 	mdi.AddOutput(VAR_SOL_WPMM, UNIT_CONT_KGKM2, DESC_SOL_WPMM, DT_Array2D);
-	mdi.AddOutput(VAR_ROOTDEPTH, UNIT_CONT_KGKM2, DESC_ROOTDEPTH, DT_Array2D);
+	mdi.AddOutput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, DT_Array2D);
 	mdi.AddOutput(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, DT_Array2D);
 	mdi.AddOutput(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, DT_Array2D);
 

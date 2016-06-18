@@ -12,8 +12,10 @@ from text import *
 def ImportDayData(db, ClimateDateFile, sitesLoc):
     climDataItems = ReadDataItemsFromTxt(ClimateDateFile)
     climFlds = climDataItems[0]
-    requiredFlds = [Tag_DT_Year, Tag_DT_Month, Tag_DT_Day, \
-                    DataType_MaximumTemperature, DataType_MinimumTemperature, \
+    T_mean = []
+    Year = []
+    requiredFlds = [Tag_DT_Year, Tag_DT_Month, Tag_DT_Day,
+                    DataType_MaximumTemperature, DataType_MinimumTemperature,
                     DataType_RelativeAirMoisture, DataType_WindSpeed]
     for fld in requiredFlds:
         if not StringInList(fld, climFlds):
@@ -65,8 +67,8 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 if dic[Tag_DT_StationID] in sitesLoc.keys():
                     curLon, curLat = sitesLoc[dic[Tag_DT_StationID]].LonLat()
                     dic[DataType_SolarRadiation] = Rs(doy(dt), float(curSSD), curLat * math.pi / 180.0)
-        outputFlds = [DataType_MeanTemperature, DataType_MaximumTemperature, DataType_MinimumTemperature,\
-                      DataType_RelativeAirMoisture, DataType_PotentialEvapotranspiration, DataType_WindSpeed,\
+        outputFlds = [DataType_MeanTemperature, DataType_MaximumTemperature, DataType_MinimumTemperature,
+                      DataType_RelativeAirMoisture, DataType_PotentialEvapotranspiration, DataType_WindSpeed,
                       DataType_SolarRadiation]
         for fld in outputFlds:
             curDic = {}
@@ -78,6 +80,21 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 curDic[Tag_DT_LocalT] = dic[Tag_DT_LocalT]
                 curDic[Tag_DT_Type] = fld
                 db[Tag_ClimateDB_Data].insert_one(curDic)
+
+        T_mean.append(dic[DataType_MeanTemperature])
+        Year.append(curY)
+    for i in range(0,len(list(set(Year)))):
+        curDic = {}
+        HU = 0
+        T_base = 0
+        for j in range(0,len(Year)):
+            if(Year[j]==list(set(Year))[i]):
+                HU += T_mean[j] - T_base*1.0
+        curDic[Tag_DT_Value] = HU
+        curDic[Tag_DT_Year] = list(set(Year))[i]
+        curDic[Tag_VAR_UNIT] = "deg C"
+        curDic[Tag_VAR_Type] = DataType_YearlyHeatUnit
+        db[Tag_ClimateDB_YearlyHeatUnit].insert_one(curDic)
 
 def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     try:
@@ -91,13 +108,7 @@ def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
 
     if not Tag_ClimateDB_Data in cList:
         db.create_collection(Tag_ClimateDB_Data)
-    # else:
-    #     db.drop_collection(tb)
+    else:
+        db.drop_collection(Tag_ClimateDB_Data)
     ImportDayData(db, meteofile, siteMLoc)
     connMongo.close()
-
-
-## TODO: Calculate Heat unit of every year according to mean air temperature (named HUTOT).
-##       Reference to SWAT theory 2009, page 306, equation 5:1.1.1
-##       T_base = 0 deg C by default
-##       Import HUTOT to mongoDB as GridFS

@@ -11,6 +11,7 @@ Climate	Cond_max	maximum stomatal conductance	m/s	PET_PM	0.005		NC
 Climate	Weight_P	Weight Coefficient of Precipitation		ALL	-999		NC			
 Climate	Weight_T	Weight Coefficient of Temperature		ALL	-999		NC			
 Climate	Weight_PET	Weight Coefficient of Potential Evapotranspiration		ALL	-999		NC			
+Climate	esco	soil evaporation compensation factor		AET_PTH	0.95	1	RC	1	0.01	Y
 
 Snow	T_snow	Snowfall temperature	oC	ALL	0	0	AC	2	-2	Y
 Snow	T0	Snowmelt temperature	oC	ALL	1	0	AC	3	-1	Y
@@ -174,14 +175,11 @@ Nutrient	cmn	Rate coefficient for mineralization of the humus active organic nut
 Nutrient	cdn	rate coefficient for denitrification		NMINRL	1	0	AC	0	3	Y
 Nutrient	rsdco_pl	Plant residue decomposition coefficient		NMINRL	0.02	0.1	AC	0.01	0.099	Y
 
-PlantGrowth	nFixFactor	nitrogen fixation factor		PG_EPIC	0.5			1	0	
-PlantGrowth	nFixMax	maximum daily-n fixation	kg/ha	PG_EPIC	10			20	1	
-PlantGrowth	wDis	water use distribution parameter		PG_EPIC	10					
-PlantGrowth	wCom	water uptake compensation factor		PG_EPIC	0.5			1	0	
-PlantGrowth	nDis	nitrogen uptake distribution parameter		PG_EPIC	10					
-PlantGrowth	pDis	phosphorous uptake distribution parameter		PG_EPIC	10					
-PlantGrowth	frPerennial	perennial biomass loss fraction		PG_EPIC	0.1					
-PlantGrowth	startYear	the start year of rotation		PG_EPIC	2000					
-PlantGrowth	landUse	the initial distribution of crops		PG_EPIC	-99					
-PlantGrowth	minGrazingBio	minimum plant biomass for grazing	kg/ha	PG_EPIC	0				0	
-Evapotranspiration	esco	soil evaporation compensation factor		AET_PTH	0.95	1	AC	1	0.01	Y
+PlantGrowth	epco	plant water uptake compensation factor		BIO_EPIC	1	1	RC	1	0.01	Y
+PlantGrowth	n_updis	nitrogen uptake distribution parameter		BIO_EPIC	20	1	RC	100	0	Y
+PlantGrowth	p_updis	phosphorus uptake distribution parameter		BIO_EPIC	20	1	RC	100	0	Y
+PlantGrowth	nfixco	Nitrogen fixation coefficient		BIO_EPIC	0.5	1	RC	1	0	Y
+PlantGrowth	nfixmx	Maximum daily-n fixation (kg/ha)	kg/ha	BIO_EPIC	20	1	RC	20	1	Y
+PlantGrowth	dormhr	time threshold used to define dormant period for plant	hr	BIO_EPIC	0	1	AC	24	0	Y
+
+

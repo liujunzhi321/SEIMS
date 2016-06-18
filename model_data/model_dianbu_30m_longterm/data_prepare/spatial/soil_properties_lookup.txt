@@ -23,7 +23,7 @@
 ### SOL_AWC			(optional, multi-values) Available water capacity
 ### SOL_POROSITY	(optional, multi-values) Porosity
 ### SOL_USLE_K		(optional, multi-values) USLE K factor
-### SOL_ALB			(optional, multi-values) Soil albedo
+### SOL_ALB			(optional) Albedo when soil is moist
 SEQN	SNAM	NLAYERS	SOL_ZMX	SOL_Z	SOL_BD	SOL_OM	CLAY	SILT	SAND	ROCK
 1	Chengbaitutian	4	180	130,230,520,1000	1.19,-9999,-9999,-9999	1.66,0.57,0.36,0.43	14.22,16.9,52.32,50.04	53.59,50.6,44.88,47.06	32.19,32.5,2.8,2.9	0,0,0,0
 2	Huangbaitutian_h	2	230	140,230	-9999,-9999	1.18,0.76	15.64,16.95	52.62,51.93	31.74,31.12	0,0

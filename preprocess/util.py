@@ -340,6 +340,12 @@ def SplitStr(str, spliter=None):
             destStrs = srcStrs[:]
             break
     return destStrs
+def IsSubString(SubStrList,Str):
+    flag=True
+    for substr in SubStrList:
+        if not(substr in Str):
+            flag=False
+    return flag
 
 def replaceByDict(srcfile, vDict, dstfile):
     srcR = ReadRaster(srcfile)

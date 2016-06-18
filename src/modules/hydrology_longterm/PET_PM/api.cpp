@@ -39,23 +39,24 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the parameters
 	mdi.AddParameter(VAR_CO2,UNIT_GAS_PPMV,DESC_CO2,Source_ParameterDB,DT_Single);
-	mdi.AddParameter(VAR_COND_RATE,UNIT_CONDRATE_MSPA,DESC_CONDRATE,Source_ParameterDB,DT_Single);
-	mdi.AddParameter(VAR_COND_MAX,UNIT_SPEED_MS,DESC_MAXCOND,Source_ParameterDB,DT_Single);
 	mdi.AddParameter(VAR_T_SNOW,UNIT_DEPTH_MM,DESC_T_SNOW,Source_ParameterDB, DT_Single); 
 	mdi.AddParameter(VAR_K_PET, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
 
 	mdi.AddParameter(VAR_DEM,UNIT_LEN_M,CONS_IN_ELEV,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_CELL_LAT, UNIT_LONLAT_DEG, DESC_CELL_LAT, Source_ParameterDB, DT_Raster1D);
 
+	mdi.AddParameter(VAR_GSI, UNIT_SPEED_MS, DESC_GSI, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_VPDFR, UNIT_PRESSURE, DESC_VPDFR, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_FRGMAX, UNIT_NON_DIM, DESC_FRGMAX, Source_ParameterDB, DT_Raster1D);
 	// set the input from other modules
 	mdi.AddInput(DataType_MeanTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Raster1D);
 	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG,DESC_MINTEMP,Source_Module, DT_Array1D);
 	mdi.AddInput(DataType_MaximumTemperature,UNIT_TEMP_DEG,DESC_MAXTEMP,Source_Module, DT_Array1D);
-	mdi.AddInput(DataType_RelativeAirMoisture,UNIT_NON_DIM,DESC_RM,Source_Module, DT_Array1D);
+	mdi.AddInput(DataType_RelativeAirMoisture,UNIT_PERCENT,DESC_RM,Source_Module, DT_Array1D);
 	mdi.AddInput(DataType_SolarRadiation,UNIT_SR,DESC_SR,Source_Module, DT_Array1D);
 	mdi.AddInput(DataType_WindSpeed,UNIT_SPEED_MS,DESC_WS,Source_Module, DT_Array1D);
 	
-	/// these three parameters all from plant growth module.
+	/// these three parameters all from plant growth module, e.g., BIO_EPIC
 	mdi.AddInput(VAR_CHT,UNIT_LEN_M,DESC_CHT,Source_Module, DT_Raster1D);	
 	mdi.AddInput(VAR_LAIDAY,UNIT_AREA_RATIO,DESC_LAIDAY,Source_Module,DT_Raster1D);
 	mdi.AddInput(VAR_ALBDAY,UNIT_NON_DIM,DESC_ALBDAY,Source_Module,DT_Array1D);
@@ -64,11 +65,15 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO,Source_Module,DT_Raster1D);
 
 	// set the output variables
+	mdi.AddOutput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, DT_Raster1D);
 	mdi.AddOutput(VAR_PET,UNIT_WTRDLT_MMD, DESC_PET, DT_Raster1D);
 	mdi.AddOutput(VAR_PPT,UNIT_WTRDLT_MMD, DESC_PPT, DT_Raster1D);
+	mdi.AddOutput(VAR_VPD, UNIT_PRESSURE, DESC_VPD, DT_Raster1D);
 	string res = mdi.GetXMLDocument();
 
 	char* tmp = new char[res.size()+1];
 	strprintf(tmp, res.size()+1, "%s", res.c_str());
 	return tmp;
 }
+	//mdi.AddParameter(VAR_COND_RATE,UNIT_CONDRATE_MSPA,DESC_CONDRATE,Source_ParameterDB,DT_Single);
+	//mdi.AddParameter(VAR_COND_MAX,UNIT_SPEED_MS,DESC_MAXCOND,Source_ParameterDB,DT_Single);

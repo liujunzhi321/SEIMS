@@ -1,3 +1,9 @@
+/*!
+ * \file BMPText.h
+ * \brief BMP related const strings
+ * \revised Liang-Jun Zhu
+ * \date 2016-6-16
+ */
 #ifndef BMP_TEXT_H
 #define BMP_TEXT_H
 
@@ -5,12 +11,23 @@
 #define BMP_DATABASE_NAME	"BMP.db3"
 
 //Table names in BMP database
-#define TABLE_INDEX			"BMP_index"
-#define TABLE_SCENARIO		"BMP_scenarios"
-#define TABLE_REACH			"Reach_BMP"
-#define TABLE_POINTSOURCE	"pointsource"
-#define TABLE_FLOWDIVERSION	"flowdiversion"
-#define TABLE_RESERVOIR		"reservoir"
+#define TAB_BMP_INDEX				"BMP_index"
+#define TAB_BMP_SCENARIO		"BMP_scenarios"
+#define TAB_BMP_REACH				"Reach_BMP"
+#define TAB_BMP_POINT_SRC	"pointsource"
+#define TAB_BMP_FLOWDIVERSION	"flowdiversion"
+#define TAB_BMP_RESERVOIR	"reservoir"
+
+/// Table field names 
+/// TAB_BMP_SCENARIO
+#define FLD_SCENARIO_ID				"ID"
+#define FLD_SCENARIO_NAME		"NAME"
+#define FLD_SCENARIO_BMPID		"BMP"
+#define FLD_SCENARIO_DIST			"DISTRIBUTION"
+#define FLD_SCENARIO_LOOKUP	"PARAMETER"
+/// TAB_BMP_INDEX
+#define FLD_BMP_ID							"ID"
+#define FLD_BMP_TYPE						"Type"
 
 //bmp name
 //also the column name in Reach_BMP table for reach BMPs
@@ -35,7 +52,7 @@
 #define BMP_NAME_TILEDRAIN				"Tile Drain Management"
 #define BMP_NAME_URBAN					"Urban Management"
 
-//the hydro climate data columns of pointsource,flowdiversion and reservoir
+//the hydro climate data columns of pointsource, flowdiversion and reservoir
 #define BMP_REACH_FLOW_NAME			"flow"
 #define BMP_REACH_SEDIMENT_NAME		"sediment"
 #define BMP_REACH_ORGANICN_NAME		"organicN"
@@ -133,12 +150,12 @@
 #define RESERVOIR_NUT_METHOD_INDEX		40  //The method used to do nutrient routing
 
 //Crop classification
-#define CROP_CLASSIFICATION_WARM_SEASON_ANNUAL_LEGUME	1
-#define CROP_CLASSIFICATION_CODE_SEASON_ANNUAL_LEGUME	2
-#define CROP_CLASSIFICATION_PERENNIAL_LEGUME			3
-#define CROP_CLASSIFICATION_WARM_SEASON_ANNUAL			4
-#define CROP_CLASSIFICATION_COLD_SEASON_ANNUAL			5
-#define CROP_CLASSIFICATION_PERENNIAL					6
-#define CROP_CLASSIFICATION_TREES						7
+#define CROP_IDC_WARM_SEASON_ANNUAL_LEGUME	1
+#define CROP_IDC_CODE_SEASON_ANNUAL_LEGUME	2
+#define CROP_IDC_PERENNIAL_LEGUME							3
+#define CROP_IDC_WARM_SEASON_ANNUAL						4
+#define CROP_IDC_COLD_SEASON_ANNUAL						5
+#define CROP_IDC_PERENNIAL												6
+#define CROP_IDC_TREES														7
 
 #endif

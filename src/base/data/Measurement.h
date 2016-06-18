@@ -41,7 +41,7 @@ public:
 	//! Get site data by time
 	virtual float*		GetSiteDataByTime(time_t t) = 0;
 	//! Get Number of site
-	int					NumberOfSites()	{return m_siteIDList.size();}
+	int						NumberOfSites()	{return m_siteIDList.size();}
 	//! Get HydroClimate site type, "M" or "P"
 	string				Type(){return m_type;	}
 	//! start time
@@ -53,16 +53,16 @@ protected:
 	//! MongoDB client object
 	mongoc_client_t*	m_conn;
 	//! HydroClimate database name
-	string				m_hydroDBName;
+	string						m_hydroDBName;
 	//! Site IDs list
-	vector<int>			m_siteIDList;
+	vector<int>				m_siteIDList;
 	//! Site type, M means meteorology, and P means precipitation
-	string				m_type;
+	string						m_type;
 	//! Start time
-	time_t				m_startTime;
+	time_t						m_startTime;
 	//! End time
-	time_t				m_endTime;
+	time_t						m_endTime;
 	//!	Measurement data of all sites in given date
-	float				*pData;
+	float							*pData;
 };
 

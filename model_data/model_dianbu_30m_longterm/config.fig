@@ -2,6 +2,7 @@
 ### MODULE CLASS NO. | PROCESS NAME | METHOD NAME | MODULE ID
 #0 | Climate
 0 | TimeSeries | | TSD_RD
+### [ITP method]_[Vertical Interpolation Method], 0 is not use vertical iterpolation.
 0 | Interpolation | Thiessen_0 | ITP
 0 | PET | Hargreaves | PET_H
 #0 | PET | PriestleyTaylor | PET_PT

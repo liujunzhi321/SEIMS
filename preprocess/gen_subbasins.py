@@ -67,12 +67,12 @@ def MaskDEMFiles(workingDir,exeDir=None):
     subbasinTauFile = tauDir + os.sep + subbasin
     originalFiles = [subbasin, flowDir, streamRaster, 
                      slope, filledDem, acc, streamOrder,
-                     flowDirDinf, dirCodeDinf, slopeDinf, weightDinf,cellLat]
+                     flowDirDinf, dirCodeDinf, slopeDinf, weightDinf,cellLat, daylMin,dormhr]
     originalFiles = [(tauDir + os.sep + item) for item in originalFiles]
     maskedFiles = [subbasinM, flowDirM, streamRasterM]
     maskedFiles = [(tauDir + os.sep + item) for item in maskedFiles]
     outputList = [slopeM, filldemM, accM,  streamOrderM, flowDirDinfM,
-                    dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM]
+                    dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM, daylMinM,dormhrM]
     for output in outputList:
         maskedFiles.append(workingDir + os.sep + output)
 

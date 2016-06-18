@@ -22,7 +22,7 @@
 *
 * Revised LiangJun Zhu
 *	1. Add the support of dynamic multi-layers soil, rather than the fixed 2 layers in previous version.
-*   2.The unit of soil depth and root depth are both mm.
+*   2.The unit of soil depth and root depth (from crop.dat) are both mm.
 */
 
 #pragma once

@@ -51,15 +51,15 @@ def thiessen(x, y, locList):
             disMin = dis
     coef_list[iMin] = 1
     fmt = '%df'%(len(coef_list))
-    
-    s = pack(fmt, *coef_list)    
+
+    s = pack(fmt, *coef_list)
     return s, iMin
 
                        
 def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData = False):
     #print "\t Subbasin:", subbasinID
     dbModel = conn[modelName]
-    spatial = GridFS(dbModel, 'spatial')
+    spatial = GridFS(dbModel, DB_TAB_SPATIAL)
         
     #read mask file from mongodb
     maskName = str(subbasinID) + '_MASK'

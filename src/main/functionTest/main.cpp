@@ -39,6 +39,8 @@ int main(int argc, const char* argv[])
 	//mongoc_collection_t	*collection;
 	mongoc_gridfs_t *gfs = mongoc_client_get_gridfs(client,dbname,collname,err);
 
+	clsRasterData *test = new clsRasterData("E:\\data\\Dianbu\\patch_partition\\dianbu\\flow_dir.tif");
+
 	clsRasterData *mask = new clsRasterData(gfs,"1_MASK",NULL);
 	clsRasterData *raster1d = new clsRasterData(gfs,"1_BLAI",mask);
 	clsRasterData *raster2d = new clsRasterData(gfs,"1_DENSITY",mask);

@@ -71,7 +71,7 @@ private:
 	/// deposition ratio 
 	float m_depRatio;  // added by Wu Hui, 2013.11.16
 
-	void initalOutputs();
+	void initialOutputs();
 
 	float getPeakRunoffRate(int);
 };

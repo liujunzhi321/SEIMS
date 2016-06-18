@@ -42,10 +42,50 @@ def GenerateCellLatRaster():
         for col in range(cols):
             if dataLat[row][col] != ds.noDataValue:
                 dataLat[row][col] = upLat - (row + 0.5) * deltaLat
-    WriteGTiffFile(WORKING_DIR + os.sep + "taudir" + os.sep + cellLat,rows,cols,dataLat,\
+    WriteGTiffFile(WORKING_DIR + os.sep + "taudir" + os.sep + cellLat,rows,cols,dataLat,
                    ds.geotrans,ds.srs,ds.noDataValue,GDT_Float32)
     #print lowerLat,upLat
-
+def CalLatDependParas():
+    ### calculate minimum daylength, from readwgn.f of SWAT
+    ## daylength=2*acos(-tan(sd)*tan(lat))/omega
+    ## where solar declination, sd, = -23.5 degrees for minimum daylength in
+    ##                      northern hemisphere and -tan(sd) = .4348
+    ##       absolute value is taken of tan(lat) to convert southern hemisphere
+    ##                      values to northern hemisphere
+    ##       the angular velocity of the earth's rotation, omega, = 15 deg/hr or
+    ##                      0.2618 rad/hr and 2/0.2618 = 7.6394
+    cellLatR = ReadRaster(WORKING_DIR + os.sep + "taudir" + os.sep + cellLat)
+    latData = cellLatR.data
+    daylmnData = numpy.copy(latData)
+    zero = numpy.zeros((cellLatR.nRows, cellLatR.nCols))
+    nodata = numpy.ones((cellLatR.nRows, cellLatR.nCols)) * cellLatR.noDataValue
+    ## convert degrees to radians (2pi/360=1/57.296)
+    daylmnData = 0.4348 * numpy.abs(numpy.tan(daylmnData / 57.296))
+    condition = daylmnData < 1.
+    daylmnData = numpy.where(condition,numpy.arccos(daylmnData),zero)
+    condition2 = latData != cellLatR.noDataValue
+    daylmnData = daylmnData * 7.6394
+    daylmnData = numpy.where(condition2, daylmnData, nodata)
+    WriteGTiffFile(WORKING_DIR + os.sep + "taudir" + os.sep + daylMin,cellLatR.nRows, cellLatR.nCols,daylmnData,
+                   cellLatR.geotrans,cellLatR.srs,cellLatR.noDataValue, GDT_Float32)
+    ## calculate day length threshold for dormancy
+    dormhrData = numpy.copy(latData)
+    if dorm_hr < -UTIL_ZERO:
+        for i in range(cellLatR.nRows):
+            for j in range(cellLatR.nCols):
+                if dormhrData[i][j] != cellLatR.noDataValue:
+                    tmpLat = dormhrData[i][j]
+                    if tmpLat <= 40. and tmpLat >= 20.:
+                        dormhrData[i][j] = (numpy.abs(tmpLat - 20.)) / 20.
+                    elif tmpLat > 40.:
+                        dormhrData[i][j] = 1.
+                    elif tmpLat < 20.:
+                        dormhrData[i][j] = -1.
+    else:
+        defaultNormHr = numpy.ones((cellLatR.nRows, cellLatR.nCols)) * dorm_hr
+        dormhrData = numpy.where(condition2,defaultNormHr,nodata)
+    WriteGTiffFile(WORKING_DIR + os.sep + "taudir" + os.sep + dormhr,cellLatR.nRows, cellLatR.nCols,dormhrData,
+                   cellLatR.geotrans,cellLatR.srs,cellLatR.noDataValue, GDT_Float32)
 def SubbasinDelineation(np, workingDir, dem, outlet, threshold, mpiexeDir=None,exeDir=None):
     if not os.path.exists(workingDir):
         os.mkdir(workingDir)
@@ -157,3 +197,7 @@ def SubbasinDelineation(np, workingDir, dem, outlet, threshold, mpiexeDir=None,e
 
     ## Convert to WGS84 (EPSG:4326)
     GenerateCellLatRaster()
+    ## Calculate parameters dependent on latitude
+    CalLatDependParas()
+if __name__ == "__main__":
+    CalLatDependParas()

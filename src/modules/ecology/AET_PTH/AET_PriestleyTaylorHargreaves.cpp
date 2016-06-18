@@ -6,7 +6,7 @@
 using namespace std;
 AET_PT_H::AET_PT_H(void):m_nCells(-1), m_soilLayers(-1),m_esco(NULL), m_nSoilLayers(NULL), m_soilDepth(NULL), m_solAWC(NULL),
 	m_tMean(NULL), m_lai(NULL), m_pet(NULL), m_snowAcc(NULL), m_snowSB(NULL), m_solCov(NULL), m_solNo3(NULL), m_somo(NULL),
-	m_ppt(NULL), m_solAET(NULL), m_no3Up(NODATA), m_totSOMO(NULL)
+	m_ppt(NULL), m_soilESDay(NULL), m_no3Up(NODATA), m_totSOMO(NULL)
 {
 }
 
@@ -16,8 +16,8 @@ AET_PT_H::~AET_PT_H(void)
 	/// clean up output variables
 	if(m_ppt != NULL)
 		delete[] m_ppt;
-	if(m_solAET != NULL)
-		delete[] m_solAET;
+	if(m_soilESDay != NULL)
+		delete[] m_soilESDay;
 	if(m_snowAcc != NULL)
 		delete[] m_snowAcc;
 	if(m_somo != NULL)
@@ -101,16 +101,16 @@ int AET_PT_H::Execute()
 {
 	CheckInputData();
 	/// initialize output variables
-	if (this->m_totSOMO == NULL || m_ppt == NULL || m_solAET == NULL)
+	if (this->m_totSOMO == NULL || m_ppt == NULL || m_soilESDay == NULL)
 	{
 		m_totSOMO = new float[m_nCells];
 		m_ppt = new float[m_nCells];
-		m_solAET = new float[m_nCells];
+		m_soilESDay = new float[m_nCells];
 		for (int i =0; i < m_nCells; i++)
 		{
 			m_totSOMO[i] = 0.f;
 			m_ppt[i] = 0.f;
-			m_solAET[i] = 0.f;
+			m_soilESDay[i] = 0.f;
 		}
 	}
 	if(m_no3Up == NODATA)	m_no3Up = 0.f;
@@ -231,8 +231,8 @@ int AET_PT_H::Execute()
 			for(int ly = 0; ly < m_nSoilLayers[i]; ly++)
 				m_totSOMO[i] += m_somo[i][ly];
 			/// calculate actual amount of evaporation from soil
-			m_solAET[i] = es_max - esleft;
-			if(m_solAET[i] < 0.f) m_solAET[i] = 0.f;
+			m_soilESDay[i] = es_max - esleft;
+			if(m_soilESDay[i] < 0.f) m_soilESDay[i] = 0.f;
 		}
 	}
 	return true;
@@ -250,7 +250,7 @@ void AET_PT_H::Get1DData(const char* key, int* n, float** data)
 {
 	string sk(key);
 	if(StringMatch(sk, VAR_PPT))		*data = this->m_ppt;		
-	else if(StringMatch(sk, VAR_SOET))		*data = this->m_solAET;
+	else if(StringMatch(sk, VAR_SOET))		*data = this->m_soilESDay;
 	else if(StringMatch(sk, VAR_SNAC))		*data = this->m_snowAcc;
 	else if(StringMatch(sk, VAR_SOMO_TOT))		*data = this->m_totSOMO;
 	else									

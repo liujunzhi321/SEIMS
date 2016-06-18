@@ -32,15 +32,18 @@ clsRasterData::clsRasterData()
 	m_raster2DData = NULL;
 }
 
-clsRasterData::clsRasterData(string ascFileName)
+clsRasterData::clsRasterData(string rstFileName)
 {
 	m_rasterPositionData = NULL;
 	m_rasterData = NULL;
 	m_mask = NULL;
-	m_fileName = ascFileName;
+	m_fileName = rstFileName;
 	m_is2DRaster = false;
 	m_raster2DData = NULL;
-	ReadASCFile(ascFileName);
+	if(GetUpper(GetSuffix(rstFileName)) == "ASC")
+		ReadASCFile(rstFileName);
+	else
+		ReadFromGDAL(rstFileName);
 }
 
 clsRasterData::clsRasterData(mongoc_gridfs_t* gfs, const char* remoteFilename, clsRasterData* templateRaster)

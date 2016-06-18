@@ -8,6 +8,8 @@
               2. The PET calculate is changed from site-based to cell-based, because PET is not only dependent on Climate site data;
 			  3. Add ecology related parameters (initialized value).
 			  4. Add potential plant transpiration as output.
+			  5. Add m_VPD, m_dayLen as outputs, which will be used in BIO_EPIC module
+			  6. change m_vpd2 and m_gsi from DT_Single to DT_Raster1D, see readplant.f of SWAT
  */
 
 #ifndef SEIMS_PET_PM_INCLUDE
@@ -58,8 +60,10 @@ private:
 	*	@return bool The validity of the dimension
 	*/
 	bool CheckInputSize(const char*,int);
-	
-	void clearInputs(void);
+	/// USELESS? By LJ.
+	///void clearInputs(void);
+	/// initialize output variables
+	void initialOutputs();
 private:
 	/// Mean air temperature for a given day (deg C)
 	float *m_tMean;
@@ -101,9 +105,13 @@ private:
 	/// CO2 concentration(ppmv)
 	float m_co2;
 	/// rate of decline in stomatal conductance per unit increase in vapor pressure deficit(m/s/kPa)
-	float m_vpd2;
-	/// maximum stomatal conductance(m/s)
-	float m_gsi;
+	float* m_vpd2;
+	/// maximum stomatal conductance(m/s) at high solar radiation and low vpd
+	float* m_gsi;
+	/// vapor pressure deficit(kPa) corresponding to the second point on the stomatal conductance curve
+	float* m_vpdfr;
+	/// fraction of maximum stomatal conductance corresponding to the second point on the stomatal conductance curve 
+	float* m_frgmax;
 	///The temperature of snow melt
 	float m_tSnow;
 	/// Correction Factor for PET
@@ -112,6 +120,10 @@ private:
 	float *m_pet;
 	/// maximum amount of transpiration (plant et)  that can occur on current day in HRU
 	float *m_ppt;
+	/// vapor pressure deficit
+	float *m_vpd;
+	/// day length
+	float *m_dayLen;
 };
 #endif
 
