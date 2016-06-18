@@ -45,7 +45,7 @@ private:
 
 	void OverlandFlow(int id);
 
-	void initalOutputs();
+	void initialOutputs();
 
 	void concentration(int id);
 

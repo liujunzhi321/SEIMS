@@ -270,11 +270,11 @@ void SedBonNutrient_CH::Get2DData(const char *key, int *nRows, int *nCols, float
 
 }
 
-void  SedBonNutrient_CH::initalOutputs()
+void  SedBonNutrient_CH::initialOutputs()
 {
 	//allocate the output variable
-	if(this->m_nCells <= 0) throw ModelException("SedBonNutrient_CH","initalOutputs","The cell number of the input can not be less than zero.");
-	if(this->m_chNumber <= 0) throw ModelException("DissolveNutrient_CH","initalOutputs","The channel number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException("SedBonNutrient_CH","initialOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_chNumber <= 0) throw ModelException("DissolveNutrient_CH","initialOutputs","The channel number of the input can not be less than zero.");
 
 	if(m_SedBonP_KG == NULL)
 	{
@@ -440,7 +440,7 @@ int SedBonNutrient_CH::Execute()
 {
 	this->CheckInputData();
 
-	initalOutputs();
+	initialOutputs();
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
 	{
