@@ -91,7 +91,10 @@ def ImportData(db, measFileList, sitesLoc):
                 varDic = {}
                 varDic[Tag_ST_Type] = type[j]
                 varDic[Tag_ST_UNIT] = dic[Tag_ST_UNIT]
-                db[Tag_ClimateDB_VARs].insert_one(varDic)
+                results = db[Tag_ClimateDB_VARs].find({Tag_ST_Type:varDic[Tag_ST_Type]},{Tag_ST_Type:1})
+                records = [data for data in results]
+                if records == []:
+                    db[Tag_ClimateDB_VARs].insert_one(varDic)
 
 def ImportMeasurementData(hostname,port,dbName,path):
     '''
