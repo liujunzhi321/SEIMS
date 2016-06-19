@@ -16,20 +16,20 @@ def ImportData(db, measFileList, sitesLoc):
         #print measDataFile
         dataPath = MEASUREMENT_DATA_DIR + os.sep + measDataFile
         measDataItems = ReadDataItemsFromTxt(dataPath)
-        ## If the dataitems is EMPTY, then goto next data file.
-        if measDataItems == []:
+        ## If the dataitems is EMPTY or only have one header row, then goto next data file.
+        if measDataItems == [] or len(measDataItems) == 1:
             continue
         measFlds = measDataItems[0]
-        requiredFlds = [Tag_ST_SiteID, Tag_DT_Year, Tag_DT_Month, Tag_DT_Day,
-                        Tag_DT_Type,Tag_DT_Value]
+        requiredFlds = [Tag_ST_StationID, Tag_DT_Year, Tag_DT_Month, Tag_DT_Day,
+                        Tag_DT_Type, Tag_DT_Value]
         for fld in requiredFlds:
             if not StringInList(fld, measFlds):### data can not meet the request!
                 raise ValueError("The %s cann't meet the required format!" % measDataFile)
         for i in range(1,len(measDataItems)):
             dic = {}
             for j in range(len(measDataItems[i])):
-                if StringMatch(measFlds[j], Tag_ST_SiteID):
-                    dic[Tag_ST_SiteID] = int(measDataItems[i][j])
+                if StringMatch(measFlds[j], Tag_ST_StationID):
+                    dic[Tag_ST_StationID] = int(measDataItems[i][j])
                 elif StringMatch(measFlds[j], Tag_DT_Year):
                     curY = int(measDataItems[i][j])
                 elif StringMatch(measFlds[j], Tag_DT_Month):
@@ -54,8 +54,10 @@ def ImportData(db, measFileList, sitesLoc):
         for i in range(1,len(siteDataItems)):
             dic = {}
             for j in range(len(siteDataItems[i])):
-                if StringMatch(siteFlds[j], Tag_ST_SiteID):
-                    dic[Tag_ST_SiteID] = int(siteDataItems[i][j])
+                if StringMatch(siteFlds[j], Tag_ST_StationID):
+                    dic[Tag_ST_StationID] = int(siteDataItems[i][j])
+                elif StringMatch(siteFlds[j], Tag_ST_StationName):
+                    dic[Tag_ST_StationName] = StripStr(siteDataItems[i][j])
                 elif StringMatch(siteFlds[j], Tag_ST_Type):
                     type = SplitStr(StripStr(siteDataItems[i][j]),',')
                 elif StringMatch(siteFlds[j], Tag_ST_Latitude):
@@ -68,20 +70,28 @@ def ImportData(db, measFileList, sitesLoc):
                     dic[Tag_ST_LocalY] = float(siteDataItems[i][j])
                 elif StringMatch(siteFlds[j], Tag_ST_UNIT):
                     dic[Tag_ST_UNIT] = StripStr(siteDataItems[i][j])
+                elif StringMatch(siteFlds[j], Tag_ST_Elevation):
+                    dic[Tag_ST_Elevation] = float(siteDataItems[i][j])
                 elif StringMatch(siteFlds[j], Tag_ST_IsOutlet):
-                    dic[Tag_ST_IsOutlet] = int(siteDataItems[i][j])
+                    dic[Tag_ST_IsOutlet] = float(siteDataItems[i][j])
 
             for j in range(len(type)):
-                curDic = {}
-                curDic[Tag_ST_SiteID] = dic[Tag_ST_SiteID]
-                curDic[Tag_ST_Type] = type[j]
-                curDic[Tag_ST_Latitude] = dic[Tag_ST_Latitude]
-                curDic[Tag_ST_Longitude] = dic[Tag_ST_Longitude]
-                curDic[Tag_ST_LocalX] = dic[Tag_ST_LocalX]
-                curDic[Tag_ST_LocalY] = dic[Tag_ST_LocalY]
-                curDic[Tag_ST_UNIT] = dic[Tag_ST_UNIT]
-                curDic[Tag_ST_IsOutlet] = dic[Tag_ST_IsOutlet]
-                db[Tag_ClimateDB_MeasSites].insert_one(curDic)
+                siteDic = {}
+                siteDic[Tag_ST_StationID] = dic[Tag_ST_StationID]
+                siteDic[Tag_ST_StationName] = dic[Tag_ST_StationName]
+                siteDic[Tag_ST_Type] = type[j]
+                siteDic[Tag_ST_Latitude] = dic[Tag_ST_Latitude]
+                siteDic[Tag_ST_Longitude] = dic[Tag_ST_Longitude]
+                siteDic[Tag_ST_LocalX] = dic[Tag_ST_LocalX]
+                siteDic[Tag_ST_LocalY] = dic[Tag_ST_LocalY]
+                siteDic[Tag_ST_Elevation] = dic[Tag_ST_Elevation]
+                siteDic[Tag_ST_IsOutlet] = dic[Tag_ST_IsOutlet]
+                # db[Tag_ClimateDB_MeasSites].insert_one(curDic)
+                db[Tag_ClimateDB_Sites].insert_one(siteDic)
+                varDic = {}
+                varDic[Tag_ST_Type] = type[j]
+                varDic[Tag_ST_UNIT] = dic[Tag_ST_UNIT]
+                db[Tag_ClimateDB_VARs].insert_one(varDic)
 
 def ImportMeasurementData(hostname,port,dbName,path):
     '''

@@ -29,7 +29,7 @@ if __name__ == "__main__":
     ## Measurement Data, such as discharge, sediment yield.
     ImportMeasurementData(HOSTNAME,PORT,ClimateDBName,MEASUREMENT_DATA_DIR)
     ## Import BMP scenario database to MongoDB
-    ImportBMPTables()
+    #ImportBMPTables()
     ## Spatial Data derived from DEM
     #SubbasinDelineation(np, WORKING_DIR, dem, outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
     #GenerateSubbasins(WORKING_DIR, exeDir=CPP_PROGRAM_DIR)

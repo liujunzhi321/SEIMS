@@ -83,7 +83,7 @@ def GenerateWeightDependentParameters(conn, subbasinID):
     siteList = [int(item) for item in siteList]
 
     qDic = {Tag_ST_StationID: {'$in' : siteList}, Tag_DT_Type:Datatype_PHU0}
-    cursor = dbHydro[Tag_ClimateDB_PHU0].find(qDic).sort(Tag_ST_StationID, 1)
+    cursor = dbHydro[Tag_ClimateDB_ANNUAL_STATS].find(qDic).sort(Tag_ST_StationID, 1)
 
     idList = []
     phuList = []

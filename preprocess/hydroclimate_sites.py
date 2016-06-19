@@ -43,28 +43,28 @@ def ImportSitesTable(db, siteFile, siteType):
                 dic[Tag_ST_LocalX] = float(siteDataItems[i][j])
             elif StringMatch(siteFlds[j], Tag_ST_LocalY):
                 dic[Tag_ST_LocalY] = float(siteDataItems[i][j])
-            elif StringMatch(siteFlds[j], Tag_ST_LocalPrjID):
-                dic[Tag_ST_LocalPrjID] = siteDataItems[i][j]
+            # elif StringMatch(siteFlds[j], Tag_ST_LocalPrjID):
+            #     dic[Tag_ST_LocalPrjID] = siteDataItems[i][j]
             elif StringMatch(siteFlds[j], Tag_ST_Longitude):
                 dic[Tag_ST_Longitude] = float(siteDataItems[i][j])
             elif StringMatch(siteFlds[j], Tag_ST_Latitude):
                 dic[Tag_ST_Latitude] = float(siteDataItems[i][j])
-            elif StringMatch(siteFlds[j], Tag_ST_DatumID):
-                dic[Tag_ST_DatumID] = siteDataItems[i][j]
+            # elif StringMatch(siteFlds[j], Tag_ST_DatumID):
+            #     dic[Tag_ST_DatumID] = siteDataItems[i][j]
             elif StringMatch(siteFlds[j], Tag_ST_Elevation):
                 dic[Tag_ST_Elevation] = float(siteDataItems[i][j])
+            elif StringMatch(siteFlds[j], Tag_ST_IsOutlet):
+                dic[Tag_ST_IsOutlet] = float(siteDataItems[i][j])
         dic[Tag_ST_Type] = siteType
         insertResult = db[Tag_ClimateDB_Sites].insert_one(dic)
         if(not insertResult.acknowledged):
             print "Insert Site information to MongoDB faied!"
             exit(-1)
         if dic[Tag_ST_StationID] not in sitesLoc.keys():
-            sitesLoc[dic[Tag_ST_StationID]] = SiteInfo(dic[Tag_ST_StationID], dic[Tag_ST_StationName], \
-                                                       dic[Tag_ST_Latitude], dic[Tag_ST_Longitude], \
-                                                       dic[Tag_ST_LocalX], dic[Tag_ST_LocalY], \
+            sitesLoc[dic[Tag_ST_StationID]] = SiteInfo(dic[Tag_ST_StationID], dic[Tag_ST_StationName],
+                                                       dic[Tag_ST_Latitude], dic[Tag_ST_Longitude],
+                                                       dic[Tag_ST_LocalX], dic[Tag_ST_LocalY],
                                                        dic[Tag_ST_Elevation])
-        # sitesLoc[dic[Tag_ST_StationID]] = [dic[Tag_ST_StationName], dic[Tag_ST_Longitude], dic[Tag_ST_Latitude],\
-        #                                    dic[Tag_ST_LocalX], dic[Tag_ST_LocalY]]
     return sitesLoc
 ### Import variables table
 def ImportVariableTable(db, varFile):
@@ -73,16 +73,16 @@ def ImportVariableTable(db, varFile):
     for i in range(1,len(varDataItems)):
         dic = {}
         for j in range(len(varDataItems[i])):
-            if StringMatch(varFlds[j], Tag_VAR_ID):
-                dic[Tag_VAR_ID] = int(varDataItems[i][j])
-            elif StringMatch(varFlds[j], Tag_VAR_Type):
+            if StringMatch(varFlds[j], Tag_VAR_Type):
                 dic[Tag_VAR_Type] = varDataItems[i][j]  ## unicode(siteDataItems[i][j], 'gb2312')
+            # elif StringMatch(varFlds[j], Tag_VAR_ID):
+            #     dic[Tag_VAR_ID] = int(varDataItems[i][j])
             elif StringMatch(varFlds[j], Tag_VAR_UNIT):
                 dic[Tag_VAR_UNIT] = varDataItems[i][j]
-            elif StringMatch(varFlds[j], Tag_VAR_IsReg):
-                dic[Tag_VAR_IsReg] = varDataItems[i][j]
-            elif StringMatch(varFlds[j], Tag_VAR_Time):
-                dic[Tag_VAR_Time] = float(varDataItems[i][j])
+            # elif StringMatch(varFlds[j], Tag_VAR_IsReg):
+            #     dic[Tag_VAR_IsReg] = varDataItems[i][j]
+            # elif StringMatch(varFlds[j], Tag_VAR_Time):
+            #     dic[Tag_VAR_Time] = float(varDataItems[i][j])
         db[Tag_ClimateDB_VARs].insert_one(dic)
 
 def ImportHydroClimateSitesInfo(hostname,port,dbName,varfile, meteofile, precfile):

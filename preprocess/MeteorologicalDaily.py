@@ -105,7 +105,7 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
             curDic[Tag_DT_Year] = YYYY
             curDic[Tag_VAR_UNIT] = "heat units"
             curDic[Tag_VAR_Type] = DataType_YearlyHeatUnit
-            db[Tag_ClimateDB_PHU0].insert_one(curDic)
+            db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
         curPHU0 /= float(len(PHUCalDic[sID].keys()))
         PHUCalDic[sID][Datatype_PHU0] = curPHU0
         curDic = {}
@@ -114,7 +114,7 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
         curDic[Tag_DT_Year] = DEFAULT_NODATA
         curDic[Tag_VAR_UNIT] = "heat units"
         curDic[Tag_VAR_Type] = Datatype_PHU0
-        db[Tag_ClimateDB_PHU0].insert_one(curDic)
+        db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
 
 def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     try:
@@ -126,7 +126,7 @@ def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
         sys.exit(1)
     db = connMongo[dbName]
     cList = db.collection_names()
-    tables = [Tag_ClimateDB_Data, Tag_ClimateDB_PHU0]
+    tables = [Tag_ClimateDB_Data, Tag_ClimateDB_ANNUAL_STATS]
     for tb in tables:
         if not StringInList(tb, cList):
             db.create_collection(tb)

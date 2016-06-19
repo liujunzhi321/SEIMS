@@ -1,4 +1,4 @@
-SiteID	Y	M	D	Type	Value
+StationID	Y	M	D	Type	Value
 1	2014	8	27	TN	3.2525
 1	2014	8	28	TN	1.78
 1	2014	8	29	TN	2.13
