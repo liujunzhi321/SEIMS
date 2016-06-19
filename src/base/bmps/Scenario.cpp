@@ -174,7 +174,7 @@ void Scenario::loadBMPs()
 	bson_error_t *err;
 	if (mongoc_cursor_error(cursor,err))
 		throw ModelException("BMP Scenario", "loadBMPs","There are no record with scenario ID: " + ValueToString(m_id));
-	const bson_t			*info,*info2;
+	const bson_t			*info;
 	while(mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor,&info)){
 		bson_iter_t	iter;
 		int BMPID;
@@ -217,7 +217,8 @@ void Scenario::loadBMPDetail()
 	map<int,BMPFactory*>::iterator it;
 	for(it = this->m_bmpFactories.begin();it!=this->m_bmpFactories.end();it++)
 	{
-		it->second->loadBMP(this->m_conn);
+		it->second->loadBMP(this->m_projectPath);
+		//it->second->loadBMP(this->m_conn);
 	}
 }
 

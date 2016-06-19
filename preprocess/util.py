@@ -9,6 +9,24 @@ from gdalconst import *
 import shutil
 from text import *
 import numpy
+DELTA = 1.e-6
+UTIL_ZERO = 1.e-6
+MINI_SLOPE = 0.0001
+
+def FloatEqual(a, b):
+    return abs(a - b) < UTIL_ZERO
+def isNumericValue(x):
+    try:
+        xx = float(x)
+    except TypeError:
+        return False
+    except ValueError:
+        return False
+    except Exception, e:
+        return False
+    else:
+        return True
+
 ####  Climate Utility Functions  ####
 def IsLeapYear(year):
     if( (year%4 == 0 and year%100 != 0) or (year%400 == 0)):
@@ -68,13 +86,10 @@ def Rs(doy, n, lat):
 
 
 ####  Spatial Utility Functions  ####
-
-DELTA = 0.000001
-MINI_SLOPE = 0.0001
-def FloatEqual(a, b):
-    return abs(a - b) < DELTA
-
 class Raster:
+    '''
+    Basic Raster Class
+    '''
     def __init__(self, nRows, nCols, data, noDataValue=None, geotransform=None, srs=None):
         self.nRows = nRows
         self.nCols = nCols
@@ -177,16 +192,6 @@ def LastHalfDay(date):
             day = GetDayNumber(year, mon)
             
     return datetime.datetime(year, mon, day, h)
-
-def GetDayNumber(year, month):
-    if month in [1,3,5,7,8,10,12]:
-        return 31
-    elif month in [4,6,9,11]:
-        return 30
-    elif IsLeapYear(year):
-        return 29
-    else:
-        return 28
 
 def GetNumberList(s):
     a = []
@@ -340,12 +345,12 @@ def SplitStr(str, spliter=None):
             destStrs = srcStrs[:]
             break
     return destStrs
-def IsSubString(SubStrList,Str):
-    flag=True
-    for substr in SubStrList:
-        if not(substr in Str):
-            flag=False
-    return flag
+
+def IsSubString(SubStr, Str):
+    if SubStr.lower() in Str.lower():
+        return True
+    else:
+        return False
 
 def replaceByDict(srcfile, vDict, dstfile):
     srcR = ReadRaster(srcfile)

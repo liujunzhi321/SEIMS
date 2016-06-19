@@ -19,19 +19,22 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	MetadataInfo mdi;
 	string res;
 
-	mdi.SetAuthor("Name");
-	mdi.SetClass("TEST", "Base functionality test!");
-	mdi.SetDescription("Module test.");
-	mdi.SetID("moduletest");
-	mdi.SetName("moduletest");
+	mdi.SetAuthor("Liang-Jun Zhu");
+	mdi.SetClass(MCLS_MGT, MCLSDESC_MGT);
+	mdi.SetDescription(MDESC_MGT_SWAT);
+	mdi.SetID(MID_MGT_SWAT);
+	mdi.SetName(MID_MGT_SWAT);
 	mdi.SetVersion("1.0");
 	mdi.SetEmail(SEIMS_EMAIL);
 	mdi.SetWebsite(SEIMS_SITE);
 	mdi.SetHelpfile("");
 	/// set parameters from database
-	mdi.AddParameter("VAR_NAME", "UNIT", "DESC", "Source", "DT");
+	mdi.AddParameter(VAR_DAYLEN_MIN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN_MIN,Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter(VAR_PHUTOT, UNIT_TIMESTEP_HOUR, DESC_PHUTOT,Source_ParameterDB, DT_Raster1D);
 	/// set input from other modules
-	mdi.AddInput("VAR_NAME", "UNIT", "DESC", "Source", "DT");
+	mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_Module, DT_Raster1D); /// PET modules
+	mdi.AddInput(VAR_PHUBASE, UNIT_TIMESTEP_HOUR, DESC_PHUBASE, Source_Module, DT_Raster1D); /// PET modules
+	
 	/// set the output variables
 	mdi.AddOutput("VAR_NAME","UNIT", "DESC", "DT");
 	/// write out the XML file.

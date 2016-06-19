@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #coding=utf-8
 ## @Discharge daily data import
-#
+## Deprecated and Replaced by import_measurement.py. By Shen Fang and Zhu Liangjun. 2016-6-19
 #
 from text import *
 from pymongo import MongoClient
@@ -52,11 +52,3 @@ def ImportDailyDischargeData(hostname,port,dbName,DischargeExcelPrefix,Discharge
         siteFile = r'%s%d.xls' % (DischargeExcelPrefix, year)
         print siteFile
         ImportOneYear(year, db, siteFile)
-
-def ImportMeasurementData():
-    '''
-    This function mainly to import measurement data to mongoDB
-    data type may include Q (discharge, m3/s), totalN, totalP, etc.
-    TODO: LJ
-    '''
-    print "TODO"

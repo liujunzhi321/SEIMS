@@ -7,11 +7,26 @@ import os,platform,sys
 
 ## Directionaries 
 if platform.system() == "Windows":
-    BASE_DATA_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\model_data\model_dianbu_30m_longterm\data_prepare'
-    TXT_DB_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\database'
-    PREPROC_SCRIPT_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\preprocess'
-    CPP_PROGRAM_DIR = r'C:\Users\Administrator\Desktop\seims\preprocessBuild\Release'
-    METIS_DIR = r'C:\Users\Administrator\Desktop\seims\preprocessBuild\metis\programs\Release'
+    ### GAO HR
+    # BASE_DATA_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\model_data\model_dianbu_30m_longterm\data_prepare'
+    # TXT_DB_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\database'
+    # PREPROC_SCRIPT_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\preprocess'
+    # CPP_PROGRAM_DIR = r'D:\SEIMS_model\SEIMS_preprocessing\build\Release'
+    # METIS_DIR = r'D:\SEIMS_model\SEIMS_preprocessing\build\metis\programs'
+    # MPIEXEC_DIR = r'"D:\Program Files\Microsoft HPC Pack 2012\Bin"'
+    ### SHEN F
+    # BASE_DATA_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\model_data\model_dianbu_30m_longterm\data_prepare'
+    # TXT_DB_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\database'
+    # PREPROC_SCRIPT_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\preprocess'
+    # CPP_PROGRAM_DIR = r'C:\Users\Administrator\Desktop\seims\preprocessBuild\Release'
+    # METIS_DIR = r'C:\Users\Administrator\Desktop\seims\preprocessBuild\metis\programs\Release'
+    # MPIEXEC_DIR = None
+    ### ZHU LJ
+    BASE_DATA_DIR = r'E:\data\model_data\model_dianbu_10m_longterm\data_prepare'
+    TXT_DB_DIR = r'E:\code\Hydro\SEIMS\database'
+    PREPROC_SCRIPT_DIR = r'E:\code\Hydro\SEIMS\preprocess'
+    CPP_PROGRAM_DIR = r'D:\Compile\SEIMS_Preprocess\Release'
+    METIS_DIR = r'D:\Compile\SEIMS_Preprocess\metis\programs\Release'
     MPIEXEC_DIR = None
 elif platform.system() == "Linux": ### Hasn't tested yet, Apr.,2016, LJ.
     BASE_DATA_DIR = r'/data/liujz/data'
@@ -23,13 +38,15 @@ elif platform.system() == "Linux": ### Hasn't tested yet, Apr.,2016, LJ.
 CLIMATE_DATA_DIR = BASE_DATA_DIR + os.sep + 'climate'
 SPATIAL_DATA_DIR = BASE_DATA_DIR + os.sep + 'spatial'
 MEASUREMENT_DATA_DIR = BASE_DATA_DIR + os.sep + 'observed'
+BMP_DATA_DIR     = BASE_DATA_DIR + os.sep + 'management'
 WORKING_DIR      = BASE_DATA_DIR + os.sep + 'output'
 
 ## MongoDB related
 #HOSTNAME = '192.168.6.55'
 HOSTNAME = '127.0.0.1'
 PORT = 27017
-ClimateDBName = 'climate_dianbu'
+ClimateDBName = 'HydroClimate_dianbu'
+BMPScenarioDBName = 'BMP_Scenario_dianbu'
 SpatialDBName = 'model_dianbu_30m_longterm'
 forCluster = False 
 stormMode = False
@@ -112,4 +129,11 @@ LANDUSE_ATTR_DB = ["manning","i_max","i_min", "root_depth", "usle_c", "SOIL_T10"
 
 
 ## Hydrological parameters
-coeTable = {"T2":[0.05, 0.48],"T10":[0.12, 0.52], "T100":[0.18,0.55]} ## Adopted from WetSpa, used in radius.py, TODO: what's meaning
+## Adopted from WetSpa, used in radius.py, TODO: what's meaning
+coeTable = {"T2":[0.05, 0.48],
+            "T10":[0.12, 0.52],
+            "T100":[0.18,0.55]}
+## time threshold used to define dormant period for plant, default is -1.
+dorm_hr = -1.
+## minimum temperature for plant growth， deg C
+T_base = 0.

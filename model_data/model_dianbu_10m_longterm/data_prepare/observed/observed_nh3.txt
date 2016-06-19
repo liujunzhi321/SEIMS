@@ -1,4 +1,4 @@
-SiteID	Y	M	D	Type	Value
+StationID	Y	M	D	Type	Value
 1	2014	1	7	NH3	0.967
 2	2014	1	7	NH3	4.168
 3	2014	1	7	NH3	43.6

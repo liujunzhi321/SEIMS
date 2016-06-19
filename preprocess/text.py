@@ -18,11 +18,16 @@ Tag_CLIM_STORM_Suf = "storm_cmorph"
 Tag_Params = "param"
 Tag_Lookup = "lookup"
 init_params = 'model_param_ini'
-lookup_tabs = ['SoilLookup','LanduseLookup','TillageLookup',\
-               'UrbanLookup','CropLookup','FertilizerLookup',\
-               'ManagementTypeLookup','MgtOpSchedulesLookup']
+lookup_tabs = ['SoilLookup','LanduseLookup','TillageLookup',
+               'UrbanLookup','CropLookup','FertilizerLookup']
 CROP_FILE = TXT_DB_DIR + os.sep + 'crop.txt'
 sqliteFile = TXT_DB_DIR + os.sep + "Parameter.db3"
+
+
+## BMP Scenario database
+BMP_tabs = ['BMP_index','BMP_scenarios','crop_management','crop_management_dist',
+             'fertilizer_management','fertilizer_management_dist','tillage_management',
+             'tillage_management_dist']
 
 ## SOIL PARAMETERS NAMES, which will be appeared in MongoDB
 SOL_SEQN    = "SEQN"
@@ -67,7 +72,8 @@ DataType_SolarRadiation = "SR"			    	#6
 DataType_WindSpeed = "WS"						#7
 DataType_RelativeAirMoisture = "RM"			    #8
 DataType_SunDurationHour = "SSD"			    #9
-DataType_YearlyHeatUnit = "HUTOT"
+DataType_YearlyHeatUnit = "PHUTOT"
+Datatype_PHU0           = "PHU0"
 
 DataType_Meteorology = "M"                      # Suffix of meteorology data
 DataType_Prefix_TS = "T"                        # Prefix of time series data
@@ -82,7 +88,7 @@ Tag_DT_Zone = 'UTCOffset'
 Tag_DT_UTC = 'UTCDateTime'
 Tag_DT_Value = 'Value'
 
-Tag_ClimateDB_YearlyHeatUnit = 'YearlyHeatUnit'
+Tag_ClimateDB_ANNUAL_STATS = 'AnnualStats'
 Tag_ClimateDB_Measurement = 'Measurement'
 Tag_ClimateDB_MeasSites = 'MeasurementSites'
 Tag_ClimateDB_VARs = 'Variables'
@@ -103,7 +109,6 @@ Tag_ST_Latitude = 'Lat'
 Tag_ST_DatumID = 'DatumID'
 Tag_ST_Elevation = 'Elevation'
 Tag_ST_Type = 'Type'
-Tag_ST_SiteID = 'SiteID'
 Tag_ST_IsOutlet = 'isOutlet'
 Tag_ST_UNIT = 'Unit'
 

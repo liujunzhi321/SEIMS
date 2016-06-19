@@ -3,8 +3,7 @@
 
 namespace MainBMP
 {
-	class BMPReach :
-		public BMPBase
+	class BMPReach :	public BMPBase
 	{
 	public:
 		BMPReach(	string bmpDatabasePath,		/*The path of BMP database*/
@@ -71,7 +70,7 @@ namespace MainBMP
 		** All the text properties
 		*/
 		map<string,string> m_textParameters;
-	//time seriese data
+	//time series data
 	protected:
 		/*
 		** All the time series data connected with reach structure
@@ -101,7 +100,7 @@ namespace MainBMP
 
 	public:
 		/*
-		** Load time seriese data for some reach structure
+		** Load time series data for some reach structure
 		*/
 		void loadTimeSeriesData(string databasePath, time_t startTime, time_t endTime,int interval);
 	
