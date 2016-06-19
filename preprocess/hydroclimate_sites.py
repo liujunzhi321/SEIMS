@@ -88,6 +88,7 @@ def ImportVariableTable(db, varFile):
 def ImportHydroClimateSitesInfo(hostname,port,dbName,varfile, meteofile, precfile):
     try:
         connMongo = MongoClient(hostname, port)
+        print "Import Climate Sites Information..."
         #print "Connected successfully"
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
@@ -96,7 +97,7 @@ def ImportHydroClimateSitesInfo(hostname,port,dbName,varfile, meteofile, precfil
     cList = db.collection_names()
     tables = [Tag_ClimateDB_Sites, Tag_ClimateDB_VARs]
     for tb in tables:
-        if not tb in cList:
+        if not StringInList(tb, cList):
             db.create_collection(tb)
         else:
             db.drop_collection(tb)

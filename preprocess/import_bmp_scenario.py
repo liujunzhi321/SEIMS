@@ -21,6 +21,7 @@ def ImportBMPTables():
     ## connect to MongoDB
     try:
         conn = MongoClient(host=HOSTNAME, port=PORT)
+        print "Import BMP Scenario Data... "
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
@@ -28,7 +29,7 @@ def ImportBMPTables():
     ## delete if collection existed
     cList = db.collection_names()
     for item in BMP_tabs:
-        if not item in cList:
+        if not StringInList(item, cList):
             db.create_collection(item)
         else:
             db.drop_collection(item)
@@ -47,7 +48,7 @@ def ImportBMPTables():
                     dic[fieldArray[i]] = str(item[i])
             db[bmpTabName].insert_one(dic)
 
-    print 'BMP tables are imported.'
+    #print 'BMP tables are imported.'
     ImportLookupTables(sqliteFile, db)
     conn.close()
 if __name__ == "__main__":

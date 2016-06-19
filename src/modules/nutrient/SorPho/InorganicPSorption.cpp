@@ -71,9 +71,9 @@ bool InorganicPSorption::CheckInputData(void)
 	return true;
 }
 
-void  InorganicPSorption::initalOutputs()
+void  InorganicPSorption::initialOutputs()
 {
-	if(m_size <= 0) throw ModelException("InorganicPSorption","initalOutputs","The cell number of the input can not be less than zero.");
+	if(m_size <= 0) throw ModelException("InorganicPSorption","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_tSolActP == NULL)
 	{
@@ -183,7 +183,7 @@ int InorganicPSorption::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 
 	#pragma omp parallel for
 	for(int i=0; i < m_nLayers; i++)

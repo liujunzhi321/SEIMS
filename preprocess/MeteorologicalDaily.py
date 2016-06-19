@@ -119,7 +119,8 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
 def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     try:
         connMongo = MongoClient(hostname, port)
-        print "Connected successfully"
+        print "Import Daily Meteorological Data... "
+        ##print "Connected successfully"
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
@@ -127,7 +128,7 @@ def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     cList = db.collection_names()
     tables = [Tag_ClimateDB_Data, Tag_ClimateDB_PHU0]
     for tb in tables:
-        if not tb in cList:
+        if not StringInList(tb, cList):
             db.create_collection(tb)
         else:
             db.drop_collection(tb)

@@ -148,9 +148,9 @@ bool DissolvedNutrient_OL::CheckInputData(void)
 	return true;
 }
 
-void  DissolvedNutrient_OL::initalOutputs()
+void  DissolvedNutrient_OL::initialOutputs()
 {
-	if(this->m_nCells <= 0) throw ModelException("DissolvedNutrient_OL","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_nCells <= 0) throw ModelException("DissolvedNutrient_OL","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_DissovP == NULL)
 	{
@@ -369,7 +369,7 @@ int DissolvedNutrient_OL::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 
 	for (int iLayer = 0; iLayer < m_nLayers; ++iLayer)
 	{
@@ -482,7 +482,7 @@ void DissolvedNutrient_OL::Set1DData(const char* key, int n, float* data)
 
 void DissolvedNutrient_OL::Get1DData(const char* key, int* n, float** data)
 {
-	initalOutputs();
+	initialOutputs();
 
 	string sk(key);
 	*n = m_nCells;

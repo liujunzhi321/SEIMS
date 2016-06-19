@@ -20,33 +20,14 @@ Tag_Lookup = "lookup"
 init_params = 'model_param_ini'
 lookup_tabs = ['SoilLookup','LanduseLookup','TillageLookup',
                'UrbanLookup','CropLookup','FertilizerLookup']
-CROP_FILE = TXT_DB_DIR + os.sep + 'CropLookup.txt'
+CROP_FILE = TXT_DB_DIR + os.sep + 'crop.txt'
 sqliteFile = TXT_DB_DIR + os.sep + "Parameter.db3"
+
 
 ## BMP Scenario database
 BMP_tabs = ['BMP_index','BMP_scenarios','crop_management','crop_management_dist',
-            'fertilizer_management','fertilizer_management_dist','tillage_management',
-            'tillage_management_dist']
-
-### CROP, LANDUSE, and SOIL attribute are imported to mongoDB
-### Match to the new lookup table of SWAT 2012 rev.637. LJ
-CROP_ATTR_LIST  = ["IDC", "BIO_E", "HVSTI", "BLAI", "FRGRW1", "LAIMX1", "FRGRW2",
-                   "LAIMX2", "DLAI", "CHTMX", "RDMX", "T_OPT", "T_BASE", "CNYLD",
-                   "CPYLD", "BN1", "BN2", "BN3", "BP1", "BP2", "BP3", "WSYF",
-                   "USLE_C", "GSI", "VPDFR", "FRGMAX", "WAVP", "CO2HI", "BIOEHI",
-                   "RSDCO_PL", "OV_N", "CN2A", "CN2B", "CN2C", "CN2D", "FERTFIELD",
-                   "ALAI_MIN", "BIO_LEAF", "MAT_YRS", "BMX_TREES", "EXT_COEF", "BM_DIEOFF"]
-
-### USLE_C is extracted from cropLookup database
-LANDUSE_ATTR_LIST = ["CN2A", "CN2B", "CN2C", "CN2D", "ROOTDEPTH", "MANNING",
-                     "INTERC_MAX", "INTERC_MIN", "SHC", "SOIL_T10",
-                     "PET_FR", "PRC_ST1", "PRC_ST2", "PRC_ST3", "PRC_ST4",
-                     "PRC_ST5", "PRC_ST6", "PRC_ST7", "PRC_ST8", "PRC_ST9",
-                     "PRC_ST10", "PRC_ST11", "PRC_ST12", "SC_ST1", "SC_ST2",
-                     "SC_ST3", "SC_ST4", "SC_ST5", "SC_ST6", "SC_ST7", "SC_ST8",
-                     "SC_ST9", "SC_ST10", "SC_ST11", "SC_ST12", "DSC_ST1", "DSC_ST2",
-                  "DSC_ST3", "DSC_ST4", "DSC_ST5", "DSC_ST6", "DSC_ST7", "DSC_ST8",
-                  "DSC_ST9", "DSC_ST10", "DSC_ST11", "DSC_ST12"]
+             'fertilizer_management','fertilizer_management_dist','tillage_management',
+             'tillage_management_dist']
 
 ## SOIL PARAMETERS NAMES, which will be appeared in MongoDB
 SOL_SEQN    = "SEQN"
@@ -108,6 +89,8 @@ Tag_DT_UTC = 'UTCDateTime'
 Tag_DT_Value = 'Value'
 
 Tag_ClimateDB_PHU0 = 'PHU0'
+Tag_ClimateDB_Measurement = 'Measurement'
+Tag_ClimateDB_MeasSites = 'MeasurementSites'
 Tag_ClimateDB_VARs = 'Variables'
 Tag_VAR_ID = 'ID'
 Tag_VAR_Type = 'Type'
@@ -126,12 +109,15 @@ Tag_ST_Latitude = 'Lat'
 Tag_ST_DatumID = 'DatumID'
 Tag_ST_Elevation = 'Elevation'
 Tag_ST_Type = 'Type'
+Tag_ST_SiteID = 'SiteID'
+Tag_ST_IsOutlet = 'isOutlet'
+Tag_ST_UNIT = 'Unit'
 
 
 ## Table Names required in MongoDB
 DB_TAB_PARAMETERS =	"parameters"
-# DB_TAB_LOOKUP_LANDUSE = "LanduseLookup"
-# DB_TAB_LOOKUP_SOIL = "SoilLookup"
+DB_TAB_LOOKUP_LANDUSE = "LanduseLookup"
+DB_TAB_LOOKUP_SOIL = "SoilLookup"
 DB_TAB_SPATIAL = "spatial"
 DB_TAB_SITES = "Sites"
 DB_TAB_DATAVALUES = "DataValues"
@@ -160,7 +146,7 @@ REACH_PMETIS = 'GROUP_PMETIS'
 DataType_Discharge = "Discharge"
 Tag_Dischage = 'q'
 ## Spatial Data related string or values
-DEFAULT_NODATA = -9999.
+DEFAULT_NODATA = -9999
 ## Spatial data preprocessing
 DIR_REACHES = "reaches"
 DIR_SUBBASIN = "subbasins"
@@ -180,8 +166,6 @@ dirCodeDinf = "dirCodeDinfTau.tif"
 slopeDinf = "slopeDinfTau.tif"
 weightDinf = "weightDinfTau.tif"
 cellLat = "cellLatOrg.tif"
-daylMin = "dayLenMinOrg.tif"
-dormhr = "dormhrOrg.tif"
 
 modifiedOutlet = "outletM.shp"
 streamSkeleton = "streamSkeleton.tif"
@@ -210,15 +194,12 @@ dirCodeDinfM = "flow_dir_dinf.tif"
 slopeDinfM = "slope_dinf.tif"
 weightDinfM = "weight_dinf.tif"
 cellLatM = "celllat.tif"
-daylMinM = "dayLenMin.tif"
-dormhrM = "dormhr.tif"
 
 subbasinVec = "subbasin.shp"
 basinVec = "basin.shp"
 chwidthName = "chwidth.tif"
 
 landuseMFile = "landuse.tif"
-cropMFile = "landcover.tif" ### added by LJ.
 soiltypeMFile = "soiltype.tif"
 
 soilTexture = "soil_texture.tif"

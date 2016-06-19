@@ -3,20 +3,18 @@
 ## @Utility functions
 #
 #
-import math,datetime,time
+import os,math,datetime,time
 from osgeo import gdal,osr
 from gdalconst import *
 import shutil
 from text import *
-from config import *
 import numpy
-
-DELTA = 0.000001
+DELTA = 1.e-6
 UTIL_ZERO = 1.e-6
 MINI_SLOPE = 0.0001
 
 def FloatEqual(a, b):
-    return abs(a - b) < DELTA
+    return abs(a - b) < UTIL_ZERO
 def isNumericValue(x):
     try:
         xx = float(x)
@@ -28,6 +26,7 @@ def isNumericValue(x):
         return False
     else:
         return True
+
 ####  Climate Utility Functions  ####
 def IsLeapYear(year):
     if( (year%4 == 0 and year%100 != 0) or (year%400 == 0)):
@@ -85,8 +84,12 @@ def Rs(doy, n, lat):
     ra = (24*60*0.082*dr(doy)/math.pi)*(w*math.sin(lat)*math.sin(d) + math.cos(lat)*math.cos(d)*math.sin(w))
     return (a + b*n/N)*ra
 
+
 ####  Spatial Utility Functions  ####
 class Raster:
+    '''
+    Basic Raster Class
+    '''
     def __init__(self, nRows, nCols, data, noDataValue=None, geotransform=None, srs=None):
         self.nRows = nRows
         self.nCols = nCols
@@ -275,7 +278,7 @@ def WriteGTiffFileByMask(filename, data, mask, gdalType):
 
 def MaskRaster(maskFile, inputFile, outputFile, outputAsc=False, noDataValue=-9999):
     id = os.path.basename(maskFile) + "_" + os.path.basename(inputFile)
-    configFile = "%s%smaskConfig_%s_%s.txt" % (CPP_PROGRAM_DIR, os.sep, id, str(time.time()))
+    configFile = "%s%smaskConfig_%s_%s.txt" % (config.CPP_PROGRAM_DIR, os.sep, id, str(time.time()))
     fMask = open(configFile, 'w')
     fMask.write(maskFile + "\n1\n")
     fMask.write("%s\t%d\t%s\n" % (inputFile, noDataValue, outputFile))
@@ -284,7 +287,7 @@ def MaskRaster(maskFile, inputFile, outputFile, outputAsc=False, noDataValue=-99
     asc = ""
     if outputAsc:
         asc = "-asc"
-    s = "%s/mask_rasters/build/mask_raster %s %s" % (CPP_PROGRAM_DIR, configFile, asc)
+    s = "%s/mask_rasters/build/mask_raster %s %s" % (config.CPP_PROGRAM_DIR, configFile, asc)
     os.system(s)
     os.remove(configFile)
 
@@ -302,11 +305,6 @@ def StringMatch(str1, str2):
     else:
         return False
 def ReadDataItemsFromTxt(txtFile):
-    '''
-    Read data items include title from text file
-    :param txtFile: data file
-    :return: 2D data array
-    '''
     f = open(txtFile)
     dataItems = []
     for line in f:
@@ -347,6 +345,12 @@ def SplitStr(str, spliter=None):
             destStrs = srcStrs[:]
             break
     return destStrs
+
+def IsSubString(SubStr, Str):
+    if SubStr.lower() in Str.lower():
+        return True
+    else:
+        return False
 
 def replaceByDict(srcfile, vDict, dstfile):
     srcR = ReadRaster(srcfile)

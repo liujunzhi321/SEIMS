@@ -191,11 +191,11 @@ bool NutTra_CH::CheckInputData(void)
 	return true;
 }
 
-void  NutTra_CH::initalOutputs()
+void  NutTra_CH::initialOutputs()
 {
 	
 	if(m_nreach <= 0) 
-		throw ModelException("NutTra_CH","initalOutputs","The cell number of the input can not be less than zero.");
+		throw ModelException("NutTra_CH","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if (m_reachLayers.empty())
 	{
@@ -283,7 +283,7 @@ int NutTra_CH::Execute()
 {
 	//check the data
 	CheckInputData();	
-	initalOutputs();
+	initialOutputs();
 	
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)

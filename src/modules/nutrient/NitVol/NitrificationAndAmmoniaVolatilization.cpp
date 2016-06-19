@@ -118,9 +118,9 @@ bool NitrificationAndAmmoniaVolatilization::CheckInputData(void)
 	return true;
 }
 
-void  NitrificationAndAmmoniaVolatilization::initalOutputs()
+void  NitrificationAndAmmoniaVolatilization::initialOutputs()
 {
-	if(this->m_size <= 0) throw ModelException("NitrificationAndAmmoniaVolatilization","initalOutputs","The cell number of the input can not be less than zero.");
+	if(this->m_size <= 0) throw ModelException("NitrificationAndAmmoniaVolatilization","initialOutputs","The cell number of the input can not be less than zero.");
 
 	if(m_nitvolTF == NULL)
 	{
@@ -285,7 +285,7 @@ int NitrificationAndAmmoniaVolatilization::Execute()
 	//check the data
 	CheckInputData();	
 
-	initalOutputs();
+	initialOutputs();
 
 	#pragma omp parallel for
 	for(int i=0; i < m_nLayers; i++)

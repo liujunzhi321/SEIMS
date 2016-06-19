@@ -1,13 +1,14 @@
 SiteID	Type	Lat	Lon	LocalX	LocalY	Unit	isOutlet
 # SiteID为唯一正整数编号，对应于observed_*.txt中的SiteID							
 # Type为观测值类型，可选输入为 FLOW, SED, NO3, NH3, NO2, ORGP, ORGN, MINP (如有其他也可添加)							
-# Lat，Lon，LocalX，LocalY都知道							
-# Unit：为观测值单位							
+# Lat，Lon，LocalX，LocalY							
+# Unit：为观测值单位，MUST BE UNIQUE
 # isOutlet：							
 #			0：其他观测点				
 #			1：流域出口观测点				
 #			2：子流域出口观测点				
-1	FLOW,NH3,COD,TN,TP,MINP	31.9402	117.4351	39541140.8	3535304.076	m3/s,mg/L	1
+1	NH3,COD,TN,TP,MINP	31.9402	117.4351	39541140.8	3535304.076	m3/s,mg/L	1
+1	FLOW	31.9402	117.4351	39541140.8	3535304.076	m3/s	1
 2	NH3,COD,TN,TP,MINP	31.8997	117.4601	39543523.76	3530822.922	mg/L	0
 3	NH3,COD,TN,TP,MINP	31.9247	117.4843	39545800.63	3533605.068	mg/L	0
 4	NH3,COD,TN,TP,MINP	31.9543	117.4784	39545228.16	3536884.858	mg/L	0

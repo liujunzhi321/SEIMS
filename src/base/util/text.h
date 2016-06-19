@@ -409,22 +409,36 @@
 #define MDESC_SEDR_VCD						"Sediment channel routing using variable channel dimension method as used in SWAT."
 
 /// Nutrient
+/// nitrogen and phosphorus mineralization and immobilization
 #define MCLS_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization"
 #define MCLSDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
 #define MID_NMINRL "NMINRL"
 #define MDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
+/// Nutrient removed and loss in surface runoff
 #define MCLS_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
 #define MCLSDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
 #define MID_SurTra "SurTra"
 #define MDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+/// Atmospheric Deposition
 #define MCLS_ATMDEP "AtmosphericDeposition"
 #define MCLSDESC_ATMDEP "AtmosphericDeposition"
 #define MID_ATMDEP "ATMDEP"
 #define MDESC_ATMDEP "AtmosphericDeposition"
+/// Nutrient remove
 #define MCLS_NutRemv "Nutrient remove"
 #define MCLSDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
 #define MID_NutRemv "NutRemv"
 #define MDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
+/// Nutrient loading contributed by groundwater flow
+#define MCLS_NutGW "Nutrient in groundwater"
+#define MCLSDESC_NutGW "Simulates the tutrient loading contributed by groundwater flow"
+#define MID_NutGW "NutGW"
+#define MDESC_NutGW "Simulates the tutrient loading contributed by groundwater flow"
+/// In-stream nutrient transformations
+#define MCLS_NutCHRout "Nutrient in reach"
+#define MCLSDESC_NutCHRout "In-stream nutrient transformations"
+#define MID_NutCHRout "NutCHRout"
+#define MDESC_NutCHRout "In-stream nutrient transformations"
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
 /// By LiangJun Zhu, HuiRan Gao ///
@@ -524,6 +538,9 @@
 #define VAR_GW_KG "kg"
 #define VAR_GWMAX "GWMAX"                           /// maximum ground water storage
 #define VAR_GWNEW "GWNEW"                           /// The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage
+#define VAR_GWNO3 "gwno3"
+#define VAR_GWMINP "gwminp"
+#define VAR_GW_Q "gw_q"
 #define VAR_GWWB "GWWB"
 #define VAR_HCH "HCH"
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
@@ -563,12 +580,14 @@
 #define VAR_LDRAIN "ldrain"
 #define VAR_MANNING "Manning"
 #define VAR_MAT_YRS "MAT_YRS"
+#define VAR_MINPGW "minpgw"
 #define VAR_MOIST_IN "Moist_in"
 #define VAR_MSF "ManningScaleFactor"                /// flow velocity scaling factor for calibration
 #define VAR_MSK_CO1 "MSK_co1"                       /// Weighting factor of bankful flow
 #define VAR_MSK_X "MSK_X"                           /// muskingum weighing factor
 #define VAR_NACTFR "nactfr"                         /// nitrogen active pool fraction. The fraction of organic nitrogen in the active pool.
 #define VAR_NEPR "NEPR"
+#define VAR_NO3GW "no3gw"
 #define VAR_NFIXCO "nfixco"                     /// Nitrogen fixation coefficient, FIXCO in SWAT
 #define VAR_NFIXMX "nfixmx"                    /// Maximum daily-n fixation (kg/ha), NFIXMX in SWAT
 #define VAR_NUPDIS "n_updis"
@@ -640,9 +659,7 @@
 #define VAR_SBGS "SBGS"                             /// Groundwater storage of the subbasin
 #define VAR_SBIF "SBIF"                             /// interflow to streams from each subbasin
 #define VAR_SBOF "SBOF"                             /// overland flow to streams from each subbasin
-#define VAR_SBPET "SBPET"
 #define VAR_SBPET "SBPET"                           /// the potential evapotranspiration rate of the subbasin
-#define VAR_SBQG "SBQG"
 #define VAR_SBQG "SBQG"                             /// groundwater flow out of the subbasin
 #define VAR_SED_DEP "SEDDEP"
 #define VAR_SED_OUTLET "SEDOUTLET"
@@ -915,6 +932,9 @@
 #define DESC_GW_KG "baseflow recession coefficient"
 #define DESC_GWMAX "maximum ground water storage"
 #define DESC_GWNEW "The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage"
+#define DESC_GWNO3 "nitrate N concentration in groundwater loading to reach"
+#define DESC_GWMINP "soluble P concentration in groundwater loading to reach"
+#define DESC_GW_Q "groundwater contribution to stream flow"
 #define DESC_HCH "Water depth in the downslope boundary of cells"
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"
 #define DESC_HMPTL "amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell"
@@ -958,12 +978,14 @@
 #define DESC_MEANTEMP "Mean Celsius degree of air temperature"
 #define DESC_METEOLAT "Latitude of MeteoClimate station"
 #define DESC_MINTEMP "Minimum Celsius degree of air temperature"
+#define DESC_MINPGW "soluble P loading to reach in groundwater"
 #define DESC_MOIST_IN "Initial soil moisture"
 #define DESC_MSF "flow velocity scaling factor for calibration"
 #define DESC_MSK_CO1 "Weighting factor of bankful flow"
 #define DESC_MSK_X "muskingum weighing factor"
 #define DESC_NACTFR "nitrogen active pool fraction. The fraction of organic nitrogen in the active pool."
 #define DESC_NEPR "Net Precipitation Distribution"
+#define DESC_NO3GW "nitrate loading to reach in groundwater"
 #define DESC_NFIXCO "Nitrogen fixation coefficient"
 #define DESC_NFIXMX "Maximum daily-N fixation (kg/ha)"
 #define DESC_NONE ""
