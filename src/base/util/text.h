@@ -779,7 +779,7 @@
 #define UNIT_CONT_KGHA "kg/ha"                      /// For  convenient, keep consistent with SWAT, need Conversion later.
 #define UNIT_CONT_TONHA "tons/ha"
 #define UNIT_CONT_RATIO "(kg/ha)/(kg/ha)"
-#define UNIT_DENSITY "mg/m3"                        /// density
+#define UNIT_DENSITY "Mg/m3"                        /// density
 #define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
 #define UNIT_GAS_PPMV "ppmv"                        /// Concentration of gas, e.g., CO2

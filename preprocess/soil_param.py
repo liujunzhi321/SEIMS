@@ -3,19 +3,19 @@
 Created on Thu Jan 10 15:36:19 2013
 
 @author: junzhi
-@revised: LiangJun Zhu, Huiran Gao
+@revised: LiangJun Zhu, Huiran Gao, Fang Shen
 @date: 2016-5-21
 """
 from math import *
-from osgeo import gdal
-from pyproj import Proj, transform
-#from numpy import *
-import numpy
-from util import *
-from text import *
 from soil_texture import *
 from soil_chem import *
-import os
+from util import *
+import numpy
+# from osgeo import gdal
+# from pyproj import Proj, transform
+# #from numpy import *
+# import os
+
 
 #SoilLAYERS(:): number of soil layers
 #SoilDepth(:,:)    |mm    : depth from the surface to bottom of soil layer
@@ -27,17 +27,23 @@ import os
 #Sol_ZMX(:)        |mm    : maximum rooting depth of soil profile
 #ANION_EXCL(:): fraction of porosity (void space) from which anions are excluded,default is 0.5
 #Sol_CRK(:): crack volume potential of soil expressed as a fraction of the total soil volume
-#Density(:,:)      |Mg/m3    : bulk density of the soil
+#Density(:,:)      |Mg/m3 or g/cm3 : bulk density of the soil
 #Conductivity      |mm/hr    : saturated hydraulic conductivity
 #WiltingPoint(:,:) |mm H2O / mm soil : water content of soil at -1.5 MPa (wilting point)
 #FieldCap(:,:)     |mm H2O / mm soil  : amount of water available to plants in soil layer at field capacity
 #Sol_AWC(:,:)      |mm H2O / mm soil : available water capacity of soil layer
-#POROSITY(:,:)    : porosity
-#Poreindex(:,:)   : pore disconnectedness index
-#USLE_K : USLE K factor
-#Sol_ALB(:) : soil albedo
+#POROSITY(:,:)    : | None | porosity
+#Poreindex(:,:)   : | None | pore disconnectedness index
+#USLE_K : | None |  USLE K factor
+#Sol_ALB : albedo of soil surface
 #Soil_Texture : soil texture
-#Hydro_Group :
+#Hydro_Group : Hydrological group, 1,2,3,and 4 to represent A,B,C,and D
+#Sol_SUMFC  :  |mm H2O  |amount of water held in the soil profile at field capacity
+#Sol_SUMWP :  |mm H2O  |amount of water held in the soil profile at wilting point
+# sol_SUMPOR   :  |mm            |porosity of soil profile
+# sol_AVPOR   : |none          |average porosity for entire soil profile
+
+## soil chemical properties refer to soil_chem.py
 class SoilProperty:
     '''
     base class of Soil properties
@@ -67,10 +73,10 @@ class SoilProperty:
         self.Sol_ALB    = DEFAULT_NODATA
         self.Soil_Texture    = DEFAULT_NODATA
         self.Hydro_Group = DEFAULT_NODATA
-        self.Sol_SUMFC  = 0
-        self.Sol_SUMWP = 0
-        self.SUMPOR  = 0
-        self.AVPOR = DEFAULT_NODATA
+        self.Sol_SUMFC  = 0.
+        self.Sol_SUMWP = 0.
+        self.Sol_SUMPOR  = 0.
+        self.Sol_AVPOR = DEFAULT_NODATA
         #self.Residue     = [] TODO: residue should be defined in Management module or dependent on landuse
         ### Here after are soil chemical properties
         self.Sol_FOP = []
@@ -257,11 +263,11 @@ class SoilProperty:
         if self.Sol_SUMWP == 0:
             for i in range(self.SoilLAYERS):
                  self.Sol_SUMWP += tmp_sol_wp[i] * tmp_dep[i]
-        if self.SUMPOR == 0:
+        if self.Sol_SUMPOR == 0:
             for i in range(self.SoilLAYERS):
-                self.SUMPOR += self.POROSITY[i] * tmp_dep[i]
-        if self.AVPOR == DEFAULT_NODATA:
-            self.AVPOR = self.SUMPOR / self.SoilDepth[self.SoilLAYERS - 1]
+                self.Sol_SUMPOR += self.POROSITY[i] * tmp_dep[i]
+        if self.Sol_AVPOR == DEFAULT_NODATA:
+            self.Sol_AVPOR = self.Sol_SUMPOR / self.SoilDepth[self.SoilLAYERS - 1]
         if self.Sol_CRK == DEFAULT_NODATA:
             self.Sol_CRK = numpy.mean(self.POROSITY)
         if self.Conductivity != [] and len(self.Conductivity) != self.SoilLAYERS:
@@ -479,17 +485,3 @@ def GetValue(geoMask, geoMap, data, i, j):
 #         attrList.append(filename)
 #
 #     return attrList
-
-
-
-#if __name__ == "__main__":
-    #testList = [[0.84627,0.04302,0.0208], [0.85,0.05,0.025], [0.65,0.1,0.025]]
-    #for s in testList:
-    #    print s[0], s[1], s[2]
-    #    print GetProperties(s[0], s[1], s[2]*100)
-#    layerNum = 1
-#    inputFolder = r'F:\data\soilmap_china'
-#    #outputFolder = r'F:\data\fenkeng_30m\data'
-#    outputFolder = r'F:\data\poyanghu\fenkeng\data'
-#    GenerateAttrMap(inputFolder, outputFolder, layerNum)
-#    print 'done!'

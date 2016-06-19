@@ -21,10 +21,10 @@ from parameters_extraction import ExtractParameters
 from build_db import BuildMongoDB
 if __name__ == "__main__":
     ## Update SQLite Parameters.db3 database
-    reConstructSQLiteDB()
+    #reConstructSQLiteDB()
     ## Climate Data
-    SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
-    ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
+    #SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
+    #ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
     #ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecExcelPrefix,PrecDataYear, SitesPList)
 
     ## TODO: Measurements Data, i.e., DB_TAB_MEASUREMENT, field design refers to DB_TAB_DATAVALUES

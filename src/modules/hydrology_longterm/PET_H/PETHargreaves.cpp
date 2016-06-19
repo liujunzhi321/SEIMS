@@ -74,6 +74,12 @@ int PETHargreaves::Execute()
 #pragma omp parallel for
 	for (int i = 0; i < m_nCells; ++i)
 	{	
+		/// update phubase of the simulation year.
+		/* update base zero total heat units, src code from SWAT, subbasin.f
+		if (tmpav(j) > 0. .and. phutot(hru_sub(j)) > 0.01) then
+			phubase(j) = phubase(j) + tmpav(j) / phutot(hru_sub(j))
+		end if*/
+
 		MaxSolarRadiation(m_jday, m_cellLat[i], m_dayLen[i], m_srMax);
 		///calculate latent heat of vaporization(from swat)
 		float latentHeat = 2.501f - 0.002361f * m_tMean[i];
