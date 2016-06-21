@@ -41,7 +41,10 @@ private:
 	float m_cellWidth;
 	/// number of cells
 	int m_nCells;
-	int m_nSolLyrs;
+	/// soil layers
+	float* m_nSoilLayers;
+	/// maximum soil layers
+	int m_soiLayers;
 
 	/// input data
 	/// drainage tile flow in soil profile

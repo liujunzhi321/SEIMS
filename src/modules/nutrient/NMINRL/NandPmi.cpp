@@ -18,13 +18,13 @@ using namespace std;
 
 NandPim::NandPim(void):
 	//input 
-	m_nCells(-1), m_cellWidth(-1), m_nSolLyrs(3), m_cmn(NULL), m_cdn(NULL), m_idplt(NULL), m_nactfr(NULL), m_psp(NULL), m_sol_z(NULL),
+	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_cmn(NULL), m_cdn(NULL), m_idplt(NULL), m_nactfr(NULL), m_psp(NULL), m_sol_z(NULL),
 	m_rsdco_pl(NULL), m_sol_cbn(NULL), m_sol_st(NULL), m_sol_tmp(NULL), m_sol_ul(NULL), m_sol_nh3(NULL), m_sol_fc(NULL), m_sol_wpmm(NULL),
-	m_sol_actp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_no3(NULL),m_sol_orgn(NULL), m_sol_orgp(NULL),
-	m_sol_rsd(NULL), m_sol_solp(NULL), m_wshd_dnit(NULL), m_wshd_hmn(0), m_wshd_hmp(NULL), m_wshd_rmn(NULL), m_wshd_rmp(NULL), m_wshd_rwn(NULL),
-	m_wshd_nitn(NULL), m_wshd_voln(NULL), m_wshd_pal(NULL), m_wshd_pas(NULL),
+	m_sol_actp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_no3(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL),
+	m_sol_rsd(NULL), m_sol_solp(NULL), m_wshd_dnit(-1), m_wshd_hmn(-1), m_wshd_hmp(-1), m_wshd_rmn(-1), m_wshd_rmp(-1), m_wshd_rwn(-1),
+	m_wshd_nitn(-1), m_wshd_voln(-1), m_wshd_pal(-1), m_wshd_pas(-1),
 	//output 
-	m_hmntl(NULL), m_hmptl(NULL), m_rmn2tl(NULL), m_rmptl(NULL),m_rwntl(NULL), m_wdntl(NULL),m_rmp1tl(NULL), m_roctl(NULL) 
+	m_hmntl(-1), m_hmptl(-1), m_rmn2tl(-1), m_rmptl(-1),m_rwntl(-1), m_wdntl(-1),m_rmp1tl(-1), m_roctl(-1) 
 {
 
 }
@@ -34,7 +34,7 @@ NandPim::~NandPim(void) {
 }
 bool NandPim::CheckInputSize(const char* key, int n) {
 	if(n <= 0) {
-		//StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_NMINRL, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(m_nCells != n) {
@@ -44,42 +44,50 @@ bool NandPim::CheckInputSize(const char* key, int n) {
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
 			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
-			throw ModelException("Denitrification","CheckInputSize",oss.str());
+			throw ModelException("NMINRL","CheckInputSize",oss.str());
 		}
 	}
 	return true;
 }
 bool NandPim::CheckInputData() {
-	if(this->m_nCells == -1) {
-		throw ModelException("NminRL","CheckInputData","You have not set the date time.");
-		return false;
-	}
-	if(m_nCells <= 0) {
-		throw ModelException("NminRL","CheckInputData","The dimension of the input data can not be less than zero.");
-		return false;
-	}
-	if(this->m_cellWidth == NULL) {
-		throw ModelException("NminRL","CheckInputData","The relative humidity can not be NULL.");
-		return false;
-	}
-	if(this->m_cmn == NULL) {
-		throw ModelException("NminRL","CheckInputData","The solar radiation can not be NULL.");
-		return false;
-	}
-	if(this->m_cdn == NULL) {
-		throw ModelException("NminRL","CheckInputData","The min temperature can not be NULL.");
-		return false;
-	}
-	if(this->m_idplt == NULL) {
-		throw ModelException("NminRL","CheckInputData","The max temperature can not be NULL.");
-		return false;
-	}
-	if(this->m_nactfr == NULL) {
-		throw ModelException("NminRL","CheckInputData","The wind speed can not be NULL.");
-		return false;
-	}
-
-	///...
+	if(this -> m_nCells <= 0) {throw ModelException("NminRL", "CheckInputData", "The input data can not be less than zero.");return false;}
+	if(this -> m_soiLayers < 0) {throw ModelException("NmiRL", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_cellWidth < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_nSoilLayers == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_cmn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_cdn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_idplt == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_nactfr == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_psp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_z == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_rsdco_pl == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_cbn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_st == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_tmp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_ul == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_nh3 == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_fc == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_wpmm == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_actp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_stap == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_aorgn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_fon == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_fop == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_no3 == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_orgn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_orgp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_rsd == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_solp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_wshd_dnit < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_hmn < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_hmp < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_rmn < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_rmp < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_rwn < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_nitn < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_voln < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_pal < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_pas < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
 	return true;
 }
 void NandPim::SetValue(const char* key, float value)
@@ -88,48 +96,20 @@ void NandPim::SetValue(const char* key, float value)
 	if (StringMatch(sk, VAR_OMP_THREADNUM)) {
 		omp_set_num_threads((int)value);
 	} 
-	else if (StringMatch(sk, Tag_CellSize)) {
-		this -> m_nCells = (int)value;
-	} 
-	else if (StringMatch(sk, Tag_CellWidth)) {
-		this -> m_cellWidth = value;
-	}
-	else if (StringMatch(sk, VAR_NACTFR)) {
-		this -> m_nactfr = value;
-	}
-	else if (StringMatch(sk, VAR_CMN)) {
-		this -> m_cmn = value;
-	}
-	else if (StringMatch(sk, VAR_WSHD_DNIT)) {
-		this -> m_wshd_dnit = value;
-	} 
-	else if (StringMatch(sk, VAR_WSHD_HMN)) {
-		this -> m_wshd_hmn = value;
-	}
-	else if (StringMatch(sk, VAR_WSHD_HMP)) {
-		this -> m_wshd_hmp = value;
-	} 
-	else if (StringMatch(sk, VAR_WSHD_RMN)) {
-		this -> m_wshd_rmn = value;
-	}
-	else if (StringMatch(sk, VAR_WSHD_RMP)) {
-		this -> m_wshd_rmp = value;
-	} 
-	else if (StringMatch(sk, VAR_WSHD_RWN)) {
-		this -> m_wshd_rwn = value;
-	}
-	else if (StringMatch(sk, VAR_WSHD_NITN)) {
-		this -> m_wshd_nitn = value;
-	}
-	else if (StringMatch(sk, VAR_WSHD_VOLN)) {
-		this -> m_wshd_voln = value;
-	}
-	else if (StringMatch(sk, VAR_WSHD_PAL)) {
-		this -> m_wshd_pal = value;
-	}
-	else if (StringMatch(sk, VAR_WSHD_PAS)) {
-		this -> m_wshd_pas = value;
-	}
+	else if (StringMatch(sk, Tag_CellSize)) {this -> m_nCells = (int)value;} 
+	else if (StringMatch(sk, Tag_CellWidth)) {this -> m_cellWidth = value;}
+	else if (StringMatch(sk, VAR_NACTFR)) {this -> m_nactfr = value;}
+	else if (StringMatch(sk, VAR_CMN)) {this -> m_cmn = value;}
+	else if (StringMatch(sk, VAR_WSHD_DNIT)) {this -> m_wshd_dnit = value;} 
+	else if (StringMatch(sk, VAR_WSHD_HMN)) {this -> m_wshd_hmn = value;}
+	else if (StringMatch(sk, VAR_WSHD_HMP)) {this -> m_wshd_hmp = value;} 
+	else if (StringMatch(sk, VAR_WSHD_RMN)) {this -> m_wshd_rmn = value;}
+	else if (StringMatch(sk, VAR_WSHD_RMP)) {this -> m_wshd_rmp = value;} 
+	else if (StringMatch(sk, VAR_WSHD_RWN)) {this -> m_wshd_rwn = value;}
+	else if (StringMatch(sk, VAR_WSHD_NITN)) {this -> m_wshd_nitn = value;}
+	else if (StringMatch(sk, VAR_WSHD_VOLN)) {this -> m_wshd_voln = value;}
+	else if (StringMatch(sk, VAR_WSHD_PAL)) {this -> m_wshd_pal = value;}
+	else if (StringMatch(sk, VAR_WSHD_PAS)) {this -> m_wshd_pas = value;}
 	else {
 		throw ModelException("NMINRL","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
@@ -137,20 +117,12 @@ void NandPim::SetValue(const char* key, float value)
 void NandPim::Set1DData(const char* key,int n, float *data)
 {
 	if(!this->CheckInputSize(key,n)) return;
-
 	string sk(key);
-	if (StringMatch(sk, VAR_CDN)) {
-		this -> m_cdn = data;
-	} 
-	else if (StringMatch(sk, VAR_LCC)) {
-		this -> m_idplt = data;
-	}
-	else if (StringMatch(sk, VAR_PL_RSDCO)) {
-		this -> m_rsdco_pl = data;
-	}
-	else if (StringMatch(sk, VAR_PSP)) {
-		this -> m_psp = data;
-	}
+	if (StringMatch(sk, VAR_CDN)) {this -> m_cdn = data;} 
+	else if (StringMatch(sk, VAR_LCC)) {this -> m_idplt = data;}
+	else if (StringMatch(sk, VAR_PL_RSDCO)) {this -> m_rsdco_pl = data;}
+	else if (StringMatch(sk, VAR_PSP)) {this -> m_psp = data;}
+	else if(StringMatch(sk,  VAR_SOILLAYERS)) m_nSoilLayers = data;
 	else {
 		throw ModelException("NMINRL","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -158,62 +130,26 @@ void NandPim::Set1DData(const char* key,int n, float *data)
 void NandPim::Set2DData(const char* key, int nRows, int nCols, float** data)
 {
 	if(!this->CheckInputSize(key,nCols)) return;
-
 	string sk(key);
-	if (StringMatch(sk, VAR_SOL_CBN)) {
-		this -> m_sol_cbn = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_WST)) {
-		this -> m_sol_st = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_WFC)) {
-		this -> m_sol_fc = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_TMP)) {
-		this -> m_sol_tmp = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_WH)) {
-		this -> m_sol_ul = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_AORGN)) {
-		this -> m_sol_aorgn = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_FON)) {
-		this -> m_sol_fon = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_FOP)) {
-		this -> m_sol_fop = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_NO3)) {
-		this -> m_sol_no3 = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_ORGN)) {
-		this -> m_sol_orgn = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_ORGP)) {
-		this -> m_sol_orgp = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_RSD)) {
-		this -> m_sol_rsd = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_SOLP)) {
-		this -> m_sol_solp = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_NH3)) {
-		this -> m_sol_nh3 = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_WPMM)) {
-		this -> m_sol_wpmm = data;
-	}
-	else if (StringMatch(sk, VAR_ROOTDEPTH)) {
-		this -> m_sol_z = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_ACTP)) {
-		this -> m_sol_actp = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_STAP)) {
-		this -> m_sol_stap = data;
-	}
+	m_soiLayers = nCols;
+	if (StringMatch(sk, VAR_SOL_CBN)) {this -> m_sol_cbn = data;}
+	else if (StringMatch(sk, VAR_SOL_WST)) {this -> m_sol_st = data;}
+	else if (StringMatch(sk, VAR_SOL_WFC)) {this -> m_sol_fc = data;}
+	else if (StringMatch(sk, VAR_SOL_TMP)) {this -> m_sol_tmp = data;}
+	else if (StringMatch(sk, VAR_SOL_WH)) {this -> m_sol_ul = data;}
+	else if (StringMatch(sk, VAR_SOL_AORGN)) {this -> m_sol_aorgn = data;}
+	else if (StringMatch(sk, VAR_SOL_FON)) {this -> m_sol_fon = data;}
+	else if (StringMatch(sk, VAR_SOL_FOP)) {this -> m_sol_fop = data;}
+	else if (StringMatch(sk, VAR_SOL_NO3)) {this -> m_sol_no3 = data;}
+	else if (StringMatch(sk, VAR_SOL_ORGN)) {this -> m_sol_orgn = data;}
+	else if (StringMatch(sk, VAR_SOL_ORGP)) {this -> m_sol_orgp = data;}
+	else if (StringMatch(sk, VAR_SOL_RSD)) {this -> m_sol_rsd = data;}
+	else if (StringMatch(sk, VAR_SOL_SOLP)) {this -> m_sol_solp = data;}
+	else if (StringMatch(sk, VAR_SOL_NH3)) {this -> m_sol_nh3 = data;}
+	else if (StringMatch(sk, VAR_SOL_WPMM)) {this -> m_sol_wpmm = data;}
+	else if (StringMatch(sk, VAR_ROOTDEPTH)) {this -> m_sol_z = data;}
+	else if (StringMatch(sk, VAR_SOL_ACTP)) {this -> m_sol_actp = data;}
+	else if (StringMatch(sk, VAR_SOL_STAP)) {this -> m_sol_stap = data;}
 	else {
 		throw ModelException("NMINRL","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -222,19 +158,21 @@ int NandPim::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
 	}
-	//Calculate daily nitrogen and phosphorus mineralization and immobilization
-	CalculateMinerandImmobi();
-	//Calculate daily mineralization (NH3 to NO3) and volatilization of NH3
-	CalculateMinerandVolati();
-	//Calculate P flux between the labile, active mineral and stable mineral P pools
-	CalculatePflux();
+	#pragma omp parallel for
+	for(int i = 0; i < m_nCells; i++) {
+		//Calculate daily nitrogen and phosphorus mineralization and immobilization
+		CalculateMinerandImmobi(i);
+		//Calculate daily mineralization (NH3 to NO3) and volatilization of NH3
+		CalculateMinerandVolati(i);
+		//Calculate P flux between the labile, active mineral and stable mineral P pools
+		CalculatePflux();
+	}
 	//return ??
 	return 0;
 }
-void NandPim::CalculateMinerandImmobi() {
+void NandPim::CalculateMinerandImmobi(int i) {
 	//soil layer (k)
-	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nSolLyrs; k++) {
+	for(int k = 0; k < m_nSoilLayers[i]; k++) {
 			//soil layer used to compute soil water and soil temperature factors
 			int kk = 0;
 			if(k == 0) {
@@ -403,13 +341,11 @@ void NandPim::CalculateMinerandImmobi() {
 				m_wdntl = m_wdntl + wdn;
 			}
 		}
-	}
 }
-void NandPim::CalculateMinerandVolati() {
+void NandPim::CalculateMinerandVolati(int i) {
 	//soil layer (k)
 	int kk = 0;
-	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nSolLyrs; k++) {
+	for(int k = 0; k < m_nSoilLayers[i]; k++) {
 			//nitrification/volatilization temperature factor (nvtf)
 			float nvtf = 0;
 			//Calculate nvtf, equation 3:1.3.1 in SWAT Theory 2009, p192
@@ -491,13 +427,11 @@ void NandPim::CalculateMinerandVolati() {
 			}
 		}
 	}
-}
-void NandPim::CalculatePflux() {
+void NandPim::CalculatePflux(int i) {
 	//slow equilibration rate constant (bk)
 	float bk = 0.0006;
-	for(int i = 0; i < m_nCells; i++) {
-		float rto = m_psp[i] / (1 - m_psp[i]);
-		for(int k = 0; k < m_nSolLyrs; k++) {
+	float rto = m_psp[i] / (1 - m_psp[i]);
+	for(int k = 0; k < m_nSoilLayers[i]; k++) {
 			float rmn1 = 0;
 			rmn1 = (m_sol_solp[i][1] - m_sol_actp[i][1] * rto);
 				if (rmn1 > 0.) rmn1 = rmn1 * 0.1;
@@ -530,108 +464,48 @@ void NandPim::CalculatePflux() {
 				m_roctl = m_roctl + roc;
 				m_rmp1tl = m_rmp1tl + rmn1;
 		}
-	}
 }
 void NandPim::GetValue(const char* key, float* value) {
 	string sk(key);
-	if (StringMatch(sk, VAR_HMNTL)) {
-		*value = this -> m_hmntl;
-	}
-	else if (StringMatch(sk, VAR_HMPTL)) {
-		*value = this -> m_hmptl;
-	}
-	else if (StringMatch(sk, VAR_RMN2TL)) {
-		*value = this -> m_rmn2tl;
-	}
-	else if (StringMatch(sk, VAR_RMPTL)) {
-		*value = this -> m_rmptl;
-	}
-	else if (StringMatch(sk, VAR_RWNTL)) {
-		*value = this -> m_rwntl;
-	}
-	else if (StringMatch(sk, VAR_WDNTL)) {
-		*value = this -> m_wdntl;
-	}
-	else if (StringMatch(sk, VAR_RMP1TL)) {
-		*value = this -> m_rmp1tl;
-	}
-	else if (StringMatch(sk, VAR_ROCTL)) {
-		*value = this -> m_roctl;
-	}
-	else if (StringMatch(sk, VAR_WSHD_DNIT)) {
-		*value = this -> m_wshd_dnit;
-	}
-	else if (StringMatch(sk, VAR_WSHD_HMN)) {
-		*value = this -> m_wshd_hmn;
-	}
-	else if (StringMatch(sk, VAR_WSHD_HMP)) {
-		*value = this -> m_wshd_hmp;
-	}
-	else if (StringMatch(sk, VAR_WSHD_RMN)) {
-		*value = this -> m_wshd_rmn;
-	}
-	else if (StringMatch(sk, VAR_WSHD_RMP)) {
-		*value = this -> m_wshd_rmp;
-	}
-	else if (StringMatch(sk, VAR_WSHD_RWN)) {
-		*value = this -> m_wshd_rwn;
-	}
-	else if (StringMatch(sk, VAR_WSHD_NITN)) {
-		*value = this -> m_wshd_nitn;
-	}
-	else if (StringMatch(sk, VAR_WSHD_VOLN)) {
-		*value = this -> m_wshd_voln;
-	}
-	else if (StringMatch(sk, VAR_WSHD_PAL)) {
-		*value = this -> m_wshd_pal;
-	}
-	else if (StringMatch(sk, VAR_WSHD_PAS)) {
-		*value = this -> m_wshd_pas;
-	}
+	if (StringMatch(sk, VAR_HMNTL)) {*value = this -> m_hmntl;}
+	else if (StringMatch(sk, VAR_HMPTL)) {*value = this -> m_hmptl;}
+	else if (StringMatch(sk, VAR_RMN2TL)) {*value = this -> m_rmn2tl;}
+	else if (StringMatch(sk, VAR_RMPTL)) {*value = this -> m_rmptl;}
+	else if (StringMatch(sk, VAR_RWNTL)) {*value = this -> m_rwntl;}
+	else if (StringMatch(sk, VAR_WDNTL)) {*value = this -> m_wdntl;}
+	else if (StringMatch(sk, VAR_RMP1TL)) {*value = this -> m_rmp1tl;}
+	else if (StringMatch(sk, VAR_ROCTL)) {*value = this -> m_roctl;}
+	else if (StringMatch(sk, VAR_WSHD_DNIT)) {*value = this -> m_wshd_dnit;}
+	else if (StringMatch(sk, VAR_WSHD_HMN)) {*value = this -> m_wshd_hmn;}
+	else if (StringMatch(sk, VAR_WSHD_HMP)) {*value = this -> m_wshd_hmp;}
+	else if (StringMatch(sk, VAR_WSHD_RMN)) {*value = this -> m_wshd_rmn;}
+	else if (StringMatch(sk, VAR_WSHD_RMP)) {*value = this -> m_wshd_rmp;}
+	else if (StringMatch(sk, VAR_WSHD_RWN)) {*value = this -> m_wshd_rwn;}
+	else if (StringMatch(sk, VAR_WSHD_NITN)) {*value = this -> m_wshd_nitn;}
+	else if (StringMatch(sk, VAR_WSHD_VOLN)) {*value = this -> m_wshd_voln;}
+	else if (StringMatch(sk, VAR_WSHD_PAL)) {*value = this -> m_wshd_pal;}
+	else if (StringMatch(sk, VAR_WSHD_PAS)) {*value = this -> m_wshd_pas;}
 	else {
 		throw ModelException("NMINRL", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }	
 void NandPim::Get2DData(const char* key, int *nRows, int *nCols, float*** data) {
 	string sk(key);
-	*nRows = m_nSolLyrs;
-	*nCols = m_nCells;
-	if (StringMatch(sk, VAR_SOL_AORGN)) {
-		*data = this -> m_sol_aorgn; 
-	}
-	else if (StringMatch(sk, VAR_SOL_FON)) {
-		*data = this -> m_sol_fon;
-	}
-	else if (StringMatch(sk, VAR_SOL_FOP)) {
-		*data = this -> m_sol_fop;
-	}
-	else if (StringMatch(sk, VAR_SOL_NO3)) {
-		*data = this -> m_sol_no3;
-	}
-	else if (StringMatch(sk, VAR_SOL_ORGN)) {
-		*data = this -> m_sol_orgn;
-	}
-	else if (StringMatch(sk, VAR_SOL_ORGP)) {
-		*data = this -> m_sol_orgp;
-	}
-	else if (StringMatch(sk, VAR_SOL_RSD)) {
-		*data = this -> m_sol_rsd;
-	}
-	else if (StringMatch(sk, VAR_SOL_SOLP)) {
-		*data = this -> m_sol_solp;
-	}
-	else if (StringMatch(sk, VAR_SOL_NH3)) {
-		*data = this -> m_sol_nh3;
-	}
-	else if (StringMatch(sk, VAR_SOL_ACTP)) {
-		*data = this -> m_sol_actp;
-	}
-	else if (StringMatch(sk, VAR_SOL_STAP)) {
-		*data = this -> m_sol_stap;
-	}
+	*nRows = m_nCells;
+	*nCols = m_soiLayers;
+	if (StringMatch(sk, VAR_SOL_AORGN)) {*data = this -> m_sol_aorgn; }
+	else if (StringMatch(sk, VAR_SOL_FON)) {*data = this -> m_sol_fon;}
+	else if (StringMatch(sk, VAR_SOL_FOP)) {*data = this -> m_sol_fop;}
+	else if (StringMatch(sk, VAR_SOL_NO3)) {*data = this -> m_sol_no3;}
+	else if (StringMatch(sk, VAR_SOL_ORGN)) {*data = this -> m_sol_orgn;}
+	else if (StringMatch(sk, VAR_SOL_ORGP)) {*data = this -> m_sol_orgp;}
+	else if (StringMatch(sk, VAR_SOL_RSD)) {*data = this -> m_sol_rsd;}
+	else if (StringMatch(sk, VAR_SOL_SOLP)) {*data = this -> m_sol_solp;}
+	else if (StringMatch(sk, VAR_SOL_NH3)) {*data = this -> m_sol_nh3;}
+	else if (StringMatch(sk, VAR_SOL_ACTP)) {*data = this -> m_sol_actp;}
+	else if (StringMatch(sk, VAR_SOL_STAP)) {*data = this -> m_sol_stap;}
 	else
-		throw ModelException("Denitrification", "Get2DData", "Output " + sk 
-		+ " does not exist in the Denitrification module. Please contact the module developer.");
+		throw ModelException("NMINRL", "Get2DData", "Output " + sk + " does not exist in the NMINRL module. Please contact the module developer.");
 }
 // int main() {
 	//	system("pause");

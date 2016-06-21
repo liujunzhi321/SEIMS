@@ -16,8 +16,8 @@
 using namespace std;
 
 NutrientinGroundwater::NutrientinGroundwater(void):
-//input 
-m_nCells(-1), m_cellWidth(-1), m_gwno3(NULL), m_gwminp(NULL), m_gw_q(NULL),
+	//input 
+	m_nCells(-1), m_cellWidth(-1), m_gwno3(NULL), m_gwminp(NULL), m_gw_q(NULL),
 	//output 
 	m_minpgw(NULL), m_no3gw(NULL)
 {
@@ -29,7 +29,7 @@ NutrientinGroundwater::~NutrientinGroundwater(void) {
 }
 bool NutrientinGroundwater::CheckInputSize(const char* key, int n) {
 	if(n <= 0) {
-		//StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_NMINRL, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(m_nCells != n) {
@@ -39,25 +39,17 @@ bool NutrientinGroundwater::CheckInputSize(const char* key, int n) {
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
 			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
-			throw ModelException("Denitrification","CheckInputSize",oss.str());
+			throw ModelException("NutGW","CheckInputSize",oss.str());
 		}
 	}
 	return true;
 }
 bool NutrientinGroundwater::CheckInputData() {
-	if(this->m_nCells == -1) {
-		throw ModelException("NutRemv","CheckInputData","You have not set the date time.");
-		return false;
-	}
-	if(m_nCells <= 0) {
-		throw ModelException("NutRemv","CheckInputData","The dimension of the input data can not be less than zero.");
-		return false;
-	}
-	if(this->m_cellWidth == NULL) {
-		throw ModelException("NutRemv","CheckInputData","The relative humidity can not be NULL.");
-		return false;
-	}
-	///...
+	if(m_nCells <= 0) {throw ModelException("NutGW", "CheckInputData", "The input data can not be less than zero.");return false;}
+	if(this->m_cellWidth < 0) {throw ModelException("NutGW", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this->m_gwno3 == NULL) {throw ModelException("NutGW", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this->m_gwminp == NULL) {throw ModelException("NutGW", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this->m_gw_q == NULL) {throw ModelException("NutGW", "CheckInputData", "The input data can not be NULL.");return false;}
 	return true;
 }
 void NutrientinGroundwater::SetValue(const char* key, float value)
@@ -73,7 +65,7 @@ void NutrientinGroundwater::SetValue(const char* key, float value)
 		this -> m_cellWidth = value;
 	}
 	else {
-		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
+		throw ModelException("NutGW","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
 }
 void NutrientinGroundwater::Set1DData(const char* key,int n, float *data)
@@ -91,7 +83,7 @@ void NutrientinGroundwater::Set1DData(const char* key,int n, float *data)
 		this -> m_gw_q = data;
 	}
 	else {
-		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
+		throw ModelException("NutGW","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
 }
 
@@ -118,9 +110,6 @@ void NutrientinGroundwater::Get1DData(const char* key, int* n, float** data) {
 		*data = this -> m_minpgw;
 	}
 	else {
-		throw ModelException("NutRemv", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException("NutGW", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }
-// int main() {
-	//	system("pause");
-//}

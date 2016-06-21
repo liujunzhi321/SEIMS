@@ -56,12 +56,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_WSHD_VOLN, UNIT_CONT_KGKM2, DESC_WSHD_VOLN, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_WSHD_PAL, UNIT_CONT_KGKM2, DESC_WSHD_PAL, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_WSHD_PAS, UNIT_CONT_KGKM2, DESC_WSHD_PAS, Source_ParameterDB, DT_Single);
-	// set the input
-
+	
+	mdi.AddParameter(VAR_PSP, UNIT_NON_DIM, DESC_PSP, Source_ParameterDB, DT_Array1D);
 	mdi.AddParameter(VAR_CDN, UNIT_NON_DIM, DESC_CDN, Source_ParameterDB, DT_Array1D);
+	
 	mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Raster1D);  /// idplt in SWAT is a lookup array. in SEIMS, use landcover
 	mdi.AddParameter(VAR_PL_RSDCO, UNIT_NON_DIM, DESC_PL_RSDCO, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_PSP, UNIT_NON_DIM, DESC_PSP, Source_ParameterDB, DT_Array1D);
+	mdi.AddParameter(VAR_SOILLAYERS, UNIT_NON_DIM, DESC_SOILLAYERS, Source_ParameterDB, DT_Raster1D);
 
 	mdi.AddParameter(VAR_SOL_CBN, UNIT_PERCENT, DESC_SOL_CBN, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_WST, UNIT_DEPTH_MM, DESC_SOL_WST, Source_ParameterDB, DT_Raster2D);
@@ -81,8 +82,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_CONT_KGKM2, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, Source_ParameterDB, DT_Raster2D);
-
-	// set the input
 
 	// set the output variables
 	mdi.AddOutput(VAR_HMNTL, UNIT_CONT_KGKM2, DESC_HMNTL, DT_Single);
@@ -104,19 +103,19 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_WSHD_PAL, UNIT_CONT_KGKM2, DESC_WSHD_PAL, DT_Single);
 	mdi.AddOutput(VAR_WSHD_PAS, UNIT_CONT_KGKM2, DESC_WSHD_PAS, DT_Single);
 
-	mdi.AddOutput(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_WPMM, UNIT_CONT_KGKM2, DESC_SOL_WPMM, DT_Array2D);
-	mdi.AddOutput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, DT_Array2D);
-	mdi.AddOutput(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, DT_Array2D);
+	mdi.AddOutput(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_WPMM, UNIT_CONT_KGKM2, DESC_SOL_WPMM, DT_Raster2D);
+	mdi.AddOutput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, DT_Raster2D);
 
 	string res = mdi.GetXMLDocument();
 	char* tmp = new char[res.size()+1];

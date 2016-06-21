@@ -41,7 +41,10 @@ private:
 	int m_nCells;
 	/// cell width of grid map (m)
 	float m_cellWidth;
-	int m_nSolLyrs;
+	/// soil layers
+	float* m_nSoilLayers;
+	/// maximum soil layers
+	int m_soiLayers;
 
 	/// parameters
 	/// concentration of nitrate in the rain (mg N/L) 

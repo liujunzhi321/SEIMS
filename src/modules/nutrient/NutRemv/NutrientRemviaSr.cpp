@@ -17,8 +17,8 @@
 using namespace std;
 
 NutrientRemviaSr::NutrientRemviaSr(void):
-//input 
-m_nCells(-1), m_cellWidth(-1), m_nSolLyrs(m_nSolLyrs), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_nperco(NULL), m_flat(NULL),
+	//input 
+	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_nperco(NULL), m_flat(NULL),
 	m_sol_perco(NULL), m_sol_wsatur(NULL), m_phoskd(NULL), m_sol_crk(NULL), m_pperco(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_conv_wt(NULL),
 	//output 
 	m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(NULL), m_sol_solp(NULL)
@@ -31,7 +31,7 @@ NutrientRemviaSr::~NutrientRemviaSr(void) {
 }
 bool NutrientRemviaSr::CheckInputSize(const char* key, int n) {
 	if(n <= 0) {
-		//StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_NutRemv, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(m_nCells != n) {
@@ -41,25 +41,30 @@ bool NutrientRemviaSr::CheckInputSize(const char* key, int n) {
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
 			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
-			throw ModelException("Denitrification","CheckInputSize",oss.str());
+			throw ModelException(MID_NutRemv, "CheckInputSize", oss.str());
 		}
 	}
 	return true;
 }
 bool NutrientRemviaSr::CheckInputData() {
-	if(this->m_nCells == -1) {
-		throw ModelException("NutRemv","CheckInputData","You have not set the date time.");
-		return false;
-	}
-	if(m_nCells <= 0) {
-		throw ModelException("NutRemv","CheckInputData","The dimension of the input data can not be less than zero.");
-		return false;
-	}
-	if(this->m_cellWidth == NULL) {
-		throw ModelException("NutRemv","CheckInputData","The relative humidity can not be NULL.");
-		return false;
-	}
-	///...
+	if(this -> m_nCells <= 0) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be less than zero.");return false;}
+	if(this ->m_cellWidth < 0) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_soiLayers < 0) {throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_nSoilLayers == NULL) {throw ModelException(MID_NutRemv, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_anion_excl == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_isep_opt == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_ldrain == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_surfr == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_nperco == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_flat == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_sol_perco == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_sol_wsatur == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_phoskd == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_sol_crk == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_pperco == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_sol_bd == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_sol_z == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_conv_wt == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	return true;
 }
 void NutrientRemviaSr::SetValue(const char* key, float value)
@@ -68,15 +73,9 @@ void NutrientRemviaSr::SetValue(const char* key, float value)
 	if (StringMatch(sk, VAR_OMP_THREADNUM)) {
 		omp_set_num_threads((int)value);
 	} 
-	else if (StringMatch(sk, Tag_CellSize)) {
-		this -> m_nCells = value;
-	}
-	else if (StringMatch(sk, Tag_CellWidth)) {
-		this -> m_cellWidth = value;
-	}
-	else if (StringMatch(sk, VAR_QTILE)) {
-		this -> m_qtile = value;
-	}
+	else if (StringMatch(sk, Tag_CellSize)) {this -> m_nCells = value;}
+	else if (StringMatch(sk, Tag_CellWidth)) {this -> m_cellWidth = value;}
+	else if (StringMatch(sk, VAR_QTILE)) {this -> m_qtile = value;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
@@ -84,32 +83,15 @@ void NutrientRemviaSr::SetValue(const char* key, float value)
 void NutrientRemviaSr::Set1DData(const char* key,int n, float *data)
 {
 	if(!this->CheckInputSize(key,n)) return;
-
 	string sk(key);
-	if (StringMatch(sk, VAR_SOER)) {
-		this -> m_surfr = data;
-	}
-	else if (StringMatch(sk, VAR_ANION_EXCL)) {
-		this -> m_anion_excl = data;
-	}
-	else if (StringMatch(sk, VAR_NPERCO)) {
-		this -> m_nperco = data;
-	}
-	else if (StringMatch(sk, VAR_PPERCO)) {
-		this -> m_pperco = data;
-	}
-	else if (StringMatch(sk, VAR_LDRAIN)) {
-		this -> m_ldrain = data;
-	}
-	else if (StringMatch(sk, VAR_ISEP_OPT)) {
-		this -> m_isep_opt = data;
-	}
-	else if (StringMatch(sk, VAR_PHOSKD)) {
-		this -> m_phoskd = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_CRK)) {
-		this -> m_sol_crk = data;
-	}
+	if (StringMatch(sk, VAR_SOER)) {this -> m_surfr = data;}
+	else if (StringMatch(sk, VAR_ANION_EXCL)) {this -> m_anion_excl = data;}
+	else if (StringMatch(sk, VAR_NPERCO)) {this -> m_nperco = data;}
+	else if (StringMatch(sk, VAR_PPERCO)) {this -> m_pperco = data;}
+	else if (StringMatch(sk, VAR_LDRAIN)) {this -> m_ldrain = data;}
+	else if (StringMatch(sk, VAR_ISEP_OPT)) {this -> m_isep_opt = data;}
+	else if (StringMatch(sk, VAR_PHOSKD)) {this -> m_phoskd = data;}
+	else if (StringMatch(sk, VAR_SOL_CRK)) {this -> m_sol_crk = data;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -117,32 +99,16 @@ void NutrientRemviaSr::Set1DData(const char* key,int n, float *data)
 void NutrientRemviaSr::Set2DData(const char* key, int nRows, int nCols, float** data)
 {
 	if(!this->CheckInputSize(key,nCols)) return;
-
 	string sk(key);
-	if (StringMatch(sk, VAR_FLAT)) {
-		this -> m_flat = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_NO3)) {
-		this -> m_sol_no3 = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_BD)) {
-		this -> m_sol_bd = data;
-	}
-	else if (StringMatch(sk, VAR_ROOTDEPTH)) {
-		this -> m_sol_z = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_SOLP)) {
-		this -> m_sol_solp = data;
-	}
-	else if (StringMatch(sk, VAR_CONV_WT)) {
-		this -> m_conv_wt = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_PERCO)) {
-		this -> m_sol_perco = data;
-	}
-	else if (StringMatch(sk, VAR_SOL_WSATUR)) {
-		this -> m_sol_wsatur = data;
-	}
+	m_soiLayers = nCols;
+	if (StringMatch(sk, VAR_FLAT)) {this -> m_flat = data;}
+	else if (StringMatch(sk, VAR_SOL_NO3)) {this -> m_sol_no3 = data;}
+	else if (StringMatch(sk, VAR_SOL_BD)) {this -> m_sol_bd = data;}
+	else if (StringMatch(sk, VAR_ROOTDEPTH)) {this -> m_sol_z = data;}
+	else if (StringMatch(sk, VAR_SOL_SOLP)) {this -> m_sol_solp = data;}
+	else if (StringMatch(sk, VAR_CONV_WT)) {this -> m_conv_wt = data;}
+	else if (StringMatch(sk, VAR_SOL_PERCO)) {this -> m_sol_perco = data;}
+	else if (StringMatch(sk, VAR_SOL_WSATUR)) {this -> m_sol_wsatur = data;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -150,6 +116,13 @@ void NutrientRemviaSr::Set2DData(const char* key, int nRows, int nCols, float** 
 int NutrientRemviaSr::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
+	}
+	// Calculate total no3
+	float total_no3 = 0.;
+	for(int i = 0; i < m_nCells; i++) {
+		for(int k = 0; k < m_nSoilLayers[i]; k++) {
+			total_no3 += m_sol_no3[i][k];
+		}
 	}
 	//Calculate the loss of nitrate via surface runoff, lateral flow, tile flow, and percolation out of the profile.
 	Nitrateloss();
@@ -162,16 +135,9 @@ void NutrientRemviaSr::Nitrateloss(){
 	//percnlyr nitrate moved to next lower layer with percolation (kg/km2)
 	float percnlyr = 0.;
 	float* tileno3;
-	float total_no3 = 0.;
-	// Calculate total no3
+	#pragma omp parallel for
 	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nSolLyrs; k++) {
-			total_no3 += m_sol_no3[i][k];
-		}
-	}
-
-	for(int i = 0; i < m_nCells; i++) {
-		for(int k = 0; k < m_nSolLyrs; k++) {
+		for(int k = 0; k < m_nSoilLayers[i]; k++) {
 			//add nitrate moved from layer above
 			m_sol_no3[i][k] = m_sol_no3[i][k] + percnlyr;
 			if (m_sol_no3[i][k] < 1e-6) {
@@ -288,10 +254,10 @@ void NutrientRemviaSr::Phosphorusloss(){
 			vap_tile = xx * vap;
 			vap = vap - vap_tile;
 		}
-		if (m_nSolLyrs >= 1) {
+		if (m_nSoilLayers[i] >= 1) {
 			m_sol_solp[i][1] = m_sol_solp[i][1] + vap;
 		}
-		for(int k = 1; k < m_nSolLyrs; k++) {
+		for(int k = 1; k < m_nSoilLayers[i]; k++) {
 			vap = 0.;
 			//if (k != m_i_sep[i]) {  // soil layer where biozone exists (m_i_sep)
 				vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((m_conv_wt[i][k] / 1000.) * m_pperco[i]);
@@ -314,26 +280,18 @@ void NutrientRemviaSr::GetValue(const char* key, float* value) {
 void NutrientRemviaSr::Get1DData(const char* key, int* n, float** data) {
 	string sk(key);
 	*n = m_nCells;
-	if (StringMatch(sk, VAR_LATNO3)) {
-		*data = this -> m_latno3;
-	}
-	if (StringMatch(sk, VAR_PERCN)) {
-		*data = this -> m_percn;
-	}
-	if (StringMatch(sk, VAR_SURQNO3)) {
-		*data = this -> m_surqno3;
-	}
-	if (StringMatch(sk, VAR_SURQSOLP)) {
-		*data = this -> m_surqsolp;
-	}
+	if (StringMatch(sk, VAR_LATNO3)) {*data = this -> m_latno3;}
+	if (StringMatch(sk, VAR_PERCN)) {*data = this -> m_percn;}
+	if (StringMatch(sk, VAR_SURQNO3)) {*data = this -> m_surqno3;}
+	if (StringMatch(sk, VAR_SURQSOLP)) {*data = this -> m_surqsolp;}
 	else {
 		throw ModelException("NutRemv", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }
 void NutrientRemviaSr::Get2DData(const char* key, int *nRows, int *nCols, float*** data) {
 	string sk(key);
-	*nRows = m_nSolLyrs;
-	*nCols = m_nCells;
+	*nRows = m_nCells;
+	*nCols = m_soiLayers;
 	if (StringMatch(sk, VAR_SOL_NO3)) {
 		*data = this -> m_sol_no3; 
 	}
@@ -341,8 +299,8 @@ void NutrientRemviaSr::Get2DData(const char* key, int *nRows, int *nCols, float*
 		*data = this -> m_sol_solp;
 	}
 	else
-		throw ModelException("Denitrification", "Get2DData", "Output " + sk 
-		+ " does not exist in the Denitrification module. Please contact the module developer.");
+		throw ModelException("NutRemv", "Get2DData", "Output " + sk 
+		+ " does not exist in the NutRemv module. Please contact the module developer.");
 }
 // int main() {
 	//	system("pause");

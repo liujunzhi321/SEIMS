@@ -41,7 +41,10 @@ private:
 	float m_cellWidth;
 	/// number of cells
 	int m_nCells;
-	int m_nSolLyrs;
+	/// soil layers
+	float* m_nSoilLayers;
+	/// maximum soil layers
+	int m_soiLayers;
 
 	///input data
 	//distribution of soil loss caused by water erosion
@@ -110,14 +113,14 @@ private:
 	 *
 	 * \return void
 	 */
-	void OrgnRemoveinSr();
+	void OrgnRemoveinSr(int i, float enratio);
 	
 	/*!
 	* \brief Calculates the amount of organic and mineral phosphorus attached to sediment in surface runoff.
 	 *
 	 * \return void
 	 */
-	void OrgpAttachedtoSed();
+	void OrgpAttachedtoSed(int i, float enratio);
 
 	
 };
