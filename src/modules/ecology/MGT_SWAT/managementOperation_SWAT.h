@@ -3,7 +3,7 @@
  * \brief All management operation in SWAT, e.g., plantop, killop, harvestop, etc.
  * \author Liang-Jun Zhu
  * \date June 2016
- *
+ *           1. Source code of SWAT include: operatn.f, sched_mgt.f, plantop.f, dormant.f, harvkillop.f, harvestop.f, killop.f, tillmix.f
  * 
  */
 #pragma once
@@ -21,7 +21,7 @@ using namespace std;
  * \ingroup MGT_SWAT
  *
  * \brief All management operation in SWAT, e.g., plantop, killop, harvestop, etc.
- *
+ * 
  */
 class MGTOpt_SWAT : public SimulationModule
 {

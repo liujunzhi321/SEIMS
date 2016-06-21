@@ -1,4 +1,4 @@
-SiteID	Y	M	D	Type	Value
+StationID	Y	M	D	Type	Value
 1	2014	8	27	MINP	0.19925
 1	2014	8	28	MINP	0.196
 1	2014	8	29	MINP	0.194

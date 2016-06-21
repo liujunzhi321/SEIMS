@@ -1,2 +1,2 @@
-StationID	Name	LocalX	LocalY	LocalPrjID	Lon	Lat	DatumID	Elevation
-58321	hefei	39523653.18	3528943.015	0	117.25	31.88	0	262
+StationID	Name	LocalX	LocalY	Lon	Lat	Elevation	isOutlet
+58321	hefei	39523653.18	3528943.015	117.25	31.88	262	0

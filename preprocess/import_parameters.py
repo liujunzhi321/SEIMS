@@ -87,7 +87,7 @@ def ImportLookupTables(sqlite_file, db):
             curLookupGridFS.close()
     c.close()
     conn.close()
-    print 'Lookup tables are imported.'
+    #print 'Lookup tables are imported.'
 if __name__ == "__main__":
     try:
         conn = MongoClient(host=HOSTNAME, port=PORT)

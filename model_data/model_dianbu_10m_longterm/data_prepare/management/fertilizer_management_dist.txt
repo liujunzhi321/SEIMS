@@ -1,3 +1,0 @@
-Scenario	Location	Level	ID
-0	28	Landuse	28
-0	75	Landuse	75

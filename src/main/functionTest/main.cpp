@@ -26,7 +26,7 @@ int main(int argc, const char* argv[])
 	bson_error_t		*err = NULL;
 	char				*str;
 	//char* dbname = "climate_dianbu";
-	char* dbname = "model_dianbu_30m_longterm";
+	char* dbname = "model_dianbu_10m_longterm";
 	//char* collname = "DataValues";
 	char* collname = "spatial";
 	char* newGridFS = "output";
@@ -39,23 +39,23 @@ int main(int argc, const char* argv[])
 	//mongoc_collection_t	*collection;
 	mongoc_gridfs_t *gfs = mongoc_client_get_gridfs(client,dbname,collname,err);
 
-	clsRasterData *test = new clsRasterData("E:\\data\\Dianbu\\patch_partition\\dianbu\\flow_dir.tif");
+	//clsRasterData *test = new clsRasterData("E:\\data\\Dianbu\\patch_partition\\dianbu\\flow_dir.tif");
 
 	clsRasterData *mask = new clsRasterData(gfs,"1_MASK",NULL);
-	clsRasterData *raster1d = new clsRasterData(gfs,"1_BLAI",mask);
-	clsRasterData *raster2d = new clsRasterData(gfs,"1_DENSITY",mask);
-	string rs1dascfile = "e:/test/1_blai_asc.asc";
-	string rs2dascfile = "e:/test/1_density_asc.asc";
-	string rs1dtiffile = "e:/test/1_blai_asc.tif";
-	string rs2dtiffile = "e:/test/1_density_asc.tif";
-	string rs1dMongo = "2_BLAI";
-	string rs2dMongo = "2_DENSITY";
-	raster1d->outputASCFile(rs1dascfile);
-	raster2d->outputASCFile(rs2dascfile);
+	clsRasterData *raster1d = new clsRasterData(gfs,"1_PHU0",mask);
+	//clsRasterData *raster2d = new clsRasterData(gfs,"1_DENSITY",mask);
+	//string rs1dascfile = "e:/test/1_blai_asc.asc";
+	//string rs2dascfile = "e:/test/1_density_asc.asc";
+	string rs1dtiffile = "e:/test/1_phu0.tif";
+	//string rs2dtiffile = "e:/test/1_density_asc.tif";
+	//string rs1dMongo = "2_BLAI";
+	//string rs2dMongo = "2_DENSITY";
+	//raster1d->outputASCFile(rs1dascfile);
+	//raster2d->outputASCFile(rs2dascfile);
 	raster1d->outputGTiff(rs1dtiffile);
-	raster2d->outputGTiff(rs2dtiffile);
-	raster1d->outputToMongoDB(rs1dMongo, gfs);
-	raster2d->outputToMongoDB(rs2dMongo, gfs);
+	//raster2d->outputGTiff(rs2dtiffile);
+	//raster1d->outputToMongoDB(rs1dMongo, gfs);
+	//raster2d->outputToMongoDB(rs2dMongo, gfs);
 
 
 

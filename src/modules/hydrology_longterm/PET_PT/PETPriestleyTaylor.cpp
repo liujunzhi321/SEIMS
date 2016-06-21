@@ -17,20 +17,23 @@
 
 using namespace std;
 
-PETPriestleyTaylor::PETPriestleyTaylor(void):m_tMin(NULL), m_tMax(NULL), m_sr(NULL), 
-	m_rhd(NULL), m_elev(NULL), m_dayLen(NULL), m_pet(NULL),m_vpd(NULL) ,m_petFactor(1.0f),m_nCells(-1)
+PETPriestleyTaylor::PETPriestleyTaylor(void):m_tMin(NULL), m_tMax(NULL), m_sr(NULL), m_rhd(NULL), m_elev(NULL), m_phutot(NULL),
+	m_dayLen(NULL),m_phuBase(NULL), m_pet(NULL),m_vpd(NULL) ,m_petFactor(1.0f),m_nCells(-1)
 {
 }
 
 PETPriestleyTaylor::~PETPriestleyTaylor(void)
 {
 	if(this->m_dayLen != NULL) delete [] this->m_dayLen;
+	if(this->m_phuBase != NULL) delete[] this->m_phuBase;
 	if(this->m_pet != NULL)		delete [] this->m_pet;
 	if(this->m_vpd != NULL)	delete [] this->m_vpd;
 }
 
 void PETPriestleyTaylor::Get1DData(const char* key, int* n, float **data)
 {
+	CheckInputData();
+	initialOutputs();
 	string sk(key);
 	if (StringMatch(sk, VAR_DAYLEN))
 	{
@@ -45,6 +48,11 @@ void PETPriestleyTaylor::Get1DData(const char* key, int* n, float **data)
 	else if (StringMatch(sk, VAR_VPD))
 	{
 		*data = this->m_vpd;
+		*n = this->m_nCells;
+	}
+	else if (StringMatch(sk, VAR_PHUBASE))
+	{
+		*data = this->m_phuBase;
 		*n = this->m_nCells;
 	}
 	else
@@ -92,29 +100,46 @@ bool PETPriestleyTaylor::CheckInputData()
 		throw ModelException(MID_PET_PT,"CheckInputData","The max temperature can not be NULL.");
 	if(this->m_tMean == NULL)
 		throw ModelException(MID_PET_PT,"CheckInputData","The mean temperature can not be NULL.");
-
+	if(this->m_phutot == NULL)
+		throw ModelException(MID_PET_PT,"CheckInputData","The PHU0 can not be NULL.");
 	return true;
 }
 
-int PETPriestleyTaylor::Execute()
+void PETPriestleyTaylor::initialOutputs()
 {
-	if(!this->CheckInputData()) return false;
 	if(this->m_pet == NULL)
 	{
 		this->m_pet = new float[this->m_nCells];
 		this->m_vpd = new float[m_nCells];
 		this->m_dayLen = new float[m_nCells];
+		this->m_phuBase = new float[m_nCells];
+#pragma omp parallel for
 		for (int i = 0; i < m_nCells; ++i)
 		{
 			this->m_pet[i] = 0.f;
 			this->m_vpd[i] = 0.f;
 			this->m_dayLen[i] = 0.f;
+			this->m_phuBase[i] = 0.f;
 		}
 	}
+}
+
+int PETPriestleyTaylor::Execute()
+{
+	if(!this->CheckInputData()) return false;
+	initialOutputs();
 	int d = JulianDay(this->m_date);
 #pragma omp parallel for
 	for (int i = 0; i < m_nCells; ++i)
 	{
+		/// update phubase of the simulation year.
+		/* update base zero total heat units, src code from SWAT, subbasin.f
+		if (tmpav(j) > 0. .and. phutot(hru_sub(j)) > 0.01) then
+			phubase(j) = phubase(j) + tmpav(j) / phutot(hru_sub(j))
+		end if*/
+		if(m_tMean[i] > 0. && m_phutot[i] > 0.01)
+			m_phuBase[i] += m_tMean[i] / m_phutot[i];
+
 		/// compute net radiation
 		/// net short-wave radiation for PET, etpot.f in SWAT src
 		float raShortWave = m_sr[i] * (1.0f - 0.23f);
@@ -175,6 +200,7 @@ void PETPriestleyTaylor::Set1DData(const char* key,int n, float *value)
 	else if (StringMatch(sk,DataType_SolarRadiation)) this->m_sr = value;
 	else if (StringMatch(sk, VAR_DEM)) this->m_elev = value;
 	else if (StringMatch(sk, VAR_CELL_LAT)) this->m_cellLat = value;
+	else if (StringMatch(sk, VAR_PHUTOT)) this->m_phutot = value;
 	else
 		throw ModelException(MID_PET_PT,"Set1DData","Parameter " + sk + " does not exist in current module. Please contact the module developer.");
 }

@@ -1,4 +1,4 @@
-SiteID	Y	M	D	Type	Value
+StationID	Y	M	D	Type	Value
 1	2014	1	7	TP	0.057
 2	2014	1	7	TP	0.789
 3	2014	1	7	TP	6.671

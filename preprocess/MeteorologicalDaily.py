@@ -7,13 +7,17 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from util import *
 import math
+import numpy
 from text import *
 ### Import climate data table
 def ImportDayData(db, ClimateDateFile, sitesLoc):
     climDataItems = ReadDataItemsFromTxt(ClimateDateFile)
     climFlds = climDataItems[0]
-    T_mean = []
-    Year = []
+    ## PHUCalDic is used for Calculating potential heat units (PHU)
+    ## for each climate station and each year.
+    ## format is {StationID:{Year1:[values],Year2:[Values]...}, ...}
+    PHUCalDic = {}
+
     requiredFlds = [Tag_DT_Year, Tag_DT_Month, Tag_DT_Day,
                     DataType_MaximumTemperature, DataType_MinimumTemperature,
                     DataType_RelativeAirMoisture, DataType_WindSpeed]
@@ -80,35 +84,53 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 curDic[Tag_DT_LocalT] = dic[Tag_DT_LocalT]
                 curDic[Tag_DT_Type] = fld
                 db[Tag_ClimateDB_Data].insert_one(curDic)
-
-        T_mean.append(dic[DataType_MeanTemperature])
-        Year.append(curY)
-    for i in range(0,len(list(set(Year)))):
+        if(dic[Tag_DT_StationID] in PHUCalDic.keys()):
+            if(curY in PHUCalDic[dic[Tag_DT_StationID]].keys()):
+                PHUCalDic[dic[Tag_DT_StationID]][curY][0].append(dic[DataType_MeanTemperature])
+            else:
+                PHUCalDic[dic[Tag_DT_StationID]][curY] = [[dic[DataType_MeanTemperature]]]
+        else:
+            PHUCalDic[dic[Tag_DT_StationID]] = {curY:[[dic[DataType_MeanTemperature]]]}
+    ### prepare dic for MongoDB
+    for sID in PHUCalDic.keys():
+        curPHU0 = 0.
+        for YYYY in PHUCalDic[sID].keys():
+            curDic = {}
+            xx = numpy.array(PHUCalDic[sID][YYYY][0])
+            curSumPHU = numpy.sum(xx[numpy.where(xx > T_base)])
+            PHUCalDic[sID][YYYY].append(curSumPHU)
+            curPHU0 += curSumPHU
+            curDic[Tag_DT_Value] = curSumPHU
+            curDic[Tag_DT_StationID] = sID
+            curDic[Tag_DT_Year] = YYYY
+            curDic[Tag_VAR_UNIT] = "heat units"
+            curDic[Tag_VAR_Type] = DataType_YearlyHeatUnit
+            db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
+        curPHU0 /= float(len(PHUCalDic[sID].keys()))
+        PHUCalDic[sID][Datatype_PHU0] = curPHU0
         curDic = {}
-        HU = 0
-        T_base = 0
-        for j in range(0,len(Year)):
-            if(Year[j]==list(set(Year))[i]):
-                HU += T_mean[j] - T_base*1.0
-        curDic[Tag_DT_Value] = HU
-        curDic[Tag_DT_Year] = list(set(Year))[i]
-        curDic[Tag_VAR_UNIT] = "deg C"
-        curDic[Tag_VAR_Type] = DataType_YearlyHeatUnit
-        db[Tag_ClimateDB_YearlyHeatUnit].insert_one(curDic)
+        curDic[Tag_DT_Value] = PHUCalDic[sID][Datatype_PHU0]
+        curDic[Tag_DT_StationID] = sID
+        curDic[Tag_DT_Year] = DEFAULT_NODATA
+        curDic[Tag_VAR_UNIT] = "heat units"
+        curDic[Tag_VAR_Type] = Datatype_PHU0
+        db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
 
 def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     try:
         connMongo = MongoClient(hostname, port)
-        print "Connected successfully"
+        print "Import Daily Meteorological Data... "
+        ##print "Connected successfully"
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
     db = connMongo[dbName]
     cList = db.collection_names()
-
-    if not Tag_ClimateDB_Data in cList:
-        db.create_collection(Tag_ClimateDB_Data)
-    else:
-        db.drop_collection(Tag_ClimateDB_Data)
+    tables = [Tag_ClimateDB_Data, Tag_ClimateDB_ANNUAL_STATS]
+    for tb in tables:
+        if not StringInList(tb, cList):
+            db.create_collection(tb)
+        else:
+            db.drop_collection(tb)
     ImportDayData(db, meteofile, siteMLoc)
     connMongo.close()

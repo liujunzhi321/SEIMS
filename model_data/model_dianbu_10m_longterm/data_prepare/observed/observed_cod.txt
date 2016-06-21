@@ -1,4 +1,4 @@
-SiteID	Y	M	D	Type	Value
+StationID	Y	M	D	Type	Value
 1	2014	1	7	COD	4.38
 2	2014	1	7	COD	4.38
 3	2014	1	7	COD	10.61

@@ -378,11 +378,16 @@
 #define MDESC_KINWAVSED_CH			"Srinivasan & Galvao function to calculate sediment yield routing of each channel cell"
 #define MID_MUSLE_AS								"MUSLE_AS"
 #define MDESC_MUSLE_AS						"use MUSLE method to calculate sediment yield of each cell"
+/// Mnagement
+#define MCLS_MGT										"Mangement practices"
+#define MCLSDESC_MGT							"BMP related modules"
+#define MID_MGT_SWAT							"MGT_SWAT"
+#define MDESC_MGT_SWAT						"Mangement operation modeling method in SWAT"
 /// Plant growth
 #define MCLS_PG										"Plant growth"
 #define MCLSDESC_PG								"Calculate the amount of plant growth."
-#define MID_BIO_EPIC								"PBIO_EPIC"
-#define MDESC_BIO_EPIC						"Calculate potential biomass using a simplified version of the EPIC plant growth model as in SWAT"
+#define MID_BIO_EPIC								"BIO_EPIC"
+#define MDESC_BIO_EPIC						"Calculate plant growth using a simplified version of the EPIC plant growth model as in SWAT"
 /// Overland routing related modules
 #define MCLS_OL_ROUTING						"Overland routing"
 #define MCLSDESC_OL_ROUTING			"Overland routing module"
@@ -635,7 +640,13 @@
 #define VAR_P_RF "p_rf"
 #define VAR_PERCN "percn"
 #define VAR_PERCO "Percolation"                     /// the amount of water percolated from the soil water reservoir
-#define VAR_PET "PET"                               /// PET 
+#define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
+#define VAR_PHUBASE "PHUBASE"
+#define VAR_PHUPLT "PHUPLT"
+#define VAR_PHUTOT "PHUTOT"
+#define VAR_PLTET_TOT "plt_et_tot"
+#define VAR_PLTPET_TOT "plt_pet_tot"
+#define VAR_K_PET "K_pet"                           /// Correction factor for PET
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PHOSKD "phoskd"
@@ -837,8 +848,8 @@
 #define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
 #define UNIT_CONT_RATIO "(kg/ha)/(kg/ha)"
 #define UNIT_CONT_TONHA "tons/ha"
-#define UNIT_DENSITY "mg/m3"                        /// density
 #define UNIT_DENSITY_L "mg/L"                        /// density
+#define UNIT_DENSITY "Mg/m3"                        /// density
 #define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
 #define UNIT_GAS_CON "uL/L"   /// e.g., uL CO2/L air, IS this same with ppmv? LJ
@@ -1079,6 +1090,12 @@
 #define DESC_PET "Potential Evapotranspiration of day"
 #define DESC_PET_HCOEF "Coefficient related to radiation used in Hargreaves method"
 #define DESC_PET_K "Correction factor for PET"
+#define DESC_PET "Potential Evapotranspiration of day"
+#define DESC_PHUBASE "base zero total heat units (used when no land cover is growing)"
+#define DESC_PHUPLT "total number of heat unites (hours) needed to bring plant to maturity"
+#define DESC_PHUTOT "annual average total potential heat units (used when no crop is growing)"
+#define DESC_PLANT_N "amount of nitrogen in plant biomass (kg/ha), plantn in SWAT"
+#define DESC_PLANT_P "amount of phosphorus in plant biomass (kg/ha), plantp in SWAT"
 #define DESC_PHOSKD "Phosphorus soil partitioning coefficient"
 #define DESC_PHUPLT "total number of heat unites (hours) needed to bring plant to maturity"
 #define DESC_PI_B "Interception Storage Capacity Exponent"
@@ -1271,8 +1288,6 @@
 #define DESC_WSHD_RNO3 "average annual amount of NO3 added to soil by rainfall in watershed"
 #define DESC_WSHD_RWN "average annual amount of nitrogen moving from active organic to stable organic pool in watershed" 
 #define DESC_WSHD_VOLN "average annual amount if nitrogen lost by ammonia volatilization in watershed" 
-
-
 
 
 //////////////////////////////////////////////////////////////////////////

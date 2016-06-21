@@ -10,6 +10,7 @@
 			  4. Add potential plant transpiration as output.
 			  5. Add m_VPD, m_dayLen as outputs, which will be used in BIO_EPIC module
 			  6. change m_vpd2 and m_gsi from DT_Single to DT_Raster1D, see readplant.f of SWAT
+			  7. Add m_phuBase as outputs, which will be used in MGT_SWAT module
  */
 
 #ifndef SEIMS_PET_PM_INCLUDE
@@ -62,6 +63,7 @@ private:
 	bool CheckInputSize(const char*,int);
 	/// USELESS? By LJ.
 	///void clearInputs(void);
+
 	/// initialize output variables
 	void initialOutputs();
 private:
@@ -79,6 +81,8 @@ private:
 	float *m_ws;
 	/// elevation(m)
 	float *m_elev;
+	/// annual PHU
+	float *m_phutot;
 	/// temporary variables
 	/// maximum solar radiation(MJ/m2/d), calculated from Julian day and latitude.
 	float m_srMax;
@@ -124,6 +128,8 @@ private:
 	float *m_vpd;
 	/// day length
 	float *m_dayLen;
+	/// base zero total heat units (used when no land cover is growing)
+	float *m_phuBase;
 };
 #endif
 

@@ -107,7 +107,7 @@ def ImportPrecipitation(db,ClimateDateFile,sitesLoc):
         sec = time.mktime(dt.timetuple())
         utcTime = time.gmtime(sec)
         dic[Tag_DT_LocalT] = dt
-        dic[Tag_DT_Zone] = time.timezone / 3600
+        dic[Tag_DT_Zone] = time.timezone / 3600.
         dic[Tag_DT_UTC] = datetime.datetime(utcTime[0], utcTime[1], utcTime[2], utcTime[3])
 
         for j in range(len(StationID)):
@@ -218,13 +218,14 @@ def ImportPrecipitation(db,ClimateDateFile,sitesLoc):
 def ImportDailyPrecData(hostname,port,dbName,precdata,sitePLoc):
     try:
         connMongo = MongoClient(hostname, port)
+        print "Import Daily Precipitation Data... "
         #print "Connected successfully"
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
     db = connMongo[dbName]
     cList = db.collection_names()
-    if not Tag_ClimateDB_Data in cList:
+    if not StringInList(Tag_ClimateDB_Data, cList):
         db.create_collection(Tag_ClimateDB_Data)
 
     ImportPrecipitation(db,precdata,sitePLoc)

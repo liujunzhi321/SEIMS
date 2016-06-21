@@ -10,12 +10,7 @@ ID	Name	Type	Priority
 9	Isolated wetland	2	3
 10	Terrace	2	3
 11	Overland flow diversion	2	3
-12	Crop management	3	1
+12	Plant management	3	1
 13	Residual management	3	2
-14	Tillage management	3	1
-15	Fertilizer management	3	1
-16	Grazing management	3	2
-17	Pesticide management	3	3
-18	Irrigation management	3	3
-19	Tile drain management	2	2
-20	Urban management	2	3
+14	Tile drain management	2	2
+15	Urban management	2	3

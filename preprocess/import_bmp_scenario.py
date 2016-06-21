@@ -15,12 +15,19 @@ from import_parameters import ImportLookupTables
 
 def ImportBMPTables():
     '''
-    Import management data to MongoDB
+    Import BMPs Scenario data to MongoDB
     '''
-    BMP_tabs_path = [BMP_DATA_DIR + os.sep + item + ".txt" for item in BMP_tabs]
+
+    BMPFiles = GetFileNameWithSuffixes(BMP_DATA_DIR, ['.txt'])
+    BMP_tabs = []
+    BMP_tabs_path = []
+    for f in BMPFiles:
+        BMP_tabs.append(f.split('.')[0])
+        BMP_tabs_path.append(BMP_DATA_DIR + os.sep + f)
     ## connect to MongoDB
     try:
         conn = MongoClient(host=HOSTNAME, port=PORT)
+        print "Import BMP Scenario Data... "
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
@@ -28,7 +35,7 @@ def ImportBMPTables():
     ## delete if collection existed
     cList = db.collection_names()
     for item in BMP_tabs:
-        if not item in cList:
+        if not StringInList(item, cList):
             db.create_collection(item)
         else:
             db.drop_collection(item)
@@ -46,8 +53,17 @@ def ImportBMPTables():
                 else:
                     dic[fieldArray[i]] = str(item[i])
             db[bmpTabName].insert_one(dic)
-
-    print 'BMP tables are imported.'
+    #print 'BMP tables are imported.'
+    ## Write BMP database name into Model main database
+    mainDB = conn[SpatialDBName]
+    cList = mainDB.collection_names()
+    if not StringInList(DB_TAB_BMP_DB, cList):
+        mainDB.create_collection(DB_TAB_BMP_DB)
+    else:
+        mainDB.drop_collection(DB_TAB_BMP_DB)
+    bmpInfoDic = {}
+    bmpInfoDic["DB"] = BMPScenarioDBName
+    mainDB[DB_TAB_BMP_DB].insert_one(bmpInfoDic)
     ImportLookupTables(sqliteFile, db)
     conn.close()
 if __name__ == "__main__":
