@@ -104,7 +104,6 @@ Tag_DT_Value = 'Value'
 
 Tag_ClimateDB_ANNUAL_STATS = 'AnnualStats'
 Tag_ClimateDB_Measurement = 'Measurement'
-Tag_ClimateDB_MeasSites = 'MeasurementSites'
 Tag_ClimateDB_VARs = 'Variables'
 Tag_VAR_ID = 'ID'
 Tag_VAR_Type = 'Type'

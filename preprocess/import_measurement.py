@@ -84,8 +84,10 @@ def ImportData(db, measFileList, sitesLoc):
                 siteDic[Tag_ST_LocalY] = dic[Tag_ST_LocalY]
                 siteDic[Tag_ST_Elevation] = dic[Tag_ST_Elevation]
                 siteDic[Tag_ST_IsOutlet] = dic[Tag_ST_IsOutlet]
-                # db[Tag_ClimateDB_MeasSites].insert_one(curDic)
-                db[Tag_ClimateDB_Sites].insert_one(siteDic)
+                results = db[Tag_ClimateDB_Sites].find({Tag_ST_StationID:siteDic[Tag_ST_StationID],Tag_ST_Type:siteDic[Tag_ST_Type]})
+                records = [data for data in results]
+                if records == []:
+                    db[Tag_ClimateDB_Sites].insert_one(siteDic)
                 varDic = {}
                 varDic[Tag_ST_Type] = type[j]
                 varDic[Tag_ST_UNIT] = dic[Tag_ST_UNIT]
@@ -112,12 +114,10 @@ def ImportMeasurementData(hostname,port,dbName,path):
         sys.exit(1)
     db = connMongo[dbName]
     cList = db.collection_names()
-    measure_tabs = [Tag_ClimateDB_Measurement, Tag_ClimateDB_MeasSites]
-    for item in measure_tabs:
-        if not StringInList(item, cList):
-            db.create_collection(item)
-        else:
-            db.drop_collection(item)
+    if not StringInList(Tag_ClimateDB_Measurement, cList):
+        db.create_collection(Tag_ClimateDB_Measurement)
+    else:
+        db.drop_collection(Tag_ClimateDB_Measurement)
 
     if not Tag_ClimateDB_Data in cList:
         db.create_collection(Tag_ClimateDB_Data)
