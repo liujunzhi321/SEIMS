@@ -18,7 +18,7 @@ int main(int argc, const char* argv[])
 {
 	GDALAllRegister();
 	string	modelPath = "";
-	int		scenarioID = 0;
+	int		scenarioID = 0;  /// By default is the Base Scenario ID
 	int i = 0;
 	int numThread = 1;
 	LayeringMethod layeringMethod = UP_DOWN;
@@ -79,15 +79,24 @@ int main(int argc, const char* argv[])
 			else
 				goto errexit;
 		}
+		if (argc > i){
+			if(atoi(argv[i]) >= 0)
+			{
+				scenarioID = atoi(argv[i]);
+				i++;
+			}
+			else
+				goto errexit;
+		}
 	}
 	if (argc == 2)
-	{
 		modelPath = argv[1];
-	}
+
 	//cout<<modelPath<<endl;
 	//cout<<numThread<<endl;
 	//cout<<layeringMethod<<endl;
 	//cout<<mongodbIP<<":"<<port<<endl;
+	//cout<<scenarioID<<endl;
 	//omp_set_num_threads(2);
 
 #ifdef MAIN
@@ -122,11 +131,13 @@ errexit:
 	cout<<"\tBy default: "<<endl;
 	cout<<"\t\tThe MongoDB IP is 192.168.6.55, and the port is 27017."<<endl;
 	cout<<"\t\tThe threads or processor number is 1."<<endl;
-	cout<<"\t\tThe Layering Method is UP_DOWN."<<endl<<endl;
-	cout<<"Usage: "<<argv[0]<<"<ModelPath> <threadsNum> [<layeringMethod> <IP> <port>]"<<endl;
-	cout<<"  <ModelPath> is the path of the configuration of the Model."<<endl;
-	cout<<"  <threadsNum> must be greater or equal than 1."<<endl;
-	cout<<"  <layeringMethod> can be 0 and 1, which means UP_DOWN and DOWN_UP respectively."<<endl;
-	cout<<"  <IP> is the address of MongoDB database, and <port> is its port number."<<endl;
+	cout<<"\t\tThe Layering Method is UP_DOWN."<<endl;
+	cout<<"\t\tThe Scenario ID is 0"<<endl<<endl;
+	cout<<"Usage: "<<argv[0]<<"<ModelPath> [<threadsNum> <layeringMethod> <IP> <port> <ScenarioID>]"<<endl;
+	cout<<"\t<ModelPath> is the path of the configuration of the Model."<<endl;
+	cout<<"\t<threadsNum> must be greater or equal than 1."<<endl;
+	cout<<"\t<layeringMethod> can be 0 and 1, which means UP_DOWN and DOWN_UP respectively."<<endl;
+	cout<<"\t<IP> is the address of MongoDB database, and <port> is its port number."<<endl;
+	cout<<"\t<ScenarioID> is the ID of BMPs Scenario which will be defined in BMPs database."<<endl;
 	exit(0);
 }

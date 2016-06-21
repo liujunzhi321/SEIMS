@@ -49,7 +49,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_SOL_SUMSAT, UNIT_DEPTH_MM, DESC_SOL_SUMSAT, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, Source_Module, DT_Raster1D); 
 	/// Crop or land cover related parameters
-	mdi.AddParameter(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_IDC, UNIT_NON_DIM, DESC_IDC, Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_ALAIMIN, UNIT_AREA_RATIO, DESC_ALAIMIN, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_BIO_E,UNIT_RAD_USE_EFFI, DESC_BIO_E, Source_ParameterDB,DT_Raster1D);
@@ -89,6 +88,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
 	/// lookup table as 2D array, such as crop, management, landuse, tillage, etc.
 
+
+	mdi.AddInput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO,Source_Module,DT_Raster1D);
 	/// climate parameters INPUT
 	mdi.AddInput(DataType_MeanTemperature,UNIT_TEMP_DEG, DESC_MEANTEMP, Source_Module,DT_Raster1D);
 	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG, DESC_MINTEMP, Source_Module,DT_Raster1D);					

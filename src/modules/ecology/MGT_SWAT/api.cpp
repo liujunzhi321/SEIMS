@@ -31,10 +31,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	/// set parameters from database
 	mdi.AddParameter(VAR_DAYLEN_MIN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN_MIN,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_PHUTOT, UNIT_TIMESTEP_HOUR, DESC_PHUTOT,Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, Source_ParameterDB, DT_Raster1D);
 	/// set input from other modules
 	mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_Module, DT_Raster1D); /// PET modules
 	mdi.AddInput(VAR_PHUBASE, UNIT_TIMESTEP_HOUR, DESC_PHUBASE, Source_Module, DT_Raster1D); /// PET modules
-	
+	mdi.AddInput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC,Source_Module,DT_Raster1D);
+
 	/// set the output variables
 	mdi.AddOutput("VAR_NAME","UNIT", "DESC", "DT");
 	/// write out the XML file.

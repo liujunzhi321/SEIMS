@@ -15,8 +15,9 @@
 // TODO - you may consider moving these to an external resource file 
 //        to make it easier to change them later 
 
+#define MODEL_NAME "SEIMS"
 #define SEIMS_EMAIL "SEIMS2015@163.com"
-#define SEIMS_SITE "http://seims.github.io/SEIMS"
+#define SEIMS_SITE "https://github.com/seims/SEIMS/wiki"
 
 //! Constant input variables
 #define CONS_IN_ELEV							"Elevation"
@@ -608,7 +609,7 @@
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PHUBASE "PHUBASE"
 #define VAR_PHUPLT "PHUPLT"
-#define VAR_PHUTOT "PHUTOT"
+#define VAR_PHUTOT "PHU0"
 #define VAR_PLTET_TOT "plt_et_tot"
 #define VAR_PLTPET_TOT "plt_pet_tot"
 #define VAR_K_PET "K_pet"                           /// Correction factor for PET
