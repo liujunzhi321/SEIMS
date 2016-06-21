@@ -439,38 +439,53 @@
 #define MCLSDESC_NutCHRout "In-stream nutrient transformations"
 #define MID_NutCHRout "NutCHRout"
 #define MDESC_NutCHRout "In-stream nutrient transformations"
+/// Nutrient transformations in overland flow
+#define MCLS_NutOLRout "Nutrient in overland flow"
+#define MCLSDESC_NutOLRout "Nutrient transformations in overland flow"
+#define MID_NutOLRout "NutCHRout"
+#define MDESC_NutOLRout "Nutrient transformations in overland flow"
+
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
 /// By LiangJun Zhu, HuiRan Gao ///
 ///Apr. , 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 #define VAR_A_BNK "a_bnk"                           /// bank flow recession constant
-#define VAR_ALAIMIN "alai_min"
-#define VAR_ALBDAY "ALBDAY"
 #define VAR_ACC "acc"
 #define VAR_ACC_INFIL "AccumuInfil"
-#define VAR_AET_PLT "AET_PLT"
 #define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/km2)
 #define VAR_ADDRNO3 "addrno3"                       /// nitrate added by rainfall (kg/km2)
+#define VAR_AET_PLT "AET_PLT"
+#define VAR_AI0 "ai0"
+#define VAR_AI1 "ai1"
+#define VAR_AI2 "ai2"
+#define VAR_AI3 "ai3"
+#define VAR_AI4 "ai4"
+#define VAR_AI5 "ai5"
+#define VAR_AI6 "ai6"
+#define VAR_ALAIMIN "alai_min"
+#define VAR_ALBDAY "ALBDAY"
+#define VAR_ALGAE "algae"
+#define VAR_AMMO_CH "ammoToCh"
+#define VAR_AMMONIAN "ammonian"
 #define VAR_ANION_EXCL "anion_excl"
 #define VAR_B_BNK "b_bnk"                           /// bank storage loss coefficient
 #define VAR_Base_ex "Base_ex"                       /// baseflow recession exponent
 #define VAR_BIO_E "BIO_E"
 #define VAR_BIOEHI "BIOEHI" 
-#define VAR_BIOLEAF "BIO_LEAF"
 #define VAR_BIOINIT "BIOINIT"
+#define VAR_BIOLEAF "BIO_LEAF"
 #define VAR_BIOMASS "BIOMASS"
-#define VAR_BLAI "BLAI"
 #define VAR_BKST "BKST"                             /// bank storage
+#define VAR_BLAI "BLAI"
 #define VAR_BMX_TREES "BMX_TREES"
-#define VAR_BNK0 "Bnk0"                             /// initial bank storage per meter of reach length
 #define VAR_BN1 "BN1"
 #define VAR_BN2 "BN2"
 #define VAR_BN3 "BN3"
+#define VAR_BNK0 "Bnk0"                             /// initial bank storage per meter of reach length
 #define VAR_BP1 "BP1"
 #define VAR_BP2 "BP2"
 #define VAR_BP3 "BP3"
-#define VAR_CELL_LAT "celllat"            /// latitude of each valid cells
 #define VAR_C_RAIN "c_rain"
 #define VAR_C_SNOW "c_snow"
 #define VAR_C_SNOW12 "c_snow12"
@@ -478,6 +493,7 @@
 #define VAR_C_WABA "C_WABA"                         /// Channel water balance in a text format for each reach and at each time step
 #define VAR_CDN "cdn"                               /// rate coefficient for denitrification
 #define VAR_CDN "cdn"                               /// rate coefficient for denitrification
+#define VAR_CELL_LAT "celllat"            /// latitude of each valid cells
 #define VAR_CH_DEP "DEP"
 #define VAR_CH_DET "DET"
 #define VAR_CH_DETCO "ChDetCo"
@@ -487,6 +503,7 @@
 #define VAR_CH_TCCO "ChTcCo"
 #define VAR_CH_V "CHANV"
 #define VAR_CH_VOL "CHANVOL"
+#define VAR_CHLORA "chlora"
 #define VAR_CHS0 "Chs0"                               /// initial channel storage per meter of reach length
 #define VAR_CHSB "CHSB"
 #define VAR_CHST "CHST"                               /// channel storage
@@ -503,7 +520,9 @@
 #define VAR_COND_RATE "Cond_rate"                     /// Rate of decline in automata's conductance per unit increase in vapor pressure deficit
 #define VAR_CONDUCT "Conductivity"
 #define VAR_CONV_WT "conv_wt"
+#define VAR_D_FlOWWIDTH "D_FlowWidth"
 #define VAR_D_P "D_P" /// Distrubution of precipitation
+#define VAR_DAYL "dayl"
 #define VAR_DAYLEN "daylength" 
 #define VAR_DAYLEN_MIN "daylmn"  /// minimum day length
 #define VAR_DEET "DEET"                               /// Distribution of evaporation from depression storage
@@ -513,34 +532,35 @@
 #define VAR_DEPRESSION "Depression"                   /// Depression storage capacity
 #define VAR_DETSPLASH "DETSplash"
 #define VAR_DF_COEF "df_coef"                         /// Deep percolation coefficient
+#define VAR_DISOLVP "disolvp"
 #define VAR_DLAI "DLAI"
-#define VAR_DORMI "dormi"	/// dormancy status code, 0 or 1 
 #define VAR_DORMHR "dormhr"
+#define VAR_DORMI "dormi"
 #define VAR_DPST "DPST"                               /// Distribution of depression storage
 #define VAR_DRYDEP_NH4 "drydep_nh4"                 /// atmospheric dry deposition of ammonia (kg/km2)
 #define VAR_DRYDEP_NO3 "drydep_no3"                 /// atmospheric dry deposition of nitrates (kg/km2)
 #define VAR_EP_CH "Ep_ch"                           /// reach evaporation adjustment factor
-#define VAR_ESCO "esco"
 #define VAR_EPCO "epco"                              /// plant water uptake compensation factor
+#define VAR_ESCO "esco"
 #define VAR_EXCP "EXCP"                             /// excess precipitation
 #define VAR_EXT_COEF "EXT_COEF"
 #define VAR_FIELDCAP "FieldCap"                     /// Soil field capacity" 
 #define VAR_FLAT "flat"
 #define VAR_FLOWDIR "FLOW_DIR"
 #define VAR_FLOWWIDTH "FlowWidth"
+#define VAR_FR_PHU_ACC "frPHUacc"
 #define VAR_FRGMAX "frgmax"
 #define VAR_FRGRW1 "FRGRW1"
 #define VAR_FRGRW2 "FRGRW1"
-#define VAR_FR_PHU_ACC "frPHUacc"
 #define VAR_GRRE "GRRE"
 #define VAR_GSI "gsi"
-#define VAR_GW0 "GW0"                               /// initial ground water storage
 #define VAR_GW_KG "kg"
+#define VAR_GW_Q "gw_q"
+#define VAR_GW0 "GW0"                               /// initial ground water storage
 #define VAR_GWMAX "GWMAX"                           /// maximum ground water storage
+#define VAR_GWMINP "gwminp"
 #define VAR_GWNEW "GWNEW"                           /// The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage
 #define VAR_GWNO3 "gwno3"
-#define VAR_GWMINP "gwminp"
-#define VAR_GW_Q "gw_q"
 #define VAR_GWWB "GWWB"
 #define VAR_HCH "HCH"
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
@@ -549,6 +569,7 @@
 #define VAR_ID_OUTLET "ID_OUTLET"
 #define VAR_IDC "IDC"             /// crop/landcover category, 1 to 7
 #define VAR_IGRO "IGRO"
+#define VAR_IGROPT "igropt"
 #define VAR_INET "INET"                             /// evaporation from the interception storage
 #define VAR_INFIL "INFIL"                           /// Infiltration
 #define VAR_INFILCAPSURPLUS "INFILCAPSURPLUS" 
@@ -561,6 +582,10 @@
 #define VAR_K_BANK "K_bank"                         /// hydraulic conductivity of the channel bank
 #define VAR_K_BLOW "K_blow"
 #define VAR_K_CHB "K_chb"                           /// hydraulic conductivity of the channel bed
+#define VAR_K_L "k_l"
+#define VAR_K_N "k_n"
+#define VAR_K_P "k_p"
+#define VAR_K_PET "K_pet"                           /// Correction factor for PET
 #define VAR_K_RUN "K_run"
 #define VAR_K_SOIL10 "k_soil10"
 #define VAR_K_SUBLI "K_subli"
@@ -569,30 +594,38 @@
 #define VAR_LAG_SNOW "lag_snow"
 #define VAR_LAIDAY "LAIDAY"
 #define VAR_LAIINIT "LAIINIT" /// initial LAI at the beginning of the simulation
-#define VAR_LAIYRMAX "laiyrmax"
-#define VAR_LAIPRE "LAIPRE"
 #define VAR_LAIMX1 "LAIMX1"
 #define VAR_LAIMX2 "LAIMX2"
+#define VAR_LAIPRE "LAIPRE"
+#define VAR_LAIYRMAX "laiyrmax"
+#define VAR_LAMBDA0 "lambda0"
+#define VAR_LAMBDA1 "lambda1"
+#define VAR_LAMBDA2 "lambda2"
 #define VAR_LAP_RATE "LapseRate"                    /// Lapse rate
 #define VAR_LATNO3 "latno3"
+#define VAR_LATNO3_CH "latno3ToCh"
 #define VAR_LCC "idplt"                             /// land cover code
-
 #define VAR_LDRAIN "ldrain"
 #define VAR_MANNING "Manning"
 #define VAR_MAT_YRS "MAT_YRS"
 #define VAR_MINPGW "minpgw"
+#define VAR_MINPGW_CH "minpgwToCh"
 #define VAR_MOIST_IN "Moist_in"
 #define VAR_MSF "ManningScaleFactor"                /// flow velocity scaling factor for calibration
 #define VAR_MSK_CO1 "MSK_co1"                       /// Weighting factor of bankful flow
 #define VAR_MSK_X "MSK_X"                           /// muskingum weighing factor
+#define VAR_MUMAX "mumax"
 #define VAR_NACTFR "nactfr"                         /// nitrogen active pool fraction. The fraction of organic nitrogen in the active pool.
 #define VAR_NEPR "NEPR"
-#define VAR_NO3GW "no3gw"
 #define VAR_NFIXCO "nfixco"                     /// Nitrogen fixation coefficient, FIXCO in SWAT
 #define VAR_NFIXMX "nfixmx"                    /// Maximum daily-n fixation (kg/ha), NFIXMX in SWAT
-#define VAR_NUPDIS "n_updis"
+#define VAR_NITRATEN "nitrate"
+#define VAR_NITRITE_CH "nitriteToCh"
+#define VAR_NITRITEN "nitrite"
+#define VAR_NO3GW "no3gw"
+#define VAR_NO3GW_CH "no3gwToCh"
 #define VAR_NPERCO "nperco"
-#define VAR_PPERCO "pperco"
+#define VAR_NUPDIS "n_updis"
 #define VAR_OL_DET "DETOverland"
 #define VAR_OL_IUH "Ol_iuh"                         /// IUH of each grid cell
 #define VAR_OL_SED_CCOE "ccoe"
@@ -600,11 +633,13 @@
 #define VAR_OL_SED_ECO2 "eco2"
 #define VAR_OMEGA "Omega"
 #define VAR_OMP_THREADNUM "ThreadNum"               /// Thread numbers for OMP
+#define VAR_ORGANICN "organicn"
+#define VAR_ORGANICP "organicp"
 #define VAR_P_MAX "P_max"
+#define VAR_P_N "p_n"
 #define VAR_P_RF "p_rf"
-#define VAR_PERCO "Percolation"                     /// the amount of water percolated from the soil water reservoir
 #define VAR_PERCN "percn"
-#define VAR_PET "PET"                               /// PET 
+#define VAR_PERCO "Percolation"                     /// the amount of water percolated from the soil water reservoir
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PHUBASE "PHUBASE"
 #define VAR_PHUPLT "PHUPLT"
@@ -613,13 +648,18 @@
 #define VAR_PLTPET_TOT "plt_pet_tot"
 #define VAR_K_PET "K_pet"                           /// Correction factor for PET
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
+#define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PHOSKD "phoskd"
+#define VAR_PHUPLT "PHUPLT"
 #define VAR_PI_B "Pi_b"
+#define VAR_PL_RSDCO "rsdco_pl"                     /// Plant residue decomposition coefficient
 #define VAR_PLANT_N "plant_N"
 #define VAR_PLANT_P "plant_P"
-#define VAR_PL_RSDCO "rsdco_pl"                     /// Plant residue decomposition coefficient
+#define VAR_PLTET_TOT "plt_et_tot"
+#define VAR_PLTPET_TOT "plt_pet_tot"
 #define VAR_POREID "Poreindex"                      /// pore size distribution index
 #define VAR_POROST "Porosity"                       /// soil porosity
+#define VAR_PPERCO "pperco"
 #define VAR_PPT "PPT"
 #define VAR_PRECI "D_P"                             /// precipitation for the day (mm)
 #define VAR_PSP "psp"                               /// Phosphorus availability index
@@ -639,22 +679,24 @@
 #define VAR_QUPREACH "QUPREACH"                     /// upreach
 #define VAR_RadianSlope "RadianSlope"
 #define VAR_RCA "rca"                               /// concentration of ammonia in the rain (mg N/m3)  L -> 0.001 * m3
+#define VAR_RCH_CBOD "rch_cbod"
+#define VAR_RCH_DOX "rch_dox"
 #define VAR_RCN "rcn"                               /// concentration of nitrate in the rain (mg N/m3)  L -> 0.001 * m3
 #define VAR_Reinfiltration "Reinfiltration"
 #define VAR_RETURNFLOW "ReturnFlow"
 #define VAR_REVAP "Revap"
 #define VAR_RG "RG"
+#define VAR_RHOQ "rhoq"
 #define VAR_RMN2TL "rmn2tl"                         /// amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/km2)
 #define VAR_RMP1TL "rmp1tl"                         /// amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell
 #define VAR_RMPTL "rmptl"                           /// amount of phosphorus moving from the fresh organic (residue) to the labile(80%) and organic(20%) pools in soil profile on current day in cell(kg P/km2)
+#define VAR_RNUM1 "rnum1"
 #define VAR_ROCTL "roctl"                           /// amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell
 #define VAR_ROOTDEPTH "rootdepth"      /// Maximum root depth of plant/land cover (mm)
-#define VAR_SOL_ZMX "SOL_ZMX"          /// Maximum rooting depth of soil profile (mm)
-#define VAR_SOILDEPTH "soilDepth"                       /// depth to bottom of soil layer
 #define VAR_RUNOFF_CO "Runoff_co"
 #define VAR_RWNTL "rwntl"                           /// amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell(kg N/km2)
-#define VAR_SAND "sand"
 #define VAR_S_FROZEN "s_frozen"
+#define VAR_SAND "sand"
 #define VAR_SBGS "SBGS"
 #define VAR_SBGS "SBGS"                             /// Groundwater storage of the subbasin
 #define VAR_SBIF "SBIF"                             /// interflow to streams from each subbasin
@@ -667,24 +709,30 @@
 #define VAR_SED_TO_CH "SEDTOCH"
 #define VAR_SED_TO_CH_T "SEDTOCH_T"
 #define VAR_SEDMINPA "sedminpa"                     /// amount of active mineral phosphorus adsorbed to sediment in surface runoff
+#define VAR_SEDMINPA_CH "sedminpaToCh"
 #define VAR_SEDMINPS "sedminps"                     /// amount of stable mineral phosphorus adsorbed to sediment in surface runoff
+#define VAR_SEDMINPS_CH "sedminpsToCh"
 #define VAR_SEDORGN "sedorgn"
+#define VAR_SEDORGN_CH "sedorgnToCh"
 #define VAR_SEDORGP "sedorgp"                       /// amount of organic phosphorus in surface runoff
+#define VAR_SEDORGP_CH "sedorgpToCh"
 #define VAR_SEEPAGE "SEEPAGE"                               /// seepage
 #define VAR_SLOPE "slope"
 #define VAR_SNAC "SNAC"
 #define VAR_SNME "SNME"
 #define VAR_SNO3UP "sno3up"
 #define VAR_SNRD "SNRD"
-#define VAR_SNSB "SNSB"
 #define VAR_SNRD "SNRD"
+#define VAR_SNSB "SNSB"
 #define VAR_SNWB "SNWB"
 #define VAR_SOER "SOER"                             /// soil loss caused by water erosion (t)
 #define VAR_SOET "SOET"                             /// evaporation from the soil water storage, es_day in SWAT
 #define VAR_SOIL_T10 "soil_t10"
+#define VAR_SOILDEPTH "soilDepth"                       /// depth to bottom of soil layer
+#define VAR_SOILLAYERS "soillayers"
 #define VAR_SOL_ACTP "sol_actp"                     /// amount of phosphorus stored in the active mineral phosphorus pool(kg P/ha)
-#define VAR_SOL_AORGN "sol_aorgn"                   /// amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/ha)
 #define VAR_SOL_ALB "sol_alb"               /// albedo when soil is moist
+#define VAR_SOL_AORGN "sol_aorgn"                   /// amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/ha)
 #define VAR_SOL_AWC "sol_awc"            /// amount of water available to plants in soil layer at field capacity (FC-WP)
 #define VAR_SOL_BD "density"                         /// bulk density of the soil (mg/m3)
 #define VAR_SOL_CBN "sol_cbn"                       /// percent organic carbon in soil layer(%)
@@ -694,10 +742,10 @@
 #define VAR_SOL_FOP "sol_fop"                       /// amount of phosphorus stored in the fresh organic (residue) pool(kg P/ha)
 #define VAR_SOL_MP "sol_mp" 
 #define VAR_SOL_NH3 "sol_nh3"                       /// amount of nitrogen stored in the ammonium pool in soil layer
-#define VAR_SOL_PERCO "sol_perco" 
 #define VAR_SOL_NO3 "sol_no3"                       /// amount of nitrogen stored in the nitrate pool in soil layer(kg N/ha)
 #define VAR_SOL_ORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
 #define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/ha)
+#define VAR_SOL_PERCO "sol_perco" 
 #define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/ha)
 #define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/ha)
@@ -715,41 +763,45 @@
 #define VAR_SOL_WFC "sol_fc"                        /// Water content of soil profile at field capacity(mm H2O)
 #define VAR_SOL_WH "sol_ul"                         /// amount of water held in the soil layer at saturation(mm H2O)
 #define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)
-#define VAR_SOL_WST "sol_st"                        /// amount of water stored in the soil layer on current day(mm H2O)
 #define VAR_SOL_WSATUR "sol_wsatur"
-#define VAR_SOILLAYERS "soillayers"
+#define VAR_SOL_WST "sol_st"                        /// amount of water stored in the soil layer on current day(mm H2O)
+#define VAR_SOL_ZMX "SOL_ZMX"          /// Maximum rooting depth of soil profile (mm)
 #define VAR_SOMO "SOMO"                             /// Distribution of soil moisture
 #define VAR_SOMO_TOT  "somo_total"          /// Total soil water content in soil profile
 #define VAR_SOTE "SOTE"                             /// Soil Temperature
 #define VAR_SOWB "SOWB"
+#define VAR_SOXY "soxy"
 #define VAR_SPCON "spcon"
 #define VAR_SPEXP "spexp"
 #define VAR_SR_MAX "srMax"                          /// Max solar radiation
+#define VAR_SRA "sra"
 #define VAR_SSRU "SSRU"                             /// The subsurface runoff
 #define VAR_SSRUVOL "SSRUVOL"
 #define VAR_STCAPSURPLUS "STCAPSURPLUS"
 #define VAR_STREAM_LINK "STREAM_LINK"
+#define VAR_SUB_SEDTOCH
 #define VAR_SUBBSN "subbasin"                       /// The subbasin grid
-#define VAR_SUB_SEDTOCH	"SubSEDTOCH"
 #define VAR_SURQNO3 "surqno3"
+#define VAR_SURQNO3_CH "surqno3ToCh"
 #define VAR_SURQSOLP "surqsolp"
+#define VAR_SURQSOLP_CH "surqsolToCh"
 #define VAR_SURU "SURU"                             /// surface runoff generated
 #define VAR_SWE "SWE"
 #define VAR_SWE0 "swe0"
-#define VAR_TREEYRS "tree_yrs"
 #define VAR_T_BASE "T_BASE"
 #define VAR_T_OPT "T_OPT"
 #define VAR_T_RG "T_RG"   /// groundwater runoff
-#define VAR_T_SOIL "t_soil"                         /// threshold soil freezing temperature
 #define VAR_T_SNOW "T_snow"                /// Snowfall temperature
-#define VAR_WS "WS"
+#define VAR_T_SOIL "t_soil"                         /// threshold soil freezing temperature
 #define VAR_T0 "T0"
+#define VAR_TFACT "tfact"
 #define VAR_TMAX "TMAX"
 #define VAR_TMEAN "TMEAN"
-#define VAR_TMIN "TMIN"
 #define VAR_TMEAN_ANN "TMEAN_ANN"
 #define VAR_TMEAN1 "TMEAN1"
 #define VAR_TMEAN2 "TMEAN2"
+#define VAR_TMIN "TMIN"
+#define VAR_TREEYRS "tree_yrs"
 #define VAR_TSD_DT "data_type"                      /// Time series data type
 #define VAR_UPSOLDEP "UpperSoilDepth"               /// depth of the upper soil layer
 #define VAR_USLE_C "USLE_C"
@@ -758,16 +810,18 @@
 #define VAR_USLE_P "USLE_P"
 #define VAR_VCRIT "vcrit"
 #define VAR_VDIV "Vdiv"                             /// diversion loss of the river reach
-#define VAR_VPDFR "vpdfr"
 #define VAR_VP_ACT "avp"                            /// actual vapor pressure
 #define VAR_VP_SAT "svp"                            /// Saturated vapor pressure
-#define VAR_VPOINT "Vpoint"                         /// point source discharge
 #define VAR_VPD "VPD"                                 /// vapor pressure deficit
+#define VAR_VPDFR "vpdfr"
+#define VAR_VPOINT "Vpoint"                         /// point source discharge
 #define VAR_VSEEP0 "Vseep0"                         ///  the initial volume of transmission loss to the deep aquifer over the time interval
 #define VAR_VSF "VelScaleFactor"                    /// flow velocity scaling factor for calibration
+#define VAR_WATTEMP "wattemp"
 #define VAR_WAVP "WAVP"
 #define VAR_WDNTL "wdntl"                           /// amount of nitrogen lost from nitrate pool by denitrification in soil profile on current day in cell(kg N/ha)
 #define VAR_WILTPOINT "WiltingPoint"
+#define VAR_WS "WS"
 #define VAR_WSHD_DNIT "wshd_dnit"                   /// average annual amount of nitrogen lost from nitrate pool due to denitrification in watershed(kg N/ha)
 #define VAR_WSHD_HMN "wshd_hmn"                     /// average annual amount of nitrogen moving from active organic to nitrate pool in watershed(kg N/ha)
 #define VAR_WSHD_HMP "wshd_hmp"                     /// average annual amount of phosphorus moving from organic to labile pool in watershed(kg P/ha)
@@ -779,7 +833,6 @@
 #define VAR_WSHD_RMP "wshd_rmp"                     /// average annual amount of phosphorus moving from fresh organic (residue) to labile and organic pools in watershed(kg P/km2)
 #define VAR_WSHD_RNO3 "wshd_rno3"                   /// average annual amount of NO3 added to soil by rainfall in watershed (kg/km2)
 #define VAR_WSHD_RWN "wshd_rwn"                     /// average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/km2)
-
 #define VAR_WSHD_VOLN "wshd_voln"                   /// average annual amount if nitrogen lost by ammonia volatilization in watershed
 
 
@@ -788,19 +841,19 @@
 /// By LiangJun Zhu, HuiRan Gao ///
 /// Apr. , 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-
 #define UNIT_AREA_KM2 "km2"                         /// Square kilometer of area
 #define UNIT_AREA_RATIO "m2/m2"
 #define UNIT_CONDRATE_MSPA "m/s/kPa"                /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
-#define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
 #define UNIT_CONT_KGHA "kg/ha"                      /// For  convenient, keep consistent with SWAT, need Conversion later.
-#define UNIT_CONT_TONHA "tons/ha"
+#define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
 #define UNIT_CONT_RATIO "(kg/ha)/(kg/ha)"
+#define UNIT_CONT_TONHA "tons/ha"
+#define UNIT_DENSITY_L "mg/L"                        /// density
 #define UNIT_DENSITY "Mg/m3"                        /// density
 #define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
-#define UNIT_GAS_PPMV "ppmv"                        /// Concentration of gas, e.g., CO2
 #define UNIT_GAS_CON "uL/L"   /// e.g., uL CO2/L air, IS this same with ppmv? LJ
+#define UNIT_GAS_PPMV "ppmv"                        /// Concentration of gas, e.g., CO2
 #define UNIT_HEAT_UNIT "hr"
 #define UNIT_KG "kg"                                /// mass Kg
 #define UNIT_KG_S "kg/s"
@@ -808,26 +861,28 @@
 #define UNIT_LAP_RATE "/100m"                       /// Lapse rate
 #define UNIT_LEN_M "m"                              /// Meter of length
 #define UNIT_LONLAT_DEG "degree"                    /// Degree of longitude and latitude
+#define UNIT_MELT_FACTOR "mm/deg C/day"                 /// Melt factor
 #define UNIT_NON_DIM ""                             /// Non dimension  
+#define UNIT_NUT_RATIO "mg/mg"         /// mg H2O/mg Nutrient
+#define UNIT_PER_DAY "1/day"               /// rate per day
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_PRESSURE "kPa"                         /// Vapor pressure
-#define UNIT_RAD_USE_EFFI	"(kg/ha)/(MJ/m2)"  ///  or Biomass-energy ratio
+#define UNIT_RAD_USE_EFFI
 #define UNIT_SECOND "sec"
-#define UNIT_VOL_FRA_M3M3 "m3/m3" 
 #define UNIT_SPEED_MS "m/s"                         /// Speed related
 #define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
 #define UNIT_STRG_M3M "m3/m"                       /// storage per meter of reach length
-#define UNIT_TEMP_FACTOR "mm/deg C"                 /// temperature factor
 #define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
+#define UNIT_TEMP_FACTOR "mm/deg C"                 /// temperature factor
 #define UNIT_TIMESTEP_HOUR "hr"                     /// Time step (h)
 #define UNIT_TIMESTEP_SEC "s"                      /// Time step (s)
 #define UNIT_TONS "t"                               /// metric tons
+#define UNIT_VOL_FRA_M3M3 "m3/m3" 
 #define UNIT_VOL_M3 "m3"                           /// volume
+#define UNIT_WAT_RATIO "mm/mm"         /// mm H2O/mm Soil
 #define UNIT_WTRDLT_MMD "mm/d"                      /// Millimeter per day of water changes
 #define UNIT_WTRDLT_MMH "mm/h"                      /// Millimeter per hour of water changes
-#define UNIT_MELT_FACTOR "mm/deg C/day"                 /// Melt factor
 #define UNIT_YEAR "yr"
-#define UNIT_WAT_RATIO "mm/mm"         /// mm H2O/mm Soil
 
 //////////////////////////////////////////////////////////////////////////
 /// Define description of units common used in SEIMS            //////////
@@ -835,28 +890,38 @@
 ///               Apr. 25, 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 #define DESC_A_BNK "bank flow recession constant"
-#define DESC_ALAIMIN "minimum LAI during winter dormant period"
-#define DESC_ALBDAY "Albedo of the current day"
 #define DESC_ACC "the number of flow accumulation cells of each cell"
 #define DESC_ACC_INFIL "accumulative infiltration"
 #define DESC_ADDRNH3 "ammonium added by rainfall"
 #define DESC_ADDRNO3 "nitrate added by rainfall"
 #define DESC_AET_PLT "actual amount of plant transpiration, ep_day in SWAT"
+#define DESC_AI0 "ratio of chlorophyll-a to algal biomass"
+#define DESC_AI1 "fraction of algal biomass that is nitrogen"
+#define DESC_AI2 "fraction of algal biomass that is phosphorus"
+#define DESC_AI3 "the rate of oxygen production per unit of algal photosynthesis"
+#define DESC_AI4 " the rate of oxygen uptake per unit of algae respiration"
+#define DESC_AI5 "the rate of oxygen uptake per unit of NH3 nitrogen oxidation"
+#define DESC_AI6 "the rate of oxygen uptake per unit of NO2 nitrogen oxidation"
+#define DESC_ALAIMIN "minimum LAI during winter dormant period"
+#define DESC_ALBDAY "Albedo of the current day"
+#define DESC_ALGAE "algal biomass concentration in reach"
+#define DESC_AMMO_CH "amount of ammonium transported with lateral flow"
+#define DESC_AMMONIAN "ammonia concentration in reach"
 #define DESC_ANION_EXCL "fraction of porosity from which anions are excluded"
 #define DESC_B_BNK "bank storage loss coefficient"
 #define DESC_BASE_EX "baseflow recession exponent"
 #define DESC_BIO_E "the potential or unstressed growth rate (including roots) per unit of intercepted photsynthetically active radiation"
-#define DESC_BIOMASS "land cover/crop biomass (dry weight)"
 #define DESC_BIOEHI "Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve"
-#define DESC_BIOLEAF "fraction of biomass that drops during dormancy (for tree only)"
 #define DESC_BIOINIT "initial dry weight biomass (kg/ha)"
-#define DESC_BLAI "maximum leaf area index"
+#define DESC_BIOLEAF "fraction of biomass that drops during dormancy (for tree only)"
+#define DESC_BIOMASS "land cover/crop biomass (dry weight)"
 #define DESC_BKST "bank storage"
+#define DESC_BLAI "maximum leaf area index"
 #define DESC_BMX_TREES "Maximum biomass for a forest (metric tons/ha)"
-#define DESC_BNK0 "initial bank storage per meter of reach length"
 #define DESC_BN1 "the normal fraction of nitrogen in the plant biomass at emergence"
 #define DESC_BN2 "the normal fraction of nitrogen in the plant biomass at 50% maturity"
 #define DESC_BN3 "the normal fraction of nitrogen in the plant biomass at maturity"
+#define DESC_BNK0 "initial bank storage per meter of reach length"
 #define DESC_BP1 "the normal fraction of phosphorus in the plant biomass at emergence"
 #define DESC_BP2 "the normal fraction of phosphorus in the plant biomass at 50% maturity"
 #define DESC_BP3 "the normal fraction of phosphorus in the plant biomass at maturity"
@@ -878,6 +943,7 @@
 #define DESC_CH_TCCO "Calibration coefficient of transport capacity calculation"
 #define DESC_CH_V "flow velocity"
 #define DESC_CH_VOL "water volume"
+#define DESC_CHLORA "chlorophyll-a concentration in reach"
 #define DESC_CHS0 "initial channel storage per meter of reach length"
 #define DESC_CHSB "Channel sediment balance in a text format for each reach and at each time step (unit?)"
 #define DESC_CHST "channel storage"
@@ -893,7 +959,9 @@
 #define DESC_CONDRATE "Rate of decline in stomatal conductance per unit increase in vapor pressure deficit"
 #define DESC_CONDUCT "saturation hydraulic conductivity"
 #define DESC_CONV_WT "factor which converts kg/kg soil to kg/ha"
+#define DESC_D_FlOWWIDTH "flow width (m) of overland plane"
 #define DESC_D_P "Precipitation distrubution raster"
+#define DESC_DAYL "day length for current day "
 #define DESC_DAYLEN "day length"
 #define DESC_DAYLEN_MIN  "minimum day length"
 #define DESC_DEET "Distribution of evaporation from depression storage"
@@ -902,16 +970,17 @@
 #define DESC_DEPRESSION "Depression storage capacity"
 #define DESC_DETSPLASH "distribution of splash detachment"
 #define DESC_DF_COEF "Deep percolation coefficient"
+#define DESC_DISOLVP "dissolved phosphorus concentration in reach"
 #define DESC_DLAI "the fraction of growing season(PHU) when senescence becomes dominant"
-#define DESC_DORMI "dormancy status code, 0 for land cover growing and 1 for dormant"
 #define DESC_DORMHR "time threshold used to define dormant period for plant"
+#define DESC_DORMI "dormancy status code, 0 for land cover growing and 1 for dormant"
 #define DESC_DPST "Distribution of depression storage"
 #define DESC_DRYDEP_NH4 "atmospheric dry deposition of ammonia"
 #define DESC_DRYDEP_NO3 "atmospheric dry deposition of nitrates"
 #define DESC_DT_HS "Time step of the simulation"
 #define DESC_EP_CH "reach evaporation adjustment factor"
-#define DESC_ESCO "soil evaporation compensation factor"
 #define DESC_EPCO "plant water uptake compensation factor"
+#define DESC_ESCO "soil evaporation compensation factor"
 #define DESC_EXCP "excess precipitation"
 #define DESC_EXT_COEF "light extinction coefficient"
 #define DESC_FIELDCAP "Soil field capacity"
@@ -922,19 +991,19 @@
 #define DESC_FLOWOUT_INDEX_D8 "The index of flow out (D8) cell of each cells in the compressed array"
 #define DESC_FLOWOUT_INDEX_DINF "The index of flow in cell in the compressed array"
 #define DESC_FLOWWIDTH "Flow width of overland plane"
+#define DESC_FR_PHU_ACC "fraction of plant heat units (PHU) accumulated"
 #define DESC_FRGMAX "fraction of maximum stomatal conductance corresponding to the second point on the stomatal conductance curve"
 #define DESC_FRGRW1 "fraction of total potential heat units corresponding to the 1st point on the optimal leaf area development curve"
 #define DESC_FRGRW2 "fraction of total potential heat units corresponding to the 2nd point on the optimal leaf area development curve"
-#define DESC_FR_PHU_ACC "fraction of plant heat units (PHU) accumulated"
 #define DESC_GRRE "" /// TODO figure out what's meaning?
 #define DESC_GSI "maximum stomatal conductance at high solar radiation and low vpd"
-#define DESC_GW0 "initial ground water storage"
 #define DESC_GW_KG "baseflow recession coefficient"
+#define DESC_GW_Q "groundwater contribution to stream flow"
+#define DESC_GW0 "initial ground water storage"
 #define DESC_GWMAX "maximum ground water storage"
+#define DESC_GWMINP "soluble P concentration in groundwater loading to reach"
 #define DESC_GWNEW "The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage"
 #define DESC_GWNO3 "nitrate N concentration in groundwater loading to reach"
-#define DESC_GWMINP "soluble P concentration in groundwater loading to reach"
-#define DESC_GW_Q "groundwater contribution to stream flow"
 #define DESC_HCH "Water depth in the downslope boundary of cells"
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"
 #define DESC_HMPTL "amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell"
@@ -942,6 +1011,7 @@
 #define DESC_ID_OUTLET  "index of outlet in the compressed array"
 #define DESC_IDC "crop/landcover category"
 #define DESC_IGRO "Land cover status code"
+#define DESC_IGROPT "option for calculating the local specific growth rate of algae"
 #define DESC_INET "evaporation from the interception storage"
 #define DESC_INFIL "Infiltration calculated in the infiltration module"
 #define DESC_INFILCAPSURPLUS "surplus of infiltration capacity"
@@ -949,13 +1019,14 @@
 #define DESC_INLO "Interception Loss Distribution"
 #define DESC_INTERC_MAX "Maximum Interception Storage Capacity"
 #define DESC_INTERC_MIN "Minimum Interception Storage Capacity"
-#define DESC_LAIYRMAX "maximum LAI for the year"
-#define DESC_LAIINIT "initial leaf area index of transplants"
 #define DESC_ISEP_OPT "initial septic operational condition"
 #define DESC_JULIAN_DAY "Julian day (int)"
 #define DESC_K_BANK "hydraulic conductivity of the channel bank"
 #define DESC_K_BLOW "a fraction coefficient of snow blowing into or out of the watershed"
 #define DESC_K_CHB "hydraulic conductivity of the channel bed"
+#define DESC_K_L "half saturation coefficient for light"
+#define DESC_K_N "half-saturation constant for nitrogen"
+#define DESC_K_P "half saturation constant for phosphorus"
 #define DESC_K_RUN "Runoff exponent"
 #define DESC_K_SOIL10 "Ratio between soil temperature at 10 cm and the mean"
 #define DESC_K_SUBLI "Praction of PET for sublimation"
@@ -963,11 +1034,17 @@
 #define DESC_KI "Interflow scale factor"
 #define DESC_LAG_SNOW "Snow temperature lag factor"
 #define DESC_LAIDAY "Leaf area index of current day"
-#define DESC_LAIPRE "leaf area index for the previous day"
+#define DESC_LAIINIT "initial leaf area index of transplants"
 #define DESC_LAIMX1 "fraction of max LAI corresponding to the 1st point on the optimal leaf area development curve"
 #define DESC_LAIMX2 "fraction of max LAI corresponding to the 2nd point on the optimal leaf area development curve"
+#define DESC_LAIPRE "leaf area index for the previous day"
+#define DESC_LAIYRMAX "maximum LAI for the year"
+#define DESC_LAMBDA0 "non-algal portion of the light extinction coefficient"
+#define DESC_LAMBDA1 "linear algal self-shading coefficient"
+#define DESC_LAMBDA2 "nonlinear algal self-shading coefficient"
 #define DESC_LAP_RATE "Lapse Rate"
 #define DESC_LATNO3 "amount of nitrate transported with lateral flow"
+#define DESC_LATNO3_CH "amount of nitrate transported with lateral flow"
 #define DESC_LCC "land cover code"
 #define DESC_LDRAIN "soil layer where drainage tile is located"
 #define DESC_MANNING "Manning's roughness"
@@ -977,31 +1054,40 @@
 #define DESC_MAXTEMP "Maximum Celsius degree of air temperature"
 #define DESC_MEANTEMP "Mean Celsius degree of air temperature"
 #define DESC_METEOLAT "Latitude of MeteoClimate station"
-#define DESC_MINTEMP "Minimum Celsius degree of air temperature"
 #define DESC_MINPGW "soluble P loading to reach in groundwater"
+#define DESC_MINPGW_CH "soluble P loading to reach in groundwater"
+#define DESC_MINTEMP "Minimum Celsius degree of air temperature"
 #define DESC_MOIST_IN "Initial soil moisture"
 #define DESC_MSF "flow velocity scaling factor for calibration"
 #define DESC_MSK_CO1 "Weighting factor of bankful flow"
 #define DESC_MSK_X "muskingum weighing factor"
+#define DESC_MUMAX "maximum specific algal growth rate at 20 deg C"
 #define DESC_NACTFR "nitrogen active pool fraction. The fraction of organic nitrogen in the active pool."
 #define DESC_NEPR "Net Precipitation Distribution"
-#define DESC_NO3GW "nitrate loading to reach in groundwater"
 #define DESC_NFIXCO "Nitrogen fixation coefficient"
 #define DESC_NFIXMX "Maximum daily-N fixation (kg/ha)"
+#define DESC_NITRATEN "nitrate concentration in reach"
+#define DESC_NITRITE_CH "amount of nitrite transported with lateral flow"
+#define DESC_NITRITEN "nitrite concentration in reach"
+#define DESC_NO3GW "nitrate loading to reach in groundwater"
+#define DESC_NO3GW_CH "nitrate loading to reach in groundwater"
 #define DESC_NONE ""
-#define DESC_NUPDIS "Nitrogen uptake distribution parameter"
 #define DESC_NPERCO "nitrate percolation coefficient"
-#define DESC_PPERCO "phosphorus percolation coefficient"
+#define DESC_NUPDIS "Nitrogen uptake distribution parameter"
 #define DESC_OL_DET "distribution of overland flow detachment"
 #define DESC_OL_IUH "IUH of each grid cell"
 #define DESC_OL_SED_CCOE "calibration coefficient of overland flow detachment erosion"
 #define DESC_OL_SED_ECO1 "calibration coefficient of transport capacity calculation"
 #define DESC_OL_SED_ECO2 "calibration coefficient of transport capacity calculation"
 #define DESC_OMEGA "calibration coefficient of splash erosion"
+#define DESC_ORGANICN "organic nitrogen concentration in reach"
+#define DESC_ORGANICP "organic phosphorus concentration in reach"
 #define DESC_P_MAX "Maximum P corresponding to runoffCo"
+#define DESC_P_N "algal preference factor for ammonia"
 #define DESC_P_RF "Peak rate adjustment factor"
-#define DESC_PERCO "the amount of water percolated from the soil water reservoir, i.e., groundwater recharge"
 #define DESC_PERCN "amount of nitrate percolating past bottom of soil profile"
+#define DESC_PERCO "the amount of water percolated from the soil water reservoir, i.e., groundwater recharge"
+#define DESC_PET "Potential Evapotranspiration of day"
 #define DESC_PET_HCOEF "Coefficient related to radiation used in Hargreaves method"
 #define DESC_PET_K "Correction factor for PET"
 #define DESC_PET "Potential Evapotranspiration of day"
@@ -1011,12 +1097,16 @@
 #define DESC_PLANT_N "amount of nitrogen in plant biomass (kg/ha), plantn in SWAT"
 #define DESC_PLANT_P "amount of phosphorus in plant biomass (kg/ha), plantp in SWAT"
 #define DESC_PHOSKD "Phosphorus soil partitioning coefficient"
+#define DESC_PHUPLT "total number of heat unites (hours) needed to bring plant to maturity"
 #define DESC_PI_B "Interception Storage Capacity Exponent"
 #define DESC_PL_RSDCO "Plant residue decomposition coefficient"
+#define DESC_PLANT_N "amount of nitrogen in plant biomass (kg/ha), plantn in SWAT"
+#define DESC_PLANT_P "amount of phosphorus in plant biomass (kg/ha), plantp in SWAT"
 #define DESC_PLTET_TOT "actual ET simulated during life of plant"
 #define DESC_PLTPET_TOT "potential ET simulated during life of plant"
 #define DESC_POREID "pore size distribution index"
 #define DESC_POROST "soil porosity"
+#define DESC_PPERCO "phosphorus percolation coefficient"
 #define DESC_PPT "maximum amount of transpiration (plant et)"
 #define DESC_PRECI "precipitation for the day"
 #define DESC_PSP "Phosphorus availability index"
@@ -1036,22 +1126,25 @@
 #define DESC_QUPREACH "Upreach"
 #define DESC_RadianSlope  "radian slope"
 #define DESC_RCA "concentration of ammonia in the rain"
+#define DESC_RCH_CBOD "carbonaceous biochemical oxygen demand in reach"
+#define DESC_RCH_DOX "dissolved oxygen concentration in reach"
 #define DESC_RCN "concentration of nitrate in the rain"
 #define DESC_Reinfiltration "TODO: meaning?"
 #define DESC_RETURNFLOW "water depth of return flow"
 #define DESC_REVAP "Revap"
+#define DESC_RHOQ "algal respiration rate at 20 deg C"
 #define DESC_RM "Relative humidity"
 #define DESC_RMN2TL "amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell"
 #define DESC_RMP1TL "amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell"
 #define DESC_RMPTL "amount of phosphorus moving from the fresh organic (residue) to the labile(80%) and organic(20%) pools in soil profile on current day in cell"
+#define DESC_RNUM1 "fraction of overland flow"
 #define DESC_ROCTL "amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell"
-#define DESC_SOILDEPTH "depth to bottom of soil layer"
 #define DESC_ROOTDEPTH "root depth of plants (mm)"
 #define DESC_ROUTING_LAYERS "Routing layers according to the flow direction, there are no flow relationships within each layer, and the first element in each layer is the number of cells in the layer"
 #define DESC_RUNOFF_CO "Potential runoff coefficient"
 #define DESC_RWNTL "amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell"
-#define DESC_SAND "Percent of sand content"
 #define DESC_S_FROZEN "Frozen moisture relative to porosity with no infiltration"
+#define DESC_SAND "Percent of sand content"
 #define DESC_SBGS "Groundwater storage of the subbasin"
 #define DESC_SBIF "interflow to streams from each subbasin"
 #define DESC_SBOF "overland flow to streams from each subbasin"
@@ -1063,25 +1156,27 @@
 #define DESC_SED_TO_CH "Distribution of sediment flowing to channel"
 #define DESC_SED_TO_CH_T  "Total sediment flowing to channel"
 #define DESC_SEDMINPA " amount of active mineral phosphorus sorbed to sediment in surface runoff"
+#define DESC_SEDMINPA_CH "amount of active mineral phosphorus absorbed to sediment in surface runoff"
 #define DESC_SEDMINPS "amount of stable mineral phosphorus sorbed to sediment in surface runoff"
+#define DESC_SEDMINPS_CH "amount of stable mineral phosphorus absorbed to sediment in surface runoff"
 #define DESC_SEDORGN "amount of organic nitrogen in surface runoff"
+#define DESC_SEDORGN_CH "amount of organic nitrogen in surface runoff"
 #define DESC_SEDORGP "amount of organic phosphorus in surface runoff"
+#define DESC_SEDORGP_CH "amount of organic phosphorus in surface runoff"
 #define DESC_SEEPAGE "seepage"
 #define DESC_SLOPE "Slope gradient (percentage)"
 #define DESC_SNAC "snow accumulation"
 #define DESC_SNME "distribution of snowmelt"
-#define DESC_TREEYRS "initial age of tress (yrs)"
-#define DESC_T_BASE "base or minimum temperature for growth"
-#define DESC_T_SNOW "Snowfall temperature"
-#define DESC_T_OPT "optimal temperature for plant growth"
 #define DESC_SNO3UP "amount of nitrate moving upward in the soil profile in watershed"
 #define DESC_SNRD "distribution of snow blowing in or out the cell"
-#define DESC_SNSB "Distribution of snow sublimation (water equivalent) for a user defined period"
 #define DESC_SNRD "distribution of snow blowing in or out the cell"
+#define DESC_SNSB "Distribution of snow sublimation (water equivalent) for a user defined period"
 #define DESC_SNWB "snow water balance for selected subbasins"
 #define DESC_SOER "soil loss caused by water erosion"
 #define DESC_SOET "evaporation from the soil water storage"
 #define DESC_SOIL_T10 "Factor of soil temperature relative to short grass (degree)"
+#define DESC_SOILDEPTH "depth to bottom of soil layer"
+#define DESC_SOILLAYERS "Soil layers number"
 #define DESC_SOL_ACTP "amount of phosphorus stored in the active mineral phosphorus pool"
 #define DESC_SOL_ALB "albedo when soil is moist"
 #define DESC_SOL_AORGN "amount of nitrogen stored in the active organic (humic) nitrogen pool"
@@ -1115,41 +1210,49 @@
 #define DESC_SOL_WFC "Water content of soil profile at field capacity"
 #define DESC_SOL_WH "amount of water held in the soil layer at saturation"
 #define DESC_SOL_WPMM " water content of soil at -1.5 MPa (wilting point)"
+#define DESC_SOL_WSATUR "amount of water held in the soil layer at saturation"
 #define DESC_SOL_WST "amount of water stored in the soil layer on current day"
 #define DESC_SOL_ZMX "Maximum rooting depth of soil profile (mm)"
-#define DESC_SOL_WSATUR "amount of water held in the soil layer at saturation"
-#define DESC_SOILLAYERS "Soil layers number"
 #define DESC_SOMO "soil moisture in soil layers"
 #define DESC_SOMO_TOT "amount of water stored in the soil profile"
 #define DESC_SOTE "soil Temperature"
 #define DESC_SOWB "soil water balance"
+#define DESC_SOXY "saturation concentration of dissolved oxygen"
 #define DESC_SPCON "Coefficient in sediment transport equation"
 #define DESC_SPEXP "Exponent in sediment transport equation"
 #define DESC_SR "Solar radiation"
 #define DESC_SR_MAX "Max solar radiation"
+#define DESC_SRA " solar radiation for the day"
 #define DESC_SSRU "The subsurface runoff"
 #define DESC_SSRUVOL "Distribution of subsurface runoff (m3)."
 #define DESC_STCAPSURPLUS "surplus of storage capacity"
 #define DESC_STREAM_LINK "Stream link (id of reaches)"
+#define DESC_SUB_SEDTOCH "sediment to streams from each subbasin"
 #define DESC_SubbasinSelected "The subbasion ids listed in file.out"
 #define DESC_SUBBSN "The subbasion grid"
-#define DESC_SUB_SEDTOCH "sediment to streams from each subbasin"
 #define DESC_SURQNO3 "amount of nitrate transported with surface runoff"
+#define DESC_SURQNO3_CH "amount of nitrate transported with surface runoff"
 #define DESC_SURQSOLP "amount of phosphorus stored in solution"
+#define DESC_SURQSOLP_CH "amount of soluble phosphorus in surface runoff"
 #define DESC_SURU "surface runoff generated"
 #define DESC_SWE "average SA of the watershed"
 #define DESC_SWE0 "Initial snow water equivalent"
+#define DESC_T_BASE "base or minimum temperature for growth"
+#define DESC_T_OPT "optimal temperature for plant growth"
 #define DESC_T_RG "groundwater runoff"
+#define DESC_T_SNOW "Snowfall temperature"
 #define DESC_T_SOIL "threshold soil freezing temperature"
 #define DESC_T0 "the snowmelt threshold temperature"
 #define DESC_Tag_FLOWIN_PERCENTAGE_DINF "Percentage of flow in"
+#define DESC_TFACT "fraction of solar radiation computed in the temperature heat balance that is photo synthetically active"
 #define DESC_TIMESTEP "time step"
 #define DESC_TMAX "max temperature"
 #define DESC_TMEAN "mean temperature"
-#define DESC_TMIN "min temperature"
 #define DESC_TMEAN_ANN "annual mean temperature"
 #define DESC_TMEAN1 "Mean air temperature of the (d-1)th day"
 #define DESC_TMEAN2 "Mean air temperature of the (d-2)th day"
+#define DESC_TMIN "min temperature"
+#define DESC_TREEYRS "initial age of tress (yrs)"
 #define DESC_TSD_CLIMATE "Climate data of all the stations"
 #define DESC_TSD_DT "Time series data type, e.g., climate data"
 #define DESC_UPSOLDEP "depth of the upper soil layer"
@@ -1160,13 +1263,14 @@
 #define DESC_VCRIT "critical velocity for sediment deposition"
 #define DESC_VDIV "diversion loss of the river reach"
 #define DESC_VER_ITP "Execute vertical interpolation (1) or not (0), defined in config.fig"
-#define DESC_VPDFR "vapor pressure deficit(kPa) corresponding to the second point on the stomatal conductance curve"
 #define DESC_VP_ACT "actual vapor pressure"
 #define DESC_VP_SAT "Saturated vapor pressure"
 #define DESC_VPD "vapor pressure deficit"
+#define DESC_VPDFR "vapor pressure deficit(kPa) corresponding to the second point on the stomatal conductance curve"
 #define DESC_VPOINT "point source discharge"
 #define DESC_VSEEP0  "the initial volume of transmission loss to the deep aquifer over the time interval"
 #define DESC_VSF "flow velocity scaling factor for calibration"
+#define DESC_WATTEMP "temperature of water in reach"
 #define DESC_WAVP "rate of decline in rue per unit increase in vapor pressure deficit"
 #define DESC_WDNTL "amount of nitrogen lost from nitrate pool by denitrification in soil profile on current day in cell"
 #define DESC_WEIGHT_ITP "Weight used for interpolation"

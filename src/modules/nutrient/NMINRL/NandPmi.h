@@ -44,7 +44,10 @@ private:
 	/// number of cells
 	int m_nCells;
 
-	int m_nSolLyrs;
+	/// soil layers
+	float* m_nSoilLayers;
+	/// maximum soil layers
+	int m_soiLayers;
 
 	///input data
 	///rate factor for humus mineralization on active organic N
@@ -159,21 +162,21 @@ private:
 	 *
 	 * \return void
 	 */
-	void CalculateMinerandImmobi();
+	void CalculateMinerandImmobi(int i);
 
 	/*!
 	* \brief estimates daily mineralization (NH3 to NO3) and volatilization of NH3.
 	 *
 	 * \return void
 	 */
-	void CalculateMinerandVolati();
+	void CalculateMinerandVolati(int i);
 	
 	/*!
 	* \brief Calculate P flux between the labile, active mineral and stable mineral p pools.
 	 *
 	 * \return void
 	 */
-	void CalculatePflux();
+	void CalculatePflux(int i);
 
 	
 };

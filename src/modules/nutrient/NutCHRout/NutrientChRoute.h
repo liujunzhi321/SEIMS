@@ -26,6 +26,21 @@ using namespace std;
  *
  */
 
+/*!
+ * \class NutrientCHRoute
+ * \ingroup NutCHRout
+ * \brief Overland routing using 4-point implicit finite difference method
+ * 
+ */
+struct MuskWeights{
+	float c1;
+	float c2;
+	float c3;
+	float c4;
+	float dt;
+	int n;  ///< number of division of the origin time step
+};
+
 class NutrientCHRoute : public SimulationModule {
 	public:
 		NutrientCHRoute(void);
@@ -37,23 +52,18 @@ class NutrientCHRoute : public SimulationModule {
 	virtual int Execute();
 	virtual void GetValue(const char* key, float* value);
 	virtual void Get1DData(const char* key, int* n, float** data);
-	virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
+	//virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
 private:
-	/// cell width of grid map (m)
-	float m_cellWidth;
-	/// number of cells
-	int m_nCells;
 	/// time step (hr)
 	int m_dt;
-	/// reach number (= subbasin number)
-	int m_nreach;
+	/// downstream id (The value is 0 if there if no downstream reach)
+	float* m_reachDownStream;
 	/// upstream id (The value is -1 if there if no upstream reach)
 	vector< vector<int> > m_reachUpStream;
-
 	/// id the reaches
 	float* m_reachId;
-	/// map from subbasin id to index of the array
-	map<int, int> m_idToIndex;
+	/// reaches number
+	int m_nReaches;
 	map<int, vector<int> > m_reachLayers;
 
 	/// input data
@@ -94,7 +104,7 @@ private:
 
 	/// day length for current day (h)
 	float* m_dayl;
-	/// hru_ra(:)    |MJ/m^2        |solar radiation for the day in HRU
+	/// solar radiation for the day (MJ/m2)
 	float* m_sra;
 	float* m_bankStorage;
 	/// overland flow to streams from each subbasin (m3/s)
@@ -104,6 +114,10 @@ private:
 	/// groundwater flow out of the subbasin (m3/s)
 	float* m_qgSub;
 
+	float *m_chOrder;
+	float *m_chWidth;
+	float *m_chDepth;
+
 	/// channel outflow
 	float* m_qsCh;
 	float* m_qiCh;
@@ -112,7 +126,54 @@ private:
 	float* m_chStorage;
 	/// channel water depth m
 	float *m_chWTdepth;
+	/// temperature of water in reach (deg C)
+	float* m_wattemp;
 
+	float* m_bc1;		/// rate constant for biological oxidation of NH3 to NO2 in reach at 20 deg C
+	float* m_bc2;		/// rate constant for biological oxidation of NO2 to NO3 in reach at 20 deg C
+	float* m_bc3;		/// rate constant for biological oxidation of organic N to ammonia in reach at 20 deg C
+	float* m_bc4;		/// rate constant for biological oxidation of organic P to dissolved P in reach at 20 deg C
+
+	float* m_rs1;		/// local algal settling rate in reach at 20 deg C (m/day)
+	float* m_rs2;		/// benthos source rate for dissolved phosphorus in reach at 20 deg C (mg disP-P)/((m**2)*day)
+	float* m_rs3;		/// benthos source rate for ammonia nitrogen in reach at 20 deg C (mg NH4-N)/((m**2)*day)
+	float* m_rs4;		/// rate coefficient for organic nitrogen settling in reach at 20 deg C (1/day)
+	float* m_rs5;		/// organic phosphorus settling rate in reach at 20 deg C (1/day)
+
+	float* m_rk1;      /// CBOD deoxygenation rate coefficient in reach at 20 deg C (1/day)
+	float* m_rk2;      /// reaeration rate in accordance with Fickian diffusion in reach at 20 deg C (1/day)
+	float* m_rk3;      /// rate of loss of CBOD due to settling in reach at 20 deg C (1/day)
+	float* m_rk4;      /// sediment oxygen demand rate in reach at 20 deg C (mg O2/ ((m**2)*day))
+
+	/// amount of nitrate transported with lateral flow
+	float* m_latno3ToCh;
+	/// amount of nitrate transported with surface runoff
+	float* m_surqno3ToCh;
+	/// amount of soluble phosphorus in surface runoff
+	float* m_surqsolpToCh;
+	/// nitrate loading to reach in groundwater
+	float* m_no3gwToCh;
+	/// soluble P loading to reach in groundwater
+	float* m_minpgwToCh;
+	// amount of organic nitrogen in surface runoff
+	float* m_sedorgnToCh;
+	// amount of organic phosphorus in surface runoff
+	float* m_sedorgpToCh;
+	// amount of active mineral phosphorus absorbed to sediment in surface runoff
+	float* m_sedminpaToCh;
+	// amount of stable mineral phosphorus absorbed to sediment in surface runoff
+	float* m_sedminpsToCh;
+	/// amount of ammonium transported with lateral flow
+	float* m_ammoToCh;
+	/// amount of nitrite transported with lateral flow
+	float* m_nitriteToCh;
+
+	//float m_vScalingFactor;
+	/// for muskingum
+	//float m_x;
+	//float m_co1;
+
+	/// output data
 	/// algal biomass concentration in reach (mg/L)
 	float* m_algae;
 	/// organic nitrogen concentration in reach (mg/L)
@@ -131,36 +192,10 @@ private:
 	float* m_rch_cbod;
 	/// dissolved oxygen concentration in reach (mg/L)
 	float* m_rch_dox;
-	/// temperature of water in reach (deg C)
-	float* m_wattemp;
 	/// chlorophyll-a concentration in reach (mg chl-a/L)
 	float* m_chlora;
-
-	float* m_bc1;		/// rate constant for biological oxidation of NH3 to NO2 in reach at 20 deg C
-	float* m_bc2;		/// rate constant for biological oxidation of NO2 to NO3 in reach at 20 deg C
-	float* m_bc3;		/// rate constant for biological oxidation of organic N to ammonia in reach at 20 deg C
-	float* m_bc4;		/// rate constant for biological oxidation of organic P to dissolved P in reach at 20 deg C
-
-	float* m_rs1;		/// local algal settling rate in reach at 20 deg C (m/day)
-	float* m_rs2;		/// benthos source rate for dissolved phosphorus in reach at 20 deg C (mg disP-P)/((m**2)*day)
-	float* m_rs3;		/// benthos source rate for ammonia nitrogen in reach at 20 deg C (mg NH4-N)/((m**2)*day)
-	float* m_rs4;		/// rate coefficient for organic nitrogen settling in reach at 20 deg C (1/day)
-	float* m_rs5;		/// organic phosphorus settling rate in reach at 20 deg C (1/day)
-
-
-	float* m_rk1;      /// CBOD deoxygenation rate coefficient in reach at 20 deg C (1/day)
-	float* m_rk2;      /// reaeration rate in accordance with Fickian diffusion in reach at 20 deg C (1/day)
-	float* m_rk3;      /// rate of loss of CBOD due to settling in reach at 20 deg C (1/day)
-	float* m_rk4;      /// sediment oxygen demand rate in reach at 20 deg C (mg O2/ ((m**2)*day))
-
-	/// subroutine summarizes data from overland flow
-	float** varoute;
-
-	/// output data
 	// saturation concentration of dissolved oxygen (mg/L)
 	float m_soxy;
-	// light extinction coefficient
-	float m_lambda;
 
 private:
 
@@ -195,7 +230,11 @@ private:
 	 *
 	 * \return float
 	 */
-	float corTempc(float r20, float thk, float tmp)
+	float corTempc(float r20, float thk, float tmp);
+
+	void initialOutputs();
+
+	//void GetCoefficients(float reachLength, float v0, MuskWeights& weights);
 };
 #endif
 
