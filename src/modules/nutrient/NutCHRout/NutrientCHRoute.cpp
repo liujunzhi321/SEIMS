@@ -17,9 +17,17 @@ using namespace std;
 
 NutrientCHRoute::NutrientCHRoute(void):
 //input
-m_nCells(-1), m_cellWidth(-1), m_gwno3(NULL), m_gwminp(NULL), m_gw_q(NULL),
+	m_dt(-1), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1),igropt(-1),  
+	m_ai0(-1), m_ai1(-1),m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1), m_lambda2(-1),
+	m_k_l(-1), m_k_n(-1), m_k_p(-1), m_p_n(-1), tfact(-1), m_mumax(-1), m_rhoq(-1), 
+	m_dayl(NULL), m_sra(NULL), m_bankStorage(NULL), m_qsSub(NULL), m_qiSub(NULL), m_qgSub(NULL), 
+	m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL), m_chStorage(NULL), m_chWTdepth(NULL), m_wattemp(NULL),
+	m_latno3ToCh(NULL), m_surqno3ToCh(NULL), m_surqsolpToCh(NULL), m_no3gwToCh(NULL), 
+	m_minpgwToCh(NULL), m_sedorgnToCh(NULL), m_sedorgpToCh(NULL), m_sedminpaToCh(NULL),
+	m_sedminpsToCh(NULL), m_ammoToCh(NULL), m_nitriteToCh(NULL), 
 	//output
-	m_minpgw(NULL), m_no3gw(NULL)
+	m_algae(NULL), m_organicn(NULL), m_organicp(NULL), m_ammonian(NULL), m_nitriten(NULL), m_nitraten(NULL),
+	m_disolvp(NULL), m_rch_cbod(NULL), m_rch_dox(NULL), m_chlora(NULL), m_soxy(NULL)
 {
 
 }
@@ -29,35 +37,68 @@ NutrientCHRoute::~NutrientCHRoute(void) {
 }
 bool NutrientCHRoute::CheckInputSize(const char* key, int n) {
 	if(n <= 0) {
-		//StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
+		throw ModelException(MID_NutCHRout, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
 		return false;
 	}
-	if(m_nCells != n) {
-		if(m_nCells <=0) {
-			m_nCells = n;
+	if(m_nReaches != n-1) {
+		if(m_nReaches <= 0)  {
+			m_nReaches = n-1;
 		} else {
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
-			throw ModelException("Denitrification","CheckInputSize",oss.str());
+			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nReaches << ".\n";  
+			throw ModelException("NutCHRout","CheckInputSize",oss.str());
 		}
 	}
 	return true;
 }
 bool NutrientCHRoute::CheckInputData() {
-	if(this->m_nCells == -1) {
-		throw ModelException("NutRemv","CheckInputData","You have not set the date time.");
-		return false;
-	}
-	if(m_nCells <= 0) {
-		throw ModelException("NutRemv","CheckInputData","The dimension of the input data can not be less than zero.");
-		return false;
-	}
-	if(this->m_cellWidth == NULL) {
-		throw ModelException("NutRemv","CheckInputData","The relative humidity can not be NULL.");
-		return false;
-	}
-	///...
+	if (this -> m_dt < 0) {throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_dt has not been set.");return false;}
+	if (this -> m_nReaches < 0) {throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_nReaches has not been set.");return false;}
+	if(this -> m_aBank < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_qUpReach < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_rnum1 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> igropt < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_ai0 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_ai1 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_ai2 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_ai3 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_ai4 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_ai5 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_ai6 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_lambda0 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_lambda1 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_lambda2 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_k_l < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_k_n < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_k_p < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_p_n < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> tfact < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_mumax < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_rhoq < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_dayl == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_sra == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_bankStorage == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_qsSub == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_qiSub == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_qgSub == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_qsCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_qiCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_qgCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_chStorage == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_chWTdepth == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_wattemp == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_latno3ToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_surqno3ToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_surqsolpToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_no3gwToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_minpgwToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_sedorgnToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_sedorgpToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_sedminpaToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_sedminpsToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_ammoToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_nitriteToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	return true;
 }
 void NutrientCHRoute::SetValue(const char* key, float value)
@@ -66,48 +107,165 @@ void NutrientCHRoute::SetValue(const char* key, float value)
 	if (StringMatch(sk, VAR_OMP_THREADNUM)) {
 		omp_set_num_threads((int)value);
 	} 
-	else if (StringMatch(sk, Tag_CellSize)) {
-		this -> m_nCells = value;
-	}
-	else if (StringMatch(sk, Tag_CellWidth)) {
-		this -> m_cellWidth = value;
-	}
+	else if (StringMatch(sk, Tag_ChannelTimeStep)) {this -> m_dt = (int)value;}
+	else if (StringMatch(sk, VAR_A_BNK)) {this -> m_aBank = value;}
+	else if (StringMatch(sk, VAR_QUPREACH)) {this -> m_qUpReach = value;}
+	else if (StringMatch(sk, VAR_RNUM1)) {this -> m_rnum1 = value;}
+	else if (StringMatch(sk, VAR_IGROPT)) {this -> igropt = value;}
+	else if (StringMatch(sk, VAR_AI0)) {this -> m_ai0 = value;}
+	else if (StringMatch(sk, VAR_AI1)) {this -> m_ai1 = value;}
+	else if (StringMatch(sk, VAR_AI2)) {this -> m_ai2 = value;}
+	else if (StringMatch(sk, VAR_AI3)) {this -> m_ai3 = value;}
+	else if (StringMatch(sk, VAR_AI4)) {this -> m_ai4 = value;}
+	else if (StringMatch(sk, VAR_AI5)) {this -> m_ai5 = value;}
+	else if (StringMatch(sk, VAR_AI6)) {this -> m_ai6 = value;}
+	else if (StringMatch(sk, VAR_LAMBDA0)) {this -> m_lambda0 = value;}
+	else if (StringMatch(sk, VAR_LAMBDA1)) {this -> m_lambda1 = value;}
+	else if (StringMatch(sk, VAR_LAMBDA2)) {this -> m_lambda2 = value;}
+	else if (StringMatch(sk, VAR_K_L)) {this -> m_k_l = value;}
+	else if (StringMatch(sk, VAR_K_N)) {this -> m_k_n = value;}
+	else if (StringMatch(sk, VAR_K_P)) {this -> m_k_p = value;}
+	else if (StringMatch(sk, VAR_P_N)) {this -> m_p_n = value;}
+	else if (StringMatch(sk, VAR_TFACT)) {this -> tfact = value;}
+	else if (StringMatch(sk, VAR_MUMAX)) {this -> m_mumax = value;}
+	else if (StringMatch(sk, VAR_RHOQ)) {this -> m_rhoq = value;}
+	//else if(StringMatch(sk, VAR_VSF)) {m_vScalingFactor = value;}
+	//else if (StringMatch(sk, VAR_MSK_X)) {m_x = value;}
+	//else if (StringMatch(sk, VAR_MSK_CO1)) {m_co1 = value;}
 	else {
-		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
+		throw ModelException("NutCHRout","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
 }
 void NutrientCHRoute::Set1DData(const char* key,int n, float *data)
 {
-	if(!this->CheckInputSize(key,n)) return;
-
+	if(!this->CheckInputSize(key,n)) {
+		return;
+	}
 	string sk(key);
-	if (StringMatch(sk, VAR_GWNO3)) {
-		this -> m_gwno3 = data;
-	}
-	else if (StringMatch(sk, VAR_GWMINP)) {
-		this -> m_gwminp = data;
-	}
-	else if (StringMatch(sk, VAR_GW_Q)) {
-		this -> m_gw_q = data;
-	}
+	if (StringMatch(sk, VAR_DAYL)) {this -> m_dayl = data;}
+	else if (StringMatch(sk, VAR_SRA)) {this -> m_sra = data;}
+	else if (StringMatch(sk, VAR_BKST)) {this -> m_bankStorage = data;}
+	else if (StringMatch(sk, VAR_SBOF)) {this -> m_qsSub = data;}
+	else if (StringMatch(sk, VAR_SBIF)) {this -> m_qiSub = data;}
+	else if (StringMatch(sk, VAR_SBQG)) {this -> m_qgSub = data;}
+	else if (StringMatch(sk, VAR_QS)) {this -> m_qsCh = data;}
+	else if (StringMatch(sk, VAR_QI)) {this -> m_qiCh = data;}
+	else if (StringMatch(sk, VAR_QG)) {this -> m_qgCh = data;}
+	else if (StringMatch(sk, VAR_CHST)) {this -> m_chStorage = data;}
+	else if (StringMatch(sk, VAR_CHWTDEPTH)) {this -> m_chWTdepth = data;}
+	else if (StringMatch(sk, VAR_WATTEMP)) {this -> m_wattemp = data;}
+	else if (StringMatch(sk, VAR_LATNO3_CH)) {this -> m_latno3ToCh = data;}
+	else if (StringMatch(sk, VAR_SURQNO3_CH)) {this -> m_surqno3ToCh = data;}
+	else if (StringMatch(sk, VAR_SURQSOLP_CH)) {this -> m_surqsolpToCh = data;}
+	else if (StringMatch(sk, VAR_NO3GW_CH)) {this -> m_no3gwToCh = data;}
+	else if (StringMatch(sk, VAR_MINPGW_CH)) {this -> m_minpgwToCh = data;}
+	else if (StringMatch(sk, VAR_SEDORGN_CH)) {this -> m_sedorgnToCh = data;}
+	else if (StringMatch(sk, VAR_SEDORGP_CH)) {this -> m_sedorgpToCh = data;}
+	else if (StringMatch(sk, VAR_SEDMINPA_CH)) {this -> m_sedminpaToCh = data;}
+	else if (StringMatch(sk, VAR_SEDMINPS_CH)) {this -> m_sedminpsToCh = data;}
+	else if (StringMatch(sk, VAR_AMMO_CH)) {this -> m_ammoToCh = data;}
+	else if (StringMatch(sk, VAR_NITRITE_CH)) {this -> m_nitriteToCh = data;}
 	else {
-		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
+		throw ModelException("NutCHRout","SetValue","Parameter " + sk + " does not exist in Nutrient module. Please contact the module developer.");
 	}
 }
+void NutrientCHRoute::Set2DData(const char* key, int nrows, int ncols, float** data)
+{
+	string sk(key);
 
+	if (StringMatch(sk, Tag_RchParam))
+	{
+		m_nReaches = ncols - 1;
+		m_reachId = data[0];
+		m_reachDownStream = data[1];
+		m_chOrder = data[2];
+		//m_chWidth = data[3];
+		//m_chLen = data[4];
+		//m_chDepth = data[5];
+		//m_chVel = data[6];
+		//m_area = data[7];
+		m_bc1 = data[8];
+		m_bc2 = data[9];
+		m_bc3 = data[10];
+		m_bc4 = data[11];
+		m_rk1 = data[12];
+		m_rk2 = data[13];
+		m_rk3 = data[14];
+		m_rk4 = data[15];
+		m_rs1 = data[16];
+		m_rs2 = data[17];
+		m_rs3 = data[18];
+		m_rs4 = data[19];
+		m_rs5 = data[20];
+		m_reachUpStream.resize(m_nReaches+1);
+		if (m_nReaches > 1)
+		{
+			for (int i = 1; i <= m_nReaches; i++)// index of the reach is the equal to stream link ID(1 to nReaches)
+			{
+				int downStreamId = int(m_reachDownStream[i]);
+				if(downStreamId <= 0)
+					continue;
+				m_reachUpStream[downStreamId].push_back(i);
+			}
+		}
+	}
+	else
+		throw ModelException("NutCHPout", "Set2DData", "Parameter " + sk + " does not exist. Please contact the module developer.");
+}
+void  NutrientCHRoute::initialOutputs() {
+	if(m_nReaches <= 0) 
+		throw ModelException("NutCHPout","initialOutputs","The cell number of the input can not be less than zero.");
+
+	if (m_reachLayers.empty()) {
+		CheckInputData();	
+		for (int i = 1; i <= m_nReaches; i++) {
+			int order = (int)m_chOrder[i];
+			m_reachLayers[order].push_back(i);
+		}
+	}
+	if (m_organicn == NULL) {
+		m_algae = new float[m_nReaches+1];
+		m_organicn = new float[m_nReaches+1];
+		m_organicp = new float[m_nReaches+1];
+		m_ammonian = new float[m_nReaches+1];
+		m_nitriten = new float[m_nReaches+1];
+		m_nitraten = new float[m_nReaches+1];
+		m_disolvp = new float[m_nReaches+1];
+		m_rch_cbod = new float[m_nReaches+1];
+		m_rch_dox = new float[m_nReaches+1];
+		m_chlora = new float[m_nReaches+1];
+		m_soxy = 0.;
+
+		#pragma omp parallel for
+		for (int i=1; i<=m_nReaches; i++) {
+			m_algae[i] = 0.;
+			m_organicn[i] = 0.;
+			m_organicp[i] = 0.;
+			m_ammonian[i] = 0.;
+			m_nitriten[i] = 0.;
+			m_nitraten[i] = 0.;
+			m_disolvp[i] = 0.;
+			m_rch_cbod[i] = 0.;
+			m_rch_dox[i] = 0.;
+			m_chlora[i] = 0.;
+
+		}
+	}
+}
 int NutrientCHRoute::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
 	}
+	initialOutputs();
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
 	{
 		// There are not any flow relationship within each routing layer.
 		// So parallelization can be done here.
-		int nReaches = it->second.size();
+		m_nReaches = it->second.size();
 		// the size of m_reachLayers (map) is equal to the maximum stream order
-		/// #pragma omp parallel for
-		for (int i = 0; i < nReaches; ++i)
+		#pragma omp parallel for
+		for (int i = 0; i < m_nReaches; ++i)
 		{
 			// index in the array
 			int reachIndex = it->second[i]; 
@@ -117,6 +275,40 @@ int NutrientCHRoute::Execute() {
 	//return ??
 	return 0;
 }
+/*
+//! Get coefficients
+void NutrientCHRoute::GetCoefficients(float reachLength, float v0, MuskWeights& weights)
+{
+	v0 = m_vScalingFactor * v0;
+	float K = (4.64f - 3.64f * m_co1) * reachLength / (5.f * v0 / 3.f);
+
+	float min = 2.0f * K * m_x;
+	float max = 2.0f * K * (1 - m_x);
+	float dt;
+	int n;
+	weights.dt = dt;
+
+	//get coefficient
+	float temp = max + dt;
+	weights.c1 = (dt - min)/temp;
+	weights.c2 = (dt + min)/temp;
+	weights.c3 = (max - dt)/temp;
+	weights.c4 = 2*dt/temp;
+	weights.n = n;
+
+	//make sure any coefficient is positive
+	if(weights.c1 < 0) 
+	{
+		weights.c2 += weights.c1;
+		weights.c1 = 0.0f;
+	}
+	if(weights.c3 < 0)
+	{
+		weights.c2 += weights.c1;
+		weights.c3 = 0.0f;
+	}
+}
+*/
 void NutrientCHRoute::NutrientinChannel(int i){
 
 	float thbc1 = 1.083;    ///temperature adjustment factor for local biological oxidation of NH3 to NO2
@@ -189,7 +381,7 @@ void NutrientCHRoute::NutrientinChannel(int i){
 	float bankOut = 0.;
 	bankOut = m_bankStorage[i] * (1 - exp(- m_aBank));
 	m_bankStorage[i] -= bankOut;
-	wtrIn += bankOut/m_dt;
+	wtrIn += bankOut / m_dt;
 
 	//wtrIn = varoute[][inum2)] * (1. - m_rnum1);
 	// Calculate flow out of reach
@@ -288,11 +480,12 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		float tday = 1.0;
 
 		// algal growth
-		// calculate light extinction coefficient (m_lambda)
+		// calculate light extinction coefficient (lambda)
+		float lambda = 0;
 		if (m_ai0 * algcon > 1.e-6) {
-			m_lambda = m_lambda0 + (m_lambda1 * m_ai0 * algcon) + m_lambda2 * pow((m_ai0 * algcon), (2 / 3));
+			lambda = m_lambda0 + (m_lambda1 * m_ai0 * algcon) + m_lambda2 * pow((m_ai0 * algcon), (2 / 3));
 		} else {
-			m_lambda = m_lambda0;
+			lambda = m_lambda0;
 		}
 
 		// calculate algal growth limitation factors for nitrogen and phosphorus
@@ -303,15 +496,15 @@ void NutrientCHRoute::NutrientinChannel(int i){
 
 		// calculate daylight average, photo synthetically active (algi)
 		float algi = 0.;
-		float dchla = 0.;
-		float dbod = 0.;
-		float ddisox = 0.;
-		float dorgn = 0.;
-		float dnh4  = 0.;
-		float dno2 = 0.;
-		float dno3  = 0.;
-		float dorgp = 0.;
-		float dsolp  = 0.;
+		dchla = 0.;
+		dbod = 0.;
+		ddisox = 0.;
+		dorgn = 0.;
+		dnh4  = 0.;
+		dno2 = 0.;
+		dno3  = 0.;
+		dorgp = 0.;
+		dsolp  = 0.;
 		if (m_dayl[i] > 0.) {
 			algi = m_sra[i] * tfact / m_dayl[i];
 		} else {
@@ -321,7 +514,7 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		// calculate growth attenuation factor for light, based on daylight average light intensity
 		float fl_1 = 0.;
 		float fll = 0.;
-		fl_1 = (1. / (m_lambda * m_chWTdepth[i])) * log((m_k_l + algi) / (m_k_l + algi * exp(-m_lambda * m_chWTdepth[i])));
+		fl_1 = (1. / (lambda * m_chWTdepth[i])) * log((m_k_l * 24 + algi) / (m_k_l * 24 + algi * exp(-lambda * m_chWTdepth[i])));
 		fll = 0.92 * (m_dayl[i] / 24.) * fl_1;
 
 		// calculate local algal growth rate
@@ -377,12 +570,12 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		// calculate dissolved oxygen concentration if reach at end of day (ddisox)
 		float uu = 0.;     // variable to hold intermediate calculation result
 		float vv = 0.;      // variable to hold intermediate calculation result
-		float ww = 0.;    // variable to hold intermediate calculation result
+		ww = 0.;    // variable to hold intermediate calculation result
 		xx = 0.;     // variable to hold intermediate calculation result
 		yy = 0.;     // variable to hold intermediate calculation result
 		zz = 0.;     // variable to hold intermediate calculation result
 		float hh = corTempc(m_rk2[i], thm_rk2, wtmp) ;
-		float uu = corTempc(m_rk2[i], thm_rk2, wtmp) * (m_soxy - o2con);
+		uu = corTempc(m_rk2[i], thm_rk2, wtmp) * (m_soxy - o2con);
 		if (algcon > 0.001) {
 			vv = (m_ai3 * corTempc(gra, thgra, wtmp) - m_ai4 * corTempc(m_rhoq, thrho, wtmp)) * algcon;
 		} else {
@@ -492,17 +685,17 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		wtrTotal = wtrIn + m_chStorage[i];
 
 		if (wtrIn > 0.001) {
-			chlin = 1000. * varoute[13][i] * (1. - m_rnum1) / wtrIn;
+			//chlin = 1000. * m_chloraToCh[i] * (1. - m_rnum1) / wtrIn;	//chlorophyll-a
 			algin = 1000. * chlin / m_ai0;
-			orgnin = 1000. * varoute[4][i] * (1. - m_rnum1) / wtrIn;
-			ammoin = 1000. * varoute[14][i] * (1. - m_rnum1) / wtrIn;
-			nitritin = 1000. * varoute[15][i] * (1. - m_rnum1) / wtrIn;
-			nitratin = 1000. * varoute[6][i] * (1. - m_rnum1) / wtrIn;
-			orgpin = 1000. * varoute[5][i] * (1. - m_rnum1) / wtrIn;
-			dispin = 1000. * varoute[7][i] * (1. - m_rnum1) / wtrIn;
-			cbodin = 1000. * varoute[16][i] * (1. - m_rnum1) / wtrIn;
-			disoxin= 1000. * varoute[17][i] * (1. - m_rnum1) / wtrIn;
-			heatin = varoute[1][i] * (1. - m_rnum1);
+			orgnin = 1000. * m_sedorgnToCh[i] * (1. - m_rnum1) / wtrIn;
+			ammoin = 1000. * m_ammoToCh[i] * (1. - m_rnum1) / wtrIn;
+			nitritin = 1000. * m_nitriteToCh[i] * (1. - m_rnum1) / wtrIn;
+			nitratin = 1000. * (m_latno3ToCh[i] + m_surqno3ToCh[i] + m_no3gwToCh[i]) * (1. - m_rnum1) / wtrIn;
+			orgpin = 1000. * (m_sedorgpToCh[i] + m_sedminpsToCh[i] + m_sedminpaToCh[i]) * (1. - m_rnum1) / wtrIn;
+			dispin = 1000. *  (m_surqsolpToCh[i] + m_minpgwToCh[i]) * (1. - m_rnum1) / wtrIn;
+			//cbodin = 1000. * m_cbodToCh[i] * (1. - m_rnum1) / wtrIn;
+			//disoxin= 1000. * m_disoxToCh[i] * (1. - m_rnum1) / wtrIn;
+			heatin =m_wattemp[i] * (1. - m_rnum1);
 		}
 
 		m_wattemp[i] =(heatin * wtrIn + wtmp * m_chStorage[i]) / wtrTotal;
@@ -513,8 +706,8 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		m_nitraten[i] = (nitratin * wtrIn + dno3  * m_chStorage[i]) / wtrTotal;
 		m_organicp[i] = (orgpin * wtrIn +  dorgp * m_chStorage[i]) / wtrTotal;
 		m_disolvp[i] = (dispin * wtrIn +  dsolp * m_chStorage[i]) / wtrTotal;
-		m_rch_cbod[i] = (cbodin * wtrIn + dbod * m_chStorage[i]) / wtrTotal;
-		m_rch_dox[i] = (disoxin * wtrIn +  ddisox * m_chStorage[i]) / wtrTotal;
+		//m_rch_cbod[i] = (cbodin * wtrIn + dbod * m_chStorage[i]) / wtrTotal;
+		//m_rch_dox[i] = (disoxin * wtrIn +  ddisox * m_chStorage[i]) / wtrTotal;
 
 		// calculate chlorophyll-a concentration at end of day
 		m_chlora[i] = 0.;
@@ -560,16 +753,28 @@ float NutrientCHRoute::corTempc(float r20, float thk, float tmp) {
 	theta = r20 * pow(thk, (tmp - 20.f));
 	return theta;
 }
+
+void NutrientCHRoute::GetValue(const char* key, float* value) {
+	string sk(key);
+	 if (StringMatch(sk, VAR_SOXY)) {
+		*value = m_soxy;
+	}
+
+}
 void NutrientCHRoute::Get1DData(const char* key, int* n, float** data) {
 	string sk(key);
-	*n = m_nCells;
-	if (StringMatch(sk, VAR_NO3GW)) {
-		*data = this -> m_no3gw;
-	}
-	if (StringMatch(sk, VAR_MINPGW)) {
-		*data = this -> m_minpgw;
-	}
+	*n = m_nReaches + 1;
+	if (StringMatch(sk, VAR_ALGAE)) {*data = this -> m_algae;}
+	else if (StringMatch(sk, VAR_ORGANICN)) {*data = this -> m_organicn;}
+	else if (StringMatch(sk, VAR_ORGANICP)) {*data = this -> m_organicp;}
+	else if (StringMatch(sk, VAR_AMMONIAN)) {*data = this -> m_ammonian;}
+	else if (StringMatch(sk, VAR_NITRITEN)) {*data = this -> m_nitriten;}
+	else if (StringMatch(sk, VAR_NITRATEN)) {*data = this -> m_nitraten;}
+	else if (StringMatch(sk, VAR_DISOLVP)) {*data = this -> m_disolvp;}
+	else if (StringMatch(sk, VAR_RCH_CBOD)) {*data = this -> m_rch_cbod;}
+	else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
+	else if (StringMatch(sk, VAR_CHLORA)) {*data = this -> m_chlora;}
 	else {
-		throw ModelException("NutRemv", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException("NutCHRout", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }
