@@ -278,7 +278,7 @@ def WriteGTiffFileByMask(filename, data, mask, gdalType):
 
 def MaskRaster(maskFile, inputFile, outputFile, outputAsc=False, noDataValue=-9999):
     id = os.path.basename(maskFile) + "_" + os.path.basename(inputFile)
-    configFile = "%s%smaskConfig_%s_%s.txt" % (config.CPP_PROGRAM_DIR, os.sep, id, str(time.time()))
+    configFile = "%s%smaskConfig_%s_%s.txt" % (CPP_PROGRAM_DIR, os.sep, id, str(time.time()))
     fMask = open(configFile, 'w')
     fMask.write(maskFile + "\n1\n")
     fMask.write("%s\t%d\t%s\n" % (inputFile, noDataValue, outputFile))
@@ -287,7 +287,7 @@ def MaskRaster(maskFile, inputFile, outputFile, outputAsc=False, noDataValue=-99
     asc = ""
     if outputAsc:
         asc = "-asc"
-    s = "%s/mask_rasters/build/mask_raster %s %s" % (config.CPP_PROGRAM_DIR, configFile, asc)
+    s = "%s/mask_rasters/build/mask_raster %s %s" % (CPP_PROGRAM_DIR, configFile, asc)
     os.system(s)
     os.remove(configFile)
 
@@ -305,6 +305,11 @@ def StringMatch(str1, str2):
     else:
         return False
 def ReadDataItemsFromTxt(txtFile):
+    '''
+    Read data items include title from text file
+    :param txtFile: data file
+    :return: 2D data array
+    '''
     f = open(txtFile)
     dataItems = []
     for line in f:
@@ -359,3 +364,23 @@ def replaceByDict(srcfile, vDict, dstfile):
     for k, v in vDict.iteritems():
         dstData[srcData==k] = v
     WriteGTiffFile(dstfile,srcR.nRows,srcR.nCols,dstData,srcR.geotrans,srcR.srs,srcR.noDataValue,GDT_Float32)
+
+def GetFileNameWithSuffixes(filePath, suffixes):
+    listFiles = os.listdir(filePath)
+    reFiles = []
+    for f in listFiles:
+        name, ext = os.path.splitext(f)
+        if StringInList(ext, suffixes):
+            reFiles.append(f)
+    return reFiles
+def GetFullPathWithSuffixes(filePath, suffixes):
+    fullPaths = []
+    for name in GetFileNameWithSuffixes(filePath, suffixes):
+        fullPaths.append(filePath + os.sep + name)
+    return fullPaths
+
+### TEST CODE
+if __name__ == "__main__":
+    p = r'E:\data\model_data\model_dianbu_10m_longterm\data_prepare\spatial'
+    print GetFileNameWithSuffixes(p,['.tif','.txt'])
+    print GetFullPathWithSuffixes(p,['.tif','.txt'])

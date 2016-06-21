@@ -1,5 +1,5 @@
 /*!
- * \file PETPenmanMonteith.h
+ * \file PETPenmanMonteith.cpp
  * \author Junzhi Liu
  * \date Nov. 2010
  * \revised LiangJun Zhu
@@ -10,6 +10,7 @@
 			  4. Add potential plant transpiration(PPT) as output.
 			  5. Add m_VPD, m_dayLen as outputs, which will be used in BIO_EPIC module
 			  6. change m_vpd2 and m_gsi from DT_Single to DT_Raster1D, see readplant.f of SWAT
+			  7. Add m_phuBase as outputs, which will be used in MGT_SWAT module
  */
 #include "PETPenmanMonteith.h"
 #include "MetadataInfo.h"
@@ -24,8 +25,9 @@
 using namespace std;
 
 PETPenmanMonteith::PETPenmanMonteith(void):m_elev(NULL), m_rhd(NULL), m_sr(NULL), m_tMean(NULL),	m_tMin(NULL), 
-	m_tMax(NULL), m_ws(NULL), m_growCode(NULL),m_cht(NULL), m_lai(NULL), m_petFactor(1.f),m_tSnow(-1), m_nCells(-1) , 
-	m_cellLat(NULL), m_albedo(NULL), m_gsi(NULL),m_vpd2(NULL),m_frgmax(NULL),m_vpdfr(NULL),m_pet(NULL),m_vpd(NULL),m_ppt(NULL),m_dayLen(NULL)
+	m_tMax(NULL), m_ws(NULL),m_phutot(NULL), m_growCode(NULL),m_cht(NULL), m_lai(NULL), m_petFactor(1.f),m_tSnow(-1), m_nCells(-1) , 
+	m_cellLat(NULL), m_albedo(NULL), m_gsi(NULL),m_vpd2(NULL),m_frgmax(NULL),m_vpdfr(NULL),
+	m_pet(NULL),m_vpd(NULL),m_ppt(NULL),m_dayLen(NULL),m_phuBase(NULL)
 {
 }
 
@@ -34,6 +36,8 @@ PETPenmanMonteith::~PETPenmanMonteith(void)
 	if(this->m_dayLen != NULL) delete [] this->m_dayLen;
 	if(this->m_pet != NULL)		delete [] this->m_pet;
 	if(this->m_vpd != NULL)	delete [] this->m_vpd;
+	if(this->m_phuBase != NULL) delete[] this->m_phuBase;
+
 	/// This code would be removed if the grow code is got from main.
 	/// Comment these code since m_growCode is provided as Parameters and be updated by plant growth module. By LJ
 	//if(this->m_growCode != NULL)
@@ -123,6 +127,11 @@ bool PETPenmanMonteith::CheckInputData()
 		throw ModelException(MID_PET_PM,"CheckInputData","The latitude can not be NULL.");
 		return false;
 	}
+	if(this->m_phutot == NULL)
+	{
+		throw ModelException(MID_PET_PM,"CheckInputData","The PHU0 can not be NULL.");
+		return false;
+	}
 	if(this->m_gsi == NULL)
 	{
 		throw ModelException(MID_PET_PM,"CheckInputData","The maximum stomatal conductance can not be NULL.");
@@ -165,7 +174,6 @@ void PETPenmanMonteith::SetValue(const char* key, float value)
 {
 	string sk(key);
 	if (StringMatch(sk,VAR_CO2)) m_co2 = value;
-	//else if (StringMatch(sk,VAR_COND_RATE)) m_vpd2 = value;
 	else if (StringMatch(sk,VAR_T_SNOW)) m_tSnow = value;
 	else if (StringMatch(sk,VAR_K_PET)) m_petFactor = value;
 	else if (StringMatch(sk, VAR_OMP_THREADNUM)) omp_set_num_threads((int)value);
@@ -201,6 +209,8 @@ void PETPenmanMonteith::Set1DData(const char* key,int n, float *value)
 	else if (StringMatch(sk,VAR_LAIDAY))
 		this->m_lai = value;
 	//from database
+	else if (StringMatch( sk, VAR_PHUTOT))
+		this->m_phutot = value;
 	else if (StringMatch(sk, VAR_IGRO))
 		this->m_growCode = value;
 	else if(StringMatch(sk, VAR_GSI))
@@ -220,6 +230,7 @@ void PETPenmanMonteith::initialOutputs()
 		this->m_pet = new float[this->m_nCells];
 		this->m_ppt = new float[this->m_nCells];
 		this->m_vpd = new float[this->m_nCells];
+		this->m_phuBase = new float[this->m_nCells];
 #pragma omp parallel for
 		for (int i = 0;i < m_nCells; i++)
 		{
@@ -227,6 +238,7 @@ void PETPenmanMonteith::initialOutputs()
 			m_pet[i] = 0.f;
 			m_ppt[i] = 0.f;
 			m_vpd[i] = 0.f;
+			m_phuBase[i] = 0.f;
 		}
 	}
 
@@ -250,6 +262,14 @@ int PETPenmanMonteith::Execute()
 	#pragma omp parallel for
 	for (int j = 0; j < m_nCells; ++j)
 	{
+		/// update phubase of the simulation year.
+		/* update base zero total heat units, src code from SWAT, subbasin.f
+		if (tmpav(j) > 0. .and. phutot(hru_sub(j)) > 0.01) then
+			phubase(j) = phubase(j) + tmpav(j) / phutot(hru_sub(j))
+		end if*/
+		if(m_tMean[j] > 0. && m_phutot[j] > 0.01)
+			m_phuBase[j] += m_tMean[j] / m_phutot[j];
+
 		//////////////////////////////////////////////////////////////////////////
 		//               compute net radiation
 		//net short-wave radiation for PET (from swat)
@@ -401,6 +421,11 @@ void PETPenmanMonteith::Get1DData(const char* key, int* n, float **data)
 	else if (StringMatch(sk, VAR_DAYLEN))
 	{
 		*data = this->m_dayLen;
+		*n = this->m_nCells;
+	}
+	else if (StringMatch(sk, VAR_PHUBASE))
+	{
+		*data = this->m_phuBase;
 		*n = this->m_nCells;
 	}
 }

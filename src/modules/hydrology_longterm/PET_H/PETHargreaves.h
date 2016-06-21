@@ -8,6 +8,7 @@
  * \note: 1. Add m_tMean from database, which may be measurement value or the mean of tMax and tMin;
 			  2. The PET calculate is changed from site-based to cell-based, because PET is not only dependent on Climate site data;
 			  3. Add m_VPD, m_dayLen as outputs, which will be used in BIO_EPIC module
+			  4. Add m_phuBase as outputs, which will be used in MGT_SWAT module
  */
 #ifndef SEIMS_PET_H_INCLUDE
 #define SEIMS_PET_H_INCLUDE
@@ -53,10 +54,8 @@ private:
 	float *m_rhd;
 	/// latitude of each valid cells
 	float *m_cellLat;
-	/////latitude of the stations   /// deprecated by LJ, May. 24, 2016
-	//float *m_latitude;
-	///// size of the input array, i.e., the HydroClimate sites number 
-	//int m_size;
+	/// annual PHU
+	float *m_phutot;
 	/// valid cell number
 	int m_nCells;
 	/// coefficient related to radiation used in Hargreaves method
@@ -65,13 +64,20 @@ private:
 	float m_petFactor;
 
 	/// temporary variables and output
+
 	/// maximum solar radiation of current day
 	float m_srMax;
 	/// Julian day
 	int m_jday;
-	/// output PET array
+	/// output
+
+	/// day length (hr)
 	float *m_dayLen;
+	/// base zero total heat units (used when no land cover is growing)
+	float *m_phuBase;
+	/// pet
 	float *m_pet;
+	/// vapor pressure deficit
 	float *m_vpd;
 private:
 
@@ -90,8 +96,19 @@ private:
 	 * \return bool The validity of the dimension
 	 */
 	bool CheckInputSize(const char*,int);
-	
-	/// MaxSolarRadiation() and JulianDay() are moved to data module to reduce code redundancy. By LJ, May., 2016
+	//! Initialize of output variables
+	void initialOutputs();
+};
+
+#endif
+
+/////latitude of the stations   /// deprecated by LJ, May. 24, 2016
+//float *m_latitude;
+///// size of the input array, i.e., the HydroClimate sites number 
+//int m_size;
+
+
+/// MaxSolarRadiation() and JulianDay() are moved to data module to reduce code redundancy. By LJ, May., 2016
 // 	/*!
 // 	 * \brief Calculate the max solar radiation for a station of one day
 // 	 *
@@ -107,6 +124,3 @@ private:
 // 	 * \return int Julian day
 // 	 */
 // 	int JulianDay(time_t);
-};
-
-#endif

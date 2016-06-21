@@ -14,8 +14,7 @@ from text import *
 def ImportData(db, measFileList, sitesLoc):
     for measDataFile in measFileList:
         #print measDataFile
-        dataPath = MEASUREMENT_DATA_DIR + os.sep + measDataFile
-        measDataItems = ReadDataItemsFromTxt(dataPath)
+        measDataItems = ReadDataItemsFromTxt(measDataFile)
         ## If the dataitems is EMPTY or only have one header row, then goto next data file.
         if measDataItems == [] or len(measDataItems) == 1:
             continue
@@ -48,8 +47,7 @@ def ImportData(db, measFileList, sitesLoc):
             dic[Tag_DT_UTC] = datetime.datetime(utcTime[0], utcTime[1], utcTime[2], utcTime[3])
             db[Tag_ClimateDB_Measurement].insert_one(dic)
     for siteFile in sitesLoc:
-        dataPath = MEASUREMENT_DATA_DIR + os.sep + siteFile
-        siteDataItems = ReadDataItemsFromTxt(dataPath)
+        siteDataItems = ReadDataItemsFromTxt(siteFile)
         siteFlds = siteDataItems[0]
         for i in range(1,len(siteDataItems)):
             dic = {}
@@ -124,7 +122,7 @@ def ImportMeasurementData(hostname,port,dbName,path):
     if not Tag_ClimateDB_Data in cList:
         db.create_collection(Tag_ClimateDB_Data)
 
-    fileList = os.listdir(path)
+    fileList = GetFullPathWithSuffixes(path,['.txt'])
     measFileList = []
     siteLoc = []
     for fl in fileList:
