@@ -18,43 +18,34 @@
 #include <sstream>
 
 ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath, SettingsInput* input, 
-						ModuleFactory *factory, int subBasinID, int scenarioID, int numThread, LayeringMethod layeringMethod):m_readFileTime(0), m_initialized(false)
+						ModuleFactory *factory, int subBasinID, int scenarioID, int numThread, LayeringMethod layeringMethod)
+						:m_conn(conn), m_dbName(dbName), m_projectPath(projectPath), m_input(input), m_factory(factory),
+						m_subBasinID(subBasinID), m_scenarioID(scenarioID), m_threadNum(numThread),m_layeringMethod(layeringMethod),
+						m_templateRasterData(NULL), m_readFileTime(0), m_firstRunChannel(true), m_firstRunOverland(true),m_initialized(false)
 {
-	m_templateRasterData = NULL;
-	m_subBasinID = subBasinID;
-
-	m_projectPath = projectPath;
-	m_conn = conn;
-	m_dbName = dbName;
-
 	mongoc_gridfs_t	*spatialData;
 	bson_error_t	*err = NULL;
-	spatialData = mongoc_client_get_gridfs(m_conn,dbName.c_str(), DB_TAB_SPATIAL, err);
+	spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(), DB_TAB_SPATIAL, err);
 	if(err != NULL)
 		throw ModelException("MainMongoDB","ModelMain","Failed to get GridFS: " + string(DB_TAB_SPATIAL) + ".\n");
-	m_outputGfs = mongoc_client_get_gridfs(m_conn,dbName.c_str(),DB_TAB_OUT_SPATIAL,err);
+	m_outputGfs = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_OUT_SPATIAL,err);
 	if(err != NULL)
 		throw ModelException("MainMongoDB","ModelMain","Failed to create output GridFS: " + string(DB_TAB_OUT_SPATIAL) + ".\n");
-	
-	string dbNameStr = dbName;
-	m_input		= input;
+
 	m_dtDaily	= m_input->getDtDaily();
 	m_dtHs		= m_input->getDtHillslope();
 	m_dtCh		= m_input->getDtChannel();
 
-	m_output = new SettingsOutput(subBasinID, projectPath + File_Output, m_conn, m_outputGfs);
+	m_output = new SettingsOutput(m_subBasinID, m_projectPath + File_Output, m_conn, m_outputGfs);
 	CheckOutput(spatialData);
-	m_factory = factory;
-	m_layeringMethod = layeringMethod;
-    
-	m_readFileTime = factory->CreateModuleList(dbNameStr, subBasinID, numThread, m_layeringMethod, m_templateRasterData, m_input, m_simulationModules);
+
+	m_readFileTime = factory->CreateModuleList(m_dbName, m_subBasinID, m_threadNum, m_layeringMethod, m_templateRasterData, m_input, m_simulationModules);
 	//cout << "Read file time: " << m_readFileTime << endl;
 	size_t n = m_simulationModules.size();
 	m_executeTime.resize(n, 0);
 	for (size_t i = 0; i < n; i++)
 	{
 		SimulationModule *pModule = m_simulationModules[i];
-
 		switch(pModule->GetTimeStepType())
 		{
 		case TIMESTEP_HILLSLOPE:
@@ -68,30 +59,17 @@ ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath, S
 		}
 	}
 
-	CheckOutput(this->m_output,this->m_input);
-
-	m_firstRunChannel = true;
-	m_firstRunOverland = true;
-
-    m_initialized = true;
+	CheckOutput(); 
 	mongoc_gridfs_destroy(spatialData);
 }
 
 ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath,  
-						ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod):m_readFileTime(0), m_initialized(false)
+	ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod)
+	:m_conn(conn), m_dbName(dbName), m_projectPath(projectPath),  m_factory(factory),
+	m_subBasinID(subBasinID), m_scenarioID(scenarioID), m_layeringMethod(layeringMethod),
+	m_templateRasterData(NULL), m_readFileTime(0), m_initialized(false),
+	m_firstRunChannel(true), m_firstRunOverland(true)
 {
-	m_templateRasterData = NULL;
-	m_subBasinID = subBasinID;
-
-	m_projectPath = projectPath;
-	m_conn = conn;
-	m_dbName = dbName;
-
-	m_factory = factory;
-	m_layeringMethod = layeringMethod;
-    
-	m_firstRunChannel = true;
-	m_firstRunOverland = true;
 }
 
 void ModelMain::Init(SettingsInput* input, int numThread)
@@ -137,7 +115,7 @@ void ModelMain::Init(SettingsInput* input, int numThread)
 		}
 	}
 
-	CheckOutput(this->m_output,this->m_input);
+	CheckOutput();
     m_initialized = true;
 	mongoc_gridfs_destroy(spatialData);
 }
@@ -323,22 +301,11 @@ void ModelMain::CheckOutput(mongoc_gridfs_t* gfs)
 
 	this->m_output->checkDate(m_input->getStartTime(),m_input->getEndTime());
 
-	//if need to output to a asc file, create the asc header and position
-	//if(this->m_output->isOutputASCFile())
-	//{
 	ostringstream oss;
 #ifdef USE_MONGODB
 	oss << m_subBasinID << "_" << GetUpper(NAME_MASK);
 	m_templateRasterData = new clsRasterData(gfs, oss.str().c_str());
-//#else
-//	//oss << m_projectPath << m_subBasinID << "_" << NAME_MASK << GTiffExtension;
-//	m_templateRasterData = new clsRasterData();
-//	//m_templateRasterData->ReadFromGDAL(oss.str());
-//	oss << m_projectPath << m_subBasinID << "_" << NAME_MASK << RasterExtension;
-//	m_templateRasterData->readASCFile(oss.str());
 #endif	
-	//}
-	//this->m_output->setSpecificCellRasterOutput(this->m_projectPath,this->m_databasePath,m_templateRasterData);
 }
 
 void ModelMain::OutputExecuteTime()
@@ -349,10 +316,10 @@ void ModelMain::OutputExecuteTime()
 	}
 }
 
-void ModelMain::CheckOutput(SettingsOutput* output,SettingsInput* input)
+void ModelMain::CheckOutput()
 {
 	vector<PrintInfo *>::iterator it;
-	for(it=output->m_printInfos.begin();it<output->m_printInfos.end();it++)
+	for(it=m_output->m_printInfos.begin();it<m_output->m_printInfos.end();it++)
 	{
 		string outputid = (*it)->getOutputID();
 	    outputid = trim(outputid);
