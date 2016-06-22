@@ -51,17 +51,17 @@ private:
 	float m_qtile;
 
 	/// Phosphorus soil partitioning coefficient
-	float* m_phoskd;
+	float m_phoskd;
 	/// phosphorus percolation coefficient (0-1)
-	float* m_pperco;
+	float m_pperco;
 	/// nitrate percolation coefficient (0-1)
-	float* m_nperco;
+	float m_nperco;
 	// fraction of porosity from which anions are excluded
 	float* m_anion_excl;
 	// distribution of surface runoff generated
 	float* m_surfr;
 	/// initial septic operational condition (active-1, failing-2, non_septic-0)
-	float* m_isep_opt;
+	float m_isep_opt;
 	/// soil layer where drainage tile is located
 	float* m_ldrain;
 	/// crack volume potential of soil

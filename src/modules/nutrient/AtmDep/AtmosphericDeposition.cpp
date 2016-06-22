@@ -106,8 +106,8 @@ int AtmosphericDeposition::Execute() {
 			// Calculate the amount of nitrite and ammonia added to the soil in rainfall, 
 		    m_addrno3 = 0.01 * m_rcn * m_preci[i];
 		    m_addrnh3 = 0.01 * m_rca * m_preci[i];
-		    m_sol_no3[i][0] = m_sol_no3[i][0] + m_addrno3 + m_drydep_no3 * 365;
-		    m_sol_nh3[i][0] = m_sol_nh3[i][0] + m_addrnh3 + m_drydep_nh4 * 365;
+		    m_sol_no3[i][0] = m_sol_no3[i][0] + m_addrno3 + m_drydep_no3 / 365;
+		    m_sol_nh3[i][0] = m_sol_nh3[i][0] + m_addrnh3 + m_drydep_nh4 / 365;
 
 			m_wshd_rno3 = m_wshd_rno3 + m_addrno3 * (1 / m_cellWidth);
 		}

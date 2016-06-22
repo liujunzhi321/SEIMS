@@ -604,7 +604,7 @@
 #define VAR_LAP_RATE "LapseRate"                    /// Lapse rate
 #define VAR_LATNO3 "latno3"
 #define VAR_LATNO3_CH "latno3ToCh"
-#define VAR_LCC "idplt"                             /// land cover code
+#define VAR_LCC "landcover"                             /// land cover code
 #define VAR_LDRAIN "ldrain"
 #define VAR_MANNING "Manning"
 #define VAR_MAT_YRS "MAT_YRS"

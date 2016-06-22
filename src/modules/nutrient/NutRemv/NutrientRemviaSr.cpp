@@ -76,6 +76,10 @@ void NutrientRemviaSr::SetValue(const char* key, float value)
 	else if (StringMatch(sk, Tag_CellSize)) {this -> m_nCells = value;}
 	else if (StringMatch(sk, Tag_CellWidth)) {this -> m_cellWidth = value;}
 	else if (StringMatch(sk, VAR_QTILE)) {this -> m_qtile = value;}
+	else if (StringMatch(sk, VAR_NPERCO)) {this -> m_nperco = value;}
+	else if (StringMatch(sk, VAR_PPERCO)) {this -> m_pperco = value;}
+	else if (StringMatch(sk, VAR_PHOSKD)) {this -> m_phoskd = value;}
+	else if (StringMatch(sk, VAR_ISEP_OPT)) {this -> m_isep_opt = value;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
@@ -86,11 +90,7 @@ void NutrientRemviaSr::Set1DData(const char* key,int n, float *data)
 	string sk(key);
 	if (StringMatch(sk, VAR_SOER)) {this -> m_surfr = data;}
 	else if (StringMatch(sk, VAR_ANION_EXCL)) {this -> m_anion_excl = data;}
-	else if (StringMatch(sk, VAR_NPERCO)) {this -> m_nperco = data;}
-	else if (StringMatch(sk, VAR_PPERCO)) {this -> m_pperco = data;}
 	else if (StringMatch(sk, VAR_LDRAIN)) {this -> m_ldrain = data;}
-	else if (StringMatch(sk, VAR_ISEP_OPT)) {this -> m_isep_opt = data;}
-	else if (StringMatch(sk, VAR_PHOSKD)) {this -> m_phoskd = data;}
 	else if (StringMatch(sk, VAR_SOL_CRK)) {this -> m_sol_crk = data;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
@@ -172,10 +172,10 @@ void NutrientRemviaSr::Nitrateloss(){
 			// calculate nitrate in surface runoff
 			// concentration of nitrate in surface runoff (cosurf)
 			float cosurf = 0.;
-			if (m_isep_opt[i] == 2) {
+			if (m_isep_opt == 2) {
 				cosurf = 1.0 * con; // N percolation does not apply to failing septic place;
 			} else {
-				cosurf = m_nperco[i] * con;
+				cosurf = m_nperco * con;
 			}
 			if (k == 0) {
 				m_surqno3[i] = m_surfr[i] * cosurf;
@@ -237,14 +237,14 @@ void NutrientRemviaSr::Phosphorusloss(){
 		float vap_tile = 0.;
 		// compute soluble P lost in surface runoff
 		float xx = 0.;  // variable to hold intermediate calculation result
-		xx = m_sol_bd[i][0] * m_sol_z[i][0] * m_phoskd[i];
+		xx = m_sol_bd[i][0] * m_sol_z[i][0] * m_phoskd;
 		m_surqsolp[i] = m_sol_solp[i][0] * m_surfr[i] / xx;
 		m_surqsolp[i] = min(m_surqsolp[i], m_sol_solp[i][0]);
 		m_surqsolp[i] = max(m_surqsolp[i], 0.);
 		m_sol_solp[i][0] = m_sol_solp[i][0] - m_surqsolp[i];
 
 		// compute soluble P leaching
-		vap = m_sol_solp[i][0] * m_sol_perco[i][0] / ((m_conv_wt[i][0] / 1000.) * m_pperco[i]);
+		vap = m_sol_solp[i][0] * m_sol_perco[i][0] / ((m_conv_wt[i][0] / 1000.) * m_pperco);
 		vap = min(vap, 0.5 * m_sol_solp[i][0]);
 		m_sol_solp[i][0] = m_sol_solp[i][0] - vap;
 
@@ -260,7 +260,7 @@ void NutrientRemviaSr::Phosphorusloss(){
 		for(int k = 1; k < m_nSoilLayers[i]; k++) {
 			vap = 0.;
 			//if (k != m_i_sep[i]) {  // soil layer where biozone exists (m_i_sep)
-				vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((m_conv_wt[i][k] / 1000.) * m_pperco[i]);
+				vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((m_conv_wt[i][k] / 1000.) * m_pperco);
 				vap = min(vap, .2 * m_sol_solp[i][k]);
 				m_sol_solp[i][k] = m_sol_solp[i][k] - vap;
 			//}

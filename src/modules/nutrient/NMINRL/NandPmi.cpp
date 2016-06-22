@@ -18,7 +18,7 @@ using namespace std;
 
 NandPim::NandPim(void):
 	//input 
-	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_cmn(NULL), m_cdn(NULL), m_idplt(NULL), m_nactfr(NULL), m_psp(NULL), m_sol_z(NULL),
+	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_cmn(NULL), m_cdn(NULL), m_landcover(NULL), m_nactfr(NULL), m_psp(NULL), m_sol_z(NULL),
 	m_rsdco_pl(NULL), m_sol_cbn(NULL), m_sol_st(NULL), m_sol_tmp(NULL), m_sol_ul(NULL), m_sol_nh3(NULL), m_sol_fc(NULL), m_sol_wpmm(NULL),
 	m_sol_actp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_no3(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL),
 	m_sol_rsd(NULL), m_sol_solp(NULL), m_wshd_dnit(-1), m_wshd_hmn(-1), m_wshd_hmp(-1), m_wshd_rmn(-1), m_wshd_rmp(-1), m_wshd_rwn(-1),
@@ -56,7 +56,7 @@ bool NandPim::CheckInputData() {
 	if(this -> m_nSoilLayers == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
 	if(this -> m_cmn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
 	if(this -> m_cdn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_idplt == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_landcover == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
 	if(this -> m_nactfr == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
 	if(this -> m_psp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
 	if(this -> m_sol_z == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
@@ -119,7 +119,7 @@ void NandPim::Set1DData(const char* key,int n, float *data)
 	if(!this->CheckInputSize(key,n)) return;
 	string sk(key);
 	if (StringMatch(sk, VAR_CDN)) {this -> m_cdn = data;} 
-	else if (StringMatch(sk, VAR_LCC)) {this -> m_idplt = data;}
+	else if (StringMatch(sk, VAR_LCC)) {this -> m_landcover = data;}
 	else if (StringMatch(sk, VAR_PL_RSDCO)) {this -> m_rsdco_pl = data;}
 	else if (StringMatch(sk, VAR_PSP)) {this -> m_psp = data;}
 	else if(StringMatch(sk,  VAR_SOILLAYERS)) m_nSoilLayers = data;
@@ -289,8 +289,8 @@ void NandPim::CalculateMinerandImmobi(int i) {
 					float rdc = 0;
 					//Calculate ca, equation 3:1.2.8 in SWAT Theory 2009, p190
 					ca = min(min(cnrf, cprf), 1);
-					if (m_idplt[i] > 0) {
-						decr = m_rsdco_pl[(int)m_idplt[i]] * ca * csf;
+					if (m_landcover[i] > 0) {
+						decr = m_rsdco_pl[(int)m_landcover[i]] * ca * csf;
 					} else {
 						decr = 0.05;
 					}

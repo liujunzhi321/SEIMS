@@ -59,7 +59,7 @@ private:
 	//rate coefficient for denitrification
 	float* m_cdn;
 	///land cover code from crop.dat
-	float* m_idplt;
+	float* m_landcover;
 	///plant residue decomposition coefficient.
 	///The fraction of residue which will decompose in a day assuming optimal moisture, temperature, C:N ratio, and C:P ratio
 	float* m_rsdco_pl;
