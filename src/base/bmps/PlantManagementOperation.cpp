@@ -1,3 +1,9 @@
+/*!
+ * \file PlantManagementOperation.cpp
+ * \brief
+ * \author Liang-Jun Zhu
+ * \date June 2016
+ */
 #include "PlantManagementOperation.h"
 #include <sstream>
 #include <iomanip>
@@ -41,4 +47,292 @@ void PlantOperation::dump(ostream *fs)
 		" Heat Units: "<<m_heatUnits<<" Initial LAI: "<<m_laiInit<<
 		" Initial Biomass: "<<m_bioInit<<" Harvest Index: "<<m_hiTarg<<
 		" Biomass target: "<<m_bioTarg<<" CNOP: "<<m_CNOP<<endl;
+}
+
+/// Irrigation
+IrrigationOperation::IrrigationOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_irrSrc = int(parameters[1]);
+	m_irrAmt = parameters[3];
+	m_irrSalt = parameters[4];
+	m_irrEfm = parameters[5];
+	m_irrSq = parameters[6];
+	m_irrNo = int(parameters[7]);
+}
+IrrigationOperation::~IrrigationOperation()
+{
+}
+void IrrigationOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Irrigation Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Irrigation Source: "<<m_irrSrc<< " Applied Depth: " << m_irrAmt<<
+		" Salt: "<<m_irrSalt<<" Efficiency: "<<m_irrEfm<<
+		" Surface Runoff Ratio: "<<m_irrSq<<" Source LocationID: "<<m_irrNo<<endl;
+}
+
+/// Fertilizer
+FertilizerOperation::FertilizerOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_fertID = int(parameters[0]);
+	m_frtKg = parameters[3];
+	m_frtSurface = parameters[4];
+}
+FertilizerOperation::~FertilizerOperation()
+{
+}
+void FertilizerOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Fertilizer Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Fertilizer ID: "<<m_fertID<< " Amount (kg): " << m_frtKg<<
+		" Fraction Applied in Surface: "<<m_frtSurface<<endl;
+}
+
+/// Pesticide
+PesticideOperation::PesticideOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_pestID = int(parameters[0]);
+	m_pstKg = parameters[3];
+	m_pstDep = parameters[4];
+}
+PesticideOperation::~PesticideOperation()
+{
+}
+void PesticideOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Pesticide Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Pesticide ID: "<<m_pestID<< " Amount (kg): " << m_pstKg<<
+		" Applied Depth (mm): "<<m_pstDep<<endl;
+}
+
+/// HarvestKill
+HarvestKillOperation::HarvestKillOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_CNOP = parameters[3];
+	m_hiOvr = parameters[4];
+	m_fracHarvk = parameters[5];
+}
+HarvestKillOperation::~HarvestKillOperation()
+{
+}
+void HarvestKillOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "HarvestKill Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" CNOP: "<<m_CNOP<< " Harvest Index Override: " << m_hiOvr<<
+		" Stover Fraction Removed: "<<m_fracHarvk<<endl;
+}
+
+/// Tillage
+TillageOperation::TillageOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_tillID = int(parameters[0]);
+	m_CNOP = parameters[3];
+}
+TillageOperation::~TillageOperation()
+{
+}
+void TillageOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Tillage Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Tillage ID: "<<m_tillID<< " CNOP: " << m_CNOP<<endl;
+}
+
+/// HarvestOnly
+HarvestOnlyOperation::HarvestOnlyOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_harvEff = parameters[3];
+	m_hiBms = parameters[4];
+	m_hiRsd = parameters[5];
+}
+HarvestOnlyOperation::~HarvestOnlyOperation()
+{
+}
+void HarvestOnlyOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "HarvestOnly Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Harvest Efficiency: "<<m_harvEff<< " Harvest Index Biomass: " << m_hiBms<<
+		" Harvest Index Residue: " << m_hiRsd<<endl;
+}
+
+/// Kill
+KillOperation::KillOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+}
+KillOperation::~KillOperation()
+{
+}
+void KillOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Kill Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<endl;
+}
+
+/// Grazing
+GrazingOperation::GrazingOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_grzDays = int(parameters[0]);
+	m_manureID = int(parameters[1]);
+	m_bioEat = parameters[3];
+	m_bioTrmp = parameters[4];
+	m_manureKg = parameters[5];
+}
+GrazingOperation::~GrazingOperation()
+{
+}
+void GrazingOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Grazing Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Grazing Days: "<<m_grzDays<< " Manure ID: " << m_manureID<<
+		" Biomass Consumed: "<<m_bioEat<<" Biomass Trampled: "<<m_bioTrmp<<
+		" Manure Deposited: "<<m_manureKg<<endl;
+}
+
+/// AutoIrrigation
+AutoIrrigationOperation::AutoIrrigationOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_wstrsID = int(parameters[0]);
+	m_irrSrc = int(parameters[1]);
+	m_autoWstrs = parameters[3];
+	m_irrEff = parameters[4];
+	m_irrMx = parameters[5];
+	m_irrAsq = parameters[6];
+	m_irrNoa = int(parameters[9]);
+}
+AutoIrrigationOperation::~AutoIrrigationOperation()
+{
+}
+void AutoIrrigationOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "AutoIrrigation Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Water Stress Identifier: "<<m_wstrsID<< " AutoIrrigation Source: " << m_irrSrc<<
+		" Source Location ID: "<<m_irrNoa<<" Water Stress Threshold: "<<m_autoWstrs<<
+		" Efficiency: "<<m_irrEff<<" Water Applied (mm): "<<m_irrMx<<
+		" Surface Runoff Ratio: "<<m_irrAsq<<endl;
+}
+
+/// AutoFertilizer
+AutoFertilizerOperation::AutoFertilizerOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_afertID = int(parameters[0]);
+	m_NStress = int(parameters[1]);
+	m_autoNStrs = parameters[3];
+	m_autoNAPP = parameters[4];
+	m_autoNYR = parameters[5];
+	m_autoEff = parameters[6];
+	m_afrtSurface = parameters[7];
+}
+AutoFertilizerOperation::~AutoFertilizerOperation()
+{
+}
+void AutoFertilizerOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "AutoFertilizer Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Fertilizer ID: "<<m_afertID<< " Nitrogen Method: " << m_NStress<<
+		" Nitrogen Stress Factor: "<<m_autoNStrs<<" MaxMineral Nitrogen: "<<m_autoNAPP<<
+		" MaxMineral Nitrogen Yearly: "<<m_autoNYR<<" Fertilizer Efficiency: "<<m_autoEff<<
+		" Surface Fraction Applied: "<<m_afrtSurface<<endl;
+}
+
+/// ReleaseImpound
+ReleaseImpoundOperation::ReleaseImpoundOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_impTrig = int(parameters[0]);
+}
+ReleaseImpoundOperation::~ReleaseImpoundOperation()
+{
+}
+void ReleaseImpoundOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Release/Impound Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Impound Trigger: "<<m_impTrig<<endl;
+}
+
+/// ContinuousFertilizer
+ContinuousFertilizerOperation::ContinuousFertilizerOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_cfertID = int(parameters[1]);
+	m_fertDays = int(parameters[0]);
+	m_ifrtFreq = int(parameters[2]);
+	m_cfrtKg = parameters[3];
+}
+ContinuousFertilizerOperation::~ContinuousFertilizerOperation()
+{
+}
+void ContinuousFertilizerOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Continuous Fertilizer Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Fertilizer ID: "<<m_cfertID<< " Amount (kg): " << m_cfrtKg<<
+		" Frequency: "<<m_ifrtFreq<<" Duration Days: "<<m_fertDays<<endl;
+}
+
+/// Continuous Pesticide
+ContinuousPesticideOperation::ContinuousPesticideOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_ipstID = int(parameters[0]);
+	m_pstDays = int(parameters[1]);
+	m_pstFreq = int(parameters[2]);
+	m_cpstKg = parameters[3];
+}
+ContinuousPesticideOperation::~ContinuousPesticideOperation()
+{
+}
+void ContinuousPesticideOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Continuous Pesticide Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Pesticide ID: "<<m_ipstID<< " Amount (kg): " << m_cpstKg<<
+		" Frequency: "<<m_pstFreq<<" Duration Days: "<<m_pstDays<<endl;
+}
+
+/// Burning
+BurningOperation::BurningOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
+PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
+{
+	m_burnFrlb = parameters[3];
+}
+BurningOperation::~BurningOperation()
+{
+}
+void BurningOperation::dump(ostream *fs)
+{
+	if(fs == NULL) return;
+	*fs	<< "Burning Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
+		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+		" Fraction Left: "<<m_burnFrlb<<endl;
 }

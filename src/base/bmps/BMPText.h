@@ -119,7 +119,6 @@
 #define BMP_PLTOP_Grazing			9
 #define BMP_PLTOP_AutoIrrigation	10
 #define BMP_PLTOP_AutoFertilizer	11
-#define BMP_PLTOP_StreetSweeping			12
 #define BMP_PLTOP_ReleaseImpound		13
 #define BMP_PLTOP_ContinuousFertilizer	14
 #define BMP_PLTOP_ContinuousPesticide	15
