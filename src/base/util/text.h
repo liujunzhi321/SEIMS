@@ -705,6 +705,7 @@
 #define VAR_SBOF "SBOF"                             /// overland flow to streams from each subbasin
 #define VAR_SBPET "SBPET"                           /// the potential evapotranspiration rate of the subbasin
 #define VAR_SBQG "SBQG"                             /// groundwater flow out of the subbasin
+#define VAR_SCENARIO "SCENARIO"
 #define VAR_SED_DEP "SEDDEP"
 #define VAR_SED_OUTLET "SEDOUTLET"
 #define VAR_SED_RECH "SEDRECH"
@@ -1152,6 +1153,7 @@
 #define DESC_SBOF "overland flow to streams from each subbasin"
 #define DESC_SBPET "the potential evapotranspiration rate of the subbasin"
 #define DESC_SBQG "groundwater flow out of the subbasin"
+#define DESC_SCENARIO "BMPs scenario information"
 #define DESC_SED_DEP "distribution of sediment deposition"
 #define DESC_SED_OUTLET "Sediment concentration at the watershed outlet"
 #define DESC_SED_RECH "Sediment in a text format at each reach outlet and at each time step"
