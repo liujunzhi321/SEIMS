@@ -1,4 +1,4 @@
-ID	Name	Type	Priority
+ID	NAME	TYPE	PRIORITY
 1	Point source	1	1
 2	Stream flow diversion	1	1
 3	Reservoir	1	1
