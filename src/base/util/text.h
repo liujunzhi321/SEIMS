@@ -196,6 +196,7 @@
 #define DB_TAB_LOOKUP_LANDUSE	"LanduseLookup"
 #define DB_TAB_LOOKUP_SOIL		"SoilLookup"
 #define DB_TAB_SITELIST			"SiteList"
+#define DB_TAB_SCENARIO		"BMPDatabase"
 #define DB_TAB_REACH			"reaches"
 #define DB_TAB_SPATIAL			"spatial"  /// spatial.files
 #define DB_TAB_SITES			"Sites"
