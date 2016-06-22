@@ -110,6 +110,9 @@ public:
 	 * \return The split strings vector
 	 */
 	static vector<string> SplitString(string item, char delimiter);
+
+	static vector<int> utils::SplitStringForInt(string item, char delimiter);
+	static vector<float> utils::SplitStringForFloat(string item, char delimiter);
 	/*!
 	 * \brief Splits the given string by spaces
 	 *

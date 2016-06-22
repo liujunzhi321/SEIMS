@@ -112,6 +112,10 @@ private:
 	mongoc_gridfs_t				*m_outputGfs;
 	//! Model name
 	string						m_dbName;
+	//! Scenario ID
+	int						m_scenarioID;
+	//! thread number for omp
+	int						m_threadNum;
 	//! SubBasin ID
 	int							m_subBasinID;
 	//! Parameters information map
@@ -139,7 +143,6 @@ private:
 	 * \TODO NEED TO BE UPDATED
 	 * 1. The output id should be valid for moduls in config files;
 	 * 2. The date range should be in the data range of file.in;
-	 * 3. Assign MASK clsRasterData to \sa m_templateRasterData
 	 * The method should be called after config, input and output is initialed.
 	 *
 	 * \param[in] gfs \a mongoc_gridfs_t
@@ -150,12 +153,11 @@ private:
 	 * \TODO NEED TO BE UPDATED
 	 * 1. The output id should be valid for moduls in config files;
 	 * 2. The date range should be in the data range of file.in;
-	 * 3. Assign MASK clsRasterData to \sa m_templateRasterData
 	 * The method should be called after config, input and output is initialed.
 	 *
 	 * \param[in] gfs \a mongoc_gridfs_t
 	 */
-	void CheckOutput(SettingsOutput* output,SettingsInput* input);
+	void CheckOutput();
 	//! Check module input data, date and execute module
 	void Step(time_t t, int yearIdx, vector<int>& moduleIndex, bool firstRun);
 

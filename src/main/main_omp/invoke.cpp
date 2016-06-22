@@ -138,7 +138,7 @@ bool isPathExists(const char *path)
 	return isExists;
 }
 
-void MainMongoDB(string modelPath,char *host,int port,int scenarioID, int numThread, LayeringMethod layingMethod)
+void MainMongoDB(string modelPath,char *host,int port, int scenarioID, int numThread, LayeringMethod layingMethod)
 {
 	try
 	{
@@ -163,10 +163,10 @@ void MainMongoDB(string modelPath,char *host,int port,int scenarioID, int numThr
 		bson_t			*reply = bson_new();
 		bson_error_t	*err = NULL;
 		if(!mongoc_client_get_server_status(conn,NULL,reply,err))
-			throw ModelException("SEIMS","MainMongoDB","Failed to connect to MongoDB!\n");
+			throw ModelException(MODEL_NAME,"MainMongoDB","Failed to connect to MongoDB!\n");
 		bson_destroy(reply);
 		
-		// TODO: ADD CHECK DATABASE AND TABLE, LJ.
+		/// TODO: ADD CHECK DATABASE AND TABLE, LJ.
 		char		**dbnames;
 		unsigned	i;
 		bool		dbExist = false;
@@ -182,12 +182,11 @@ void MainMongoDB(string modelPath,char *host,int port,int scenarioID, int numThr
 			bson_strfreev(dbnames);
 		}
 		if(!dbExist)
-			throw ModelException("SEIMS","MainMongoDB","Database: " + dbName + " is not existed in MongoDB!\n");
-		// CHECK FINISHED
+			throw ModelException(MODEL_NAME,"MainMongoDB","Database: " + dbName + " is not existed in MongoDB!\n");
+		/// CHECK FINISHED
 
 		int nSubbasin = 1;
-		int scenarioID = 0;
-		SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, nSubbasin);
+		SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, nSubbasin, scenarioID);
 		ModuleFactory *factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName);
 
 		ModelMain main(conn, dbName, projectPath, input, factory, nSubbasin, scenarioID, numThread, layingMethod);
@@ -196,18 +195,15 @@ void MainMongoDB(string modelPath,char *host,int port,int scenarioID, int numThr
 
 		delete factory;
 		mongoc_uri_destroy(uri);
-		//mongoc_client_destroy(conn);
 		mongoc_cleanup();
 	}
 	catch(ModelException e)
 	{
 		cout << e.toString() << endl;
-		//if(main != NULL) delete main;
 	}
 	catch(exception e)
 	{
 		cout << e.what() << endl;
-		//if(main != NULL) delete main;
 	}
 }
 

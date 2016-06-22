@@ -22,7 +22,7 @@ string ManagementOperation::UniqueID()
 string ManagementOperation::ManagementOperation2ID(int location,int year, int month, int day)
 {
 	ostringstream os;
-	os	<< setw(8) << setfill('0') << location << "|"
+	os << setw(8) << setfill('0') << location << "|"
 		<< setw(4) << setfill('0') << year << "|"
 		<< setw(2) << setfill('0') << month << "|"
 		<< setw(2) << setfill('0') << day;

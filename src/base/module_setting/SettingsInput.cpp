@@ -15,14 +15,19 @@
 #include <cstdlib>
 using namespace std;
 
-SettingsInput::SettingsInput(string fileName, mongoc_client_t* conn, string dbName, int nSubbasin, int scenarioID):m_subbasinID(nSubbasin)
+SettingsInput::SettingsInput(string fileName, mongoc_client_t* conn, string dbName, int nSubbasin, int scenarioID):
+m_subbasinID(nSubbasin),m_scenarioID(scenarioID),m_dbName(dbName)
 {
 	size_t index = fileName.find_last_of(SEP);
 	string projectPath = fileName.substr(0,index+1);
 
 	m_conn = conn;
 	m_scenario = NULL;
-	//if(scenarioID != -1) m_scenario = new Scenario(projectPath,scenarioID); //-1 means this model doesn't need scenario information
+	if(m_scenarioID != -1) /// -1 means this model doesn't need scenario information
+	{
+		GetBMPScenarioDBName();
+		m_scenario = new Scenario(m_conn, m_dbScenario, m_scenarioID); 
+	}
 	LoadSettingsFromFile(fileName,dbName);
 }
 //! Destructor 
@@ -68,67 +73,31 @@ bool SettingsInput::readDate()
 	return true;
 }
 
-//bool SettingsInput::readTimeSeriesData()
-//{
-//	for (size_t i=0; i<m_Settings.size(); i++)
-//	{		
-//		//if (StringMatch(m_Settings[i][0], Tag_SiteName) && m_Settings[i].size() == 3 )
-//		//{
-//		//	m_inputStation->readOneStationData(atoi(m_Settings[i][1].c_str()), trim(m_Settings[i][2]));
-//		//} 
-//		//if (StringMatch(m_Settings[i][0], Tag_ReachName) && m_Settings[i].size() == 4)
-//		//{	
-//		//	m_inputReach->readOneReachData(m_Settings[i][1],m_Settings[i][2],m_Settings[i][3]);
-//		//} 
-//	}
-//	
-//	return true;
-//}
-
-//void SettingsInput::buildTimeQuery(time_t startTime, time_t endTime, bson* query)
-//{
-//	//bson_append_start_object(query, "MEASURE_TIME");
-//	//bson_append_date(query, "$gte", startTime*1000);
-//	//bson_append_date(query, "$lte", endTime*1000);
-//	//bson_append_finish_object(query);
-//	
-//}
-//! build query for mongodb
-//void SettingsInput::buildQuery(const set<int>& idSet, const string& type, bson* query)
-//{
-//	set<int>::iterator it;
-//
-//	// id
-//	if (!idSet.empty())
-//	{
-//		bson con_id[1];
-//		bson_init(con_id);
-//		bson_append_start_array(con_id, "$in");
-//		int i = 0;
-//		ostringstream oss;
-//		for (it = idSet.begin(); it != idSet.end(); ++it)
-//		{
-//			oss.str("");
-//			oss << i;
-//			bson_append_int(con_id, oss.str().c_str(), *it);
-//			i++;
-//		}
-//		bson_append_finish_array(con_id);
-//		bson_finish(con_id);
-//		bson_append_bson(query, "ID", con_id);
-//	}
-//
-//	// type
-//	bson_append_string(query, "TYPE", type.c_str());
-//
-//}
-
+void SettingsInput::GetBMPScenarioDBName()
+{
+	bson_t *query;
+	query = bson_new();
+	mongoc_cursor_t *cursor;
+	mongoc_collection_t	*collection;
+	const bson_t *doc;
+	collection = mongoc_client_get_collection(m_conn,m_dbName.c_str(),DB_TAB_SCENARIO);
+	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,query,NULL,NULL);
+	while(mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor,&doc)){
+		bson_iter_t iter;
+		if (bson_iter_init (&iter, doc) && bson_iter_find (&iter,MONG_SITELIST_DB)){
+			m_dbScenario = GetStringFromBSONITER(&iter);
+			break;
+		}
+	}
+	bson_destroy(query);
+	mongoc_cursor_destroy(cursor);
+	mongoc_collection_destroy(collection);
+}
 
 void SettingsInput::ReadSiteList()
 {
 	bson_t *query;
 	query = bson_new();
-
 	// subbasin id
 	BSON_APPEND_INT32(query, Tag_SubbasinId, m_subbasinID);
 	// mode
@@ -172,7 +141,6 @@ void SettingsInput::ReadSiteList()
 			m_inputStation->ReadSitesData(m_dbHydro, siteList, DataType_PotentialEvapotranspiration, m_startDate, m_endDate, stormMode);
 		}
 	}
-
 	bson_destroy(query);
 	mongoc_cursor_destroy(cursor);
 	mongoc_collection_destroy(collection);

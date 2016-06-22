@@ -253,6 +253,23 @@ vector<string> utils::SplitString(string item, char delimiter)
 	return tokens;
 }
 
+vector<int> utils::SplitStringForInt(string item, char delimiter)
+{
+	vector<string> valueStrs = utils::SplitString(item, delimiter);
+	vector<int> values;
+	for (vector<string>::iterator it = valueStrs.begin(); it != valueStrs.end(); it++)
+		values.push_back(atoi((*it).c_str()));
+	vector<int>(values).swap(values);
+	return values;
+}
+vector<float> utils::SplitStringForFloat(string item, char delimiter)
+{
+	vector<string> valueStrs = utils::SplitString(item, delimiter);
+	vector<float> values(valueStrs.size());
+	for (vector<string>::iterator it = valueStrs.begin(); it != valueStrs.end(); it++)
+		values.push_back(atof((*it).c_str()));
+	return values;
+}
 vector<string> utils::SplitString(string item)
 {
 	istringstream iss(item); 
