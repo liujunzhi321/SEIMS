@@ -187,7 +187,11 @@ void MainMongoDB(string modelPath,char *host,int port, int scenarioID, int numTh
 
 		int nSubbasin = 1;
 		SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, nSubbasin, scenarioID);
-		ModuleFactory *factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName);
+		ModuleFactory *factory;
+		if(scenarioID >= 0 && input->BMPScenario() != NULL)
+			factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName, layingMethod,input->BMPScenario());
+		else
+			factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName, layingMethod);
 
 		ModelMain main(conn, dbName, projectPath, input, factory, nSubbasin, scenarioID, numThread, layingMethod);
 		main.Execute();	

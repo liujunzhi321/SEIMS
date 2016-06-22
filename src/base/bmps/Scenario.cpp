@@ -239,7 +239,7 @@ void Scenario::Dump(string fileName)
 {
 	ofstream fs;
 	utils util;
-	fs.open(fileName.c_str(), ios::out);
+	fs.open(fileName.c_str(), ios::ate);
 	if (fs.is_open())
 	{
 		Dump(&fs);

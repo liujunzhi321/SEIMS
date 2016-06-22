@@ -120,29 +120,4 @@ def BuildMongoDB(workingDir, modelName, stormMode, forCluster,
 
 ## test code
 if __name__ == "__main__":
-
-    workingDir = r"/data/hydro_preprocessing/fenkeng"
-
-    modelName = "model_fenkeng"
-    genIUH = True 
-    forCluster = True 
-    stormMode = True 
-    
-    if len(sys.argv) >= 5:
-        workingDir = sys.argv[1]
-        modelName = sys.argv[2]
-        if int(sys.argv[3]) > 0:
-            stormMode = True
-        if int(sys.argv[4]) > 0:
-            forCluster = True
-
-    if stormMode:
-        genIUH = False
-    else:
-        genIUH = True
-
-    if forCluster and 'cluster_' not in modelName.lower():
-        modelName = 'cluster_' + modelName
-
-    BuildMongoDB(workingDir, modelName, stormMode, genIUH, forCluster) 
-
+    BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesThiessen, MeteorSitesThiessen)

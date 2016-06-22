@@ -113,7 +113,7 @@ def ImportPrecipitation(db,ClimateDateFile,sitesLoc):
         for j in range(len(StationID)):
             curDic = {}
             curDic[Tag_DT_Value] = precipitation[j]
-            curDic[Tag_DT_StationID] = StationID[j]
+            curDic[Tag_DT_StationID] = int(StationID[j])
             curDic[Tag_DT_Type] = DataType_Precipitation
             curDic[Tag_DT_Zone] = dic[Tag_DT_Zone]
             curDic[Tag_DT_LocalT] = dic[Tag_DT_LocalT]

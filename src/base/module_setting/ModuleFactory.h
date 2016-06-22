@@ -23,13 +23,14 @@
 #include "clsInterpolationWeightData.h"
 #include "clsRasterData.h"
 #include "SettingsInput.h"
+#include "Scenario.h"
 #ifndef linux
 #include <Windows.h>
 #endif
 
 
 using namespace std;
-
+using namespace MainBMP;
 class ModuleFactory 
 {
 public:
@@ -41,7 +42,17 @@ public:
 	 * \param[in] conn \a mongoc_client_t
 	 * \param[in] dbName name of your model
 	 */
-	ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName);
+	ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod);
+	/*!
+	 * \brief Constructor of ModuleFactory from config file and BMP database
+	 * By default, the layering method is UP_DOWN
+	 * \param[in] configFileName config.fig file which contains modules list for Simulation
+	 * \param[in] modelPath the path of your model
+	 * \param[in] conn \a mongoc_client_t
+	 * \param[in] dbName name of your model
+	 * \param[in] scenario BMPs scenario data
+	 */
+	ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario);
 	//! Destructor
 	~ModuleFactory(void);
 
@@ -114,6 +125,8 @@ private:
 	map<string, clsInterpolationWeightData*> m_weightDataMap;
 	//! Raster data (include 1D and/or 2D) map
 	map<string, clsRasterData*>			m_rsMap;
+	//! BMPs Scenario data
+	Scenario*									m_scenario;
 
 private:
 	//! Initialization, read the config.fig file and initialize
@@ -140,11 +153,9 @@ private:
 	string GetComparableName(string& paraName);
 	//! Find dependent parameters 
 	ParamInfo* FindDependentParam(ParamInfo& paramInfo);
-
-	void ConnectMongoDB();
 	//! Read parameter settings from MongoDB
 	void ReadParametersFromMongoDB();
-	//! Set data
+	//! Set data for modules, include all datatype
 	void SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* setting, ParamInfo* param, clsRasterData* templateRaster, 
 		SettingsInput* settingsInput, SimulationModule* pModule, bool vertitalItp);
 	//! Set single Value
@@ -155,6 +166,8 @@ private:
 	void Set2DData(string& dbName, string& paraName, int nSubbasin, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule);
 	//! Set raster data
 	void SetRaster(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule);
+	//! Set BMPs Scenario data
+	void SetScenario(SimulationModule* pModule);
 	//! Read multiply reach information from file
 	//void ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nRows, int& nCols, float**& data);
 	//! Read single reach information 

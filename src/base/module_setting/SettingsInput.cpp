@@ -26,7 +26,8 @@ m_subbasinID(nSubbasin),m_scenarioID(scenarioID),m_dbName(dbName)
 	if(m_scenarioID != -1) /// -1 means this model doesn't need scenario information
 	{
 		GetBMPScenarioDBName();
-		m_scenario = new Scenario(m_conn, m_dbScenario, m_scenarioID); 
+		m_scenario = new Scenario(m_conn, m_dbScenario, m_scenarioID);
+		//m_scenario->Dump("e:\\test\\bmpScenario.txt");/// Write BMPs Scenario Information to Text file
 	}
 	LoadSettingsFromFile(fileName,dbName);
 }

@@ -8,6 +8,7 @@ from util import *
 def txt2Sqlite(dataFiles, dbFile):
     dataImport = {} ### format: {tabName:[fieldName, Units, dataRows]}
     for dataFileItem in dataFiles:
+        #print dataFileItem
         dataPath = TXT_DB_DIR + os.sep + dataFileItem[1] + ".txt"
         dataItems = ReadDataItemsFromTxt(dataPath)
         if dataFileItem[0] == Tag_Params:
