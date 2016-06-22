@@ -44,7 +44,7 @@ public:
 	time_t getDtChannel(void) const;
 	//! Get daily time interval of simulation in sec
 	time_t getDtDaily() const;
-	//! Get scenario ID
+	//! Get scenario data
 	Scenario* BMPScenario();
 	//! Get data of input HydroClimate stations
 	InputStation* StationData();
@@ -67,6 +67,8 @@ private:
 	string			m_dbName;
 	//! HydroClimate database name
 	string			m_dbHydro;
+	//! BMPs Scenario database name
+	string			m_dbScenario;
 	//! MongoDB client
 	mongoc_client_t*m_conn;
 	//! HydroClimate site list <siteType, siteIDList>
@@ -75,6 +77,8 @@ private:
 	int m_subbasinID;
 	//! Simulation mode, can be DAILY or HOURLY
 	string m_mode;
+	//! BMPs Scenario ID
+	int m_scenarioID;
 private:
 
 	//void buildTimeQuery(time_t startTime, time_t endTime, bson_t* query);/// Deprecated
@@ -83,7 +87,9 @@ private:
 	//! Read start and end date, simulation mode and time interval
 	bool readDate(void);
 	///bool readTimeSeriesData(void);///Deprecated
-	//! 
+	//! Read HydroClimate site list
 	void ReadSiteList();
+	//! Query and get BMP scenario database name
+	void GetBMPScenarioDBName();
 };
 
