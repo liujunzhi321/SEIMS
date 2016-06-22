@@ -188,7 +188,7 @@ Nutrient	ai3	Rate of oxygen production per unit algal photosynthesis	mg/mg	NutCH
 Nutrient	ai4	Rate of oxygen uptake per unit algal respiration	mg/mg	NutCHRout	2.0	0	AC	2.3	1.6	Y
 Nutrient	ai5	Rate of oxygen uptake per unit NH3-N oxidation	mg/mg	NutCHRout	3.5	0	AC	4	3	Y
 Nutrient	ai6	Rate of oxygen uptake per unit NO2-N oxidation	mg/mg	NutCHRout	1.07	0	AC	1.14	1	Y
-Nutrient	lambda0	Non-algal portion of hte light extinction coefficient	1/m	NutCHRout	1	0	AC	10	0	Y					
+Nutrient	lambda0	Non-algal portion of hte light extinction coefficient	1/m	NutCHRout	1	0	AC	10	0	Y
 Nutrient	lambda1	Linear algal self-shading coefficient	(1/m)1/(ug chla/L)	NutCHRout	0.03	0	AC	0.065	0.0065	Y
 Nutrient	lambda2	Nonlinear alga self-shading coefficient	(1/m)(ug chla/L)^(-2/3)	NutCHRout	0.0541	0	AC	1	0	Y
 Nutrient	k_l	Half-saturation coefficient for light	MJ/(m2*hr)	NutCHRout	0.75	0	AC	1.135	0.223	Y
