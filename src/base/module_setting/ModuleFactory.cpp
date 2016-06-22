@@ -40,8 +40,8 @@
 #include "MongoUtil.h"
 //#include "DBManager.h"
 
-ModuleFactory::ModuleFactory(const string& configFileName, const string& modulePath, mongoc_client_t* conn, const string& dbName)
-	:m_modulePath(modulePath), m_conn(conn), m_dbName(dbName), m_layingMethod(UP_DOWN)
+ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod)
+	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod)
 {
 	Init(configFileName);
 #ifdef USE_MONGODB
@@ -53,7 +53,19 @@ ModuleFactory::ModuleFactory(const string& configFileName, const string& moduleP
 	}
 #endif
 }
-
+ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario)
+	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod), m_scenario(scenario)
+{
+	Init(configFileName);
+#ifdef USE_MONGODB
+	bson_error_t *err = NULL;
+	m_spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
+	if (err != NULL)
+	{
+		throw ModelException("ModuleFactory","Constructor","Failed to connect to GridFS!\n");
+	}
+#endif
+}
 ModuleFactory::~ModuleFactory(void)
 {
 #ifdef USE_MONGODB
@@ -102,8 +114,6 @@ void ModuleFactory::Init(const string& configFileName)
 	ReadConfigFile(configFileName.c_str());
 #ifdef USE_MONGODB
 	ReadParametersFromMongoDB();
-//#else
-	//ReadParametersFromSQLite();
 #endif
 
 	size_t n = m_moduleIDs.size();
@@ -912,6 +922,9 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	case DT_LapseRateArray:
 		//SetLapseRateArray();
 		break;
+	case DT_Scenario:
+		SetScenario(pModule);
+		break;
 	default:
 		break;
 	}
@@ -1249,7 +1262,14 @@ void ModuleFactory::SetRaster(string& dbName, string& paraName, string& remoteFi
 		}
 	}
 }
-
+/// Added by Liang-Jun Zhu, 2016-6-22
+void ModuleFactory::SetScenario(SimulationModule* pModule)
+{
+	if(NULL==m_scenario)
+		return;
+	else
+		pModule->SetScenario(m_scenario);
+}
 void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInput* inputSetting, time_t t)
 {
 	size_t n = m_moduleIDs.size();
