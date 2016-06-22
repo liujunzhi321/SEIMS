@@ -7,25 +7,25 @@
  */
 #pragma once
 #include <string>
-#include "MongoUtil.h"
-//#include "DBManager.h"
 #include <map>
-#include "BMPText.h"
-#include "BMPBase.h"
 #include <map>
 #include <vector>
-#include "BMPFactory.h"
-#include "BMPReachFactory.h"
-#include "BMPReachFlowDiversion.h"
-#include "BMPReachPointSource.h"
-#include "BMPReachReservoir.h"
-#include "ManagementOperation.h"
-#include "ManagementOperationPlant.h"
-#include "ManagementOperationHarvest.h"
-#include "ManagementOperationFertilizer.h"
-#include "ManagementOperationTillage.h"
 #include <ostream>
 #include <iomanip>
+#include "MongoUtil.h"
+#include "BMPText.h"
+#include "BMPFactory.h"
+#include "BMPPlantMgtFactory.h"
+//#include "BMPBase.h"
+//#include "BMPReachFactory.h"
+//#include "BMPReachFlowDiversion.h"
+//#include "BMPReachPointSource.h"
+//#include "BMPReachReservoir.h"
+//#include "ManagementOperation.h"
+//#include "ManagementOperationPlant.h"
+//#include "ManagementOperationHarvest.h"
+//#include "ManagementOperationFertilizer.h"
+//#include "ManagementOperationTillage.h"
 
 using namespace std;
 
@@ -66,12 +66,12 @@ namespace MainBMP
 		void loadTimeSeriesData(string databasePath, time_t startTime, time_t endTime,int interval);
 
 	public:
-		//! Get reach structure as \sa BMPReachFlowDiversion
-		BMPReachFlowDiversion*	getFlowDiversion(int reach);
-		//! Get reach structure as \sa BMPReachPointSource
-		BMPReachPointSource*		getPointSource(int reach);
-		//! Get reach structure as \sa BMPReachReservoir
-		BMPReachReservoir*			getReservoir(int reach);
+		////! Get reach structure as \sa BMPReachFlowDiversion
+		//BMPReachFlowDiversion*	getFlowDiversion(int reach);
+		////! Get reach structure as \sa BMPReachPointSource
+		//BMPReachPointSource*		getPointSource(int reach);
+		////! Get reach structure as \sa BMPReachReservoir
+		//BMPReachReservoir*			getReservoir(int reach);
 
 		//! Get maximum reservoir id
 		int getMaxReservoirId();
@@ -79,7 +79,7 @@ namespace MainBMP
 		//-----------------------------------------------
 		//areal non-structural bmp information
 
-		/// Get planting operation at current time
+		/*/// Get planting operation at current time
 		NonStructural::ManagementOperationPlant* getOperationPlant(
 			int validCellIndex,int startYear,time_t currentTime){
 				return (NonStructural::ManagementOperationPlant*)getOperation(validCellIndex,startYear,currentTime,BMP_TYPE_CROP);};
@@ -98,12 +98,12 @@ namespace MainBMP
 		NonStructural::ManagementOperationTillage* getOperationTillage(
 			int validCellIndex,int startYear,time_t currentTime)
 		{return (NonStructural::ManagementOperationTillage*)getOperation(validCellIndex,startYear,currentTime,BMP_TYPE_TILLAGE);};
-		
+		*/
 		//-----------------------------------------------
 
 	private:
 		/// Get reach structural BMP information according to the given reach ID and reach BMP ID
-		BMPReach* getReachStructure(int reach,int reachBMPid);
+		//BMPReach* getReachStructure(int reach,int reachBMPid);
 		/*!
 		 * \brief Get crop/landcover management operation BMP information
 		 *
@@ -114,8 +114,8 @@ namespace MainBMP
 		 * \param[in] useSecond Use second opertion or not
 		 * \return \sa MnagemetnOperation pointer
 		 */
-		NonStructural::ManagementOperation* getOperation(
-			int validCellIndex,int startYear,time_t currentTime,int BMPid,bool useSecond = false);
+		//NonStructural::ManagementOperation* getOperation(
+		//	int validCellIndex,int startYear,time_t currentTime,int BMPid,bool useSecond = false);
 	private:
 		//! MongoDB client object, added by Liangjun
 		mongoc_client_t*	m_conn;
@@ -127,30 +127,32 @@ namespace MainBMP
 		int m_id;
 		/// Scenario Name, e.g., base scenario
 		string m_name;
+
 		/*!
 		 * Model path, used to find BMP.db3 in previous version
 		 * \deprecated now because of the use of MongoDB
 		 */
-		string m_projectPath;
+		//string m_projectPath;
 	private:
 		/*!
 		 * Map of BMPs 
 		 * the index is BMP ID, and the value is \sa BMPFactory
 		 */
 		map<int, BMPFactory*> m_bmpFactories;
-		/// Load scenario information by scenarioID
-		void loadScenario(int scenarioID);
-		/// Get scenario name by scenarioID
+		/// Load scenario information
+		void loadScenario();
+		/// Get scenario name
 		void loadScenarioName();
 		/// Load each BMP in current scenario
 		void loadBMPs();
 		/// Load a single BMP information via \sa BMPFactory
 		void loadBMPDetail();
+
 		/*!
 		 * Get full path of BMP.db3 in previous version
 		 * \deprecated now because of the use of MongoDB
 		 */
-		string bmpPath();
+		//string bmpPath();
 	};
 }
 

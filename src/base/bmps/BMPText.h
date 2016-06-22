@@ -22,14 +22,17 @@
 /// TAB_BMP_SCENARIO
 #define FLD_SCENARIO_ID				"ID"
 #define FLD_SCENARIO_NAME		"NAME"
-#define FLD_SCENARIO_BMPID		"BMP"
+#define FLD_SCENARIO_BMPID		"BMPID"
+#define FLD_SCENARIO_SUB			"SUBSCENARIO"
 #define FLD_SCENARIO_DIST			"DISTRIBUTION"
-#define FLD_SCENARIO_LOOKUP	"PARAMETER"
+#define FLD_SCENARIO_LOOKUP	"COLLECTION"
+#define FLD_SCENARIO_LOCATION "LOCATION"
 /// TAB_BMP_INDEX
 #define FLD_BMP_ID							"ID"
-#define FLD_BMP_TYPE						"Type"
+#define FLD_BMP_TYPE						"TYPE"
+#define FLD_BMP_PRIORITY			"PRIORITY"
 
-//bmp name
+//BMPs
 //also the column name in Reach_BMP table for reach BMPs
 #define BMP_NAME_POINTSOURCE			"PointSource"
 #define BMP_NAME_FLOWDIVERSION_STREAM	"FlowDiversion"
@@ -92,6 +95,8 @@
 #define BMP_TYPE_ISOLATEDPOND			9
 #define BMP_TYPE_TERRACE				10
 #define BMP_TYPE_FLOWDIVERSION_OVERLAND	11
+#define BMP_TYPE_PLANT_MGT		12
+/// TODO
 #define BMP_TYPE_CROP					12
 #define BMP_TYPE_RESIDUAL				13
 #define BMP_TYPE_TILLAGE				14
@@ -101,6 +106,44 @@
 #define BMP_TYPE_IRRIGATION				18
 #define BMP_TYPE_TILEDRAIN				19
 #define BMP_TYPE_URBAN					20
+
+/// Plant management code
+#define BMP_PLTOP_PLANT				1
+#define BMP_PLTOP_Irrigation			2
+#define BMP_PLTOP_Fertilizer			3
+#define BMP_PLTOP_Pesticide			4
+#define BMP_PLTOP_HarvestKill		5
+#define BMP_PLTOP_Tillage				6
+#define BMP_PLTOP_Harvest				7
+#define BMP_PLTOP_Kill					8
+#define BMP_PLTOP_Grazing			9
+#define BMP_PLTOP_AutoIrrigation	10
+#define BMP_PLTOP_AutoFertilizer	11
+#define BMP_PLTOP_StreetSweeping			12
+#define BMP_PLTOP_ReleaseImpound		13
+#define BMP_PLTOP_ContinuousFertilizer	14
+#define BMP_PLTOP_ContinuousPesticide	15
+#define BMP_PLTOP_Burning							16
+
+/// Plant management fields
+#define BMP_PLTOP_FLD_SUB					"SUBSCENARIO"
+#define BMP_PLTOP_FLD_NAME					"NAME"
+#define BMP_PLTOP_FLD_SEQUENCE		"SEQUENCE"
+#define BMP_PLTOP_FLD_YEAR					"YEAR"
+#define BMP_PLTOP_FLD_MONTH				"MONTH"
+#define BMP_PLTOP_FLD_DAY					"DAY"
+#define BMP_PLTOP_FLD_HUSC					"HUSC"
+#define BMP_PLTOP_FLD_MGTOP				"MGT_OP"
+#define BMP_PLTOP_FLD_MGT_PRE			"MGT"
+//#define BMP_PLTOP_FLD_MGT2I				"MGT2I"
+//#define BMP_PLTOP_FLD_MGT3I				"MGT3I"
+//#define BMP_PLTOP_FLD_MGT4I				"MGT4"
+//#define BMP_PLTOP_FLD_MGT5					"MGT5"
+//#define BMP_PLTOP_FLD_MGT6					"MGT6"
+//#define BMP_PLTOP_FLD_MGT7					"MGT7"
+//#define BMP_PLTOP_FLD_MGT8					"MGT8"
+//#define BMP_PLTOP_FLD_MGT9					"MGT9"
+//#define BMP_PLTOP_FLD_MGT10I				"MGT10I"
 
 //BMP Type
 #define BMP_TYPE_REACH					1
