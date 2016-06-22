@@ -28,6 +28,15 @@ int		GetIntFromBSONITER(bson_iter_t *iter)
 	{
 		return (int)vv->value.v_int64;
 	}
+	else if (vv->value_type == BSON_TYPE_DOUBLE)
+	{
+		return (int)vv->value.v_double;
+	}
+	else if (vv->value_type == BSON_TYPE_UTF8)
+	{
+		string tmp = vv->value.v_utf8.str;
+		return atoi(tmp.c_str());
+	}
 	else
 	{
 		throw ModelException("MongoDB Utility", "ReadFromMongoDB", "Failed in get INT value.\n");
@@ -50,6 +59,11 @@ float	GetFloatFromBSONITER(bson_iter_t *iter)
 	else if (vv->value_type == BSON_TYPE_DOUBLE)
 	{
 		return (float)vv->value.v_double;
+	}
+	else if (vv->value_type == BSON_TYPE_UTF8)
+	{
+		string tmp = vv->value.v_utf8.str;
+		return atof(tmp.c_str());
 	}
 	else
 	{
