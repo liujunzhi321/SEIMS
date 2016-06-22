@@ -7,7 +7,8 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-
+#include "Scenario.h"
+using namespace MainBMP;
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
 	return new IO_TEST();
@@ -31,6 +32,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter(VAR_CN2, UNIT_NON_DIM, DESC_CN2, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_CONDUCT, UNIT_WTRDLT_MMH, DESC_CONDUCT, Source_ParameterDB, DT_Raster2D);
+	///test add scenario data
+	mdi.AddParameter(VAR_SCENARIO, UNIT_NON_DIM, DESC_SCENARIO, Source_ParameterDB, DT_Scenario);
 	/// set the output variables
 	mdi.AddOutput("CN2_M",UNIT_NON_DIM, DESC_CN2, DT_Raster1D);
 	mdi.AddOutput("K_M",UNIT_WTRDLT_MMH,DESC_CONDUCT,DT_Raster2D);

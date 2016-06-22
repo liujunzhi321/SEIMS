@@ -5,7 +5,7 @@
 #include "ModelException.h"
 using namespace std;
 IO_TEST::IO_TEST(void):m_nCells(-1), m_raster1D(NULL), m_raster2D(NULL),
-	m_output1Draster(NULL), m_output2Draster(NULL)
+	m_output1Draster(NULL), m_output2Draster(NULL),m_scenario(NULL)
 {
 }
 
@@ -21,6 +21,8 @@ IO_TEST::~IO_TEST(void)
 		delete[] m_output2Draster;
 		m_output2Draster = NULL;
 	}
+	if(m_scenario != NULL)
+		delete m_scenario;
 }
 
 void IO_TEST::Set1DData(const char* key, int n, float* data)
@@ -38,6 +40,11 @@ void IO_TEST::Set2DData(const char* key, int n, int col, float** data)
 		this->m_raster2D = data;
 		this->m_soilLayers = col;
 	}
+}
+void IO_TEST::SetScenario(MainBMP::Scenario* sce)
+{
+	if(NULL != sce)
+		m_scenario = sce;
 }
 bool IO_TEST::CheckInputSize(const char* key, int n)
 {
@@ -92,7 +99,9 @@ int IO_TEST::Execute()
 		for(int j = 0; j < m_soilLayers; j++)
 			m_output2Draster[i][j] = m_raster2D[i][j] + 2.f;
 	}
-	return true;
+	/// Write Scenario Information
+	m_scenario->Dump("e:\\test\\bmpScenario2.txt");
+	return 0;
 }
 
 void IO_TEST::Get1DData(const char* key, int* n, float** data)

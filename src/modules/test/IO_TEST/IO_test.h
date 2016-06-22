@@ -3,7 +3,8 @@
 #include "api.h"
 #include "util.h"
 #include "SimulationModule.h"
-
+#include "Scenario.h"
+using namespace MainBMP;
 using namespace std;
 
 class IO_TEST : public SimulationModule
@@ -21,14 +22,17 @@ private:
 	float* m_output1Draster;
 	/// output 2D raster data
 	float** m_output2Draster;
+	/// BMPs Scenario data
+	Scenario* m_scenario;
 public:
 	IO_TEST(void);
 	~IO_TEST(void);
-	virtual int Execute();
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	virtual void Set2DData(const char* key, int n, int col, float** data);
-	virtual void Get2DData(const char* key, int* n, int* col, float*** data);
+	int Execute();
+	void Set1DData(const char* key, int n, float* data);
+	void Get1DData(const char* key, int* n, float** data);
+	void Set2DData(const char* key, int n, int col, float** data);
+	void Get2DData(const char* key, int* n, int* col, float*** data);
+	void SetScenario(MainBMP::Scenario* sce);
 private:
 	/*!
 	 * \brief check the input data. Make sure all the input data is available.
