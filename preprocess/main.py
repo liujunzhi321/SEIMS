@@ -23,11 +23,11 @@ if __name__ == "__main__":
     ## Update SQLite Parameters.db3 database
     #reConstructSQLiteDB()
     ## Climate Data
-    #SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME,PORT,ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
-    #ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
-    #ImportDailyPrecData(HOSTNAME,PORT,ClimateDBName,PrecDailyFile, SitesPList)
+    SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME, PORT, ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
+    ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
+    ImportDailyPrecData(HOSTNAME, PORT, ClimateDBName, PrecDailyFile, SitesPList)
     ## Measurement Data, such as discharge, sediment yield.
-    #ImportMeasurementData(HOSTNAME,PORT,ClimateDBName,MEASUREMENT_DATA_DIR)
+    ImportMeasurementData(HOSTNAME,PORT,ClimateDBName,MEASUREMENT_DATA_DIR)
     ## Spatial Data derived from DEM
     #SubbasinDelineation(np, WORKING_DIR, dem, outlet_file, threshold, mpiexeDir=MPIEXEC_DIR,exeDir=CPP_PROGRAM_DIR)
     #GenerateSubbasins(WORKING_DIR, exeDir=CPP_PROGRAM_DIR)
@@ -36,4 +36,4 @@ if __name__ == "__main__":
     ## Import to MongoDB database
     #BuildMongoDB(WORKING_DIR, SpatialDBName, stormMode, forCluster, ClimateDBName, PrecSitesThiessen, MeteorSitesThiessen)
     ## Import BMP scenario database to MongoDB
-    ImportBMPTables()
+    #ImportBMPTables()
