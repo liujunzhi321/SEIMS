@@ -32,7 +32,9 @@ def ImportParameters(sqlite_file, db):
                     dic[field_list[i]] = items[i].encode('ascii')
                 else:
                     dic[field_list[i]] = items[i]
-            db[DB_TAB_PARAMETERS].insert_one(dic)
+            curfilter = {PARAM_FLD_NAME: dic[PARAM_FLD_NAME], "TYPE": tablename}
+            db[DB_TAB_PARAMETERS].find_one_and_replace(curfilter, dic, upsert=True)
+            # db[DB_TAB_PARAMETERS].insert_one(dic)
     db[DB_TAB_PARAMETERS].create_index(PARAM_FLD_NAME)
     c.close()
     conn.close()

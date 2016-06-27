@@ -3,6 +3,7 @@
 ## @Meteorological daily data import
 #
 #
+import pymongo
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from util import *
@@ -23,6 +24,7 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                     DataType_RelativeAirMoisture, DataType_WindSpeed]
     for fld in requiredFlds:
         if not StringInList(fld, climFlds):
+            raise ValueError("Meteorological Daily data is invalid, please Check!")
             exit(0)  ### data can not meet the request!
     for i in range(1,len(climDataItems)):
         dic = {}
@@ -83,7 +85,9 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 curDic[Tag_DT_Zone] = dic[Tag_DT_Zone]
                 curDic[Tag_DT_LocalT] = dic[Tag_DT_LocalT]
                 curDic[Tag_DT_Type] = fld
-                db[Tag_ClimateDB_Data].insert_one(curDic)
+                curfilter = {Tag_DT_StationID: dic[Tag_DT_StationID], Tag_DT_UTC: dic[Tag_DT_UTC]}
+                db[Tag_ClimateDB_Data].find_one_and_replace(curfilter, curDic, upsert=True)
+                # db[Tag_ClimateDB_Data].insert_one(curDic)
         if(dic[Tag_DT_StationID] in PHUCalDic.keys()):
             if(curY in PHUCalDic[dic[Tag_DT_StationID]].keys()):
                 PHUCalDic[dic[Tag_DT_StationID]][curY][0].append(dic[DataType_MeanTemperature])
@@ -91,6 +95,10 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 PHUCalDic[dic[Tag_DT_StationID]][curY] = [[dic[DataType_MeanTemperature]]]
         else:
             PHUCalDic[dic[Tag_DT_StationID]] = {curY:[[dic[DataType_MeanTemperature]]]}
+    ## Create index
+    db[Tag_ClimateDB_Data].create_index([(Tag_DT_StationID, pymongo.ASCENDING),
+                                         (Tag_DT_Type, pymongo.ASCENDING),
+                                         (Tag_DT_UTC, pymongo.ASCENDING)])
     ### prepare dic for MongoDB
     for sID in PHUCalDic.keys():
         curPHU0 = 0.
@@ -105,7 +113,10 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
             curDic[Tag_DT_Year] = YYYY
             curDic[Tag_VAR_UNIT] = "heat units"
             curDic[Tag_VAR_Type] = DataType_YearlyHeatUnit
-            db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
+            curfilter = {Tag_DT_StationID: sID, Tag_VAR_Type: DataType_YearlyHeatUnit,
+                         Tag_DT_Yea: YYYY}
+            db[Tag_ClimateDB_ANNUAL_STATS].find_one_and_replace(curfilter, curDic, upsert=True)
+            # db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
         curPHU0 /= float(len(PHUCalDic[sID].keys()))
         PHUCalDic[sID][Datatype_PHU0] = curPHU0
         curDic = {}
@@ -114,7 +125,10 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
         curDic[Tag_DT_Year] = DEFAULT_NODATA
         curDic[Tag_VAR_UNIT] = "heat units"
         curDic[Tag_VAR_Type] = Datatype_PHU0
-        db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
+        curfilter = {Tag_DT_StationID: sID, Tag_VAR_Type: Datatype_PHU0,
+                         Tag_DT_Yea: DEFAULT_NODATA}
+        db[Tag_ClimateDB_ANNUAL_STATS].find_one_and_replace(curfilter, curDic, upsert=True)
+        # db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
 
 def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     try:
@@ -130,7 +144,13 @@ def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     for tb in tables:
         if not StringInList(tb, cList):
             db.create_collection(tb)
-        else:
-            db.drop_collection(tb)
+        # else:
+        #     db.drop_collection(tb)
     ImportDayData(db, meteofile, siteMLoc)
     connMongo.close()
+
+if __name__ == "__main__":
+    from hydroclimate_sites import ImportHydroClimateSitesInfo
+    SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME, PORT, ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
+    ImportDailyMeteoData(HOSTNAME, PORT, ClimateDBName, MeteoDailyFile, SitesMList)
+
