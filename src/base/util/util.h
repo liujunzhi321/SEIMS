@@ -114,6 +114,59 @@ extern string GetPathFromFullName(string& fullFileName);
  */
 extern string GetUpper(string);
 /*!
+ * \brief Initialize DT_Array1D data
+ *
+ * \param[in] row
+ * \param[in] data
+ * \param[in] initialValue
+ */
+template<typename T>
+void Initialize1DArray(int row, T*& data, T initialValue)
+{
+	data = new T[row];
+	for (int i = 0; i < row; i++)
+		data[i] = initialValue;
+}
+/*!
+ * \brief Initialize DT_Array2D data
+ *
+ * \param[in] row
+ * \param[in] row
+ * \param[in] data
+ * \param[in] initialValue
+ */
+template<typename T>
+void Initialize2DArray(int row, int col, T**& data, T initialValue)
+{
+	data = new T*[row];
+	for(int i = 0; i < row; i++)
+	{
+		data[i] = new T[col];
+		for (int j = 0; j < col; j++)
+		{
+			data[i][j] = initialValue;
+		}
+	}
+}
+/*!
+ * \brief Release DT_Array2D data
+ *
+ * \param[in] row
+ * \param[in] row
+ * \param[in] data
+ */
+template<typename T>
+void Release2DArray(int row, int col, T**& data)
+{
+	for(int i = 0; i < row; i++)
+	{
+		if(data[i] != NULL)
+			delete[] data[i];
+	}
+	delete[] data;
+	data = NULL;
+}
+/*!
  * \brief Get local time
  *
  * \param[in] tValue \a time_t date

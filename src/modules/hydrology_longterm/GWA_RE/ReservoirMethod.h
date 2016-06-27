@@ -24,8 +24,8 @@
 *	Date:		2011-3-14
 *	Description:
 *	1.	Add codes to process the groundwater which comes from bank storage in 
-*		channel routing module. The water volumn of this part of groundwater is
-*		added to the groudwater storage. The input variable "T_GWNEW" is used
+*		channel routing module. The water volume of this part of groundwater is
+*		added to the groundwater storage. The input variable "T_GWNEW" is used
 *		for this purpose. One additional parameter is added to function setInputs 
 *		of class subbasin. See equation 8 in memo "Channel water balance" for detailed
 *		reference.

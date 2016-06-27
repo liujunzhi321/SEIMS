@@ -18,6 +18,16 @@ using namespace std;
 */
 int		GetYear(time_t&);
 /*!
+ * \brief Get the month
+ * \return int month
+*/
+int		GetMonth(time_t&);
+/*!
+ * \brief Get the day
+ * \return int day
+*/
+int		GetDay(time_t&);
+/*!
  * \brief Get the Julian day of one day
  * \return int Julian day
 */

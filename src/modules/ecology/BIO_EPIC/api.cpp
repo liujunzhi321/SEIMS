@@ -90,6 +90,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 
 	mdi.AddInput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO,Source_Module,DT_Raster1D);
+	mdi.AddInput(VAR_BIOTARG, UNIT_CONT_KGHA, DESC_BIOTARG,Source_Module, DT_Raster1D); /// used after plant operation
 	/// climate parameters INPUT
 	mdi.AddInput(DataType_MeanTemperature,UNIT_TEMP_DEG, DESC_MEANTEMP, Source_Module,DT_Raster1D);
 	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG, DESC_MINTEMP, Source_Module,DT_Raster1D);					
@@ -122,8 +123,10 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_ALBDAY, UNIT_NON_DIM, DESC_ALBDAY, DT_Raster1D);
 	mdi.AddOutput(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, DT_Raster1D);
 
+	mdi.AddOutput(VAR_LAST_SOILRD, UNIT_DEPTH_MM, DESC_LAST_SOILRD, DT_Raster1D);
 	mdi.AddOutput(VAR_LAIYRMAX, UNIT_AREA_RATIO, DESC_LAIYRMAX, DT_Raster1D);
 	mdi.AddOutput(VAR_LAIDAY,UNIT_AREA_RATIO, DESC_LAIDAY,DT_Raster1D);
+
 	///mdi.AddOutput(VAR_LAIPRE, UNIT_AREA_RATIO, DESC_LAIPRE,DT_Raster1D);
 	mdi.AddOutput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC,DT_Raster1D);
 	mdi.AddOutput(VAR_PLTET_TOT, UNIT_DEPTH_MM, DESC_PLTET_TOT, DT_Raster1D);

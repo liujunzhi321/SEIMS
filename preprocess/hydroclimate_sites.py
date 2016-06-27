@@ -56,10 +56,12 @@ def ImportSitesTable(db, siteFile, siteType):
             elif StringMatch(siteFlds[j], Tag_ST_IsOutlet):
                 dic[Tag_ST_IsOutlet] = float(siteDataItems[i][j])
         dic[Tag_ST_Type] = siteType
-        insertResult = db[Tag_ClimateDB_Sites].insert_one(dic)
-        if(not insertResult.acknowledged):
-            print "Insert Site information to MongoDB faied!"
-            exit(-1)
+        curfilter = {Tag_ST_StationID: dic[Tag_ST_StationID], Tag_ST_Type: dic[Tag_ST_Type]}
+        db[Tag_ClimateDB_Sites].find_one_and_replace(curfilter, dic, upsert=True)
+        # insertResult = db[Tag_ClimateDB_Sites].insert_one(dic)
+        # if(not insertResult.acknowledged):
+        #     print "Insert Site information to MongoDB faied!"
+        #     exit(-1)
         if dic[Tag_ST_StationID] not in sitesLoc.keys():
             sitesLoc[dic[Tag_ST_StationID]] = SiteInfo(dic[Tag_ST_StationID], dic[Tag_ST_StationName],
                                                        dic[Tag_ST_Latitude], dic[Tag_ST_Longitude],
@@ -83,7 +85,9 @@ def ImportVariableTable(db, varFile):
             #     dic[Tag_VAR_IsReg] = varDataItems[i][j]
             # elif StringMatch(varFlds[j], Tag_VAR_Time):
             #     dic[Tag_VAR_Time] = float(varDataItems[i][j])
-        db[Tag_ClimateDB_VARs].insert_one(dic)
+        ## If this item existed already, then update it, otherwise insert one.
+        curfilter = {Tag_VAR_Type: dic[Tag_VAR_Type]}
+        db[Tag_ClimateDB_VARs].find_one_and_replace(curfilter, dic, upsert=True)
 
 def ImportHydroClimateSitesInfo(hostname,port,dbName,varfile, meteofile, precfile):
     try:
@@ -99,10 +103,12 @@ def ImportHydroClimateSitesInfo(hostname,port,dbName,varfile, meteofile, precfil
     for tb in tables:
         if not StringInList(tb, cList):
             db.create_collection(tb)
-        else:
-            db.drop_collection(tb)
+        # else:
+        #     db.drop_collection(tb)
     ImportVariableTable(db, varfile)
     SiteMLoc = ImportSitesTable(db,meteofile,DataType_Meteorology)
     SitePLoc = ImportSitesTable(db,precfile,DataType_Precipitation)
     connMongo.close()
     return (SiteMLoc, SitePLoc)
+if __name__ == "__main__":
+    SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME, PORT, ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)

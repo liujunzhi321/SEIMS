@@ -58,6 +58,8 @@ namespace MainBMP
 		bool IsBaseScenario() {return this->m_id == 0;}
 		//! Get scenario name
 		string Name();
+		//! Get BMPs Factories
+		map<int, BMPFactory*> GetBMPFactories(){return m_bmpFactories;}
 		//! Write all BMPs information of this scenario to a text file
 		void Dump(string fileName);
 		//! Output all BMPs information of this scenario to ostream
@@ -135,8 +137,8 @@ namespace MainBMP
 		//string m_projectPath;
 	private:
 		/*!
-		 * Map of BMPs 
-		 * the index is BMP ID, and the value is \sa BMPFactory
+		 * Map of BMPs Factory
+		 * the Key is unique BMP ID, and the value is \sa BMPFactory
 		 */
 		map<int, BMPFactory*> m_bmpFactories;
 		/// Load scenario information

@@ -19,9 +19,9 @@ Biomass_EPIC::Biomass_EPIC(void):m_nCells(-1), m_nClimDataYrs(-1), m_co2(NODATA)
 	m_frPlantN1(NULL), m_frPlantN2(NULL), m_frPlantN3(NULL), m_frPlantP1(NULL), m_frPlantP2(NULL), m_frPlantP3(NULL), 
 	m_chtMax(NULL), m_co2Hi(NULL), m_frDLAI(NULL), m_epco(NULL), m_lightExtCoef(NULL), m_frGrowOptLAI1(NULL), m_frGrowOptLAI2(NULL), 
 	m_hvstIdx(NULL), m_frMaxLAI1(NULL), m_frMaxLAI2(NULL), m_matYrs(NULL), m_tBase(NULL), m_tOpt(NULL), m_wavp(NULL), 
-	m_cht(NULL), m_initTreeMatYr(NULL), m_initBiomass(NULL), m_initLAI(NULL), m_PHUPlt(NULL),  m_dormIdx(NULL),m_pltET(NULL), m_pltPET(NULL),
+	m_cht(NULL), m_initTreeMatYr(NULL), m_initBiomass(NULL), m_initLAI(NULL), m_PHUPlt(NULL),  m_dormFlag(NULL),m_pltET(NULL), m_pltPET(NULL),
 	m_dayLen(NULL), m_VPD(NULL),m_PET(NULL),  m_ppt(NULL), m_soilESDay(NULL), m_soilNO3(NULL), m_soilPsol(NULL), m_snowAcc(NULL),
-	m_LAIDay(NULL), m_frPHUacc(NULL), m_LAIYrMax(NULL), m_hvstIdxAdj(NULL), m_LAIMaxFr(NULL), m_oLAI(NULL), m_soilStRD(NULL), 
+	m_LAIDay(NULL), m_frPHUacc(NULL), m_LAIYrMax(NULL), m_hvstIdxAdj(NULL), m_LAIMaxFr(NULL), m_oLAI(NULL), m_lastSoilRootDepth(NULL), 
 	m_plantEPDay(NULL), m_frRoot(NULL), m_fixN(NULL),  m_plantUpTkN(NULL),  m_plantUpTkP(NULL),  m_plantN(NULL),  m_plantP(NULL),  m_frPlantP(NULL), 
 	m_NO3Defic(NULL),  m_frStrsAe(NULL),  m_frStrsN(NULL),  m_frStrsP(NULL),  m_frStrsTmp(NULL),  m_frStrsWa(NULL),
 	m_biomassDelta(NULL),  m_biomass(NULL)
@@ -62,7 +62,7 @@ Biomass_EPIC::~Biomass_EPIC(void)
 	if(m_soilCov != NULL) delete[] m_soilCov;
 	if(m_LAIDay != NULL) delete [] m_LAIDay;
 	if(m_cht != NULL) delete[] m_cht;
-	if(m_dormIdx != NULL) delete[] m_dormIdx;
+	if(m_dormFlag != NULL) delete[] m_dormFlag;
 	if(m_LAIYrMax != NULL) delete[] m_LAIYrMax;
 	if(m_frPHUacc != NULL) delete[] m_frPHUacc;
 	if(m_pltET != NULL) delete[] m_pltET;
@@ -163,7 +163,7 @@ void Biomass_EPIC::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(sk,VAR_BIOINIT))	m_initBiomass = data;
 	else if(StringMatch(sk,VAR_PHUPLT))	m_PHUPlt = data;
 	else if(StringMatch(sk,VAR_CHT))	 m_cht = data;
-	else if(StringMatch(sk,VAR_DORMI))	 m_dormIdx = data;
+	else if(StringMatch(sk,VAR_DORMI))	 m_dormFlag = data;
 	
 	//// need to be initialized in this module
 	else if(StringMatch(sk,VAR_LAIDAY))	m_LAIDay = data;
@@ -273,7 +273,7 @@ bool Biomass_EPIC::CheckInputData(void)
 	if(m_initBiomass == NULL) throw ModelException(MID_BIO_EPIC,"CheckInputData","The initial dry weight biomass can not be NULL.");
 	if(m_PHUPlt == NULL) throw ModelException(MID_BIO_EPIC,"CheckInputData","The total number of heat unites (hours) needed to bring plant to maturity can not be NULL.");
 	if(m_cht == NULL) throw ModelException(MID_BIO_EPIC,"CheckInputData","The canopy height for the day can not be NULL.");
-	if(m_dormIdx == NULL) throw ModelException(MID_BIO_EPIC,"CheckInputData","The dormancy status code can not be NULL.");
+	if(m_dormFlag == NULL) throw ModelException(MID_BIO_EPIC,"CheckInputData","The dormancy status code can not be NULL.");
 
 	/// DT_Raster2D
 	if(m_soilDepth == NULL) throw ModelException(MID_BIO_EPIC,"CheckInputData","The soil depth data can not be NULL.");
@@ -337,11 +337,11 @@ void Biomass_EPIC::initialOutputs()
 			m_oLAI[i] = 0.f;
 		}
 	}
-	if (m_soilStRD ==NULL)		
+	if (m_lastSoilRootDepth ==NULL)		
 	{
-		m_soilStRD = new float[m_nCells];
+		m_lastSoilRootDepth = new float[m_nCells];
 		for (int i = 0; i < m_nCells; i++) 
-			m_soilStRD[i]=0.0f;
+			m_lastSoilRootDepth[i] = 10.;  /// TODO, check it out
 	}
 	if (m_plantEPDay ==NULL)		
 	{
@@ -442,7 +442,7 @@ void Biomass_EPIC::DistributePlantET(int i)
 	}
 	else
 		m_soilRD = m_soilZMX[i];
-	m_soilStRD[i] = m_soilRD;
+	m_lastSoilRootDepth[i] = m_soilRD;
 	if(m_ppt[i] <= 0.01)
 		m_frStrsWa[i] = 1.f;
 	else
@@ -587,10 +587,10 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
 		reg = min(m_frStrsWa[i], min(m_frStrsTmp[i], min(m_frStrsN[i], m_frStrsP[i])));
 		if(reg < 0.f) reg = 0.f;
 		if(reg > 1.f) reg = 1.f;
-		//// bio_targ in SWAT is not corporated in SEIMS.
+		//// TODO bio_targ in SWAT is not corporated in SEIMS.
 		m_biomass[i] += m_biomassDelta[i] * reg;
 		float rto = 1.f;
-		if (idc == 7)
+		if (idc == CROP_IDC_TREES)
 		{
 			if (m_matYrs[i] > 0.)
 			{
@@ -612,7 +612,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
 		float ff = f - m_LAIMaxFr[i];
 		m_LAIMaxFr[i] = f;
 		/// 8. calculate new canopy height
-		if (idc == 7)
+		if (idc == CROP_IDC_TREES)
 			m_cht[i] = rto * m_chtMax[i];
 		else
 			m_cht[i] = m_chtMax[i] * sqrt(f);
@@ -623,7 +623,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
 		{
 			laiMax = 0.f;
 			laiDelta = 0.f;
-			if (idc == 7)
+			if (idc == CROP_IDC_TREES)
 				laiMax = rto * m_maxLAI[i];
 			else
 				laiMax = m_maxLAI[i];
@@ -836,7 +836,7 @@ int Biomass_EPIC::Execute()
 		if (FloatEqual(m_igro[i], 1.0f))			/// land cover growing
 		{
 			DistributePlantET(i);						/// swu.f
-			if(FloatEqual(m_dormIdx[i], 0.))	/// plant will not undergo stress if dormant
+			if(FloatEqual(m_dormFlag[i], 0.))	/// plant will not undergo stress if dormant
 				AdjustPlantGrowth(i);					/// plantmod.f
 			CheckDormantStatus(i);				/// dormant.f
 		}
@@ -851,6 +851,7 @@ void Biomass_EPIC::Get1DData(const char* key, int* n, float** data)
 	string sk(key);
 	*n = m_nCells;
 	if(StringMatch(sk,VAR_BIOMASS))	*data = m_biomass;
+	else if(StringMatch(sk, VAR_LAST_SOILRD)) *data = m_lastSoilRootDepth;
 	else if (StringMatch(sk, VAR_PLANT_P)) *data = m_plantP;
 	else if (StringMatch(sk, VAR_PLANT_N)) *data = m_plantN;
 	else if (StringMatch(sk, VAR_AET_PLT)) *data = m_plantEPDay;
@@ -859,7 +860,7 @@ void Biomass_EPIC::Get1DData(const char* key, int* n, float** data)
 	else if (StringMatch(sk, VAR_FR_PHU_ACC)) *data = m_frPHUacc;
 	else if (StringMatch(sk, VAR_LAIDAY)) *data = m_LAIDay;
 	else if (StringMatch(sk, VAR_LAIYRMAX)) *data = m_LAIYrMax;
-	else if (StringMatch(sk, VAR_DORMI)) *data = m_dormIdx;
+	else if (StringMatch(sk, VAR_DORMI)) *data = m_dormFlag;
 	else if (StringMatch(sk, VAR_ALBDAY)) *data = m_albedo;
 	else if (StringMatch(sk, VAR_CHT)) *data = m_cht;
 	else if (StringMatch(sk, VAR_SOL_COV)) *data = m_soilCov;

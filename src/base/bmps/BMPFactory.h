@@ -35,6 +35,8 @@ namespace MainBMP
 		///virtual void loadBMP(string bmpDatabasePath) = 0;
 		/// Get BMP type
 		int bmpType(){return m_bmpType;}
+		/// Get subScenario ID
+		int GetSubScenarioId(){return m_subScenarioId;}
 		/// Output
 		virtual void Dump(ostream* fs) = 0;
 	protected:

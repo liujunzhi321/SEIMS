@@ -9,6 +9,7 @@
 #include <iomanip>
 #include "utils.h"
 #include "BMPText.h"
+#include "util.h"
 
 using namespace MainBMP;
 using namespace PlantManagement;
@@ -28,11 +29,11 @@ PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
 {
 	m_plantID = int(parameters[0]);
 	m_curYrMat = int(parameters[2]);
-	m_heatUnits = parameters[3];
+	m_heatUnits = (parameters[3] < 700.f) ? 1700.f : parameters[3];
 	m_laiInit = parameters[4];
 	m_bioInit = parameters[5];
 	m_hiTarg = parameters[6];
-	m_bioTarg = parameters[7];
+	m_bioTarg = parameters[7] * 1000.; /// tons/ha => kg/ha
 	m_CNOP = parameters[8];
 }
 PlantOperation::~PlantOperation()
@@ -54,9 +55,10 @@ IrrigationOperation::IrrigationOperation(int mgtOp, float husc, int year, int mo
 PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
 {
 	m_irrSrc = int(parameters[1]);
+	m_irrSrc = (m_irrSrc<= 0) ? IRR_SRC_OUTWTSD : m_irrSrc;
 	m_irrAmt = parameters[3];
 	m_irrSalt = parameters[4];
-	m_irrEfm = parameters[5];
+	m_irrEfm = (parameters[5] < UTIL_ZERO) ? 1.0 : parameters[5];
 	m_irrSq = parameters[6];
 	m_irrNo = int(parameters[7]);
 }
@@ -79,7 +81,7 @@ PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
 {
 	m_fertID = int(parameters[0]);
 	m_frtKg = parameters[3];
-	m_frtSurface = parameters[4];
+	m_frtSurface = (parameters[4] < UTIL_ZERO) ? 0.2 : parameters[4];
 }
 FertilizerOperation::~FertilizerOperation()
 {
@@ -155,7 +157,7 @@ void TillageOperation::dump(ostream *fs)
 HarvestOnlyOperation::HarvestOnlyOperation(int mgtOp, float husc, int year, int month, int day,float* parameters):
 PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
 {
-	m_harvEff = parameters[3];
+	m_harvEff = (parameters[3] <= 0.) ? 1.0 : parameters[3];
 	m_hiBms = parameters[4];
 	m_hiRsd = parameters[5];
 }
@@ -195,6 +197,8 @@ PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
 	m_bioEat = parameters[3];
 	m_bioTrmp = parameters[4];
 	m_manureKg = parameters[5];
+	if (m_manureKg <= 0.)
+		m_manureKg = 0.95 * m_bioEat;
 }
 GrazingOperation::~GrazingOperation()
 {
@@ -220,6 +224,12 @@ PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
 	m_irrMx = parameters[5];
 	m_irrAsq = parameters[6];
 	m_irrNoa = int(parameters[9]);
+	m_irrSrc = (m_irrSrc<= 0) ? IRR_SRC_OUTWTSD : m_irrSrc;
+	if(m_wstrsID <= 0) m_wstrsID = 1;
+	if(m_irrEff > 1.) m_irrEff = 0.;
+	if(FloatEqual(m_irrEff, 0.)) m_irrEff = 1.;
+	if(m_irrMx < UTIL_ZERO) m_irrMx = 25.4;
+	if(m_irrSrc <= 0) m_irrSrc = 
 }
 AutoIrrigationOperation::~AutoIrrigationOperation()
 {
@@ -246,6 +256,9 @@ PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
 	m_autoNYR = parameters[5];
 	m_autoEff = parameters[6];
 	m_afrtSurface = parameters[7];
+	if(m_autoNAPP < UTIL_ZERO) m_autoNAPP = 250.;
+	if(m_autoNYR < UTIL_ZERO) m_autoNYR = 350.;
+	if(m_afrtSurface <= UTIL_ZERO) m_afrtSurface = 0.8;
 }
 AutoFertilizerOperation::~AutoFertilizerOperation()
 {
