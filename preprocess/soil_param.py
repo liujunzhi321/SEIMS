@@ -74,6 +74,7 @@ class SoilProperty:
         self.Sol_ALB    = DEFAULT_NODATA
         self.Soil_Texture    = DEFAULT_NODATA
         self.Hydro_Group = DEFAULT_NODATA
+        self.Sol_SUMUL = 0.
         self.Sol_SUMFC  = 0.
         self.Sol_SUMWP = 0.
         self.Sol_SUMPOR  = 0.
@@ -282,6 +283,9 @@ class SoilProperty:
                     sol_wp = sol_por * 0.25
             tmp_sol_up.append(sol_up)
             tmp_sol_wp.append(sol_wp)
+        if self.Sol_SUMUL == 0:
+            for i in range(self.SoilLAYERS):
+                self.Sol_SUMUL += (self.POROSITY[i] - tmp_sol_wp[i]) * tmp_dep[i]
         if self.Sol_SUMFC == 0:
             for i in range(self.SoilLAYERS):
                 self.Sol_SUMFC += (tmp_sol_up[i] - tmp_sol_wp[i]) * tmp_dep[i]
