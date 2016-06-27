@@ -131,7 +131,7 @@ private:
 	/// Calculation SCS-CN number
 	float  Calculate_CN(float sm, int cell);
 	/// initial outputs before execute main function
-	void initalOutputs();
+	void initialOutputs();
 };
 
 

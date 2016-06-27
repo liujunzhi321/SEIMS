@@ -40,6 +40,10 @@ namespace MainBMP
 			~PlantManagementOperation(void);
 			//! Output
 			virtual void dump(ostream *fs) = 0;
+			float& GetHUFraction(){return m_frHU;}
+			int& GetMonth(){return m_month;}
+			int& GetDay(){return m_day;}
+			int& GetOperationCode(){return m_mgtOp;}
 		protected:
 			/// husc
 			float m_frHU;

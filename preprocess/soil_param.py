@@ -54,6 +54,7 @@ class SoilProperty:
         self.SNAM       = SNAM
         self.SoilLAYERS       = DEFAULT_NODATA
         self.SoilDepth      = []
+        self.SoilThick      = []
         self.OM     = []
         self.CLAY       = []
         self.SILT       = []
@@ -78,6 +79,8 @@ class SoilProperty:
         self.Sol_SUMPOR  = 0.
         self.Sol_AVPOR = DEFAULT_NODATA
         #self.Residue     = [] TODO: residue should be defined in Management module or dependent on landuse
+        self.Sol_CBN = []  ##
+        self.Sol_N = [] ## added by Liangjun, according to readsol.f in SWAT
         ### Here after are soil chemical properties
         self.Sol_FOP = []
         self.Sol_fon = []
@@ -105,7 +108,7 @@ class SoilProperty:
         if self.SoilLAYERS == DEFAULT_NODATA:
             raise ValueError("Soil layers number must be provided, please check the input file!")
         dep_new = 10
-        if self.SoilDepth[0] - dep_new >= 10:
+        if self.SoilDepth[0] - dep_new >= 10.:
             self.SoilLAYERS += 1
             self.SoilDepth.insert(0,dep_new)
             self.OM.insert(0,self.OM[0])
@@ -127,7 +130,11 @@ class SoilProperty:
                 self.POROSITY.insert(0,DEFAULT_NODATA)
             if self.USLE_K != []:
                 self.USLE_K.insert(0,DEFAULT_NODATA)
-
+        for l in range(self.SoilLAYERS):
+            if l == 0:
+                self.SoilThick[l] = self.SoilDepth[l]
+            else:
+                self.SoilThick[l] = self.SoilDepth[l] - self.SoilDepth[l - 1]
         
         if self.SoilDepth == [] or len(self.SoilDepth) != self.SoilLAYERS or DEFAULT_NODATA in self.SoilDepth:
             raise IndexError("Soil depth must have a size equal to soil layers number!")
@@ -136,8 +143,19 @@ class SoilProperty:
         elif DEFAULT_NODATA in self.OM and self.OM.index(DEFAULT_NODATA) >= 2 and self.SoilLAYERS >= 3:
             for i in range(2,self.SoilLAYERS):
                 if self.OM[i] == DEFAULT_NODATA:
-                    tmpDepth = self.SoilDepth[i] - self.SoilDepth[1]
-                    self.OM[i] = self.OM[i-1] * numpy.exp(-.001 * tmpDepth) ## mm -> m
+                    self.OM[i] = self.OM[i-1] * numpy.exp(-.001 * self.SoilThick[i]) ## mm -> m
+        ### sol_cbn = sol_om * 0.58
+        for i in range(self.SoilLAYERS):
+            if(self.OM[i] * 0.58 < UTIL_ZERO):
+                self.Sol_CBN[i] = 0.10
+            else:
+                self.Sol_CBN[i] = self.OM[i] * 0.58
+        ### sol_n = sol_cbn/11.
+        for i in range(self.SoilLAYERS):
+            if(self.OM[i] * 0.58 < UTIL_ZERO):
+                self.Sol_N[i] = 0.10 / 11.0
+            else:
+                self.Sol_N[i] = self.OM[i] * 0.58 / 11.0
         if self.CLAY == [] or len(self.CLAY) != self.SoilLAYERS or DEFAULT_NODATA in self.CLAY:
             raise IndexError("Soil Clay content must have a size equal to soil layers number!")
         if self.SILT == [] or len(self.SILT) != self.SoilLAYERS or DEFAULT_NODATA in self.SILT:
@@ -220,6 +238,13 @@ class SoilProperty:
             for i in range(self.SoilLAYERS):
                 if self.Sol_AWC[i] == DEFAULT_NODATA:
                     self.Sol_AWC[i] = self.FieldCap[i] - self.WiltingPoint[i]
+        for i in range(self.SoilLAYERS):
+            if(self.Sol_AWC[i] <= 0.):
+                self.Sol_AWC[i] = 0.005
+            elif(self.Sol_AWC[i] <= 0.01):
+                self.Sol_AWC[i] = 0.01
+            elif(self.Sol_AWC[i] >= 0.8):
+                self.Sol_AWC[i] = 0.8
         if self.Poreindex != [] and len(self.Poreindex) != self.SoilLAYERS:
             raise IndexError("Pore disconnectedness index must have a size equal to soil layers number!")
         elif self.Poreindex == []:

@@ -12,7 +12,9 @@
 #include "util.h"
 #include "ClimateParams.h"
 #include "SimulationModule.h"
+#include "Scenario.h"
 using namespace std;
+using namespace MainBMP;
 /** \defgroup MGT_SWAT
  * \ingroup Ecology
  * \brief All management operation in SWAT, e.g., plantop, killop, harvestop, etc.
@@ -27,69 +29,316 @@ using namespace std;
 class MGTOpt_SWAT : public SimulationModule
 {
 private:
+	/// BMPs Scenario
+	Scenario* m_scenario;
+	/*
+	* Plant management factory derived from m_scenario
+	* Key is  uniqueBMPID, which is calculated by Landuse_ID * 100 + subScenario;
+	* Value is a series of plant management operations
+	*/
+	map<int, BMPPlantMgtFactory*> m_mgtFactory;
 	/// valid cells number
 	int m_nCells;
-	/// Julian day
-	int m_jDay;
-	/// current sequence number of management operations
-	int* m_curNOP;
-	/// current management operation code
-	int* m_curMgtOp;
-	/// maximum management operations number
-	int* m_maxNOP;
+	/// cell width (m)
+	float m_cellWidth;
+	/// cell area (ha)
+	float m_cellArea;
+	/// the total number of subbasins
+	int m_nSub;
+	/// valid cell numbers in each subbasin
+	map<int, int> m_nCellsSubbsn;
+	/// subbasin area, key is subbasinID, value is area
+	map<int, float> m_nAreaSubbsn;
+
+	/**Parameters from MongoDB**/
+	/// subbasin ID of each cell
+	float* m_subBsnID;
+	/// land use
+	float* m_landUse;
+	/// land cover 
+	float* m_landCover;
+	/// management unit, e.g., fields
+	float* m_mgtFields;
+
+	/// soil layers
+	float* m_nSoilLayers;
+	/// soil depth of all layers, sol_z(:,:)    |mm            |depth to bottom of soil layer
+	float** m_soilDepth;
+	/// soil thick
+	float** m_soilThick;
+	/// maximum root depth
+	float* m_soilZMX;
+	//!!    sol_bd(1,:)   |Mg/m^3        |bulk density of top soil layer in cell
+	float** m_soilBD;   
+	/// sol_sumfc(:)   |mm H2O        |amount of water held in the soil profile at field capacity
+	float* m_soilSumFC; 
+	/// sol_n, initialized by sol_cbn / 11.0 according to readsol.f in SWAT
+	float** m_soilN;
+	/// soil carbon, sol_cbn
+	float** m_soilCarbon;
+	/// soil rock (%)
+	float** m_soilRock;
+	/// soil clay
+	float** m_soilClay;
+	/// soil sand
+	float** m_soilSand;
+	/// soil silt
+	float** m_soilSilt;
+	/**soil properties, both as input and ouput**/
+	//!!    sol_aorgn(:,:)|kg N/ha       |amount of nitrogen stored in the active organic (humic) nitrogen pool
+	float** m_soilActiveOrgN;
+	//!!    sol_fon(:,:)  |kg N/ha       |amount of nitrogen stored in the fresh organic (residue) pool
+	float** m_soilFreshOrgN;
+	//!!    sol_fop(:,:)  |kg P/ha       |amount of phosphorus stored in the fresh organic (residue) pool
+	float** m_soilFreshOrgP;
+	//!!    sol_nh3(:,:)  |kg N/ha       |amount of nitrogen stored in the ammonium pool in soil layer
+	float** m_soilNH3;
+	//!!    sol_no3(:,:)  |kg N/ha       |amount of nitrogen stored in the nitrate pool in soil layer
+	float** m_soilNO3;
+	//!! sol_orgn(:,:) |kg N/ha       |amount of nitrogen stored in the stable organic N pool
+	float** m_soilStableOrgN;
+	//!!    sol_orgp(:,:) |kg P/ha       |amount of phosphorus stored in the organic P pool
+	float** m_soilOrgP;
+	//!!    sol_solp(:,:) |kg P/ha       |amount of inorganic phosphorus stored in solution
+	float** m_soilSolP;
+
+	/** Temporary parameters**/
+	/// Sequence number of management operations done in the previous time step run
+	int* m_doneOpSequence;
+
+	/** plant operation related parameters **/
+
+	/// landuse lookup table
+	float** m_landuseLookup;
+	/// landuse number
+	int m_landuseNum;
+	/// map from m_landuseLookup
+	map<int, float*> m_landuseLookupMap;
+	/// CN2 values
+	float* m_CN2;
 	/// plant growth code, 0 or 1
 	float* m_igro;
+	/// Harvest index target
+	float* m_HarvestIdxTarg;
+	/// Biomass target
+	float* m_BiomassTarg;
+	/// current year in rotation to maturity
+	float* m_curYearMat;
+	/// wsyf(:)     |(kg/ha)/(kg/ha)|Value of harvest index between 0 and HVSTI
+	/// which represents the lowest value expected due to water stress
+	float* m_wtrStrsYF;
+	/// the leaf area indices for day i
+	float* m_LAIDay;
 	/// phu base
 	float* m_phuBase;
 	/// phu accumulated
 	float* m_phuAcc;
-	/// dormancy flat
+	/// total number of heat units to bring plant to maturity
+	float* m_phuPlant;
+	/// dormancy flat, idorm in SWAT, 1 is growing and 0 is dormancy
 	int* m_dormFlag;
+	/// hvsti(:)    |(kg/ha)/(kg/ha)|harvest index: crop yield/aboveground biomass
+	float* m_havstIdx;
+	/// hvstiadj(:) |(kg/ha)/(kg/ha)|optimal harvest index for current time during growing season
+	float* m_havstIdxAdj;
+	/// DO NOT KNOW NOW, initialized as 0.
+	float* m_LAIMaxFr;
+	/// DO NOT KNOW NOW
+	float* m_oLAI;
+	/// fraction of plant biomass that is nitrogen, pltfr_n in SWAT
+	float* m_frPlantN;
+	/// amount of nitrogen in plant biomass (kg/ha), plantn in SWAT
+	float* m_plantN;
+	/// amount of phosphorus in plant biomass (kg/ha), plantp in SWAT
+	float* m_plantP;
+	/// actual ET simulated during life of plant, plt_et in SWAT
+	float* m_pltET;
+	/// potential ET simulated during life of plant, plt_pet in SWAT
+	float* m_pltPET;
+	/// fraction of total plant biomass that is in roots, rwt in SWAT
+	float* m_frRoot;
+	/// land cover/crop biomass (dry weight), bio_ms in SWAT
+	float* m_biomass;
 
-	/// plant operation related parameters
+	/** HarvestKill operation related **/
+	///// bio_hv(:,:,:)|kg/ha          |harvested biomass (dry weight)
+	//float** m_harvBiomass;
+	///// bio_yrms(:) |metric tons/ha |annual biomass (dry weight) in the cell
+	//float* m_annualBiomass;
+	///// yldkg(:,:,:)|kg/ha          |yield (dry weight) by crop type in the HRU
+	////float** m_cropYld;
+	///// yldanu(:)   |metric tons/ha |annual yield (dry weight) in the HRU
+	//float* m_annualYld;
+	/// amount of organic matter in the soil layer classified as residue,sol_rsd(:,:)|kg/ha    
+	float** m_soilRsd;
+	/// fraction of potential plant growth achieved where the reduction is caused by water stress, strsw in SWAT
+	float* m_frStrsWa;
+
+	/** Crop related parameters **/
+
+	/// crop lookup table
+	float** m_cropLookup;
+	/// crop number
+	int m_cropNum;
+	/// map for m_cropLookup
+	map<int, float*> m_cropLookupMap;
+
+	/** Fertilizer related parameters **/
+
+	/// fertilizer lookup table
+	float** m_fertilizerLookup;
+	/// fertilizer number
+	int m_fertilizerNum;
+	/// map for m_fertilizerLookup
+	map<int, float*> m_fertilizerLookupMap;
+	/// carbon modeling method
+	///   = 0 Static soil carbon (old mineralization routines)
+	///   = 1 C-FARM one carbon pool model 
+	///   = 2 Century model
+	int m_cswat;
+
+	/** Irrigation operation related **/
+	/// irrigation flag
+	int* m_irrFlag;
+	/// aird(:)        |mm H2O        |amount of water applied to cell on current day
+	float* m_appliedWater;
+	///  deepst(:)      |mm H2O        |depth of water in deep aquifer
+	float* m_deepWaterDepth; 
+	///shallst | mm H2O        |depth of water in shallow aquifer
+	float* m_shallowWaterDepth; 
+	/// pot_vol(:)     |m**3 H2O      |current volume of water stored in the depression/impounded area
+	float* m_impoundVolume;
+	/// potsa(:)       |ha            |surface area of impounded water body
+	float* m_impoundArea;  
+	/// deepirr(:)  |mm H2O        |amount of water removed from deep aquifer for irrigation
+	float* m_deepIrrWater;
+	/// shallirr(:) |mm H2O        |amount of water removed from shallow aquifer for irrigation
+	float* m_shallowIrrWater; 
+	/** auto irrigation operation related**/
+	
+	/// Water stress identifier, 1 plant water demand, 2 soil water content 
+	int* m_wtrStrsID;
+	/// Water stress threshold that triggers irrigation, if m_wtrStresID is 1, the value usually 0.90 ~ 0.95
+	float* m_autoWtrStres;
+	/// irrigation source
+	int* m_autoIrrSource;
+	/// irrigation source location code
+	int* m_autoIrrNo;
+	/// auto irrigation efficiency, 0 ~ 100, IRR_EFF
+	float* m_autoIrrEfficiency;
+	/// amount of irrigation water applied each time auto irrigation is triggered (mm), 0 ~ 100, IRR_MX
+	float* m_autoIrrWtrDepth;
+	/// surface runoff ratio (0-1) (0.1 is 10% surface runoff), IRR_ASQ
+	float* m_autoSurfRunRatio;
+	/**Bacteria related**/
+	float m_bactSwf;
+	///  bactlp_plt(:) |# cfu/m^2     |less persistent bacteria on foliage
+	float* m_bactLessPersistPlt; 
+	///  bactlpq(:)    |# cfu/m^2     |less persistent bacteria in soil solution
+	float* m_bactLessPersistSol;
+	///  bactlps(:)    |# cfu/m^2     |less persistent bacteria attached to soil particles
+	float* m_bactLessPersistParticle; 
+	///  bactp_plt(:)  |# cfu/m^2     |persistent bacteria on foliage
+	float* m_bactPersistPlt; 
+	///  bactpq(:)     |# cfu/m^2     |persistent bacteria in soil solution
+	float* m_bactPersistSol;
+	///  bactps(:)     |# cfu/m^2     |persistent bacteria attached to soil particles
+	float* m_bactPersistParticle; 
+
+	/** HarvestKill, Harvest, and Kill operation related  **/
+	/// stsol_rd(:) |mm            |storing last soil root depth for use in harvestkillop/killop /// defined in swu.f
+	float* m_lastSoilRootDepth; 
+
+	/** tillage operation related **/
+	/// tillage lookup table
+	float** m_tillageLookup;
+	/// tillage number
+	int m_tillageNum;
+	/// map for m_tillageLookup
+	map<int, float*> m_tillageLookupMap;
+	/// sol_actp(:,:) |kg P/ha       |amount of phosphorus stored in the active mineral phosphorus pool
+	float** m_soilActiveMinP;
+	/// sol_stap(:,:) |kg P/ha       |amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool
+	float** m_soilStableMinP;
+	///// min_res(:)	|kg/ha		   |Min residue allowed due to implementation of residue management in the OPS file.
+	//float* m_minResidue;
+	
+	/**auto fertilizer operation**/
+	/// fertilizer ID from fertilizer database
+	int* m_fertilizeID;
+	/* Code for approach used to determine amount of nitrogen to Cell
+			0 Nitrogen target approach
+			1 annual max approach */
+	int* m_NStressCode;
+	/// Nitrogen stress factor of cover/plant that triggers fertilization, usually set 0.90 to 0.95
+	float* m_autoNStress;
+	/// Maximum amount of mineral N allowed in any one application (kg N/ha), auto_napp
+	float* m_autoMaxAppliedN;
+	/// Maximum amount of mineral N allowed to be applied in any one year (kg N/ha), auto_nyr
+	float* m_autoAnnMaxAppliedMinN;
+	/// modifier for auto fertilization target nitrogen content, tnylda
+	float* m_targNYld;
+	/// auto_eff(:) |none           |fertilizer application efficiency calculated as the amount of N applied divided by the amount of N removed at harvest
+	float* m_autoFertEfficiency;
+	/// Fraction of fertilizer applied to top 10mm of soil, the default is 0.2
+	float* m_autoFertSurface;
+	/** Grazing operation **/
+
+	/// ndeat(:)    |days          |number of days cell has been grazed
+	int* m_nGrazingDays; 
+	/*  igrz(:)     |none          |grazing flag for cell:
+												|0 cell currently not grazed
+												|1 cell currently grazed */
+	int* m_grzFlag;   
+	/** Release or Impound Operation **/
+
+	/* |release/impound action code:
+	       |0 begin impounding water
+	       |1 release impounded water*/
+	int* m_impoundTriger;
 
 public:
 	//! Constructor
 	MGTOpt_SWAT(void);
 	//! Destructor
 	~MGTOpt_SWAT(void);
-	virtual int Execute();
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	virtual void Set2DData(const char* key, int n, int col, float** data);
-	virtual void Get2DData(const char* key, int* n, int* col, float*** data);
+	int Execute();
+	void Set1DData(const char* key, int n, float* data);
+	void Get1DData(const char* key, int* n, float** data);
+	void Set2DData(const char* key, int n, int col, float** data);
+	void Get2DData(const char* key, int* n, int* col, float*** data);
+	void SetScenario(Scenario* sce);
 private:
+	/*!
+	 * \brief Get operation parameters according to operation sequence number
+	 * \param[in] cellIdx current cell index
+	 * \param[out] factoryID Index of Plant BMPs factory
+	 * \param[out] nOps Operation sequence number, and there might be several operation occurred on one day
+	 */
+	bool GetOperationCode(int cellIdx, int& factoryID, vector<int>& nOps);
 	/*!
 	 * \brief Manager all operations on schedule
 	 * \param[in] cellIdx Index of valid cell
-	 * \param[in] mgtOpCode Management operation code, 0~16
+	 * \param[in] factoryID Index of Plant BMPs factory
+	 * \param[in] nOp Operation sequence
 	 */
-	void ScheduledManagement(int cellIdx, int mgtOpCode);
-	/*!
-	 * \brief Get operation parameters according to operation sequence number
-	 * \param[in] nOp Operation sequence number
-	 * \param[out] mgtOpCode Management operation code
-	 * \param[out] jDay Operation Julian date
-	 * \param[out] phuOp Fraction of heat units (PHU0 or PHUPLT) of current operation
-	 , int& mgtOpCode, int& jDay, float& phuOp
-	 */
-	bool GetOperationParameters(int cellIdx, int nOp);
-	void PlantOperation(int cellIdx);
-	void IrrigationOperation(int cellIdx);
-	void FertilizerOperation(int cellIdx);
-	void PesticideOperation(int cellIdx);
-	void HarvestKillOperation(int cellIdx);
-	void TillageOperation(int cellIdx);
-	void HarvestOnlyOperation(int cellIdx);
-	void KillOperation(int cellIdx);
-	void GrazingOperation(int cellIdx);
-	void AutoIrrigationOperation(int cellIdx);
-	void AutoFertilizerOperation(int cellIdx);
-	void StreetSweepingOperation(int cellIdx);
-	void ReleaseImpoundOperation(int cellIdx);
-	void ContinuousFertilizerOperation(int cellIdx);
-	void ContinuousPesticideOperation(int cellIdx);
-	void BurningOperation(int cellIdx);
+	void ScheduledManagement(int cellIdx, int& factoryID, int nOp);
+	
+	void ExecutePlantOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteIrrigationOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteFertilizerOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecutePesticideOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteHarvestKillOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteTillageOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteHarvestOnlyOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteKillOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteGrazingOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteAutoIrrigationOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteAutoFertilizerOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteReleaseImpoundOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteContinuousFertilizerOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteContinuousPesticideOperation(int cellIdx, int& factoryID, int nOp);
+	void ExecuteBurningOperation(int cellIdx, int& factoryID, int nOp);
 	/*!
 	 * \brief check the input data. Make sure all the input data is available.
 	 * \return bool The validity of the input data.
@@ -105,5 +354,23 @@ private:
 	 * \return bool The validity of the dimension
 	 */
 	bool CheckInputSize(const char*,int);
+	void initialOutputs();
+	void initialAutoIrrigationOutputs();
+	void initialAutoFertilizerOutputs();
+	void initialPlantOutputs();
+	/// Handle lookup tables ///
+
+	/// landuse lookup table
+	void initializeLanduseLookup();
+	/// crop lookup table
+	void initializeCropLookup();
+	/// fertilizer lookup table
+	void initializeFertilizerLookup();
+	/// tillage lookup table
+	void initializeTillageLookup();
+	/// the complementary error function
+	float Erfc(float xx);
+	/// distributes dead root mass through the soil profile
+	void rootFraction(int i, float*& root_fr);
 };
 

@@ -8,8 +8,8 @@
 #include "utils.h"
 using namespace MainBMP;
 
-BMPPlantMgtFactory::BMPPlantMgtFactory(int scenarioId,int bmpId,int subScenario,int bmpType,int bmpPriority,string distribution,string parameter, string location)
-:BMPFactory(scenarioId,bmpId,subScenario,bmpType,bmpPriority,distribution,parameter,location)
+BMPPlantMgtFactory::BMPPlantMgtFactory(int scenarioId,int bmpId,int subScenario,int bmpType,int bmpPriority,string distribution,string collection, string location)
+:BMPFactory(scenarioId,bmpId,subScenario,bmpType,bmpPriority,distribution,collection,location)
 {	
 	m_location = utils::SplitStringForInt(location, ',');
 }
@@ -55,6 +55,8 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string bmpDBName)
 		float husc;
 		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_NAME))
 			m_name = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_LUCC)) 
+			m_luccID = GetIntFromBSONITER(&itertor);
 		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_MGTOP)) 
 			mgtCode = GetIntFromBSONITER(&itertor);
 		//if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_SEQUENCE)) 
@@ -78,7 +80,7 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string bmpDBName)
 		m_bmpSequence.push_back(uniqueMgtCode);
 		switch(mgtCode)
 		{
-		case BMP_PLTOP_PLANT:
+		case BMP_PLTOP_Plant:
 			m_bmpPlantOps[uniqueMgtCode] = new PlantOperation(mgtCode,husc,year,month,day,m_parameters);
 			break;
 		case BMP_PLTOP_Irrigation:

@@ -80,7 +80,7 @@ private:
 	float* m_soilALB;
 	/// soil depth of all layers
 	float** m_soilDepth;
-	/// amount of organic matter in the soil layer classified as residue
+	/// amount of organic matter in the soil layer classified as residue,sol_rsd(:,:)|kg/ha    
 	float** m_soilRsd;
 	/// amount of water available to plants in soil layer at field capacity (fc - wp water), sol_fc in SWAT
 	float** m_soilAWC;
@@ -166,11 +166,11 @@ private:
 	float* m_initLAI;
 	/// total heat units needed to bring plant to maturity
 	float* m_PHUPlt;
-	/// dominant code, 0 is land cover growing (not dormant), 1 is land cover dormant, by default m_dormIdx is 0.
-	float* m_dormIdx;
-	/// actual ET simulated during life of plant
+	/// dominant code, 0 is land cover growing (not dormant), 1 is land cover dormant, by default m_dormFlag is 0.
+	float* m_dormFlag;
+	/// actual ET simulated during life of plant, plt_et in SWAT
 	float* m_pltET;
-	/// potential ET simulated during life of plant
+	/// potential ET simulated during life of plant, pltPET in SWAT
 	float* m_pltPET;
 
 	/**  Nutrient related parameters  **/
@@ -215,7 +215,7 @@ private:
 
 	/// the leaf area indices for day i
 	float* m_LAIDay;
-	/// fraction of plant heat units (PHU) accumulated, also as output
+	/// fraction of plant heat units (PHU) accumulated, also as output, phuacc in SWAT
 	float* m_frPHUacc;
 	/// maximum leaf area index for the current year (m_yearIdx), lai_yrmx in SWAT
 	float* m_LAIYrMax;
@@ -225,8 +225,8 @@ private:
 	float* m_LAIMaxFr;
 	/// DO NOT KNOW NOW
 	float* m_oLAI;
-	/// last soil root depth for use in harvest-kill-op/kill-op 
-	float* m_soilStRD;
+	/// last soil root depth for use in harvest-kill-op/kill-op,  
+	float* m_lastSoilRootDepth;
 	/// actual amount of transpiration (mm H2O), ep_day in SWAT
 	float* m_plantEPDay;
 	/// fraction of total plant biomass that is in roots, rwt in SWAT
