@@ -164,7 +164,13 @@ Hydrology_longterm|SUR_CN|VAR_SOMO|AddOutput
 
 ### 涉及土壤层的计算，增加NoData值的判断
 
-
+### SWAT中的未知变量和没有数据的变量：
+模块|子模块|变量名|问题
+---|---|---|---
+Nutrient|NutrientRemviaSr|qtile|没有数据,赋初值为0.0001
+Nutrient|NutrientRemviaSr|ldrain|没有数据,赋初值为-1
+Nutrient|NutrientRemviaSr|sol_preco|没有数据,赋初值为0.0001
+Nutrient|SurrunoffTransfer|sol_mp|未知变量,赋初值为0
 
 
 

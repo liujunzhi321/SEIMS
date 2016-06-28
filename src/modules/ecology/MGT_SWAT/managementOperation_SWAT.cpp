@@ -192,7 +192,7 @@ void MGTOpt_SWAT::initializeTillageLookup()
 }
 void MGTOpt_SWAT::initialPlantOutputs()
 {
-	if(m_BiomassTarg != NULL) Initialize1DArray(m_nCells, m_BiomassTarg, 0.);
+	if(m_BiomassTarg != NULL) Initialize1DArray(m_nCells, m_BiomassTarg, (float)0.);
 }
 void MGTOpt_SWAT::ExecutePlantOperation(int i, int& factoryID, int nOp)
 {
