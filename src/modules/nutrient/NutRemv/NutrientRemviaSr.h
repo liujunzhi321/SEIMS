@@ -66,6 +66,8 @@ private:
 	float* m_ldrain;
 	/// crack volume potential of soil
 	float* m_sol_crk;
+	/// amount of water held in the soil layer at saturation
+	float* m_sol_wsatur;
 
 	/// lateral flow in soil layer
 	float** m_flat;
@@ -75,10 +77,8 @@ private:
 	float** m_sol_bd;
 	/// depth to bottom of soil layer
 	float** m_sol_z;
-	/// amount of water held in the soil layer at saturation
-	float** m_sol_wsatur;
 	/// factor which converts kg/kg soil to kg/ha
-	float** m_conv_wt;
+	float** m_sol_depth;
 
 	/// output data
 	/// amount of nitrate transported with lateral flow
@@ -132,6 +132,7 @@ private:
 	*/
 	void Phosphorusloss();
 	
+	void initialOutputs();
 };
 #endif
 

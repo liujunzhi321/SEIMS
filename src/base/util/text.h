@@ -524,7 +524,6 @@
 #define VAR_CONV_WT "conv_wt"
 #define VAR_D_FlOWWIDTH "D_FlowWidth"
 #define VAR_D_P "D_P" /// Distrubution of precipitation
-#define VAR_DAYL "dayl"
 #define VAR_DAYLEN "daylength" 
 #define VAR_DAYLEN_MIN "daylmn"  /// minimum day length
 #define VAR_DEET "DEET"                               /// Distribution of evaporation from depression storage
@@ -663,7 +662,6 @@
 #define VAR_POROST "Porosity"                       /// soil porosity
 #define VAR_PPERCO "pperco"
 #define VAR_PPT "PPT"
-#define VAR_PRECI "D_P"                             /// precipitation for the day (mm)
 #define VAR_PSP "psp"                               /// Phosphorus availability index
 #define VAR_PUPDIS "p_updis"
 #define VAR_QCH "QCH"
@@ -737,7 +735,6 @@
 #define VAR_SOL_AORGN "sol_aorgn"                   /// amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/ha)
 #define VAR_SOL_AWC "sol_awc"            /// amount of water available to plants in soil layer at field capacity (FC-WP)
 #define VAR_SOL_BD "density"                         /// bulk density of the soil (mg/m3)
-#define VAR_SOL_CBN "sol_cbn"                       /// percent organic carbon in soil layer(%)
 #define VAR_SOL_COV "sol_cov"                    /// amount of residue on soil surface (kg/ha)
 #define VAR_SOL_CRK "sol_crk"                    /// crack volume potential of soil
 #define VAR_SOL_FON "sol_fon"                       /// amount of nitrogen stored in the fresh organic (residue) pool(kg N/ha)
@@ -747,6 +744,7 @@
 #define VAR_SOL_NO3 "sol_no3"                       /// amount of nitrogen stored in the nitrate pool in soil layer(kg N/ha)
 #define VAR_SOL_ORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
 #define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/ha)
+#define VAR_SOL_OM "om"
 #define VAR_SOL_PERCO "sol_perco" 
 #define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/ha)
@@ -762,10 +760,7 @@
 #define VAR_SOL_TD1 "soil_td1"
 #define VAR_SOL_TD2 "soil_td2"
 #define VAR_SOL_TMP "sol_tmp"                       /// daily average temperature of soil layer(deg C)
-#define VAR_SOL_WFC "sol_fc"                        /// Water content of soil profile at field capacity(mm H2O)
-#define VAR_SOL_WH "sol_ul"                         /// amount of water held in the soil layer at saturation(mm H2O)
 #define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)
-#define VAR_SOL_WSATUR "sol_wsatur"
 #define VAR_SOL_WST "sol_st"                        /// amount of water stored in the soil layer on current day(mm H2O)
 #define VAR_SOL_ZMX "SOL_ZMX"          /// Maximum rooting depth of soil profile (mm)
 #define VAR_SOMO "SOMO"                             /// Distribution of soil moisture
@@ -869,7 +864,7 @@
 #define UNIT_PER_DAY "1/day"               /// rate per day
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_PRESSURE "kPa"                         /// Vapor pressure
-#define UNIT_RAD_USE_EFFI
+#define UNIT_RAD_USE_EFFI "(kg/ha)/(MJ/m2)"
 #define UNIT_SECOND "sec"
 #define UNIT_SPEED_MS "m/s"                         /// Speed related
 #define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
@@ -963,7 +958,6 @@
 #define DESC_CONV_WT "factor which converts kg/kg soil to kg/ha"
 #define DESC_D_FlOWWIDTH "flow width (m) of overland plane"
 #define DESC_D_P "Precipitation distrubution raster"
-#define DESC_DAYL "day length for current day "
 #define DESC_DAYLEN "day length"
 #define DESC_DAYLEN_MIN  "minimum day length"
 #define DESC_DEET "Distribution of evaporation from depression storage"
@@ -1110,7 +1104,6 @@
 #define DESC_POROST "soil porosity"
 #define DESC_PPERCO "phosphorus percolation coefficient"
 #define DESC_PPT "maximum amount of transpiration (plant et)"
-#define DESC_PRECI "precipitation for the day"
 #define DESC_PSP "Phosphorus availability index"
 #define DESC_PUPDIS "Phosphorus uptake distribution parameter"
 #define DESC_QCH "Flux in the downslope boundary of cells"
@@ -1184,7 +1177,6 @@
 #define DESC_SOL_AORGN "amount of nitrogen stored in the active organic (humic) nitrogen pool"
 #define DESC_SOL_AWC "amount of water available to plants in soil layer at field capacity (AWC=FC-WP)"
 #define DESC_SOL_BD "bulk density of the soil"
-#define DESC_SOL_CBN "percent organic carbon in soil layer"
 #define DESC_SOL_COV "amount of residue on soil surface"
 #define DESC_SOL_CRK "crack volume potential of soil"
 #define DESC_SOL_FON "amount of nitrogen stored in the fresh organic (residue) pool"
@@ -1194,6 +1186,7 @@
 #define DESC_SOL_NO3 "amount of nitrogen stored in the nitrate pool in soil layer"
 #define DESC_SOL_ORGN "amount of nitrogen stored in the stable organic N pool"
 #define DESC_SOL_ORGP "amount of phosphorus stored in the organic P pool in soil layer"
+#define DESC_SOL_OM "percent of organic matter in soil"
 #define DESC_SOL_PERCO "percolation from soil layer" 
 #define DESC_SOL_RSD "amount of organic matter in the soil classified as residue"
 #define DESC_SOL_SOLP "amount of phosphorus stored in solution"
@@ -1210,9 +1203,7 @@
 #define DESC_SOL_TD2 "Coefficient d2 for Finn Plauborg Method"
 #define DESC_SOL_TMP "daily average temperature of soil layer"
 #define DESC_SOL_WFC "Water content of soil profile at field capacity"
-#define DESC_SOL_WH "amount of water held in the soil layer at saturation"
 #define DESC_SOL_WPMM " water content of soil at -1.5 MPa (wilting point)"
-#define DESC_SOL_WSATUR "amount of water held in the soil layer at saturation"
 #define DESC_SOL_WST "amount of water stored in the soil layer on current day"
 #define DESC_SOL_ZMX "Maximum rooting depth of soil profile (mm)"
 #define DESC_SOMO "soil moisture in soil layers"

@@ -118,6 +118,7 @@ private:
 	bool CheckInputData(void);
 
 	void initial();
+	void initialOutputs();
 	/*!
 	 * \brief check the input size. Make sure all the input data have same dimension.
 	 *

@@ -76,6 +76,6 @@ private:
 	/// amount of nitrate in layer (kg/km2)
 	float **m_sol_no3;
 
-
+	void initialOutputs();
 };
 #endif

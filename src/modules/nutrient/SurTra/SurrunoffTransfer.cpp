@@ -19,7 +19,7 @@ using namespace std;
 SurrunoffTransfer::SurrunoffTransfer(void):
 	//input 
 	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_sedimentYield(NULL), m_surfr(NULL), m_sol_bd(NULL), m_sol_z(NULL),
-	m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL),
+	m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_mp(NULL)
 	//output 
 	m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL)
 {
@@ -62,6 +62,7 @@ bool SurrunoffTransfer::CheckInputData() {
 	if(this -> m_sol_aorgn == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_sol_fon == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_sol_fop == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_sol_mp == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
 	return true;
 }
 void SurrunoffTransfer::SetValue(const char* key, float value)
@@ -114,10 +115,25 @@ void SurrunoffTransfer::Set2DData(const char* key, int nRows, int nCols, float**
 		throw ModelException("SurTra","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
 }
+void SurrunoffTransfer::initialOutputs() {
+	if(this->m_nCells <= 0) {
+		throw ModelException("SurTra", "CheckInputData", "The dimension of the input data can not be less than zero.");
+	}
+	// allocate the output variables
+	if(m_sedorgn == NULL) {
+		for(int i=0; i < m_nCells; i++) {
+			m_sedorgn[i] = 0.;
+			m_sedorgp[i] = 0.;
+			m_sedminpa[i] = 0.;
+			m_sedminps[i] = 0.;
+		}
+	}
+}
 int SurrunoffTransfer::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
 	}
+	this -> initialOutputs();
 	//enrichment ratio (enratio)
 	float* enratio = CalculateEnrRatio();
 	#pragma omp parallel for

@@ -171,7 +171,7 @@ def GenerateReachTable(folder, db, forCluster):
     downStreamDic, downstreamUpOrderDic, upstreamDownOrderDic, \
          depthDic, slopeDic, widthDic, lenDic = downStream(reachFile)
     #for k in downStreamDic:
-    #    print k, downStreamDic[k]
+        #print k, downStreamDic[k]
     
     g = nx.DiGraph()
     for k in downStreamDic:
@@ -244,7 +244,7 @@ def GenerateReachTable(folder, db, forCluster):
         dicManning[id] = maxManning - a * (upstreamDownOrderDic[id] - minOrder)
             
     for n in nlist:
-        #print 'divide number: ', n
+        print 'divide number: ', n
         if(n == 1):
             for id in downStreamDic:
                 dic = {}
@@ -262,6 +262,19 @@ def GenerateReachTable(folder, db, forCluster):
                 dic[REACH_LENGTH] = lenDic[id]
                 dic[REACH_DEPTH] = depthDic[id]
                 dic[REACH_AREA] = areaDic[id]*dx*dx
+                dic[REACH_BC1] = 0.55
+                dic[REACH_BC2] = 1.1
+                dic[REACH_BC3] = 0.21
+                dic[REACH_BC4] = 0.35
+                dic[REACH_RK1] = 1.71
+                dic[REACH_RK2] = 50
+                dic[REACH_RK3] = 0.36
+                dic[REACH_RK4] = 2
+                dic[REACH_RS1] = 1
+                dic[REACH_RS2] = 0.05
+                dic[REACH_RS3] = 0.5
+                dic[REACH_RS4] = 0.05
+                dic[REACH_RS5] = 0.05
                 db[DB_TAB_REACH].insert_one(dic)
             continue
         
@@ -314,6 +327,19 @@ def GenerateReachTable(folder, db, forCluster):
             dic[REACH_LENGTH] = lenDic[id]
             dic[REACH_DEPTH] = depthDic[id]
             dic[REACH_AREA] = areaDic[id]*dx*dx
+            dic[REACH_BC1] = 0.55
+            dic[REACH_BC2] = 1.1
+            dic[REACH_BC3] = 0.21
+            dic[REACH_BC4] = 0.35
+            dic[REACH_RK1] = 1.71
+            dic[REACH_RK2] = 50
+            dic[REACH_RK3] = 0.36
+            dic[REACH_RK4] = 2
+            dic[REACH_RS1] = 1
+            dic[REACH_RS2] = 0.05
+            dic[REACH_RS3] = 0.5
+            dic[REACH_RS4] = 0.05
+            dic[REACH_RS5] = 0.05
             db[DB_TAB_REACH].insert_one(dic)
          
     db[DB_TAB_REACH].create_index(REACH_GROUPDIVIDED)
@@ -324,7 +350,9 @@ def GenerateReachTable(folder, db, forCluster):
 
 if __name__ == "__main__":
     #conn = Connection(host='192.168.6.55', port=27017)
-    conn = MongoClient(host='192.168.6.55', port=27017)
-    workingDir = '/data/liujz/data/fenkeng/output'
-    db = conn['cluster_model_fenkeng_90m']
-    GenerateReachTable(workingDir, db, True)
+    conn = MongoClient(host='127.0.0.1', port=27017)
+    #workingDir = '/data/liujz/data/fenkeng/output'
+    workingDir = 'D:/SEIMS_model/Model_data/model_dianbu_30m_longterm/data_prepare/output'
+    #db = conn['cluster_model_fenkeng_90m']
+    db = conn['local']
+    GenerateReachTable(workingDir, db, False)

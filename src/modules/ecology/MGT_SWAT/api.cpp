@@ -38,7 +38,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC,Source_Module,DT_Raster1D);
 
 	/// set the output variables
-	mdi.AddOutput("VAR_NAME","UNIT", "DESC", "DT");
+	//mdi.AddOutput("VAR_NAME", "UNIT", "DESC", "DT");
 	/// write out the XML file.
 	res = mdi.GetXMLDocument();
 

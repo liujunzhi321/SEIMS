@@ -91,6 +91,6 @@ private:
 	 *		variables should be initial in the Get1DData function. This 
 	 *		initialization is realized by function initalOutputs. 
 	 */
-	void initalOutputs();
+	void initialOutputs();
 };
 

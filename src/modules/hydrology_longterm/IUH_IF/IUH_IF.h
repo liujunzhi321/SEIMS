@@ -91,6 +91,6 @@ private:
 	/// interflow to streams for each subbasin (m3/s)
 	float* m_Q_SBIF;
 
-	void initalOutputs();
+	void initialOutputs();
 };
 

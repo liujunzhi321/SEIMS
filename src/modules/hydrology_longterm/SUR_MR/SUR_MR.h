@@ -126,7 +126,7 @@ private:
 	/// infiltration map of watershed (mm) of the total nCells
 	float* m_infil;
 	/// initial output for the first run
-	void initalOutputs();
+	void initialOutputs();
 };
 
 

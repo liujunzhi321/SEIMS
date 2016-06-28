@@ -20,7 +20,7 @@ void MGTOpt_SWAT::Set1DData(const char* key, int n, float* data)
 void MGTOpt_SWAT::Set2DData(const char* key, int n, int col, float** data)
 {
 }
-bool MGTOpt_SWAT::GetOperationParameters(int nOp)
+bool MGTOpt_SWAT::GetOperationParameters(int i, int nOp)
 {
 	/// current management operation code
 	/// and Julian day of current management operation'

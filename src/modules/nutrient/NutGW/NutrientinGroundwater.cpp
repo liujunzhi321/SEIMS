@@ -86,11 +86,23 @@ void NutrientinGroundwater::Set1DData(const char* key,int n, float *data)
 		throw ModelException("NutGW","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
 }
-
+void NutrientinGroundwater::initialOutputs() {
+	if(this->m_nCells <= 0) {
+		throw ModelException("AtmosphericDeposition", "CheckInputData", "The dimension of the input data can not be less than zero.");
+	}
+	// allocate the output variables
+	if(m_no3gw == NULL) {
+		for(int i=0; i < m_nCells; i++) {
+			m_no3gw[i] = 0.;
+			m_minpgw[i] = 0.;
+		}
+	}
+}
 int NutrientinGroundwater::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
 	}
+	this -> initialOutputs();
 	for(int i = 0; i < m_nCells; i++) {
 
 		m_no3gw[i] = m_gwno3[i] * m_gw_q[i] / 100.;

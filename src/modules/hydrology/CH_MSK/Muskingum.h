@@ -72,7 +72,7 @@ private:
 			return -pow(-a, n);
 	}
 	void ChannelFlow(int iReach, int iCell, int id, float qgEachCell);
-	void initalOutputs();
+	void initialOutputs();
 	/// valid cells number
 	int m_nCells;
 
