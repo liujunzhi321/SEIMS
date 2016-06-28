@@ -39,5 +39,5 @@ void clsReach::Reset(void)
 	Subbasin				= -1;
 	UpDownOrder	= -1;
 	V0						= NODATA_VALUE;
-	Width					=NODATA_VALUE;
+	Width					= NODATA_VALUE;
 }
