@@ -19,7 +19,7 @@ using namespace std;
 SurrunoffTransfer::SurrunoffTransfer(void):
 	//input 
 	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_sedimentYield(NULL), m_surfr(NULL), m_sol_bd(NULL), m_sol_z(NULL),
-	m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_mp(NULL)
+	m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_mp(NULL), 
 	//output 
 	m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL)
 {
@@ -128,6 +128,7 @@ void SurrunoffTransfer::initialOutputs() {
 			m_sedminps[i] = 0.;
 		}
 	}
+	if(m_sol_mp == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_mp, (float)0.);}
 }
 int SurrunoffTransfer::Execute() {
 	if(!this -> CheckInputData()) { 
