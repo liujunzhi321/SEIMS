@@ -1,9 +1,15 @@
+/*!
+ * \file BMPPlantMgtFactory.cpp
+ * \brief Plant management operations factory
+ * \author Liang-Jun Zhu
+ * \date June 2016
+ */
 #include "BMPPlantMgtFactory.h"
 #include "utils.h"
 using namespace MainBMP;
 
-BMPPlantMgtFactory::BMPPlantMgtFactory(int scenarioId,int bmpId,int subScenario,int bmpType,int bmpPriority,string distribution,string parameter, string location)
-:BMPFactory(scenarioId,bmpId,subScenario,bmpType,bmpPriority,distribution,parameter,location)
+BMPPlantMgtFactory::BMPPlantMgtFactory(int scenarioId,int bmpId,int subScenario,int bmpType,int bmpPriority,string distribution,string collection, string location)
+:BMPFactory(scenarioId,bmpId,subScenario,bmpType,bmpPriority,distribution,collection,location)
 {	
 	m_location = utils::SplitStringForInt(location, ',');
 }
@@ -49,6 +55,8 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string bmpDBName)
 		float husc;
 		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_NAME))
 			m_name = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_LUCC)) 
+			m_luccID = GetIntFromBSONITER(&itertor);
 		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_MGTOP)) 
 			mgtCode = GetIntFromBSONITER(&itertor);
 		//if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_SEQUENCE)) 
@@ -72,11 +80,53 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string bmpDBName)
 		m_bmpSequence.push_back(uniqueMgtCode);
 		switch(mgtCode)
 		{
-		case BMP_PLTOP_PLANT:
+		case BMP_PLTOP_Plant:
 			m_bmpPlantOps[uniqueMgtCode] = new PlantOperation(mgtCode,husc,year,month,day,m_parameters);
 			break;
+		case BMP_PLTOP_Irrigation:
+			m_bmpPlantOps[uniqueMgtCode] = new IrrigationOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_Fertilizer:
+			m_bmpPlantOps[uniqueMgtCode] = new FertilizerOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_Pesticide:
+			m_bmpPlantOps[uniqueMgtCode] = new PesticideOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_HarvestKill:
+			m_bmpPlantOps[uniqueMgtCode] = new HarvestKillOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_Tillage:
+			m_bmpPlantOps[uniqueMgtCode] = new TillageOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_Harvest:
+			m_bmpPlantOps[uniqueMgtCode] = new HarvestOnlyOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_Kill:
+			m_bmpPlantOps[uniqueMgtCode] = new KillOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_Grazing:
+			m_bmpPlantOps[uniqueMgtCode] = new GrazingOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_AutoIrrigation:
+			m_bmpPlantOps[uniqueMgtCode] = new AutoIrrigationOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_AutoFertilizer:
+			m_bmpPlantOps[uniqueMgtCode] = new AutoFertilizerOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_ReleaseImpound:
+			m_bmpPlantOps[uniqueMgtCode] = new ReleaseImpoundOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_ContinuousFertilizer:
+			m_bmpPlantOps[uniqueMgtCode] = new ContinuousFertilizerOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_ContinuousPesticide:
+			m_bmpPlantOps[uniqueMgtCode] = new ContinuousPesticideOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
+		case BMP_PLTOP_Burning:
+			m_bmpPlantOps[uniqueMgtCode] = new BurningOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
 		default:
-			m_bmpPlantOps[uniqueMgtCode] = new PlantManagementOperation(mgtCode,husc,year,month,day,m_parameters);
+			break;
 		}
 		count++;
 	}

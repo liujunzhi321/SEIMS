@@ -63,64 +63,64 @@ ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath, S
 	mongoc_gridfs_destroy(spatialData);
 }
 
-ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath,  
-	ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod)
-	:m_conn(conn), m_dbName(dbName), m_projectPath(projectPath),  m_factory(factory),
-	m_subBasinID(subBasinID), m_scenarioID(scenarioID), m_layeringMethod(layeringMethod),
-	m_templateRasterData(NULL), m_readFileTime(0), m_initialized(false),
-	m_firstRunChannel(true), m_firstRunOverland(true)
-{
-}
-
-void ModelMain::Init(SettingsInput* input, int numThread)
-{
-	m_input = input;
-	m_dtDaily = m_input->getDtDaily();
-	m_dtHs = m_input->getDtHillslope();
-	m_dtCh = m_input->getDtChannel();
-
-	m_output = new SettingsOutput(m_subBasinID, m_projectPath + File_Output, m_conn, m_outputGfs);
-
-	mongoc_gridfs_t	*spatialData;
-	bson_error_t	*err = NULL;
-	spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
-	if(err != NULL)
-		throw ModelException("MainMongoDB","ModelMain","Failed to get GridFS: " + string(DB_TAB_SPATIAL) + ".\n");
-	m_outputGfs = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_OUT_SPATIAL,err);
-	if(err != NULL)
-		throw ModelException("MainMongoDB","ModelMain","Failed to create output GridFS: " + string(DB_TAB_OUT_SPATIAL) + ".\n");
-
-	CheckOutput(spatialData);
-    
-	m_readFileTime = m_factory->CreateModuleList(m_dbName, m_subBasinID, numThread, m_layeringMethod, m_templateRasterData, m_input, m_simulationModules);
-	//cout << "Read file time: " << m_readFileTime << endl;
-	size_t n = m_simulationModules.size();
-	m_executeTime.resize(n, 0);
-	for (size_t i = 0; i < n; i++)
-	{
-		SimulationModule *pModule = m_simulationModules[i];
-
-		switch(pModule->GetTimeStepType())
-		{
-		case TIMESTEP_HILLSLOPE:
-			m_hillslopeModules.push_back(i);
-			break;
-		case TIMESTEP_CHANNEL:
-			m_channelModules.push_back(i);
-			//cout << "channel module: " << i << endl; 
-			break;
-		case TIMESTEP_ECOLOGY:
-			m_ecoModules.push_back(i);
-
-		}
-	}
-
-	CheckOutput();
-    m_initialized = true;
-	mongoc_gridfs_destroy(spatialData);
-}
-
-
+//ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath,  
+//	ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod)
+//	:m_conn(conn), m_dbName(dbName), m_projectPath(projectPath),  m_factory(factory),
+//	m_subBasinID(subBasinID), m_scenarioID(scenarioID), m_layeringMethod(layeringMethod),
+//	m_templateRasterData(NULL), m_readFileTime(0), m_initialized(false),
+//	m_firstRunChannel(true), m_firstRunOverland(true)
+//{
+//}
+//
+//void ModelMain::Init(SettingsInput* input, int numThread)
+//{
+//	m_input = input;
+//	m_dtDaily = m_input->getDtDaily();
+//	m_dtHs = m_input->getDtHillslope();
+//	m_dtCh = m_input->getDtChannel();
+//
+//	m_output = new SettingsOutput(m_subBasinID, m_projectPath + File_Output, m_conn, m_outputGfs);
+//
+//	mongoc_gridfs_t	*spatialData;
+//	bson_error_t	*err = NULL;
+//	spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
+//	if(err != NULL)
+//		throw ModelException("MainMongoDB","ModelMain","Failed to get GridFS: " + string(DB_TAB_SPATIAL) + ".\n");
+//	m_outputGfs = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_OUT_SPATIAL,err);
+//	if(err != NULL)
+//		throw ModelException("MainMongoDB","ModelMain","Failed to create output GridFS: " + string(DB_TAB_OUT_SPATIAL) + ".\n");
+//
+//	CheckOutput(spatialData);
+//    
+//	m_readFileTime = m_factory->CreateModuleList(m_dbName, m_subBasinID, numThread, m_layeringMethod, m_templateRasterData, m_input, m_simulationModules);
+//	//cout << "Read file time: " << m_readFileTime << endl;
+//	size_t n = m_simulationModules.size();
+//	m_executeTime.resize(n, 0);
+//	for (size_t i = 0; i < n; i++)
+//	{
+//		SimulationModule *pModule = m_simulationModules[i];
+//
+//		switch(pModule->GetTimeStepType())
+//		{
+//		case TIMESTEP_HILLSLOPE:
+//			m_hillslopeModules.push_back(i);
+//			break;
+//		case TIMESTEP_CHANNEL:
+//			m_channelModules.push_back(i);
+//			//cout << "channel module: " << i << endl; 
+//			break;
+//		case TIMESTEP_ECOLOGY:
+//			m_ecoModules.push_back(i);
+//
+//		}
+//	}
+//
+//	CheckOutput();
+//    m_initialized = true;
+//	mongoc_gridfs_destroy(spatialData);
+//}
+//
+//
 
 ModelMain::~ModelMain(void)
 {

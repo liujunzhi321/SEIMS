@@ -32,6 +32,18 @@ int GetYear(time_t &date)
 	LocalTime(date, &dateInfo);
 	return dateInfo.tm_year;
 }
+int GetMonth(time_t &date)
+{
+	struct tm dateInfo;
+	LocalTime(date, &dateInfo);
+	return dateInfo.tm_mon;
+}
+int GetDay(time_t &date)
+{
+	struct tm dateInfo;
+	LocalTime(date, &dateInfo);
+	return dateInfo.tm_mday;
+}
 int JulianDay(time_t &date)
 {
 	struct tm dateInfo;

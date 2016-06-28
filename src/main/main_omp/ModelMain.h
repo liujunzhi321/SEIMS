@@ -53,8 +53,8 @@ public:
 	 * \param[in] scenarioID Scenario ID
 	 * \param[in] layeringMethod Layering method, default is UP_DOWN
 	 */
-    ModelMain(mongoc_client_t* conn, string dbName, string projectPath,
-                 ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod = UP_DOWN);
+    //ModelMain(mongoc_client_t* conn, string dbName, string projectPath,
+    //             ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod = UP_DOWN);
 	//! Destructor
 	~ModelMain(void);
 
@@ -85,7 +85,7 @@ public:
 	//! Include channel processes or not?
 	bool	IncludeChannelProcesses(){return m_channelModules.size() != 0;}
 
-	void	Init(SettingsInput* input, int numThread);
+	//void	Init(SettingsInput* input, int numThread);
 	//! Has the model been initialized?
 	bool	IsInitialized() { return m_initialized; }
 	//! Creating output files, e.g., QOutlet.txt

@@ -481,3 +481,35 @@ void SUR_CN::initalW1W2()
 		m_sMax[i] = smx;
 	}
 }
+
+/// TODO: These code should be coupled to SUR_CN module. By LJ.  
+/// curno.f in SWAT
+//float smxOld;
+//if(m_CN1[i] > UTIL_ZERO)
+//	smxOld = 254. * (100. / m_CN1[i] - 1.);
+//float c2 = 0.f, c3 = 0.f;
+//m_CN3[i] = 0.f;
+//m_CN1[i] = 0.f;
+///// calculate moisture condition I and III curve numbers
+//c2 = 100. - cnn;
+//m_CN1[i] = cnn - 20. * c2 / (c2 + exp(2.533 - 0.0636 * c2));
+//m_CN1[i] = max(m_CN1[i], 0.4 * cnn);
+//m_CN3[i] = cnn * exp(0.006729 * c2);
+
+///// calculate maximum retention parameter value
+//m_reCoefSoilMois[i] = 254. * (100. / m_CN1[i] - 1.);
+
+//// calculate retention parameter value for CN3
+//float s3 = 254. * (100. / m_CN3[i] - 1.);
+
+//// calculate fraction difference in retention parameters
+//float rto3 = 0.f, rtos = 0.f;
+//rto3 = 1. - s3 / m_reCoefSoilMois[i];
+//rtos = 1. - 2.54 / m_reCoefSoilMois[i];
+///// calculate shape parameters
+//float *w1, *w2;
+//getScurveShapeParameter(rto3, rtos, m_soilSumFC[i], m_soilSumUl[i], w1, w2);
+//if(m_yearIdx < 0) /// in SWAT, curyr is from 1 to nbyr. in SEIMS, m_yearIdx is start from 0
+//	m_reCoefCN[i] = 0.9 * m_reCoefSoilMois[i];
+//else /// plant ET
+//	m_reCoefCN[i] = (1. - ((smxOld - m_reCoefCN[i]) / smxOld)) * m_reCoefSoilMois[i];

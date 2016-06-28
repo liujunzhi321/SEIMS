@@ -18,7 +18,7 @@ int main(int argc, const char* argv[])
 {
 	GDALAllRegister();
 	string	modelPath = "";
-	int		scenarioID = 0;  /// By default is the Base Scenario ID
+	int		scenarioID = -1;  /// By default, no BMPs Scenario is used, in case of lack of BMPs database.
 	int i = 0;
 	int numThread = 1;
 	LayeringMethod layeringMethod = UP_DOWN;

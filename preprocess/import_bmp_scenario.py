@@ -37,8 +37,8 @@ def ImportBMPTables():
     for item in BMP_tabs:
         if not StringInList(item, cList):
             db.create_collection(item)
-        else:
-            db.drop_collection(item)
+        # else:
+        #     db.drop_collection(item)
     for j in range(len(BMP_tabs_path)):
         bmpTxt = BMP_tabs_path[j]
         bmpTabName = BMP_tabs[j]
@@ -52,18 +52,20 @@ def ImportBMPTables():
                     dic[fieldArray[i]] = float(item[i])
                 else:
                     dic[fieldArray[i]] = str(item[i])
-            db[bmpTabName].insert_one(dic)
+            db[bmpTabName].find_one_and_replace(dic, dic, upsert=True)
+            # db[bmpTabName].insert_one(dic)
     #print 'BMP tables are imported.'
     ## Write BMP database name into Model main database
     mainDB = conn[SpatialDBName]
     cList = mainDB.collection_names()
     if not StringInList(DB_TAB_BMP_DB, cList):
         mainDB.create_collection(DB_TAB_BMP_DB)
-    else:
-        mainDB.drop_collection(DB_TAB_BMP_DB)
+    # else:
+    #     mainDB.drop_collection(DB_TAB_BMP_DB)
     bmpInfoDic = {}
     bmpInfoDic["DB"] = BMPScenarioDBName
-    mainDB[DB_TAB_BMP_DB].insert_one(bmpInfoDic)
+    mainDB[DB_TAB_BMP_DB].find_one_and_replace(bmpInfoDic, bmpInfoDic, upsert=True)
+    # mainDB[DB_TAB_BMP_DB].insert_one(bmpInfoDic)
     ImportLookupTables(sqliteFile, db)
     conn.close()
 if __name__ == "__main__":
