@@ -229,7 +229,6 @@ PlantManagementOperation(mgtOp,husc,year,month,day,parameters)
 	if(m_irrEff > 1.) m_irrEff = 0.;
 	if(FloatEqual(m_irrEff, 0.)) m_irrEff = 1.;
 	if(m_irrMx < UTIL_ZERO) m_irrMx = 25.4;
-	if(m_irrSrc <= 0) m_irrSrc = 
 }
 AutoIrrigationOperation::~AutoIrrigationOperation()
 {

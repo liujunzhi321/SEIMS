@@ -376,7 +376,7 @@ namespace MainBMP
 		public:
 			BurningOperation(int mgtOp, float husc, int year, int month, int day,float* parameters);
 			~BurningOperation();
-			int FractionLeft(){return m_burnFrlb;}
+			float FractionLeft(){return m_burnFrlb;}
 			//! Output
 			void dump(ostream *fs);
 		private:
