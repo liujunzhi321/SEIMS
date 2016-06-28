@@ -188,7 +188,7 @@ private:
 
 	map<int, vector<int> > m_reachLayers;
 
-	void initalOutputs();
+	void initialOutputs();
 
 	void SedChannelRouting(int i);
 

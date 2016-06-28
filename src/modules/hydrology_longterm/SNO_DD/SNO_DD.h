@@ -70,6 +70,6 @@ private:
 	/// removed by LJ
 	///bool m_isInitial;
 
-	void initalOutputs();
+	void initialOutputs();
 };
 

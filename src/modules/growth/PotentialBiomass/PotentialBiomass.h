@@ -119,7 +119,7 @@ private:
 	void getNPShapeParameter(float* fr1, float* fr2, float* fr3, float* shape1, float* shape2);
 	float getNPFraction(float fr1, float fr3, float shape1, float shape2, float frPHU);
 	float NPBiomassFraction(float x1, float x2, float x3, float frPHU);
-	void initalOutputs();
+	void initialOutputs();
 
 	bool IsTree(int classification); 
 	bool IsAnnual(int classification);

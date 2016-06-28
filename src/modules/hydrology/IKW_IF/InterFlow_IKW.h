@@ -54,7 +54,7 @@ private:
 
 	void FlowInSoil(int id);
 
-	void initalOutputs();
+	void initialOutputs();
 
 	/// size
 	int m_nCells;

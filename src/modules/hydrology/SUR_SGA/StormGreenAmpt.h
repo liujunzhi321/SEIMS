@@ -139,7 +139,7 @@ private:
 
 	/// this function calculated the wetting front matric potential
 	float CalculateCapillarySuction(float por, float clay, float sand);
-	void initalOutputs();
+	void initialOutputs();
 
 };
 ///#endif

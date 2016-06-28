@@ -70,7 +70,6 @@ void MGTOpt_SWAT::Set1DData(const char* key, int n, float* data)
 void MGTOpt_SWAT::Set2DData(const char* key, int n, int col, float** data)
 {
 }
-
 void MGTOpt_SWAT::SetScenario(Scenario* sce)
 {
 	if(NULL != sce)

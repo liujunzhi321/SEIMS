@@ -65,8 +65,8 @@ private:
 	float GetNewQ(float qIn, float qLast, float surplus, float alpha, float dt, float dx);
 
 	void ChannelFlow(int iReach, int iCell, int id, float qgEachCell);
-	void initalOutputs();
-	void initalOutputs2();
+	void initialOutputs();
+	void initialOutputs2();
 	/// valid cells number
 	int m_nCells;
 

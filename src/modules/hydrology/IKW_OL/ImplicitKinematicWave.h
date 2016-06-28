@@ -61,7 +61,7 @@ private:
 
 	void OverlandFlow(int id);
 
-	void initalOutputs();
+	void initialOutputs();
 
 	//! valid cells number
 	int m_nCells;

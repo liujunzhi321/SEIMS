@@ -74,7 +74,7 @@ private:
 	/// surplus of storage capacity
 	float *m_storageCapSurplus;
 
-	void initalOutputs();
+	void initialOutputs();
 
 	/// whether check inputs, TODO Is it useless? By LJ
 	bool m_checkInput;

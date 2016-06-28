@@ -51,13 +51,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_ANION_EXCL, UNIT_NON_DIM, DESC_ANION_EXCL, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_LDRAIN, UNIT_NON_DIM, DESC_LDRAIN, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_SOL_CRK, UNIT_NON_DIM, DESC_SOL_CRK, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_SOL_SUMSAT, UNIT_DEPTH_MM, DESC_SOL_SUMSAT, Source_ParameterDB, DT_Raster1D);
 
 	mdi.AddParameter(VAR_FLAT, UNIT_DEPTH_MM, DESC_FLAT, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_PERCO, UNIT_DEPTH_MM, DESC_SOL_PERCO, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_BD, UNIT_DENSITY, DESC_SOL_BD, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_WSATUR, UNIT_DEPTH_MM, DESC_SOL_WSATUR, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_CONV_WT, UNIT_NON_DIM, DESC_CONV_WT, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOILDEPTH, UNIT_NON_DIM, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGKM2, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
 

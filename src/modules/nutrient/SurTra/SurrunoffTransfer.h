@@ -122,6 +122,7 @@ private:
 	 */
 	void OrgpAttachedtoSed(int i, float enratio);
 
+	void initialOutputs();
 	
 };
 #endif

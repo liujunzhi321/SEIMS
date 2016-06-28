@@ -20,7 +20,7 @@ NutrientCHRoute::NutrientCHRoute(void):
 	m_dt(-1), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1),igropt(-1),  
 	m_ai0(-1), m_ai1(-1),m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1), m_lambda2(-1),
 	m_k_l(-1), m_k_n(-1), m_k_p(-1), m_p_n(-1), tfact(-1), m_mumax(-1), m_rhoq(-1), 
-	m_dayl(NULL), m_sra(NULL), m_bankStorage(NULL), m_qsSub(NULL), m_qiSub(NULL), m_qgSub(NULL), 
+	m_daylen(NULL), m_sra(NULL), m_bankStorage(NULL), m_qsSub(NULL), m_qiSub(NULL), m_qgSub(NULL), 
 	m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL), m_chStorage(NULL), m_chWTdepth(NULL), m_wattemp(NULL),
 	m_latno3ToCh(NULL), m_surqno3ToCh(NULL), m_surqsolpToCh(NULL), m_no3gwToCh(NULL), 
 	m_minpgwToCh(NULL), m_sedorgnToCh(NULL), m_sedorgpToCh(NULL), m_sedminpaToCh(NULL),
@@ -76,7 +76,7 @@ bool NutrientCHRoute::CheckInputData() {
 	if(this -> tfact < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_mumax < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_rhoq < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_dayl == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_daylen == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_sra == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_bankStorage == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_qsSub == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
@@ -142,7 +142,7 @@ void NutrientCHRoute::Set1DData(const char* key,int n, float *data)
 		return;
 	}
 	string sk(key);
-	if (StringMatch(sk, VAR_DAYL)) {this -> m_dayl = data;}
+	if (StringMatch(sk, VAR_DAYLEN)) {this -> m_daylen = data;}
 	else if (StringMatch(sk, VAR_SRA)) {this -> m_sra = data;}
 	else if (StringMatch(sk, VAR_BKST)) {this -> m_bankStorage = data;}
 	else if (StringMatch(sk, VAR_SBOF)) {this -> m_qsSub = data;}
@@ -173,7 +173,7 @@ void NutrientCHRoute::Set2DData(const char* key, int nrows, int ncols, float** d
 {
 	string sk(key);
 
-	if (StringMatch(sk, Tag_RchParam))
+	if (StringMatch(sk, VAR_RCHPARAM))
 	{
 		m_nReaches = ncols - 1;
 		m_reachId = data[0];
@@ -237,7 +237,7 @@ void  NutrientCHRoute::initialOutputs() {
 		m_soxy = 0.;
 
 		#pragma omp parallel for
-		for (int i=1; i<=m_nReaches; i++) {
+		for (int i = 1; i <= m_nReaches; i++) {
 			m_algae[i] = 0.;
 			m_organicn[i] = 0.;
 			m_organicp[i] = 0.;
@@ -256,7 +256,7 @@ int NutrientCHRoute::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
 	}
-	initialOutputs();
+	this -> initialOutputs();
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
 	{
@@ -505,8 +505,8 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		dno3  = 0.;
 		dorgp = 0.;
 		dsolp  = 0.;
-		if (m_dayl[i] > 0.) {
-			algi = m_sra[i] * tfact / m_dayl[i];
+		if (m_daylen[i] > 0.) {
+			algi = m_sra[i] * tfact / m_daylen[i];
 		} else {
 			algi = 0.00001;
 		}
@@ -515,7 +515,7 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		float fl_1 = 0.;
 		float fll = 0.;
 		fl_1 = (1. / (lambda * m_chWTdepth[i])) * log((m_k_l * 24 + algi) / (m_k_l * 24 + algi * exp(-lambda * m_chWTdepth[i])));
-		fll = 0.92 * (m_dayl[i] / 24.) * fl_1;
+		fll = 0.92 * (m_daylen[i] / 24.) * fl_1;
 
 		// calculate local algal growth rate
 		float gra = 0.;

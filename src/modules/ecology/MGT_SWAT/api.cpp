@@ -106,6 +106,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_SHALLST, UNIT_DEPTH_MM, DESC_SHALLST, Source_Module, DT_Raster1D);
 
 	/// set the output variables
+
 	mdi.AddOutput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, DT_Raster1D);
 	mdi.AddOutput(VAR_BIOTARG, UNIT_CONT_KGHA, DESC_BIOTARG, DT_Raster1D);  /// defined in plant operation
 	mdi.AddOutput(VAR_HITARG, UNIT_CONT_RATIO, DESC_HITARG, DT_Raster1D);  /// defined in plant operation

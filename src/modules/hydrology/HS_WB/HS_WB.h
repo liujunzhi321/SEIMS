@@ -94,7 +94,7 @@ public:
 
 
 private:
-	void initalOutputs();
+	void initialOutputs();
 	/**
 	*	@brief check the input data. Make sure all the input data is available.
 	*

@@ -24,8 +24,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetClass(MCLS_ATMDEP, MCLSDESC_ATMDEP);
 	mdi.SetDescription(MDESC_ATMDEP);
 	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetID((MDESC_ATMDEP);
-	mdi.SetName((MDESC_ATMDEP);
+	mdi.SetID(MDESC_ATMDEP);
+	mdi.SetName(MDESC_ATMDEP);
 	mdi.SetVersion("0.1");
 	mdi.SetWebsite(SEIMS_SITE);
 
@@ -40,7 +40,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D); 
 
-	mdi.AddInput(VAR_PRECI, UNIT_DEPTH_MM, DESC_PRECI, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_D_P, UNIT_DEPTH_MM, DESC_D_P, Source_Module, DT_Raster1D);
 
 	mdi.AddOutput(VAR_ADDRNO3, UNIT_CONT_KGKM2, DESC_ADDRNO3, DT_Single);
 	mdi.AddOutput(VAR_WSHD_RNO3, UNIT_CONT_KGKM2, DESC_WSHD_RNO3, DT_Single);

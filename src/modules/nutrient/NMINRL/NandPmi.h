@@ -55,24 +55,22 @@ private:
 	///nitrogen active pool fraction. The fraction of organic nitrogen in the active pool.
 	float m_nactfr;
 	///Phosphorus availability index. The fraction of fertilizer P remaining in labile pool after initial rapid phase of P sorption
-	float* m_psp;
+	float m_psp;
 	//rate coefficient for denitrification
-	float* m_cdn;
+	float m_cdn;
 	///land cover code from crop.dat
 	float* m_landcover;
 	///plant residue decomposition coefficient.
 	///The fraction of residue which will decompose in a day assuming optimal moisture, temperature, C:N ratio, and C:P ratio
 	float* m_rsdco_pl;
-	///percent organic carbon in soil layer(%)
-	float** m_sol_cbn;
+	///percent organic matter in soil layer (%)
+	float** m_sol_om;
 	///amount of water stored in the soil layer on current day(mm H2O)
 	float** m_sol_st;
 	///Water content of soil profile at field capacity(mm H2O)
 	float** m_sol_fc;
 	///daily average temperature of soil layer(deg C)
 	float** m_sol_tmp;
-	///amount of water held in the soil layer at saturation(mm H2O)
-	float** m_sol_ul;
 	///depth to bottom of soil layer
 	float** m_sol_z;
 	///amount of phosphorus stored in the active mineral phosphorus pool
@@ -178,12 +176,9 @@ private:
 	 */
 	void CalculatePflux(int i);
 
+	void initialOutputs();
 	
 };
 
 #endif
-
-
-
-
 
