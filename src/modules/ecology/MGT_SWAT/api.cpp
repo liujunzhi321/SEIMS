@@ -30,7 +30,9 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetHelpfile("");
 	/// set parameters from database
 	mdi.AddParameter(VAR_CSWAT, UNIT_NON_DIM, DESC_CSWAT, Source_ParameterDB, DT_Single);
-	mdi.AddParameter(VAR_BACT_SWF, UNIT_NON_DIM, DESC_BACT_SWF, Source_ParameterDB, DT_Single);
+	//mdi.AddParameter(VAR_BACT_SWF, UNIT_NON_DIM, DESC_BACT_SWF, Source_ParameterDB, DT_Single); ///TODO
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+
 	mdi.AddParameter(VAR_MGT_FIELD, UNIT_NON_DIM, DESC_MGT_FIELD, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_DAYLEN_MIN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN_MIN,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_PHUTOT, UNIT_TIMESTEP_HOUR, DESC_PHUTOT,Source_ParameterDB, DT_Raster1D);
@@ -58,8 +60,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_TREEYRS, UNIT_YEAR, DESC_TREEYRS, Source_ParameterDB, DT_Raster1D); /// m_curYearMat
 	mdi.AddParameter(VAR_WSYF, UNIT_CONT_RATIO, DESC_WSYF, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_PHUPLT, UNIT_HEAT_UNIT,DESC_PHUPLT, Source_ParameterDB, DT_Raster1D);
-
-		
 
 	/// lookup tables
 	mdi.AddParameter(VAR_LANDUSE_LOOKUP, UNIT_NON_DIM, DESC_LANDUSE_LOOKUP, Source_ParameterDB, DT_Array2D);
@@ -94,14 +94,15 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_PLANT_N, UNIT_CONT_KGHA, DESC_PLANT_N, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_PLANT_P, UNIT_CONT_KGHA, DESC_PLANT_P, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_FR_PLANT_N, UNIT_NON_DIM, DESC_FR_PLANT_N, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_FR_PLANT_P, UNIT_NON_DIM, DESC_FR_PLANT_P, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_FR_ROOT, UNIT_NON_DIM, DESC_FR_ROOT, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_BIOMASS, UNIT_CONT_KGHA, DESC_BIOMASS, Source_Module, DT_Raster1D);
-	mdi.AddInput(VAR_PLTET, UNIT_DEPTH_MM, DESC_PLTET, Source_Module, DT_Raster1D);
-	mdi.AddInput(VAR_PLTPET, UNIT_DEPTH_MM, DESC_PLTPET, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_PLTET_TOT, UNIT_DEPTH_MM, DESC_PLTET_TOT, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_PLTPET_TOT, UNIT_DEPTH_MM, DESC_PLTPET_TOT, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_LAST_SOILRD, UNIT_DEPTH_MM, DESC_LAST_SOILRD, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_FR_STRSWTR, UNIT_NON_DIM, DESC_FR_STRSWTR, Source_Module, DT_Raster1D);
 	
-	/// water table
+	/// groundwater table
 	mdi.AddInput(VAR_DEEPST, UNIT_DEPTH_MM, DESC_DEEPST, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SHALLST, UNIT_DEPTH_MM, DESC_SHALLST, Source_Module, DT_Raster1D);
 
@@ -121,11 +122,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_AIRRWTR_DEPTH, UNIT_DEPTH_MM, DESC_AIRRWTR_DEPTH, DT_Raster1D);
 	mdi.AddOutput(VAR_AIRRSURF_RATIO, UNIT_NON_DIM, DESC_AIRRSURF_RATIO, DT_Raster1D);
 	mdi.AddOutput(VAR_AFERT_ID, UNIT_NON_DIM, DESC_AFERT_ID, DT_Raster1D);
+	mdi.AddOutput(VAR_AFERT_NSTRSID, UNIT_NON_DIM, DESC_AFERT_NSTRSID, DT_Raster1D);
 	mdi.AddOutput(VAR_AFERT_NSTRS, UNIT_NON_DIM, DESC_AFERT_NSTRS, DT_Raster1D);
-
-	m_fertilizeID(NULL), m_NStressCode(NULL), m_autoNStress(NULL), m_autoMaxAppliedN(NULL), m_autoAnnMaxAppliedMinN(NULL), 
-		m_targNYld(NULL), m_autoFertEfficiency(NULL), m_autoFertSurface(NULL), 
-
+	mdi.AddOutput(VAR_AFERT_MAXN, UNIT_CONT_KGHA, DESC_AFERT_MAXN, DT_Raster1D);
+	mdi.AddOutput(VAR_AFERT_AMAXN, UNIT_CONT_KGHA, DESC_AFERT_AMAXN,DT_Raster1D);
+	mdi.AddOutput(VAR_AFERT_NYLDT, UNIT_NON_DIM, DESC_AFERT_NYLDT, DT_Raster1D);
+	mdi.AddOutput(VAR_AFERT_FRTEFF, UNIT_NON_DIM, DESC_AFERT_FRTEFF, DT_Raster1D);
+	mdi.AddOutput(VAR_AFERT_FRTSURF, UNIT_NON_DIM, DESC_AFERT_FRTSURF, DT_Raster1D);
 	mdi.AddOutput(VAR_GRZ_DAYS, UNIT_NON_DIM, DESC_GRZ_DAYS, DT_Raster1D); /// defined in grazing operation
 	mdi.AddOutput(VAR_GRZ_FLAG, UNIT_NON_DIM, DESC_GRZ_FLAG, DT_Raster1D);
 	mdi.AddOutput(VAR_IMPOUND_TRIG, UNIT_NON_DIM, DESC_IMPOUND_TRIG, DT_Raster1D); /// defined in impound/release operation
@@ -137,11 +140,3 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	strprintf(tmp, res.size()+1, "%s", res.c_str());
 	return tmp;
 }
-	/// bacteria related
-	m_bactSwf(NODATA),	m_bactLessPersistPlt(NULL), m_bactLessPersistSol(NULL), m_bactLessPersistParticle(NULL), 
-	m_bactPersistPlt(NULL), m_bactPersistSol(NULL), m_bactPersistParticle(NULL), 
-	/// Tillage operation
-	(NULL), 
-	/// auto fertilizer operation
-
-
