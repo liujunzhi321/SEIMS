@@ -203,24 +203,6 @@ void Read2DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename
 	free(floatValues);
 }
 
-//void Read2DSoilAttr(mongoc_gridfs_t* spatialData, string remoteFileName, clsRasterData* templateRaster, int& n, float**& data)
-//{
-//	string remoteFile2 = remoteFileName + "2";
-//	clsRasterData raster1(spatialData, remoteFileName.c_str(), templateRaster);
-//	clsRasterData raster2(spatialData, remoteFile2.c_str(), templateRaster);
-//
-//	float *data1, *data2;
-//	raster1.getRasterData(&n, &data1);
-//	raster2.getRasterData(&n, &data2);
-//
-//	data = new float*[n];
-//	for(int i = 0; i < n; i++){
-//		data[i] = new float[2];
-//		data[i][0] = data1[i];
-//		data[i][1] = data2[i];
-//	}
-//}
-
 void ReadIUHFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& n, float**& data)
 {
 	mongoc_gridfs_file_t	*gfile;

@@ -14,7 +14,8 @@
 #include <iomanip>
 #include <fstream>
 #ifndef linux
-    #include <Windows.h>
+	#include <WinSock2.h>
+	#include <windows.h>
 #else
     #include <unistd.h>    
     #include <sys/types.h>
@@ -121,14 +122,14 @@ void PrintInfoItem::add1DTimeSeriesResult(time_t t,int n,float* data)
 void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, string header)
 {
 #ifndef linux
-	projectPath = projectPath + DB_TAB_OUT_SPATIAL + "\\";
+	projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
 	if(::GetFileAttributes(projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
 	{
 		LPSECURITY_ATTRIBUTES att = NULL;
 		::CreateDirectory(projectPath.c_str(),att);
 	}
 #else
-	projectPath = projectPath + DB_TAB_OUT_SPATIAL + "/";
+	projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
 	if(access(projectPath.c_str(), F_OK) != 0)
 	{
 		mkdir(projectPath.c_str(), 0777);

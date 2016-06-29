@@ -21,6 +21,7 @@
 #include <functional>
 
 #ifndef linux
+#include <WinSock2.h>
 #include <Windows.h>
 #include <direct.h>
 #endif

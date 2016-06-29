@@ -15,9 +15,20 @@
 // TODO - you may consider moving these to an external resource file 
 //        to make it easier to change them later 
 
-#define MODEL_NAME "SEIMS"
-#define SEIMS_EMAIL "SEIMS2015@163.com"
-#define SEIMS_SITE "https://github.com/seims/SEIMS/wiki"
+#define MODEL_NAME							"SEIMS"
+#define SEIMS_EMAIL								"SEIMS2015@163.com"
+#define SEIMS_SITE								"https://github.com/seims/SEIMS/wiki"
+
+#ifndef linux
+#define Tag_ModuleDirectoryName "\\"
+#define SEP "\\"
+#define Tag_ModuleExt ".dll"
+#else
+#define Tag_ModuleDirectoryName "/"
+#define SEP "/"
+#define Tag_So "lib"
+#define Tag_ModuleExt ".so"
+#endif
 
 //! Constant input variables
 #define CONS_IN_ELEV							"Elevation"
@@ -25,18 +36,18 @@
 #define CONS_IN_XPR							"xpr"
 #define CONS_IN_YPR							"ypr"
 
-//! Climate data type, used in SEIMS_ModuleSetting class, ITP, etc. // LJ, Apr.,2016
-#define DataType_Precipitation "P"					//1, Suffix of precipitation data
-#define DataType_MeanTemperature "TMEAN"      	    //2
-#define DataType_MinimumTemperature "TMIN"			//3
-#define DataType_MaximumTemperature "TMAX"			//4
-#define DataType_PotentialEvapotranspiration "PET"	//5
-#define DataType_SolarRadiation "SR"				//6
-#define DataType_WindSpeed "WS"						//7
-#define DataType_RelativeAirMoisture "RM"			//8
-#define DataType_Meteorology "M"                    // Suffix of meteorology data
-#define DataType_Prefix_TS "T"                      // Prefix of time series data
-#define DataType_Prefix_DIS "D"                     // Prefix of distributed data
+//! Climate data type
+#define DataType_Precipitation							"P"					//1, Suffix of precipitation data
+#define DataType_MeanTemperature					"TMEAN"      	//2
+#define DataType_MinimumTemperature			"TMIN"			//3
+#define DataType_MaximumTemperature			"TMAX"			//4
+#define DataType_PotentialEvapotranspiration	"PET"				//5
+#define DataType_SolarRadiation						"SR"				//6
+#define DataType_WindSpeed							"WS"				//7
+#define DataType_RelativeAirMoisture				"RM"				//8
+#define DataType_Meteorology							"M"                  // Suffix of meteorology data
+#define DataType_Prefix_TS								"T"                   // Prefix of time series data
+#define DataType_Prefix_DIS								"D"                   // Prefix of distributed data
 
 //! Tags
 #define Tag_Configuration "Configuration"
@@ -52,100 +63,43 @@
 #define Tag_VerticalInterpolation "VERTICALINTERPOLATION"
 #define Tag_Weight "WEIGHT"
 
-///////  define parameter-related string constants used in the SEIMS ///////
-#define PARAM_USE_Y			"Y"
-#define PARAM_USE_N			"N"
+///////  define parameter calibration related string constants  ///////
 #define PARAM_CHANGE_RC		"RC"
 #define PARAM_CHANGE_AC		"AC"
 #define PARAM_CHANGE_NC		"NC"
-#define PARAM_FLD_NAME		"NAME"
-#define PARAM_FLD_DESC		"DESCRIPTION"
-#define PARAM_FLD_UNIT		"UNIT"
-#define PARAM_FLD_MIDS		"MODULE"
-#define PARAM_FLD_VALUE		"VALUE"
-#define PARAM_FLD_IMPACT	"IMPACT"
-#define PARAM_FLD_CHANGE	"CHANGE"
-#define PARAM_FLD_MAX		"MAX"
-#define PARAM_FLD_MIN		"MIN"
-#define PARAM_FLD_USE		"USE"
+#define PARAM_FLD_NAME			"NAME"
+#define PARAM_FLD_DESC			"DESCRIPTION"
+#define PARAM_FLD_UNIT				"UNIT"
+#define PARAM_FLD_MIDS			"MODULE"
+#define PARAM_FLD_VALUE			"VALUE"
+#define PARAM_FLD_IMPACT		"IMPACT"
+#define PARAM_FLD_CHANGE		"CHANGE"
+#define PARAM_FLD_MAX				"MAX"
+#define PARAM_FLD_MIN				"MIN"
+#define PARAM_FLD_USE				"USE"
+#define PARAM_USE_Y					"Y"
+#define PARAM_USE_N					"N"
 
-
-#ifndef linux
-    #define Tag_ModuleDirectoryName "\\"
-	#define SEP "\\"
-    #define Tag_ModuleExt ".dll"
-#else
-    #define Tag_ModuleDirectoryName "/"
-	#define SEP "/"
-    #define Tag_ModuleExt ".so"
-#endif
-
-#define Tag_OutputID "OUTPUTID"
-#define Tag_Interval "INTERVAL"
-#define Tag_SiteCount "SITECOUNT"
-#define Tag_SiteName "SITENAME"
-#define Tag_SiteID "SITEID"
-#define Tag_ReachName "REACHNAME"
-#define Tag_StartTime "STARTTIME"
-#define Tag_EndTime "ENDTIME"
-#define Tag_FileName "FILENAME"
-#define Tag_Type "TYPE"
-#define Tag_Count "COUNT"
-#define Tag_DataType "DATA_TYPE"
-
-
-#define Tag_SubbasinCount "SUBBASINCOUNT"
-#define Tag_SubbasinId "SubbasinID"
-#define Tag_ReservoirCount "RESERVOIRCOUNT"
-#define Tag_ReservoirId "RESERVOIRID"
-#define Tag_SubbasinSelected "subbasinSelected"
-#define Tag_CellSize "CELLSIZE"
-#define Tag_Mask "MASK"
-#define Tag_TimeStep "TimeStep"
-#define Tag_HillSlopeTimeStep "DT_HS"
-#define Tag_ChannelTimeStep "DT_CH"
-#define Tag_CellWidth "CELLWIDTH" // this is the size of a single CELL
-#define Tag_PStat "P_STAT"
-
-
-// D8 Flow model
-#define Tag_FLOWIN_INDEX_D8 "FLOWIN_INDEX_D8"
-#define Tag_FLOWOUT_INDEX_D8 "FLOWOUT_INDEX_D8"
-#define Tag_ROUTING_LAYERS "ROUTING_LAYERS"
-
-// TODO: Dinf, MFD, MFD-md integrated into SEIMS.
-//! D-infinity Flow model after Tarboton et al.(1991)
-#define Tag_FLOWIN_INDEX_DINF "FLOWIN_INDEX_DINF"
-#define Tag_FLOWIN_PERCENTAGE_DINF "FLOWIN_PERCENTAGE_DINF"
-#define Tag_FLOWOUT_INDEX_DINF "FLOWOUT_INDEX_DINF"
-#define Tag_FLOWOUT_PERCENTAGE_DINF "FLOWOUT_PERCENTAGE_DINF"
-#define Tag_ROUTING_LAYERS_DINF "ROUTING_LAYERS_DINF"
-//! Multi-Flow model after Quinn et al.(1991)
-#define Tag_FLOWIN_INDEX_MFD "FLOWIN_INDEX_MFD"
-#define Tag_FLOWIN_PERCENTAGE_MFD "FLOWIN_PERCENTAGE_MFD"
-#define Tag_FLOWIN_PERCENTAGE_D8 "FLOWIN_PERCENTAGE_D8"
-#define Tag_FLOWOUT_INDEX_MFD "FLOWOUT_INDEX_MFD"
-#define Tag_FLOWOUT_PERCENTAGE_MFD "FLOWOUT_PERCENTAGE_MFD"
-#define Tag_ROUTING_LAYERS_MFD "ROUTING_LAYERS_MFD"
-//! MFD-md flow model after Qin et al.(2007) (md means maximum downslope), TODO.
-#define Tag_FLOWIN_INDEX_MFD_MD "FLOWIN_INDEX_MFD_MD"
-#define Tag_FLOWIN_PERCENTAGE_MFD_MD "FLOWIN_PERCENTAGE_MFD_MD"
-#define Tag_FLOWOUT_INDEX_MFD_MD "FLOWOUT_INDEX_MFD_MD"
-#define Tag_FLOWOUT_PERCENTAGE_MFD_MD "FLOWOUT_PERCENTAGE_MFD_MD"
-#define Tag_ROUTING_LAYERS_MFD_MD "ROUTING_LAYERS_MFD_MD"
-/// Replaced by VAR_RCHPARAM
-#define Tag_ReachParameter	"ReachParameter"
-#define DESC_REACH_PARAMETER "Reach parameters such as stream order, manning's n and downstream subbasin id (Array2D)"
-#define Tag_RchParam		"RchParam"
-#define VAR_RCHPARAM	"ReachParameters"
-
+/// Tags in file.out
+#define Tag_OutputID						"OUTPUTID"
+#define Tag_Interval							"INTERVAL"
+#define Tag_SiteCount						"SITECOUNT"
+#define Tag_SiteName						"SITENAME"
+#define Tag_SiteID							"SITEID"
+#define Tag_ReachName					"REACHNAME"
+#define Tag_StartTime						"STARTTIME"
+#define Tag_EndTime						"ENDTIME"
+#define Tag_FileName						"FILENAME"
+#define Tag_Type								"TYPE"
+#define Tag_Count							"COUNT"
+#define Tag_DataType						"DATA_TYPE"
 ////////////  Output Tags   ///////////////
 //// Output aggregation type //////
 #define Tag_Unknown			"UNKNOWN" 
-#define Tag_Sum				"SUM"
+#define Tag_Sum					"SUM"
 #define Tag_Average			"AVERAGE"
-#define Tag_Average2		"AVE"
-#define Tag_Average3		"MEAN"
+#define Tag_Average2			"AVE"
+#define Tag_Average3			"MEAN"
 #define Tag_Minimum			"MIN"
 #define Tag_Maximum			"MAX"
 #define Tag_SpecificCells	"SPECIFIC"
@@ -159,37 +113,64 @@
 #define Tag_NitrOutlet "NitrateOutlet"
 #define TAG_OUT_QSUBBASIN "QSUBBASIN"
 
+#define Tag_SubbasinCount			"SUBBASINCOUNT"
+#define Tag_SubbasinId					"SubbasinID"
+#define Tag_ReservoirCount			"RESERVOIRCOUNT"
+#define Tag_ReservoirId					"RESERVOIRID"
+#define Tag_SubbasinSelected		"subbasinSelected"
+#define Tag_CellSize						"CELLSIZE"
+#define Tag_Mask								"MASK"
+#define Tag_TimeStep						"TimeStep"
+#define Tag_HillSlopeTimeStep		"DT_HS"
+#define Tag_ChannelTimeStep		"DT_CH"
+#define Tag_CellWidth						"CELLWIDTH" // this is the size of a single CELL
+#define Tag_PStat								"P_STAT"         // currently not used.
 
 
-//!for reach hydro climate data
-#define DIVERSION	"flowdiversion"
-#define POINTSOURCE "pointsource"
-#define RESERVOIR	"reservoir"
-#define FLOW		"flow"
-#define SDEIDMENT	"sediment"
-#define ORGANICN	"organicN"
-#define ORGANICP	"organicP"
-#define NO3			"NO3"
-#define NH3			"NH3"
-#define NO2			"NO2"
-#define MINERALP	"mineralP"
+// D8 Flow model
+#define Tag_FLOWIN_INDEX_D8			"FLOWIN_INDEX_D8"
+#define Tag_FLOWOUT_INDEX_D8		"FLOWOUT_INDEX_D8"
+#define Tag_ROUTING_LAYERS			"ROUTING_LAYERS"
+
+// TODO: Dinf, MFD, MFD-md integrated into SEIMS.
+//! D-infinity Flow model after Tarboton et al.(1991)
+#define Tag_FLOWIN_INDEX_DINF						"FLOWIN_INDEX_DINF"
+#define Tag_FLOWIN_PERCENTAGE_DINF		"FLOWIN_PERCENTAGE_DINF"
+#define Tag_FLOWOUT_INDEX_DINF					"FLOWOUT_INDEX_DINF"
+#define Tag_FLOWOUT_PERCENTAGE_DINF	"FLOWOUT_PERCENTAGE_DINF"
+#define Tag_ROUTING_LAYERS_DINF				"ROUTING_LAYERS_DINF"
+//! Multi-Flow model after Quinn et al.(1991)
+#define Tag_FLOWIN_INDEX_MFD "FLOWIN_INDEX_MFD"
+#define Tag_FLOWIN_PERCENTAGE_MFD "FLOWIN_PERCENTAGE_MFD"
+#define Tag_FLOWIN_PERCENTAGE_D8 "FLOWIN_PERCENTAGE_D8"
+#define Tag_FLOWOUT_INDEX_MFD "FLOWOUT_INDEX_MFD"
+#define Tag_FLOWOUT_PERCENTAGE_MFD "FLOWOUT_PERCENTAGE_MFD"
+#define Tag_ROUTING_LAYERS_MFD "ROUTING_LAYERS_MFD"
+//! MFD-md flow model after Qin et al.(2007) (md means maximum downslope), TODO.
+#define Tag_FLOWIN_INDEX_MFD_MD "FLOWIN_INDEX_MFD_MD"
+#define Tag_FLOWIN_PERCENTAGE_MFD_MD "FLOWIN_PERCENTAGE_MFD_MD"
+#define Tag_FLOWOUT_INDEX_MFD_MD "FLOWOUT_INDEX_MFD_MD"
+#define Tag_FLOWOUT_PERCENTAGE_MFD_MD "FLOWOUT_PERCENTAGE_MFD_MD"
+#define Tag_ROUTING_LAYERS_MFD_MD "ROUTING_LAYERS_MFD_MD"
+
+#define Tag_ReachParameter							"ReachParameter"
+#define Tag_RchParam									"RchParam"
+/// Replaced Tag_ReachParameter and Tag_RchParam by VAR_REACH_PARAM
+#define VAR_REACH_PARAM						"ReachParameters"
+#define DESC_REACH_PARAM						"Reach parameters such as stream order, manning's n and downstream subbasin id"
 
 /// Files or database constant strings
-#define ASCIIExtension ".asc"
-#define GTiffExtension ".tif"
-#define TextExtension ".txt"
-#define File_HydroClimateDB "HydroClimate.db3"
-#define File_ParameterDB "Parameter.db3"
-#define File_BMPDB "BMP.db3"
-#define Table_LapseRate "lapse_rate"
-#define NAME_MASK "MASK"
+#define ASCIIExtension									".asc"
+#define GTiffExtension										".tif"
+#define TextExtension										".txt"
+#define NAME_MASK										"MASK"
 
-#define File_Config				"config.fig"
-#define File_Input				"file.in"
-#define File_Output				"file.out"
-#define Source_HydroClimateDB	"HydroClimateDB"
-#define Source_ParameterDB		"ParameterDB"
-#define Source_Module			"Module"
+#define File_Config											"config.fig"
+#define File_Input												"file.in"
+#define File_Output											"file.out"
+#define Source_HydroClimateDB					"HydroClimateDB"
+#define Source_ParameterDB							"ParameterDB"
+#define Source_Module									"Module"
 
 ///////// Table Names required in MongoDB /////////
 #define DB_TAB_PARAMETERS		"parameters"
@@ -198,10 +179,10 @@
 #define DB_TAB_SITELIST			"SiteList"
 #define DB_TAB_SCENARIO		"BMPDatabase"
 #define DB_TAB_REACH			"reaches"
-#define DB_TAB_SPATIAL			"spatial"  /// spatial.files
+#define DB_TAB_SPATIAL			"spatial"  /// i.e., spatial.files
 #define DB_TAB_SITES			"Sites"
 #define DB_TAB_DATAVALUES		"DataValues" // hydroClimate data values
-#define DB_TAB_MEASUREMENT		"measurement" // TODO: discharge, nutrient etc. should be stored in this collection
+#define DB_TAB_MEASUREMENT		"measurement"
 
 #define DB_TAB_OUT_SPATIAL		"output"
 
@@ -218,7 +199,7 @@
 #define REACH_WIDTH				"WIDTH"
 #define REACH_LENGTH			"LENGTH"
 #define REACH_DEPTH				"DEPTH"
-#define REACH_V0				"V0"
+#define REACH_V0						"V0"
 #define REACH_AREA				"AREA"
 #define REACH_MANNING			"MANNING"
 #define REACH_SLOPE				"SLOPE" 
@@ -380,12 +361,12 @@
 #define MDESC_KINWAVSED_CH			"Srinivasan & Galvao function to calculate sediment yield routing of each channel cell"
 #define MID_MUSLE_AS								"MUSLE_AS"
 #define MDESC_MUSLE_AS						"use MUSLE method to calculate sediment yield of each cell"
-/// Mnagement
+/// Management
 #define MCLS_MGT										"Mangement practices"
 #define MCLSDESC_MGT							"BMP related modules"
 #define MID_MGT_SWAT							"MGT_SWAT"
 #define MDESC_MGT_SWAT						"Mangement operation modeling method in SWAT"
-/// Plant growth
+/// Ecology
 #define MCLS_PG										"Plant growth"
 #define MCLSDESC_PG								"Calculate the amount of plant growth."
 #define MID_BIO_EPIC								"BIO_EPIC"
@@ -458,19 +439,14 @@
 #define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/km2)
 #define VAR_ADDRNO3 "addrno3"                       /// nitrate added by rainfall (kg/km2)
 #define VAR_AET_PLT "AET_PLT"
-#define VAR_AFERT_ID "afert_id"
+#define VAR_AFERT_AMAXN "afert_AmaxN"
 #define VAR_AFERT_FRTEFF "afert_frteff"
 #define VAR_AFERT_FRTSURF "afert_frtsurf"
+#define VAR_AFERT_ID "afert_id"
 #define VAR_AFERT_MAXN "afert_maxN"
-#define VAR_AFERT_AMAXN "afert_AmaxN"
 #define VAR_AFERT_NSTRS "afert_nstrs"
 #define VAR_AFERT_NSTRSID "afert_nstrsID"
 #define VAR_AFERT_NYLDT "afert_nyldTarg"
-#define VAR_AIRR_SOURCE "airr_source"
-#define VAR_AIRR_LOCATION "airr_location"
-#define VAR_AIRR_EFF "airr_eff"
-#define VAR_AIRRWTR_DEPTH "airrwtr_depth"
-#define VAR_AIRRSURF_RATIO "airrsurf_ratio"
 #define VAR_AI0 "ai0"
 #define VAR_AI1 "ai1"
 #define VAR_AI2 "ai2"
@@ -478,6 +454,11 @@
 #define VAR_AI4 "ai4"
 #define VAR_AI5 "ai5"
 #define VAR_AI6 "ai6"
+#define VAR_AIRR_EFF "airr_eff"
+#define VAR_AIRR_LOCATION "airr_location"
+#define VAR_AIRR_SOURCE "airr_source"
+#define VAR_AIRRSURF_RATIO "airrsurf_ratio"
+#define VAR_AIRRWTR_DEPTH "airrwtr_depth"
 #define VAR_ALAIMIN "alai_min"
 #define VAR_ALBDAY "ALBDAY"
 #define VAR_ALGAE "algae"
@@ -488,7 +469,7 @@
 #define VAR_AWTR_STRS_TRIG "awtr_strsTrig"
 #define VAR_B_BNK "b_bnk"                           /// bank storage loss coefficient
 #define VAR_BACT_SWF "bact_swf"
-#define VAR_Base_ex "Base_ex"                       /// baseflow recession exponent
+#define VAR_Base_ex "Base_ex"                       /// base flow recession exponent
 #define VAR_BIO_E "BIO_E"
 #define VAR_BIOEHI "BIOEHI" 
 #define VAR_BIOINIT "BIO_INIT"
@@ -510,7 +491,6 @@
 #define VAR_C_SNOW12 "c_snow12"
 #define VAR_C_SNOW6 "c_snow6"
 #define VAR_C_WABA "C_WABA"                         /// Channel water balance in a text format for each reach and at each time step
-#define VAR_CDN "cdn"                               /// rate coefficient for denitrification
 #define VAR_CDN "cdn"                               /// rate coefficient for denitrification
 #define VAR_CELL_LAT "celllat"            /// latitude of each valid cells
 #define VAR_CH_DEP "DEP"
@@ -541,8 +521,7 @@
 #define VAR_CONV_WT "conv_wt"
 #define VAR_CROP_LOOKUP "CropLookup"
 #define VAR_CSWAT "cswat" 
-#define VAR_D_FlOWWIDTH "D_FlowWidth"
-#define VAR_D_P "D_P" /// Distribution of precipitation
+#define VAR_PCP "D_P" /// Distribution of precipitation
 #define VAR_DAYLEN "daylength" 
 #define VAR_DAYLEN_MIN "daylenmin"  /// minimum day length
 #define VAR_DEEPST "deepst"
@@ -593,9 +572,9 @@
 #define VAR_HITARG "hi_targ"
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
 #define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
-#define VAR_HVSTI "hvsti"   /// harvst index
-#define VAR_HVSTI_TARG "hi_targ"
+#define VAR_HVSTI "hvsti"   /// harvest index
 #define VAR_HVSTI_ADJ "hvsti_adj"
+#define VAR_HVSTI_TARG "hi_targ"
 #define VAR_ID_OUTLET "ID_OUTLET"
 #define VAR_IDC "IDC"             /// crop/landcover category, 1 to 7
 #define VAR_IGRO "IGRO"
@@ -609,13 +588,9 @@
 #define VAR_INTERC_MAX "Interc_max"                 /// Maximum Interception Storage Capacity
 #define VAR_INTERC_MIN "Interc_min"                 /// Minimum Interception Storage Capacity
 #define VAR_IRR_FLAG "irr_flag"
-#define VAR_IRR_WTR "irr_water"
 #define VAR_IRR_SURFQ "irr_surfq"
+#define VAR_IRR_WTR "irr_water"
 #define VAR_ISEP_OPT "isep_opt"
-#define VAR_LAIMAXFR "laimaxfr"
-#define VAR_LANDCOVER "landcover"
-#define VAR_LANDUSE "landuse"
-#define VAR_LANDUSE_LOOKUP "LanduseLookup"
 #define VAR_JULIAN_DAY "JDay"                       /// Julian day (int)
 #define VAR_K_BANK "K_bank"                         /// hydraulic conductivity of the channel bank
 #define VAR_K_BLOW "K_blow"
@@ -623,6 +598,7 @@
 #define VAR_K_L "k_l"
 #define VAR_K_N "k_n"
 #define VAR_K_P "k_p"
+#define VAR_K_PET "K_pet"                           /// Correction factor for PET
 #define VAR_K_PET "K_pet"                           /// Correction factor for PET
 #define VAR_K_RUN "K_run"
 #define VAR_K_SOIL10 "k_soil10"
@@ -632,6 +608,7 @@
 #define VAR_LAG_SNOW "lag_snow"
 #define VAR_LAIDAY "LAIDAY"
 #define VAR_LAIINIT "LAI_INIT" /// initial LAI at the beginning of the simulation
+#define VAR_LAIMAXFR "laimaxfr"
 #define VAR_LAIMX1 "LAIMX1"
 #define VAR_LAIMX2 "LAIMX2"
 #define VAR_LAIPRE "LAIPRE"
@@ -639,6 +616,9 @@
 #define VAR_LAMBDA0 "lambda0"
 #define VAR_LAMBDA1 "lambda1"
 #define VAR_LAMBDA2 "lambda2"
+#define VAR_LANDCOVER "landcover"
+#define VAR_LANDUSE "landuse"
+#define VAR_LANDUSE_LOOKUP "LanduseLookup"
 #define VAR_LAP_RATE "LapseRate"                    /// Lapse rate
 #define VAR_LAST_SOILRD "lastSoilRD"
 #define VAR_LATNO3 "latno3"
@@ -666,12 +646,12 @@
 #define VAR_NO3GW_CH "no3gwToCh"
 #define VAR_NPERCO "nperco"
 #define VAR_NUPDIS "n_updis"
-#define VAR_OLAI "olai"
 #define VAR_OL_DET "DETOverland"
 #define VAR_OL_IUH "Ol_iuh"                         /// IUH of each grid cell
 #define VAR_OL_SED_CCOE "ccoe"
 #define VAR_OL_SED_ECO1 "eco1"
 #define VAR_OL_SED_ECO2 "eco2"
+#define VAR_OLAI "olai"
 #define VAR_OMEGA "Omega"
 #define VAR_OMP_THREADNUM "ThreadNum"               /// Thread numbers for OMP
 #define VAR_ORGANICN "organicn"
@@ -681,19 +661,13 @@
 #define VAR_P_RF "p_rf"
 #define VAR_PERCN "percn"
 #define VAR_PERCO "Percolation"                     /// the amount of water percolated from the soil water reservoir
+#define VAR_PET "PET"                           /// Potential Evapotranspiration of day
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
+#define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
+#define VAR_PHOSKD "phoskd"
 #define VAR_PHUBASE "PHUBASE"
 #define VAR_PHUPLT "PHUPLT"
 #define VAR_PHUTOT "PHU0"
-#define VAR_PLTET "plt_et"
-#define VAR_PLTET_TOT "plt_et_tot"
-#define VAR_PLTPET "plt_pet"
-#define VAR_PLTPET_TOT "plt_pet_tot"
-#define VAR_K_PET "K_pet"                           /// Correction factor for PET
-#define VAR_PET "PET"                           /// Potential Evapotranspiration of day
-#define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
-#define VAR_PHOSKD "phoskd"
-#define VAR_PHUPLT "PLTHU"
 #define VAR_PI_B "Pi_b"
 #define VAR_PL_RSDCO "rsdco_pl"                     /// Plant residue decomposition coefficient
 #define VAR_PLANT_N "plant_N"
@@ -729,18 +703,17 @@
 #define VAR_REVAP "Revap"
 #define VAR_RG "RG"
 #define VAR_RHOQ "rhoq"
-#define VAR_ROCK "rock"
 #define VAR_RMN2TL "rmn2tl"                         /// amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/km2)
 #define VAR_RMP1TL "rmp1tl"                         /// amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell
 #define VAR_RMPTL "rmptl"                           /// amount of phosphorus moving from the fresh organic (residue) to the labile(80%) and organic(20%) pools in soil profile on current day in cell(kg P/km2)
 #define VAR_RNUM1 "rnum1"
+#define VAR_ROCK "rock"
 #define VAR_ROCTL "roctl"                           /// amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell
 #define VAR_ROOTDEPTH "rootdepth"      /// Maximum root depth of plant/land cover (mm)
 #define VAR_RUNOFF_CO "Runoff_co"
 #define VAR_RWNTL "rwntl"                           /// amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell(kg N/km2)
 #define VAR_S_FROZEN "s_frozen"
 #define VAR_SAND "sand"
-#define VAR_SILT "silt"
 #define VAR_SBGS "SBGS"
 #define VAR_SBGS "SBGS"                             /// Groundwater storage of the subbasin
 #define VAR_SBIF "SBIF"                             /// interflow to streams from each subbasin
@@ -763,6 +736,7 @@
 #define VAR_SEDORGP_CH "sedorgpToCh"
 #define VAR_SEEPAGE "SEEPAGE"                               /// seepage
 #define VAR_SHALLST "shallst"
+#define VAR_SILT "silt"
 #define VAR_SLOPE "slope"
 #define VAR_SNAC "SNAC"
 #define VAR_SNME "SNME"
@@ -775,13 +749,14 @@
 #define VAR_SOET "SOET"                             /// evaporation from the soil water storage, es_day in SWAT
 #define VAR_SOIL_T10 "soil_t10"
 #define VAR_SOILDEPTH "soilDepth"                       /// depth to bottom of soil layer
-#define VAR_SOILTHICK "soilthick"
 #define VAR_SOILLAYERS "soillayers"
+#define VAR_SOILTHICK "soilthick"
 #define VAR_SOL_ACTP "sol_actp"                     /// amount of phosphorus stored in the active mineral phosphorus pool(kg P/ha)
 #define VAR_SOL_ALB "sol_alb"               /// albedo when soil is moist
 #define VAR_SOL_AORGN "sol_aorgn"                   /// amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/ha)
 #define VAR_SOL_AWC "sol_awc"            /// amount of water available to plants in soil layer at field capacity (FC-WP)
 #define VAR_SOL_BD "density"                         /// bulk density of the soil (mg/m3)
+#define VAR_SOL_CBN "sol_cbn"
 #define VAR_SOL_COV "sol_cov"                    /// amount of residue on soil surface (kg/ha)
 #define VAR_SOL_CRK "sol_crk"                    /// crack volume potential of soil
 #define VAR_SOL_FON "sol_fon"                       /// amount of nitrogen stored in the fresh organic (residue) pool(kg N/ha)
@@ -790,9 +765,9 @@
 #define VAR_SOL_N "sol_N"
 #define VAR_SOL_NH3 "sol_nh3"                       /// amount of nitrogen stored in the ammonium pool in soil layer
 #define VAR_SOL_NO3 "sol_no3"                       /// amount of nitrogen stored in the nitrate pool in soil layer(kg N/ha)
+#define VAR_SOL_OM "om"
 #define VAR_SOL_ORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
 #define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/ha)
-#define VAR_SOL_OM "om"
 #define VAR_SOL_PERCO "sol_perco" 
 #define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/ha)
@@ -824,7 +799,7 @@
 #define VAR_SSRUVOL "SSRUVOL"
 #define VAR_STCAPSURPLUS "STCAPSURPLUS"
 #define VAR_STREAM_LINK "STREAM_LINK"
-#define VAR_SUB_SEDTOCH
+#define VAR_SUB_SEDTOCH ""
 #define VAR_SUBBSN "subbasin"                       /// The subbasin grid
 #define VAR_SURQNO3 "surqno3"
 #define VAR_SURQNO3_CH "surqno3ToCh"
@@ -843,13 +818,12 @@
 #define VAR_TILLAGE_LOOKUP "TillageLookup"
 #define VAR_TMAX "TMAX"
 #define VAR_TMEAN "TMEAN"
-#define VAR_TMEAN_ANN "TMEAN_ANN"
+#define VAR_TMEAN_ANN "TMEAN0"  /// annual mean temperature
 #define VAR_TMEAN1 "TMEAN1"
 #define VAR_TMEAN2 "TMEAN2"
 #define VAR_TMIN "TMIN"
 #define VAR_TREEYRS "CURYR_INIT"
 #define VAR_TSD_DT "data_type"                      /// Time series data type
-#define VAR_UPSOLDEP "UpperSoilDepth"               /// depth of the upper soil layer
 #define VAR_USLE_C "USLE_C"
 #define VAR_USLE_K "USLE_K"
 #define VAR_USLE_LS "USLE_LS"
@@ -882,6 +856,7 @@
 #define VAR_WSHD_VOLN "wshd_voln"                   /// average annual amount if nitrogen lost by ammonia volatilization in watershed
 #define VAR_WSYF "wsyf"
 
+
 //////////////////////////////////////////////////////////////////////////
 /// Define units common used in SEIMS, in case of inconsistency //////////
 /// By LiangJun Zhu, HuiRan Gao ///
@@ -894,8 +869,8 @@
 #define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
 #define UNIT_CONT_RATIO "(kg/ha)/(kg/ha)"
 #define UNIT_CONT_TONHA "tons/ha"
-#define UNIT_DENSITY_L "mg/L"                        /// density
 #define UNIT_DENSITY "Mg/m3"                        /// density
+#define UNIT_DENSITY_L "mg/L"                        /// density
 #define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
 #define UNIT_GAS_CON "uL/L"   /// e.g., uL CO2/L air, IS this same with ppmv? LJ
@@ -930,6 +905,7 @@
 #define UNIT_WTRDLT_MMH "mm/h"                      /// Millimeter per hour of water changes
 #define UNIT_YEAR "yr"
 
+
 //////////////////////////////////////////////////////////////////////////
 /// Define description of units common used in SEIMS            //////////
 /// By LiangJun Zhu, HuiRan Gao //////////////////////////
@@ -941,19 +917,14 @@
 #define DESC_ADDRNH3 "ammonium added by rainfall"
 #define DESC_ADDRNO3 "nitrate added by rainfall"
 #define DESC_AET_PLT "actual amount of plant transpiration, ep_day in SWAT"
-#define DESC_AFERT_ID "fertilizer ID from fertilizer database"
-#define DESC_AFERT_NSTRSID "Code for approach used to determine amount of nitrogen to Cell"
-#define DESC_AFERT_NSTRS "Nitrogen stress factor of cover/plant that triggers fertilization"
-#define DESC_AFERT_MAXN "Maximum amount of mineral N allowed in any one application"
 #define DESC_AFERT_AMAXN "Maximum amount of mineral N allowed to be applied in any one year"
-#define DESC_AFERT_NYLDT "modifier for auto fertilization target nitrogen content"
 #define DESC_AFERT_FRTEFF "fertilizer application efficiency calculated as the amount of N applied divided by the amount of N removed at harvest"
 #define DESC_AFERT_FRTSURF "Fraction of fertilizer applied to top 10mm of soil"
-#define DESC_AIRR_EFF "auto irrigation efficiency, 0 ~ 100"
-#define DESC_AIRR_SOURCE "irrigation source"
-#define DESC_AIRR_LOCATION "location of irrigation source"
-#define DESC_AIRRWTR_DEPTH "amount of irrigation water applied each time"
-#define DESC_AIRRSURF_RATIO "surface runoff ratio (0-1)"
+#define DESC_AFERT_ID "fertilizer ID from fertilizer database"
+#define DESC_AFERT_MAXN "Maximum amount of mineral N allowed in any one application"
+#define DESC_AFERT_NSTRS "Nitrogen stress factor of cover/plant that triggers fertilization"
+#define DESC_AFERT_NSTRSID "Code for approach used to determine amount of nitrogen to Cell"
+#define DESC_AFERT_NYLDT "modifier for auto fertilization target nitrogen content"
 #define DESC_AI0 "ratio of chlorophyll-a to algal biomass"
 #define DESC_AI1 "fraction of algal biomass that is nitrogen"
 #define DESC_AI2 "fraction of algal biomass that is phosphorus"
@@ -961,6 +932,11 @@
 #define DESC_AI4 " the rate of oxygen uptake per unit of algae respiration"
 #define DESC_AI5 "the rate of oxygen uptake per unit of NH3 nitrogen oxidation"
 #define DESC_AI6 "the rate of oxygen uptake per unit of NO2 nitrogen oxidation"
+#define DESC_AIRR_EFF "auto irrigation efficiency, 0 ~ 100"
+#define DESC_AIRR_LOCATION "location of irrigation source"
+#define DESC_AIRR_SOURCE "irrigation source"
+#define DESC_AIRRSURF_RATIO "surface runoff ratio (0-1)"
+#define DESC_AIRRWTR_DEPTH "amount of irrigation water applied each time"
 #define DESC_ALAIMIN "minimum LAI during winter dormant period"
 #define DESC_ALBDAY "Albedo of the current day"
 #define DESC_ALGAE "algal biomass concentration in reach"
@@ -969,8 +945,8 @@
 #define DESC_ANION_EXCL "fraction of porosity from which anions are excluded"
 #define DESC_AWTR_STRS_ID "Water stress identifier, 1 plant water demand, 2 soil water content"
 #define DESC_AWTR_STRS_TRIG "Water stress threshold that triggers irrigation"
-#define DESC_BACT_SWF "fraction of manure containing active colony forming units (cfu)"
 #define DESC_B_BNK "bank storage loss coefficient"
+#define DESC_BACT_SWF "fraction of manure containing active colony forming units (cfu)"
 #define DESC_BASE_EX "baseflow recession exponent"
 #define DESC_BIO_E "the potential or unstressed growth rate (including roots) per unit of intercepted photsynthetically active radiation"
 #define DESC_BIOEHI "Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve"
@@ -1024,7 +1000,6 @@
 #define DESC_CONV_WT "factor which converts kg/kg soil to kg/ha"
 #define DESC_CROP_LOOKUP "Crop database"
 #define DESC_CSWAT "carbon modeling method"
-#define DESC_D_FlOWWIDTH "flow width (m) of overland plane"
 #define DESC_D_P "Precipitation distrubution raster"
 #define DESC_DAYLEN "day length"
 #define DESC_DAYLEN_MIN  "minimum day length"
@@ -1065,9 +1040,9 @@
 #define DESC_FRGMAX "fraction of maximum stomatal conductance corresponding to the second point on the stomatal conductance curve"
 #define DESC_FRGRW1 "fraction of total potential heat units corresponding to the 1st point on the optimal leaf area development curve"
 #define DESC_FRGRW2 "fraction of total potential heat units corresponding to the 2nd point on the optimal leaf area development curve"
+#define DESC_GRRE "" /// TODO figure out what's meaning?
 #define DESC_GRZ_DAYS "number of days cell has been grazed"
 #define DESC_GRZ_FLAG "grazing flag for cell"
-#define DESC_GRRE "" /// TODO figure out what's meaning?
 #define DESC_GSI "maximum stomatal conductance at high solar radiation and low vpd"
 #define DESC_GW_KG "baseflow recession coefficient"
 #define DESC_GW_Q "groundwater contribution to stream flow"
@@ -1081,8 +1056,8 @@
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"
 #define DESC_HMPTL "amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell"
 #define DESC_HVSTI "harvest index: crop yield/aboveground biomass"
-#define DESC_HVSTI_TARG "harvest index target"
 #define DESC_HVSTI_ADJ "harvest index adjusted for water stress"
+#define DESC_HVSTI_TARG "harvest index target"
 #define DESC_ID_OUTLET  "index of outlet in the compressed array"
 #define DESC_IDC "crop/landcover category"
 #define DESC_IGRO "Land cover status code"
@@ -1096,8 +1071,8 @@
 #define DESC_INTERC_MAX "Maximum Interception Storage Capacity"
 #define DESC_INTERC_MIN "Minimum Interception Storage Capacity"
 #define DESC_IRR_FLAG "irrigation flag, 1 or 0"
-#define DESC_IRR_WTR "amount of water applied to cell on current day"
 #define DESC_IRR_SURFQ "amount of water from irrigation to become surface runoff"
+#define DESC_IRR_WTR "amount of water applied to cell on current day"
 #define DESC_ISEP_OPT "initial septic operational condition"
 #define DESC_JULIAN_DAY "Julian day (int)"
 #define DESC_K_BANK "hydraulic conductivity of the channel bank"
@@ -1114,9 +1089,9 @@
 #define DESC_LAG_SNOW "Snow temperature lag factor"
 #define DESC_LAIDAY "Leaf area index of current day"
 #define DESC_LAIINIT "initial leaf area index of transplants"
+#define DESC_LAIMAXFR "DO NOT KNOW MEANING"
 #define DESC_LAIMX1 "fraction of max LAI corresponding to the 1st point on the optimal leaf area development curve"
 #define DESC_LAIMX2 "fraction of max LAI corresponding to the 2nd point on the optimal leaf area development curve"
-#define DESC_LAIMAXFR "DO NOT KNOW MEANING"
 #define DESC_LAIPRE "leaf area index for the previous day"
 #define DESC_LAIYRMAX "maximum LAI for the year"
 #define DESC_LAMBDA0 "non-algal portion of the light extinction coefficient"
@@ -1159,12 +1134,12 @@
 #define DESC_NONE ""
 #define DESC_NPERCO "nitrate percolation coefficient"
 #define DESC_NUPDIS "Nitrogen uptake distribution parameter"
-#define DESC_OLAI "DO NOT KNOW MEANING"
 #define DESC_OL_DET "distribution of overland flow detachment"
 #define DESC_OL_IUH "IUH of each grid cell"
 #define DESC_OL_SED_CCOE "calibration coefficient of overland flow detachment erosion"
 #define DESC_OL_SED_ECO1 "calibration coefficient of transport capacity calculation"
 #define DESC_OL_SED_ECO2 "calibration coefficient of transport capacity calculation"
+#define DESC_OLAI "DO NOT KNOW MEANING"
 #define DESC_OMEGA "calibration coefficient of splash erosion"
 #define DESC_ORGANICN "organic nitrogen concentration in reach"
 #define DESC_ORGANICP "organic phosphorus concentration in reach"
@@ -1174,19 +1149,19 @@
 #define DESC_PERCN "amount of nitrate percolating past bottom of soil profile"
 #define DESC_PERCO "the amount of water percolated from the soil water reservoir, i.e., groundwater recharge"
 #define DESC_PET "Potential Evapotranspiration of day"
+#define DESC_PET "Potential Evapotranspiration of day"
 #define DESC_PET_HCOEF "Coefficient related to radiation used in Hargreaves method"
 #define DESC_PET_K "Correction factor for PET"
-#define DESC_PET "Potential Evapotranspiration of day"
+#define DESC_PHOSKD "Phosphorus soil partitioning coefficient"
 #define DESC_PHUBASE "base zero total heat units (used when no land cover is growing)"
 #define DESC_PHUPLT "total number of heat unites (hours) needed to bring plant to maturity"
-#define DESC_PHUTOT "annual average total potential heat units (used when no crop is growing)"
-#define DESC_PLANT_N "amount of nitrogen in plant biomass (kg/ha), plantn in SWAT"
-#define DESC_PLANT_P "amount of phosphorus in plant biomass (kg/ha), plantp in SWAT"
-#define DESC_PHOSKD "Phosphorus soil partitioning coefficient"
 #define DESC_PHUPLT "total number of heat unites (hours) needed to bring plant to maturity"
+#define DESC_PHUTOT "annual average total potential heat units (used when no crop is growing)"
 #define DESC_PI_B "Interception Storage Capacity Exponent"
 #define DESC_PL_RSDCO "Plant residue decomposition coefficient"
 #define DESC_PLANT_N "amount of nitrogen in plant biomass (kg/ha), plantn in SWAT"
+#define DESC_PLANT_N "amount of nitrogen in plant biomass (kg/ha), plantn in SWAT"
+#define DESC_PLANT_P "amount of phosphorus in plant biomass (kg/ha), plantp in SWAT"
 #define DESC_PLANT_P "amount of phosphorus in plant biomass (kg/ha), plantp in SWAT"
 #define DESC_PLTET_TOT "actual ET simulated during life of plant"
 #define DESC_PLTPET_TOT "potential ET simulated during life of plant"
@@ -1231,7 +1206,6 @@
 #define DESC_RWNTL "amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell"
 #define DESC_S_FROZEN "Frozen moisture relative to porosity with no infiltration"
 #define DESC_SAND "Percent of sand content"
-#define DESC_SILT "Percent of silt content"
 #define DESC_SBGS "Groundwater storage of the subbasin"
 #define DESC_SBIF "interflow to streams from each subbasin"
 #define DESC_SBOF "overland flow to streams from each subbasin"
@@ -1253,6 +1227,7 @@
 #define DESC_SEDORGP_CH "amount of organic phosphorus in surface runoff"
 #define DESC_SEEPAGE "seepage"
 #define DESC_SHALLST "depth of water in shallow aquifer"
+#define DESC_SILT "Percent of silt content"
 #define DESC_SLOPE "Slope gradient (percentage)"
 #define DESC_SNAC "snow accumulation"
 #define DESC_SNME "distribution of snowmelt"
@@ -1265,13 +1240,14 @@
 #define DESC_SOET "evaporation from the soil water storage"
 #define DESC_SOIL_T10 "Factor of soil temperature relative to short grass (degree)"
 #define DESC_SOILDEPTH "depth to bottom of soil layer"
-#define DESC_SOILTHICK "soil thick of each layer"
 #define DESC_SOILLAYERS "Soil layers number"
+#define DESC_SOILTHICK "soil thick of each layer"
 #define DESC_SOL_ACTP "amount of phosphorus stored in the active mineral phosphorus pool"
 #define DESC_SOL_ALB "albedo when soil is moist"
 #define DESC_SOL_AORGN "amount of nitrogen stored in the active organic (humic) nitrogen pool"
 #define DESC_SOL_AWC "amount of water available to plants in soil layer at field capacity (AWC=FC-WP)"
 #define DESC_SOL_BD "bulk density of the soil"
+#define DESC_SOL_CBN "soil carbon content"
 #define DESC_SOL_COV "amount of residue on soil surface"
 #define DESC_SOL_CRK "crack volume potential of soil"
 #define DESC_SOL_FON "amount of nitrogen stored in the fresh organic (residue) pool"
@@ -1280,9 +1256,9 @@
 #define DESC_SOL_N "used for orgncswat.f in SWAT. TODO"
 #define DESC_SOL_NH3 "amount of nitrogen stored in the ammonium pool in soil layer"
 #define DESC_SOL_NO3 "amount of nitrogen stored in the nitrate pool in soil layer"
+#define DESC_SOL_OM "percent of organic matter in soil"
 #define DESC_SOL_ORGN "amount of nitrogen stored in the stable organic N pool"
 #define DESC_SOL_ORGP "amount of phosphorus stored in the organic P pool in soil layer"
-#define DESC_SOL_OM "percent of organic matter in soil"
 #define DESC_SOL_PERCO "percolation from soil layer" 
 #define DESC_SOL_RSD "amount of organic matter in the soil classified as residue"
 #define DESC_SOL_SOLP "amount of phosphorus stored in solution"
@@ -1326,7 +1302,6 @@
 #define DESC_SURU "surface runoff generated"
 #define DESC_SWE "average SA of the watershed"
 #define DESC_SWE0 "Initial snow water equivalent"
-#define DESC_TILLAGE_LOOKUP "Tillage database"
 #define DESC_T_BASE "base or minimum temperature for growth"
 #define DESC_T_OPT "optimal temperature for plant growth"
 #define DESC_T_RG "groundwater runoff"
@@ -1335,6 +1310,7 @@
 #define DESC_T0 "the snowmelt threshold temperature"
 #define DESC_Tag_FLOWIN_PERCENTAGE_DINF "Percentage of flow in"
 #define DESC_TFACT "fraction of solar radiation computed in the temperature heat balance that is photo synthetically active"
+#define DESC_TILLAGE_LOOKUP "Tillage database"
 #define DESC_TIMESTEP "time step"
 #define DESC_TMAX "max temperature"
 #define DESC_TMEAN "mean temperature"
