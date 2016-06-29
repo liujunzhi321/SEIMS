@@ -91,7 +91,9 @@ enum dimensionTypes
 	/// Lapse rate array, TODO need more detail description
 	DT_LapseRateArray	= 8, 
 	/// Scenario used by BMPs
-	DT_Scenario			= 9
+	DT_Scenario			= 9,
+	/// Reach parameters
+	DT_Reach				= 10
 };
 
 

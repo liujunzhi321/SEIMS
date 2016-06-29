@@ -39,7 +39,7 @@ void clsReach::Reset(void)
 	Subbasin				= -1;
 	UpDownOrder		= -1;
 	V0						= NODATA_VALUE;
-	Width					=NODATA_VALUE;
+	Width					= NODATA_VALUE;
 	bc1						= -1;
 	bc2						= -1;
 	bc3						= -1;

@@ -97,6 +97,7 @@ int PETHargreaves::Execute()
 		if (tmpav(j) > 0. .and. phutot(hru_sub(j)) > 0.01) then
 			phubase(j) = phubase(j) + tmpav(j) / phutot(hru_sub(j))
 		end if*/
+		if(m_jday == 1) m_phuBase[i] = 0.;
 		if(m_tMean[i] > 0. && m_phutot[i] > 0.01)
 			m_phuBase[i] += m_tMean[i] / m_phutot[i];
 		MaxSolarRadiation(m_jday, m_cellLat[i], m_dayLen[i], m_srMax);

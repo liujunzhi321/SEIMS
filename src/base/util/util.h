@@ -298,7 +298,7 @@ extern string& trim(string& s);
 * \return converted string
 */
 template<typename T>
-string ValueToString(T &val)
+string ValueToString(T val)
 {
 	ostringstream oss;
 	oss << val;
