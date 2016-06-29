@@ -4,6 +4,7 @@
  * \author Liang-Jun Zhu
  * \date June 2016
  *           1. Source code of SWAT include: readmgt.f, operatn.f, sched_mgt.f, plantop.f, harvkillop.f, harvestop.f, killop.f, newtillmix.f, etc.
+ *           2. Preliminary implemented version, not include grazing, auto fertilizer, etc. See detail please find the TODOs.
  * 
  */
 #pragma once
@@ -120,7 +121,7 @@ private:
 	float* m_CN2;
 	/// plant growth code, 0 or 1
 	float* m_igro;
-	/// Harvest index target
+	/// Harvest index target, defined in plant operation and used in harvest/kill operation
 	float* m_HarvestIdxTarg;
 	/// Biomass target
 	float* m_BiomassTarg;
@@ -207,6 +208,8 @@ private:
 	float* m_irrFlag;
 	/// aird(:)        |mm H2O        |amount of water applied to cell on current day
 	float* m_appliedWater;
+	/// qird(:)        |mm H2O        |amount of water from irrigation to become surface runoff
+	float* m_irrSurfQWater;
 	///  deepst(:)      |mm H2O        |depth of water in deep aquifer
 	float* m_deepWaterDepth; 
 	///shallst | mm H2O        |depth of water in shallow aquifer
@@ -272,11 +275,11 @@ private:
 	
 	/**auto fertilizer operation**/
 	/// fertilizer ID from fertilizer database
-	int* m_fertilizeID;
+	float* m_fertilizerID;
 	/* Code for approach used to determine amount of nitrogen to Cell
 			0 Nitrogen target approach
 			1 annual max approach */
-	int* m_NStressCode;
+	float* m_NStressCode;
 	/// Nitrogen stress factor of cover/plant that triggers fertilization, usually set 0.90 to 0.95
 	float* m_autoNStress;
 	/// Maximum amount of mineral N allowed in any one application (kg N/ha), auto_napp

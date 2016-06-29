@@ -76,6 +76,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_T_OPT, UNIT_TEMP_DEG, DESC_T_OPT, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_WAVP, UNIT_RAD_USE_EFFI, DESC_WAVP, Source_ParameterDB,DT_Raster1D);
 	/// Management related parameters, may saved as DT_Array2D with ICNUM as index. IF not provided, these should be initialized in intialOutputs()
+	mdi.AddParameter(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_EPCO, UNIT_NON_DIM, DESC_EPCO,Source_ParameterDB,DT_Raster1D);
 	mdi.AddParameter(VAR_TREEYRS, UNIT_YEAR, DESC_TREEYRS, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_LAIINIT, UNIT_CONT_RATIO, DESC_LAIINIT, Source_ParameterDB, DT_Raster1D);
@@ -88,9 +89,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
 	/// lookup table as 2D array, such as crop, management, landuse, tillage, etc.
 
-
-	mdi.AddInput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO,Source_Module,DT_Raster1D);
-	mdi.AddInput(VAR_BIOTARG, UNIT_CONT_KGHA, DESC_BIOTARG,Source_Module, DT_Raster1D); /// used after plant operation
 	/// climate parameters INPUT
 	mdi.AddInput(DataType_MeanTemperature,UNIT_TEMP_DEG, DESC_MEANTEMP, Source_Module,DT_Raster1D);
 	mdi.AddInput(DataType_MinimumTemperature,UNIT_TEMP_DEG, DESC_MINTEMP, Source_Module,DT_Raster1D);					
@@ -104,12 +102,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_PPT,UNIT_WTRDLT_MMD, DESC_PPT, Source_Module, DT_Raster1D);/// maximum plant et
 	mdi.AddInput(VAR_SOET, UNIT_DEPTH_MM, DESC_SOET, Source_Module, DT_Raster1D);/// actual soil evaporation
 	mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module, DT_Raster1D);
-	
-	/// variables need to be initialized in this module, and also as OUTPUT
-	mdi.AddInput(VAR_LAIDAY,UNIT_AREA_RATIO, DESC_LAIDAY,Source_Module,DT_Raster1D);  /// initialized by LAI_INIT in the first run
-	mdi.AddInput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC,Source_Module,DT_Raster1D);
-	mdi.AddInput(VAR_PLTET_TOT, UNIT_DEPTH_MM, DESC_PLTET_TOT, Source_Module, DT_Raster1D);
-	mdi.AddInput(VAR_PLTPET_TOT, UNIT_DEPTH_MM, DESC_PLTPET_TOT, Source_Module, DT_Raster1D);
 
 	// set the output variables
 	mdi.AddOutput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO,DT_Raster2D);
@@ -119,6 +111,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
 	mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, DT_Array2D); 
 
+	mdi.AddOutput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, DT_Raster1D);
+	mdi.AddOutput(VAR_HVSTI_ADJ, UNIT_CONT_RATIO, DESC_HVSTI_ADJ, DT_Raster1D);
 	mdi.AddOutput(VAR_CHT, UNIT_LEN_M, DESC_CHT, DT_Raster1D);
 	mdi.AddOutput(VAR_ALBDAY, UNIT_NON_DIM, DESC_ALBDAY, DT_Raster1D);
 	mdi.AddOutput(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, DT_Raster1D);
@@ -144,3 +138,10 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	strprintf(tmp, res.size()+1, "%s", res.c_str());
 	return tmp;
 }
+
+	
+	/// variables need to be initialized in this module, and also as OUTPUT
+	/*mdi.AddInput(VAR_LAIDAY,UNIT_AREA_RATIO, DESC_LAIDAY,Source_Module,DT_Raster1D);  /// initialized by LAI_INIT in the first run
+	mdi.AddInput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC,Source_Module,DT_Raster1D);
+	mdi.AddInput(VAR_PLTET_TOT, UNIT_DEPTH_MM, DESC_PLTET_TOT, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_PLTPET_TOT, UNIT_DEPTH_MM, DESC_PLTPET_TOT, Source_Module, DT_Raster1D);*/

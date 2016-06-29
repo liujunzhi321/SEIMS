@@ -491,7 +491,7 @@
 #define VAR_Base_ex "Base_ex"                       /// baseflow recession exponent
 #define VAR_BIO_E "BIO_E"
 #define VAR_BIOEHI "BIOEHI" 
-#define VAR_BIOINIT "BIOINIT"
+#define VAR_BIOINIT "BIO_INIT"
 #define VAR_BIOLEAF "BIO_LEAF"
 #define VAR_BIOMASS "BIOMASS"
 #define VAR_BIOTARG "biotarg"
@@ -595,6 +595,7 @@
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
 #define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
 #define VAR_HVSTI "hvsti"   /// harvst index
+#define VAR_HVSTI_TARG "hi_targ"
 #define VAR_HVSTI_ADJ "hvsti_adj"
 #define VAR_ID_OUTLET "ID_OUTLET"
 #define VAR_IDC "IDC"             /// crop/landcover category, 1 to 7
@@ -610,6 +611,7 @@
 #define VAR_INTERC_MIN "Interc_min"                 /// Minimum Interception Storage Capacity
 #define VAR_IRR_FLAG "irr_flag"
 #define VAR_IRR_WTR "irr_water"
+#define VAR_IRR_SURFQ "irr_surfq"
 #define VAR_ISEP_OPT "isep_opt"
 #define VAR_LAIMAXFR "laimaxfr"
 #define VAR_LANDCOVER "landcover"
@@ -630,7 +632,7 @@
 #define VAR_KI "Ki"
 #define VAR_LAG_SNOW "lag_snow"
 #define VAR_LAIDAY "LAIDAY"
-#define VAR_LAIINIT "LAIINIT" /// initial LAI at the beginning of the simulation
+#define VAR_LAIINIT "LAI_INIT" /// initial LAI at the beginning of the simulation
 #define VAR_LAIMX1 "LAIMX1"
 #define VAR_LAIMX2 "LAIMX2"
 #define VAR_LAIPRE "LAIPRE"
@@ -692,7 +694,7 @@
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PHOSKD "phoskd"
-#define VAR_PHUPLT "PHUPLT"
+#define VAR_PHUPLT "PLTHU"
 #define VAR_PI_B "Pi_b"
 #define VAR_PL_RSDCO "rsdco_pl"                     /// Plant residue decomposition coefficient
 #define VAR_PLANT_N "plant_N"
@@ -850,7 +852,7 @@
 #define VAR_TMEAN1 "TMEAN1"
 #define VAR_TMEAN2 "TMEAN2"
 #define VAR_TMIN "TMIN"
-#define VAR_TREEYRS "tree_yrs"
+#define VAR_TREEYRS "CURYR_INIT"
 #define VAR_TSD_DT "data_type"                      /// Time series data type
 #define VAR_UPSOLDEP "UpperSoilDepth"               /// depth of the upper soil layer
 #define VAR_USLE_C "USLE_C"
@@ -1085,6 +1087,7 @@
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"
 #define DESC_HMPTL "amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell"
 #define DESC_HVSTI "harvest index: crop yield/aboveground biomass"
+#define DESC_HVSTI_TARG "harvest index target"
 #define DESC_HVSTI_ADJ "harvest index adjusted for water stress"
 #define DESC_ID_OUTLET  "index of outlet in the compressed array"
 #define DESC_IDC "crop/landcover category"
@@ -1100,6 +1103,7 @@
 #define DESC_INTERC_MIN "Minimum Interception Storage Capacity"
 #define DESC_IRR_FLAG "irrigation flag, 1 or 0"
 #define DESC_IRR_WTR "amount of water applied to cell on current day"
+#define DESC_IRR_SURFQ "amount of water from irrigation to become surface runoff"
 #define DESC_ISEP_OPT "initial septic operational condition"
 #define DESC_JULIAN_DAY "Julian day (int)"
 #define DESC_K_BANK "hydraulic conductivity of the channel bank"
