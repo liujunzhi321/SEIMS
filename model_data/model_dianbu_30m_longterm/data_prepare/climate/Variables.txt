@@ -1,8 +1,0 @@
-ID	Type	Unit	IsRegular	TimeSupport
-1	TMEAN	deg C	true	1.0
-2	TMAX	deg C	true	1.0
-3	TMIN	deg C	true	1.0
-4	RM	1	true	1.0
-5	WS	m/s	true	1.0
-6	SR	MJ/m2/day	true	1.0
-7	P	mm	true	1.0

@@ -133,9 +133,9 @@ class SoilProperty:
                 self.USLE_K.insert(0,DEFAULT_NODATA)
         for l in range(self.SoilLAYERS):
             if l == 0:
-                self.SoilThick[l] = self.SoilDepth[l]
+                self.SoilThick.append(self.SoilDepth[l])
             else:
-                self.SoilThick[l] = self.SoilDepth[l] - self.SoilDepth[l - 1]
+                self.SoilThick.append(self.SoilDepth[l] - self.SoilDepth[l - 1])
         
         if self.SoilDepth == [] or len(self.SoilDepth) != self.SoilLAYERS or DEFAULT_NODATA in self.SoilDepth:
             raise IndexError("Soil depth must have a size equal to soil layers number!")
@@ -148,15 +148,15 @@ class SoilProperty:
         ### sol_cbn = sol_om * 0.58
         for i in range(self.SoilLAYERS):
             if(self.OM[i] * 0.58 < UTIL_ZERO):
-                self.Sol_CBN[i] = 0.10
+                self.Sol_CBN.append(0.10)
             else:
-                self.Sol_CBN[i] = self.OM[i] * 0.58
+                self.Sol_CBN.append(self.OM[i] * 0.58)
         ### sol_n = sol_cbn/11.
         for i in range(self.SoilLAYERS):
             if(self.OM[i] * 0.58 < UTIL_ZERO):
-                self.Sol_N[i] = 0.10 / 11.0
+                self.Sol_N.append(0.10 / 11.0)
             else:
-                self.Sol_N[i] = self.OM[i] * 0.58 / 11.0
+                self.Sol_N.append(self.OM[i] * 0.58 / 11.0)
         if self.CLAY == [] or len(self.CLAY) != self.SoilLAYERS or DEFAULT_NODATA in self.CLAY:
             raise IndexError("Soil Clay content must have a size equal to soil layers number!")
         if self.SILT == [] or len(self.SILT) != self.SoilLAYERS or DEFAULT_NODATA in self.SILT:
