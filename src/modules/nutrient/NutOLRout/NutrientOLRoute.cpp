@@ -93,7 +93,7 @@ void NutrientOLRoute::Set1DData(const char* key,int n, float *data)
 	string sk(key);
 	if (StringMatch(sk, VAR_STREAM_LINK)) {this -> m_streamLink = data;}
 	else if(StringMatch(sk, VAR_CHWIDTH)) {this -> m_chWidth = data;}
-	else if(StringMatch(sk, VAR_D_FlOWWIDTH)) {this -> m_FlowWidth = data;}
+	else if(StringMatch(sk, VAR_FLOWWIDTH)) {this -> m_FlowWidth = data;}
 	else if(StringMatch(sk, VAR_LATNO3)) {this -> m_latno3 = data;}
 	else if(StringMatch(sk, VAR_SURQNO3)) {this -> m_surqno3 = data;}
 	//else if(StringMatch(sk, VAR_AMMONIAN)) {this -> m_ammo = data;}

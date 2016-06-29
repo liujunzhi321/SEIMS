@@ -34,7 +34,7 @@ void clsPI_MSM::Set1DData(const char* key, int nRows, float* data)
 	this->CheckInputSize(key,nRows);
 
 	string s(key);
-	if(StringMatch(s, VAR_PRECI))				
+	if(StringMatch(s, VAR_PCP))				
 		m_P = data;
 	else if(StringMatch(s,VAR_PET))			
 		m_PET = data;

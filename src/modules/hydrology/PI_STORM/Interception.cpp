@@ -56,7 +56,7 @@ void clsPI_STORM::Set1DData(const char* key, int n, float* data)
 	this->CheckInputSize(key, n);
 
 	string s(key);
-	if(StringMatch(s,VAR_D_P))				
+	if(StringMatch(s,VAR_PCP))				
 	{
 		this->m_P = data;
 

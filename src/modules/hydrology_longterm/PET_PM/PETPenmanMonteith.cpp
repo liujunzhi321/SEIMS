@@ -267,7 +267,7 @@ int PETPenmanMonteith::Execute()
 		if (tmpav(j) > 0. .and. phutot(hru_sub(j)) > 0.01) then
 			phubase(j) = phubase(j) + tmpav(j) / phutot(hru_sub(j))
 		end if*/
-		if(m_jday == 1) m_phuBase[i] = 0.;
+		if(m_jday == 1) m_phuBase[j] = 0.;
 		if(m_tMean[j] > 0. && m_phutot[j] > 0.01)
 			m_phuBase[j] += m_tMean[j] / m_phutot[j];
 

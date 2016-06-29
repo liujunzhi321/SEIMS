@@ -526,7 +526,7 @@ void Muskingum::Set1DData(const char* key, int n, float* data)
 		m_s0 = data;
 	else if(StringMatch(sk, VAR_FLOWDIR))
 		m_direction = data;
-	else if(StringMatch(sk, VAR_D_P))
+	else if(StringMatch(sk, VAR_PCP))
 		m_prec = data;
 
 	else if(StringMatch(sk, VAR_QSOIL))

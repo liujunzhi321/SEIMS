@@ -59,7 +59,8 @@ def thiessen(x, y, locList):
 def GenerateWeightDependentParameters(conn, subbasinID):
     '''
     Generate some parameters dependent on weight data and only should be calculated once.
-    Such as PHUTOT (annual average total potential heat units)
+    Such as PHU0 (annual average total potential heat units)
+            TMEAN0 (annual average temperature)
     :return:
     '''
     dbModel = conn[SpatialDBName]
@@ -85,11 +86,20 @@ def GenerateWeightDependentParameters(conn, subbasinID):
     qDic = {Tag_ST_StationID: {'$in' : siteList}, Tag_DT_Type:Datatype_PHU0}
     cursor = dbHydro[Tag_ClimateDB_ANNUAL_STATS].find(qDic).sort(Tag_ST_StationID, 1)
 
+    qDic2 = {Tag_ST_StationID: {'$in' : siteList}, Tag_DT_Type:DataType_MeanTemperature0}
+    cursor2 = dbHydro[Tag_ClimateDB_ANNUAL_STATS].find(qDic2).sort(Tag_ST_StationID, 1)
+
     idList = []
     phuList = []
     for site in cursor:
         idList.append(site[Tag_ST_StationID])
         phuList.append(site[Tag_DT_Value])
+
+    idList2 = []
+    tmeanList = []
+    for site in cursor2:
+        idList2.append(site[Tag_ST_StationID])
+        tmeanList.append(site[Tag_DT_Value])
 
     weightMData = spatial.get(weightM["_id"])
     totalLen = numCells*numSites
@@ -98,10 +108,12 @@ def GenerateWeightDependentParameters(conn, subbasinID):
 
     #calculate PHU0
     phu0Data = np.zeros((numCells))
+    #calculate TMEAN0
+    tmean0Data = np.zeros((numCells))
     for i in range(numCells):
         for j in range(numSites):
             phu0Data[i] += phuList[j] * weightMData[i * numSites + j]
-
+            tmean0Data[i] += tmeanList[j] * weightMData[i * numSites + j]
     ysize = int(mask["metadata"]["NROWS"])
     xsize = int(mask["metadata"]["NCOLS"])
     noDataValue = mask["metadata"]["NODATA_VALUE"]
@@ -110,29 +122,45 @@ def GenerateWeightDependentParameters(conn, subbasinID):
     fmt = '%df' % (totalLen,)
     maskData = unpack(fmt, maskData.read())
     fname = "%s_%s" % (str(subbasinID), Datatype_PHU0)
+    fname2 = "%s_%s" % (str(subbasinID), DataType_MeanTemperature0)
     if(spatial.exists(filename=fname)):
         x = spatial.get_version(filename=fname)
+        spatial.delete(x._id)
+    if(spatial.exists(filename=fname2)):
+        x = spatial.get_version(filename=fname2)
         spatial.delete(x._id)
     metaDic = mask["metadata"]
     metaDic["TYPE"] = Datatype_PHU0
     metaDic["ID"] = fname
     metaDic["DESCRIPTION"] = Datatype_PHU0
+
+    metaDic2 = mask["metadata"]
+    metaDic2["TYPE"] = DataType_MeanTemperature0
+    metaDic2["ID"] = fname2
+    metaDic2["DESCRIPTION"] = DataType_MeanTemperature0
+
     myfile = spatial.new_file(filename=fname, metadata=metaDic)
+    myfile2 = spatial.new_file(filename=fname2, metadata=metaDic2)
     vaildCount = 0
     for i in range(0, ysize):
         curRow = []
+        curRow2 = []
         for j in range(0, xsize):
             index = i*xsize + j
             #print index
             if(abs(maskData[index] - noDataValue) > util.DELTA):
                 curRow.append(phu0Data[vaildCount])
+                curRow2.append(tmean0Data[vaildCount])
                 vaildCount += 1
             else:
                 curRow.append(noDataValue)
+                curRow2.append(noDataValue)
         fmt = '%df'%(xsize)
         myfile.write(pack(fmt, *curRow))
+        myfile2.write(pack(fmt, *curRow2))
     myfile.close()
-    print vaildCount
+    myfile2.close()
+    print "Valid Cell Number is: %d" % vaildCount
 def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData = False):
     '''
     Generate and import weight information using Thiessen polygon method.
@@ -267,7 +295,7 @@ if __name__ == "__main__":
     #for i in range(1, 900):
     #GenerateWeightInfo(conn, 'model_dianbu_10m_longterm', 1, False)
     GenerateWeightDependentParameters(conn,1)
-    print 'done!'
+    #print 'done!'
     
     
     

@@ -1,5 +1,3 @@
-// SOL_WB.cpp : main project file.
-
 #include "SOL_WB.h"
 #include "MetadataInfo.h"
 #include "util.h"
@@ -212,7 +210,7 @@ void SOL_WB::Set1DData(const char* key, int nRows, float* data)
 
 	if(StringMatch(s, VAR_INLO))				
 		m_Interception = data;
-	else if(StringMatch(s, VAR_PRECI))			
+	else if(StringMatch(s, VAR_PCP))			
 		m_Precipitation = data;
 	else if(StringMatch(s, VAR_INET))		
 		m_EI = data;

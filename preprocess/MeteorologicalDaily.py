@@ -18,14 +18,12 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
     ## for each climate station and each year.
     ## format is {StationID:{Year1:[values],Year2:[Values]...}, ...}
     PHUCalDic = {}
-
     requiredFlds = [Tag_DT_Year, Tag_DT_Month, Tag_DT_Day,
                     DataType_MaximumTemperature, DataType_MinimumTemperature,
                     DataType_RelativeAirMoisture, DataType_WindSpeed]
     for fld in requiredFlds:
         if not StringInList(fld, climFlds):
             raise ValueError("Meteorological Daily data is invalid, please Check!")
-            exit(0)  ### data can not meet the request!
     for i in range(1,len(climDataItems)):
         dic = {}
         curSSD = DEFAULT_NODATA
@@ -102,10 +100,13 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
     ### prepare dic for MongoDB
     for sID in PHUCalDic.keys():
         curPHU0 = 0.
+        curTMEAN0 = 0.  ## multi-annual mean
         for YYYY in PHUCalDic[sID].keys():
             curDic = {}
             xx = numpy.array(PHUCalDic[sID][YYYY][0])
             curSumPHU = numpy.sum(xx[numpy.where(xx > T_base)])
+            curTMEAN = numpy.mean(xx)
+            curTMEAN0 += curTMEAN
             PHUCalDic[sID][YYYY].append(curSumPHU)
             curPHU0 += curSumPHU
             curDic[Tag_DT_Value] = curSumPHU
@@ -114,22 +115,34 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
             curDic[Tag_VAR_UNIT] = "heat units"
             curDic[Tag_VAR_Type] = DataType_YearlyHeatUnit
             curfilter = {Tag_DT_StationID: sID, Tag_VAR_Type: DataType_YearlyHeatUnit,
-                         Tag_DT_Yea: YYYY}
+                         Tag_DT_Year: YYYY}
             db[Tag_ClimateDB_ANNUAL_STATS].find_one_and_replace(curfilter, curDic, upsert=True)
-            # db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
-        curPHU0 /= float(len(PHUCalDic[sID].keys()))
-        PHUCalDic[sID][Datatype_PHU0] = curPHU0
-        curDic = {}
+            # import annual mean temperature
+            curDic[Tag_VAR_Type] = DataType_MeanTemperature
+            curDic[Tag_VAR_UNIT] = "deg C"
+            curDic[Tag_DT_Value] = round(curTMEAN,1)
+            curfilter = {Tag_DT_StationID: sID, Tag_VAR_Type: DataType_MeanTemperature,
+                         Tag_DT_Year: YYYY}
+            db[Tag_ClimateDB_ANNUAL_STATS].find_one_and_replace(curfilter, curDic, upsert=True)
+        yrNum = float(len(PHUCalDic[sID].keys()))
+        curPHU0 /= yrNum
+        PHUCalDic[sID][Datatype_PHU0] = round(curPHU0,1)
+        curTMEAN0 /= yrNum
         curDic[Tag_DT_Value] = PHUCalDic[sID][Datatype_PHU0]
         curDic[Tag_DT_StationID] = sID
         curDic[Tag_DT_Year] = DEFAULT_NODATA
         curDic[Tag_VAR_UNIT] = "heat units"
         curDic[Tag_VAR_Type] = Datatype_PHU0
         curfilter = {Tag_DT_StationID: sID, Tag_VAR_Type: Datatype_PHU0,
-                         Tag_DT_Yea: DEFAULT_NODATA}
+                         Tag_DT_Year: DEFAULT_NODATA}
         db[Tag_ClimateDB_ANNUAL_STATS].find_one_and_replace(curfilter, curDic, upsert=True)
-        # db[Tag_ClimateDB_ANNUAL_STATS].insert_one(curDic)
-
+        # import annual mean temperature
+        curDic[Tag_VAR_Type] = DataType_MeanTemperature
+        curDic[Tag_VAR_UNIT] = "deg C"
+        curDic[Tag_DT_Value] = round(curTMEAN0,1)
+        curfilter = {Tag_DT_StationID: sID, Tag_VAR_Type: DataType_MeanTemperature0,
+                     Tag_DT_Year: DEFAULT_NODATA}
+        db[Tag_ClimateDB_ANNUAL_STATS].find_one_and_replace(curfilter, curDic, upsert=True)
 def ImportDailyMeteoData(hostname,port,dbName,meteofile,siteMLoc):
     try:
         connMongo = MongoClient(hostname, port)

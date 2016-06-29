@@ -13,7 +13,6 @@
 #ifndef linux
 #include <WinSock2.h>
 #include <windows.h>
-#define DLL_EXT  ".dll"
 #else
 #include <unistd.h>
 #include <sys/types.h>
@@ -22,7 +21,6 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#define DLL_EXT  ".so"
 #endif
 
 
@@ -30,7 +28,7 @@
 #include <string.h>
 #include <fstream>
 #include "bson.h"
-
+#include "text.h"
 #include "util.h"
 #include "utils.h"
 #include "ModuleFactory.h"
@@ -127,13 +125,13 @@ void ModuleFactory::Init(const string& configFileName)
 #ifndef linux
 			dllID = MID_ITP;
 #else
-			dllID = "lib" + string(MID_ITP);
+			dllID = Tag_So + string(MID_ITP);
 #endif
 		else if (id.find(MID_TSD_RD) != string::npos)
 #ifndef linux
 			dllID = MID_TSD_RD;
 #else
-			dllID = "lib" + string(MID_TSD_RD);
+			dllID = Tag_So + string(MID_TSD_RD);
 #endif
 
 #ifdef INTEL_COMPILER
@@ -842,7 +840,7 @@ void ModuleFactory::ReadConfigFile(const char* configFileName)
 					string settingString = settings[i][1];
 					string module = GetUpper(settings[i][3]);
 #ifdef linux
-					module = "lib" + module;
+					module = Tag_So + module;
 #endif
 					
 					SEIMSModuleSetting* moduleSetting = new SEIMSModuleSetting(module, settingString);

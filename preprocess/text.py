@@ -89,6 +89,7 @@ DataType_RelativeAirMoisture = "RM"			    #8
 DataType_SunDurationHour = "SSD"			    #9
 DataType_YearlyHeatUnit = "PHUTOT"
 Datatype_PHU0           = "PHU0"
+DataType_MeanTemperature0 = "TMEAN0"
 
 DataType_Meteorology = "M"                      # Suffix of meteorology data
 DataType_Prefix_TS = "T"                        # Prefix of time series data

@@ -67,17 +67,17 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	/// set input from other modules
 	/// soil properties
-	mdi.AddInput(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, Source_ParameterDB, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGKM2, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_NH3, UNIT_CONT_KGKM2, DESC_SOL_NH3, Source_ParameterDB, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_FOP, UNIT_CONT_KGHA, DESC_SOL_FOP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_ORGN, UNIT_CONT_KGHA, DESC_SOL_ORGN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_ORGP, UNIT_CONT_KGHA, DESC_SOL_ORGP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_NH3, UNIT_CONT_KGHA, DESC_SOL_NH3, Source_ParameterDB, DT_Raster2D);
 	mdi.AddInput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, Source_Module, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, Source_Module, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_RSD, UNIT_CONT_KGKM2, DESC_SOL_RSD, Source_Module, DT_Raster2D); 
+	mdi.AddInput(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, Source_Module, DT_Raster2D); 
 
 	/// landuse/landcover
 	mdi.AddInput(VAR_PHUBASE, UNIT_HEAT_UNIT, DESC_PHUBASE, Source_Module, DT_Raster1D); /// PET modules

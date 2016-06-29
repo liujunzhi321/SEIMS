@@ -119,8 +119,8 @@ void MGTOpt_SWAT::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(sk, VAR_PLANT_P)) m_plantP = data;
 	else if(StringMatch(sk, VAR_FR_PLANT_N)) m_frPlantN = data;
 	else if(StringMatch(sk, VAR_FR_PLANT_P)) m_frPlantP = data;
-	else if(StringMatch(sk, VAR_PLTET)) m_pltET = data;
-	else if(StringMatch(sk,VAR_PLTPET))	m_pltPET = data;
+	else if(StringMatch(sk, VAR_PLTET_TOT)) m_pltET = data;
+	else if(StringMatch(sk,VAR_PLTPET_TOT))	m_pltPET = data;
 	else if(StringMatch(sk,VAR_FR_ROOT))	m_frRoot = data;
 	else if(StringMatch(sk,VAR_BIOMASS))	m_biomass = data;
 	//// Harvest and Kill operation
