@@ -65,7 +65,6 @@ def ImportLookupTables(sqlite_file, db):
             for i in range(len(items)):
                 if isNumericValue(items[i]):
                     itemValue.append(float(items[i]))
-            itemValue.insert(0, float(len(itemValue)))  ### the first element is the number of fields in lookup table
             itemValues.append(itemValue)
         nRow = len(itemValues)
         #print itemValues
@@ -80,7 +79,7 @@ def ImportLookupTables(sqlite_file, db):
             if(spatial.exists(filename=tablename)):
                 x = spatial.get_version(filename=tablename)
                 spatial.delete(x._id)
-            metadic = {'ITEM_COUNT': nRow, 'FIELD_COUNT': nCol - 1}
+            metadic = {'ITEM_COUNT': nRow, 'FIELD_COUNT': nCol}
             curLookupGridFS = spatial.new_file(filename=tablename,metadic=metadic)
             fmt = '%df'%(nCol)
             for i in range(nRow):
