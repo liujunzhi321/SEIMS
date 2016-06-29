@@ -202,19 +202,19 @@ Nutrient	mumax	Maximum specific algal growth rate at 20 deg C	none	NutCHRout	2	1
 Nutrient	rhoq	Algal respiration rate at 20 deg C	1/day	NutCHRout	0.3	1	RC	0.05	0.5	Y
 Nutrient	tfact	Fraction of solar radiation that is photosynthetically active	none	NutCHRout	0.3	1	RC	1	0	Y
 Nutrient	rnum1	Fraction of overland flow	none	NutCHRout	0.05	1	RC	1	0	Y
-Nutrient	rs1	Local algal settling rate in the reach at 20 deg C	m/day	NutCHRout	1	IMPACT	CHANGE	1.82	0.15	Y
+Nutrient	rs1	Local algal settling rate in the reach at 20 deg C	m/day	NutCHRout	1	1	RC	1.82	0.15	Y
 Nutrient	rs2	Benthic (sediment) source rate for dissolved phosphorus in the reach at 20 deg C	mg disP-P)/((m**2)*day	NutCHRout	0.05	IMPACT	CHANGE	0.1	0.001	Y
-Nutrient	rs3	Benthic source rate for NH4-N in the reach at 20 deg C	mg NH4-N)/((m**2)*day	NutCHRout	0.5	IMPACT	CHANGE	1	0	Y
-Nutrient	rs4	Rate coefficient for organic N settling in the reach at 20 deg C	1/day	NutCHRout	0.05	IMPACT	CHANGE	0.1	0.001	Y
-Nutrient	rs5	Organic phosphorus settling rate in the reach at 20 deg C	1/day	NutCHRout	0.05	IMPACT	CHANGE	0.1	0.001	Y
-Nutrient	rk1	Carbonaceous biological oxygen demand deoxygenation rate coefficient in the reach at 20 deg C	1/day	NutCHRout	1.71	IMPACT	CHANGE	3.4	0.02	Y
-Nutrient	rk2	DESCRIPTION	1/day	NutCHRout	50	IMPACT	CHANGE	100	0	Y
-Nutrient	rk3	DESCRIPTION	1/day	NutCHRout	0.36	IMPACT	CHANGE	0.36	-0.36	Y
-Nutrient	rk4	DESCRIPTION	(m**2)*day)	NutCHRout	2	IMPACT	CHANGE	100	0	Y
-Nutrient	bc1	DESCRIPTION	1/day	NutCHRout	0.55	IMPACT	CHANGE	1	0.1	Y
-Nutrient	bc2	DESCRIPTION	1/day	NutCHRout	1.1	IMPACT	CHANGE	2	0.2	Y
-Nutrient	bc3	DESCRIPTION	1/day	NutCHRout	0.21	IMPACT	CHANGE	0.4	0.2	Y
-Nutrient	bc4	DESCRIPTION	1/day	NutCHRout	0.35	IMPACT	CHANGE	0.7	0.01	Y
+Nutrient	rs3	Benthic source rate for NH4-N in the reach at 20 deg C	mg NH4-N)/((m**2)*day	NutCHRout	0.5	IMPACT	RC	1	0	Y
+Nutrient	rs4	Rate coefficient for organic N settling in the reach at 20 deg C	1/day	NutCHRout	0.05	IMPACT	RC	0.1	0.001	Y
+Nutrient	rs5	Organic phosphorus settling rate in the reach at 20 deg C	1/day	NutCHRout	0.05	1	CHANGE	0.1	0.001	Y
+Nutrient	rk1	Carbonaceous biological oxygen demand deoxygenation rate coefficient in the reach at 20 deg C	1/day	NutCHRout	1.71	IMPACT	RC	3.4	0.02	Y
+Nutrient	rk2	Oxygen reaeration rate in accordance with Fickian diffusion in the reach at 20 deg C	1/day	NutCHRout	50	0	AC	100	0	Y
+Nutrient	rk3	Rate of loss of carbonaceous biological oxygen demand due to settling in the reach at 20 deg C	1/day	NutCHRout	0.36	1	RC	0.36	-0.36	Y
+Nutrient	rk4	Benthic oxygen demand rate in the reach at 20 deg C	(m**2)*day)	NutCHRout	2	1	RC	100	0	Y
+Nutrient	bc1	Rate constant for biological oxidation of NH4 to NO2 in the reach at 20 deg C	1/day	NutCHRout	0.55	1	RC	1	0.1	Y
+Nutrient	bc2	Rate constant for biological oxidation of NO2 to NO3 in the reach at 20 deg C	1/day	NutCHRout	1.1	1	RC	2	0.2	Y
+Nutrient	bc3	Rate constant for hydrolysis of organic N to NH4 in the reach at 20 deg C	1/day	NutCHRout	0.21	1	RC	0.4	0.2	Y
+Nutrient	bc4	Rate constant for mineralization of organic P to dissolved P in the reach at 20 deg C	1/day	NutCHRout	0.35	1	RC	0.7	0.01	Y
 
 PlantGrowth	epco	plant water uptake compensation factor		BIO_EPIC	1	1	RC	1	0.01	Y
 PlantGrowth	n_updis	nitrogen uptake distribution parameter		BIO_EPIC	20	1	RC	100	0	Y
