@@ -119,12 +119,33 @@ void NutrientOLRoute::Set2DData(const char* key, int nrows, int ncols, float** d
 		throw ModelException("NutOLRout", "Set2DData", "Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }
-
+void NutrientOLRoute::initialOutputs() {
+	if(this->m_nCells <= 0) {
+		throw ModelException("NutrientOLRoute", "CheckInputData", "The dimension of the input data can not be less than zero.");
+	}
+	// allocate the output variables
+	if(m_surqno3ToCh == NULL) {
+		for(int i=0; i < m_nCells; i++) {
+			m_surqno3ToCh[i] = 0.;
+			m_latno3ToCh[i] = 0.;
+			m_no3gwToCh[i] = 0.;
+			m_surqsolpToCh[i] = 0.;
+			m_minpgwToCh[i] = 0.;
+			m_sedorgnToCh[i] = 0.;
+			m_sedorgpToCh[i] = 0.;
+			m_sedminpaToCh[i] = 0.;
+			m_sedminpsToCh[i] = 0.;
+			m_ammoToCh[i] = 0.;
+			m_nitriteToCh[i] = 0.;
+		}
+	}
+}
 int NutrientOLRoute::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
 	}
-	initial();
+	this -> initial();
+	this -> initialOutputs();
 	#pragma omp parallel for
 	for (int iLayer = 0; iLayer < m_nLayers; ++iLayer) {
 		// There are not any flow relationship within each routing layer.

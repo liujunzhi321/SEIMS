@@ -103,7 +103,7 @@ private:
 	float m_rhoq;
 
 	/// day length for current day (h)
-	float* m_dayl;
+	float* m_daylen;
 	/// solar radiation for the day (MJ/m2)
 	float* m_sra;
 	float* m_bankStorage;

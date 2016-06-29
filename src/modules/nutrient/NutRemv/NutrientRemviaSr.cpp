@@ -18,8 +18,9 @@ using namespace std;
 
 NutrientRemviaSr::NutrientRemviaSr(void):
 	//input 
-	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_nperco(NULL), m_flat(NULL),
-	m_sol_perco(NULL), m_sol_wsatur(NULL), m_phoskd(NULL), m_sol_crk(NULL), m_pperco(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_conv_wt(NULL),
+	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nperco(-1), m_phoskd(-1), m_pperco(-1), m_qtile(-1), 
+	m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
+	m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_sol_depth(NULL),
 	//output 
 	m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(NULL), m_sol_solp(NULL)
 {
@@ -64,7 +65,7 @@ bool NutrientRemviaSr::CheckInputData() {
 	if(this -> m_pperco == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_sol_bd == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_sol_z == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
-	if(this -> m_conv_wt == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_sol_depth == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	return true;
 }
 void NutrientRemviaSr::SetValue(const char* key, float value)
@@ -92,6 +93,7 @@ void NutrientRemviaSr::Set1DData(const char* key,int n, float *data)
 	else if (StringMatch(sk, VAR_ANION_EXCL)) {this -> m_anion_excl = data;}
 	else if (StringMatch(sk, VAR_LDRAIN)) {this -> m_ldrain = data;}
 	else if (StringMatch(sk, VAR_SOL_CRK)) {this -> m_sol_crk = data;}
+	else if (StringMatch(sk, VAR_SOL_SUMSAT)) {this -> m_sol_wsatur = data;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -106,17 +108,39 @@ void NutrientRemviaSr::Set2DData(const char* key, int nRows, int nCols, float** 
 	else if (StringMatch(sk, VAR_SOL_BD)) {this -> m_sol_bd = data;}
 	else if (StringMatch(sk, VAR_ROOTDEPTH)) {this -> m_sol_z = data;}
 	else if (StringMatch(sk, VAR_SOL_SOLP)) {this -> m_sol_solp = data;}
-	else if (StringMatch(sk, VAR_CONV_WT)) {this -> m_conv_wt = data;}
+	else if (StringMatch(sk, VAR_SOILDEPTH)) {this -> m_sol_depth = data;}
 	else if (StringMatch(sk, VAR_SOL_PERCO)) {this -> m_sol_perco = data;}
-	else if (StringMatch(sk, VAR_SOL_WSATUR)) {this -> m_sol_wsatur = data;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
+}
+void NutrientRemviaSr::initialOutputs() {
+	if(this->m_nCells <= 0) {
+		throw ModelException("NutRemv", "CheckInputData", "The dimension of the input data can not be less than zero.");
+	}
+	// allocate the output variables
+	if(m_latno3 == NULL) {
+		for(int i=0; i < m_nCells; i++) {
+			m_latno3[i] = 0.;
+			m_percn[i] = 0.;
+			m_surqno3[i] = 0.;
+			m_surqsolp[i] = 0.;
+		}
+	}
+	if(m_wshd_plch < 0) {
+		m_wshd_plch = 0.;
+	}
+	// input variables
+	if(m_flat == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_flat, (float)0.0001);}
+	if(m_sol_perco == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_perco, (float)0.0001);}
+	if(m_ldrain == NULL) {Initialize1DArray(m_nCells, m_ldrain, (float)-1.);}
+	m_qtile = 0.0001;
 }
 int NutrientRemviaSr::Execute() {
 	if(!this -> CheckInputData()) { 
 		return false;
 	}
+	this -> initialOutputs();
 	// Calculate total no3
 	float total_no3 = 0.;
 	for(int i = 0; i < m_nCells; i++) {
@@ -163,7 +187,7 @@ void NutrientRemviaSr::Nitrateloss(){
 			// Calculate the concentration of nitrate in the mobile water (con), 
 			// equation 4:2.1.2, 4:2.1.3 and 4:2.1.4 in SWAT Theory 2009, p269
 			mw = m_sol_perco[i][k] + sro + m_flat[i][k] + 1.e-10;
-			ww = -mw / ((1. - m_anion_excl[i]) * m_sol_wsatur[i][k]);
+			ww = -mw / ((1. - m_anion_excl[i]) * m_sol_wsatur[i]);
 			vno3 = m_sol_no3[i][k] * (1. - exp(ww));
 			if (mw > 1.e-10) {
 				con = max(vno3 / mw, 0.);
@@ -186,7 +210,7 @@ void NutrientRemviaSr::Nitrateloss(){
 			// calculate nitrate in tile flow 
 			if (m_ldrain[i] == k) {
 					// m_alph_e[i] = exp(-1./(m_n_lag[i] + 1.e-6))
-					// ww1 = -1./ ((1. - m_anion_excl[i]) * m_sol_wsatur[i][k])
+					// ww1 = -1./ ((1. - m_anion_excl[i]) * m_sol_wsatur[i])
 					// m_vno3_c = m_sol_no3[i][k] * (1. - exp(ww1))
 					// if (total_no3 > 1.001) {
 					//	 tno3ln = n_lnco[i] * (log(total_no3)) ** m_n_ln[i]
@@ -232,6 +256,15 @@ void NutrientRemviaSr::Nitrateloss(){
 void NutrientRemviaSr::Phosphorusloss(){
 
 	for(int i = 0; i < m_nCells; i++) {
+		// mg/kg => kg/ha
+		float *sol_thick = new float(m_nSoilLayers[i]);
+			sol_thick[0] = m_sol_depth[i][0];
+		for(int k = 1; k < m_nSoilLayers[i]; k++) {
+			sol_thick[k] = m_sol_depth[k] - m_sol_depth[k - 1];
+		}
+		float wt1 = m_sol_bd[i][0] * sol_thick[0] / 100.;
+		float conv_wt = 1.e6 * wt1;
+
 		// amount of P leached from soil layer (vap)
 		float vap = 0.;
 		float vap_tile = 0.;
@@ -244,7 +277,7 @@ void NutrientRemviaSr::Phosphorusloss(){
 		m_sol_solp[i][0] = m_sol_solp[i][0] - m_surqsolp[i];
 
 		// compute soluble P leaching
-		vap = m_sol_solp[i][0] * m_sol_perco[i][0] / ((m_conv_wt[i][0] / 1000.) * m_pperco);
+		vap = m_sol_solp[i][0] * m_sol_perco[i][0] / ((conv_wt / 1000.) * m_pperco);
 		vap = min(vap, 0.5 * m_sol_solp[i][0]);
 		m_sol_solp[i][0] = m_sol_solp[i][0] - vap;
 
@@ -260,7 +293,7 @@ void NutrientRemviaSr::Phosphorusloss(){
 		for(int k = 1; k < m_nSoilLayers[i]; k++) {
 			vap = 0.;
 			//if (k != m_i_sep[i]) {  // soil layer where biozone exists (m_i_sep)
-				vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((m_conv_wt[i][k] / 1000.) * m_pperco);
+				vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((conv_wt / 1000.) * m_pperco);
 				vap = min(vap, .2 * m_sol_solp[i][k]);
 				m_sol_solp[i][k] = m_sol_solp[i][k] - vap;
 			//}

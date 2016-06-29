@@ -221,7 +221,6 @@ void MGTOpt_SWAT::Set2DData(const char* key, int n, int col, float** data)
 		throw ModelException(MID_MGT_SWAT, "Set2DData", "Parameter " + sk + 
 		" does not exist in current module. Please contact the module developer.");
 }
-
 void MGTOpt_SWAT::SetScenario(Scenario* sce)
 {
 	if(NULL != sce)

@@ -34,10 +34,10 @@ bool AtmosphericDeposition::CheckInputData(void) {
 	if(m_nCells <= 0) {throw ModelException("AtmosphericDeposition","CheckInputData","The cell number of the input can not be less than zero.");return false;}
 	if(this -> m_soiLayers < 0) {throw ModelException("NmiRL", "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_cellWidth < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_nSoilLayers == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_preci == NULL) {throw ModelException("AtmosphericDeposition","CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_rcn < 0) {throw ModelException("AtmosphericDeposition","CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_rca < 0) {throw ModelException("AtmosphericDeposition","CheckInputData","The input data can not be NULL.");return false;}
+	if(this -> m_nSoilLayers == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_preci == NULL) {throw ModelException("AtmosphericDeposition","CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_sol_z == NULL) {throw ModelException("AtmosphericDeposition","CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_drydep_no3 == NULL) {throw ModelException("AtmosphericDeposition","CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_drydep_nh4 == NULL) {throw ModelException("AtmosphericDeposition","CheckInputData","The input data can not be NULL.");return false;}
@@ -63,11 +63,11 @@ bool AtmosphericDeposition::CheckInputSize(const char* key, int n){
 }
 void AtmosphericDeposition::Set1DData(const char* key, int n, float* data) {
 	string sk(key);
-	if(StringMatch(sk, VAR_PRECI)) {
+	if(StringMatch(sk, VAR_D_P)) {
 		m_preci = data;
 	}
 	else {
-		throw ModelException("CH_MSK", "Set1DData", "Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException("AtmosphericDeposition", "Set1DData", "Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }
 void AtmosphericDeposition::SetValue(const char* key, float value) {
@@ -94,18 +94,33 @@ void AtmosphericDeposition::Set2DData(const char* key, int nRows, int nCols, flo
 	else if (StringMatch(sk, VAR_SOL_NO3)) {this -> m_sol_no3 = data;}
 	else if (StringMatch(sk, VAR_SOL_NH3)) {this -> m_sol_nh3 = data;}
 	else {
-		throw ModelException("SurTra","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
+		throw ModelException("AtmosphericDeposition","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
+	}
+}
+void AtmosphericDeposition::initialOutputs() {
+	if(this->m_nCells <= 0) {
+		throw ModelException("AtmosphericDeposition", "CheckInputData", "The dimension of the input data can not be less than zero.");
+	}
+	// allocate the output variables
+	if(m_addrnh3 < 0) {
+		m_addrnh3 = 0.;
+		m_addrno3 = 0.;
+	}
+	if(m_wshd_rno3 < 0) {
+		m_wshd_rno3 = 0.;
 	}
 }
 int AtmosphericDeposition::Execute() {
 	//check the data
-	CheckInputData();
+	this -> CheckInputData();
+	this -> initialOutputs();
 	#pragma omp parallel for
 	for(int i = 0; i < m_nCells; i++) {
 		for(int k = 0; k < m_nSoilLayers[i]; k++) {
 			// Calculate the amount of nitrite and ammonia added to the soil in rainfall, 
 		    m_addrno3 = 0.01 * m_rcn * m_preci[i];
 		    m_addrnh3 = 0.01 * m_rca * m_preci[i];
+			m_sol_nh3[i][0] = 0.;
 		    m_sol_no3[i][0] = m_sol_no3[i][0] + m_addrno3 + m_drydep_no3 / 365;
 		    m_sol_nh3[i][0] = m_sol_nh3[i][0] + m_addrnh3 + m_drydep_nh4 / 365;
 
@@ -123,7 +138,7 @@ void AtmosphericDeposition::GetValue(const char* key, float* value) {
 		*value = m_wshd_rno3;
 	}
 	else {
-		throw ModelException("NMINRL", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException("AtmosphericDeposition", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }
 

@@ -56,7 +56,7 @@ private:
 	//		return -pow(-a, n);
 	//}
 	void ChannelFlow(int iReach, int iCell, int id);
-	void initalOutputs();
+	void initialOutputs();
 	///< Valid cells number
 	int m_nCells;
 

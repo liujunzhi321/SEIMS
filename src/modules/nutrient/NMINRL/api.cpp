@@ -40,12 +40,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	// set the parameters
 	//Latitude is used to calculate max solar radiation. It is read in the similar format with elevation.
-	mdi.AddParameter(VAR_CMN, UNIT_NON_DIM, DESC_CMN,Source_ParameterDB, DT_Single);
-	mdi.AddParameter(VAR_NACTFR, UNIT_NON_DIM, DESC_NACTFR, Source_ParameterDB, DT_Single);
-	
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
+	mdi.AddParameter(VAR_CMN, UNIT_NON_DIM, DESC_CMN,Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_CDN, UNIT_NON_DIM, DESC_CDN, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_NACTFR, UNIT_NON_DIM, DESC_NACTFR, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_PSP, UNIT_NON_DIM, DESC_PSP, Source_ParameterDB, DT_Single);
+	
 	mdi.AddParameter(VAR_WSHD_DNIT, UNIT_CONT_KGKM2, DESC_WSHD_DNIT, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_WSHD_HMN, UNIT_CONT_KGKM2, DESC_WSHD_HMN, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_WSHD_HMP, UNIT_CONT_KGKM2, DESC_WSHD_HMP, Source_ParameterDB, DT_Single);
@@ -57,18 +59,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_WSHD_PAL, UNIT_CONT_KGKM2, DESC_WSHD_PAL, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_WSHD_PAS, UNIT_CONT_KGKM2, DESC_WSHD_PAS, Source_ParameterDB, DT_Single);
 	
-	mdi.AddParameter(VAR_PSP, UNIT_NON_DIM, DESC_PSP, Source_ParameterDB, DT_Array1D);
-	mdi.AddParameter(VAR_CDN, UNIT_NON_DIM, DESC_CDN, Source_ParameterDB, DT_Array1D);
-	
 	mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Raster1D);  /// idplt in SWAT is a lookup array. in SEIMS, use landcover
 	mdi.AddParameter(VAR_PL_RSDCO, UNIT_NON_DIM, DESC_PL_RSDCO, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_SOILLAYERS, UNIT_NON_DIM, DESC_SOILLAYERS, Source_ParameterDB, DT_Raster1D);
 
-	mdi.AddParameter(VAR_SOL_CBN, UNIT_PERCENT, DESC_SOL_CBN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_OM, UNIT_PERCENT, DESC_SOL_OM, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_WST, UNIT_DEPTH_MM, DESC_SOL_WST, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_WFC, UNIT_DEPTH_MM, DESC_SOL_WFC, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_FIELDCAP, UNIT_VOL_FRA_M3M3, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_TMP, UNIT_TEMP_DEG, DESC_SOL_TMP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_WH, UNIT_DEPTH_MM, DESC_SOL_WH, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, Source_ParameterDB, DT_Raster2D);
