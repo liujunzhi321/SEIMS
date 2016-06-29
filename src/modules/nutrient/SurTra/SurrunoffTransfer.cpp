@@ -142,7 +142,7 @@ int SurrunoffTransfer::Execute() {
 		//Calculates the amount of organic nitrogen removed in surface runoff.
 		OrgnRemoveinSr(i, enratio[i]);
 		//Calculates the amount of organic and mineral phosphorus attached to sediment in surface runoff.
-		OrgpAttachedtoSed();
+		OrgpAttachedtoSed(i, enratio[i]);
 	}
 	//return ??
 	return 0;
