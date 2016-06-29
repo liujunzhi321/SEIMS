@@ -69,10 +69,11 @@ def MaskDEMFiles(workingDir,exeDir=None):
                      slope, filledDem, acc, streamOrder,
                      flowDirDinf, dirCodeDinf, slopeDinf, weightDinf,cellLat, daylMin,dormhr]
     originalFiles = [(tauDir + os.sep + item) for item in originalFiles]
+    originalFiles.append(mgtFiedlFile)
     maskedFiles = [subbasinM, flowDirM, streamRasterM]
     maskedFiles = [(tauDir + os.sep + item) for item in maskedFiles]
     outputList = [slopeM, filldemM, accM,  streamOrderM, flowDirDinfM,
-                    dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM, daylMinM,dormhrM]
+                    dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM, daylMinM,dormhrM,mgtFiedlMFile]
     for output in outputList:
         maskedFiles.append(workingDir + os.sep + output)
 
@@ -129,3 +130,6 @@ def GenerateSubbasins(workingDir, exeDir=None):
     os.system(s)
     fStatus.write("%d,%s\n" % (100, "Finished!"))
     fStatus.close()
+
+if __name__ == "__main__":
+    MaskDEMFiles(WORKING_DIR,exeDir=CPP_PROGRAM_DIR)

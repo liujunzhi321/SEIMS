@@ -293,5 +293,5 @@ def ExtractParameters(inputLanduse, dstdir, genCN=False, genRunoffCoef=False, ge
     f.close()
 
 if __name__ == "__main__":
-    maskFile = r'E:\data\model_data\model_dianbu_30m_longterm\data_prepare\output\mask.tif'
+    maskFile = r'E:\data_m\SEIMS\dianbu_30m_output\mask.tif'
     soil_parameters2(WORKING_DIR,maskFile,soilSEQNFile,soilSEQNText)

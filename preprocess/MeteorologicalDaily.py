@@ -137,7 +137,7 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                          Tag_DT_Year: DEFAULT_NODATA}
         db[Tag_ClimateDB_ANNUAL_STATS].find_one_and_replace(curfilter, curDic, upsert=True)
         # import annual mean temperature
-        curDic[Tag_VAR_Type] = DataType_MeanTemperature
+        curDic[Tag_VAR_Type] = DataType_MeanTemperature0
         curDic[Tag_VAR_UNIT] = "deg C"
         curDic[Tag_DT_Value] = round(curTMEAN0,1)
         curfilter = {Tag_DT_StationID: sID, Tag_VAR_Type: DataType_MeanTemperature0,
