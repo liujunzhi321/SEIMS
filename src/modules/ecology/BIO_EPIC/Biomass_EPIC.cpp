@@ -13,7 +13,7 @@
 using namespace std;
 
 Biomass_EPIC::Biomass_EPIC(void):m_nCells(-1), m_nClimDataYrs(-1), m_co2(NODATA), m_tMean(NULL), m_tMin(NULL), m_SR(NULL),m_dayLenMin(NULL),m_dormHr(NULL),
-	m_soilLayers(-1), m_NUpDis(NODATA), m_PUpDis(NODATA), m_NFixCoef(NODATA), m_NFixMax(NODATA), m_soilRD(NODATA), m_tMeanAnn(NODATA),
+	m_soilLayers(-1), m_NUpDis(NODATA), m_PUpDis(NODATA), m_NFixCoef(NODATA), m_NFixMax(NODATA), m_soilRD(NODATA), m_tMeanAnn(NULL),
 	m_nSoilLayers(NULL), m_soilZMX(NULL), m_soilALB(NULL),m_soilDepth(NULL), m_soilRsd(NULL), m_soilAWC(NULL), m_totSoilAWC(NULL), m_totSoilSat(NULL), m_somo(NULL), m_totSOMO(NULL),m_soilCov(NULL),
 	m_igro(NULL), m_landCoverCls(NULL), m_aLAIMin(NULL), m_BIOE(NULL), m_BIOEHI(NULL), m_frBioLeafDrop(NULL), m_maxLAI(NULL), m_maxBiomass(NULL),
 	m_frPlantN1(NULL), m_frPlantN2(NULL), m_frPlantN3(NULL), m_frPlantP1(NULL), m_frPlantP2(NULL), m_frPlantP3(NULL), 
@@ -82,7 +82,6 @@ void Biomass_EPIC::SetValue(const char* key, float data)
 	else if(StringMatch(sk,VAR_PUPDIS))	m_PUpDis = data;
 	else if(StringMatch(sk,VAR_NFIXCO))	m_NFixCoef = data;
 	else if(StringMatch(sk,VAR_NFIXMX))	m_NFixMax = data;
-	else if(StringMatch(sk, VAR_TMEAN_ANN))m_tMeanAnn = data;
 	else	
 		throw ModelException(MID_BIO_EPIC,"SetValue","Parameter " + sk 
 		+ " does not exist in current module. Please contact the module developer.");
@@ -113,6 +112,7 @@ void Biomass_EPIC::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(sk, DataType_MinimumTemperature)) m_tMin = data;
 	else if(StringMatch(sk, DataType_SolarRadiation)) m_SR = data;
 	else if(StringMatch(sk, VAR_DAYLEN_MIN)) m_dayLenMin = data;
+	else if(StringMatch(sk, VAR_TMEAN_ANN))m_tMeanAnn = data;
 	else if(StringMatch(sk, VAR_DORMHR)) m_dormHr = data;
 	else if(StringMatch(sk, VAR_DAYLEN)) m_dayLen = data;
 	//// soil properties and water related
@@ -218,7 +218,7 @@ bool Biomass_EPIC::CheckInputData(void)
 	if(FloatEqual(m_PUpDis, NODATA))	throw ModelException(MID_BIO_EPIC,"CheckInputData","The phosphorus uptake distribution parameter must be provided.");
 	if(FloatEqual(m_NFixCoef, NODATA))	throw ModelException(MID_BIO_EPIC,"CheckInputData","The nitrogen fixation coefficient must be provided.");
 	if(FloatEqual(m_NFixMax, NODATA))	throw ModelException(MID_BIO_EPIC,"CheckInputData","The maximum daily-N fixation must be provided.");
-	if(FloatEqual(m_tMeanAnn, NODATA))	throw ModelException(MID_BIO_EPIC,"CheckInputData","The annual mean air temperature must be provided.");
+	if(m_tMeanAnn == NULL)	throw ModelException(MID_BIO_EPIC,"CheckInputData","The annual mean air temperature can not be NULL.");
 	/// DT_Raster1D
 	if(m_tMin == NULL) throw ModelException(MID_BIO_EPIC,"CheckInputData","The min temperature data can not be NULL.");
 	if(m_tMean == NULL) throw ModelException(MID_BIO_EPIC,"CheckInputData","The mean temperature data can not be NULL.");
@@ -519,7 +519,7 @@ void Biomass_EPIC::CalTempStress(int i)
 		m_frStrsTmp[i] = exp(-0.1054 * rto);
 	else
 		m_frStrsTmp[i] = 0.f;
-	if(m_tMin[i] <= m_tMeanAnn - 15.)
+	if(m_tMin[i] <= m_tMeanAnn[i] - 15.)
 		m_frStrsTmp[i] = 0.f;
 }
 

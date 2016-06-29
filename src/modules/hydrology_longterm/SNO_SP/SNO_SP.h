@@ -77,6 +77,6 @@ private:
 
 	float CMelt();
 
-	void initalOutputs();
+	void initialOutputs();
 };
 

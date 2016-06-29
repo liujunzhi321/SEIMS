@@ -65,7 +65,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_SRA, UNIT_SR, DESC_SRA, Source_ParameterDB, DT_Array1D);
 	mdi.AddParameter(VAR_WATTEMP, UNIT_TEMP_DEG, DESC_WATTEMP, Source_ParameterDB, DT_Array1D);
 
-	mdi.AddParameter(VAR_RCHPARAM, UNIT_NON_DIM, DESC_REACH_PARAMETER, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 
 	mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);
 

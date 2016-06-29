@@ -11,8 +11,8 @@
  * 
  */
 #ifndef linux
+#include <WinSock2.h>
 #include <windows.h>
-#define DLL_EXT  ".dll"
 #else
 #include <unistd.h>
 #include <sys/types.h>
@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#define DLL_EXT  ".so"
 #endif
 
 
@@ -96,17 +95,17 @@ void ModulesIOList::Init(const string& configFileName)
 		string id = m_moduleIDs[i];
 		string dllID = id;
 		// for ITP modules, the input ids are ITP_T, ITP_P and ITP should be used as ID name
-		if(id.find("ITP") != string::npos)
+		if(id.find(MID_ITP) != string::npos)
 #ifndef linux
-			dllID = "ITP";
+			dllID = MID_ITP;
 #else
-			dllID = "libITP";
+			dllID = Tag_So + string(MID_ITP);
 #endif
-		else if (id.find("TSD") != string::npos)
+		else if (id.find(MID_TSD_RD) != string::npos)
 #ifndef linux
-			dllID = "TSD_RD";
+			dllID = MID_TSD_RD;
 #else
-			dllID = "libTSD_RD";
+			dllID = Tag_So + string(MID_TSD_RD);
 #endif
 		// load function pointers from DLL
 		ReadDLL(id, dllID);
@@ -631,7 +630,7 @@ void ModulesIOList::ReadModulesListFile(const char* configFileName)
 				string moduleID = GetUpper(moduleInfos[i][2]);
 				string moduleSettingPrefix = moduleInfos[i][3];
 #ifdef linux
-				moduleID = "lib" + moduleID;
+				moduleID = Tag_So + moduleID;
 #endif
 				SEIMSModuleSetting* moduleSetting = new SEIMSModuleSetting(moduleID, moduleSettingPrefix);
 				m_moduleIDs.push_back(moduleID);

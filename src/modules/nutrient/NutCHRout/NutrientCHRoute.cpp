@@ -173,7 +173,7 @@ void NutrientCHRoute::Set2DData(const char* key, int nrows, int ncols, float** d
 {
 	string sk(key);
 
-	if (StringMatch(sk, VAR_RCHPARAM))
+	if (StringMatch(sk, VAR_REACH_PARAM))
 	{
 		m_nReaches = ncols - 1;
 		m_reachId = data[0];

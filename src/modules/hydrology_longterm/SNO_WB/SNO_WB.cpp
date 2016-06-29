@@ -230,7 +230,7 @@ void SNO_WB::Set1DData(const char* key, int n, float* data)
 	else if(StringMatch(s, VAR_WS))			this->m_WindSpeed = data;
 	else if(StringMatch(s, VAR_TMAX))		this->m_tMax = data;	
 	else if(StringMatch(s, VAR_TMEAN))		this->m_tMean = data;
-	else if(StringMatch(s, VAR_PRECI))			this->m_P = data;	
+	else if(StringMatch(s, VAR_PCP))			this->m_P = data;	
 	//else if(StringMatch(s, VAR_SUBBSN))		this->m_subbasin = data;
 	else									throw ModelException(MID_SNO_WB,"Set1DData","Parameter " + s 
 		+ " does not exist in current module. Please contact the module developer.");

@@ -43,12 +43,12 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_FLOWOUT_INDEX_D8, UNIT_NON_DIM, DESC_FLOWOUT_INDEX_D8, Source_ParameterDB, DT_Array1D);
 	mdi.AddParameter(Tag_FLOWIN_INDEX_D8,UNIT_NON_DIM,DESC_FLOWIN_INDEX_D8,Source_ParameterDB, DT_Array2D);
 	mdi.AddParameter(VAR_STREAM_LINK, UNIT_NON_DIM,DESC_STREAM_LINK, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(Tag_ReachParameter, UNIT_NON_DIM, DESC_REACH_PARAMETER, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(Tag_ReachParameter, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 
 	// from other module
 	mdi.AddInput(VAR_QOVERLAND,UNIT_FLOW_CMS,DESC_QOVERLAND,Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_QSOIL,UNIT_FLOW_CMS,DESC_QSOIL,Source_Module, DT_Raster1D);
-	mdi.AddInput(VAR_D_P,UNIT_DEPTH_MM,DESC_D_P,Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_PCP,UNIT_DEPTH_MM,DESC_D_P,Source_Module, DT_Raster1D);
 
 	// output
 	mdi.AddOutput(VAR_QCH,UNIT_FLOW_CMS, DESC_QCH, DT_Array2D);

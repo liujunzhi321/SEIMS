@@ -44,7 +44,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_QUPREACH, UNIT_NON_DIM, DESC_QUPREACH, Source_ParameterDB, DT_Single);
 	//mdi.AddParameter(VAR_MSF, UNIT_NON_DIM, DESC_MSF, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAMETER, Source_ParameterDB, DT_Array2D);
+	mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 	//mdi.AddParameter(VAR_VDIV, UNIT_VOL_M3, DESC_VDIV, DT_Array1D);
 	//mdi.AddParameter(VAR_VPOINT, UNIT_VOL_M3, DESC_VPOINT, "diversionloss.txt", DT_Array1D);
 	mdi.AddParameter(VAR_SUBBSN, UNIT_NON_DIM, DESC_SUBBSN, Source_ParameterDB, DT_Raster1D);

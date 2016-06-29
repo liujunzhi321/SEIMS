@@ -63,7 +63,7 @@ bool AtmosphericDeposition::CheckInputSize(const char* key, int n){
 }
 void AtmosphericDeposition::Set1DData(const char* key, int n, float* data) {
 	string sk(key);
-	if(StringMatch(sk, VAR_D_P)) {
+	if(StringMatch(sk, VAR_PCP)) {
 		m_preci = data;
 	}
 	else {

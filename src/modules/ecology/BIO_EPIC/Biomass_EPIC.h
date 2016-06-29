@@ -63,7 +63,7 @@ private:
 	/// solar radiation
 	float* m_SR;
 	/// average annual air temperature
-	float m_tMeanAnn;
+	float* m_tMeanAnn;
 	/// minimum day length
 	float* m_dayLenMin;
 	/// dormancy threshold

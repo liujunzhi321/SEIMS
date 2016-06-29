@@ -84,6 +84,6 @@ private:
 	float* m_w;
 	float* m_wt; 
 
-	void initalOutputs();
+	void initialOutputs();
 };
 

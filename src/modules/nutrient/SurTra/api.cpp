@@ -42,15 +42,15 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_CONT_KGKM2, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_MP, UNIT_CONT_KGKM2, DESC_SOL_MP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_FOP, UNIT_CONT_KGHA, DESC_SOL_FOP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_ORGN, UNIT_CONT_KGHA, DESC_SOL_ORGN, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_ORGP, UNIT_CONT_KGHA, DESC_SOL_ORGP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_CONT_KGHA, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_MP, UNIT_CONT_KGHA, DESC_SOL_MP, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_BD, UNIT_DENSITY, DESC_SOL_BD, Source_ParameterDB, DT_Raster2D);
 	
 	// set the input
@@ -58,18 +58,18 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module, DT_Raster1D);
 
 	// set the output variables
-	mdi.AddOutput(VAR_SEDORGN, UNIT_CONT_KGKM2, DESC_SEDORGN, DT_Raster1D);
-	mdi.AddOutput(VAR_SEDORGP, UNIT_CONT_KGKM2, DESC_SEDORGP, DT_Raster1D);
-	mdi.AddOutput(VAR_SEDMINPA, UNIT_CONT_KGKM2, DESC_SEDMINPA, DT_Raster1D);
-	mdi.AddOutput(VAR_SEDMINPS, UNIT_CONT_KGKM2, DESC_SEDMINPS, DT_Raster1D);
+	mdi.AddOutput(VAR_SEDORGN, UNIT_CONT_KGHA, DESC_SEDORGN, DT_Raster1D);
+	mdi.AddOutput(VAR_SEDORGP, UNIT_CONT_KGHA, DESC_SEDORGP, DT_Raster1D);
+	mdi.AddOutput(VAR_SEDMINPA, UNIT_CONT_KGHA, DESC_SEDMINPA, DT_Raster1D);
+	mdi.AddOutput(VAR_SEDMINPS, UNIT_CONT_KGHA, DESC_SEDMINPS, DT_Raster1D);
 
-	mdi.AddOutput(VAR_SOL_AORGN, UNIT_CONT_KGKM2, DESC_SOL_AORGN, DT_Raster2D);
-	mdi.AddOutput(VAR_SOL_FON, UNIT_CONT_KGKM2, DESC_SOL_FON, DT_Raster2D);
-	mdi.AddOutput(VAR_SOL_FOP, UNIT_CONT_KGKM2, DESC_SOL_FOP, DT_Raster2D);
-	mdi.AddOutput(VAR_SOL_ORGN, UNIT_CONT_KGKM2, DESC_SOL_ORGN, DT_Raster2D);
-	mdi.AddOutput(VAR_SOL_ORGP, UNIT_CONT_KGKM2, DESC_SOL_ORGP, DT_Raster2D);
-	mdi.AddOutput(VAR_SOL_ACTP, UNIT_CONT_KGKM2, DESC_SOL_ACTP, DT_Raster2D);
-	mdi.AddOutput(VAR_SOL_STAP, UNIT_CONT_KGKM2, DESC_SOL_STAP, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_FOP, UNIT_CONT_KGHA, DESC_SOL_FOP, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_ORGN, UNIT_CONT_KGHA, DESC_SOL_ORGN, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_ORGP, UNIT_CONT_KGHA, DESC_SOL_ORGP, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, DT_Raster2D);
 
 	string res = mdi.GetXMLDocument();
 	char* tmp = new char[res.size()+1];

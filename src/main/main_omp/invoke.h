@@ -15,7 +15,7 @@
 //#include <io.h>
 #include "ParamInfo.h"
 #include "PrintInfo.h"
-#include "DBManager.h"
+//#include "DBManager.h"
 //#include "SiteInfo.h"
 #include "Settings.h"
 #include "SettingsInput.h"

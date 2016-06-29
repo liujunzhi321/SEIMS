@@ -47,8 +47,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_GW_Q, UNIT_DEPTH_MM, DESC_GW_Q, Source_ParameterDB, DT_Raster1D);
 
 	// set the output variables
-	mdi.AddOutput(VAR_NO3GW, UNIT_CONT_KGKM2, DESC_NO3GW, DT_Raster1D);
-	mdi.AddOutput(VAR_MINPGW, UNIT_CONT_KGKM2, DESC_MINPGW, DT_Raster1D);
+	mdi.AddOutput(VAR_NO3GW, UNIT_CONT_KGHA, DESC_NO3GW, DT_Raster1D);
+	mdi.AddOutput(VAR_MINPGW, UNIT_CONT_KGHA, DESC_MINPGW, DT_Raster1D);
 
 	string res = mdi.GetXMLDocument();
 	char* tmp = new char[res.size()+1];

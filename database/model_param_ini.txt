@@ -222,5 +222,7 @@ PlantGrowth	p_updis	phosphorus uptake distribution parameter		BIO_EPIC	20	1	RC	1
 PlantGrowth	nfixco	Nitrogen fixation coefficient		BIO_EPIC	0.5	1	RC	1	0	Y
 PlantGrowth	nfixmx	Maximum daily-n fixation (kg/ha)	kg/ha	BIO_EPIC	20	1	RC	20	1	Y
 PlantGrowth	dormhr	time threshold used to define dormant period for plant	hr	BIO_EPIC	0	1	AC	24	0	Y
+PlantGrowth	cswat	carbon modeling method		MGT_SWAT	0	0	AC	2	0	Y
+Bacteria	bact_swf	fraction of manure containing active colony forming units (cfu)		MGT_SWAT	0.15	1	RC	1	0	Y
 
 
