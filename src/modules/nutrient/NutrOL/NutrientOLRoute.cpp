@@ -1,6 +1,6 @@
 /*//
  * \file NutrientOLRoute.cpp
- * \ingroup NutOLRout
+ * \ingroup NutrOL
  * \author Huiran Gao
  * \date Jun 2016
  */

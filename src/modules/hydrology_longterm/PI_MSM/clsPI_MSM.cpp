@@ -1,4 +1,3 @@
-//! Class for the Precipitation Interception module
 #include "clsPI_MSM.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"

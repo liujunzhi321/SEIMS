@@ -393,10 +393,10 @@
 
 /// Nutrient
 /// nitrogen and phosphorus mineralization and immobilization
-#define MCLS_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization"
-#define MCLSDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
-#define MID_NMINRL "NMINRL"
-#define MDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
+#define MCLS_MINRL "Daily nitrogen and phosphorus mineralization and immobilization"
+#define MCLSDESC_MINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
+#define MID_MINRL "MINRL"
+#define MDESC_MINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
 /// Nutrient removed and loss in surface runoff
 #define MCLS_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
 #define MCLSDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."

@@ -1,6 +1,6 @@
 /*!
  * \file NandPmi.cpp
- * \ingroup NminRL
+ * \ingroup MINRL
  * \author Huiran Gao
  * \date April 2016
  */
@@ -34,7 +34,7 @@ NandPim::~NandPim(void) {
 }
 bool NandPim::CheckInputSize(const char* key, int n) {
 	if(n <= 0) {
-		throw ModelException(MID_NMINRL, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
+		throw ModelException(MID_MINRL, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(m_nCells != n) {
@@ -44,49 +44,49 @@ bool NandPim::CheckInputSize(const char* key, int n) {
 			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
 			ostringstream oss;
 			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nCells << ".\n";  
-			throw ModelException("NMINRL","CheckInputSize",oss.str());
+			throw ModelException(MID_MINRL,"CheckInputSize",oss.str());
 		}
 	}
 	return true;
 }
 bool NandPim::CheckInputData() {
-	if(this -> m_nCells <= 0) {throw ModelException("NminRL", "CheckInputData", "The input data can not be less than zero.");return false;}
-	if(this -> m_soiLayers < 0) {throw ModelException("NmiRL", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_cellWidth < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_nSoilLayers == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_cmn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_cdn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_landcover == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_nactfr == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_psp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_z == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_rsdco_pl == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_om == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_st == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_tmp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_nh3 == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_fc == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_wpmm == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_actp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_stap == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_aorgn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_fon == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_fop == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_no3 == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_orgn == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_orgp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_rsd == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_sol_solp == NULL) {throw ModelException("NminRL", "CheckInputData", "The data can not be NULL.");return false;}
-	if(this -> m_wshd_dnit < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_hmn < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_hmp < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_rmn < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_rmp < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_rwn < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_nitn < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_voln < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_pal < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
-	if(this -> m_wshd_pas < 0) {throw ModelException("NminRL", "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_nCells <= 0) {throw ModelException(MID_MINRL, "CheckInputData", "The input data can not be less than zero.");return false;}
+	if(this -> m_soiLayers < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_cellWidth < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_nSoilLayers == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_cmn == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_cdn == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_landcover == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_nactfr == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_psp == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_z == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_rsdco_pl == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_om == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_st == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_tmp == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_nh3 == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_fc == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_wpmm == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_actp == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_stap == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_aorgn == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_fon == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_fop == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_no3 == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_orgn == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_orgp == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_rsd == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sol_solp == NULL) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_wshd_dnit < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_hmn < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_hmp < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_rmn < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_rmp < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_rwn < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_nitn < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_voln < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_pal < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
+	if(this -> m_wshd_pas < 0) {throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");return false;}
 	return true;
 }
 void NandPim::SetValue(const char* key, float value)
@@ -112,7 +112,7 @@ void NandPim::SetValue(const char* key, float value)
 	else if (StringMatch(sk, VAR_WSHD_PAL)) {this -> m_wshd_pal = value;}
 	else if (StringMatch(sk, VAR_WSHD_PAS)) {this -> m_wshd_pas = value;}
 	else {
-		throw ModelException("NMINRL","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
+		throw ModelException(MID_MINRL,"SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
 	}
 }
 void NandPim::Set1DData(const char* key,int n, float *data)
@@ -123,7 +123,7 @@ void NandPim::Set1DData(const char* key,int n, float *data)
 	else if (StringMatch(sk, VAR_PL_RSDCO)) {this -> m_rsdco_pl = data;}
 	else if(StringMatch(sk,  VAR_SOILLAYERS)) {this -> m_nSoilLayers = data;}
 	else {
-		throw ModelException("NMINRL","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
+		throw ModelException(MID_MINRL,"SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
 }
 void NandPim::Set2DData(const char* key, int nRows, int nCols, float** data)
@@ -149,7 +149,7 @@ void NandPim::Set2DData(const char* key, int nRows, int nCols, float** data)
 	else if (StringMatch(sk, VAR_SOL_ACTP)) {this -> m_sol_actp = data;}
 	else if (StringMatch(sk, VAR_SOL_STAP)) {this -> m_sol_stap = data;}
 	else {
-		throw ModelException("NMINRL","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
+		throw ModelException(MID_MINRL,"SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
 }
 void NandPim::initialOutputs() {
@@ -508,7 +508,7 @@ void NandPim::GetValue(const char* key, float* value) {
 	else if (StringMatch(sk, VAR_WSHD_PAL)) {*value = this -> m_wshd_pal;}
 	else if (StringMatch(sk, VAR_WSHD_PAS)) {*value = this -> m_wshd_pas;}
 	else {
-		throw ModelException("NMINRL", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
+		throw ModelException(MID_MINRL, "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }	
 void NandPim::Get2DData(const char* key, int *nRows, int *nCols, float*** data) {
@@ -524,10 +524,10 @@ void NandPim::Get2DData(const char* key, int *nRows, int *nCols, float*** data) 
 	else if (StringMatch(sk, VAR_SOL_RSD)) {*data = this -> m_sol_rsd;}
 	else if (StringMatch(sk, VAR_SOL_SOLP)) {*data = this -> m_sol_solp;}
 	else if (StringMatch(sk, VAR_SOL_NH3)) {*data = this -> m_sol_nh3;}
-	else if (StringMatch(sk, VAR_SOL_ACTP)) {*data = this -> m_sol_actp;}
-	else if (StringMatch(sk, VAR_SOL_STAP)) {*data = this -> m_sol_stap;}
+	else if (StringMatch(sk, VAR_SOL_ACTP)) {*data = this->m_sol_actp;}
+	else if (StringMatch(sk, VAR_SOL_STAP)) {*data = this->m_sol_stap;}
 	else
-		throw ModelException("NMINRL", "Get2DData", "Output " + sk + " does not exist in the NMINRL module. Please contact the module developer.");
+		throw ModelException(MID_MINRL, "Get2DData", "Output " + sk + " does not exist in the current module. Please contact the module developer.");
 }
 // int main() {
 	//	system("pause");

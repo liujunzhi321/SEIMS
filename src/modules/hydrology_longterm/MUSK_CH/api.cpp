@@ -19,13 +19,7 @@
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
-/** \defgroup MUSKINGUM_CH
- * \ingroup Hydrology_longterm
- * \brief 
- *
- *
- *
- */
+
 //! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
 {
