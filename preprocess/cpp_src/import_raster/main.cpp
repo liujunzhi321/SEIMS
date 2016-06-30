@@ -136,7 +136,7 @@ int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubba
 
 		bson_destroy(p);
 		free(p);
-		delete subData;
+		delete[] subData;
 	}
 	return 0;
 }
@@ -226,7 +226,10 @@ int Decomposite2DRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSub
 
 		bson_destroy(p);
 		free(p);
-		delete sub2DData;
+		for(int i = 0; i < subXSize*subYSize; i++)
+			delete[] sub2DData[i];
+		delete[] sub2DData;
+		sub2DData = NULL;
 	}
 	return 0;
 }
