@@ -83,7 +83,8 @@ def ImportDayData(db, ClimateDateFile, sitesLoc):
                 curDic[Tag_DT_Zone] = dic[Tag_DT_Zone]
                 curDic[Tag_DT_LocalT] = dic[Tag_DT_LocalT]
                 curDic[Tag_DT_Type] = fld
-                curfilter = {Tag_DT_StationID: dic[Tag_DT_StationID], Tag_DT_UTC: dic[Tag_DT_UTC]}
+                curfilter = {Tag_DT_StationID: dic[Tag_DT_StationID], Tag_DT_UTC: dic[Tag_DT_UTC],
+                             Tag_DT_Type: fld}
                 db[Tag_ClimateDB_Data].find_one_and_replace(curfilter, curDic, upsert=True)
                 # db[Tag_ClimateDB_Data].insert_one(curDic)
         if(dic[Tag_DT_StationID] in PHUCalDic.keys()):

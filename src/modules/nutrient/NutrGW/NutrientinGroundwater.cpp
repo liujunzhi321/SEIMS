@@ -29,7 +29,7 @@ NutrientinGroundwater::~NutrientinGroundwater(void) {
 }
 bool NutrientinGroundwater::CheckInputSize(const char* key, int n) {
 	if(n <= 0) {
-		throw ModelException(MID_NMINRL, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
+		throw ModelException(MID_MINRL, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
 		return false;
 	}
 	if(m_nCells != n) {

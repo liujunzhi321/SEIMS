@@ -197,7 +197,6 @@ void MainMongoDB(string modelPath,char *host,int port, int scenarioID, int numTh
 		main.Execute();	
 		main.Output();
 
-		delete factory;
 		mongoc_uri_destroy(uri);
 		mongoc_cleanup();
 	}

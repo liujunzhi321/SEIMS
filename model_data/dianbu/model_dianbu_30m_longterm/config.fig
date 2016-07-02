@@ -4,17 +4,14 @@
 0 | TimeSeries | | TSD_RD
 ### [ITP method]_[Vertical Interpolation Method], 0 is not use vertical iterpolation.
 0 | Interpolation | Thiessen_0 | ITP
-0 | PET | Hargreaves | PET_H
-#0 | PET | PriestleyTaylor | PET_PT
-#0 | PET | Penman-Monteith | PET_PM ##### NOT TESTED YET, TEST AFTER ECOLOGY MODULES ARE ACCOMPLISHED.
 0 | Soil temperature | Finn Plauborg | STP_FP
 #1 | Interception
 1 | Interception | Maximum Storage | PI_MSM
 #2 | Snow accumulation and melt
 #2 | Snow redistribution | | SRD_MB ### NEED TO PREPARE INPUT DATA BEFORE!
-2 | Snow Sublimation | WetSpa | SSM_PE
+#2 | Snow Sublimation | WetSpa | SSM_PE
 2 | Snow melt | Degree-Day | SNO_DD
-2 | Snow | Water balance | SNO_WB
+#2 | Snow | Water balance | SNO_WB
 #2 | Snow | Snowpeak Daily | SNO_SP
 #3 | Infiltration and Surface runoff
 3 | Infiltration | Modified rational | SUR_MR
@@ -23,21 +20,31 @@
 #4 | Depression
 4 | Depression | Linsley | DEP_LINSLEY
 #4 | Depression | Fill and spill | DEP_FS  ### NOT UPDATED AND/OR TESTED.
+#9 | Erosion
+#9 | Hillslope erosion | MUSLE | MUSLE_AS
+#xx| Management Operation | SWAT | MGT_SWAT
 #5 | Percolation
 #5 | Percolation | Darcy and Brooks-Corey | PER_PI
 5 | Percolation | Storage routing | PER_STR
 #5 | Percolation | Darcy | PER_DARCY ### NOT UPDATED AND/OR TESTED.
-#6 | Subsurface
-#6 | Subsurface | Darcy and Kinematic | SSR_DA
+0 | PET | Hargreaves | PET_H
+#0 | PET | PriestleyTaylor | PET_PT
+#0 | PET | Penman-Monteith | PET_PM ##### NOT TESTED YET, TEST AFTER ECOLOGY MODULES ARE ACCOMPLISHED.
+#xx | AET | Hargreaves and PriestleyTaylor | AET_PTH
 #7 | Soil Evaporation
 #7 | Soil Evaporation | Linear | SET_LM
+#xx | PG | Simplified EPIC | BIO_EPIC
+#xx | MINRL | Mineralization of N, P | MINRL
+#xx | ATMDEP | Atomosphere deposition | ATMDEP
+#xx | Movement | Nutrient Movement | NUTRMV
+#6 | Subsurface
+#6 | Subsurface | Darcy and Kinematic | SSR_DA
 #8 | Groundwater
 #8 | Groundwater | Linear reservoir | GWA_RE
-#9 | Erosion
-#9 | Hillslope erosion | MUSLE | MUSLE_AS
 #10 | Routing
 #10 | Overland routing | IUH | IUH_OL
 #10 | Overland routing | Kinematic wave | IKW_OL
+#9 | Channel erosion | TODO | 
 #10 | Channel routing | MUSK | MUSK_CH
 #10 | Channel routing | Kinematic wave | IKW_CH
 #10 | Channel routing | Diffusive wave | CH_DW

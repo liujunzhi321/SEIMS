@@ -128,7 +128,7 @@ void SurrunoffTransfer::initialOutputs() {
 			m_sedminps[i] = 0.;
 		}
 	}
-	if(m_sol_mp == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_mp, (float)0.);}
+	if(m_sol_mp == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_mp, 0.f);}
 }
 int SurrunoffTransfer::Execute() {
 	if(!this -> CheckInputData()) { 

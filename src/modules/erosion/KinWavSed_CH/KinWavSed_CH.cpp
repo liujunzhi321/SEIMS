@@ -228,13 +228,6 @@ void KinWavSed_CH::Get2DData(const char *key, int *nRows, int *nCols, float ***d
 
 }
 
-string KinWavSed_CH::toString(float value)
-{
-	ostringstream oss;
-	oss << value;
-	return oss.str();
-}
-
 bool KinWavSed_CH::CheckInputData()
 {
 	if(m_flowInIndex == NULL)

@@ -4,6 +4,7 @@
 #include "util.h"
 #include "SimulationModule.h"
 #include "Scenario.h"
+#include "clsReach.h"
 using namespace MainBMP;
 using namespace std;
 
@@ -24,6 +25,8 @@ private:
 	float** m_output2Draster;
 	/// BMPs Scenario data
 	Scenario* m_scenario;
+	/// Reach information
+	clsReaches* m_reaches;
 public:
 	IO_TEST(void);
 	~IO_TEST(void);
@@ -33,6 +36,7 @@ public:
 	void Set2DData(const char* key, int n, int col, float** data);
 	void Get2DData(const char* key, int* n, int* col, float*** data);
 	void SetScenario(MainBMP::Scenario* sce);
+	void SetReaches(clsReaches* reaches);
 private:
 	/*!
 	 * \brief check the input data. Make sure all the input data is available.

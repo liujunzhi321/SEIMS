@@ -29,7 +29,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetName(MID_PI_STORM);
 	mdi.SetVersion("0.4");
 	mdi.SetWebsite(SEIMS_SITE);
-	mdi.SetHelpfile("PI_STORM.chm");
+	mdi.SetHelpfile("");
 
 	// set the input variables (time series)
 	mdi.AddInput(VAR_PCP,UNIT_DEPTH_MM,DESC_D_P,Source_Module, DT_Raster1D);

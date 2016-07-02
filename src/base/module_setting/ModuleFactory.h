@@ -24,6 +24,7 @@
 #include "clsRasterData.h"
 #include "SettingsInput.h"
 #include "Scenario.h"
+#include "clsReach.h"
 #ifndef linux
 #include <Windows.h>
 #endif
@@ -109,7 +110,7 @@ private:
 	//! Mongo GridFS to store spatial data
 	mongoc_gridfs_t						*m_spatialData;
 	//! Store parameters from Database \sa m_dbName
-	map<string, ParamInfo*>				m_parametersInDB; 
+	map<string, ParamInfo*>			m_parametersInDB; 
 
 	//! 1D array data map
 	map<string, float*>					m_1DArrayMap;
@@ -124,9 +125,11 @@ private:
 	//! Interpolation weight data map
 	map<string, clsInterpolationWeightData*> m_weightDataMap;
 	//! Raster data (include 1D and/or 2D) map
-	map<string, clsRasterData*>			m_rsMap;
+	map<string, clsRasterData*>	m_rsMap;
 	//! BMPs Scenario data
 	Scenario*									m_scenario;
+	//! Reaches information
+	clsReaches*								m_reaches;
 
 private:
 	//! Initialization, read the config.fig file and initialize
@@ -168,6 +171,8 @@ private:
 	void SetRaster(string& dbName, string& paraName, string& remoteFileName, clsRasterData* templateRaster, SimulationModule* pModule);
 	//! Set BMPs Scenario data
 	void SetScenario(SimulationModule* pModule);
+	//! Set Reaches information
+	void SetReaches(SimulationModule* pModule);
 	//! Read multiply reach information from file
 	//void ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nRows, int& nCols, float**& data);
 	//! Read single reach information 
