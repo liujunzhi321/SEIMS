@@ -89,9 +89,7 @@ void clsPI_STORM::SetValue(const char* key, float data)
 		omp_set_num_threads((int)data);
 	}
 	else									
-		throw ModelException(MID_PI_STORM,"SetValue","Parameter " + s + " does not exist in PI_STORM method. Please contact the module developer.");
-
-	//this->StatusMessage("Set "+ s + "=" + clsPI_MSM::toString(data));
+		throw ModelException(MID_PI_STORM,"SetValue","Parameter " + s + " does not exist in current module. Please contact the module developer.");
 }
 
 void clsPI_STORM::Get1DData(const char* key, int* n, float** data)
@@ -216,24 +214,17 @@ bool clsPI_STORM::CheckInputData()
 
 	if(this->m_Pi_b > 1.5 || this->m_Pi_b < 0.5)
 	{
-		throw ModelException(MID_PI_STORM,"CheckInputData","The interception storage capacity exponent can not be " + clsPI_STORM::toString(this->m_Pi_b) + ". It should between 0.5 and 1.5.");
+		throw ModelException(MID_PI_STORM,"CheckInputData","The interception storage capacity exponent can not be " + ValueToString(this->m_Pi_b) + ". It should between 0.5 and 1.5.");
 		return false;
 	}
 
 	if(this->m_Init_IS > 1 || this->m_Init_IS < 0)
 	{
-		throw ModelException(MID_PI_STORM,"CheckInputData","The Initial interception storage can not be " + clsPI_STORM::toString(this->m_Init_IS) + ". It should between 0 and 1.");
+		throw ModelException(MID_PI_STORM,"CheckInputData","The Initial interception storage can not be " + ValueToString(this->m_Init_IS) + ". It should between 0 and 1.");
 		return false;
 	}
 
 	return true;
-}
-
-string clsPI_STORM::toString(float value)
-{
-	char s[20];
-	strprintf(s,20,"%f",value);
-	return string(s);
 }
 
 bool clsPI_STORM::CheckInputSize(const char* key, int n)

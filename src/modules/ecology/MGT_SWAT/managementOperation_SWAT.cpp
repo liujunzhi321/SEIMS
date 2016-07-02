@@ -1392,6 +1392,7 @@ void MGTOpt_SWAT::initialOutputs()
 	m_cellArea = m_cellWidth * m_cellWidth / 10000.;
 	if(m_nSub <= 0)
 	{
+#pragma omp parallel for
 		for(int i=0;i<this->m_nCells;i++)
 		{
 			m_nCellsSubbsn[int(this->m_subBsnID[i])] += 1;
@@ -1400,28 +1401,28 @@ void MGTOpt_SWAT::initialOutputs()
 		this->m_nSub = m_nCellsSubbsn.size();
 	}
 	/// plant operation
-	if(m_HarvestIdxTarg == NULL) Initialize1DArray(m_nCells, m_HarvestIdxTarg, (float)0.);
-	if(m_BiomassTarg == NULL) Initialize1DArray(m_nCells, m_BiomassTarg, (float)0.);
+	if(m_HarvestIdxTarg == NULL) Initialize1DArray(m_nCells, m_HarvestIdxTarg, 0.f);
+	if(m_BiomassTarg == NULL) Initialize1DArray(m_nCells, m_BiomassTarg, 0.f);
 	/// irrigation / auto irrigation operations
-	if(m_appliedWater == NULL) Initialize1DArray(m_nCells, m_appliedWater, (float)0.);
-	if(m_irrSurfQWater = NULL) Initialize1DArray(m_nCells, m_irrSurfQWater, (float)0.);
-	if(m_irrFlag == NULL) Initialize1DArray(m_nCells, m_irrFlag, (float)0);
+	if(m_appliedWater == NULL) Initialize1DArray(m_nCells, m_appliedWater, 0.f);
+	if(m_irrSurfQWater = NULL) Initialize1DArray(m_nCells, m_irrSurfQWater, 0.f);
+	if(m_irrFlag == NULL) Initialize1DArray(m_nCells, m_irrFlag, 0.f);
 	if(m_autoIrrSource == NULL) Initialize1DArray(m_nCells, m_autoIrrSource, (float)IRR_SRC_OUTWTSD);
-	if(m_autoIrrNo == NULL) Initialize1DArray(m_nCells, m_autoIrrNo, (float)-1);
-	if(m_wtrStrsID == NULL) Initialize1DArray(m_nCells, m_wtrStrsID, (float)1); /// By default, plant water demand
-	if(m_autoWtrStres == NULL) Initialize1DArray(m_nCells, m_autoWtrStres, (float)0.);
-	if(m_autoIrrEfficiency == NULL) Initialize1DArray(m_nCells, m_autoIrrEfficiency, (float)0.);
-	if(m_autoIrrWtrDepth == NULL) Initialize1DArray(m_nCells, m_autoIrrWtrDepth, (float)0.);
-	if(m_autoSurfRunRatio == NULL) Initialize1DArray(m_nCells, m_autoSurfRunRatio, (float)0.);
+	if(m_autoIrrNo == NULL) Initialize1DArray(m_nCells, m_autoIrrNo, -1.f);
+	if(m_wtrStrsID == NULL) Initialize1DArray(m_nCells, m_wtrStrsID, 1.f); /// By default, plant water demand
+	if(m_autoWtrStres == NULL) Initialize1DArray(m_nCells, m_autoWtrStres, 0.f);
+	if(m_autoIrrEfficiency == NULL) Initialize1DArray(m_nCells, m_autoIrrEfficiency, 0.f);
+	if(m_autoIrrWtrDepth == NULL) Initialize1DArray(m_nCells, m_autoIrrWtrDepth, 0.f);
+	if(m_autoSurfRunRatio == NULL) Initialize1DArray(m_nCells, m_autoSurfRunRatio, 0.f);
 	/// fertilizer / auto fertilizer operations
-	if(m_fertilizerID == NULL) Initialize1DArray(m_nCells, m_fertilizerID, (float)-1);
-	if(m_NStressCode == NULL) Initialize1DArray(m_nCells, m_NStressCode, (float)0);
-	if(m_autoNStress == NULL) Initialize1DArray(m_nCells, m_autoNStress, (float)0.);
-	if(m_autoMaxAppliedN == NULL) Initialize1DArray(m_nCells, m_autoMaxAppliedN, (float)0.);
-	if(m_targNYld == NULL) Initialize1DArray(m_nCells, m_targNYld, (float)0.);
-	if(m_autoAnnMaxAppliedMinN == NULL) Initialize1DArray(m_nCells, m_autoAnnMaxAppliedMinN, (float)0.);
-	if(m_autoFertEfficiency == NULL) Initialize1DArray(m_nCells, m_autoFertEfficiency, (float)0.);
-	if(m_autoFertSurface == NULL) Initialize1DArray(m_nCells, m_autoFertSurface, (float)0.);
+	if(m_fertilizerID == NULL) Initialize1DArray(m_nCells, m_fertilizerID, -1.f);
+	if(m_NStressCode == NULL) Initialize1DArray(m_nCells, m_NStressCode, 0.f);
+	if(m_autoNStress == NULL) Initialize1DArray(m_nCells, m_autoNStress, 0.f);
+	if(m_autoMaxAppliedN == NULL) Initialize1DArray(m_nCells, m_autoMaxAppliedN, 0.f);
+	if(m_targNYld == NULL) Initialize1DArray(m_nCells, m_targNYld, 0.f);
+	if(m_autoAnnMaxAppliedMinN == NULL) Initialize1DArray(m_nCells, m_autoAnnMaxAppliedMinN, 0.f);
+	if(m_autoFertEfficiency == NULL) Initialize1DArray(m_nCells, m_autoFertEfficiency, 0.f);
+	if(m_autoFertSurface == NULL) Initialize1DArray(m_nCells, m_autoFertSurface, 0.f);
 }
 
 float MGTOpt_SWAT::Erfc(float xx)
@@ -1430,7 +1431,7 @@ float MGTOpt_SWAT::Erfc(float xx)
 	float c3 = .00034, c4 = .019527;
 	float x = 0.f, erf = 0.f, erfc = 0.f;
 	x = abs(sqrt(2.) * xx);
-	erf = 1. - pow(float(1. + c1 * x + c2 * x * x + c3 * pow(x, (float)3.) + c4 * pow(x, (float)4.)), (float)-4.);
+	erf = 1. - pow(float(1. + c1 * x + c2 * x * x + c3 * pow(x, 3.f) + c4 * pow(x, 4.f)), -4.f);
 	if(xx < 0.) erf = -erf;
 	erfc = 1. - erf;
 	return erfc;

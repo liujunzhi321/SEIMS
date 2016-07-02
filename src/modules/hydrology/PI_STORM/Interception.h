@@ -88,7 +88,5 @@ private:
 	*	@return bool The validity of the dimension
 	*/
 	bool CheckInputSize(const char*,int);
-	
-	static string toString(float value);
 };
 
