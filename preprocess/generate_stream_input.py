@@ -22,7 +22,7 @@ def gridNumber(watershedFile):
     for i in range(ysize):
         for j in range(xsize):
             k = int(data[i][j])
-            if(abs(k - noDataValue) > DELTA):
+            if(abs(k - noDataValue) > UTIL_ZERO):
                 numDic[k] = numDic.setdefault(k,0) + 1
     return numDic, ds.GetGeoTransform()[1]
     

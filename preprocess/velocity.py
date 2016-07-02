@@ -41,7 +41,7 @@ def GenerateVelocity(filepath):
     velocity = zeros((ysize, xsize))
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(rad_data[i][j]-noDataValue) < util.DELTA ):
+            if(abs(rad_data[i][j]-noDataValue) < util.UTIL_ZERO):
                 velocity[i][j] = -9999
                 continue
             velocity[i][j] = math.pow(Man_data[i][j], -1) * math.pow(rad_data[i][j], 2/3) * math.pow(slo_data[i][j]/100, 0.5)

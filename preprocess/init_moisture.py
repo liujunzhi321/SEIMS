@@ -33,10 +33,10 @@ def InitMoisture(dstdir):
     wiMin = 1000
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(dataAcc[i][j] - noDataValue) < util.DELTA):
+            if(abs(dataAcc[i][j] - noDataValue) < util.UTIL_ZERO):
                 wiGrid[i][j] = DEFAULT_NODATA
             else:
-                if(abs(dataSlope[i][j]) < util.DELTA):
+                if(abs(dataSlope[i][j]) < util.UTIL_ZERO):
                     dataSlope[i][j] = 0.1/dx*100
 
                 wiGrid[i][j] =  math.log( (dataAcc[i][j] + 1)*cellArea / (dataSlope[i][j]/100.) )
@@ -55,7 +55,7 @@ def InitMoisture(dstdir):
     moisture = zeros((ysize, xsize))
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(dataAcc[i][j] - noDataValue) < util.DELTA):
+            if(abs(dataAcc[i][j] - noDataValue) < util.UTIL_ZERO):
                 moisture[i][j] = DEFAULT_NODATA
             else:
                 moisture[i][j] =  a*wiGrid[i][j] + b

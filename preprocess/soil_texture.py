@@ -55,7 +55,7 @@ def SoilTexture(workingDir):
     usleK_array = zeros((nRows, nCols)) # USLE K factor
     for i in range(nRows):
         for j in range(nCols):
-            if abs(dataSand[i][j] - noDataValue) < DELTA:
+            if abs(dataSand[i][j] - noDataValue) < UTIL_ZERO:
                 st[i][j] = DEFAULT_NODATA
                 hg[i][j] = DEFAULT_NODATA
                 usleK_array[i][j] = DEFAULT_NODATA

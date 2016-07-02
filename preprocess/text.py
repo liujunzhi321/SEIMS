@@ -172,7 +172,7 @@ REACH_RS4 = 'RS4'
 REACH_RS5 = 'RS5'
 ## Hydrological data related tags
 ## Spatial Data related string or values
-DEFAULT_NODATA = -9999
+DEFAULT_NODATA = -9999.
 ## Spatial data preprocessing
 DIR_REACHES = "reaches"
 DIR_SUBBASIN = "subbasins"

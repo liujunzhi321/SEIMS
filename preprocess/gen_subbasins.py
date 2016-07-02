@@ -33,7 +33,7 @@ def GetMaskFromRaster(rasterFile, dstdir):
     
     for i in range(ysize):
         for j in range(xsize):
-            if abs(data[i][j] - noDataValue) > util.DELTA:
+            if abs(data[i][j] - noDataValue) > util.UTIL_ZERO:
                 iMin = min(i, iMin)
                 iMax = max(i, iMax)
                 jMin = min(j, jMin)
@@ -50,7 +50,7 @@ def GetMaskFromRaster(rasterFile, dstdir):
     
     for i in range(ySizeMask):
         for j in range(xSizeMask):
-            if abs(data[i+iMin][j+jMin] - noDataValue) > util.DELTA:
+            if abs(data[i+iMin][j+jMin] - noDataValue) > util.UTIL_ZERO:
                 mask[i][j] = 1
             else:
                 mask[i][j] = DEFAULT_NODATA

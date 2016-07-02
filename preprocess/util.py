@@ -3,13 +3,13 @@
 ## @Utility functions
 #
 #
-import os,math,datetime,time
+import math,datetime,time
 from osgeo import gdal,osr
 from gdalconst import *
 import shutil
 from text import *
 import numpy
-DELTA = 1.e-6
+
 UTIL_ZERO = 1.e-6
 MINI_SLOPE = 0.0001
 

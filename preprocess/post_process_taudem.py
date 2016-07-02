@@ -74,7 +74,7 @@ def SerializeStreamNet(streamNetFile, outputReachFile):
         id = ft.GetFieldAsInteger(iLink)
         reachLen = ft.GetFieldAsDouble(iLen)
         if not id in oldIdList:
-            if reachLen < DELTA:
+            if reachLen < UTIL_ZERO:
                 downstreamId = ft.GetFieldAsInteger(iLinkDownSlope)
                 outputDic[id] = downstreamId 
             else:
@@ -139,19 +139,19 @@ def SerializeSubbasin(subbasinFile, streamRasterFile, idMap, \
     print "number of reaches: ", n
     for i in range(nRows):
         for j in range(nCols):
-            if abs(data[i][j] - noDataValue) < DELTA:
+            if abs(data[i][j] - noDataValue) < UTIL_ZERO:
                 outputSubbasin[i][j] = noDataValue
             else:
                 outputSubbasin[i][j] = idMap[int(data[i][j])]#error if the outlet subbasin contains only one grid, so there is no reach for this subbasin
                 
-            if dataStream[i][j] < DELTA:
+            if dataStream[i][j] < UTIL_ZERO:
                 outputStream[i][j] = noDataValueStream  
             else:
                 outputStream[i][j] = outputSubbasin[i][j]
     
-    WriteGTiffFile(outputSubbasinFile, nRows, nCols, outputSubbasin, \
+    WriteGTiffFile(outputSubbasinFile, nRows, nCols, outputSubbasin,
             subbasin.geotrans, subbasin.srs, noDataValue, gdal.GDT_Int32)
-    WriteGTiffFile(outputStreamLinkFile, nRows, nCols, outputStream, \
+    WriteGTiffFile(outputStreamLinkFile, nRows, nCols, outputStream,
             streamRaster.geotrans, streamRaster.srs, noDataValue, gdal.GDT_Int32)
 
             
@@ -167,13 +167,13 @@ def ChangeFlowDir(flowDirFileTau, flowDirFileEsri):
     dataTau.shape = n
     output = zeros(n)
     for i in range(n):
-        if abs(dataTau[i] - noDataValue) < DELTA:
+        if abs(dataTau[i] - noDataValue) < UTIL_ZERO:
             output[i] = noDataValue
         else:
             value = int(dataTau[i]) - 1
             output[i] = dirMap[value]
     output.shape = (nRows, nCols)    
-    WriteGTiffFile(flowDirFileEsri, nRows, nCols, output, \
+    WriteGTiffFile(flowDirFileEsri, nRows, nCols, output,
             flowDirTau.geotrans, flowDirTau.srs, noDataValue, gdal.GDT_Int32)
         
 
@@ -189,7 +189,7 @@ def ChangeSlope(slopeFile, outputFile):
     output = zeros(n)
     
     for i in range(n):
-        if abs(data[i] - noDataValue) < DELTA:
+        if abs(data[i] - noDataValue) < UTIL_ZERO:
             output[i] = noDataValue
         else:
             output[i] = 100*data[i]
@@ -212,7 +212,7 @@ def AddWidthToReach(reachFile, stramLinkFile, width):
             #streamRaster[i][j] = dataStream[i][j]
             #if width[i][j] > dx:
             #    pass
-            if abs(dataStream[i][j] - noDataValue) > DELTA:
+            if abs(dataStream[i][j] - noDataValue) > UTIL_ZERO:
                 id = int(dataStream[i][j])
                 chNumDic.setdefault(id, 0)
                 chWidthDic.setdefault(id, 0)
@@ -336,7 +336,7 @@ if __name__ == '__main__':
     outputStreamFile = dstdir + os.sep + "stream_link.tif"
     
     idMap = SerializeStreamNet(streamNetFile, outputReachFile)
-    SerializeSubbasin(subbasinFile, streamRasterFile, idMap, \
+    SerializeSubbasin(subbasinFile, streamRasterFile, idMap,
                             outputSubbasinFile, outputStreamFile)
     #ChangeFlowDir(flowDirFileTau, outputFlowDirFile)
     
