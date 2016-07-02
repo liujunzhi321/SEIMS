@@ -53,8 +53,8 @@ MEASUREMENT_DATA_DIR = BASE_DATA_DIR + os.sep + 'observed'
 BMP_DATA_DIR     = BASE_DATA_DIR + os.sep + 'management'
 
 ## MongoDB related
-HOSTNAME = '192.168.6.57'
-#HOSTNAME = '127.0.0.1'
+#HOSTNAME = '192.168.6.57'
+HOSTNAME = '127.0.0.1'
 PORT = 27017
 ClimateDBName = 'HydroClimate_dianbu'
 BMPScenarioDBName = 'BMP_Scenario_dianbu'
