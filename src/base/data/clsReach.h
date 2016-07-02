@@ -11,7 +11,10 @@
 
 #include <string>
 #include "MetadataInfoConst.h"
-
+#include "mongoc.h"
+#include "MongoUtil.h"
+#include "ModelException.h"
+#include <map>
 using namespace std;
 /*!
 * \ingroup data
@@ -22,14 +25,40 @@ class clsReach
 {
 public:
 	//! Constructor
-	clsReach(void);
+	clsReach(const bson_t *&bsonTab, bson_iter_t &iter);
 	//! Destructor
 	~clsReach(void);
 	//! Reset the contents of the object to default values
 	void Reset(void);
-
+	int GetSubbasinID(){return Subbasin;}
+	float GetArea(){return this->Area;}
+	float GetDepth(){return this->Depth;}
+	int GetDownStream(){return DownStream;}
+	int GetDownUpOrder(){return DownUpOrder;}
+	int GetUpDownOrder(){return UpDownOrder;}
+	int GetGroup(){return Group;}
+	int GetGroupDivided(){return GroupDivided;}
+	float GetLength(){return this->Length;}
+	float GetManning(){return this->Manning;}
+	int GetNumCells(){return this->NumCells;}
+	float GetSlope(){return this->Slope;}
+	float GetV0(){return this->V0;}
+	float GetWidth(){return this->Width;}
+	float GetBc1(){return this->bc1;}
+	float GetBc2(){return this->bc2;}
+	float GetBc3(){return this->bc3;}
+	float GetBc4(){return this->bc4;}
+	float GetRs1(){return this->rs1;}
+	float GetRs2(){return this->rs2;}
+	float GetRs3(){return this->rs3;}
+	float GetRs4(){return this->rs4;}
+	float GetRs5(){return this->rs5;}
+	float GetRk1(){return this->rk1;}
+	float GetRk2(){return this->rk2;}
+	float GetRk3(){return this->rk3;}
+	float GetRk4(){return this->rk4;}
 private:
-	//! Area
+	//! Subbasin area
 	float		Area;
 	//! Depth
 	float		Depth;
@@ -75,7 +104,7 @@ private:
 	float  rs4;	
 	/// organic phosphorus settling rate in reach at 20 deg C (1/day)
 	float  rs5;	
-     /// CBOD deoxygenation rate coefficient in reach at 20 deg C (1/day)
+     /// CBOD doxygenation rate coefficient in reach at 20 deg C (1/day)
 	float  rk1;
      /// reaeration rate in accordance with Fickian diffusion in reach at 20 deg C (1/day)
 	float  rk2; 
@@ -83,6 +112,43 @@ private:
 	float  rk3;
      /// sediment oxygen demand rate in reach at 20 deg C (mg O2/ ((m**2)*day))
 	float  rk4;
-
 };
-
+/*!
+ * \class clsReaches
+ * \ingroup data
+ *
+ * \brief Read and store all reaches information as input parameters
+ *
+ */
+class clsReaches
+{
+public:
+	/*!
+	 * \brief Constructor
+	 *
+	 * Query reach table from MongoDB
+	 *
+	 * \param[in] conn mongoc client instance
+	 * \param[in] dbName Database name
+	 * \param[in] collectionName Reach collection name
+	 */
+	clsReaches(mongoc_client_t *conn,string& dbName, string& collectionName);
+	/// Destructor
+	~clsReaches();
+	/// Get single reach information by subbasin ID
+	clsReach* GetReachByID(int id){return reachesInfo.at(id);}
+	/// Get reach number
+	int GetReachNumber(){return this->reachNum;}
+	/// Get reach IDs
+	vector<int> GetReachIDs(){return this->reachIDs;}
+private:
+	/// reaches number
+	int reachNum;
+	/// reach IDs
+	vector<int> reachIDs;
+	/* Map container to store all reaches information
+	 * key: reach ID
+	 * value: clsReach instance (pointer)
+	 */
+	map<int, clsReach*> reachesInfo;
+};
