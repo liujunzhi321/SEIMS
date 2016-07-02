@@ -3,7 +3,7 @@
 from osgeo import gdal,osr
 import sqlite3
 from numpy import *
-import util
+from util import *
 from text import *
 
 def DepressionCap(filepath, sqliteFile):
@@ -65,7 +65,7 @@ def DepressionCap(filepath, sqliteFile):
     lastStid = 0
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(mask_data[i][j]-noDataValue1) < util.DELTA):
+            if(abs(mask_data[i][j]-noDataValue1) < UTIL_ZERO):
                 depStorageCap[i][j] = noDataValue2
                 continue
             landuID = int(landu_data[i][j])
@@ -84,17 +84,17 @@ def DepressionCap(filepath, sqliteFile):
                 depressionGrid0 = dep_sd0[landuID][lastStid]
                 
             tempGrid1 = log(depressionGrid0 + 0.0001)
-            theSlopeGrid = slo_data[i][j] / 100
+            theSlopeGrid = slo_data[i][j] / 100.
             tempGrid2 = theSlopeGrid * (-9.5)
             depressionGrid = math.exp(tempGrid1 + tempGrid2)
             
-            if(landuID == 106 or landuID == 107 or landuID ==105):
-                depStorageCap[i][j] = 0.5*imp+(1-imp)*depressionGrid
+            if(landuID == 106 or landuID == 107 or landuID == 105): ## TODO, check if it is  (landuID >= 98)? By LJ
+                depStorageCap[i][j] = 0.5 * imp + (1 - imp) * depressionGrid
             else:
                 depStorageCap[i][j] = depressionGrid
                 
     filename = filepath + os.sep + depressionFile   
-    util.WriteGTiffFile(filename, ysize, xsize, depStorageCap, \
+    WriteGTiffFile(filename, ysize, xsize, depStorageCap,
                             geotransform, srs, noDataValue2, gdal.GDT_Float32)
         
     

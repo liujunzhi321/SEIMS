@@ -148,7 +148,7 @@ def GenerateWeightDependentParameters(conn, subbasinID):
         for j in range(0, xsize):
             index = i*xsize + j
             #print index
-            if(abs(maskData[index] - noDataValue) > util.DELTA):
+            if(abs(maskData[index] - noDataValue) > util.UTIL_ZERO):
                 curRow.append(phu0Data[vaildCount])
                 curRow2.append(tmean0Data[vaildCount])
                 vaildCount += 1
@@ -196,7 +196,7 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
     #count number of valid cells
     num = 0
     for i in range(0, totalLen):
-        if(abs(data[i] - noDataValue) > util.DELTA):
+        if(abs(data[i] - noDataValue) > util.UTIL_ZERO):
             num = num + 1
     
     #read stations information from database    
@@ -260,7 +260,7 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
                 for j in range(0, xsize):
                     index = i*xsize + j
                     #print index
-                    if(abs(data[index] - noDataValue) > util.DELTA):
+                    if(abs(data[index] - noDataValue) > util.UTIL_ZERO):
                         #x = geo[0] + (j+0.5)*geo[1] + i*geo[2]
                         #y = geo[3] + j*geo[4] + (i+0.5)*geo[5]
                         x = xll + j*dx
