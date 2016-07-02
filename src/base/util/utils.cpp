@@ -249,7 +249,6 @@ vector<string> utils::SplitString(string item, char delimiter)
 	{
 		tokens.push_back(field);
 	}
-
 	return tokens;
 }
 

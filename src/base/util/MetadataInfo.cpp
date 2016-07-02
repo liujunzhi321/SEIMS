@@ -118,6 +118,9 @@ void MetadataInfo::DimensionTag(string tag, int indent, dimensionTypes dimType, 
 	case DT_Scenario:
 		strTmp = Type_Scenario;
 		break;
+	case DT_Reach:
+		strTmp = Type_Reach;
+		break;
     default:
         break;
 	}
