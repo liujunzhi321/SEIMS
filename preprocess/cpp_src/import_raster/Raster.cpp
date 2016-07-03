@@ -530,9 +530,10 @@ void Raster<T>::DeleteExistingData(void)
 		for (int i = 0; i < m_nRows; ++i)
 		{
 			if (m_data[i] != NULL)
-				delete m_data[i];
+				delete[] m_data[i];
 		}
-		delete m_data;
+		delete[] m_data;
+		m_data = NULL;
 	}
 }
 

@@ -136,7 +136,8 @@ int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubba
 
 		bson_destroy(p);
 		free(p);
-		delete subData;
+		delete[] subData;
+		subData = NULL;
 	}
 	return 0;
 }
@@ -226,7 +227,10 @@ int Decomposite2DRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSub
 
 		bson_destroy(p);
 		free(p);
-		delete sub2DData;
+		for(int i = 0; i < subXSize*subYSize; i++)
+			delete[] sub2DData[i];
+		delete[] sub2DData;
+		sub2DData = NULL;
 	}
 	return 0;
 }
@@ -264,7 +268,6 @@ int DecompositeRaster(map<int, SubBasin>& bboxMap, Raster<int>& rsSubbasin, cons
 		GDALDataset *poDstDS = poDriver->Create(subbasinFile.c_str(), subXSize, subYSize, 1, GDT_Float32, papszOptions );
 
 		float *subData = (float *) CPLMalloc(sizeof(float)*subXSize*subYSize);
-
 		for (int i = subbasin.yMin; i <= subbasin.yMax; i++)
 		{
 			for (int j = subbasin.xMin; j <= subbasin.xMax; j++)
