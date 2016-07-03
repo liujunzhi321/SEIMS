@@ -60,7 +60,7 @@ def GenerateCN2(dstdir, dbname):
                 hg = int(dataHg[i][j]) - 1 
                 data_prop[i][j] = cn2Map[landuseID][hg]
     
-    WriteGTiffFile(filename, ysize, xsize, data_prop, \
+    WriteGTiffFile(filename, ysize, xsize, data_prop,
                            geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
             
     print 'The CN2 file is generated!'

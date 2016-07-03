@@ -21,7 +21,7 @@ def OGRWkt2Shapely(input_shape, idField):
         idList.append(feat.GetField(idIndex))
     return shapely_objects, idList
 
-def FindSites(dbModel, hydroDBName, subbasinFile, thiessenFileList, siteTypeList, mode):
+def FindSites(db, hydroDBName, subbasinFile, thiessenFileList, siteTypeList, mode):
     subbasinIdField = 'LINKNO'##'DN'
     #print subbasinFile
     try:
@@ -41,6 +41,7 @@ def FindSites(dbModel, hydroDBName, subbasinFile, thiessenFileList, siteTypeList
         dic['SubbasinID'] = id
         dic['DB'] =  hydroDBName
         dic['Mode'] = mode
+        curFileter = {'SubbasinID':id,'DB': hydroDBName, 'Mode': mode}
         for i in range(0, n):
             thiessenFile = thiessenFileList[i]
             #print thiessenFile
@@ -63,9 +64,9 @@ def FindSites(dbModel, hydroDBName, subbasinFile, thiessenFileList, siteTypeList
             
             siteField = 'SiteList%s' % (siteType,)
             dic[siteField] = siteListStr
-        
-        dbModel[DB_TAB_SITELIST].insert_one(dic)
-    dbModel[DB_TAB_SITELIST].create_index([('SubbasinID', pymongo.ASCENDING), ('Mode', pymongo.ASCENDING)])
+        db[DB_TAB_SITELIST].find_one_and_replace(curFileter, dic, upsert = True)
+        #dbModel[DB_TAB_SITELIST].insert_one(dic)
+    db[DB_TAB_SITELIST].create_index([('SubbasinID', pymongo.ASCENDING), ('Mode', pymongo.ASCENDING)])
     print 'meteorology sites table was generated.'
     return nSubbasins
 
@@ -85,7 +86,6 @@ if __name__ == "__main__":
     
     thiessenFileList = [thiessenFileMeteo, thiessenFilePreci]
     typeList = ['M', 'P']
-    model_name = 'model_dianbu_30m_longterm'
-    FindSites(conn, model_name, subbasinFile, thiessenFileList, typeList, 'DAILY')
-    
-    print 'done!'
+    model_name = 'model_dianbu_10m_longterm'
+    db = conn[model_name]
+    FindSites(db, ClimateDBName, subbasinFile, thiessenFileList, typeList, 'DAILY')

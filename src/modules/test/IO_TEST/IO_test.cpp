@@ -5,7 +5,7 @@
 #include "ModelException.h"
 using namespace std;
 IO_TEST::IO_TEST(void):m_nCells(-1), m_raster1D(NULL), m_raster2D(NULL),
-	m_output1Draster(NULL), m_output2Draster(NULL),m_scenario(NULL)
+	m_output1Draster(NULL), m_output2Draster(NULL),m_scenario(NULL), m_reaches(NULL)
 {
 }
 
@@ -23,6 +23,8 @@ IO_TEST::~IO_TEST(void)
 	}
 	if(m_scenario != NULL)
 		delete m_scenario;
+	if(m_reaches != NULL)
+		delete m_reaches;
 }
 
 void IO_TEST::Set1DData(const char* key, int n, float* data)
@@ -45,6 +47,11 @@ void IO_TEST::SetScenario(MainBMP::Scenario* sce)
 {
 	if(NULL != sce)
 		m_scenario = sce;
+}
+void IO_TEST::SetReaches(clsReaches* reaches)
+{
+	if(NULL != reaches)
+		m_reaches = reaches;
 }
 bool IO_TEST::CheckInputSize(const char* key, int n)
 {
@@ -101,6 +108,16 @@ int IO_TEST::Execute()
 	}
 	/// Write Scenario Information
 	m_scenario->Dump("e:\\test\\bmpScenario2.txt");
+	int nReaches = m_reaches->GetReachNumber();
+	vector<int> reachIDs = m_reaches->GetReachIDs();
+	/// Get reach information by subbasin ID
+	for (vector<int>::iterator it = reachIDs.begin(); it != reachIDs.end(); it++)
+	{
+		clsReach* reachTest = m_reaches->GetReachByID(*it);
+		/// Get any fields of reach
+		float slope = reachTest->GetSlope();
+		//cout<<"Reach ID: "<<*it<<", Slope: "<<slope<<endl;
+	}
 	return 0;
 }
 

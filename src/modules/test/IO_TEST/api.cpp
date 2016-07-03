@@ -34,6 +34,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_CONDUCT, UNIT_WTRDLT_MMH, DESC_CONDUCT, Source_ParameterDB, DT_Raster2D);
 	///test add scenario data
 	mdi.AddParameter(VAR_SCENARIO, UNIT_NON_DIM, DESC_SCENARIO, Source_ParameterDB, DT_Scenario);
+	///test reaches information
+	mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Reach);
 	/// set the output variables
 	mdi.AddOutput("CN2_M",UNIT_NON_DIM, DESC_CN2, DT_Raster1D);
 	mdi.AddOutput("K_M",UNIT_WTRDLT_MMH,DESC_CONDUCT,DT_Raster2D);

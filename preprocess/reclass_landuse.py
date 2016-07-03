@@ -51,42 +51,21 @@ def ReclassLanduse(landuseFile, dbname, dstdir):
 
     n = xsize * ysize
     data.shape = n
-        
     attrList = []
     for iprop in xrange(num_propeties):
         pname = property_namelist[iprop]
-        print "\t", pname
-        
         filename = dstdir + os.sep + pname + ".tif"
         attrList.append(filename)
-        
-        #t = time()
-        
         data_prop = numpy.zeros(n)
         dic = property_map[pname]
-        
         for i in xrange(n):
             id = int(data[i])
             data_prop[i] = dic[id] if id > 0 else noDataValue
-        
-        #print time() - t
-        
         data_prop.shape = (ysize, xsize)
         
         WriteGTiffFile(filename, ysize, xsize, data_prop,geotransform, srs, noDataValue, gdal.GDT_Float32)
-    
     print 'The landuse parameters are generated!'
-
     return attrList
-    
 if __name__ == '__main__':
-    landuseFile = r'D:\hydro_preprocessing\taudem\landuse.tif'
-    dstdir = r'D:\hydro_preprocessing\tmp'
-    dbFile = r'D:\hydro_preprocessing\data\Parameter.db3'
-    if len(sys.argv) >= 4:
-        soilFile = sys.argv[1]
-        dstdir = sys.argv[2]
-        dbFile = sys.argv[3]
-    
     ReclassLanduse(landuseFile, dbFile, dstdir)
     

@@ -58,7 +58,7 @@ def cal_flowlen(filepath, weight):
     
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(fdir_data[i][j]-noDataValue) < util.DELTA):
+            if(abs(fdir_data[i][j]-noDataValue) < util.UTIL_ZERO):
                 length[i][j] = noDataValue
                 continue
         
@@ -102,7 +102,7 @@ def GenerateDelta_s(filepath):
     delta_s = zeros((ysize, xsize))
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(vel_data[i][j]-noDataValue) < util.DELTA ):
+            if(abs(vel_data[i][j]-noDataValue) < util.UTIL_ZERO):
                 delta_s[i][j] = DEFAULT_NODATA
                 continue
             if(strlk_data[i][j] <= 0):
@@ -119,14 +119,12 @@ def GenerateDelta_s(filepath):
     delta_s_sqr = cal_flowlen(filepath, weight)
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(vel_data[i][j]-noDataValue) < util.DELTA ):
+            if(abs(vel_data[i][j]-noDataValue) < util.UTIL_ZERO):
                 continue
-            
             delta_s[i][j] = math.sqrt(delta_s_sqr[i][j]) / 3600
                             
     filename = filepath + os.sep + delta_sFile
-    WriteGTiffFile(filename, ysize, xsize, delta_s, \
-                                geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
+    WriteGTiffFile(filename, ysize, xsize, delta_s,geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
                      
     
     

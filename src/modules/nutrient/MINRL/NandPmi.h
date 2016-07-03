@@ -1,17 +1,18 @@
-/** \defgroup NMINRL
+/** \defgroup MINRL
  * \ingroup Nutrient
  * \brief Daily nitrogen and phosphorus mineralization and immobilization.
+ * From nminrl.f, nitvol.f, pminrl
  */
 /*!
  * \file NandPmi.h
- * \ingroup NMINRL
+ * \ingroup MINRL
  * \author Huiran Gao
  * \date April 2016
  */
 
 #pragma once
 #ifndef SEIMS_NMINRL_PARAMS_INCLUDE
-#define SEIMS_NMINRL_PARAMS_INCLUDE
+#define SEIMS_MINRL_PARAMS_INCLUDE
 #include <string>
 #include "api.h"
 #include "SimulationModule.h"
@@ -19,7 +20,7 @@ using namespace std;
 
 /*!
  * \class NandPmi
- * \ingroup NMINRL
+ * \ingroup MINRL
  *
  * \brief Daily nitrogen and phosphorus mineralization and immobilization.
  *  Considering fresh organic material (plant residue) and active and stable humus material.

@@ -36,7 +36,6 @@
 #include "MetadataInfoConst.h"
 #include "MetadataInfo.h"
 #include "MongoUtil.h"
-//#include "DBManager.h"
 
 ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod)
 	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod)
@@ -52,7 +51,7 @@ ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPa
 #endif
 }
 ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario)
-	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod), m_scenario(scenario)
+	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod), m_scenario(scenario), m_reaches(NULL)
 {
 	Init(configFileName);
 #ifdef USE_MONGODB
@@ -371,6 +370,7 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 	if (StringMatch(strType,Type_SiteInformation))	typ = DT_SiteInformation;
 	if (StringMatch(strType,Type_LapseRateArray))	typ = DT_LapseRateArray;
 	if (StringMatch(strType,Type_Scenario))			typ = DT_Scenario;
+	if(StringMatch(strType, Type_Reach))	typ = DT_Reach;
 	return typ;
 }
 
@@ -923,6 +923,9 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 	case DT_Scenario:
 		SetScenario(pModule);
 		break;
+	case DT_Reach:
+		SetReaches(pModule);
+		break;
 	default:
 		break;
 	}
@@ -1267,6 +1270,13 @@ void ModuleFactory::SetScenario(SimulationModule* pModule)
 		return;
 	else
 		pModule->SetScenario(m_scenario);
+}
+/// Added by Liang-Jun Zhu, 2016-7-2
+void ModuleFactory::SetReaches(SimulationModule* pModule)
+{
+	if(NULL == m_reaches)
+		m_reaches = new clsReaches(m_conn, m_dbName, string(DB_TAB_REACH));
+	pModule->SetReaches(m_reaches);
 }
 void ModuleFactory::UpdateInput(vector<SimulationModule*>& modules, SettingsInput* inputSetting, time_t t)
 {

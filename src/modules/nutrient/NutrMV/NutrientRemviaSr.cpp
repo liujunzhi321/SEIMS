@@ -131,9 +131,9 @@ void NutrientRemviaSr::initialOutputs() {
 		m_wshd_plch = 0.;
 	}
 	// input variables
-	if(m_flat == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_flat, (float)0.0001);}
-	if(m_sol_perco == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_perco, (float)0.0001);}
-	if(m_ldrain == NULL) {Initialize1DArray(m_nCells, m_ldrain, (float)-1.);}
+	if(m_flat == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_flat, 0.0001f);}
+	if(m_sol_perco == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_perco, 0.0001f);}
+	if(m_ldrain == NULL) {Initialize1DArray(m_nCells, m_ldrain, -1.f);}
 	m_qtile = 0.0001;
 }
 int NutrientRemviaSr::Execute() {

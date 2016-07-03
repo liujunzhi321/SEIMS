@@ -1,9 +1,9 @@
 /*!
  * \file api.cpp
- * \brief Define MetadataInfo of NMINRL module.
+ * \brief Define MetadataInfo of MINRL module.
 /*!
  * \file api.cpp
- * \ingroup NMINRL
+ * \ingroup MINRL
  * \author Huiran Gao
  * \date April 2016
  */
@@ -29,14 +29,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 {
 	MetadataInfo mdi;
 	mdi.SetAuthor("Huiran Gao");
-	mdi.SetClass(MCLS_NMINRL, MCLSDESC_NMINRL);
-	mdi.SetDescription(MDESC_NMINRL);
+	mdi.SetClass(MCLS_MINRL, MCLSDESC_MINRL);
+	mdi.SetDescription(MDESC_MINRL);
 	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetID(MDESC_NMINRL);
-	mdi.SetName(MDESC_NMINRL);
+	mdi.SetID(MDESC_MINRL);
+	mdi.SetName(MDESC_MINRL);
 	mdi.SetVersion("1.0");
 	mdi.SetWebsite(SEIMS_SITE);
-	mdi.SetHelpfile("NMINRL.html");
+	mdi.SetHelpfile("MINRL.html");
 
 	// set the parameters
 	//Latitude is used to calculate max solar radiation. It is read in the similar format with elevation.

@@ -156,7 +156,7 @@
 #define Tag_ReachParameter							"ReachParameter"
 #define Tag_RchParam									"RchParam"
 /// Replaced Tag_ReachParameter and Tag_RchParam by VAR_REACH_PARAM
-#define VAR_REACH_PARAM						"ReachParameters"
+#define VAR_REACH_PARAM						"REACH"
 #define DESC_REACH_PARAM						"Reach parameters such as stream order, manning's n and downstream subbasin id"
 
 /// Files or database constant strings
@@ -203,6 +203,19 @@
 #define REACH_AREA				"AREA"
 #define REACH_MANNING			"MANNING"
 #define REACH_SLOPE				"SLOPE" 
+#define REACH_BC1					"BC1" 
+#define REACH_BC2					"BC2" 
+#define REACH_BC3					"BC3" 
+#define REACH_BC4					"BC4" 
+#define REACH_RS1					"RS1"
+#define REACH_RS2					"RS2"
+#define REACH_RS3					"RS3"
+#define REACH_RS4					"RS4"
+#define REACH_RS5					"RS5"
+#define REACH_RK1					"RK1"
+#define REACH_RK2					"RK2"
+#define REACH_RK3					"RK3"
+#define REACH_RK4					"RK4"
 
 
 /// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
@@ -219,6 +232,7 @@
 #define Tag_Mode_Daily			"DAILY"
 
 #define Type_Scenario			"SCENARIO"
+#define Type_Reach				"REACH"
 #define Type_LapseRateArray		"LAPSERATEARRAY"
 #define Type_SiteInformation	"SITEINFORMATION"
 #define Type_Raster1D		"RASTER1D"
@@ -393,10 +407,10 @@
 
 /// Nutrient
 /// nitrogen and phosphorus mineralization and immobilization
-#define MCLS_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization"
-#define MCLSDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
-#define MID_NMINRL "NMINRL"
-#define MDESC_NMINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
+#define MCLS_MINRL "Daily nitrogen and phosphorus mineralization and immobilization"
+#define MCLSDESC_MINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
+#define MID_MINRL "MINRL"
+#define MDESC_MINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
 /// Nutrient removed and loss in surface runoff
 #define MCLS_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
 #define MCLSDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."

@@ -27,7 +27,7 @@ def GenerateRadius(filepath, stormProbability):
     radius = zeros((ysize, xsize))
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(data[i][j]-noDataValue) < util.DELTA ):
+            if(abs(data[i][j]-noDataValue) < util.UTIL_ZERO):
                 radius[i][j] = -9999
                 continue
             data[i][j] = data[i][j] + 1

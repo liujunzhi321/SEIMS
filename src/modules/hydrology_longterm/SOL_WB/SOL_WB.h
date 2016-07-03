@@ -80,15 +80,13 @@ public:
 
 
 private:
-	static string toString(float value);
-
 	/**
 	*	@brief check the input data. Make sure all the input data is available.
 	*/
 	void CheckInputData(void);
 
 	/**
-	*	@brief checke the input size. Make sure all the input data have same dimension.
+	*	@brief check the input size. Make sure all the input data have same dimension.
 	*	
 	*	@param key The key of the input data
 	*	@param n The input data dimension

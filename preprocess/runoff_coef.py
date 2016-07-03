@@ -1,11 +1,10 @@
 #! /usr/bin/env python
 #coding=utf-8
-from osgeo import gdal, osr 
-import math, os, sys
+from osgeo import gdal, osr
 import sqlite3
 from numpy import *
 from text import *
-import util
+from util import *
 
 def RunoffCoefficent(filepath, sqliteFile):
     #read landuselookup table from sqlite
@@ -28,7 +27,7 @@ def RunoffCoefficent(filepath, sqliteFile):
     cursor.close()
     conn.close()
     # end read data
-    
+
     slope = filepath + os.sep + slopeM
     ds = gdal.Open(slope)
     band = ds.GetRasterBand(1)
@@ -69,7 +68,7 @@ def RunoffCoefficent(filepath, sqliteFile):
     for i in range(0, ysize):
         for j in range(0, xsize):
             landuID = int(landu_data[i][j])
-            if(abs(mask_data[i][j]-noDataValue1) < util.DELTA or landuID < 0):
+            if(abs(mask_data[i][j]-noDataValue1) < UTIL_ZERO or landuID < 0):
                 coef[i][j] = noDataValue2
                 continue
             
@@ -82,8 +81,8 @@ def RunoffCoefficent(filepath, sqliteFile):
             stid = int(soilTextureArray[i][j]) - 1
             
             c0 = runoff_c0[landuID][stid]
-            s0 = runoff_s0[landuID][stid] / 100
-            slp = slo_data[i][j] / 100
+            s0 = runoff_s0[landuID][stid] / 100.
+            slp = slo_data[i][j] / 100.
             
             if slp + s0 < 0.0001:
                 coef[i][j] = c0
@@ -91,7 +90,7 @@ def RunoffCoefficent(filepath, sqliteFile):
             
             coef1 = (1-c0) * slp /(slp+s0)
             coef2 = c0 + coef1
-            if(landuID == 106 or landuID == 107 or landuID ==105):
+            if(landuID == 106 or landuID == 107 or landuID == 105): ## TODO, Check if it is (landuID >= 98)
                 coef[i][j] = coef2*(1-imp)+imp
             else:
                 coef[i][j] = coef2
@@ -100,7 +99,7 @@ def RunoffCoefficent(filepath, sqliteFile):
             #    print c0, slp, s0, coe1, coef2
                             
     filename = filepath + os.sep + runoff_coefFile
-    util.WriteGTiffFile(filename, ysize, xsize, coef, \
+    WriteGTiffFile(filename, ysize, xsize, coef,
                                geotransform, srs, noDataValue2, gdal.GDT_Float32)
     
     print 'The Runoffcoefficient file is generated!'

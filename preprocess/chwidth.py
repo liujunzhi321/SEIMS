@@ -2,7 +2,7 @@
 #coding=utf-8
 from osgeo import gdal,osr
 from numpy import *
-import util
+from util import *
 from text import *
 
 def chwidth(accFile, chwidthFile):
@@ -30,16 +30,16 @@ def chwidth(accFile, chwidthFile):
     b = 0.56
     ## TODO: Figure out what's means, and move it to text.py or config.py. LJ
     
-    noDataValue = DEFAULT_NODATA
+    #noDataValue = DEFAULT_NODATA
     width = zeros((ysize, xsize))
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(dataAcc[i][j] - noDataValue) < util.DELTA):
+            if(abs(dataAcc[i][j] - noDataValue) < UTIL_ZERO):
                 width[i][j] = noDataValue
             else:
-                width[i][j] =  math.pow(a*(dataAcc[i][j] + 1)*cellArea/1000000, b)
+                width[i][j] =  math.pow(a * (dataAcc[i][j] + 1) * cellArea / 1000000., b)
     
-    util.WriteGTiffFile(chwidthFile, ysize, xsize, width, \
+    WriteGTiffFile(chwidthFile, ysize, xsize, width,
                         geotransform, srs, noDataValue, gdal.GDT_Float32)
     
     return width

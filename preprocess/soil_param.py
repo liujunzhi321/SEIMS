@@ -473,7 +473,7 @@ def GetValue(geoMask, geoMap, data, i, j):
 #     for i in range(ySizeMask):
 #         #print "soil", i
 #         for j in range(xSizeMask):
-#             if abs(dataMask[i][j] - noDataValue) < DELTA:
+#             if abs(dataMask[i][j] - noDataValue) < UTIL_ZERO:
 #                 for iAttr in range(n):
 #                     attrMapList[iAttr][i][j] = DEFAULT_NODATA
 #                 continue

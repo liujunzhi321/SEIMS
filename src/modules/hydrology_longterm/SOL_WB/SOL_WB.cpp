@@ -91,14 +91,10 @@ int SOL_WB::Execute()
 void SOL_WB::SetValue(const char* key, float data)
 {
 	string s(key);
-	if (StringMatch(s, VAR_OMP_THREADNUM))
-	{
-		omp_set_num_threads((int)data);
-	}
+	if (StringMatch(s, VAR_OMP_THREADNUM))omp_set_num_threads((int)data);
 	else									
 		throw ModelException("SOL_WB","SetValue","Parameter " + s 
-		+ " does not exist in SOL_WB method. Please contact the module developer.");
-
+		+ " does not exist in current module. Please contact the module developer.");
 }
 void SOL_WB::setValueToSubbasin()
 {
@@ -177,7 +173,7 @@ void SOL_WB::setValueToSubbasin()
 
 			int id = it->second->getId();
 			if(id >= m_subbasinTotalCount)  
-				throw ModelException("SOL_WB","setValueToSubbasin","The groundwater runoff for subbasin " + SOL_WB::toString(float(id)) + " does not exist. Please check the input variable named T_RG from groundwater module.");
+				throw ModelException("SOL_WB","setValueToSubbasin","The groundwater runoff for subbasin " + ValueToString(id) + " does not exist. Please check the input variable named T_RG from groundwater module.");
 			m_soilWaterBalance[index][13] = m_RG[id];
 			m_soilWaterBalance[index][14] = m_soilWaterBalance[index][11] + m_soilWaterBalance[index][12] + m_soilWaterBalance[index][13];
 			m_soilWaterBalance[index][15] = it->second->getAverage("S_MOI");
@@ -202,7 +198,6 @@ void SOL_WB::Set1DData(const char* key, int nRows, float* data)
 	{
 		m_RG = data;
 		m_subbasinTotalCount = nRows;		
-
 		return;
 	}
 
@@ -243,7 +238,7 @@ void SOL_WB::Set1DData(const char* key, int nRows, float* data)
 	else if(StringMatch(s, VAR_NEPR))	
 		m_pNet = data;
 	else
-		throw ModelException("SOL_WB", "Set1DData", "Parameter " + s + " does not exist in the SOL_WB module.");
+		throw ModelException("SOL_WB", "Set1DData", "Parameter " + s + " does not exist in current module.");
 
 }
 
@@ -275,15 +270,7 @@ void SOL_WB::Get2DData(const char* key, int* nRows, int* nCols, float*** data)
 		*nCols = 17;
 		*data = m_soilWaterBalance;
 	}
-	else throw ModelException("SOL_WB","getResult","Result " + s + " does not exist in SOL_WB method. Please contact the module developer.");
-}
-
-
-string SOL_WB::toString(float value)
-{
-	char s[20];
-	strprintf(s,20,"%f",value);
-	return string(s);
+	else throw ModelException("SOL_WB","getResult","Result " + s + " does not exist in current module. Please contact the module developer.");
 }
 
 void SOL_WB::CheckInputData()

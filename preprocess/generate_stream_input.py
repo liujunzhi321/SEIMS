@@ -22,7 +22,7 @@ def gridNumber(watershedFile):
     for i in range(ysize):
         for j in range(xsize):
             k = int(data[i][j])
-            if(abs(k - noDataValue) > DELTA):
+            if(abs(k - noDataValue) > UTIL_ZERO):
                 numDic[k] = numDic.setdefault(k,0) + 1
     return numDic, ds.GetGeoTransform()[1]
     
@@ -275,7 +275,9 @@ def GenerateReachTable(folder, db, forCluster):
                 dic[REACH_RS3] = 0.5
                 dic[REACH_RS4] = 0.05
                 dic[REACH_RS5] = 0.05
-                db[DB_TAB_REACH].insert_one(dic)
+                curFilter = {REACH_SUBBASIN: id}
+                db[DB_TAB_REACH].find_one_and_replace(curFilter, dic, upsert = True)
+                #db[DB_TAB_REACH].insert_one(dic)
             continue
         
         #kmetis
@@ -340,10 +342,12 @@ def GenerateReachTable(folder, db, forCluster):
             dic[REACH_RS3] = 0.5
             dic[REACH_RS4] = 0.05
             dic[REACH_RS5] = 0.05
-            db[DB_TAB_REACH].insert_one(dic)
+            curFilter = {REACH_SUBBASIN: id}
+            db[DB_TAB_REACH].find_one_and_replace(curFilter, dic, upsert = True)
+            #db[DB_TAB_REACH].insert_one(dic)
          
-    db[DB_TAB_REACH].create_index(REACH_GROUPDIVIDED)
-    db[DB_TAB_REACH].create_index([(REACH_SUBBASIN, pymongo.ASCENDING),\
+    #db[DB_TAB_REACH].create_index(REACH_GROUPDIVIDED)
+    db[DB_TAB_REACH].create_index([(REACH_SUBBASIN, pymongo.ASCENDING),
                                    (REACH_GROUPDIVIDED, pymongo.ASCENDING)])
     
     print 'The reaches table is generated!'
@@ -352,7 +356,7 @@ if __name__ == "__main__":
     #conn = Connection(host='192.168.6.55', port=27017)
     conn = MongoClient(host='127.0.0.1', port=27017)
     #workingDir = '/data/liujz/data/fenkeng/output'
-    workingDir = 'D:/SEIMS_model/Model_data/model_dianbu_30m_longterm/data_prepare/output'
+    workingDir = 'E:\data_m\SEIMS\dianbu_10m_output'
     #db = conn['cluster_model_fenkeng_90m']
-    db = conn['local']
+    db = conn['model_dianbu_10m_longterm']
     GenerateReachTable(workingDir, db, False)

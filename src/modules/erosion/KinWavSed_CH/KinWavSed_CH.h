@@ -175,8 +175,6 @@ private:
 
 private:
 
-	static string toString(float value);
-
 	void initial();
 	///**
 	//*	@brief calculate the velocity of overland flow.

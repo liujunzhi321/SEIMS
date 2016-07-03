@@ -124,6 +124,7 @@ template<typename T>
 void Initialize1DArray(int row, T*& data, T initialValue)
 {
 	data = new T[row];
+#pragma omp parallel for
 	for (int i = 0; i < row; i++)
 		data[i] = initialValue;
 }
@@ -139,6 +140,7 @@ template<typename T>
 void Initialize2DArray(int row, int col, T**& data, T initialValue)
 {
 	data = new T*[row];
+#pragma omp parallel for
 	for(int i = 0; i < row; i++)
 	{
 		data[i] = new T[col];
@@ -149,15 +151,26 @@ void Initialize2DArray(int row, int col, T**& data, T initialValue)
 	}
 }
 /*!
- * \brief Release DT_Array2D data
- *
- * \param[in] row
- * \param[in] row
+ * \brief Release DT_Array1D data
  * \param[in] data
  */
 template<typename T>
-void Release2DArray(int row, int col, T**& data)
+void Release1DArray(T*& data)
 {
+	delete[] data;
+	data = NULL;
+}
+/*!
+ * \brief Release DT_Array2D data
+ *
+ * \param[in] row Row
+ * \param[in] col Column
+ * \param[in] data
+ */
+template<typename T>
+void Release2DArray(int row, T**& data)
+{
+#pragma omp parallel for
 	for(int i = 0; i < row; i++)
 	{
 		if(data[i] != NULL)

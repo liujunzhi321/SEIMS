@@ -23,21 +23,21 @@ if platform.system() == "Windows":
     # MPIEXEC_DIR = None
     # WORKING_DIR = r'E:\data_m\SEIMS\dianbu_10m_output'
     ### ZHU LJ
-    # BASE_DATA_DIR = r'E:\code\Hydro\SEIMS\model_data\dianbu\data_prepare'
-    # TXT_DB_DIR = r'E:\code\Hydro\SEIMS\database'
-    # PREPROC_SCRIPT_DIR = r'E:\code\Hydro\SEIMS\preprocess'
-    # CPP_PROGRAM_DIR = r'D:\Compile\SEIMS_Preprocess\Release'
-    # METIS_DIR = r'D:\Compile\SEIMS_Preprocess\metis\programs\Release'
+    BASE_DATA_DIR = r'E:\code\Hydro\SEIMS\model_data\dianbu\data_prepare'
+    TXT_DB_DIR = r'E:\code\Hydro\SEIMS\database'
+    PREPROC_SCRIPT_DIR = r'E:\code\Hydro\SEIMS\preprocess'
+    CPP_PROGRAM_DIR = r'D:\Compile\SEIMS_Preprocess\Release'
+    METIS_DIR = r'D:\Compile\SEIMS_Preprocess\metis\programs\Release'
+    MPIEXEC_DIR = None
+    WORKING_DIR = r'E:\data_m\SEIMS\dianbu_10m_output'
+    ### ZHU LJ-WindowsServer-6.57
+    # BASE_DATA_DIR = r'G:\code_zhulj\SEIMS\model_data\model_dianbu_10m_longterm\data_prepare'
+    # TXT_DB_DIR = r'G:\code_zhulj\SEIMS\database'
+    # PREPROC_SCRIPT_DIR = r'G:\code_zhulj\SEIMS\preprocess'
+    # CPP_PROGRAM_DIR = r'G:\Compile\SEIMS_Preprocess\Release'
+    # METIS_DIR = r'G:\compile\SEIMS_Preprocess\metis\programs\Release'
     # MPIEXEC_DIR = None
     # WORKING_DIR = r'E:\data_m\SEIMS\dianbu_30m_output'
-    ### ZHU LJ-WindowsServer-6.57
-    BASE_DATA_DIR = r'G:\code_zhulj\SEIMS\model_data\dianbu\data_prepare'
-    TXT_DB_DIR = r'G:\code_zhulj\SEIMS\database'
-    PREPROC_SCRIPT_DIR = r'G:\code_zhulj\SEIMS\preprocess'
-    CPP_PROGRAM_DIR = r'G:\Compile\SEIMS_Preprocess\Release'
-    METIS_DIR = r'G:\compile\SEIMS_Preprocess\metis\programs\Release'
-    MPIEXEC_DIR = None
-    WORKING_DIR = r'G:\data_m\SEIMS_dataprepare\model_dianbu_10m_longterm'
 elif platform.system() == "Linux": ### Hasn't tested yet, Apr.,2016, LJ.
     BASE_DATA_DIR = r'/data/liujz/data'
     TXT_DB_DIR = r'/data/liujz/data/database'

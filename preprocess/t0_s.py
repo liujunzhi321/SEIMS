@@ -2,12 +2,9 @@
 #coding=utf-8
 
 from osgeo import gdal, osr
-import math, os, sys
-import sqlite3
 from numpy import *
 from text import *
-import util
-from util import WriteGTiffFile
+from util import *
 
 sys.setrecursionlimit(10000)
 
@@ -63,7 +60,7 @@ def cal_flowlen(filepath, weight):
     
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(fdir_data[i][j]-noDataValue) < util.DELTA):
+            if(abs(fdir_data[i][j]-noDataValue) < UTIL_ZERO):
                 length[i][j] = noDataValue
                 continue
         
@@ -100,7 +97,7 @@ def GenerateT0_s(filepath):
     traveltime = zeros((ysize, xsize))
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(vel_data[i][j]-noDataValue) < util.DELTA):
+            if(abs(vel_data[i][j]-noDataValue) < UTIL_ZERO):
                 traveltime[i][j] = noDataValue
                 continue
             if(strlk_data[i][j] <= 0):
@@ -111,15 +108,15 @@ def GenerateT0_s(filepath):
     flowlen = cal_flowlen(filepath, weight)
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if(abs(vel_data[i][j]-noDataValue) < util.DELTA):
-                traveltime[i][j] = -9999
+            if(abs(vel_data[i][j]-noDataValue) < UTIL_ZERO):
+                traveltime[i][j] = DEFAULT_NODATA
                 continue
-            celerity = vel_data[i][j] * 5.0 / 3
-            traveltime[i][j] = flowlen[i][j] / celerity / 3600
+            celerity = vel_data[i][j] * 5.0 / 3.
+            traveltime[i][j] = flowlen[i][j] / celerity / 3600.
                             
     filename = filepath + os.sep + t0_sFile
-    WriteGTiffFile(filename, ysize, xsize, traveltime, \
-                                geotransform, srs, -9999, gdal.GDT_Float32)
+    WriteGTiffFile(filename, ysize, xsize, traveltime,
+                                geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
                      
     
     
