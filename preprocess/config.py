@@ -37,7 +37,7 @@ if platform.system() == "Windows":
     # CPP_PROGRAM_DIR = r'G:\Compile\SEIMS_Preprocess\Release'
     # METIS_DIR = r'G:\compile\SEIMS_Preprocess\metis\programs\Release'
     # MPIEXEC_DIR = None
-    # WORKING_DIR = r'G:\data_m\SEIMS_dataprepare\model_dianbu_10m_longterm'
+    # WORKING_DIR = r'E:\data_m\SEIMS\dianbu_30m_output'
 elif platform.system() == "Linux": ### Hasn't tested yet, Apr.,2016, LJ.
     BASE_DATA_DIR = r'/data/liujz/data'
     TXT_DB_DIR = r'/data/liujz/data/database'
