@@ -56,6 +56,8 @@ ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath, S
 			break;
 		case TIMESTEP_ECOLOGY:
 			m_ecoModules.push_back(i);
+		case TIMESTEP_SIMULATION:
+			m_overallModules.push_back(i);
 		}
 	}
 
@@ -233,7 +235,18 @@ void ModelMain::StepChannel(time_t t, int yearIdx)
 	Step(t, yearIdx, m_channelModules, m_firstRunChannel);
 	m_firstRunChannel = false;
 }
-
+void ModelMain::StepOverall(time_t startT, time_t endT)
+{
+	for (size_t i = 0; i < m_overallModules.size(); i++)
+	{
+		int index = m_overallModules[i];
+		SimulationModule *pModule = m_simulationModules[index];
+		clock_t sub_t1 = clock();
+		pModule->Execute();
+		clock_t sub_t2 = clock();
+		m_executeTime[index] += (sub_t2 - sub_t1);
+	}
+}
 void ModelMain::Step(time_t t, int yearIdx, vector<int>& moduleIndex, bool firstRun)
 {
 	for (size_t i = 0; i < moduleIndex.size(); i++)
@@ -274,6 +287,7 @@ void ModelMain::Execute()
 		StepChannel(t, yearIdx);
 		Output(t);
 	}
+	StepOverall(startTime, endTime);
 	clock_t t2 = clock();
 	//cout << "time(ms):  " << t2-t1 << endl;
 	cout << "[TIMESPAN][COMPUTING]\tALL\t" << (t2-t1)/1000. << endl;
