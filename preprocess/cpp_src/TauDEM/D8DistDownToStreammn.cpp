@@ -102,7 +102,7 @@ int main(int argc,char **argv)
 			i++;
 			if(argc > i)
 			{
-				if(strcmp(argv[i],"h")==0)       //argv[14] == "h" or "v" or "p" or "s" or "ave" or "max" or "min"
+				if(strcmp(argv[i],"h")==0)       //argv[14] == "h" or "v" or "p" or "s"
 				{
 					typemethod=0;
 				}
@@ -163,7 +163,7 @@ int main(int argc,char **argv)
        printf("<srcfile> is the stream raster input file.\n");
        printf("<distfile> is the distance to stream output file.\n");
 	   printf("[-m distmethod] is the optional method flag.\n");
-	   printf("    dist  can be h, v, p and s, which means horizontal, vertical, Pythagoras and Surface respectively, the default is h.\n");
+	   printf("    dist  can be h, v, p and s, which means Horizontal, Vertical, Pythagoras and Surface respectively, the default is h.\n");
 	   printf("The optional <thresh> is the user input threshold number.\n");
        printf("The following are appended to the file names\n");
        printf("before the files are opened:\n");

@@ -35,6 +35,34 @@ def FlowDirD8(np, workingDir, filledDem, flowDir, slope, mpiexeDir = None, exeDi
     process=subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
     
+def D8DistDownToStream(np, workingDir, p,fel,src,dist,distancemethod,thresh,mpiexeDir = None, exeDir=None, hostfile=None):
+    os.chdir(workingDir)
+    if distancemethod == 'Horizontal':
+        distmeth = 'h'
+    elif distancemethod == 'Vertical':
+        distmeth = 'v'
+    elif distancemethod == 'Pythagoras':
+        distmeth = 'p'
+    elif distancemethod == 'Surface':
+        distmeth = 's'
+    else:
+        distmeth = 's'
+    if np > 8 and hostfile is not None:
+        cmd = 'mpiexec -f ' + hostfile + ' -n '
+    else:
+        cmd = 'mpiexec -n '
+
+    if exeDir is None:
+        cmd = cmd + str(np) + ' d8distdowntostream -p ' + '"' + p + '"' + ' -fel ' + '"' +fel+ '"' +' -src ' + '"' + src + '"' + ' -dist ' + '"' + dist + '"' +' -m '+distmeth+ ' -thresh ' + str(thresh)
+    else:
+        cmd = cmd + str(np) + ' ' + exeDir + os.sep + 'd8distdowntostream -p ' + '"' + p + '"' + ' -fel ' + '"' +fel+ '"' +' -src ' + '"' + src + '"' + ' -dist ' + '"' + dist + '"' +' -m '+distmeth+ ' -thresh ' + str(thresh)
+    if mpiexeDir is not None:
+        cmd = mpiexeDir + os.sep + cmd
+
+    print cmd
+    #os.system(cmd)
+    process=subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    return process.stdout.readlines()
 
 def FlowDirDinf(np, workingDir, filledDem, flowAngle, slope, mpiexeDir = None,exeDir=None):
     os.chdir(workingDir)

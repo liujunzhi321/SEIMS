@@ -57,23 +57,21 @@ def GetMaskFromRaster(rasterFile, dstdir):
     
     outputFile = dstdir + os.sep + mask_to_ext
     maskGeotrans = [xMinMask, dx, 0, yMaxMask, 0, -dx]
-    WriteGTiffFile(outputFile, ySizeMask, xSizeMask, mask, \
-                            maskGeotrans, srs, DEFAULT_NODATA, gdal.GDT_Int32)
-    
+    WriteGTiffFile(outputFile, ySizeMask, xSizeMask, mask, maskGeotrans, srs, DEFAULT_NODATA, gdal.GDT_Int32)
     return outputFile, Raster(ySizeMask, xSizeMask, mask, DEFAULT_NODATA, maskGeotrans, srs)
     
 def MaskDEMFiles(workingDir,exeDir=None):
     tauDir = workingDir + os.sep + "taudir"
     subbasinTauFile = tauDir + os.sep + subbasin
-    originalFiles = [subbasin, flowDir, streamRaster, 
+    originalFiles = [subbasin, flowDir, streamRaster,
                      slope, filledDem, acc, streamOrder,
-                     flowDirDinf, dirCodeDinf, slopeDinf, weightDinf,cellLat, daylMin,dormhr]
+                     flowDirDinf, dirCodeDinf, slopeDinf, weightDinf,cellLat, daylMin,dormhr, dist2StreamD8]
     originalFiles = [(tauDir + os.sep + item) for item in originalFiles]
     originalFiles.append(mgtFiedlFile)
     maskedFiles = [subbasinM, flowDirM, streamRasterM]
     maskedFiles = [(tauDir + os.sep + item) for item in maskedFiles]
     outputList = [slopeM, filldemM, accM,  streamOrderM, flowDirDinfM,
-                    dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM, daylMinM,dormhrM,mgtFiedlMFile]
+                    dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM, daylMinM,dormhrM, dist2StreamD8M, mgtFiedlMFile]
     for output in outputList:
         maskedFiles.append(workingDir + os.sep + output)
 

@@ -179,7 +179,13 @@ def SubbasinDelineation(np, workingDir, dem, outlet, threshold, mpiexeDir=None,e
     fStatus.flush()
     print StreamNet(np, tauDir, filledDem, flowDir, acc, streamRaster, modifiedOutlet, streamOrder, chNetwork, chCoord, streamNet, subbasin, mpiexeDir=mpiexeDir, exeDir=exeDir)
     print "[Output], %s, %s" % (workingDir, status)
-        
+
+    status = "Calculating distance to stream (D8)..."
+    fStatus.write("%d,%s\n" % (95, status))
+    fStatus.flush()
+    print D8DistDownToStream(np, tauDir, flowDir, filledDem, streamRaster, dist2StreamD8, D8DownMethod, 1, mpiexeDir=mpiexeDir, exeDir=exeDir)
+    print "[Output], %s, %s" % (workingDir, status)
+
     fStatus.write("100,subbasin delineation is finished!")
     fStatus.close()
 

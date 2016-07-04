@@ -29,7 +29,7 @@ if platform.system() == "Windows":
     CPP_PROGRAM_DIR = r'D:\Compile\SEIMS_Preprocess\Release'
     METIS_DIR = r'D:\Compile\SEIMS_Preprocess\metis\programs\Release'
     MPIEXEC_DIR = None
-    WORKING_DIR = r'E:\data_m\SEIMS\dianbu_10m_output'
+    WORKING_DIR = r'E:\data_m\SEIMS\dianbu_30m_output'
     ### ZHU LJ-WindowsServer-6.57
     # BASE_DATA_DIR = r'G:\code_zhulj\SEIMS\model_data\model_dianbu_10m_longterm\data_prepare'
     # TXT_DB_DIR = r'G:\code_zhulj\SEIMS\database'
@@ -57,7 +57,7 @@ BMP_DATA_DIR     = BASE_DATA_DIR + os.sep + 'management'
 HOSTNAME = '127.0.0.1'
 PORT = 27017
 ClimateDBName = 'HydroClimate_dianbu'
-BMPScenarioDBName = 'BMP_Scenario_dianbu'
+BMPScenarioDBName = 'BMP_Scenario_dianbu_30m_longterm'
 SpatialDBName = 'model_dianbu_10m_longterm'
 forCluster = False 
 stormMode = False
@@ -75,18 +75,23 @@ PrecSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Thiessen_P.shp'
 if stormMode:
     PrecStormSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Thiessen_P_STORM.shp'
 MeteorSitesThiessen = SPATIAL_DATA_DIR + os.sep + 'Thiessen_M.shp'
-dem = SPATIAL_DATA_DIR + os.sep + 'dem_10m.tif'
+dem = SPATIAL_DATA_DIR + os.sep + 'dem_30m.tif'
 outlet_file = SPATIAL_DATA_DIR + os.sep + 'outlet.shp'
 
 threshold = 0  # threshold for stream extraction from D8-flow accumulation weighted Peuker-Douglas stream sources
                # if threshold is 0, then Drop Analysis is used to select the optimal value.
 np = 4  # number of parallel processors for TauDEM
-landuseFile = SPATIAL_DATA_DIR + os.sep + 'landuse_10m.tif'
-soilSEQNFile = SPATIAL_DATA_DIR + os.sep + 'soil_SEQN_10m.tif'
+landuseFile = SPATIAL_DATA_DIR + os.sep + 'landuse_30m.tif'
+soilSEQNFile = SPATIAL_DATA_DIR + os.sep + 'soil_SEQN_30m.tif'
 soilSEQNText = SPATIAL_DATA_DIR + os.sep + 'soil_properties_lookup.txt'
 
 ## Management Fields, optional, but required for BMPs optimization
-mgtFiedlFile = SPATIAL_DATA_DIR + os.sep + 'mgt_fields_10m.tif'
+mgtFiedlFile = SPATIAL_DATA_DIR + os.sep + 'mgt_fields_30m.tif'
+
+
+
+## Preprocess parameters
+D8DownMethod = 'Surface' # Horizontal, Vertical, Pythagoras or Surface
 ## Hydrological parameters
 ## Adopted from WetSpa, used in radius.py
 coeTable = {"T2":[0.05, 0.48],
