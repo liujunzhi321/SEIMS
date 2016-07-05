@@ -21,27 +21,18 @@ int		GetIntFromBSONITER(bson_iter_t *iter)
 	bson_type_t vtype = bson_iter_type(iter);
 	const bson_value_t *vv = bson_iter_value(iter);
 	if (vv->value_type == BSON_TYPE_INT32)
-	{
 		return (int)vv->value.v_int32;
-	}
 	else if (vv->value_type == BSON_TYPE_INT64)
-	{
 		return (int)vv->value.v_int64;
-	}
 	else if (vv->value_type == BSON_TYPE_DOUBLE)
-	{
 		return (int)vv->value.v_double;
-	}
 	else if (vv->value_type == BSON_TYPE_UTF8)
 	{
 		string tmp = vv->value.v_utf8.str;
 		return atoi(tmp.c_str());
 	}
 	else
-	{
 		throw ModelException("MongoDB Utility", "ReadFromMongoDB", "Failed in get INT value.\n");
-		return -1;
-	}
 }
 
 float	GetFloatFromBSONITER(bson_iter_t *iter)
@@ -49,27 +40,18 @@ float	GetFloatFromBSONITER(bson_iter_t *iter)
 	bson_type_t vtype = bson_iter_type(iter);
 	const bson_value_t *vv = bson_iter_value(iter);
 	if (vv->value_type == BSON_TYPE_INT32)
-	{
 		return (float)vv->value.v_int32;
-	}
 	else if (vv->value_type == BSON_TYPE_INT64)
-	{
 		return (float)vv->value.v_int64;
-	}
 	else if (vv->value_type == BSON_TYPE_DOUBLE)
-	{
 		return (float)vv->value.v_double;
-	}
 	else if (vv->value_type == BSON_TYPE_UTF8)
 	{
 		string tmp = vv->value.v_utf8.str;
 		return atof(tmp.c_str());
 	}
 	else
-	{
 		throw ModelException("MongoDB Utility", "ReadFromMongoDB", "Failed in get FLOAT value.\n");
-		return -1.f;
-	}
 }
 
 time_t	GetDateTimeFromBSONITER(bson_iter_t *iter)
@@ -77,26 +59,29 @@ time_t	GetDateTimeFromBSONITER(bson_iter_t *iter)
 	bson_type_t vtype = bson_iter_type(iter);
 	const bson_value_t *vv = bson_iter_value(iter);
 	if (vv->value_type == BSON_TYPE_DATE_TIME)
-	{
 		return (time_t)vv->value.v_datetime;
-	}
 	else
 	{
 		throw ModelException("MongoDB Utility", "ReadFromMongoDB", "Failed in get Date Time value.\n");
 		return -1;
 	}
+	/// TODO: Add string to datetime
 }
 
 string	GetStringFromBSONITER(bson_iter_t *iter)
 {
 	bson_type_t vtype = bson_iter_type(iter);
 	const bson_value_t *vv = bson_iter_value(iter);
-	string vvStr = "";
 	if (vv->value_type == BSON_TYPE_UTF8)
-		vvStr = vv->value.v_utf8.str;
+		return vv->value.v_utf8.str;
+	else if (vv->value_type == BSON_TYPE_INT32)
+		return ValueToString(vv->value.v_int32);
+	else if (vv->value_type == BSON_TYPE_INT64)
+		return ValueToString(vv->value.v_int64);
+	else if (vv->value_type == BSON_TYPE_DOUBLE)
+		return ValueToString(vv->value.v_double);
 	else
 		throw ModelException("MongoDB Utility", "ReadFromMongoDB", "Failed in get String value.\n");
-	return vvStr;
 }
 
 int GetCollectionNames(mongoc_client_t* conn, string& dbName, vector<string>& collNameList)
@@ -341,7 +326,7 @@ void ReadLongTermReachInfo(mongoc_client_t *conn,string& dbName, int subbasinID,
 
 	collection = mongoc_client_get_collection(conn,dbName.c_str(),DB_TAB_REACH);
 	if(err != NULL)
-		throw ModelException("MongoUtil","ReadLongTermMutltiReachInfo","Failed to get document number of collection: " + string(DB_TAB_REACH) + ".\n");
+		throw ModelException("MongoUtil","ReadLongTermMutltiReachInfo","Failed to get collection: " + string(DB_TAB_REACH) + ".\n");
 	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,b,NULL,NULL);
 
 	int nReaches = 1;
@@ -496,7 +481,7 @@ void ReadReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *co
 
 	collection = mongoc_client_get_collection(conn,dbName.c_str(),DB_TAB_REACH);
 	if(err != NULL)
-		throw ModelException("MongoUtil","ReadReachInfoFromMongoDB","Failed to get document number of collection: " + string(DB_TAB_REACH) + ".\n");
+		throw ModelException("MongoUtil","ReadReachInfoFromMongoDB","Failed to get collection: " + string(DB_TAB_REACH) + ".\n");
 	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,b,NULL,NULL);
 
 	int nAttr = 5;
