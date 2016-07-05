@@ -39,6 +39,10 @@ def ImportBMPTables():
             db.create_collection(item)
         # else:
         #     db.drop_collection(item)
+    ## Read subbasin.tif and dist2Stream.tif
+    subbasinR = ReadRaster(WORKING_DIR + os.sep + subbasinOut)
+    dist2StreamR = ReadRaster(WORKING_DIR + os.sep + dist2StreamD8M)
+    ## End reading
     for j in range(len(BMP_tabs_path)):
         bmpTxt = BMP_tabs_path[j]
         bmpTabName = BMP_tabs[j]
@@ -52,7 +56,15 @@ def ImportBMPTables():
                     dic[fieldArray[i]] = float(item[i])
                 else:
                     dic[fieldArray[i]] = str(item[i])
-            db[bmpTabName].find_one_and_replace(dic, dic, upsert=True)
+            if StringInList(Tag_ST_LocalX, dic.keys()) and StringInList(Tag_ST_LocalY, dic.keys()):
+                subbsnID = subbasinR.GetValueByXY(dic[Tag_ST_LocalX], dic[Tag_ST_LocalY])
+                distance = dist2StreamR.GetValueByXY(dic[Tag_ST_LocalX], dic[Tag_ST_LocalY])
+                if subbsnID != None and distance != None:
+                    dic["SUBBASIN"] = float(subbsnID)
+                    dic["DIST2REACH"] = float(distance)
+                    db[bmpTabName].find_one_and_replace(dic, dic, upsert=True)
+            else:
+                db[bmpTabName].find_one_and_replace(dic, dic, upsert=True)
             # db[bmpTabName].insert_one(dic)
     #print 'BMP tables are imported.'
     ## Write BMP database name into Model main database
@@ -66,7 +78,7 @@ def ImportBMPTables():
     bmpInfoDic["DB"] = BMPScenarioDBName
     mainDB[DB_TAB_BMP_DB].find_one_and_replace(bmpInfoDic, bmpInfoDic, upsert=True)
     # mainDB[DB_TAB_BMP_DB].insert_one(bmpInfoDic)
-    ImportLookupTables(sqliteFile, db)
+    #ImportLookupTables(sqliteFile, db) # Currently not used. By LJ
     conn.close()
 if __name__ == "__main__":
     ImportBMPTables()

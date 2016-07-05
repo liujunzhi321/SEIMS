@@ -7,7 +7,7 @@
 ## 		40000: Sewage outlet in rural resident
 ## 		50000: Water release point, such as spillway of upstream reservoir
 ## 	ID can be numbered from 1 to 9999.
-PTSRC	PTSRCID	Name	Lon	Lat	LoacalX	LocalY	Size
+PTSRC	PTSRCID	Name	Lon	Lat	LocalX	LocalY	Size
 10000	10001	CATTLE1	117.44897	32.011126	39542419.65	3543174.289	300
 20000	20001	PIG1	117.4418671	31.94989758	39541776.29	3536382.004	7
 20000	20002	PIG2	117.4441539	31.95003845	39541992.43	3536398.51	353
