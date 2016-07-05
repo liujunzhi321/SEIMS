@@ -275,7 +275,7 @@ def PostProcessTauDEM(dstdir):
     subbasinVectorFile = subbasinDir + os.sep + subbasinVec
         
     idMap = SerializeStreamNet(streamNetFile, outputReachFile)
-    SerializeSubbasin(subbasinFile, streamRasterFile, idMap, \
+    SerializeSubbasin(subbasinFile, streamRasterFile, idMap,
                         outputSubbasinFile, outputStreamLinkFile)
     ChangeFlowDir(flowDirFileTau, outputFlowDirFile)
     

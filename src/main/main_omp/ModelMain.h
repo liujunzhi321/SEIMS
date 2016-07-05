@@ -99,6 +99,8 @@ public:
 	void	StepChannel(time_t t, int yearIdx);
 	//! Execute hillslope modules in current step
 	void	StepHillSlope(time_t t, int yearIdx, int subIndex);
+	//! Execute overall modules in the entire simulation period, e.g., COST module.
+	void StepOverall(time_t startT, time_t endT);
 	//! Set Flow In Channel data for Channel-related module, e.g., CH_DW
 	///void	SetChannelFlowIn(float value);/// Deprecated. LJ
 	//! Check module input data, date and execute module
@@ -130,6 +132,8 @@ private:
 	vector<int>					m_channelModules;
 	//! Ecology modules index list
 	vector<int>					m_ecoModules;
+	//! Whole simulation scale modules index list
+	vector<int>					m_overallModules;
 	//! Execute time list of each module
 	vector<int>					m_executeTime;
 	//! Time consuming for read files

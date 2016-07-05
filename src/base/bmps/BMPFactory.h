@@ -30,11 +30,13 @@ namespace MainBMP
 		/// Destructor
 		~BMPFactory(void);
 		/// Load BMP parameters from MongoDB
-		virtual void loadBMP(mongoc_client_t* conn, string bmpDBName) = 0;
+		virtual void loadBMP(mongoc_client_t* conn, string& bmpDBName) = 0;
 		/// Load BMP parameters from SQLite
 		///virtual void loadBMP(string bmpDatabasePath) = 0;
 		/// Get BMP type
 		int bmpType(){return m_bmpType;}
+		/// Get BMP priority
+		int bmpPriority(){return m_bmpPriority;}
 		/// Get subScenario ID
 		int GetSubScenarioId(){return m_subScenarioId;}
 		/// Output

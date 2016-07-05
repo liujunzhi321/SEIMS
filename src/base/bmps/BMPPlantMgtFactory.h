@@ -7,7 +7,6 @@
 #pragma once
 #include <stdlib.h>
 #include "BMPFactory.h"
-#include "BMPPlantMgtFactory.h"
 #include "PlantManagementOperation.h"
 using namespace MainBMP;
 using namespace PlantManagement;
@@ -29,7 +28,7 @@ namespace MainBMP
 		/// Destructor
 		~BMPPlantMgtFactory(void);
 		/// Load BMP parameters from MongoDB
-		void loadBMP(mongoc_client_t* conn, string bmpDBName);
+		void loadBMP(mongoc_client_t* conn, string& bmpDBName);
 		/// Output
 		void Dump(ostream* fs);
 		/// Get landuse / landcover ID

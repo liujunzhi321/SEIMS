@@ -177,7 +177,25 @@ time_t utils::ConvertToTime2(const string& strDate, const char* format, bool inc
 
 	return t;
 }
-
+time_t utils::ConvertYMDToTime(int& year, int& month, int& day)
+{
+	time_t t;
+	try
+	{
+		struct tm timeinfo;
+		timeinfo.tm_year = year- 1900;
+		timeinfo.tm_mon = month - 1;
+		timeinfo.tm_mday = day;
+		timeinfo.tm_isdst = false;
+		t = mktime(&timeinfo);
+	}
+	catch (...)
+	{
+		cout << "Error in ConvertYMDToTime.\n";
+		throw;
+	}
+	return t;
+}
 bool utils::FileExists( string FileName )
 {
 #ifndef linux
@@ -209,7 +227,6 @@ int utils::GetDateInfoFromTimet(time_t* t, int* year, int* month, int* day)
 	strftime(dateString,30,"%Y-%m-%d %X",&dateInfo);
 	int hour, min, sec;
 	sscanf_s(dateString, "%4d-%2d-%2d %2d:%2d:%2d", year, month, day, &hour, &min, &sec);
-
 	return 0;
 }
 

@@ -11,6 +11,7 @@ from osgeo import osr,ogr
 from osr import SpatialReference
 from gen_dinf import GenerateDinf
 from util import *
+from text import *
 import numpy
 
 def GenerateCellLatRaster():
@@ -61,7 +62,7 @@ def CalLatDependParas():
     ##                      0.2618 rad/hr and 2/0.2618 = 7.6394
     cellLatR = ReadRaster(WORKING_DIR + os.sep + "taudir" + os.sep + cellLat)
     latData = cellLatR.data
-    daylmnData = numpy.copy(latData)
+    daylmnData = cellLatR.data
     zero = numpy.zeros((cellLatR.nRows, cellLatR.nCols))
     nodata = numpy.ones((cellLatR.nRows, cellLatR.nCols)) * cellLatR.noDataValue
     ## convert degrees to radians (2pi/360=1/57.296)
@@ -179,7 +180,13 @@ def SubbasinDelineation(np, workingDir, dem, outlet, threshold, mpiexeDir=None,e
     fStatus.flush()
     print StreamNet(np, tauDir, filledDem, flowDir, acc, streamRaster, modifiedOutlet, streamOrder, chNetwork, chCoord, streamNet, subbasin, mpiexeDir=mpiexeDir, exeDir=exeDir)
     print "[Output], %s, %s" % (workingDir, status)
-        
+
+    status = "Calculating distance to stream (D8)..."
+    fStatus.write("%d,%s\n" % (95, status))
+    fStatus.flush()
+    print D8DistDownToStream(np, tauDir, flowDir, filledDem, streamRaster, dist2StreamD8, D8DownMethod, 1, mpiexeDir=mpiexeDir, exeDir=exeDir)
+    print "[Output], %s, %s" % (workingDir, status)
+
     fStatus.write("100,subbasin delineation is finished!")
     fStatus.close()
 

@@ -1,37 +1,33 @@
-## The file define different plant management scenario																		
-## mgt1~mgt10 changes depending on the mgt_op																		
-##1	PlantOperation			year	month	day	husc	1	PLANT_ID	NONE	CURYR_MAT	HEAT_UNITS	LAI_INIT	BIO_INIT	HI_TARG	BIO_TARG	CNOP	NONE
-##2	IrrigationOperation			year	month	day	husc	2	NONE	IRR_SC	NONE	IRR_AMT	IRR_SALT	IRR_EFM	IRR_SQ	NONE	NONE	IRR_NO
-##3	FertilizerOperation			year	month	day	husc	3	FERT_ID	NONE	NONE	FRT_KG	FRT_SURFACE	NONE	NONE	NONE	NONE	NONE
-##4	PesticideOperation			year	month	day	husc	4	PEST_ID	NONE	NONE	PST_KG	PST_DEP	NONE	NONE	NONE	NONE	NONE
-##5	HarvestKillOperation			year	month	day	husc	5	NONE	NONE	NONE	CNOP	HI_OVR	FRAC_HARVK	NONE	NONE	NONE	NONE
-##6	TillageOperation			year	month	day	husc	6	TILL_ID	NONE	NONE	CNOP	NONE	NONE	NONE	NONE	NONE	NONE
-##7	HarvestOnlyOperation			year	month	day	husc	7	NONE	NONE	NONE	HARVEFF	HI_BMS	HI_RSD	NONE	NONE	NONE	NONE
-##8	KillOperation			year	month	day	husc	8	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE
-##9	GrazingOperation			year	month	day	husc	9	GRZ_DAYS	MANURE_ID	NONE	BIO_EAT	BIO_TRMP	MANURE_KG	NONE	NONE	NONE	NONE
-##10	AutoIrrigationOperation			year	month	day	husc	10	WSTRS_ID	IRR_SCA	NONE	AUTO_WSTRS	IRR_EFF	IRR_MX	IRR_ASQ	NONE	NONE	IRR_NOA
-##11	AutoFertilizerOperation			year	month	day	husc	11	AFERT_ID	NSTRESS	NONE	AUTO_NSTRS	AUTO_NAPP	AUTO_NYR	AUTO_EFF	AFRT_SURFACE	NONE	NONE
-##13	ReleaseImpoundOperation			year	month	day	husc	13	IMP_TRIG	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE
-##14	ContinuousFertilizerOperation			year	month	day	husc	14	FERT_DAYS	CFRT_ID	IFRT_FREQ	CFRT_KG	NONE	NONE	NONE	NONE	NONE	NONE
-##15	ContinuousPesticideOperation			year	month	day	husc	15	IPST_ID	PEST_DAYS	IPST_FREQ	CPST_KG	NONE	NONE	NONE	NONE	NONE	NONE
-##16	BurningOperation			year	month	day	husc	16	NONE	NONE	NONE	BURN_FRLB	NONE	NONE	NONE	NONE	NONE	NONE
-SUBSCENARIO	NAME	LANDUSE_ID	SEQUENCE	YEAR	MONTH	DAY	HUSC	MGT_OP	MGT1	MGT2	MGT3	MGT4	MGT5	MGT6	MGT7	MGT8	MGT9	MGT10
-0	generalAGRL	33	1	1	0	0	0.3	6	1	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	2	1	0	0	0.3	2	0	1	0	80	0	0.5	0.5	0	0	0
-0	generalAGRL	33	3	1	0	0	0.3	3	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	4	1	0	0	0.3	3	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	5	1	0	0	0.3	10	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	6	1	0	0	0.31	1	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	7	1	0	0	0.15	3	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	8	1	0	0	0.25	10	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	9	1	0	0	0.4	3	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	10	1	0	0	1.1	5	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	11	1	0	0	0.85	6	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	12	1	0	0	0.85	3	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	13	1	0	0	0.85	3	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	14	1	0	0	0.86	1	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	15	1	0	0	0.3	3	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	16	2	0	0	0.35	10	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	17	2	0	0	0.45	3	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	18	2	0	0	0.6	10	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	33	19	2	0	0	1.1	5	0	0	0	0	0	0	0	0	0	0
+## The file define different plant management scenario																
+## mgt1~mgt10 changes depending on the mgt_op																
+##1	PlantOperation	year	month	day	husc	1	PLANT_ID	NONE	CURYR_MAT	HEAT_UNITS	LAI_INIT	BIO_INIT	HI_TARG	BIO_TARG	CNOP	NONE
+##2	IrrigationOperation	year	month	day	husc	2	NONE	IRR_SC	NONE	IRR_AMT	IRR_SALT	IRR_EFM	IRR_SQ	NONE	NONE	IRR_NO
+##3	FertilizerOperation	year	month	day	husc	3	FERT_ID	NONE	NONE	FRT_KG	FRT_SURFACE	NONE	NONE	NONE	NONE	NONE
+##4	PesticideOperation	year	month	day	husc	4	PEST_ID	NONE	NONE	PST_KG	PST_DEP	NONE	NONE	NONE	NONE	NONE
+##5	HarvestKillOperation	year	month	day	husc	5	NONE	NONE	NONE	CNOP	HI_OVR	FRAC_HARVK	NONE	NONE	NONE	NONE
+##6	TillageOperation	year	month	day	husc	6	TILL_ID	NONE	NONE	CNOP	NONE	NONE	NONE	NONE	NONE	NONE
+##7	HarvestOnlyOperation	year	month	day	husc	7	NONE	NONE	NONE	HARVEFF	HI_BMS	HI_RSD	NONE	NONE	NONE	NONE
+##8	KillOperation	year	month	day	husc	8	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE
+##9	GrazingOperation	year	month	day	husc	9	GRZ_DAYS	MANURE_ID	NONE	BIO_EAT	BIO_TRMP	MANURE_KG	NONE	NONE	NONE	NONE
+##10	AutoIrrigationOperation	year	month	day	husc	10	WSTRS_ID	IRR_SCA	NONE	AUTO_WSTRS	IRR_EFF	IRR_MX	IRR_ASQ	NONE	NONE	IRR_NOA
+##11	AutoFertilizerOperation	year	month	day	husc	11	AFERT_ID	NSTRESS	NONE	AUTO_WSTRS	AUTO_NAPP	AUTO_NYR	AUTO_EFF	AFRT_SURFACE	NONE	NONE
+##12	StreetSweepingOperation	year	month	day	husc	12	NONE	NONE	NONE	SWEEPEFF	FR_CURB	NONE	NONE	NONE	NONE	NONE
+##13	ReleaseImpoundOperation	year	month	day	husc	13	IMP_TRIG	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE	NONE
+##14	ContinuousFertilizerOperation	year	month	day	husc	14	FERT_DAYS	CFRT_ID	IFRT_FREQ	CFRT_KG	NONE	NONE	NONE	NONE	NONE	NONE
+##15	ContinuousPesticideOperation	year	month	day	husc	15	IPST_ID	PEST_DAYS	IPST_FREQ	CPST_KG	NONE	NONE	NONE	NONE	NONE	NONE
+##16	BurningOperation	year	month	day	husc	16	NONE	NONE	NONE	BURN_FRLB	NONE	NONE	NONE	NONE	NONE	NONE
+SUBSCENARIO	Name	year	month	day	husc	mgt_op	mgt1i	mgt2i	mgt3i	mgt4	mgt5	mgt6	mgt7	mgt8	mgt9	mgt10i
+0	generalAGRL	1	-9999	-9999	0.23	6	1	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	13	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	3	1	0	0	97.5	1	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	3	2	0	0	97.5	1	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	10	1	1	0	0.5	0.5	50	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.24	1	33	0	0	2370	0	20	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.25	10	2	1	0	0.6	0.5	100	0.5	0	0	0
+0	generalAGRL	1	-9999	-9999	1.28	13	1	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	1.29	5	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.84	6	1	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.85	1	28	0	0	1700	0	0	0	0	0	0
+0	generalAGRL	2	-9999	-9999	0.35	10	1	1	0	0.5	0.5	50	0	0	0	0
+0	generalAGRL	2	-9999	-9999	0.6	10	1	1	0	0.5	0.5	50	0	0	0	0
+0	generalAGRL	2	-9999	-9999	1.36	5	0	0	0	0	0	0	0	0	0	0

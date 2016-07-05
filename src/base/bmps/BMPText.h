@@ -25,8 +25,12 @@
 #define FLD_SCENARIO_BMPID		"BMPID"
 #define FLD_SCENARIO_SUB			"SUBSCENARIO"
 #define FLD_SCENARIO_DIST			"DISTRIBUTION"
-#define FLD_SCENARIO_LOOKUP	"COLLECTION"
+#define FLD_SCENARIO_TABLE		"COLLECTION"
 #define FLD_SCENARIO_LOCATION "LOCATION"
+/// Options of FLD_SCENARIO_DIST
+#define FLD_SCENARIO_DIST_RASTER	"RASTER"
+#define FLD_SCENARIO_DIST_ARRAY		"ARRAY"
+
 /// TAB_BMP_INDEX
 #define FLD_BMP_ID							"ID"
 #define FLD_BMP_TYPE						"TYPE"
@@ -78,8 +82,6 @@
 #define BMP_REACH_X_INDEX				1
 #define BMP_REACH_Y_INDEX				2
 
-
-
 //base scenario id
 #define BASE_SCENARIO_ID	0
 
@@ -96,7 +98,37 @@
 #define BMP_TYPE_TERRACE				10
 #define BMP_TYPE_FLOWDIVERSION_OVERLAND	11
 #define BMP_TYPE_PLANT_MGT		12
-/// TODO
+
+//// Common fields
+#define BMP_FLD_SUB									"SUBSCENARIO"
+#define BMP_FLD_NAME								"NAME"
+#define BMP_FLD_SEQUENCE						"SEQUENCE"
+#define BMP_FLD_SYEAR								"SYEAR"
+#define BMP_FLD_SMONTH							"SMONTH"
+#define BMP_FLD_SDAY								"SDAY"
+#define BMP_FLD_EYEAR								"EYEAR"
+#define BMP_FLD_EMONTH							"EMONTH"
+#define BMP_FLD_EDAY								"EDAY"
+/// Point source management
+#define BMP_PTSRC_FLD_CODE				"PTSRC"
+#define BMP_PTSRC_FLD_Q						"Q"
+#define BMP_PTSRC_FLD_SED					"SED"
+#define BMP_PTSRC_FLD_TN						"TN"
+#define BMP_PTSRC_FLD_NO3					"NO3"
+#define BMP_PTSRC_FLD_NH3					"NH3"
+#define BMP_PTSRC_FLD_ORGN				"ORGN"
+#define BMP_PTSRC_FLD_TP						"TP"
+#define BMP_PTSRC_FLD_MINP					"MINP"
+#define BMP_PTSRC_FLD_ORGP				"ORGP"
+#define BMP_PTSRC_FLD_PTSRCID			"PTSRCID"
+#define BMP_PTSRC_FLD_LAT					"LAT"
+#define BMP_PTSRC_FLD_LON					"LON"
+#define BMP_PTSRC_FLD_LOCALX			"LOCALX"
+#define BMP_PTSRC_FLD_LOCALY			"LOCALY"
+#define BMP_PTSRC_FLD_SUBBSN			"SUBBASIN"
+#define BMP_PTSRC_FLD_SIZE					"SIZE"
+#define BMP_PTSRC_FLD_DISTDOWN		"DIST2REACH"
+/// *.ops ??? TODO
 #define BMP_TYPE_CROP					12
 #define BMP_TYPE_RESIDUAL				13
 #define BMP_TYPE_TILLAGE				14
@@ -126,25 +158,14 @@
 #define BMP_PLTOP_SKIPYEAR					17
 
 /// Plant management fields
-#define BMP_PLTOP_FLD_SUB					"SUBSCENARIO"
-#define BMP_PLTOP_FLD_NAME					"NAME"
 #define BMP_PLTOP_FLD_LUCC					"LANDUSE_ID"
-#define BMP_PLTOP_FLD_SEQUENCE		"SEQUENCE"
 #define BMP_PLTOP_FLD_YEAR					"YEAR"
 #define BMP_PLTOP_FLD_MONTH				"MONTH"
 #define BMP_PLTOP_FLD_DAY					"DAY"
 #define BMP_PLTOP_FLD_HUSC					"HUSC"
 #define BMP_PLTOP_FLD_MGTOP				"MGT_OP"
 #define BMP_PLTOP_FLD_MGT_PRE			"MGT"
-//#define BMP_PLTOP_FLD_MGT2I				"MGT2I"
-//#define BMP_PLTOP_FLD_MGT3I				"MGT3I"
-//#define BMP_PLTOP_FLD_MGT4I				"MGT4"
-//#define BMP_PLTOP_FLD_MGT5					"MGT5"
-//#define BMP_PLTOP_FLD_MGT6					"MGT6"
-//#define BMP_PLTOP_FLD_MGT7					"MGT7"
-//#define BMP_PLTOP_FLD_MGT8					"MGT8"
-//#define BMP_PLTOP_FLD_MGT9					"MGT9"
-//#define BMP_PLTOP_FLD_MGT10I				"MGT10I"
+
 
 //BMP Type
 #define BMP_TYPE_REACH					1

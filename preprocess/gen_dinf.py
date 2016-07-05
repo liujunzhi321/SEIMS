@@ -1,8 +1,5 @@
-import math
-import numpy
 from TauDEM import *
-from osgeo import gdal, osr
-from util import WriteGTiffFile, FloatEqual, MaskRaster 
+from util import *
 
 np = 8
 e = 0
@@ -36,7 +33,7 @@ def CheckOrtho(a):
 
 def AssignDirCode(a, noDataValue):
     if FloatEqual(a, noDataValue):
-        return (-9999,-9999) 
+        return (DEFAULT_NODATA, DEFAULT_NODATA)
 
     d = CheckOrtho(a)
     if d is not None:
@@ -67,7 +64,7 @@ def AssignDirCode(a, noDataValue):
         a1 = a - se
         d  = 3   #2+1
 
-    return (d, a1/math.pi*4.0)
+    return (d, a1/math.pi * 4.0)
 
 
 def GenerateDinf(np, wdir, demFilled, flowDir, slopeFile, dirCodeFile, weightFile,mpiexeDir=None,exeDir=None):
@@ -82,8 +79,8 @@ def GenerateDinf(np, wdir, demFilled, flowDir, slopeFile, dirCodeFile, weightFil
     srs = osr.SpatialReference()
     srs.ImportFromWkt(ds.GetProjection())
 
-    WriteGTiffFile(dirCodeFile, band.YSize, band.XSize, dirCode, ds.GetGeoTransform(), srs, -9999, gdal.GDT_Int16)
-    WriteGTiffFile(weightFile, band.YSize, band.XSize, weight, ds.GetGeoTransform(), srs, -9999, gdal.GDT_Float32)
+    WriteGTiffFile(dirCodeFile, band.YSize, band.XSize, dirCode, ds.GetGeoTransform(), srs, DEFAULT_NODATA, gdal.GDT_Int16)
+    WriteGTiffFile(weightFile, band.YSize, band.XSize, weight, ds.GetGeoTransform(), srs, DEFAULT_NODATA, gdal.GDT_Float32)
     
 
 if __name__ == '__main__':
@@ -102,7 +99,6 @@ if __name__ == '__main__':
         maskFile = '/data/liujz/data/qingshuihe_%dm/output/mask.tif' % (res,)
         dirCodeFile = wdir + os.sep + "flow_dir_%dm_dinf.tif" % (res,)
         slopeFile = wdir + os.sep + "slope_%dm_dinf.tif" % (res,)
-        MaskRaster(maskFile, dirCodeFileTmp, dirCodeFile)
-        MaskRaster(maskFile, slope, slopeFile)
+
 
 

@@ -313,13 +313,19 @@ bool MGTOpt_SWAT::GetOperationCode(int i, int& factoryID, vector<int>& nOps)
 		if(curLanduseID == (it->first) / 100)
 		{
 			/// 2. If current cell located in the locations of this BMPPlantMgtFactory
-			vector<int> tmpLocations = it->second->GetLocations();
-			vector<int>::iterator findIter = find(tmpLocations.begin(), tmpLocations.end(), curMgtField);
-			if(findIter != tmpLocations.end())
+			if(ValueInVector(curMgtField, it->second->GetLocations()))
 			{
 				factoryID = it->first;
 				break;
 			}
+			// replaced by LJ, 2016-7-5
+			//vector<int> tmpLocations = it->second->GetLocations();
+			//vector<int>::iterator findIter = find(tmpLocations.begin(), tmpLocations.end(), curMgtField);
+			//if(findIter != tmpLocations.end())
+			//{
+			//	factoryID = it->first;
+			//	break;
+			//}
 		}
 	}
 	if(factoryID < 0) return false;

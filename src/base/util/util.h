@@ -317,3 +317,37 @@ string ValueToString(T val)
 	oss << val;
 	return oss.str();
 }
+/*!
+* \brief If value in vector container
+*
+* \param[in] val Value, e.g., a int, or float
+* \param[in] vec Vector container, data type is consistent with val
+* \return True if val is in vec, otherwise False
+*/
+template<typename T>
+bool ValueInVector(T &val, vector<T>& vec)
+{
+	vector<T>::iterator findIter = find(vec.begin(), vec.end(), val);
+	if(findIter == vec.end())
+		return false;
+	else
+		return true;
+}
+
+/*!
+* \brief Remove value in vector container
+*
+* \param[in] val Value to be removed, e.g., a int, or float
+* \param[in] vec Vector container, data type is consistent with val
+*/
+template<typename T>
+void RemoveValueInVector(T &val, vector<T>& vec)
+{
+	for(vector<T>::iterator Iter = vec.begin(); Iter != vec.end(); Iter++) 
+	{ 
+		if(*Iter == val) 
+			Iter = vec.erase(Iter);
+		if(Iter == vec.end()) 
+			break;
+	}
+}
