@@ -181,12 +181,12 @@ void Scenario::loadBMPs()
 		int BMPID;
 		int subScenario;
 		string distribution;
-		string parameter;
+		string collection;
 		string location;
 		if(bson_iter_init_find(&iter,info,FLD_SCENARIO_BMPID))BMPID = (int)GetFloatFromBSONITER(&iter);
 		if(bson_iter_init_find(&iter,info,FLD_SCENARIO_SUB))subScenario = (int)GetFloatFromBSONITER(&iter);
 		if(bson_iter_init_find(&iter,info,FLD_SCENARIO_DIST)) distribution = GetStringFromBSONITER(&iter);
-		if(bson_iter_init_find(&iter,info, FLD_SCENARIO_LOOKUP)) parameter = GetStringFromBSONITER(&iter);
+		if(bson_iter_init_find(&iter,info, FLD_SCENARIO_TABLE)) collection = GetStringFromBSONITER(&iter);
 		if(bson_iter_init_find(&iter,info, FLD_SCENARIO_LOCATION)) location = GetStringFromBSONITER(&iter);
 
 		int BMPType;
@@ -206,13 +206,13 @@ void Scenario::loadBMPs()
 		bson_destroy(queryBMP);
 		mongoc_cursor_destroy(cursor2);
 		/// Combine BMPID, and SubScenario for a unique ID to identify "different" BMP
-		int uniqueBMPID = BMPID * 100 + subScenario;
+		int uniqueBMPID = BMPID * 100000 + subScenario;
 		if(this->m_bmpFactories.find(uniqueBMPID) == this->m_bmpFactories.end())
 		{
+			if(BMPID == BMP_TYPE_POINTSOURCE)
+				this->m_bmpFactories[uniqueBMPID] = new BMPPointSrcFactory(m_id, BMPID, subScenario, BMPType, BMPPriority, distribution, collection, location);
 			if (BMPID == BMP_TYPE_PLANT_MGT)
-			{
-				this->m_bmpFactories[uniqueBMPID] = new BMPPlantMgtFactory(m_id,BMPID,subScenario,BMPType,BMPPriority,distribution,parameter,location);
-			}
+				this->m_bmpFactories[uniqueBMPID] = new BMPPlantMgtFactory(m_id, BMPID, subScenario, BMPType, BMPPriority, distribution, collection, location);
 			/*if(BMPType == BMP_TYPE_REACH)
 			this->m_bmpFactories[BMPID] = new BMPReachFactory(m_id,BMPID,BMPType,distribution,parameter);
 			if(BMPType == BMP_TYPE_AREAL_NON_STRUCTURAL)
@@ -262,88 +262,3 @@ void Scenario::Dump(ostream* fs)
 	}
 }
 }
-//void Scenario::loadTimeSeriesData(string databasePath, time_t startTime, time_t endTime,int interval)
-//{
-//	map<int,BMPFactory*>::iterator it;
-//	for(it = this->m_bmpFactories.begin();it!=this->m_bmpFactories.end();it++)
-//	{
-//		if(it->second == NULL) continue;
-//
-//		if(it->second->bmpType() != BMP_TYPE_REACH) continue;
-//
-//		BMPReachFactory* reach = (BMPReachFactory*)(it->second);
-//
-//		reach->loadTimeSeriesData(databasePath,startTime,endTime,interval);
-//	}
-//}
-//
-//BMPReach* Scenario::getReachStructure(int reach,int reachBMPid)
-//{
-//	map<int,BMPFactory*>::iterator it;
-//
-//	it = this->m_bmpFactories.find(reachBMPid);
-//	if(it == this->m_bmpFactories.end()) return NULL;
-//	else
-//	{
-//		BMPReachFactory* reachF = (BMPReachFactory* )(it->second);
-//		return reachF->ReachBMP(reach);
-//	}
-//}
-//
-//BMPReachPointSource* Scenario::getPointSource(int reach)
-//{
-//	BMPReach* r= getReachStructure(reach,BMP_TYPE_POINTSOURCE);
-//	if(r==NULL) return NULL;
-//	else return (BMPReachPointSource*)r;
-//}
-//
-//BMPReachFlowDiversion* Scenario::getFlowDiversion(int reach)
-//{
-//	BMPReach* r=  getReachStructure(reach,BMP_TYPE_FLOWDIVERSION_STREAM);
-//	if(r==NULL) return NULL;
-//	else return (BMPReachFlowDiversion*)r;
-//}
-//
-//BMPReachReservoir* Scenario::getReservoir(int reach)
-//{
-//	BMPReach* r=  getReachStructure(reach,BMP_TYPE_RESERVOIR);
-//	if(r==NULL) return NULL;
-//	else return (BMPReachReservoir*)r;
-//}
-//
-//int Scenario::getMaxReservoirId()
-//{
-//	map<int,BMPFactory*>::iterator it;
-//
-//	it = this->m_bmpFactories.find(BMP_TYPE_RESERVOIR);
-//	if(it == this->m_bmpFactories.end()) return 0;
-//	else
-//	{
-//		BMPReachFactory* reachF = (BMPReachFactory* )(it->second);
-//		return reachF->getMaxStructureId();
-//	}
-//}
-//
-//NonStructural::ManagementOperation* Scenario::getOperation(
-//	int validCellIndex,int startYear,time_t currentTime,int BMPid,bool useSecond)
-//{
-//	map<int,BMPFactory*>::iterator it;
-//
-//	it = this->m_bmpFactories.find(BMPid);
-//	if(it == this->m_bmpFactories.end()) return NULL;
-//	else
-//	{
-//		BMPArealNonStructural* arealS = (BMPArealNonStructural* )(it->second);
-//		if(useSecond)	return arealS->getSecondOperation(validCellIndex,startYear,currentTime);
-//		else	
-//			return arealS->getOperation(validCellIndex,startYear,currentTime);
-//	}
-//}
-
-//}
-
-/// Deprecated by Liangjun
-//string Scenario::bmpPath()
-//{
-//	return this->m_projectPath + BMP_DATABASE_NAME;
-//}

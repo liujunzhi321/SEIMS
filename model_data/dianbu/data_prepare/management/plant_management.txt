@@ -17,17 +17,17 @@
 ##15	ContinuousPesticideOperation	year	month	day	husc	15	IPST_ID	PEST_DAYS	IPST_FREQ	CPST_KG	NONE	NONE	NONE	NONE	NONE	NONE
 ##16	BurningOperation	year	month	day	husc	16	NONE	NONE	NONE	BURN_FRLB	NONE	NONE	NONE	NONE	NONE	NONE
 SUBSCENARIO	Name	year	month	day	husc	mgt_op	mgt1i	mgt2i	mgt3i	mgt4	mgt5	mgt6	mgt7	mgt8	mgt9	mgt10i
-0	generalAGRL	1			0.23	6	1	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1			0.23	13	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1			0.23	3	1	0	0	97.5	1	0	0	0	0	0
-0	generalAGRL	1			0.23	3	2	0	0	97.5	1	0	0	0	0	0
-0	generalAGRL	1			0.23	10	1	1	0	0.5	0.5	50	0	0	0	0
-0	generalAGRL	1			0.24	1	33	0	0	2370	0	20	0	0	0	0
-0	generalAGRL	1			0.25	10	2	1	0	0.6	0.5	100	0.5	0	0	0
-0	generalAGRL	1			1.28	13	1	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1			1.29	5	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1			0.84	6	1	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1			0.85	1	28	0	0	1700	0	0	0	0	0	0
-0	generalAGRL	2			0.35	10	1	1	0	0.5	0.5	50	0	0	0	0
-0	generalAGRL	2			0.6	10	1	1	0	0.5	0.5	50	0	0	0	0
-0	generalAGRL	2			1.36	5	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	6	1	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	13	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	3	1	0	0	97.5	1	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	3	2	0	0	97.5	1	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.23	10	1	1	0	0.5	0.5	50	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.24	1	33	0	0	2370	0	20	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.25	10	2	1	0	0.6	0.5	100	0.5	0	0	0
+0	generalAGRL	1	-9999	-9999	1.28	13	1	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	1.29	5	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.84	6	1	0	0	0	0	0	0	0	0	0
+0	generalAGRL	1	-9999	-9999	0.85	1	28	0	0	1700	0	0	0	0	0	0
+0	generalAGRL	2	-9999	-9999	0.35	10	1	1	0	0.5	0.5	50	0	0	0	0
+0	generalAGRL	2	-9999	-9999	0.6	10	1	1	0	0.5	0.5	50	0	0	0	0
+0	generalAGRL	2	-9999	-9999	1.36	5	0	0	0	0	0	0	0	0	0	0
