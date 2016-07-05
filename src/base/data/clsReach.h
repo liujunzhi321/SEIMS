@@ -136,19 +136,19 @@ public:
 	/// Destructor
 	~clsReaches();
 	/// Get single reach information by subbasin ID
-	clsReach* GetReachByID(int id){return reachesInfo.at(id);}
+	clsReach* GetReachByID(int id){return m_reachesInfo.at(id);}
 	/// Get reach number
-	int GetReachNumber(){return this->reachNum;}
+	int GetReachNumber(){return this->m_reachNum;}
 	/// Get reach IDs
-	vector<int> GetReachIDs(){return this->reachIDs;}
+	vector<int> GetReachIDs(){return this->m_reachIDs;}
 private:
 	/// reaches number
-	int reachNum;
+	int m_reachNum;
 	/// reach IDs
-	vector<int> reachIDs;
+	vector<int> m_reachIDs;
 	/* Map container to store all reaches information
 	 * key: reach ID
 	 * value: clsReach instance (pointer)
 	 */
-	map<int, clsReach*> reachesInfo;
+	map<int, clsReach*> m_reachesInfo;
 };
