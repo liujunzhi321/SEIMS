@@ -3,15 +3,15 @@
 ## @Utility functions
 #
 #
-import math,datetime,time
+import os,math,datetime,time
 from osgeo import gdal,osr
 from gdalconst import *
 import shutil
-from text import *
 import numpy
 
 UTIL_ZERO = 1.e-6
 MINI_SLOPE = 0.0001
+DEFAULT_NODATA = -9999.
 
 def FloatEqual(a, b):
     return abs(a - b) < UTIL_ZERO
@@ -89,11 +89,20 @@ def Rs(doy, n, lat):
 class Raster:
     '''
     Basic Raster Class
+    Build-in functions:
+        1. GetAverage()
+        2. GetMax()
+        3. GetMin()
+        4. GetSTD()
+        5. GetSum()
+        6. GetValueByRowCol(row, col)
+        7. GetValueByXY(x, y)
+
     '''
     def __init__(self, nRows, nCols, data, noDataValue=None, geotransform=None, srs=None):
         self.nRows = nRows
         self.nCols = nCols
-        self.data = data
+        self.data = numpy.copy(data)
         self.noDataValue = noDataValue
         self.geotrans = geotransform
         self.srs = srs
@@ -103,6 +112,40 @@ class Raster:
         self.xMax = geotransform[0] + nCols*geotransform[1]
         self.yMax = geotransform[3]
         self.yMin = geotransform[3] + nRows*geotransform[5]
+        self.validZone = self.data != self.noDataValue
+        self.validValues = numpy.where(self.validZone, self.data, numpy.nan)
+
+    def GetAverage(self):
+        return numpy.nanmean(self.validValues)
+    def GetMax(self):
+        return numpy.nanmax(self.validValues)
+    def GetMin(self):
+        return numpy.nanmin(self.validValues)
+    def GetSTD(self):
+        return numpy.nanstd(self.validValues)
+    def GetSum(self):
+        return numpy.nansum(self.validValues)
+    def GetValueByRowCol(self, row, col):
+        if row < 0 or row >= self.nRows or col < 0 or col >= self.nCols:
+            raise ValueError("The row or col must be >=0 and less than nRows or nCols!")
+        else:
+            value = self.data[int(round(row))][int(round(col))]
+            if value == self.noDataValue:
+                return None
+            else:
+                return value
+    def GetValueByXY(self, x, y):
+        if x < self.xMin or x > self.xMax or y < self.yMin or y > self.yMax:
+            raise ValueError("The x or y value must be within the Min and Max!")
+        else:
+            row = self.nRows - int(numpy.ceil((y - self.yMin)/self.dx))
+            col = int(numpy.floor((x - self.xMin)/self.dx))
+            value = self.data[row][col]
+            if value == self.noDataValue:
+                return None
+            else:
+                return value
+
 
 def ReadRaster(rasterFile):
     ds = gdal.Open(rasterFile)
@@ -117,7 +160,7 @@ def ReadRaster(rasterFile):
     srs.ImportFromWkt(ds.GetProjection())
     #print srs.ExportToProj4()
     if noDataValue is None:
-        noDataValue = -9999
+        noDataValue = DEFAULT_NODATA
     return Raster(ysize, xsize, data, noDataValue, geotrans, srs) 
 
 def CopyShpFile(shpFile, dstFile):
@@ -276,9 +319,9 @@ def WriteGTiffFileByMask(filename, data, mask, gdalType):
     ds = None
     
 
-def MaskRaster(maskFile, inputFile, outputFile, outputAsc=False, noDataValue=-9999):
+def MaskRaster(cppDir, maskFile, inputFile, outputFile, outputAsc=False, noDataValue=DEFAULT_NODATA):
     id = os.path.basename(maskFile) + "_" + os.path.basename(inputFile)
-    configFile = "%s%smaskConfig_%s_%s.txt" % (CPP_PROGRAM_DIR, os.sep, id, str(time.time()))
+    configFile = "%s%smaskConfig_%s_%s.txt" % (cppDir, os.sep, id, str(time.time()))
     fMask = open(configFile, 'w')
     fMask.write(maskFile + "\n1\n")
     fMask.write("%s\t%d\t%s\n" % (inputFile, noDataValue, outputFile))
@@ -287,7 +330,7 @@ def MaskRaster(maskFile, inputFile, outputFile, outputAsc=False, noDataValue=-99
     asc = ""
     if outputAsc:
         asc = "-asc"
-    s = "%s/mask_rasters/build/mask_raster %s %s" % (CPP_PROGRAM_DIR, configFile, asc)
+    s = "%s/mask_rasters/build/mask_raster %s %s" % (cppDir, configFile, asc)
     os.system(s)
     os.remove(configFile)
 
@@ -381,6 +424,18 @@ def GetFullPathWithSuffixes(filePath, suffixes):
 
 ### TEST CODE
 if __name__ == "__main__":
-    p = r'E:\data\model_data\model_dianbu_10m_longterm\data_prepare\spatial'
-    print GetFileNameWithSuffixes(p,['.tif','.txt'])
-    print GetFullPathWithSuffixes(p,['.tif','.txt'])
+    #p = r'E:\data\model_data\model_dianbu_10m_longterm\data_prepare\spatial'
+    #print GetFileNameWithSuffixes(p,['.tif','.txt'])
+    #print GetFullPathWithSuffixes(p,['.tif','.txt'])
+    dist2Stream = r'E:\data_m\SEIMS\dianbu_30m_output\dist2Stream.tif'
+    R = ReadRaster(dist2Stream)
+    print "XMin: %f" % R.xMin
+    print "XMax: %f" % R.xMax
+    print "YMin: %f" % R.yMin
+    print "YMax: %f" % R.yMax
+    print "Mean: %f" % R.GetAverage()
+    print "Max : %f" % R.GetMax()
+    print "Min : %f" % R.GetMin()
+    print "Sum : %f" % R.GetSum()
+    print "STD : %f" % R.GetSTD()
+    print "Value at (x, y): %f" % R.GetValueByXY(39542419.65,3543174.289)
