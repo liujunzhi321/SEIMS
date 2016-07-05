@@ -58,7 +58,7 @@ HOSTNAME = '127.0.0.1'
 PORT = 27017
 ClimateDBName = 'HydroClimate_dianbu'
 BMPScenarioDBName = 'BMP_Scenario_dianbu_30m_longterm'
-SpatialDBName = 'model_dianbu_10m_longterm'
+SpatialDBName = 'model_dianbu_30m_longterm'
 forCluster = False 
 stormMode = False
 if forCluster and 'cluster_' not in SpatialDBName.lower():

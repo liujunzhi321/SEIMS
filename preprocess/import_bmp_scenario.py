@@ -53,12 +53,12 @@ def ImportBMPTables():
             dic = {}
             for i in range(len(fieldArray)):
                 if(isNumericValue(item[i])):
-                    dic[fieldArray[i]] = float(item[i])
+                    dic[fieldArray[i].upper()] = float(item[i])
                 else:
-                    dic[fieldArray[i]] = str(item[i])
+                    dic[fieldArray[i].upper()] = str(item[i])
             if StringInList(Tag_ST_LocalX, dic.keys()) and StringInList(Tag_ST_LocalY, dic.keys()):
-                subbsnID = subbasinR.GetValueByXY(dic[Tag_ST_LocalX], dic[Tag_ST_LocalY])
-                distance = dist2StreamR.GetValueByXY(dic[Tag_ST_LocalX], dic[Tag_ST_LocalY])
+                subbsnID = subbasinR.GetValueByXY(dic[Tag_ST_LocalX.upper()], dic[Tag_ST_LocalY.upper()])
+                distance = dist2StreamR.GetValueByXY(dic[Tag_ST_LocalX.upper()], dic[Tag_ST_LocalY.upper()])
                 if subbsnID != None and distance != None:
                     dic["SUBBASIN"] = float(subbsnID)
                     dic["DIST2REACH"] = float(distance)
