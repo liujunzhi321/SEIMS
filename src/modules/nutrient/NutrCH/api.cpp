@@ -62,7 +62,6 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	//mdi.AddParameter(VAR_MSK_CO1, UNIT_NON_DIM, DESC_MSK_CO1, Source_ParameterDB, DT_Single);
 	//mdi.AddParameter(VAR_VSF, UNIT_NON_DIM, DESC_VSF, Source_ParameterDB, DT_Single);
 	
-	mdi.AddParameter(VAR_SRA, UNIT_SR, DESC_SRA, Source_ParameterDB, DT_Array1D);
 	mdi.AddParameter(VAR_WATTEMP, UNIT_TEMP_DEG, DESC_WATTEMP, Source_ParameterDB, DT_Array1D);
 
 	mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
@@ -70,6 +69,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);
 
 	// set the input variables
+	mdi.AddInput(VAR_SRA, UNIT_SR, DESC_SRA, Source_Module, DT_Array1D);
+
 	mdi.AddInput(VAR_LATNO3_CH, UNIT_KG, DESC_LATNO3_CH, Source_Module, DT_Array1D);
 	mdi.AddInput(VAR_SURQNO3_CH, UNIT_KG, DESC_SURQNO3_CH, Source_Module, DT_Array1D);
 	mdi.AddInput(VAR_SURQSOLP_CH, UNIT_KG, DESC_SURQSOLP_CH, Source_Module, DT_Array1D);

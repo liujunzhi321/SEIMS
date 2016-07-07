@@ -36,12 +36,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(VAR_DRYDEP_NO3, UNIT_CONT_KGHA, DESC_DRYDEP_NO3, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_DRYDEP_NH4, UNIT_CONT_KGHA, DESC_DRYDEP_NH4, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D); 
-
+	// set input from other modules
 	mdi.AddInput(VAR_PCP, UNIT_DEPTH_MM, DESC_D_P, Source_Module, DT_Raster1D);
 
+	mdi.AddInput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_Module, DT_Raster2D); 
+
+	// set output
 	mdi.AddOutput(VAR_ADDRNO3, UNIT_CONT_KGHA, DESC_ADDRNO3, DT_Single);
 	mdi.AddOutput(VAR_WSHD_RNO3, UNIT_CONT_KGHA, DESC_WSHD_RNO3, DT_Single);
 

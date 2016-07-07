@@ -31,7 +31,15 @@ NutrientOLRoute::NutrientOLRoute(void):
 }
 
 NutrientOLRoute::~NutrientOLRoute(void) {
-	///TODO
+	if (m_QV != NULL){
+		delete [] m_QV;
+	}
+	if (m_ChV != NULL){
+		delete [] m_ChV;
+	}
+	if (m_fract != NULL){
+		delete [] m_fract;
+	}
 }
 bool NutrientOLRoute::CheckInputSize(const char* key, int n) {
 	if(n <= 0) {
