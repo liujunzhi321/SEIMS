@@ -27,7 +27,7 @@ AtmosphericDeposition::AtmosphericDeposition(void):
 }
 
 AtmosphericDeposition::~AtmosphericDeposition(void){
-	
+
 }
 
 bool AtmosphericDeposition::CheckInputData(void) {

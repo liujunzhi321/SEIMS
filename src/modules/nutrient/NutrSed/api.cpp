@@ -42,20 +42,21 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_FOP, UNIT_CONT_KGHA, DESC_SOL_FOP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_ORGN, UNIT_CONT_KGHA, DESC_SOL_ORGN, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_ORGP, UNIT_CONT_KGHA, DESC_SOL_ORGP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_ROOTDEPTH, UNIT_CONT_KGHA, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_MP, UNIT_CONT_KGHA, DESC_SOL_MP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_BD, UNIT_DENSITY, DESC_SOL_BD, Source_ParameterDB, DT_Raster2D);
-	
-	// set the input
+	// set input from other modules
 	mdi.AddInput(VAR_SOER, UNIT_TONS, DESC_SOER, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module, DT_Raster1D);
+
+	mdi.AddInput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_FOP, UNIT_CONT_KGHA, DESC_SOL_FOP, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_ORGN, UNIT_CONT_KGHA, DESC_SOL_ORGN, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_ORGP, UNIT_CONT_KGHA, DESC_SOL_ORGP, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_ROOTDEPTH, UNIT_CONT_KGHA, DESC_ROOTDEPTH, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, Source_Module, DT_Raster2D);
+	//mdi.AddParameter(VAR_SOL_MP, UNIT_CONT_KGHA, DESC_SOL_MP, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_BD, UNIT_DENSITY, DESC_SOL_BD, Source_Module, DT_Raster2D);
+	
 
 	// set the output variables
 	mdi.AddOutput(VAR_SEDORGN, UNIT_CONT_KGHA, DESC_SEDORGN, DT_Raster1D);
