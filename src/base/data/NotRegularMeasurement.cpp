@@ -62,7 +62,7 @@ NotRegularMeasurement::NotRegularMeasurement(mongoc_client_t* conn, string hydro
 		mongoc_collection_t	*collection;
 		const bson_t *doc;
 		char *record;
-		collection = mongoc_client_get_collection(m_conn,hydroDBName.c_str(),MONG_HYDRO_DATA);
+		collection = mongoc_client_get_collection(m_conn,hydroDBName.c_str(),DB_TAB_DATAVALUES);
 		cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,query,NULL,NULL);
 		float value;
 		time_t dt;
