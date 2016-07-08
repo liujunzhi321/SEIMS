@@ -21,9 +21,9 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    if(argc < 5)
+    if(argc < 6)
     {
-        cout << "usage: grid_layering hostname port output_dir modelname nsubbasin\n";
+        cout << "usage: grid_layering <hostIP> <port> <output_dir> <modelName> <gridFSName> <nsubbasin>\n";
         exit(-1);
     }
 
@@ -31,18 +31,19 @@ int main(int argc, char** argv)
     int port = atoi(argv[2]);
     const char* outputDir = argv[3];
     const char* modelName = argv[4];
-    int nSubbasins = atoi(argv[5]);
+	const char* gridFSName = argv[5];
+    int nSubbasins = atoi(argv[6]);
 
     mongo conn[1];
     gridfs gfs[1];
     int status = mongo_connect(conn, hostName, port); 
     if( MONGO_OK != status ) 
     {
-        cout << "can not connect to mongodb.\n";
+        cout << "can not connect to MongoDB.\n";
         exit(-1);
     }
 
-    gridfs_init(conn, modelName, "spatial", gfs); 
+    gridfs_init(conn, modelName, gridFSName, gfs); 
 
 	int outputNoDataValue = -9999;
 	clock_t t1 = clock();
