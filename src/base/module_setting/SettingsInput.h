@@ -29,7 +29,7 @@ class SettingsInput :public Settings
 {
 public:
 	//! Constructor
-	SettingsInput(string fileName, mongoc_client_t* conn, string dbName, int nSubbasin = 1, int scenarioID = -1);
+	SettingsInput(string fileName, mongoc_client_t* conn, string dbName, int nSubbasin = 1);
 	//! Destructor
 	~SettingsInput(void);
 	//! Output to log file
@@ -44,8 +44,6 @@ public:
 	time_t getDtChannel(void) const;
 	//! Get daily time interval of simulation in sec
 	time_t getDtDaily() const;
-	//! Get scenario data
-	Scenario* BMPScenario();
 	//! Get data of input HydroClimate stations
 	InputStation* StationData();
 private:
@@ -59,26 +57,20 @@ private:
 	time_t			m_dtCh;
 
 	//! data of input HydroClimate stations
-	InputStation*	m_inputStation;
-	//! Simulation scenario
-	Scenario*		m_scenario;
+	InputStation*							m_inputStation;
 
 	//! Parameter database name
-	string			m_dbName;
+	string										m_dbName;
 	//! HydroClimate database name
-	string			m_dbHydro;
-	//! BMPs Scenario database name
-	string			m_dbScenario;
+	string										m_dbHydro;
 	//! MongoDB client
-	mongoc_client_t*m_conn;
+	mongoc_client_t*					m_conn;
 	//! HydroClimate site list <siteType, siteIDList>
-	map<string, vector<int> > m_siteListMap;
+	map<string, vector<int> >		m_siteListMap;
 	//! Subbasin ID
-	int m_subbasinID;
+	int												m_subbasinID;
 	//! Simulation mode, can be DAILY or HOURLY
-	string m_mode;
-	//! BMPs Scenario ID
-	int m_scenarioID;
+	string										m_mode;
 private:
 
 	//void buildTimeQuery(time_t startTime, time_t endTime, bson_t* query);/// Deprecated
@@ -89,7 +81,5 @@ private:
 	///bool readTimeSeriesData(void);///Deprecated
 	//! Read HydroClimate site list
 	void ReadSiteList();
-	//! Query and get BMP scenario database name
-	void GetBMPScenarioDBName();
 };
 

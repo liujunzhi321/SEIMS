@@ -15,29 +15,19 @@
 #include <cstdlib>
 using namespace std;
 
-SettingsInput::SettingsInput(string fileName, mongoc_client_t* conn, string dbName, int nSubbasin, int scenarioID):
-m_subbasinID(nSubbasin),m_scenarioID(scenarioID),m_dbName(dbName)
+SettingsInput::SettingsInput(string fileName, mongoc_client_t* conn, string dbName, int nSubbasin)
+	:m_conn(conn), m_dbName(dbName), m_subbasinID(nSubbasin)
 {
-	size_t index = fileName.find_last_of(SEP);
-	string projectPath = fileName.substr(0,index+1);
-
-	m_conn = conn;
-	m_scenario = NULL;
-	if(m_scenarioID != -1) /// -1 means this model doesn't need scenario information
-	{
-		GetBMPScenarioDBName();
-		m_scenario = new Scenario(m_conn, m_dbScenario, m_scenarioID);
-		//m_scenario->Dump("e:\\test\\bmpScenario.txt");/// Write BMPs Scenario Information to Text file
-	}
-	LoadSettingsFromFile(fileName,dbName);
+	//size_t index = fileName.find_last_of(SEP);
+	//string projectPath = fileName.substr(0,index+1);
+	LoadSettingsFromFile(fileName, dbName);
 }
 //! Destructor 
 SettingsInput::~SettingsInput(void)
 {
-	//StatusMessage("Start to release SettingsInput ...");
-	if(m_scenario != NULL) delete m_scenario;
+	StatusMessage("Start to release SettingsInput ...");
 	if(m_inputStation!=NULL) delete m_inputStation;
-	//StatusMessage("End to release SettingsInput ...");
+	StatusMessage("End to release SettingsInput ...");
 }
 
 bool SettingsInput::readDate()
@@ -72,27 +62,6 @@ bool SettingsInput::readDate()
 		m_dtCh = 86400;
 	}
 	return true;
-}
-
-void SettingsInput::GetBMPScenarioDBName()
-{
-	bson_t *query;
-	query = bson_new();
-	mongoc_cursor_t *cursor;
-	mongoc_collection_t	*collection;
-	const bson_t *doc;
-	collection = mongoc_client_get_collection(m_conn,m_dbName.c_str(),DB_TAB_SCENARIO);
-	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,query,NULL,NULL);
-	while(mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor,&doc)){
-		bson_iter_t iter;
-		if (bson_iter_init (&iter, doc) && bson_iter_find (&iter,MONG_SITELIST_DB)){
-			m_dbScenario = GetStringFromBSONITER(&iter);
-			break;
-		}
-	}
-	bson_destroy(query);
-	mongoc_cursor_destroy(cursor);
-	mongoc_collection_destroy(collection);
 }
 
 void SettingsInput::ReadSiteList()
@@ -172,14 +141,8 @@ void SettingsInput::Dump(string fileName)
 		fs << "Start Date :" << util.ConvertToString2(&m_startDate) <<  endl;
 		fs << "End Date :" << util.ConvertToString2(&m_endDate) <<  endl;
 		fs << "Interval :" << m_dtHs << "\t" << m_dtCh <<  endl;
-		if(m_scenario!=NULL) m_scenario->Dump(&fs);
 		fs.close();
 	}
-}
-
-Scenario* SettingsInput::BMPScenario()
-{
-	return m_scenario;
 }
 
 InputStation* SettingsInput::StationData()

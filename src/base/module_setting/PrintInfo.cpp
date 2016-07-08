@@ -239,7 +239,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData* templateRaster, str
 		return;
 	}
 
-	if(TimeSeriesData.size() > 0)	//time series data
+	if(TimeSeriesData.size() > 0)	/// time series data
 	{
 		ofstream fs;
 		utils util;

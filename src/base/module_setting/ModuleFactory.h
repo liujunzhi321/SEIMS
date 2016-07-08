@@ -42,18 +42,19 @@ public:
 	 * \param[in] modelPath the path of your model
 	 * \param[in] conn \a mongoc_client_t
 	 * \param[in] dbName name of your model
+	 * \param[in] scenarioID
 	 */
-	ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod);
-	/*!
-	 * \brief Constructor of ModuleFactory from config file and BMP database
-	 * By default, the layering method is UP_DOWN
-	 * \param[in] configFileName config.fig file which contains modules list for Simulation
-	 * \param[in] modelPath the path of your model
-	 * \param[in] conn \a mongoc_client_t
-	 * \param[in] dbName name of your model
-	 * \param[in] scenario BMPs scenario data
-	 */
-	ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario);
+	ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, int scenarioID);
+	///*!
+	// * \brief Constructor of ModuleFactory from config file and BMP database
+	// * By default, the layering method is UP_DOWN
+	// * \param[in] configFileName config.fig file which contains modules list for Simulation
+	// * \param[in] modelPath the path of your model
+	// * \param[in] conn \a mongoc_client_t
+	// * \param[in] dbName name of your model
+	// * \param[in] scenario BMPs scenario data
+	// */
+	//ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario);
 	//! Destructor
 	~ModuleFactory(void);
 
@@ -69,28 +70,28 @@ public:
 	//! Get Module ID by index
 	string GetModuleID(int i){return m_moduleIDs[i];}
 private:
-	typedef SimulationModule*			(*InstanceFunction)(void);
-	typedef const char*					(*MetadataFunction)(void);
+	typedef SimulationModule*				(*InstanceFunction)(void);
+	typedef const char*							(*MetadataFunction)(void);
 	//! Modules' instance map
 	map<string, InstanceFunction>		m_instanceFuncs;
 	//! Metadata map of modules
 	map<string, MetadataFunction>		m_metadataFuncs;
 	//! Module path
-	string								m_modulePath;
+	string													m_modulePath;
 	//! Layering method, can be UP_DOWN or DOWN_UP
-	LayeringMethod						m_layingMethod;
+	LayeringMethod									m_layingMethod;
 	//! Module IDs
-	vector<string>						m_moduleIDs;
+	vector<string>									m_moduleIDs;
 #ifndef linux
 	//! .DLL (or .so) handles
-	vector<HINSTANCE>					m_dllHandles;
+	vector<HINSTANCE>						m_dllHandles;
 #else
-	vector<void*>						m_dllHandles;
+	vector<void*>										m_dllHandles;
 #endif
 	//! Module settings, \a map<string, SEIMSModuleSetting*>
 	map<string, SEIMSModuleSetting*>	m_settings;
 	//! Metadata of modules
-	map<string, const char*>			m_metadata;
+	map<string, const char*>						m_metadata;
 	//! Parameters of modules
 	map<string, vector<ParamInfo> >		m_parameters;
 	//! Input of modules
@@ -98,13 +99,18 @@ private:
 	//! Output of modules
 	map<string, vector<ParamInfo> >		m_outputs;
 	//! Input settings, \sa SettingInput
-	SettingsInput						*m_setingsInput;
+	SettingsInput					*m_setingsInput;
 	//! IP address of MongoDB
 	string								m_host;
 	//! MongoDB port
-	int									m_port;
+	int										m_port;
 	//! Database name of the simulation model
 	string								m_dbName;
+	//! BMPs Scenario database name
+	string								m_dbScenario;
+	//! BMPs Scenario ID
+	int										m_scenarioID;
+
 	//! MongoDB Client
 	mongoc_client_t						*m_conn;
 	//! Mongo GridFS to store spatial data
@@ -152,6 +158,8 @@ private:
 	void ReadInputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting);
 	//! Read module's output setting from XML string
 	void ReadOutputSetting(string& moduleID, TiXmlDocument& doc, SEIMSModuleSetting* setting);
+	//! Query and get BMP scenario database name
+	void GetBMPScenarioDBName();
 	//! Get comparable name after underscore if necessary, e.g., T_PET => use PET
 	string GetComparableName(string& paraName);
 	//! Find dependent parameters 
