@@ -146,21 +146,16 @@ void MainMongoDB(string modelPath,char *host,int port, int scenarioID, int numTh
 		string projectPath = modelPath + SEP;
 		string modulePath = exePath + SEP;
 		checkProject(projectPath);
-		//string dbName = "model_xiajiang";
 		size_t nameIdx = modelPath.rfind(SEP);
 		string dbName = modelPath.substr(nameIdx+1);
-		//string dbName = modelPath;
 		mongoc_client_t *conn;
-		//const char* host = "127.0.0.1";
-		//const char* host ="192.168.6.55";
-		//int port = 27017;
 		if(!isIPAddress(host))
 			throw ModelException("MainMongoDB","Connect to MongoDB","IP address: " + string(host) + "is invalid, Please check!\n");
 		mongoc_init();
 		mongoc_uri_t *uri = mongoc_uri_new_for_host_port(host, port);
 		conn = mongoc_client_new_from_uri(uri);
 		/// Check the connection to MongoDB is success or not
-		bson_t			*reply = bson_new();
+		bson_t				*reply = bson_new();
 		bson_error_t	*err = NULL;
 		if(!mongoc_client_get_server_status(conn,NULL,reply,err))
 			throw ModelException(MODEL_NAME,"MainMongoDB","Failed to connect to MongoDB!\n");
@@ -186,12 +181,8 @@ void MainMongoDB(string modelPath,char *host,int port, int scenarioID, int numTh
 		/// CHECK FINISHED
 
 		int nSubbasin = 1;
-		SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, nSubbasin, scenarioID);
-		ModuleFactory *factory;
-		if(scenarioID >= 0 && input->BMPScenario() != NULL)
-			factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName, layingMethod,input->BMPScenario());
-		else
-			factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName, layingMethod);
+		SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, nSubbasin);
+		ModuleFactory *factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName, layingMethod, scenarioID);
 
 		ModelMain main(conn, dbName, projectPath, input, factory, nSubbasin, scenarioID, numThread, layingMethod);
 		main.Execute();	
