@@ -31,7 +31,10 @@ BMPPointSrcFactory::~BMPPointSrcFactory(void)
 		for(map<int, PointBMPLocations*>::iterator it = m_pointSrcLocsMap.begin(); it != m_pointSrcLocsMap.end(); it++)
 		{
 			if(it->second != NULL)
+			{
 				delete it->second;
+				it->second = NULL;
+			}
 			m_pointSrcLocsMap.erase(it);
 		}
 		m_pointSrcLocsMap.clear();
@@ -41,7 +44,10 @@ BMPPointSrcFactory::~BMPPointSrcFactory(void)
 		for(map<int, PointSourceMgtParams*>::iterator it = m_pointSrcMgtMap.begin(); it != m_pointSrcMgtMap.end(); it++)
 		{
 			if(it->second != NULL)
+			{
 				delete it->second;
+				it->second = NULL;
+			}
 			m_pointSrcMgtMap.erase(it);
 		}
 		m_pointSrcMgtMap.clear();
@@ -124,8 +130,8 @@ void BMPPointSrcFactory::ReadPointBMPLocations(mongoc_client_t* conn, string& bm
 void BMPPointSrcFactory::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Point Source Management Factory: " <<endl<< "SubScenario ID: "<<m_subScenarioId
-		<<" PTSRC: "<<m_pointSrc<<endl;
+	*fs	<< "Point Source Management Factory: " <<endl<<
+		"    SubScenario ID: "<<m_subScenarioId<<" PTSRC: "<<m_pointSrc<<endl;
 	for (vector<int>::iterator it = m_pointSrcMgtSeqs.begin(); it != m_pointSrcMgtSeqs.end(); it++)
 	{
 		map<int, PointSourceMgtParams*>::iterator findIdx = m_pointSrcMgtMap.find(*it);
@@ -146,7 +152,7 @@ void BMPPointSrcFactory::Dump(ostream* fs)
 /************************************************************************/
 
 PointSourceMgtParams::PointSourceMgtParams(const bson_t *&bsonTable, bson_iter_t &iter)
-	: m_startDate(time(NULL)), m_endDate(time(NULL)), m_waterVolume(0.f), m_sedimentConc(0.f), m_TNConc(0.f), m_NO3Conc(0.f), 
+	: m_startDate(0), m_endDate(0), m_waterVolume(0.f), m_sedimentConc(0.f), m_TNConc(0.f), m_NO3Conc(0.f), 
 	m_NH3Conc(0.f), m_OrgNConc(0.f), m_TPConc(0.f), m_MinPConc(0.f), m_OrgPConc(0.f), m_name(""), m_seqence(-1)
 {
 	if (bson_iter_init_find(&iter,bsonTable,BMP_FLD_NAME))
@@ -197,12 +203,12 @@ PointSourceMgtParams::~PointSourceMgtParams(void)
 void PointSourceMgtParams::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Point Source Operation: " <<endl;
-	if(m_startDate != time(NULL))
-		*fs<< "Start Date: "<<m_startDate<<endl;
-	if(m_endDate != time(NULL))
-		*fs<<"End Date: "<<m_endDate<<endl;
-	*fs<<" WaterVolume: "<<m_waterVolume<<", Sediment: "<<m_sedimentConc<<
+	*fs	<< "    Point Source Managements: " <<endl;
+	if(m_startDate != 0)
+		*fs<<"      Start Date: "<<utils::ConvertToString(&m_startDate)<<endl;
+	if(m_endDate != 0)
+		*fs<<"      End Date: "<<utils::ConvertToString(&m_endDate)<<endl;
+	*fs<<"      WaterVolume: "<<m_waterVolume<<", Sediment: "<<m_sedimentConc<<
 		", TN: "<<m_TNConc<< ", NO3: " << m_NO3Conc<<
 		", NH3: "<<m_NH3Conc<<", OrgN: "<<m_OrgNConc<<
 		", TP: "<<m_TPConc<<", MinP: "<<m_MinPConc<<
@@ -243,8 +249,8 @@ PointBMPLocations::~PointBMPLocations(void)
 void PointBMPLocations::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Point Source Location: " <<endl<<
-		" PTSRCID: "<<m_pointSrcID<<", SubBasinID: "<<m_subbasinID<<
+	*fs	<< "      Point Source Location: " <<endl<<
+		"        PTSRCID: "<<m_pointSrcID<<", SubBasinID: "<<m_subbasinID<<
 		", Lon: "<<m_lon<< ", Lat: " << m_lat<<
 		", LocalX: "<<m_localX<<", LocalY: "<<m_localY<<
 		", Size: "<<m_size<<", DistanceDown: "<<m_distDown<<endl;
