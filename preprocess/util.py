@@ -1,10 +1,11 @@
 #! /usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 ## @Utility functions
+# Author: Junzhi Liu
+# Revised: Liang-Jun Zhu
 #
-#
-import os,math,datetime,time
-from osgeo import gdal,osr
+import os, math, datetime, time
+from osgeo import gdal, osr, ogr
 from gdalconst import *
 import shutil
 import numpy
@@ -12,9 +13,14 @@ import numpy
 UTIL_ZERO = 1.e-6
 MINI_SLOPE = 0.0001
 DEFAULT_NODATA = -9999.
+SQ2 = math.sqrt(2.)
+shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx']
+
 
 def FloatEqual(a, b):
     return abs(a - b) < UTIL_ZERO
+
+
 def isNumericValue(x):
     try:
         xx = float(x)
@@ -27,22 +33,25 @@ def isNumericValue(x):
     else:
         return True
 
+
 ####  Climate Utility Functions  ####
 def IsLeapYear(year):
-    if( (year%4 == 0 and year%100 != 0) or (year%400 == 0)):
+    if ((year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)):
         return True
     else:
         return False
 
+
 def GetDayNumber(year, month):
-    if month in [1,3,5,7,8,10,12]:
+    if month in [1, 3, 5, 7, 8, 10, 12]:
         return 31
-    elif month in [4,6,9,11]:
+    elif month in [4, 6, 9, 11]:
         return 30
     elif IsLeapYear(year):
         return 29
     else:
         return 28
+
 
 ## Solar Radiation Calculation
 #  @param doy day of year
@@ -55,23 +64,27 @@ def doy(dt):
     t = time.localtime(sec)
     return t.tm_yday
 
-#earth-sun distance 
+
+# earth-sun distance
 def dr(doy):
-    return 1 + 0.033*math.cos(2*math.pi*doy/365)
+    return 1 + 0.033 * math.cos(2 * math.pi * doy / 365)
 
-#declination
+
+# declination
 def dec(doy):
-    return 0.409*math.sin(2*math.pi*doy/365 - 1.39)
+    return 0.409 * math.sin(2 * math.pi * doy / 365 - 1.39)
 
-#sunset hour angle
+
+# sunset hour angle
 def ws(lat, dec):
-    x = 1 - math.pow(math.tan(lat), 2)*math.pow(math.tan(dec), 2)
+    x = 1 - math.pow(math.tan(lat), 2) * math.pow(math.tan(dec), 2)
     if x < 0:
         x = 0.00001
-    #print x
-    return 0.5*math.pi - math.atan(-math.tan(lat)*math.tan(dec)/math.sqrt(x))
+    # print x
+    return 0.5 * math.pi - math.atan(-math.tan(lat) * math.tan(dec) / math.sqrt(x))
 
-#solar radiation
+
+# solar radiation
 def Rs(doy, n, lat):
     """n is sunshine duration"""
     lat = lat * math.pi / 180.
@@ -79,10 +92,11 @@ def Rs(doy, n, lat):
     b = 0.5
     d = dec(doy)
     w = ws(lat, d)
-    N = 24*w/math.pi
-    #Extraterrestrial radiation for daily periods
-    ra = (24*60*0.082*dr(doy)/math.pi)*(w*math.sin(lat)*math.sin(d) + math.cos(lat)*math.cos(d)*math.sin(w))
-    return (a + b*n/N)*ra
+    N = 24 * w / math.pi
+    # Extraterrestrial radiation for daily periods
+    ra = (24 * 60 * 0.082 * dr(doy) / math.pi) * (
+        w * math.sin(lat) * math.sin(d) + math.cos(lat) * math.cos(d) * math.sin(w))
+    return (a + b * n / N) * ra
 
 
 ####  Spatial Utility Functions  ####
@@ -99,32 +113,38 @@ class Raster:
         7. GetValueByXY(x, y)
 
     '''
-    def __init__(self, nRows, nCols, data, noDataValue=None, geotransform=None, srs=None):
+
+    def __init__(self, nRows, nCols, data, noDataValue = None, geotransform = None, srs = None):
         self.nRows = nRows
         self.nCols = nCols
         self.data = numpy.copy(data)
         self.noDataValue = noDataValue
         self.geotrans = geotransform
         self.srs = srs
-        
+
         self.dx = geotransform[1]
         self.xMin = geotransform[0]
-        self.xMax = geotransform[0] + nCols*geotransform[1]
+        self.xMax = geotransform[0] + nCols * geotransform[1]
         self.yMax = geotransform[3]
-        self.yMin = geotransform[3] + nRows*geotransform[5]
+        self.yMin = geotransform[3] + nRows * geotransform[5]
         self.validZone = self.data != self.noDataValue
         self.validValues = numpy.where(self.validZone, self.data, numpy.nan)
 
     def GetAverage(self):
         return numpy.nanmean(self.validValues)
+
     def GetMax(self):
         return numpy.nanmax(self.validValues)
+
     def GetMin(self):
         return numpy.nanmin(self.validValues)
+
     def GetSTD(self):
         return numpy.nanstd(self.validValues)
+
     def GetSum(self):
         return numpy.nansum(self.validValues)
+
     def GetValueByRowCol(self, row, col):
         if row < 0 or row >= self.nRows or col < 0 or col >= self.nCols:
             raise ValueError("The row or col must be >=0 and less than nRows or nCols!")
@@ -134,12 +154,13 @@ class Raster:
                 return None
             else:
                 return value
+
     def GetValueByXY(self, x, y):
         if x < self.xMin or x > self.xMax or y < self.yMin or y > self.yMax:
             raise ValueError("The x or y value must be within the Min and Max!")
         else:
-            row = self.nRows - int(numpy.ceil((y - self.yMin)/self.dx))
-            col = int(numpy.floor((x - self.xMin)/self.dx))
+            row = self.nRows - int(numpy.ceil((y - self.yMin) / self.dx))
+            col = int(numpy.floor((x - self.xMin) / self.dx))
             value = self.data[row][col]
             if value == self.noDataValue:
                 return None
@@ -155,33 +176,36 @@ def ReadRaster(rasterFile):
     ysize = band.YSize
     noDataValue = band.GetNoDataValue()
     geotrans = ds.GetGeoTransform()
-    
+
     srs = osr.SpatialReference()
     srs.ImportFromWkt(ds.GetProjection())
-    #print srs.ExportToProj4()
+    # print srs.ExportToProj4()
     if noDataValue is None:
         noDataValue = DEFAULT_NODATA
-    return Raster(ysize, xsize, data, noDataValue, geotrans, srs) 
+    return Raster(ysize, xsize, data, noDataValue, geotrans, srs)
+
 
 def CopyShpFile(shpFile, dstFile):
-    #copy the reach file to new file
+    # copy the reach file to new file
     RemoveShpFile(dstFile)
-    extlist = ['.shp', '.dbf', '.shx', '.prj']
     prefix = os.path.splitext(shpFile)[0]
     dstPrefix = os.path.splitext(dstFile)[0]
-    for ext in extlist:
+    for ext in shp_ext_list:
         src = prefix + ext
         if os.path.exists(src):
             dst = dstPrefix + ext
             shutil.copy(src, dst)
-    
+
+
 def RemoveShpFile(shpFile):
-    extlist = ['.shp', '.dbf', '.shx', '.prj']
+    # shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx']
     prefix = os.path.splitext(shpFile)[0]
-    for ext in extlist:
+    for ext in shp_ext_list:
         filename = prefix + ext
         if os.path.exists(filename):
             os.remove(filename)
+
+
 ### TODO: This function can be simply replaced by date += datetime.timedelta(days=1). PLZ check and update. LJ
 def NextDay(date):
     year = date.year
@@ -195,6 +219,7 @@ def NextDay(date):
         mon = 1
         year = year + 1
     return datetime.datetime(year, mon, day)
+
 
 def NextHalfDay(date):
     year = date.year
@@ -211,7 +236,7 @@ def NextHalfDay(date):
     if mon > 12:
         mon = 1
         year = year + 1
-    #print year, mon, day, h
+    # print year, mon, day, h
     return datetime.datetime(year, mon, day, h)
 
 
@@ -224,7 +249,7 @@ def LastHalfDay(date):
     if h < 0:
         h = h + 24
         day = day - 1
-    
+
     if day < 1:
         if mon == 1:
             year = year - 1
@@ -233,51 +258,56 @@ def LastHalfDay(date):
         else:
             mon = mon - 1
             day = GetDayNumber(year, mon)
-            
+
     return datetime.datetime(year, mon, day, h)
+
 
 def GetNumberList(s):
     a = []
     iCursor = 0
     for i in range(len(s)):
         if not s[i].isdigit():
-            if(s[iCursor:i].isdigit()):
+            if (s[iCursor:i].isdigit()):
                 a.append(int(s[iCursor:i]))
             iCursor = i + 1
     if s[iCursor:].isdigit():
         a.append(int(s[iCursor:]))
     return a
 
+
 def NashCoef(qObs, qSimu):
     n = len(qObs)
-    ave = sum(qObs)/n
+    ave = sum(qObs) / n
     a1 = 0
     a2 = 0
     for i in range(n):
-        a1 = a1 + pow(qObs[i]-qSimu[i], 2)
+        a1 = a1 + pow(qObs[i] - qSimu[i], 2)
         a2 = a2 + pow(qObs[i] - ave, 2)
-    return 1 - a1/a2
+    return 1 - a1 / a2
+
 
 def RMSE(list1, list2):
     n = len(list1)
     s = 0
     for i in range(n):
         s = s + pow(list1[i] - list2[i], 2)
-    return math.sqrt(s/n)
+    return math.sqrt(s / n)
+
 
 def GetRasterStat(rasterFile):
-    dataset = gdal.Open(rasterFile,GA_ReadOnly)
+    dataset = gdal.Open(rasterFile, GA_ReadOnly)
     if not dataset is None:
         band = dataset.GetRasterBand(1)
         max = band.GetMaximum()
         min = band.GetMinimum()
         if max is None or min is None:
-            (min,max) = band.ComputeRasterMinMax(1)
+            (min, max) = band.ComputeRasterMinMax(1)
         mean, std = band.ComputeBandStats()
         band = None
         dataset = None
-        return (max,min,mean,std)
+        return (max, min, mean, std)
     dataset = None
+
 
 def WriteAscFile(filename, data, xsize, ysize, geotransform, noDataValue):
     header = """NCOLS %d
@@ -286,16 +316,18 @@ XLLCENTER %f
 YLLCENTER %f
 CELLSIZE %f
 NODATA_VALUE %f
-""" % (xsize, ysize, geotransform[0] + 0.5*geotransform[1], geotransform[3]-(ysize-0.5)*geotransform[1], geotransform[1], noDataValue)
-        
+""" % (xsize, ysize, geotransform[0] + 0.5 * geotransform[1], geotransform[3] - (ysize - 0.5) * geotransform[1],
+       geotransform[1], noDataValue)
+
     f = open(filename, 'w')
     f.write(header)
     for i in range(0, ysize):
         for j in range(0, xsize):
             f.write(str(data[i][j]) + "\t")
         f.write("\n")
-    f.close() 
-    
+    f.close()
+
+
 def WriteGTiffFile(filename, nRows, nCols, data, geotransform, srs, noDataValue, gdalType):
     format = "GTiff"
     driver = gdal.GetDriverByName(format)
@@ -304,8 +336,9 @@ def WriteGTiffFile(filename, nRows, nCols, data, geotransform, srs, noDataValue,
     ds.SetProjection(srs.ExportToWkt())
     ds.GetRasterBand(1).SetNoDataValue(noDataValue)
     ds.GetRasterBand(1).WriteArray(data)
-    
+
     ds = None
+
 
 def WriteGTiffFileByMask(filename, data, mask, gdalType):
     format = "GTiff"
@@ -315,11 +348,11 @@ def WriteGTiffFileByMask(filename, data, mask, gdalType):
     ds.SetProjection(mask.srs.ExportToWkt())
     ds.GetRasterBand(1).SetNoDataValue(mask.noDataValue)
     ds.GetRasterBand(1).WriteArray(data)
-    
-    ds = None
-    
 
-def MaskRaster(cppDir, maskFile, inputFile, outputFile, outputAsc=False, noDataValue=DEFAULT_NODATA):
+    ds = None
+
+
+def MaskRaster(cppDir, maskFile, inputFile, outputFile, outputAsc = False, noDataValue = DEFAULT_NODATA):
     id = os.path.basename(maskFile) + "_" + os.path.basename(inputFile)
     configFile = "%s%smaskConfig_%s_%s.txt" % (cppDir, os.sep, id, str(time.time()))
     fMask = open(configFile, 'w')
@@ -334,6 +367,7 @@ def MaskRaster(cppDir, maskFile, inputFile, outputFile, outputAsc=False, noDataV
     os.system(s)
     os.remove(configFile)
 
+
 def StringInList(str, strList):
     newStrList = strList[:]
     for i in range(len(newStrList)):
@@ -342,11 +376,15 @@ def StringInList(str, strList):
         return True
     else:
         return False
+
+
 def StringMatch(str1, str2):
     if str1.lower() == str2.lower():
         return True
     else:
         return False
+
+
 def ReadDataItemsFromTxt(txtFile):
     '''
     Read data items include title from text file
@@ -357,11 +395,13 @@ def ReadDataItemsFromTxt(txtFile):
     dataItems = []
     for line in f:
         strLine = line.split('\n')[0]
-        if strLine !='' and strLine.find('#') < 0:
+        if strLine != '' and strLine.find('#') < 0:
             lineList = strLine.split('\t')
             dataItems.append(lineList)
     f.close()
     return dataItems
+
+
 def StripStr(str):
     ### @Function: Remove space(' ') and indent('\t') at the begin and end of the string
     oldStr = ''
@@ -371,9 +411,11 @@ def StripStr(str):
         newStr = oldStr.strip('\t')
         newStr = newStr.strip(' ')
     return newStr
-def SplitStr(str, spliter=None):
+
+
+def SplitStr(str, spliter = None):
     ### @Function: Split string by spliter space(' ') and indent('\t') as default
-    spliters = [' ','\t']
+    spliters = [' ', '\t']
     if spliter is not None:
         spliters.append(spliter)
     destStrs = []
@@ -394,19 +436,22 @@ def SplitStr(str, spliter=None):
             break
     return destStrs
 
+
 def IsSubString(SubStr, Str):
     if SubStr.lower() in Str.lower():
         return True
     else:
         return False
 
+
 def replaceByDict(srcfile, vDict, dstfile):
     srcR = ReadRaster(srcfile)
     srcData = srcR.data
     dstData = numpy.copy(srcData)
     for k, v in vDict.iteritems():
-        dstData[srcData==k] = v
-    WriteGTiffFile(dstfile,srcR.nRows,srcR.nCols,dstData,srcR.geotrans,srcR.srs,srcR.noDataValue,GDT_Float32)
+        dstData[srcData == k] = v
+    WriteGTiffFile(dstfile, srcR.nRows, srcR.nCols, dstData, srcR.geotrans, srcR.srs, srcR.noDataValue, GDT_Float32)
+
 
 def GetFileNameWithSuffixes(filePath, suffixes):
     listFiles = os.listdir(filePath)
@@ -416,17 +461,20 @@ def GetFileNameWithSuffixes(filePath, suffixes):
         if StringInList(ext, suffixes):
             reFiles.append(f)
     return reFiles
+
+
 def GetFullPathWithSuffixes(filePath, suffixes):
     fullPaths = []
     for name in GetFileNameWithSuffixes(filePath, suffixes):
         fullPaths.append(filePath + os.sep + name)
     return fullPaths
 
+
 ### TEST CODE
 if __name__ == "__main__":
-    #p = r'E:\data\model_data\model_dianbu_10m_longterm\data_prepare\spatial'
-    #print GetFileNameWithSuffixes(p,['.tif','.txt'])
-    #print GetFullPathWithSuffixes(p,['.tif','.txt'])
+    # p = r'E:\data\model_data\model_dianbu_10m_longterm\data_prepare\spatial'
+    # print GetFileNameWithSuffixes(p,['.tif','.txt'])
+    # print GetFullPathWithSuffixes(p,['.tif','.txt'])
     dist2Stream = r'E:\data_m\SEIMS\dianbu_30m_output\dist2Stream.tif'
     R = ReadRaster(dist2Stream)
     print "XMin: %f" % R.xMin
@@ -438,4 +486,4 @@ if __name__ == "__main__":
     print "Min : %f" % R.GetMin()
     print "Sum : %f" % R.GetSum()
     print "STD : %f" % R.GetSTD()
-    print "Value at (x, y): %f" % R.GetValueByXY(39542419.65,3543174.289)
+    print "Value at (x, y): %f" % R.GetValueByXY(39542419.65, 3543174.289)

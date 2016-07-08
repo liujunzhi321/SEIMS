@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void MainMongoDB(const char* modelStr, int nSubbasins, const char* host, int port, int dt)
+void MainMongoDB(const char* modelStr, const char* gridFSName, int nSubbasins, const char* host, int port, int dt)
 {
 	// connect to mongodb
 	mongo conn[1];
@@ -24,11 +24,11 @@ void MainMongoDB(const char* modelStr, int nSubbasins, const char* host, int por
 
 	if( MONGO_OK != status ) 
 	{ 
-		cout << "can not connect to mongodb.\n";
+		cout << "can not connect to MongoDB.\n";
 		exit(-1);
 	}
 
-	gridfs_init(conn, modelStr, "spatial", gfs); 
+	gridfs_init(conn, modelStr, gridFSName, gfs); 
 
 	for (int i = 1; i <= nSubbasins; i++)
 	{
@@ -69,11 +69,11 @@ int main(int argc, const char** argv)
 	const char* host = argv[1];
 	int port = atoi(argv[2]);
 	const char* modelName = argv[3];
+	const char* gridFSName = argv[4];
+	int dt = atoi(argv[5]);
+	int nSubbasins = atoi(argv[6]);
 
-	int dt = atoi(argv[4]);
-	int nSubbasins = atoi(argv[5]);
-
-	MainMongoDB(modelName, nSubbasins, host, port, dt);
+	MainMongoDB(modelName,gridFSName, nSubbasins, host, port, dt);
 
 	cout << " IUH calculation is OK!" << endl;
 	return 0;

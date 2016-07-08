@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#******************************************************************************
+# ******************************************************************************
 #  $Id: gdal_polygonize.py 25664 2013-02-22 15:43:33Z rouault $
 # 
 #  Project:  GDAL Python Interface
 #  Purpose:  Application for converting raster data to a vector polygon layer.
 #  Author:   Frank Warmerdam, warmerdam@pobox.com
 # 
-#******************************************************************************
+# ******************************************************************************
 #  Copyright (c) 2008, Frank Warmerdam
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,7 +27,7 @@
 #  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
-#******************************************************************************
+# ******************************************************************************
 
 try:
     from osgeo import gdal, ogr, osr
@@ -37,7 +37,8 @@ except ImportError:
 import sys
 import os.path
 
-print gdal.__version__
+
+# print gdal.__version__
 
 def Usage():
     print("""
@@ -45,6 +46,7 @@ gdal_polygonize [-8] [-nomask] [-mask filename] raster_file [-b band]
                 [-q] [-f ogr_format] out_file [layer] [fieldname]
 """)
     sys.exit(1)
+
 
 # =============================================================================
 # 	Mainline
@@ -64,9 +66,9 @@ dst_field = -1
 mask = 'default'
 
 gdal.AllRegister()
-argv = gdal.GeneralCmdLineProcessor( sys.argv )
+argv = gdal.GeneralCmdLineProcessor(sys.argv)
 if argv is None:
-    sys.exit( 0 )
+    sys.exit(0)
 
 # Parse command line arguments.
 i = 1
@@ -82,14 +84,14 @@ while i < len(argv):
 
     elif arg == '-8':
         options.append('8CONNECTED=8')
-        
+
     elif arg == '-nomask':
         mask = 'none'
-        
+
     elif arg == '-mask':
         i = i + 1
         mask = argv[i]
-        
+
     elif arg == '-b':
         i = i + 1
         src_band_n = int(argv[i])
@@ -116,7 +118,7 @@ if src_filename is None or dst_filename is None:
 
 if dst_layername is None:
     dst_layername = 'out'
-    
+
 # =============================================================================
 # 	Verify we have next gen bindings with the polygonize method.
 # =============================================================================
@@ -133,8 +135,8 @@ except:
 #	Open source file
 # =============================================================================
 
-src_ds = gdal.Open( src_filename )
-    
+src_ds = gdal.Open(src_filename)
+
 if src_ds is None:
     print('Unable to open %s' % src_filename)
     sys.exit(1)
@@ -146,7 +148,7 @@ if mask is 'default':
 elif mask is 'none':
     maskband = None
 else:
-    mask_ds = gdal.Open( mask )
+    mask_ds = gdal.Open(mask)
     maskband = mask_ds.GetRasterBand(1)
 
 # =============================================================================
@@ -154,8 +156,8 @@ else:
 # =============================================================================
 
 try:
-    gdal.PushErrorHandler( 'CPLQuietErrorHandler' )
-    dst_ds = ogr.Open( dst_filename, update=1 )
+    gdal.PushErrorHandler('CPLQuietErrorHandler')
+    dst_ds = ogr.Open(dst_filename, update = 1)
     gdal.PopErrorHandler()
 except:
     dst_ds = None
@@ -167,7 +169,7 @@ if dst_ds is None:
     drv = ogr.GetDriverByName(format)
     if not quiet_flag:
         print('Creating output %s of format %s.' % (dst_filename, format))
-    dst_ds = drv.CreateDataSource( dst_filename )
+    dst_ds = drv.CreateDataSource(dst_filename)
 
 # =============================================================================
 #       Find or create destination layer.
@@ -182,15 +184,15 @@ if dst_layer is None:
     srs = None
     if src_ds.GetProjectionRef() != '':
         srs = osr.SpatialReference()
-        srs.ImportFromWkt( src_ds.GetProjectionRef() )
-        
-    dst_layer = dst_ds.CreateLayer(dst_layername, srs = srs )
+        srs.ImportFromWkt(src_ds.GetProjectionRef())
+
+    dst_layer = dst_ds.CreateLayer(dst_layername, srs = srs)
 
     if dst_fieldname is None:
         dst_fieldname = 'DN'
-        
-    fd = ogr.FieldDefn( dst_fieldname, ogr.OFTInteger )
-    dst_layer.CreateField( fd )
+
+    fd = ogr.FieldDefn(dst_fieldname, ogr.OFTInteger)
+    dst_layer.CreateField(fd)
     dst_field = 0
 else:
     if dst_fieldname is not None:
@@ -206,18 +208,11 @@ if quiet_flag:
     prog_func = None
 else:
     prog_func = gdal.TermProgress
-    
-result = gdal.Polygonize( srcband, maskband, dst_layer, dst_field, options,
-                          callback = prog_func )
-    
+
+result = gdal.Polygonize(srcband, maskband, dst_layer, dst_field, options,
+                         callback = prog_func)
+
 srcband = None
 src_ds = None
 dst_ds = None
 mask_ds = None
-
-
-
-
-
-
-

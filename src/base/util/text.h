@@ -233,6 +233,7 @@
 
 #define Type_Scenario			"SCENARIO"
 #define Type_Reach				"REACH"
+#define Type_LookupTable	"LOOKUPTABLE"
 #define Type_LapseRateArray		"LAPSERATEARRAY"
 #define Type_SiteInformation	"SITEINFORMATION"
 #define Type_Raster1D		"RASTER1D"

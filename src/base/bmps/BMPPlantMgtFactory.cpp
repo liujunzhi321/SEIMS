@@ -139,8 +139,8 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string& bmpDBName)
 void BMPPlantMgtFactory::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Plant Management Factory: " <<endl<< "SubScenario ID: "<<m_subScenarioId
-		<< " Name = " << m_name<<endl;
+	*fs	<< "Plant Management Factory: " <<endl<< 
+		"    SubScenario ID: "<<m_subScenarioId<< " Name = " << m_name<<endl;
 	for (vector<int>::iterator it = m_bmpSequence.begin(); it != m_bmpSequence.end(); it++)
 	{
 		map<int, PlantManagementOperation*>::iterator findIdx = m_bmpPlantOps.find(*it);

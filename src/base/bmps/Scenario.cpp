@@ -251,8 +251,7 @@ void Scenario::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
 
-	*fs << "Scenario" << endl;
-	*fs << "ID:" << this->m_id << endl;
+	*fs << "Scenario ID:" << this->m_id << endl;
 	*fs << "Name:" << this->m_name << endl;
 	*fs << "*** All the BMPs ***" << endl;
 	map<int,BMPFactory*>::iterator it;
