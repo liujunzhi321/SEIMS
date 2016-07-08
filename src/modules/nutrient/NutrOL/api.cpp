@@ -45,20 +45,22 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter(VAR_STREAM_LINK, UNIT_NON_DIM, DESC_STREAM_LINK, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_CHWIDTH, UNIT_LEN_M, DESC_CHWIDTH, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_LATNO3, UNIT_CONT_KGHA, DESC_LATNO3, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_SURQNO3, UNIT_CONT_KGHA, DESC_SURQNO3, Source_ParameterDB, DT_Raster1D);
-	//mdi.AddParameter(VAR_AMMONIAN, UNIT_CONT_KGKM2, DESC_AMMONIAN, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_SURQSOLP, UNIT_CONT_KGHA, DESC_SURQSOLP, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_NO3GW, UNIT_CONT_KGHA, DESC_NO3GW, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_MINPGW, UNIT_CONT_KGHA, DESC_MINPGW, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_SEDORGN, UNIT_CONT_KGHA, DESC_SEDORGN, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_SEDORGP, UNIT_CONT_KGHA, DESC_SEDORGP, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_SEDMINPA, UNIT_CONT_KGHA, DESC_SEDMINPA, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_SEDMINPS, UNIT_CONT_KGHA, DESC_SEDMINPS, Source_ParameterDB, DT_Raster1D);
-	
+
 	mdi.AddParameter(Tag_FLOWIN_INDEX_D8, UNIT_NON_DIM, DESC_FLOWIN_INDEX_D8, Source_ParameterDB, DT_Array2D);
 	mdi.AddParameter(Tag_ROUTING_LAYERS, UNIT_NON_DIM, DESC_ROUTING_LAYERS, Source_ParameterDB, DT_Array2D);
 
+	// set input from other modules
+	mdi.AddInput(VAR_LATNO3, UNIT_CONT_KGHA, DESC_LATNO3, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SURQNO3, UNIT_CONT_KGHA, DESC_SURQNO3, Source_Module, DT_Raster1D);
+	//mdi.AddInput(VAR_AMMONIAN, UNIT_CONT_KGKM2, DESC_AMMONIAN, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SURQSOLP, UNIT_CONT_KGHA, DESC_SURQSOLP, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_NO3GW, UNIT_CONT_KGHA, DESC_NO3GW, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_MINPGW, UNIT_CONT_KGHA, DESC_MINPGW, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SEDORGN, UNIT_CONT_KGHA, DESC_SEDORGN, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SEDORGP, UNIT_CONT_KGHA, DESC_SEDORGP, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SEDMINPA, UNIT_CONT_KGHA, DESC_SEDMINPA, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SEDMINPS, UNIT_CONT_KGHA, DESC_SEDMINPS, Source_Module, DT_Raster1D);
+	
 	// set the output variables
 	mdi.AddOutput(VAR_SURQNO3_CH, UNIT_KG, DESC_SURQNO3_CH, DT_Raster1D);
 	mdi.AddOutput(VAR_LATNO3_CH, UNIT_KG, DESC_LATNO3_CH, DT_Raster1D);

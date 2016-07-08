@@ -33,7 +33,37 @@ NutrientCHRoute::NutrientCHRoute(void):
 }
 
 NutrientCHRoute::~NutrientCHRoute(void) {
-	///TODO
+	if (m_algae != NULL){
+		delete [] m_algae;
+	}
+	if (m_organicn != NULL){
+		delete [] m_organicn;
+	}
+	if (m_organicp != NULL){
+		delete [] m_organicp;
+	}
+	if (m_ammonian != NULL){
+		delete [] m_ammonian;
+	}
+	if (m_nitriten != NULL){
+		delete [] m_nitriten;
+	}
+	if (m_nitraten != NULL){
+		delete [] m_nitraten;
+	}
+	if (m_disolvp != NULL){
+		delete [] m_disolvp;
+	}
+	if (m_rch_cbod != NULL){
+		delete [] m_rch_cbod;
+	}
+	if (m_rch_dox != NULL){
+		delete [] m_rch_dox;
+	}
+	if (m_chlora != NULL){
+		delete [] m_chlora;
+	}
+	
 }
 bool NutrientCHRoute::CheckInputSize(const char* key, int n) {
 	if(n <= 0) {

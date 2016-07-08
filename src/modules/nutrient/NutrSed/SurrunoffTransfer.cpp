@@ -19,14 +19,15 @@ using namespace std;
 SurrunoffTransfer::SurrunoffTransfer(void):
 	//input 
 	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_sedimentYield(NULL), m_surfr(NULL), m_sol_bd(NULL), m_sol_z(NULL),
-	m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_mp(NULL), 
+	m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL),
 	//output 
 	m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL)
 {
 
 }
 
-SurrunoffTransfer::~SurrunoffTransfer(void) {
+SurrunoffTransfer::~SurrunoffTransfer(void) 
+{
 	///TODO
 }
 bool SurrunoffTransfer::CheckInputSize(const char* key, int n) {
@@ -62,7 +63,7 @@ bool SurrunoffTransfer::CheckInputData() {
 	if(this -> m_sol_aorgn == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_sol_fon == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_sol_fop == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_sol_mp == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
+	//if(this -> m_sol_mp == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
 	return true;
 }
 void SurrunoffTransfer::SetValue(const char* key, float value)
@@ -110,7 +111,7 @@ void SurrunoffTransfer::Set2DData(const char* key, int nRows, int nCols, float**
 	else if (StringMatch(sk, VAR_SOL_FON)) {this -> m_sol_fon = data;}
 	else if (StringMatch(sk, VAR_SOL_ACTP)) {this -> m_sol_actp = data;}
 	else if (StringMatch(sk, VAR_SOL_STAP)) {this -> m_sol_stap = data;}
-	else if (StringMatch(sk, VAR_SOL_MP)) {this -> m_sol_mp = data;}
+	//else if (StringMatch(sk, VAR_SOL_MP)) {this -> m_sol_mp = data;}
 	else {
 		throw ModelException("SurTra","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -128,7 +129,7 @@ void SurrunoffTransfer::initialOutputs() {
 			m_sedminps[i] = 0.;
 		}
 	}
-	if(m_sol_mp == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_mp, 0.f);}
+	//if(m_sol_mp == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_mp, 0.f);}
 }
 int SurrunoffTransfer::Execute() {
 	if(!this -> CheckInputData()) { 
@@ -212,9 +213,9 @@ void SurrunoffTransfer::OrgpAttachedtoSed(int i, float enratio){
 			float sol_attp_a = 0;
 			float sol_attp_s = 0;
 			//Calculate sediment
-			sol_attp = m_sol_orgp[i][0] + m_sol_fop[i][0] + m_sol_mp[i][0] + m_sol_actp[i][0] + m_sol_stap[i][0];
+			sol_attp = m_sol_orgp[i][0] + m_sol_fop[i][0] + m_sol_actp[i][0] + m_sol_stap[i][0];
 			if (sol_attp > 1e-3) {
-				sol_attp_o = (m_sol_orgp[i][0] + m_sol_fop[i][0]+ m_sol_mp[i][0]) / sol_attp;
+				sol_attp_o = (m_sol_orgp[i][0] + m_sol_fop[i][0]) / sol_attp;
 				sol_attp_a = m_sol_actp[i][0] / sol_attp;
 				sol_attp_s = m_sol_stap[i][0] / sol_attp;
 			}
@@ -238,7 +239,6 @@ void SurrunoffTransfer::OrgpAttachedtoSed(int i, float enratio){
 			if (porgg > 1e-3) {
 				m_sol_orgp[i][0] = m_sol_orgp[i][0] - m_sedorgp[i] * (m_sol_orgp[i][0] / porgg);
 				m_sol_fop[i][0] = m_sol_fop[i][0] - m_sedorgp[i] * (m_sol_fop[i][0] / porgg);
-				m_sol_mp[i][0] = m_sol_mp[i][0] - m_sedorgp[i] * (m_sol_mp[i][0] / porgg);
 			}
 			m_sol_actp[i][0] = m_sol_actp[i][0] - m_sedminpa[i];
 			m_sol_stap[i][0] = m_sol_stap[i][0] - m_sedminps[i];
@@ -249,10 +249,6 @@ void SurrunoffTransfer::OrgpAttachedtoSed(int i, float enratio){
 			if (m_sol_fop[i][0] < 0) {
 				m_sedorgp[i] = m_sedorgp[i] + m_sol_fop[i][0];
 				m_sol_fop[i][0] = 0;
-			}
-			if (m_sol_mp[i][0] < 0) {
-				m_sedorgp[i] = m_sedorgp[i] + m_sol_mp[i][0];
-				m_sol_mp[i][0] = 0;
 			}
 			if (m_sol_actp[i][0] < 0) {
 				m_sedminpa[i] = m_sedminpa[i] + m_sol_actp[i][0];
