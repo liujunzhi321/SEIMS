@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 # Calculating channel width using accumulated data
 # Author: Junzhi Liu
 # Revised: Liang-Jun Zhu, 2016-7-6
@@ -7,7 +7,8 @@
 #
 
 from util import *
-from text import *
+from config import *
+
 
 def chwidth(accFile, chwidthFile):
     accR = ReadRaster(accFile)
@@ -23,14 +24,14 @@ def chwidth(accFile, chwidthFile):
     # noDataValue = band.GetNoDataValue()
     # if noDataValue is None:
     #     noDataValue = DEFAULT_NODATA
-        
+
     # srs = osr.SpatialReference()
     # srs.ImportFromWkt(ds.GetProjection())
     #
     # geotransform = ds.GetGeoTransform()
     # dx = geotransform[1]
-    cellArea = dx*dx
-    
+    cellArea = dx * dx
+
     # storm frequency   a      b
     # 2                 1      0.56
     # 10                1.2    0.56
@@ -52,6 +53,8 @@ def chwidth(accFile, chwidthFile):
     #
     WriteGTiffFile(chwidthFile, ysize, xsize, width, accR.geotrans, accR.srs, noDataValue, gdal.GDT_Float32)
     return width
+
+
 if __name__ == '__main__':
     accFile = WORKING_DIR + os.sep + accM
     chwidthFile = WORKING_DIR + os.sep + chwidthName

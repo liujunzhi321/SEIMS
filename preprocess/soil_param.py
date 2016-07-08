@@ -1,45 +1,41 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 10 15:36:19 2013
+#! /usr/bin/env python
+# coding=utf-8
+# Calculating depression capacity
+# Author: Junzhi Liu, 2013-1-10
+# Revised: Liang-Jun Zhu, Huiran Gao, Fang Shen
+#
+#
 
-@author: junzhi
-@revised: LiangJun Zhu, Huiran Gao, Fang Shen
-@date: 2016-5-21
-"""
 from math import *
 from soil_texture import *
 from soil_chem import *
 from util import *
 import numpy
-# from osgeo import gdal
-# from pyproj import Proj, transform
-# #from numpy import *
-# import os
 
 
-#SoilLAYERS(:): number of soil layers
-#SoilDepth(:,:)    |mm    : depth from the surface to bottom of soil layer
-#OM(:,:)           |%     : organic matter content
-#CLAY(:,:)         |%     : percent clay content in soil material,diameter < 0.002 mm
-#SILT(:,:)         |%     : percent silt content in soil material,diameter between 0.002 mm and 0.05 mm
-#SAND(:,:)         |%     : percent sand content in soil material,diameter between 0.05 mm and 2 mm
-#ROCK(:,:)         |%     : percent of rock fragments content in soil material,diameter > 2 mm
-#Sol_ZMX(:)        |mm    : maximum rooting depth of soil profile
-#ANION_EXCL(:): fraction of porosity (void space) from which anions are excluded,default is 0.5
-#Sol_CRK(:): crack volume potential of soil expressed as a fraction of the total soil volume
-#Density(:,:)      |Mg/m3 or g/cm3 : bulk density of the soil
-#Conductivity      |mm/hr    : saturated hydraulic conductivity
-#WiltingPoint(:,:) |mm H2O / mm soil : water content of soil at -1.5 MPa (wilting point)
-#FieldCap(:,:)     |mm H2O / mm soil  : amount of water available to plants in soil layer at field capacity
-#Sol_AWC(:,:)      |mm H2O / mm soil : available water capacity of soil layer
-#POROSITY(:,:)    : | None | porosity
-#Poreindex(:,:)   : | None | pore disconnectedness index
-#USLE_K : | None |  USLE K factor
-#Sol_ALB : albedo of soil surface
-#Soil_Texture : soil texture
-#Hydro_Group : Hydrological group, 1,2,3,and 4 to represent A,B,C,and D
-#Sol_SUMFC  :  |mm H2O  |amount of water held in the soil profile at field capacity
-#Sol_SUMWP :  |mm H2O  |amount of water held in the soil profile at wilting point
+# SoilLAYERS(:): number of soil layers
+# SoilDepth(:,:)    |mm    : depth from the surface to bottom of soil layer
+# OM(:,:)           |%     : organic matter content
+# CLAY(:,:)         |%     : percent clay content in soil material,diameter < 0.002 mm
+# SILT(:,:)         |%     : percent silt content in soil material,diameter between 0.002 mm and 0.05 mm
+# SAND(:,:)         |%     : percent sand content in soil material,diameter between 0.05 mm and 2 mm
+# ROCK(:,:)         |%     : percent of rock fragments content in soil material,diameter > 2 mm
+# Sol_ZMX(:)        |mm    : maximum rooting depth of soil profile
+# ANION_EXCL(:): fraction of porosity (void space) from which anions are excluded,default is 0.5
+# Sol_CRK(:): crack volume potential of soil expressed as a fraction of the total soil volume
+# Density(:,:)      |Mg/m3 or g/cm3 : bulk density of the soil
+# Conductivity      |mm/hr    : saturated hydraulic conductivity
+# WiltingPoint(:,:) |mm H2O / mm soil : water content of soil at -1.5 MPa (wilting point)
+# FieldCap(:,:)     |mm H2O / mm soil  : amount of water available to plants in soil layer at field capacity
+# Sol_AWC(:,:)      |mm H2O / mm soil : available water capacity of soil layer
+# POROSITY(:,:)    : | None | porosity
+# Poreindex(:,:)   : | None | pore disconnectedness index
+# USLE_K : | None |  USLE K factor
+# Sol_ALB : albedo of soil surface
+# Soil_Texture : soil texture
+# Hydro_Group : Hydrological group, 1,2,3,and 4 to represent A,B,C,and D
+# Sol_SUMFC  :  |mm H2O  |amount of water held in the soil profile at field capacity
+# Sol_SUMWP :  |mm H2O  |amount of water held in the soil profile at wilting point
 # sol_SUMPOR   :  |mm            |porosity of soil profile
 # sol_AVPOR   : |none          |average porosity for entire soil profile
 
@@ -49,39 +45,40 @@ class SoilProperty:
     base class of Soil properties
     :method: init(SEQN, SNAM)
     '''
+
     def __init__(self, SEQN, SNAM):
-        self.SEQN       = SEQN
-        self.SNAM       = SNAM
-        self.SoilLAYERS       = DEFAULT_NODATA
-        self.SoilDepth      = []
-        self.SoilThick      = []
-        self.OM     = []
-        self.CLAY       = []
-        self.SILT       = []
-        self.SAND       = []
-        self.ROCK       = []
-        self.Sol_ZMX    = DEFAULT_NODATA
+        self.SEQN = SEQN
+        self.SNAM = SNAM
+        self.SoilLAYERS = DEFAULT_NODATA
+        self.SoilDepth = []
+        self.SoilThick = []
+        self.OM = []
+        self.CLAY = []
+        self.SILT = []
+        self.SAND = []
+        self.ROCK = []
+        self.Sol_ZMX = DEFAULT_NODATA
         self.ANION_EXCL = DEFAULT_NODATA
-        self.Sol_CRK    = DEFAULT_NODATA
-        self.Density     = []
-        self.Conductivity      = []
-        self.WiltingPoint     = []
-        self.FieldCap     = []
-        self.Sol_AWC    = []
+        self.Sol_CRK = DEFAULT_NODATA
+        self.Density = []
+        self.Conductivity = []
+        self.WiltingPoint = []
+        self.FieldCap = []
+        self.Sol_AWC = []
         self.POROSITY = []
-        self.Poreindex= []
+        self.Poreindex = []
         self.USLE_K = []
-        self.Sol_ALB    = DEFAULT_NODATA
-        self.Soil_Texture    = DEFAULT_NODATA
+        self.Sol_ALB = DEFAULT_NODATA
+        self.Soil_Texture = DEFAULT_NODATA
         self.Hydro_Group = DEFAULT_NODATA
         self.Sol_SUMUL = 0.
-        self.Sol_SUMFC  = 0.
+        self.Sol_SUMFC = 0.
         self.Sol_SUMWP = 0.
-        self.Sol_SUMPOR  = 0.
+        self.Sol_SUMPOR = 0.
         self.Sol_AVPOR = DEFAULT_NODATA
-        #self.Residue     = [] TODO: residue should be defined in Management module or dependent on landuse
+        # self.Residue     = [] TODO: residue should be defined in Management module or dependent on landuse
         self.Sol_CBN = []  ##
-        self.Sol_N = [] ## added by Liangjun, according to readsol.f in SWAT
+        self.Sol_N = []  ## added by Liangjun, according to readsol.f in SWAT
         ### Here after are soil chemical properties
         self.Sol_FOP = []
         self.Sol_fon = []
@@ -103,7 +100,8 @@ class SoilProperty:
         solDict = self.__dict__
         solDict.pop('SNAM')
         return solDict
-    def CheckData(self): ## check the required input, and calculate all physical and chemical properties
+
+    def CheckData(self):  ## check the required input, and calculate all physical and chemical properties
         ###set a soil layer at dep_new and adjust all lower layers
         ### a septic layer:0-10mm,accordig to swat layersplit.f
         if self.SoilLAYERS == DEFAULT_NODATA:
@@ -111,49 +109,49 @@ class SoilProperty:
         dep_new = 10
         if self.SoilDepth[0] - dep_new >= 10.:
             self.SoilLAYERS += 1
-            self.SoilDepth.insert(0,dep_new)
-            self.OM.insert(0,self.OM[0])
-            self.CLAY.insert(0,self.CLAY[0])
-            self.SILT.insert(0,self.SILT[0])
-            self.SAND.insert(0,self.SAND[0])
-            self.ROCK.insert(0,self.ROCK[0])
+            self.SoilDepth.insert(0, dep_new)
+            self.OM.insert(0, self.OM[0])
+            self.CLAY.insert(0, self.CLAY[0])
+            self.SILT.insert(0, self.SILT[0])
+            self.SAND.insert(0, self.SAND[0])
+            self.ROCK.insert(0, self.ROCK[0])
             if self.WiltingPoint != []:
-                self.WiltingPoint.insert(0,DEFAULT_NODATA)
+                self.WiltingPoint.insert(0, DEFAULT_NODATA)
             if self.Density != []:
-                self.Density.insert(0,DEFAULT_NODATA)
+                self.Density.insert(0, DEFAULT_NODATA)
             if self.FieldCap != []:
-                self.FieldCap.insert(0,DEFAULT_NODATA)
+                self.FieldCap.insert(0, DEFAULT_NODATA)
             if self.Sol_AWC != []:
-                self.Sol_AWC.insert(0,DEFAULT_NODATA)
+                self.Sol_AWC.insert(0, DEFAULT_NODATA)
             if self.Poreindex != []:
-                self.Poreindex.insert(0,DEFAULT_NODATA)
+                self.Poreindex.insert(0, DEFAULT_NODATA)
             if self.POROSITY != []:
-                self.POROSITY.insert(0,DEFAULT_NODATA)
+                self.POROSITY.insert(0, DEFAULT_NODATA)
             if self.USLE_K != []:
-                self.USLE_K.insert(0,DEFAULT_NODATA)
+                self.USLE_K.insert(0, DEFAULT_NODATA)
         for l in range(self.SoilLAYERS):
             if l == 0:
                 self.SoilThick.append(self.SoilDepth[l])
             else:
                 self.SoilThick.append(self.SoilDepth[l] - self.SoilDepth[l - 1])
-        
+
         if self.SoilDepth == [] or len(self.SoilDepth) != self.SoilLAYERS or DEFAULT_NODATA in self.SoilDepth:
             raise IndexError("Soil depth must have a size equal to soil layers number!")
         if self.OM == [] or len(self.OM) != self.SoilLAYERS:
             raise IndexError("Soil organic matter must have a size equal to soil layers number!")
         elif DEFAULT_NODATA in self.OM and self.OM.index(DEFAULT_NODATA) >= 2 and self.SoilLAYERS >= 3:
-            for i in range(2,self.SoilLAYERS):
+            for i in range(2, self.SoilLAYERS):
                 if self.OM[i] == DEFAULT_NODATA:
-                    self.OM[i] = self.OM[i-1] * numpy.exp(-.001 * self.SoilThick[i]) ## mm -> m
+                    self.OM[i] = self.OM[i - 1] * numpy.exp(-.001 * self.SoilThick[i])  ## mm -> m
         ### sol_cbn = sol_om * 0.58
         for i in range(self.SoilLAYERS):
-            if(self.OM[i] * 0.58 < UTIL_ZERO):
+            if (self.OM[i] * 0.58 < UTIL_ZERO):
                 self.Sol_CBN.append(0.10)
             else:
                 self.Sol_CBN.append(self.OM[i] * 0.58)
         ### sol_n = sol_cbn/11.
         for i in range(self.SoilLAYERS):
-            if(self.OM[i] * 0.58 < UTIL_ZERO):
+            if (self.OM[i] * 0.58 < UTIL_ZERO):
                 self.Sol_N.append(0.10 / 11.0)
             else:
                 self.Sol_N.append(self.OM[i] * 0.58 / 11.0)
@@ -171,16 +169,16 @@ class SoilProperty:
         tmp_sat = []
         tmp_wp = []
         for i in range(self.SoilLAYERS):
-            s = self.SAND[i] * 0.01 ## % -> decimal
+            s = self.SAND[i] * 0.01  ## % -> decimal
             c = self.CLAY[i] * 0.01
             om = self.OM[i]
-            wpt = -0.024*s + 0.487*c + 0.006*om + 0.005*s*om - 0.013*c*om + 0.068*s*c + 0.031
-            tmp_wp.append(1.14*wpt - 0.02)
-            fct = -0.251*s + 0.195*c + 0.011*om + 0.006*s*om - 0.027*c*om + 0.452*s*c + 0.299
-            fc = fct + 1.283*fct*fct - 0.374*fct - 0.015
-            s33t = 0.278*s + 0.034*c + 0.022*om - 0.018*s*om - 0.027*c*om - 0.584*s*c + 0.078
-            s33 = 1.636*s33t - 0.107
-            sat = fc + s33 - 0.097*s + 0.043
+            wpt = -0.024 * s + 0.487 * c + 0.006 * om + 0.005 * s * om - 0.013 * c * om + 0.068 * s * c + 0.031
+            tmp_wp.append(1.14 * wpt - 0.02)
+            fct = -0.251 * s + 0.195 * c + 0.011 * om + 0.006 * s * om - 0.027 * c * om + 0.452 * s * c + 0.299
+            fc = fct + 1.283 * fct * fct - 0.374 * fct - 0.015
+            s33t = 0.278 * s + 0.034 * c + 0.022 * om - 0.018 * s * om - 0.027 * c * om - 0.584 * s * c + 0.078
+            s33 = 1.636 * s33t - 0.107
+            sat = fc + s33 - 0.097 * s + 0.043
             tmp_fc.append(fc)
             tmp_sat.append(sat)
         if self.Sol_ZMX == DEFAULT_NODATA or self.Sol_ZMX > self.SoilDepth[-1]:
@@ -221,8 +219,8 @@ class SoilProperty:
                 if self.Density != [] and len(self.Density) == self.SoilLAYERS:
                     p_df = self.Density[i]
                 else:
-                    p_df = 2.65*(1.0 - sat)
-                sat_df = 1 - p_df/2.65
+                    p_df = 2.65 * (1.0 - sat)
+                sat_df = 1 - p_df / 2.65
                 tmp_fc_bdeffect.append(fc - 0.2 * (sat - sat_df))
             if DEFAULT_NODATA in self.FieldCap:
                 for i in range(self.SoilLAYERS):
@@ -240,11 +238,11 @@ class SoilProperty:
                 if self.Sol_AWC[i] == DEFAULT_NODATA:
                     self.Sol_AWC[i] = self.FieldCap[i] - self.WiltingPoint[i]
         for i in range(self.SoilLAYERS):
-            if(self.Sol_AWC[i] <= 0.):
+            if (self.Sol_AWC[i] <= 0.):
                 self.Sol_AWC[i] = 0.005
-            elif(self.Sol_AWC[i] <= 0.01):
+            elif (self.Sol_AWC[i] <= 0.01):
                 self.Sol_AWC[i] = 0.01
-            elif(self.Sol_AWC[i] >= 0.8):
+            elif (self.Sol_AWC[i] >= 0.8):
                 self.Sol_AWC[i] = 0.8
         if self.Poreindex != [] and len(self.Poreindex) != self.SoilLAYERS:
             raise IndexError("Pore disconnectedness index must have a size equal to soil layers number!")
@@ -263,7 +261,7 @@ class SoilProperty:
             for i in range(self.SoilLAYERS):
                 if self.POROSITY[i] == DEFAULT_NODATA:
                     self.POROSITY[i] = 1 - self.Density[i] / 2.65
-        tmp_sol_up = []        ## according to swat soil_phys.f
+        tmp_sol_up = []  ## according to swat soil_phys.f
         tmp_sol_wp = []
         tmp_dep = []
         xx = 0
@@ -273,7 +271,7 @@ class SoilProperty:
             tmp_dep.append(dep)
         for i in range(self.SoilLAYERS):
             sol_wp = 0.4 * self.CLAY[i] * 0.01 * self.Density[i]
-            sol_por = 1 - self.Density[i]/2.65
+            sol_por = 1 - self.Density[i] / 2.65
             sol_up = sol_wp + self.Sol_AWC[i]
             if sol_por <= sol_up:
                 sol_up = sol_por - 0.05
@@ -291,7 +289,7 @@ class SoilProperty:
                 self.Sol_SUMFC += (tmp_sol_up[i] - tmp_sol_wp[i]) * tmp_dep[i]
         if self.Sol_SUMWP == 0:
             for i in range(self.SoilLAYERS):
-                 self.Sol_SUMWP += tmp_sol_wp[i] * tmp_dep[i]
+                self.Sol_SUMWP += tmp_sol_wp[i] * tmp_dep[i]
         if self.Sol_SUMPOR == 0:
             for i in range(self.SoilLAYERS):
                 self.Sol_SUMPOR += self.POROSITY[i] * tmp_dep[i]
@@ -321,16 +319,16 @@ class SoilProperty:
             raise IndexError("USLE K factor must have a size equal to soil layers number!")
         elif self.USLE_K == [] or DEFAULT_NODATA in self.USLE_K:
             tmp_usle_k = []
-            for i in range(self.SoilLAYERS): ## According to Liu BY et al., (1999)
+            for i in range(self.SoilLAYERS):  ## According to Liu BY et al., (1999)
                 sand = self.SAND[i]
                 silt = self.SILT[i]
                 clay = self.CLAY[i]
                 cbn = self.OM[i] * 0.58
                 sn = 1 - sand * 0.01
-                a = (0.2+0.3*exp(-0.0256*sand*(1-silt*0.01)))
-                b = pow(silt/(clay+silt),0.3)
-                c = (1-0.25*cbn/(cbn+exp(3.72-2.95*cbn)))
-                d = (1-0.25*sn/(sn+exp(-5.51+22.9*sn)))
+                a = (0.2 + 0.3 * exp(-0.0256 * sand * (1 - silt * 0.01)))
+                b = pow(silt / (clay + silt), 0.3)
+                c = (1 - 0.25 * cbn / (cbn + exp(3.72 - 2.95 * cbn)))
+                d = (1 - 0.25 * sn / (sn + exp(-5.51 + 22.9 * sn)))
                 k = a * b * c * d
                 tmp_usle_k.append(k)
             if self.USLE_K == []:
@@ -373,50 +371,51 @@ class SoilProperty:
 ## TODO, add reference.
 def GetProperties(s, c, om):
     ## wilting point (SOL_WP)
-    wpt = -0.024*s + 0.487*c + 0.006*om + 0.005*s*om - 0.013*c*om + 0.068*s*c + 0.031
-    wp = 1.14*wpt - 0.02
-    
-    ## bulk density according to field capacity
-    fct = -0.251*s + 0.195*c + 0.011*om + 0.006*s*om - 0.027*c*om + 0.452*s*c + 0.299
-    fc = fct + 1.283*fct*fct - 0.374*fct - 0.015
+    wpt = -0.024 * s + 0.487 * c + 0.006 * om + 0.005 * s * om - 0.013 * c * om + 0.068 * s * c + 0.031
+    wp = 1.14 * wpt - 0.02
 
-    s33t = 0.278*s + 0.034*c + 0.022*om - 0.018*s*om - 0.027*c*om - 0.584*s*c + 0.078
-    s33 = 1.636*s33t - 0.107
-    sat = fc + s33 - 0.097*s + 0.043
-    pn = 2.65*(1.0 - sat)
+    ## bulk density according to field capacity
+    fct = -0.251 * s + 0.195 * c + 0.011 * om + 0.006 * s * om - 0.027 * c * om + 0.452 * s * c + 0.299
+    fc = fct + 1.283 * fct * fct - 0.374 * fct - 0.015
+
+    s33t = 0.278 * s + 0.034 * c + 0.022 * om - 0.018 * s * om - 0.027 * c * om - 0.584 * s * c + 0.078
+    s33 = 1.636 * s33t - 0.107
+    sat = fc + s33 - 0.097 * s + 0.043
+    pn = 2.65 * (1.0 - sat)
 
     ## field capacity (SOL_FC) with density effects (df)
     p_df = pn
-    sat_df = 1 - p_df/2.65  ## porosity
-    fc_df = fc - 0.2*(sat - sat_df)
+    sat_df = 1 - p_df / 2.65  ## porosity
+    fc_df = fc - 0.2 * (sat - sat_df)
 
     ## available water capacity (SOL_AWC)
     awc = fc_df - wp
 
     # pore disconnectedness index
     b = (log(1500.) - log(33.)) / (log(fc) - log(wp))
-    lamda = 1.0/b
-    
+    lamda = 1.0 / b
+
     # saturated conductivity
-    #print s, c, sat, fc, 3-lamda
-    ks = 1930*pow(sat-fc, 3-lamda)
-    
-    #print wp, fc_df, awc,
+    # print s, c, sat, fc, 3-lamda
+    ks = 1930 * pow(sat - fc, 3 - lamda)
+
+    # print wp, fc_df, awc,
     return wp, fc_df, sat_df, p_df, ks, lamda
-    #"WiltingPoint", "FieldCap", "Porosity","Density","Conductivity", "Poreindex"
+    # "WiltingPoint", "FieldCap", "Porosity","Density","Conductivity", "Poreindex"
+
 
 def GetValue(geoMask, geoMap, data, i, j):
-    #pGeo = Proj("+proj=longlat +ellps=krass +no_defs")
-    #pAlbers = Proj("+proj=aea +ellps=krass +lon_0=105 +lat_0=0 +lat_1=25 +lat_2=47")
-    #xMask = geoMask[0] + (j+0.5)*geoMask[1]
-    #yMask = geoMask[3] + (i+0.5)*geoMask[5]
-    #xMap, yMap = transform(pAlbers, pGeo, xMask, yMask)
+    # pGeo = Proj("+proj=longlat +ellps=krass +no_defs")
+    # pAlbers = Proj("+proj=aea +ellps=krass +lon_0=105 +lat_0=0 +lat_1=25 +lat_2=47")
+    # xMask = geoMask[0] + (j+0.5)*geoMask[1]
+    # yMask = geoMask[3] + (i+0.5)*geoMask[5]
+    # xMap, yMap = transform(pAlbers, pGeo, xMask, yMask)
 
-    xMap = geoMask[0] + (j+0.5)*geoMask[1]
-    yMap = geoMask[3] + (i+0.5)*geoMask[5]
+    xMap = geoMask[0] + (j + 0.5) * geoMask[1]
+    yMap = geoMask[3] + (i + 0.5) * geoMask[5]
 
-    jMap = (xMap - geoMap[0])/geoMap[1]
-    iMap = (yMap - geoMap[3])/geoMap[5]
+    jMap = (xMap - geoMap[0]) / geoMap[1]
+    iMap = (yMap - geoMap[3]) / geoMap[5]
 
     return data[iMap][jMap]
 

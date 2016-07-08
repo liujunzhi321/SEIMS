@@ -1,21 +1,23 @@
 #! /usr/bin/env python
-#coding=utf-8
-## @Precipitation daily
-#
+# coding=utf-8
+## @Import daily precipitation data
+# Author: Junzhi Liu
+# Revised: Liang-Jun Zhu
 #
 import pymongo
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from util import *
-from text import *
+from config import *
 
-def ImportPrecipitation(db,ClimateDateFile,sitesLoc):
+
+def ImportPrecipitation(db, ClimateDateFile, sitesLoc, isFirst):
     climDataItems = ReadDataItemsFromTxt(ClimateDateFile)
     climFlds = climDataItems[0]
     StationID = []
-    for i in range(3,len(climFlds)):
-         StationID.append(climFlds[i])
-    for i in range(1,len(climDataItems)):
+    for i in range(3, len(climFlds)):
+        StationID.append(climFlds[i])
+    for i in range(1, len(climDataItems)):
         dic = {}
         precipitation = []
         for j in range(len(climDataItems[i])):
@@ -27,51 +29,58 @@ def ImportPrecipitation(db,ClimateDateFile,sitesLoc):
                 curD = int(climDataItems[i][j])
             else:
                 for k in range(len(StationID)):
-                    if StringMatch(climFlds[j],StationID[k]):
+                    if StringMatch(climFlds[j], StationID[k]):
                         precipitation.append(float(climDataItems[i][j]))
 
         dt = datetime.datetime(curY, curM, curD, 0, 0)
         sec = time.mktime(dt.timetuple())
         utcTime = time.gmtime(sec)
-        dic[Tag_DT_LocalT] = dt
-        dic[Tag_DT_Zone] = time.timezone / 3600.
-        dic[Tag_DT_UTC] = datetime.datetime(utcTime[0], utcTime[1], utcTime[2], utcTime[3])
+        dic[Tag_DT_LocalT.upper()] = dt
+        dic[Tag_DT_Zone.upper()] = time.timezone / 3600.
+        dic[Tag_DT_UTC.upper()] = datetime.datetime(utcTime[0], utcTime[1], utcTime[2], utcTime[3])
 
         for j in range(len(StationID)):
             curDic = {}
-            curDic[Tag_DT_Value] = precipitation[j]
-            curDic[Tag_DT_StationID] = int(StationID[j])
-            curDic[Tag_DT_Type] = DataType_Precipitation
-            curDic[Tag_DT_Zone] = dic[Tag_DT_Zone]
-            curDic[Tag_DT_LocalT] = dic[Tag_DT_LocalT]
-            curDic[Tag_DT_UTC] = dic[Tag_DT_UTC]
-            curfilter = {Tag_DT_StationID: curDic[Tag_DT_StationID],
-                         Tag_DT_Type: curDic[Tag_DT_Type],
-                         Tag_DT_UTC: curDic[Tag_DT_UTC]}
-            db[Tag_ClimateDB_Data].find_one_and_replace(curfilter, curDic, upsert=True)
-            # db[Tag_ClimateDB_Data].insert_one(curDic)
+            curDic[Tag_DT_Value.upper()] = precipitation[j]
+            curDic[Tag_DT_StationID.upper()] = int(StationID[j])
+            curDic[Tag_DT_Type.upper()] = DataType_Precipitation
+            curDic[Tag_DT_Zone.upper()] = dic[Tag_DT_Zone.upper()]
+            curDic[Tag_DT_LocalT.upper()] = dic[Tag_DT_LocalT.upper()]
+            curDic[Tag_DT_UTC.upper()] = dic[Tag_DT_UTC.upper()]
+            curfilter = {Tag_DT_StationID.upper(): curDic[Tag_DT_StationID.upper()],
+                         Tag_DT_Type.upper()     : curDic[Tag_DT_Type.upper()],
+                         Tag_DT_UTC.upper()      : curDic[Tag_DT_UTC.upper()]}
+            if (isFirst):
+                db[DB_TAB_DATAVALUES.upper()].insert_one(curDic)
+            else:
+                db[DB_TAB_DATAVALUES.upper()].find_one_and_replace(curfilter, curDic, upsert = True)
     ## Create index
-    db[Tag_ClimateDB_Data].create_index([(Tag_DT_StationID, pymongo.ASCENDING),
-                                         (Tag_DT_Type, pymongo.ASCENDING),
-                                         (Tag_DT_UTC, pymongo.ASCENDING)])
+    db[DB_TAB_DATAVALUES.upper()].create_index([(Tag_DT_StationID.upper(), pymongo.ASCENDING),
+                                                (Tag_DT_Type.upper(), pymongo.ASCENDING),
+                                                (Tag_DT_UTC.upper(), pymongo.ASCENDING)])
 
-def ImportDailyPrecData(hostname,port,dbName,precdata,sitePLoc):
+
+def ImportDailyPrecData(sitePLoc):
     try:
-        connMongo = MongoClient(hostname, port)
+        connMongo = MongoClient(HOSTNAME, PORT)
         print "Import Daily Precipitation Data... "
-        #print "Connected successfully"
+        # print "Connected successfully"
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
-    db = connMongo[dbName]
+    db = connMongo[ClimateDBName]
     cList = db.collection_names()
-    if not StringInList(Tag_ClimateDB_Data, cList):
-        db.create_collection(Tag_ClimateDB_Data)
+    firstImport = False
+    if not StringInList(DB_TAB_DATAVALUES, cList):
+        db.create_collection(DB_TAB_DATAVALUES.upper())
+        firstImport = True
 
-    ImportPrecipitation(db, precdata, sitePLoc)
+    ImportPrecipitation(db, PrecDailyFile, sitePLoc, firstImport)
     connMongo.close()
+
 
 if __name__ == "__main__":
     from hydroclimate_sites import ImportHydroClimateSitesInfo
-    SitesMList, SitesPList = ImportHydroClimateSitesInfo(HOSTNAME, PORT, ClimateDBName,HydroClimateVarFile, MetroSiteFile, PrecSiteFile)
-    ImportDailyPrecData(HOSTNAME, PORT, ClimateDBName, PrecDailyFile, SitesPList)
+
+    SitesMList, SitesPList = ImportHydroClimateSitesInfo()
+    ImportDailyPrecData(SitesPList)
