@@ -21,11 +21,11 @@ NutrientOLRoute::NutrientOLRoute(void):
 	m_routingLayers(NULL), m_flowInIndex(NULL), m_FlowWidth(NULL), m_chWidth(NULL), m_streamLink(NULL), 
 	m_latno3(NULL), m_surqno3(NULL), m_surqsolp(NULL), m_no3gw(NULL), 
 	m_minpgw(NULL), m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL), 
-	m_ChV(NULL), m_QV(NULL), m_fract(NULL), 
+	m_ChV(NULL), m_QV(NULL), m_fract(NULL), m_cod(NULL),
 	//output
 	m_surqno3ToCh(NULL), m_latno3ToCh(NULL), m_no3gwToCh(NULL), m_surqsolpToCh(NULL), m_minpgwToCh(NULL), 
 	m_sedorgnToCh(NULL), m_sedorgpToCh(NULL), m_sedminpaToCh(NULL), m_sedminpsToCh(NULL), 
-	m_ammoToCh(NULL), m_nitriteToCh(NULL)
+	m_ammoToCh(NULL), m_nitriteToCh(NULL), m_codToCh(NULL)
 {
 
 }
@@ -80,6 +80,7 @@ bool NutrientOLRoute::CheckInputData() {
 	if(this -> m_streamLink == NULL) {throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_chWidth == NULL) {throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_FlowWidth == NULL) {throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_cod == NULL) {throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");return false;}
 	return true;
 }
 void NutrientOLRoute::SetValue(const char* key, float value)
@@ -112,6 +113,7 @@ void NutrientOLRoute::Set1DData(const char* key,int n, float *data)
 	else if(StringMatch(sk, VAR_SEDORGP)) {this -> m_sedorgp = data;}
 	else if(StringMatch(sk, VAR_SEDMINPA)) {this -> m_sedminpa = data;}
 	else if(StringMatch(sk, VAR_SEDMINPS)) {this -> m_sedminps = data;}
+	else if(StringMatch(sk, VAR_COD)) {this -> m_cod = data;}
 	else {
 		throw ModelException("NutOLRout","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -145,6 +147,7 @@ void NutrientOLRoute::initialOutputs() {
 			m_sedminpsToCh[i] = 0.;
 			m_ammoToCh[i] = 0.;
 			m_nitriteToCh[i] = 0.;
+			m_codToCh[i] = 0.;
 		}
 	}
 }
@@ -193,6 +196,7 @@ void NutrientOLRoute::NutrientinOverland(int i) {
 	float sedorgp = 0.;	// sum of sedorgp flow in
 	float sedminpa = 0.;	// sum of sedminpa flow in
 	float sedminps = 0.;	// sum of sedminps flow in
+	float cod = 0.;	// sum of cod flow in
 
 	for (int k = 1; k <= (int)m_flowInIndex[i][0]; ++k)
 	{
@@ -207,6 +211,7 @@ void NutrientOLRoute::NutrientinOverland(int i) {
 		m_sedorgp[flowInID] = max(1.e-12, m_sedorgp[flowInID]);
 		m_sedminpa[flowInID] = max(1.e-12, m_sedminpa[flowInID]);
 		m_sedminps[flowInID] = max(1.e-12, m_sedminps[flowInID]);
+		m_cod[flowInID] = max(1.e-12, m_cod[flowInID]);
 
 		//Sum
 		surqno3 = surqno3 + m_surqno3[flowInID];
@@ -218,6 +223,7 @@ void NutrientOLRoute::NutrientinOverland(int i) {
 		sedorgp = sedorgp + m_sedorgp[flowInID];
 		sedminpa = sedminpa + m_sedminpa[flowInID];
 		sedminps = sedminps + m_sedminps[flowInID];
+		cod = cod + m_cod[flowInID];
 
 	}
 
@@ -232,6 +238,7 @@ void NutrientOLRoute::NutrientinOverland(int i) {
 		m_sedorgpToCh[i] = sedorgp * cellArea;
 		m_sedminpaToCh[i] = sedminpa * cellArea;
 		m_sedminpsToCh[i] = sedminps * cellArea;
+		m_cod[i] = cod * cellArea;
 		return;
 	}
 
@@ -245,8 +252,11 @@ void NutrientOLRoute::NutrientinOverland(int i) {
 	m_sedorgpToCh[i] = NutToChannel(i, m_sedorgpToCh[i]);
 	m_sedminpaToCh[i] = NutToChannel(i, m_sedminpaToCh[i]);
 	m_sedminpsToCh[i] = NutToChannel(i, m_sedminpsToCh[i]);
+	m_codToCh[i] = NutToChannel(i, m_codToCh[i]);
 	m_ammoToCh[i] = 0.;
 	m_nitriteToCh[i] = 0.;
+
+	m_codToCh[i] = m_codToCh[i] / 1.E6; //mg to kg
 	
 }
 float NutrientOLRoute::NutToChannel(int id, float nut)
@@ -275,6 +285,7 @@ void NutrientOLRoute::Get1DData(const char* key, int* n, float** data) {
 	else if(StringMatch(sk, VAR_SEDMINPS_CH)) {*data = this -> m_sedminpsToCh;}
 	else if(StringMatch(sk, VAR_AMMO_CH)) {*data = this -> m_ammoToCh;}
 	else if(StringMatch(sk, VAR_NITRITE_CH)) {*data = this -> m_nitriteToCh;}
+	else if(StringMatch(sk, VAR_COD_CH)) {*data = this -> m_codToCh;}
 	else {
 		throw ModelException("NutOLRout", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}

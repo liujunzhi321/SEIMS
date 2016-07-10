@@ -27,7 +27,7 @@ NutrientCHRoute::NutrientCHRoute(void):
 	m_sedminpsToCh(NULL), m_ammoToCh(NULL), m_nitriteToCh(NULL), 
 	//output
 	m_algae(NULL), m_organicn(NULL), m_organicp(NULL), m_ammonian(NULL), m_nitriten(NULL), m_nitraten(NULL),
-	m_disolvp(NULL), m_rch_cbod(NULL), m_rch_dox(NULL), m_chlora(NULL), m_soxy(NULL)
+	m_disolvp(NULL), m_rch_cod(NULL), m_rch_dox(NULL), m_chlora(NULL), m_soxy(NULL)
 {
 
 }
@@ -54,8 +54,8 @@ NutrientCHRoute::~NutrientCHRoute(void) {
 	if (m_disolvp != NULL){
 		delete [] m_disolvp;
 	}
-	if (m_rch_cbod != NULL){
-		delete [] m_rch_cbod;
+	if (m_rch_cod != NULL){
+		delete [] m_rch_cod;
 	}
 	if (m_rch_dox != NULL){
 		delete [] m_rch_dox;
@@ -261,7 +261,7 @@ void  NutrientCHRoute::initialOutputs() {
 		m_nitriten = new float[m_nReaches+1];
 		m_nitraten = new float[m_nReaches+1];
 		m_disolvp = new float[m_nReaches+1];
-		m_rch_cbod = new float[m_nReaches+1];
+		m_rch_cod = new float[m_nReaches+1];
 		m_rch_dox = new float[m_nReaches+1];
 		m_chlora = new float[m_nReaches+1];
 		m_soxy = 0.;
@@ -275,7 +275,7 @@ void  NutrientCHRoute::initialOutputs() {
 			m_nitriten[i] = 0.;
 			m_nitraten[i] = 0.;
 			m_disolvp[i] = 0.;
-			m_rch_cbod[i] = 0.;
+			m_rch_cod[i] = 0.;
 			m_rch_dox[i] = 0.;
 			m_chlora[i] = 0.;
 
@@ -287,6 +287,30 @@ int NutrientCHRoute::Execute() {
 		return false;
 	}
 	this -> initialOutputs();
+	///////////////////////////////////////Get reach information/////////////////////////////////////
+	int nReaches = m_reaches -> GetReachNumber();
+	vector<int> reachIDs = m_reaches -> GetReachIDs();
+	/// Get reach information by subbasin ID
+	for (vector<int>::iterator it = reachIDs.begin(); it != reachIDs.end(); it++)
+	{
+		clsReach* reach = m_reaches->GetReachByID(*it);
+		/// Get fields of reach
+		m_bc1[*it] = reach -> GetBc1();
+		m_bc2[*it] = reach -> GetBc2();
+		m_bc3[*it] = reach -> GetBc3();
+		m_bc4[*it] = reach -> GetBc4();
+		m_rk1[*it] = reach -> GetRk1();
+		m_rk2[*it] = reach -> GetRk2();
+		m_rk3[*it] = reach -> GetRk3();
+		m_rk4[*it] = reach -> GetRk4();
+		m_rs1[*it] = reach -> GetRs1();
+		m_rs2[*it] = reach -> GetRs2();
+		m_rs3[*it] = reach -> GetRs3();
+		m_rs4[*it] = reach -> GetRs4();
+		m_rs5[*it] = reach -> GetRs5();
+
+	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	map<int, vector<int> >::iterator it;
 	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
 	{
@@ -369,10 +393,11 @@ void NutrientCHRoute::NutrientinChannel(int i){
 	float nitratin = 0.;
 	float orgpin = 0.;
 	float dispin = 0.;
-	float cbodin = 0.;
+	float codin = 0.;
 	float disoxin = 0.;
 	float cinn = 0.;
 	float heatin = 0.;
+	float cod = 0.;
 
 	float dalgae = 0.;
 	float dchla = 0.;
@@ -450,7 +475,7 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		no3con = m_nitraten[i];
 		orgpcon =  m_organicp[i];
 		solpcon = m_disolvp[i];
-		cbodcon = m_rch_cbod[i];
+		cbodcon = m_rch_cod[i];
 		o2con  = m_rch_dox[i];
 		// temperature of water in reach (wtmp deg C)
 		float wtmp = 0.;
@@ -723,7 +748,7 @@ void NutrientCHRoute::NutrientinChannel(int i){
 			nitratin = 1000. * (m_latno3ToCh[i] + m_surqno3ToCh[i] + m_no3gwToCh[i]) * (1. - m_rnum1) / wtrIn;
 			orgpin = 1000. * (m_sedorgpToCh[i] + m_sedminpsToCh[i] + m_sedminpaToCh[i]) * (1. - m_rnum1) / wtrIn;
 			dispin = 1000. *  (m_surqsolpToCh[i] + m_minpgwToCh[i]) * (1. - m_rnum1) / wtrIn;
-			//cbodin = 1000. * m_cbodToCh[i] * (1. - m_rnum1) / wtrIn;
+			codin = 1000. * m_codToCh[i] * (1. - m_rnum1) / wtrIn;
 			//disoxin= 1000. * m_disoxToCh[i] * (1. - m_rnum1) / wtrIn;
 			heatin =m_wattemp[i] * (1. - m_rnum1);
 		}
@@ -736,7 +761,7 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		m_nitraten[i] = (nitratin * wtrIn + dno3  * m_chStorage[i]) / wtrTotal;
 		m_organicp[i] = (orgpin * wtrIn +  dorgp * m_chStorage[i]) / wtrTotal;
 		m_disolvp[i] = (dispin * wtrIn +  dsolp * m_chStorage[i]) / wtrTotal;
-		//m_rch_cbod[i] = (cbodin * wtrIn + dbod * m_chStorage[i]) / wtrTotal;
+		m_rch_cod[i] = (codin * wtrIn + dbod * m_chStorage[i]) / wtrTotal;
 		//m_rch_dox[i] = (disoxin * wtrIn +  ddisox * m_chStorage[i]) / wtrTotal;
 
 		// calculate chlorophyll-a concentration at end of day
@@ -752,7 +777,7 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		nitratin = 0.0;
 		orgpin = 0.0;
 		dispin = 0.0;
-		cbodin = 0.0;
+		codin = 0.0;
 		disoxin = 0.0;
 		m_algae[i] = 0.0;
 		m_chlora[i] = 0.0;
@@ -762,7 +787,7 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		m_nitraten[i] = 0.0;
 		m_organicp[i] = 0.0;
 		m_disolvp[i] = 0.0;
-		m_rch_cbod[i] = 0.0;
+		m_rch_cod[i] = 0.0;
 		m_rch_dox[i] = 0.0;
 		dalgae = 0.0;
 		dchla = 0.0;
@@ -801,8 +826,8 @@ void NutrientCHRoute::Get1DData(const char* key, int* n, float** data) {
 	else if (StringMatch(sk, VAR_NITRITEN)) {*data = this -> m_nitriten;}
 	else if (StringMatch(sk, VAR_NITRATEN)) {*data = this -> m_nitraten;}
 	else if (StringMatch(sk, VAR_DISOLVP)) {*data = this -> m_disolvp;}
-	else if (StringMatch(sk, VAR_RCH_CBOD)) {*data = this -> m_rch_cbod;}
-	else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
+	else if (StringMatch(sk, VAR_RCH_COD)) {*data = this -> m_rch_cod;}
+	//else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
 	else if (StringMatch(sk, VAR_CHLORA)) {*data = this -> m_chlora;}
 	else {
 		throw ModelException("NutCHRout", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");

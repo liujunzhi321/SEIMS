@@ -65,6 +65,8 @@ private:
 	/// reaches number
 	int m_nReaches;
 	map<int, vector<int> > m_reachLayers;
+	/// Reach information
+	clsReaches* m_reaches;
 
 	/// input data
 	/// bank flow recession constant
@@ -167,6 +169,8 @@ private:
 	float* m_ammoToCh;
 	/// amount of nitrite transported with lateral flow
 	float* m_nitriteToCh;
+	/// cod to reach in surface runoff (kg)
+	float* m_codToCh;
 
 	//float m_vScalingFactor;
 	/// for muskingum
@@ -188,8 +192,8 @@ private:
 	float* m_nitraten;
 	/// dissolved phosphorus concentration in reach (mg/L)
 	float* m_disolvp;
-	/// carbonaceous biochemical oxygen demand in reach (mg/L)
-	float* m_rch_cbod;
+	/// carbonaceous oxygen demand in reach (mg/L)
+	float* m_rch_cod;
 	/// dissolved oxygen concentration in reach (mg/L)
 	float* m_rch_dox;
 	/// chlorophyll-a concentration in reach (mg chl-a/L)

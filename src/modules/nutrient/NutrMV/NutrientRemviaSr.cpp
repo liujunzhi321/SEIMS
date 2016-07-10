@@ -18,11 +18,13 @@ using namespace std;
 
 NutrientRemviaSr::NutrientRemviaSr(void):
 	//input 
-	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nperco(-1), m_phoskd(-1), m_pperco(-1), m_qtile(-1), 
+	m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1),  m_sedimentYield(NULL), m_nperco(-1), m_phoskd(-1), m_pperco(-1), m_qtile(-1), 
 	m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
 	m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_sol_depth(NULL),
+	 m_sol_om(NULL), m_gw_q(NULL),
 	//output 
-	m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(NULL), m_sol_solp(NULL)
+	m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(NULL), m_sol_solp(NULL),
+	m_cod(NULL), m_chl_a(NULL) //,m_doxq(), m_soxy()
 {
 
 }
@@ -52,6 +54,8 @@ bool NutrientRemviaSr::CheckInputData() {
 	if(this ->m_cellWidth < 0) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_soiLayers < 0) {throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");return false;}
 	if(this -> m_nSoilLayers == NULL) {throw ModelException(MID_NutRemv, "CheckInputData", "The data can not be NULL.");return false;}
+	if(this -> m_sedimentYield == NULL) {throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");return false;}
+	if(this -> m_sol_om == NULL) {throw ModelException(MID_NutRemv, "CheckInputData", "The data can not be NULL.");return false;}
 	if(this -> m_anion_excl == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_isep_opt == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_ldrain == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
@@ -66,6 +70,7 @@ bool NutrientRemviaSr::CheckInputData() {
 	if(this -> m_sol_bd == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_sol_z == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
 	if(this -> m_sol_depth == NULL) {throw ModelException(MID_NutRemv, "CheckInputData","The input data can not be NULL.");return false;}
+	if(this->m_gw_q == NULL) {throw ModelException("NutGW", "CheckInputData", "The input data can not be NULL.");return false;}
 	return true;
 }
 void NutrientRemviaSr::SetValue(const char* key, float value)
@@ -89,11 +94,16 @@ void NutrientRemviaSr::Set1DData(const char* key,int n, float *data)
 {
 	if(!this->CheckInputSize(key,n)) return;
 	string sk(key);
-	if (StringMatch(sk, VAR_SOER)) {this -> m_surfr = data;}
+	if (StringMatch(sk, VAR_SURU)) {this -> m_surfr = data;}
 	else if (StringMatch(sk, VAR_ANION_EXCL)) {this -> m_anion_excl = data;}
 	else if (StringMatch(sk, VAR_LDRAIN)) {this -> m_ldrain = data;}
 	else if (StringMatch(sk, VAR_SOL_CRK)) {this -> m_sol_crk = data;}
 	else if (StringMatch(sk, VAR_SOL_SUMSAT)) {this -> m_sol_wsatur = data;}
+	else if (StringMatch(sk, VAR_SOER)) {this -> m_sedimentYield = data;}
+	else if (StringMatch(sk, VAR_SEDORGN)) {this -> m_sedorgn = data;}
+	else if (StringMatch(sk, VAR_SEDORGP)) {this -> m_sedorgp = data;}
+	else if (StringMatch(sk, VAR_TMEAN)) {this -> m_tmean = data;}
+	else if (StringMatch(sk, VAR_GW_Q)) {this -> m_gw_q = data;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -110,6 +120,7 @@ void NutrientRemviaSr::Set2DData(const char* key, int nRows, int nCols, float** 
 	else if (StringMatch(sk, VAR_SOL_SOLP)) {this -> m_sol_solp = data;}
 	else if (StringMatch(sk, VAR_SOILDEPTH)) {this -> m_sol_depth = data;}
 	else if (StringMatch(sk, VAR_SOL_PERCO)) {this -> m_sol_perco = data;}
+	else if (StringMatch(sk, VAR_SOL_OM)) {this -> m_sol_om = data;}
 	else {
 		throw ModelException("NutRemv","SetValue","Parameter " + sk + " does not exist in CLIMATE module. Please contact the module developer.");
 	}
@@ -125,6 +136,14 @@ void NutrientRemviaSr::initialOutputs() {
 			m_percn[i] = 0.;
 			m_surqno3[i] = 0.;
 			m_surqsolp[i] = 0.;
+		}
+	}
+	if(m_cod == NULL) {
+		for(int i = 0; i < m_nCells; i++) {
+			m_cod[i] = 0.;
+			m_chl_a[i] = 0.;
+			m_doxq[i] = 0.;
+			m_soxy[i] = 0.;
 		}
 	}
 	if(m_wshd_plch < 0) {
@@ -155,6 +174,7 @@ int NutrientRemviaSr::Execute() {
 	//return ??
 	return 0;
 }
+
 void NutrientRemviaSr::Nitrateloss(){
 	//percnlyr nitrate moved to next lower layer with percolation (kg/km2)
 	float percnlyr = 0.;
@@ -251,6 +271,86 @@ void NutrientRemviaSr::Nitrateloss(){
 		nloss = max(0.,nloss);
 		nloss = min(1.,nloss);
 		m_latno3[i] = (1. - nloss) * m_latno3[i];
+
+		// calculate CBOD, COD, Chl_a, doxq and soxy
+		// calculcate water temperature
+		// SWAT manual 2.3.13
+		float wtmp = 0.;
+		wtmp = 5.0 + 0.75 * m_tmean[i];
+		if (wtmp <= 0.1)  {
+			wtmp = 0.1;
+		}
+		wtmp = wtmp + 273.15;    // deg C to deg K
+		// water in cell
+		float qdr = 0.;
+		qdr = m_surfr[i] + m_flat[i][0] + m_qtile + m_gw_q[i];
+		if (qdr > 1.e-4) {
+			// kilo moles of phosphorus in nutrient loading to main channel (tp)
+			float tp = 0.;
+			tp = 100. * (m_sedorgn[i] + m_surqno3[i]) / qdr;   //100*kg/ha/mm = ppm 
+			// regional adjustment on sub chla_a loading
+			float chla_subco = 40.;
+			m_chl_a[i] = chla_subco * tp;
+			m_chl_a[i] =m_chl_a[i] / 1000;  // um/L to mg/L
+
+			// calculate enrichment ratio
+			float enratio;
+			if (m_sedimentYield[i] < 1e-4) {
+				m_sedimentYield[i] = 0;
+			}
+			// CREAMS method for calculating enrichment ratio
+			float cy = 0;
+			// Calculate sediment calculations, equation 4:2.2.3 in SWAT Theory 2009, p272
+			cy = 0.1 * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * 0.0001 * m_surfr[i] + 1e-6);
+			if (cy > 1e-6) {
+				enratio = 0.78 * pow(cy, -0.2468f);
+			} else {
+				enratio = 0;
+			}
+			if (enratio > 3.5) {
+				enratio = 3.5;
+			}
+
+			// calculate organic carbon loading to main channel
+			float org_c = 0.;
+			org_c = (m_sol_om[i][0] * 0.58  / 100.) * enratio * m_sedimentYield[i] * 1000.;
+			// calculate carbonaceous biological oxygen demand (CBOD) and COD(transform from CBOD)
+			float cbod = 0.;
+			cbod = 2.7 * org_c / (qdr * m_cellWidth * m_cellWidth);
+			// calculate COD
+			float n = 3.; // Conversion factor 1~6.5  
+			float k = 0.15; // Reaction coefficient 0.1~0.2  
+			m_cod[i] = n *(cbod * (1. - exp(-5. * k)));
+
+			/*
+			// calculate dissolved oxygen saturation concentration (soxy)
+			float soxy = 0.;
+			float ww = 0.;
+			float xx = 0.;
+			float yy = 0.;
+			float zz = 0.;
+			ww = -139.34410 + (1.575701E05 / wtmp);
+			xx = 6.642308E07 /pow (wtmp, 2);
+			yy = 1.243800E10 /pow (wtmp, 3);
+			zz = 8.621949E11 / pow(wtmp, 4);
+			m_soxy[i] = exp(ww - xx + yy - zz);
+			if (soxy < 0.) {
+				soxy = 0.;
+			}
+			// calculate actual dissolved oxygen concentration
+			m_doxq[i] = soxy * exp(-0.1 * cbod);
+			if (m_doxq[i] < 0.) {
+				m_doxq[i] = 0.;
+			}
+			if (m_doxq[i] > soxy) {
+				m_doxq[i] = soxy;
+			}
+			*/
+		} else {
+			m_chl_a[i] = 0.;
+			m_cod[i] = 0.;
+			//m_doxq[i] = 0.;
+		}
 	}
 }
 void NutrientRemviaSr::Phosphorusloss(){
@@ -317,6 +417,9 @@ void NutrientRemviaSr::Get1DData(const char* key, int* n, float** data) {
 	if (StringMatch(sk, VAR_PERCN)) {*data = this -> m_percn;}
 	if (StringMatch(sk, VAR_SURQNO3)) {*data = this -> m_surqno3;}
 	if (StringMatch(sk, VAR_SURQSOLP)) {*data = this -> m_surqsolp;}
+	if (StringMatch(sk, VAR_COD)) {*data = this -> m_cod;}
+	if (StringMatch(sk, VAR_CHL_A)) {*data = this -> m_chl_a;}
+
 	else {
 		throw ModelException("NutRemv", "GetValue","Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
