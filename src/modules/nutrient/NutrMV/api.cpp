@@ -59,7 +59,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddInput(VAR_SOL_SUMSAT, UNIT_DEPTH_MM, DESC_SOL_SUMSAT, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SOER, UNIT_TONS, DESC_SOER, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SEDORGN, UNIT_CONT_KGHA, DESC_SEDORGN, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_SEDORGP, UNIT_CONT_KGHA, DESC_SEDORGP, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_TMEAN, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_GW_Q, UNIT_DEPTH_MM, DESC_GW_Q, Source_Module, DT_Raster1D);
 
+	mdi.AddInput(VAR_SOL_OM, UNIT_PERCENT, DESC_SOL_OM, Source_Module, DT_Raster2D);
 	mdi.AddInput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_Module, DT_Raster2D);
 	mdi.AddInput(VAR_SOL_BD, UNIT_DENSITY, DESC_SOL_BD, Source_Module, DT_Raster2D);
 	mdi.AddInput(VAR_SOILDEPTH, UNIT_NON_DIM, DESC_SOILDEPTH, Source_Module, DT_Raster2D);
@@ -67,12 +73,14 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_Module, DT_Raster2D);
 
 	// set the output variables
+	mdi.AddOutput(VAR_WSHD_PLCH, UNIT_CONT_KGHA, DESC_WSHD_PLCH, DT_Single);
+
 	mdi.AddOutput(VAR_LATNO3, UNIT_CONT_KGHA, DESC_LATNO3, DT_Raster1D);
 	mdi.AddOutput(VAR_PERCN, UNIT_CONT_KGHA, DESC_PERCN, DT_Raster1D);
 	mdi.AddOutput(VAR_SURQNO3, UNIT_CONT_KGHA, DESC_SURQNO3, DT_Raster1D);
 	mdi.AddOutput(VAR_SURQSOLP, UNIT_CONT_KGHA, DESC_SURQSOLP, DT_Raster1D);
-
-	mdi.AddOutput(VAR_WSHD_PLCH, UNIT_CONT_KGHA, DESC_WSHD_PLCH, DT_Single);
+	mdi.AddOutput(VAR_COD, UNIT_DENSITY_L, DESC_COD, DT_Raster1D);
+	mdi.AddOutput(VAR_CHL_A, UNIT_DENSITY_L, DESC_CHL_A, DT_Raster1D);
 
 	mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);
 	mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, DT_Raster2D);

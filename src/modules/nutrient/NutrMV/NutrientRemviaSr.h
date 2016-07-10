@@ -49,7 +49,8 @@ private:
 	/// input data
 	/// drainage tile flow in soil profile
 	float m_qtile;
-
+	//distribution of soil loss caused by water erosion
+	float* m_sedimentYield;
 	/// Phosphorus soil partitioning coefficient
 	float m_phoskd;
 	/// phosphorus percolation coefficient (0-1)
@@ -80,6 +81,18 @@ private:
 	/// factor which converts kg/kg soil to kg/ha
 	float** m_sol_depth;
 
+
+	///percent organic matter in soil layer (%)
+	float** m_sol_om;
+	/// amount of organic nitrogen in surface runoff
+	float* m_sedorgn;
+	/// amount of organic phosphorus in surface runoff
+	float* m_sedorgp;
+	/// average air temperature
+	float* m_tmean;
+	/// groundwater contribution to stream flow
+	float* m_gw_q;
+
 	/// output data
 	/// amount of nitrate transported with lateral flow
 	float* m_latno3;
@@ -89,6 +102,14 @@ private:
 	float* m_surqno3;
 	/// amount of soluble phosphorus in surface runoff
 	float* m_surqsolp;
+	/// carbonaceous oxygen demand of surface runoff
+	float* m_cod;
+	/// chlorophyll-a concentration in water yield
+	float* m_chl_a;
+	/// dissolved oxygen concentration in the surface runoff
+	//float* m_doxq;
+	/// dissolved oxygen saturation concentration
+	//float* m_soxy;
 
 	/// input & output
 	/// average annual amount of phosphorus leached into second soil layer
@@ -132,6 +153,12 @@ private:
 	*/
 	void Phosphorusloss();
 	
+	/*!
+	* \brief Calculate enrichment ratio.
+	 *
+	 * \return void
+	 */
+	float* CalculateEnrRatio();
 	void initialOutputs();
 };
 #endif

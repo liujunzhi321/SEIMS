@@ -79,6 +79,8 @@ private:
 	float* m_sedminpa;
 	//amount of stable mineral phosphorus absorbed to sediment in surface runoff
 	float* m_sedminps;
+	/// carbonaceous oxygen demand of surface runoff
+	float* m_cod;
 
 	//test
 	float* m_ChV;
@@ -108,6 +110,8 @@ private:
 	float* m_ammoToCh;
 	/// nitrite to reach in surface runoff (kg)
 	float* m_nitriteToCh;
+	/// cod to reach in surface runoff (kg)
+	float* m_codToCh;
 
 private:
 

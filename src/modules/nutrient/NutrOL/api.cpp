@@ -60,6 +60,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput(VAR_SEDORGP, UNIT_CONT_KGHA, DESC_SEDORGP, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SEDMINPA, UNIT_CONT_KGHA, DESC_SEDMINPA, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SEDMINPS, UNIT_CONT_KGHA, DESC_SEDMINPS, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_COD, UNIT_DENSITY_L, DESC_COD, Source_Module, DT_Raster1D);
 	
 	// set the output variables
 	mdi.AddOutput(VAR_SURQNO3_CH, UNIT_KG, DESC_SURQNO3_CH, DT_Raster1D);
@@ -73,6 +74,7 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddOutput(VAR_SEDMINPS_CH, UNIT_KG, DESC_SEDMINPS_CH, DT_Raster1D);
 	mdi.AddOutput(VAR_AMMO_CH, UNIT_KG, DESC_AMMO_CH, DT_Raster1D);
 	mdi.AddOutput(VAR_NITRITE_CH, UNIT_KG, DESC_NITRITE_CH, DT_Raster1D);
+	mdi.AddOutput(VAR_COD_CH, UNIT_KG, DESC_COD_CH, DT_Raster1D);
 
 	string res = mdi.GetXMLDocument();
 	char* tmp = new char[res.size()+1];
