@@ -142,8 +142,8 @@ void NutrientRemviaSr::initialOutputs() {
 		for(int i = 0; i < m_nCells; i++) {
 			m_cod[i] = 0.;
 			m_chl_a[i] = 0.;
-			m_doxq[i] = 0.;
-			m_soxy[i] = 0.;
+			//m_doxq[i] = 0.;
+			//m_soxy[i] = 0.;
 		}
 	}
 	if(m_wshd_plch < 0) {
