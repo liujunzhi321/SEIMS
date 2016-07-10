@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 ## @Import BMP Scenario related parameters to MongoDB
 ## @Author Liang-Jun Zhu
 ## @Date   2016-6-16
@@ -7,11 +7,9 @@
 
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from gridfs import *
-from struct import pack
-from text import *
+from config import *
 from util import *
-from import_parameters import ImportLookupTables
+
 
 def ImportBMPTables():
     '''
@@ -26,7 +24,7 @@ def ImportBMPTables():
         BMP_tabs_path.append(BMP_DATA_DIR + os.sep + f)
     ## connect to MongoDB
     try:
-        conn = MongoClient(host=HOSTNAME, port=PORT)
+        conn = MongoClient(HOSTNAME, PORT)
         print "Import BMP Scenario Data... "
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
@@ -35,10 +33,13 @@ def ImportBMPTables():
     ## delete if collection existed
     cList = db.collection_names()
     for item in BMP_tabs:
-        if not StringInList(item, cList):
-            db.create_collection(item)
-        # else:
-        #     db.drop_collection(item)
+        if not StringInList(item.upper(), cList):
+            db.create_collection(item.upper())
+
+    ## Read subbasin.tif and dist2Stream.tif
+    subbasinR = ReadRaster(WORKING_DIR + os.sep + subbasinOut)
+    dist2StreamR = ReadRaster(WORKING_DIR + os.sep + dist2StreamD8M)
+    ## End reading
     for j in range(len(BMP_tabs_path)):
         bmpTxt = BMP_tabs_path[j]
         bmpTabName = BMP_tabs[j]
@@ -48,25 +49,31 @@ def ImportBMPTables():
         for item in dataArray:
             dic = {}
             for i in range(len(fieldArray)):
-                if(isNumericValue(item[i])):
-                    dic[fieldArray[i]] = float(item[i])
+                if (isNumericValue(item[i])):
+                    dic[fieldArray[i].upper()] = float(item[i])
                 else:
-                    dic[fieldArray[i]] = str(item[i])
-            db[bmpTabName].find_one_and_replace(dic, dic, upsert=True)
-            # db[bmpTabName].insert_one(dic)
-    #print 'BMP tables are imported.'
+                    dic[fieldArray[i].upper()] = str(item[i]).upper()
+            if StringInList(Tag_ST_LocalX, dic.keys()) and StringInList(Tag_ST_LocalY, dic.keys()):
+                subbsnID = subbasinR.GetValueByXY(dic[Tag_ST_LocalX.upper()], dic[Tag_ST_LocalY.upper()])
+                distance = dist2StreamR.GetValueByXY(dic[Tag_ST_LocalX.upper()], dic[Tag_ST_LocalY.upper()])
+                if subbsnID != None and distance != None:
+                    dic[REACH_SUBBASIN.upper()] = float(subbsnID)
+                    dic[BMP_FLD_PT_DISTDOWN.upper()] = float(distance)
+                    db[bmpTabName.upper()].find_one_and_replace(dic, dic, upsert = True)
+            else:
+                db[bmpTabName.upper()].find_one_and_replace(dic, dic, upsert = True)
+    # print 'BMP tables are imported.'
     ## Write BMP database name into Model main database
     mainDB = conn[SpatialDBName]
     cList = mainDB.collection_names()
-    if not StringInList(DB_TAB_BMP_DB, cList):
-        mainDB.create_collection(DB_TAB_BMP_DB)
-    # else:
-    #     mainDB.drop_collection(DB_TAB_BMP_DB)
+    if not StringInList(DB_TAB_BMP_DB.upper(), cList):
+        mainDB.create_collection(DB_TAB_BMP_DB.upper())
+
     bmpInfoDic = {}
-    bmpInfoDic["DB"] = BMPScenarioDBName
-    mainDB[DB_TAB_BMP_DB].find_one_and_replace(bmpInfoDic, bmpInfoDic, upsert=True)
-    # mainDB[DB_TAB_BMP_DB].insert_one(bmpInfoDic)
-    ImportLookupTables(sqliteFile, db)
+    bmpInfoDic[FLD_DB.upper()] = BMPScenarioDBName
+    mainDB[DB_TAB_BMP_DB.upper()].find_one_and_replace(bmpInfoDic, bmpInfoDic, upsert = True)
     conn.close()
+
+
 if __name__ == "__main__":
     ImportBMPTables()

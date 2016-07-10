@@ -114,13 +114,13 @@
 #define TAG_OUT_QSUBBASIN "QSUBBASIN"
 
 #define Tag_SubbasinCount			"SUBBASINCOUNT"
-#define Tag_SubbasinId					"SubbasinID"
+#define Tag_SubbasinId					"SUBBASINID"
 #define Tag_ReservoirCount			"RESERVOIRCOUNT"
 #define Tag_ReservoirId					"RESERVOIRID"
 #define Tag_SubbasinSelected		"subbasinSelected"
 #define Tag_CellSize						"CELLSIZE"
 #define Tag_Mask								"MASK"
-#define Tag_TimeStep						"TimeStep"
+#define Tag_TimeStep						"TIMESTEP"
 #define Tag_HillSlopeTimeStep		"DT_HS"
 #define Tag_ChannelTimeStep		"DT_CH"
 #define Tag_CellWidth						"CELLWIDTH" // this is the size of a single CELL
@@ -173,18 +173,16 @@
 #define Source_Module									"Module"
 
 ///////// Table Names required in MongoDB /////////
-#define DB_TAB_PARAMETERS		"parameters"
-#define DB_TAB_LOOKUP_LANDUSE	"LanduseLookup"
-#define DB_TAB_LOOKUP_SOIL		"SoilLookup"
-#define DB_TAB_SITELIST			"SiteList"
-#define DB_TAB_SCENARIO		"BMPDatabase"
-#define DB_TAB_REACH			"reaches"
-#define DB_TAB_SPATIAL			"spatial"  /// i.e., spatial.files
-#define DB_TAB_SITES			"Sites"
-#define DB_TAB_DATAVALUES		"DataValues" // hydroClimate data values
-#define DB_TAB_MEASUREMENT		"measurement"
-
-#define DB_TAB_OUT_SPATIAL		"output"
+#define DB_TAB_PARAMETERS		"PARAMETERS"
+#define DB_TAB_SITELIST			"SITELIST"
+#define DB_TAB_SCENARIO		"BMPDATABASE"
+#define DB_TAB_REACH			"REACHES"
+#define DB_TAB_SPATIAL			"SPATIAL"  /// i.e., spatial.files
+#define DB_TAB_SITES			"SITES"
+#define DB_TAB_DATAVALUES		"DATA_VALUES" // hydroClimate data values
+#define DB_TAB_MEASUREMENT		"MEASUREMENT"
+#define DB_TAB_ANNSTAT			"ANNUAL_STATS"
+#define DB_TAB_OUT_SPATIAL		"OUTPUT"
 
 /// Fields in DB_TAB_REACH ///
 #define REACH_SUBBASIN			"SUBBASIN"
@@ -219,20 +217,21 @@
 
 
 /// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
-#define SITELIST_TABLE_M		"SiteListM"
-#define SITELIST_TABLE_P		"SiteListP"
-#define SITELIST_TABLE_PET		"SiteListPET"
-#define SITELIST_TABLE_STORM	"StormSiteList"
+#define SITELIST_TABLE_M		"SITELISTM"
+#define SITELIST_TABLE_P		"SITELISTP"
+#define SITELIST_TABLE_PET		"SITELISTPET"
+#define SITELIST_TABLE_STORM	"STORMSITELIST"
 
 //! define string constants used in the code, also used in the mongoDB.SiteList table's header
-#define Tag_NoDataValue			"NoDataValue"
-#define Tag_SubbasinSelected	"subbasinSelected"
-#define Tag_Mode				"Mode"
+//#define Tag_NoDataValue			"NoDataValue"
+
+#define Tag_Mode							"MODE"
 #define Tag_Mode_Storm			"STORM"
-#define Tag_Mode_Daily			"DAILY"
+#define Tag_Mode_Daily				"DAILY"
 
 #define Type_Scenario			"SCENARIO"
 #define Type_Reach				"REACH"
+#define Type_LookupTable	"LOOKUPTABLE"
 #define Type_LapseRateArray		"LAPSERATEARRAY"
 #define Type_SiteInformation	"SITEINFORMATION"
 #define Type_Raster1D		"RASTER1D"
@@ -1386,15 +1385,14 @@
 #define MONG_GRIDFS_WEIGHT_SITES	"NUM_SITES"
 #define MONG_GRIDFS_ID				"ID"
 #define MONG_GRIDFS_SUBBSN			"SUBBASIN"
-#define MONG_HYDRO_SITE_TYPE		"Type"
-#define MONG_HYDRO_SITE_LAT			"Lat"
-#define MONG_HYDRO_SITE_ELEV		"Elevation"
-#define MONG_HYDRO_DATA				"DataValues"
-#define MONG_HYDRO_DATA_SITEID		"StationID"
-#define MONG_HYDRO_DATA_UTC			"UTCDateTime"
-#define MONG_HYDRO_DATA_LOCALT		"LocalDateTime"
-#define MONG_HYDRO_DATA_VALUE		"Value"
-#define MONG_SITELIST_SUBBSN		"SubbasinID"
+#define MONG_HYDRO_SITE_TYPE		"TYPE"
+#define MONG_HYDRO_SITE_LAT			"LAT"
+#define MONG_HYDRO_SITE_ELEV		"ELEVATION"
+#define MONG_HYDRO_DATA_SITEID		"STATIONID"
+#define MONG_HYDRO_DATA_UTC			"UTCDATETIME"
+#define MONG_HYDRO_DATA_LOCALT		"LOCALDATETIME"
+#define MONG_HYDRO_DATA_VALUE		"VALUE"
+#define MONG_SITELIST_SUBBSN		"SUBBASINID"
 #define MONG_SITELIST_DB			"DB"
 
 
@@ -1402,7 +1400,6 @@
 /// Define Raster/ related constant strings used in SEIMS and preprocess//
 /// By LiangJun Zhu, May. 5, 2016  ///////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-#define HEADER_RS_TAB	    "Header"
 #define HEADER_RS_NODATA	"NODATA_VALUE"
 #define HEADER_RS_XLL		"XLLCENTER"
 #define HEADER_RS_YLL		"YLLCENTER"

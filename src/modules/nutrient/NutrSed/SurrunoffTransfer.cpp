@@ -26,7 +26,8 @@ SurrunoffTransfer::SurrunoffTransfer(void):
 
 }
 
-SurrunoffTransfer::~SurrunoffTransfer(void) {
+SurrunoffTransfer::~SurrunoffTransfer(void) 
+{
 	///TODO
 }
 bool SurrunoffTransfer::CheckInputSize(const char* key, int n) {

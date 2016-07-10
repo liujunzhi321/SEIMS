@@ -20,10 +20,12 @@ BMPPlantMgtFactory::~BMPPlantMgtFactory()
 	for(it=m_bmpPlantOps.begin();it!=m_bmpPlantOps.end();it++)
 	{
 		if(it->second != NULL) delete it->second;
+		m_bmpPlantOps.erase(it);
 	}
+	m_bmpPlantOps.clear();
 }
 
-void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string bmpDBName)
+void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string& bmpDBName)
 {
 	bson_t		*b = bson_new();
 	bson_t		*child1 = bson_new(), *child2 = bson_new();
@@ -31,19 +33,18 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string bmpDBName)
 	BSON_APPEND_INT32(child1,FLD_SCENARIO_SUB,m_subScenarioId);
 	bson_append_document_end(b,child1);
 	BSON_APPEND_DOCUMENT_BEGIN(b,"$orderby",child2);
-	BSON_APPEND_INT32(child2,BMP_PLTOP_FLD_SEQUENCE,1);
+	BSON_APPEND_INT32(child2,BMP_FLD_SEQUENCE,1);
 	bson_append_document_end(b,child2);
 	bson_destroy(child1);
 	bson_destroy(child2);
 
 	mongoc_cursor_t		*cursor;
-	const bson_t		*bsonTable;
-	mongoc_collection_t	*collection;
-	bson_error_t		*err = NULL;
+	const bson_t				*bsonTable;
+	mongoc_collection_t	*collection = NULL;
 
 	collection = mongoc_client_get_collection(conn,bmpDBName.c_str(),m_bmpCollection.c_str());
-	if(err != NULL)
-		throw ModelException("BMPs Scenario","Read Plant Management Operations","Failed to get document number of collection: " + m_bmpCollection + ".\n");
+	if(collection == NULL)
+		throw ModelException("BMPs Scenario","Read Plant Management Operations","Failed to get collection: " + m_bmpCollection + ".\n");
 	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,b,NULL,NULL);
 	bson_iter_t			itertor;
 	int paramNum = 10;
@@ -53,13 +54,13 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string bmpDBName)
 		//int seqNo;
 		int mgtCode,year,month,day;
 		float husc;
-		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_NAME))
+		if (bson_iter_init_find(&itertor,bsonTable,BMP_FLD_NAME))
 			m_name = GetStringFromBSONITER(&itertor);
 		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_LUCC)) 
 			m_luccID = GetIntFromBSONITER(&itertor);
 		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_MGTOP)) 
 			mgtCode = GetIntFromBSONITER(&itertor);
-		//if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_SEQUENCE)) 
+		//if (bson_iter_init_find(&itertor,bsonTable,BMP_FLD_SEQUENCE)) 
 		//	seqNo = GetIntFromBSONITER(&itertor);
 		if (bson_iter_init_find(&itertor,bsonTable,BMP_PLTOP_FLD_YEAR)) 
 			year = GetIntFromBSONITER(&itertor);
@@ -138,8 +139,8 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t* conn, string bmpDBName)
 void BMPPlantMgtFactory::Dump(ostream* fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Plant Management Factory: " <<endl<< "SubScenario ID: "<<m_subScenarioId
-		<< " Name = " << m_name<<endl;
+	*fs	<< "Plant Management Factory: " <<endl<< 
+		"    SubScenario ID: "<<m_subScenarioId<< " Name = " << m_name<<endl;
 	for (vector<int>::iterator it = m_bmpSequence.begin(); it != m_bmpSequence.end(); it++)
 	{
 		map<int, PlantManagementOperation*>::iterator findIdx = m_bmpPlantOps.find(*it);

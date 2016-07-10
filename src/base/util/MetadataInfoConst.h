@@ -73,7 +73,7 @@ enum dimensionTypes
 	/// Unknown type
 	DT_Unknown			= -1,
 	/// Single numeric
-	DT_Single			= 0, 
+	DT_Single				= 0, 
 	/// 1D array, e.g., maximum temperature of sites
 	DT_Array1D			= 1,
 	/// 2D array
@@ -93,7 +93,9 @@ enum dimensionTypes
 	/// Scenario used by BMPs
 	DT_Scenario			= 9,
 	/// Reach parameters
-	DT_Reach				= 10
+	DT_Reach				= 10,
+	/// Lookup tables
+	DT_LookupTable	= 11
 };
 
 

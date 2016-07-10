@@ -83,6 +83,15 @@ public:
 	 */
 	static time_t ConvertToTime2(const string& strDate, const char* format, bool includeHour);
 	/*!
+	 * \brief Convert integer year, month, and day to date time
+	 *
+	 * \param[in] strDate \a string date
+	 * \param[in] format \a string format
+	 * \param[in] includeHour \a bool Include Hour?
+	 * \return Date time \a time_t
+	 */
+	static time_t ConvertYMDToTime(int& year, int& month, int& day);
+	/*!
 	 * \brief Return a flag indicating if the given file exists
 	 *
 	 * \param[in] FileName String path of file
@@ -93,9 +102,9 @@ public:
 	 * \brief Get date information from \a time_t variable 
 	 *
 	 * \param[in] t \a time_t date
-	 * \param[out] year, month, day \a int data
+	 * \param[out] year, month, day \a int value
 	 */
-	static int GetDateInfoFromTimet(time_t* seconds, int* year, int* month, int* day);
+	static int GetDateInfoFromTimet(time_t* t, int* year, int* month, int* day);
 	/*!
 	 * \brief Writes an entry to the log file. Normally only used for debug
 	 *

@@ -16,16 +16,7 @@
 #include "BMPText.h"
 #include "BMPFactory.h"
 #include "BMPPlantMgtFactory.h"
-//#include "BMPBase.h"
-//#include "BMPReachFactory.h"
-//#include "BMPReachFlowDiversion.h"
-//#include "BMPReachPointSource.h"
-//#include "BMPReachReservoir.h"
-//#include "ManagementOperation.h"
-//#include "ManagementOperationPlant.h"
-//#include "ManagementOperationHarvest.h"
-//#include "ManagementOperationFertilizer.h"
-//#include "ManagementOperationTillage.h"
+#include "BMPPointSourceFactory.h"
 
 using namespace std;
 
@@ -149,12 +140,6 @@ namespace MainBMP
 		void loadBMPs();
 		/// Load a single BMP information via \sa BMPFactory
 		void loadBMPDetail();
-
-		/*!
-		 * Get full path of BMP.db3 in previous version
-		 * \deprecated now because of the use of MongoDB
-		 */
-		//string bmpPath();
 	};
 }
 

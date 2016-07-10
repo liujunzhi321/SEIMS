@@ -122,13 +122,15 @@ clsReaches::clsReaches(mongoc_client_t *conn,string& dbName, string& collectionN
 
 	mongoc_cursor_t		*cursor;
 	const bson_t		*bsonTable;
-	mongoc_collection_t	*collection;
+	mongoc_collection_t	*collection = NULL;
 	bson_error_t		*err = NULL;
 
 	collection = mongoc_client_get_collection(conn,dbName.c_str(),collectionName.c_str());
+	if(collection == NULL)
+		throw ModelException("clsReaches","ReadAllReachInfo","Failed to get collection: " + collectionName + ".\n");
 	const bson_t		*qCount = bson_new();
-	this->reachNum = (int)mongoc_collection_count(collection,MONGOC_QUERY_NONE,qCount,0,0,NULL,err);
-	if(err != NULL || this->reachNum < 0)
+	this->m_reachNum = (int)mongoc_collection_count(collection,MONGOC_QUERY_NONE,qCount,0,0,NULL,err);
+	if(err != NULL || this->m_reachNum < 0)
 		throw ModelException("clsReaches","ReadAllReachInfo","Failed to get document number of collection: " + collectionName + ".\n");
 	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,b,NULL,NULL);
 
@@ -136,10 +138,10 @@ clsReaches::clsReaches(mongoc_client_t *conn,string& dbName, string& collectionN
 	while(mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor,&bsonTable)) 
 	{
 		clsReach *curReach = new clsReach(bsonTable, iterator);
-		reachesInfo[curReach->GetSubbasinID()] = curReach;
-		this->reachIDs.push_back(curReach->GetSubbasinID());
+		m_reachesInfo[curReach->GetSubbasinID()] = curReach;
+		this->m_reachIDs.push_back(curReach->GetSubbasinID());
 	}
-	vector<int>(reachIDs).swap(reachIDs);
+	vector<int>(m_reachIDs).swap(m_reachIDs);
 	bson_destroy(b);
 	mongoc_collection_destroy(collection);
 	mongoc_cursor_destroy(cursor);
@@ -147,9 +149,9 @@ clsReaches::clsReaches(mongoc_client_t *conn,string& dbName, string& collectionN
 
 clsReaches::~clsReaches()
 {
-	if (!reachesInfo.empty())
+	if (!m_reachesInfo.empty())
 	{
-		for (map<int, clsReach*>::iterator iter = reachesInfo.begin(); iter != reachesInfo.end(); iter++)
+		for (map<int, clsReach*>::iterator iter = m_reachesInfo.begin(); iter != m_reachesInfo.end(); iter++)
 		{
 			if(iter->second != NULL)
 				delete iter->second;

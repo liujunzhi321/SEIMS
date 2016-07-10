@@ -37,64 +37,127 @@
 #include "MetadataInfo.h"
 #include "MongoUtil.h"
 
-ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod)
-	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod)
+ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, int scenarioID)
+	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod), m_scenarioID(scenarioID), 
+	m_reaches(NULL), m_scenario(NULL)
 {
 	Init(configFileName);
 #ifdef USE_MONGODB
 	bson_error_t *err = NULL;
 	m_spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
 	if (err != NULL)
+		throw ModelException("ModuleFactory","Constructor","Failed to connect to \"spatial\" GridFS!\n");
+	
+	if(m_scenarioID != -1) /// -1 means this model doesn't need scenario information
 	{
-		throw ModelException("ModuleFactory","Constructor","Failed to connect to GridFS!\n");
+		GetBMPScenarioDBName();
+		m_scenario = new Scenario(m_conn, m_dbScenario, m_scenarioID);
+		m_scenario->Dump("e:\\test\\bmpScenario.txt");/// Write BMPs Scenario Information to Text file
 	}
 #endif
 }
-ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario)
-	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod), m_scenario(scenario), m_reaches(NULL)
-{
-	Init(configFileName);
-#ifdef USE_MONGODB
-	bson_error_t *err = NULL;
-	m_spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
-	if (err != NULL)
-	{
-		throw ModelException("ModuleFactory","Constructor","Failed to connect to GridFS!\n");
-	}
-#endif
-}
+//ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario)
+//	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod), m_scenario(scenario), m_reaches(NULL)
+//{
+//	Init(configFileName);
+//#ifdef USE_MONGODB
+//	bson_error_t *err = NULL;
+//	m_spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
+//	if (err != NULL)
+//	{
+//		throw ModelException("ModuleFactory","Constructor","Failed to connect to GridFS!\n");
+//	}
+//#endif
+//}
 ModuleFactory::~ModuleFactory(void)
 {
 #ifdef USE_MONGODB
 	mongoc_gridfs_destroy(m_spatialData);
 	mongoc_client_destroy(m_conn);
 #endif
-
-	for (map<string, SEIMSModuleSetting*>::iterator it = m_settings.begin(); it != m_settings.end(); ++it)
-		delete it->second;
-	
-	for (map<string, const char*>::iterator it = m_metadata.begin(); it != m_metadata.end(); ++it)
-		delete it->second;
-
-	for (map<string, ParamInfo*>::iterator it = m_parametersInDB.begin(); it != m_parametersInDB.end(); ++it)
-		delete it->second;
-
-	for (map<string, clsInterpolationWeightData*>::iterator it = m_weightDataMap.begin(); it != m_weightDataMap.end(); ++it)
-		delete it->second;
-
-	for (map<string, clsRasterData*>::iterator it = m_rsMap.begin(); it != m_rsMap.end(); ++it)
-		delete it->second;
-
-	//for (map<string, float*>::iterator it = m_1DArrayMap.begin(); it != m_1DArrayMap.end(); ++it)
-	//	delete it->second;
-
-	for (map<string, float**>::iterator it = m_2DArrayMap.begin(); it != m_2DArrayMap.end(); ++it)
+	/// Improved by Liangjun, 2016-7-6
+	/// First release memory, then erase map element.
+	for (map<string, SEIMSModuleSetting*>::iterator it = m_settings.begin(); it != m_settings.end(); it++)
 	{
-		for (int j = 0; j < m_2DRowsLenMap[it->first]; j++)
-			delete it->second[j];
-		delete it->second;
+		if(it->second != NULL)
+		{
+			delete it->second;
+			it->second = NULL;
+		}
+		m_settings.erase(it);
 	}
+	m_settings.clear();
 
+	for (map<string, const char*>::iterator it = m_metadata.begin(); it != m_metadata.end(); it++)
+	{
+		if(it->second != NULL)
+		{
+			delete it->second;
+			it->second = NULL;
+		}
+		m_metadata.erase(it);
+	}
+	m_metadata.clear();
+
+	for (map<string, ParamInfo*>::iterator it = m_parametersInDB.begin(); it != m_parametersInDB.end(); it++)
+	{
+		if(it->second != NULL)
+		{
+			delete it->second;
+			it->second = NULL;
+		}
+		m_parametersInDB.erase(it);
+	}
+	m_parametersInDB.clear();
+
+	for (map<string, clsInterpolationWeightData*>::iterator it = m_weightDataMap.begin(); it != m_weightDataMap.end(); it++)
+	{
+		if(it->second != NULL)
+		{
+			delete it->second;
+			it->second = NULL;
+		}
+		m_weightDataMap.erase(it);
+	}
+	m_weightDataMap.clear();
+
+	for (map<string, clsRasterData*>::iterator it = m_rsMap.begin(); it != m_rsMap.end(); it++)
+	{
+		if(it->second != NULL)
+		{
+			delete it->second;
+			it->second = NULL;
+		}
+		m_rsMap.erase(it);
+	}
+	m_rsMap.clear();
+
+	for (map<string, float*>::iterator it = m_1DArrayMap.begin(); it != m_1DArrayMap.end(); it++)
+	{
+		if(it->second != NULL)
+			Release1DArray(it->second);
+		m_1DArrayMap.erase(it);
+	}
+	m_1DArrayMap.clear();
+
+	for (map<string, float**>::iterator it = m_2DArrayMap.begin(); it != m_2DArrayMap.end(); it++)
+	{
+		if(it->second != NULL)
+			Release2DArray(m_2DRowsLenMap[it->first], it->second);
+		m_2DArrayMap.erase(it);
+	}
+	m_2DArrayMap.clear();
+
+	if(m_scenario != NULL)
+	{
+		delete m_scenario;
+		m_scenario = NULL;
+	}
+	if(m_reaches != NULL)
+	{
+		delete m_reaches;
+		m_reaches = NULL;
+	}
 
 	for (size_t i = 0; i < m_dllHandles.size(); i++)
 	{
@@ -173,23 +236,43 @@ void ModuleFactory::Init(const string& configFileName)
 			//cout << "\t" << param.Name << "\t" << param.DependPara->ModuleID << ":" << param.DependPara->Name << endl; 
 		}
 	}
-	
+}
+
+void ModuleFactory::GetBMPScenarioDBName()
+{
+	bson_t *query;
+	query = bson_new();
+	mongoc_cursor_t *cursor;
+	mongoc_collection_t	*collection;
+	const bson_t *doc;
+	collection = mongoc_client_get_collection(m_conn,m_dbName.c_str(),DB_TAB_SCENARIO);
+	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,query,NULL,NULL);
+	while(mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor,&doc)){
+		bson_iter_t iter;
+		if (bson_iter_init (&iter, doc) && bson_iter_find (&iter,MONG_SITELIST_DB)){
+			m_dbScenario = GetStringFromBSONITER(&iter);
+			break;
+		}
+	}
+	bson_destroy(query);
+	mongoc_cursor_destroy(cursor);
+	mongoc_collection_destroy(collection);
 }
 
 void ModuleFactory::ReadParametersFromMongoDB()
 {
 	mongoc_cursor_t		*cursor;
 	mongoc_collection_t	*collection;
-	bson_t				*query;
+	bson_t							*query;
+	bson_error_t				*err = NULL;
+	const bson_t				*info;
 	collection = mongoc_client_get_collection(m_conn, m_dbName.c_str(),DB_TAB_PARAMETERS);
 	query = bson_new();
 	cursor = mongoc_collection_find(collection,MONGOC_QUERY_NONE,0,0,0,query,NULL,NULL);
-	bson_error_t		*err = NULL;
 	if (mongoc_cursor_error(cursor,err))
 	{
 		throw ModelException("ModuleFactory","ReadParametersFromMongoDB","Nothing found in the collection: " + string(DB_TAB_PARAMETERS) + ".\n");
 	}
-	const bson_t			*info;
 	while(mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor,&info)){
 		ParamInfo	*p = new ParamInfo();
 		bson_iter_t	iter;
@@ -371,6 +454,7 @@ dimensionTypes ModuleFactory::MatchType(string strType)
 	if (StringMatch(strType,Type_LapseRateArray))	typ = DT_LapseRateArray;
 	if (StringMatch(strType,Type_Scenario))			typ = DT_Scenario;
 	if(StringMatch(strType, Type_Reach))	typ = DT_Reach;
+	if(StringMatch(strType, Type_LookupTable)) typ = DT_LookupTable;
 	return typ;
 }
 
@@ -925,6 +1009,8 @@ void ModuleFactory::SetData(string& dbName, int nSubbasin, SEIMSModuleSetting* s
 		break;
 	case DT_Reach:
 		SetReaches(pModule);
+		break;
+	case DT_LookupTable:
 		break;
 	default:
 		break;

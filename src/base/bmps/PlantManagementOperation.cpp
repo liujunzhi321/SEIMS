@@ -42,8 +42,9 @@ PlantOperation::~PlantOperation()
 void PlantOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Plant Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs	<< "    Plant Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Plant ID: "<<m_plantID<< " CurrentYearToMaturity: " << m_curYrMat<<
 		" Heat Units: "<<m_heatUnits<<" Initial LAI: "<<m_laiInit<<
 		" Initial Biomass: "<<m_bioInit<<" Harvest Index: "<<m_hiTarg<<
@@ -68,8 +69,9 @@ IrrigationOperation::~IrrigationOperation()
 void IrrigationOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Irrigation Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs	<< "    Irrigation Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Irrigation Source: "<<m_irrSrc<< " Applied Depth: " << m_irrAmt<<
 		" Salt: "<<m_irrSalt<<" Efficiency: "<<m_irrEfm<<
 		" Surface Runoff Ratio: "<<m_irrSq<<" Source LocationID: "<<m_irrNo<<endl;
@@ -89,8 +91,9 @@ FertilizerOperation::~FertilizerOperation()
 void FertilizerOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Fertilizer Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs	<< "    Fertilizer Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Fertilizer ID: "<<m_fertID<< " Amount (kg): " << m_frtKg<<
 		" Fraction Applied in Surface: "<<m_frtSurface<<endl;
 }
@@ -109,8 +112,9 @@ PesticideOperation::~PesticideOperation()
 void PesticideOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Pesticide Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs	<< "    Pesticide Operation: " <<endl<<
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Pesticide ID: "<<m_pestID<< " Amount (kg): " << m_pstKg<<
 		" Applied Depth (mm): "<<m_pstDep<<endl;
 }
@@ -129,8 +133,9 @@ HarvestKillOperation::~HarvestKillOperation()
 void HarvestKillOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "HarvestKill Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs	<< "    HarvestKill Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" CNOP: "<<m_CNOP<< " Harvest Index Override: " << m_hiOvr<<
 		" Stover Fraction Removed: "<<m_fracHarvk<<endl;
 }
@@ -148,8 +153,9 @@ TillageOperation::~TillageOperation()
 void TillageOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Tillage Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs	<< "    Tillage Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Tillage ID: "<<m_tillID<< " CNOP: " << m_CNOP<<endl;
 }
 
@@ -167,8 +173,9 @@ HarvestOnlyOperation::~HarvestOnlyOperation()
 void HarvestOnlyOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "HarvestOnly Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs<< "    HarvestOnly Operation: " <<endl<<
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Harvest Efficiency: "<<m_harvEff<< " Harvest Index Biomass: " << m_hiBms<<
 		" Harvest Index Residue: " << m_hiRsd<<endl;
 }
@@ -184,8 +191,9 @@ KillOperation::~KillOperation()
 void KillOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Kill Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<endl;
+	*fs<< "    Kill Operation: " <<endl<<
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<endl;
 }
 
 /// Grazing
@@ -206,8 +214,9 @@ GrazingOperation::~GrazingOperation()
 void GrazingOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Grazing Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs<< "    Grazing Operation: " <<endl<<
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Grazing Days: "<<m_grzDays<< " Manure ID: " << m_manureID<<
 		" Biomass Consumed: "<<m_bioEat<<" Biomass Trampled: "<<m_bioTrmp<<
 		" Manure Deposited: "<<m_manureKg<<endl;
@@ -236,8 +245,9 @@ AutoIrrigationOperation::~AutoIrrigationOperation()
 void AutoIrrigationOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "AutoIrrigation Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs<< "    AutoIrrigation Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Water Stress Identifier: "<<m_wstrsID<< " AutoIrrigation Source: " << m_irrSrc<<
 		" Source Location ID: "<<m_irrNoa<<" Water Stress Threshold: "<<m_autoWstrs<<
 		" Efficiency: "<<m_irrEff<<" Water Applied (mm): "<<m_irrMx<<
@@ -265,8 +275,9 @@ AutoFertilizerOperation::~AutoFertilizerOperation()
 void AutoFertilizerOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "AutoFertilizer Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs<< "    AutoFertilizer Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Fertilizer ID: "<<m_afertID<< " Nitrogen Method: " << m_NStress<<
 		" Nitrogen Stress Factor: "<<m_autoNStrs<<" MaxMineral Nitrogen: "<<m_autoNAPP<<
 		" MaxMineral Nitrogen Yearly: "<<m_autoNYR<<" Fertilizer Efficiency: "<<m_autoEff<<
@@ -285,8 +296,9 @@ ReleaseImpoundOperation::~ReleaseImpoundOperation()
 void ReleaseImpoundOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Release/Impound Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs<< "    Release/Impound Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Impound Trigger: "<<m_impTrig<<endl;
 }
 
@@ -305,8 +317,9 @@ ContinuousFertilizerOperation::~ContinuousFertilizerOperation()
 void ContinuousFertilizerOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Continuous Fertilizer Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs<< "    Continuous Fertilizer Operation: " <<endl<<
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Fertilizer ID: "<<m_cfertID<< " Amount (kg): " << m_cfrtKg<<
 		" Frequency: "<<m_ifrtFreq<<" Duration Days: "<<m_fertDays<<endl;
 }
@@ -326,8 +339,9 @@ ContinuousPesticideOperation::~ContinuousPesticideOperation()
 void ContinuousPesticideOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Continuous Pesticide Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs<< "    Continuous Pesticide Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Pesticide ID: "<<m_ipstID<< " Amount (kg): " << m_cpstKg<<
 		" Frequency: "<<m_pstFreq<<" Duration Days: "<<m_pstDays<<endl;
 }
@@ -344,7 +358,8 @@ BurningOperation::~BurningOperation()
 void BurningOperation::dump(ostream *fs)
 {
 	if(fs == NULL) return;
-	*fs	<< "Burning Operation: " <<endl<< "HUSC: "<<m_frHU<<" rotationYear: "<<
-		m_year<<" Month: "<<m_month<<" Day: "<<m_day<<
+	*fs<< "    Burning Operation: " <<endl<< 
+		"      HUSC: "<<m_frHU<<" rotationYear: "<<m_year<<
+		" Month: "<<m_month<<" Day: "<<m_day<<
 		" Fraction Left: "<<m_burnFrlb<<endl;
 }

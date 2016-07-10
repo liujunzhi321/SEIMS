@@ -137,6 +137,7 @@ int DecompositeRasterToMongoDB(map<int, SubBasin>& bboxMap, Raster<int>& rsSubba
 		bson_destroy(p);
 		free(p);
 		delete[] subData;
+		subData = NULL;
 	}
 	return 0;
 }
@@ -267,7 +268,6 @@ int DecompositeRaster(map<int, SubBasin>& bboxMap, Raster<int>& rsSubbasin, cons
 		GDALDataset *poDstDS = poDriver->Create(subbasinFile.c_str(), subXSize, subYSize, 1, GDT_Float32, papszOptions );
 
 		float *subData = (float *) CPLMalloc(sizeof(float)*subXSize*subYSize);
-
 		for (int i = subbasin.yMin; i <= subbasin.yMax; i++)
 		{
 			for (int j = subbasin.xMin; j <= subbasin.xMax; j++)
@@ -309,9 +309,9 @@ int DecompositeRaster(map<int, SubBasin>& bboxMap, Raster<int>& rsSubbasin, cons
 
 int main(int argc, char** argv)
 {
-	if (argc < 6)
+	if (argc < 7)
 	{
-		cout << "Usage: " << "ImportRaster SubbasinFile DataFolder modelName hostname port [outputFolder]\n";
+		cout << "Usage: " << "ImportRaster <MaskFile> <DataFolder> <modelName> <GridFSName> <hostIP> <port> [outputFolder]\n";
 		exit(-1);
 	}
 
@@ -324,11 +324,12 @@ int main(int argc, char** argv)
 	const char* subbasinFile = argv[1];
 	const char* folder = argv[2];
 	const char* modelName = argv[3];
-	const char* hostname = argv[4];
-	int port = atoi(argv[5]);
+	const char* gridFSName = argv[4];
+	const char* hostname = argv[5];
+	int port = atoi(argv[6]);
     const char* outTifFolder = NULL;
-    if(argc >= 7)
-        outTifFolder = argv[6];
+    if(argc >= 8)
+        outTifFolder = argv[7];
 
 	vector<string> dstFiles;
 	FindFiles(folder, "*.tif", dstFiles);
@@ -402,10 +403,10 @@ int main(int argc, char** argv)
 	
 	if( MONGO_OK != status ) 
 	{ 
-		cout << "can not connect to mongodb.\n";
+		cout << "can not connect to MongoDB.\n";
 		exit(-1);
 	}
-	gridfs_init(conn, modelName, "spatial", gfs); 
+	gridfs_init(conn, modelName, gridFSName, gfs); 
 
 	/// read document already existed in "spatial" collection
 	mongo_cursor cursor[1];
@@ -414,7 +415,9 @@ int main(int argc, char** argv)
 	bson_finish(query);
 	char spatialCollection[255]; 
 	strcpy_s(spatialCollection, modelName);
-	strcat_s(spatialCollection,".spatial.files");
+	strcpy_s(spatialCollection, ".");
+	strcat_s(spatialCollection, gridFSName);
+	strcat_s(spatialCollection,".files");
 	mongo_cursor_init(cursor, conn, spatialCollection);
 	mongo_cursor_set_query(cursor, query);
 	vector<string> fileNamesExisted;

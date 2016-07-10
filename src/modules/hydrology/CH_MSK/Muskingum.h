@@ -96,9 +96,13 @@ private:
 	float m_vScalingFactor;
 
 	/**
-	*	@brief flow direction by the rule of ArcGIS
+	*	@brief Flow direction by the rule of TauDEM
 	*
-	*	The value of direction is as following:
+		The value of direction is as following (TauDEM):
+		4  3  2
+		5      1
+		6  7  8
+		The value of direction is as following (ArcGIS):
 		32 64 128
 		64     1
 		8   4  2
@@ -149,7 +153,7 @@ private:
 		0     0
 		1  0  1
 	*/
-	std::map<int, int> m_diagonal;
+	map<int, int> m_diagonal;
 
 	/// beta in manning equation
 	float m_beta;

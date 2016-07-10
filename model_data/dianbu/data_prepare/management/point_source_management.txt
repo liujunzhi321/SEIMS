@@ -1,0 +1,29 @@
+## This file define point source related inputs.
+## SUBSCENARIO: Sub-Scenario ID which used in BMP_scenarios.txt, MUST BE INTEGER
+## NAME: Name of Sub-Scenario
+## PTSRC: Point source code includes:
+## 		10000: Cattle farm
+## 		20000: Pig farm
+## 		30000: Chicken farm
+## 		40000: Sewage outlet in rural resident
+## 		50000: Water release point, such as spillway of upstream reservoir
+## 	SEQUENCE: The operation sequence, which is scheduled by starting date and ending date.
+## 	SYear, SMonth, SDay and EYear, EMonth, EDay can be used to define the starting and ending release date respectively.
+## 		If all set to -9999, then every time step will release the water, sediment, and nutrient.
+## 	Here after is the parameters information:
+## 	Parameter	Description	Unit
+## 	Q	Water volume	m3/'size'/day ('Size' may be one cattle or one pig, depends on PTSRC code)
+## 	Sed	Sediment concentration	kg/'size'/day
+## 	TN	Total Nitrogen concentration	kg/'size'/day
+## 	NO3	Nitrate Nitrogen concentration	kg/'size'/day
+## 	NH3	Ammonium Nitrogen concentration	kg/'size'/day
+## 	ORGN	Organic Nitrogen concentration	kg/'size'/day
+## 	TP	Total phosphorus concentration	kg/'size'/day
+## 	MINP	Mineral phosphorus concentration	kg/'size'/day
+## 	ORGP	Organic phosphorus concentration	kg/'size'/day
+
+SUBSCENARIO	NAME	PTSRC	SEQUENCE	SYear	SMonth	SDay	EYear	EMonth	EDay	Q	SED	TN	NO3	NH3	ORGN	TP	MINP	ORGP
+10001	traditional	10000	0	-9999	-9999	-9999	-9999	-9999	-9999	0.0003	0	0.04	0.01	0.01	0.02	0.05	0.01	0.04
+20001	traditional	20000	0	-9999	-9999	-9999	-9999	-9999	-9999	0.0003	0	0.04	0.01	0.01	0.02	0.05	0.01	0.04
+30001	traditional	30000	0	-9999	-9999	-9999	-9999	-9999	-9999	0.0003	0	0.04	0.01	0.01	0.02	0.05	0.01	0.04
+40001	traditional	40000	0	-9999	-9999	-9999	-9999	-9999	-9999	0.0003	0	0.04	0.01	0.01	0.02	0.05	0.01	0.04

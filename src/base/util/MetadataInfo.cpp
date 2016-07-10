@@ -121,6 +121,9 @@ void MetadataInfo::DimensionTag(string tag, int indent, dimensionTypes dimType, 
 	case DT_Reach:
 		strTmp = Type_Reach;
 		break;
+	case DT_LookupTable:
+		strTmp = Type_LookupTable;
+		break;
     default:
         break;
 	}
