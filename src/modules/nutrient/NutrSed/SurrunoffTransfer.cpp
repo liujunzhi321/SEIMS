@@ -123,10 +123,10 @@ void SurrunoffTransfer::initialOutputs() {
 	// allocate the output variables
 	if(m_sedorgn == NULL) {
 		for(int i=0; i < m_nCells; i++) {
-			m_sedorgn[i] = 0.;
-			m_sedorgp[i] = 0.;
-			m_sedminpa[i] = 0.;
-			m_sedminps[i] = 0.;
+			m_sedorgn[i] = 0.f;
+			m_sedorgp[i] = 0.f;
+			m_sedminpa[i] = 0.f;
+			m_sedminps[i] = 0.f;
 		}
 	}
 	//if(m_sol_mp == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_mp, 0.f);}
@@ -152,20 +152,20 @@ float* SurrunoffTransfer::CalculateEnrRatio(){
 	//enrichment ratio
 	float* enratio;
 	for(int i = 0; i < m_nCells; i++) {
-		if (m_sedimentYield[i] < 1e-4) {
-			m_sedimentYield[i] = 0;
+		if (m_sedimentYield[i] < 1e-4f) {
+			m_sedimentYield[i] = 0.f;
 		}
 		// CREAMS method for calculating enrichment ratio
-		float cy = 0;
+		float cy = 0.f;
 		// Calculate sediment calculations, equation 4:2.2.3 in SWAT Theory 2009, p272
-		cy = 0.1 * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * 0.0001 * m_surfr[i] + 1e-6);
-		if (cy > 1e-6) {
-			enratio[i] = 0.78 * pow(cy, -0.2468f);
+		cy = 0.1f * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * 0.0001f * m_surfr[i] + 1e-6f);
+		if (cy > 1e-6f) {
+			enratio[i] = 0.78f * pow(cy, -0.2468f);
 		} else {
-			enratio[i] = 0;
+			enratio[i] = 0.f;
 		}
-		if (enratio[i] > 3.5) {
-			enratio[i] = 3.5;
+		if (enratio[i] > 3.5f) {
+			enratio[i] = 3.5f;
 		}
 	}
 	return enratio;
@@ -173,32 +173,32 @@ float* SurrunoffTransfer::CalculateEnrRatio(){
 void SurrunoffTransfer::OrgnRemoveinSr(int i, float enratio) {
 		for(int k = 0; k < m_nSoilLayers[i]; k++) {
 			//amount of organic N in first soil layer (orgninfl)
-			float orgninfl = 0;
+			float orgninfl = 0.f;
 			//conversion factor (wt)
-			float wt = 0;
+			float wt = 0.f;
 			orgninfl = m_sol_orgn[i][0] + m_sol_aorgn[i][0] + m_sol_fon[i][0];
-			wt = m_sol_bd[i][0] * m_sol_z[i][0] / 100;
+			wt = m_sol_bd[i][0] * m_sol_z[i][0] / 100.f;
 			//concentration of organic N in soil (concn)
-			float concn = 0;
+			float concn = 0.f;
 			concn = orgninfl * enratio / wt;
 			//Calculate the amount of organic nitrogen transported with sediment to the stream, equation 4:2.2.1 in SWAT Theory 2009, p271
-			m_sedorgn[i] = 0.001 * concn * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * m_nCells);
+			m_sedorgn[i] = 0.001f * concn * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * m_nCells);
 			//update soil nitrogen pools
-			if(orgninfl > 1e-6) {
+			if(orgninfl > 1e-6f) {
 				m_sol_aorgn[i][0] = m_sol_aorgn[i][0] - m_sedorgn[i] * (m_sol_aorgn[i][0] / orgninfl);
 				m_sol_orgn[i][0] = m_sol_orgn[i][0] - m_sedorgn[i] * (m_sol_orgn[i][0] / orgninfl);
 				m_sol_fon[i][0] = m_sol_fon[i][0] - m_sedorgn[i] * (m_sol_fon[i][0] / orgninfl);
 				if (m_sol_aorgn[i][0] < 0) {
 					m_sedorgn[i] = m_sedorgn[i] + m_sol_aorgn[i][0];
-					m_sol_aorgn[i][0] = 0;
+					m_sol_aorgn[i][0] = 0.f;
 				}
-				if (m_sol_orgn[i][0] < 0) {
+				if (m_sol_orgn[i][0] < 0.f) {
 					m_sedorgn[i] = m_sedorgn[i] + m_sol_orgn[i][0];
-					m_sol_orgn[i][0] = 0;
+					m_sol_orgn[i][0] = 0.f;
 				}
-				if (m_sol_fon[i][0] < 0.) {
+				if (m_sol_fon[i][0] < 0.f) {
 					m_sedorgn[i] = m_sedorgn[i] + m_sol_fon[i][0];
-					m_sol_fon[i][0] = 0;
+					m_sol_fon[i][0] = 0.f;
 				}
 			}
 
@@ -207,56 +207,56 @@ void SurrunoffTransfer::OrgnRemoveinSr(int i, float enratio) {
 void SurrunoffTransfer::OrgpAttachedtoSed(int i, float enratio){
 		for(int k = 0; k < m_nSoilLayers[i]; k++) {
 			//amount of phosphorus attached to sediment in soil (sol_attp)
-			float sol_attp = 0;
+			float sol_attp = 0.f;
 			//fraction of active mineral/organic/stable mineral phosphorus in soil (sol_attp_o, sol_attp_a, sol_attp_s)
-			float sol_attp_o = 0;
-			float sol_attp_a = 0;
-			float sol_attp_s = 0;
+			float sol_attp_o = 0.f;
+			float sol_attp_a = 0.f;
+			float sol_attp_s = 0.f;
 			//Calculate sediment
 			sol_attp = m_sol_orgp[i][0] + m_sol_fop[i][0] + m_sol_actp[i][0] + m_sol_stap[i][0];
-			if (sol_attp > 1e-3) {
+			if (sol_attp > 1e-3f) {
 				sol_attp_o = (m_sol_orgp[i][0] + m_sol_fop[i][0]) / sol_attp;
 				sol_attp_a = m_sol_actp[i][0] / sol_attp;
 				sol_attp_s = m_sol_stap[i][0] / sol_attp;
 			}
 			//conversion factor (mg/kg => kg/ha) (wt)
-			float wt = m_sol_bd[i][0] * m_sol_z[i][0] / 100;
+			float wt = m_sol_bd[i][0] * m_sol_z[i][0] / 100.f;
 			//concentration of organic P in soil (concp)
-			float concp = 0;
+			float concp = 0.f;
 			concp = sol_attp * enratio / wt;
 			//total amount of P removed in sediment erosion (sedp)
-			float sedp = 0.001 * concp * m_sedimentYield[i] / (m_cellWidth * m_cellWidth);
+			float sedp = 0.001f * concp * m_sedimentYield[i] / (m_cellWidth * m_cellWidth);
 			m_sedorgp[i] = sedp * sol_attp_o;
 			m_sedminpa[i] = sedp * sol_attp_a;
 			m_sedminps[i] = sedp * sol_attp_s;
 			//modify phosphorus pools
 			//total amount of P in mineral sediment pools prior to sediment removal (psedd)
-			float psedd = 0;
+			float psedd = 0.f;
 			//total amount of P in organic pools prior to sediment removal (porgg)
-			float porgg = 0;
+			float porgg = 0.f;
 			psedd = m_sol_actp[i][0] + m_sol_stap[i][0];
 			porgg = m_sol_orgp[i][0] + m_sol_fop[i][0];
-			if (porgg > 1e-3) {
+			if (porgg > 1e-3f) {
 				m_sol_orgp[i][0] = m_sol_orgp[i][0] - m_sedorgp[i] * (m_sol_orgp[i][0] / porgg);
 				m_sol_fop[i][0] = m_sol_fop[i][0] - m_sedorgp[i] * (m_sol_fop[i][0] / porgg);
 			}
 			m_sol_actp[i][0] = m_sol_actp[i][0] - m_sedminpa[i];
 			m_sol_stap[i][0] = m_sol_stap[i][0] - m_sedminps[i];
-			if (m_sol_orgp[i][0] < 0) {
+			if (m_sol_orgp[i][0] < 0.f) {
 				m_sedorgp[i] = m_sedorgp[i] + m_sol_orgp[i][0];
-				m_sol_orgp[i][0] = 0;
+				m_sol_orgp[i][0] = 0.f;
 			}
-			if (m_sol_fop[i][0] < 0) {
+			if (m_sol_fop[i][0] < 0.f) {
 				m_sedorgp[i] = m_sedorgp[i] + m_sol_fop[i][0];
-				m_sol_fop[i][0] = 0;
+				m_sol_fop[i][0] = 0.f;
 			}
-			if (m_sol_actp[i][0] < 0) {
+			if (m_sol_actp[i][0] < 0.f) {
 				m_sedminpa[i] = m_sedminpa[i] + m_sol_actp[i][0];
-				m_sol_actp[i][0] = 0;
+				m_sol_actp[i][0] = 0.f;
 			}
-			if (m_sol_stap[i][0] < 0) {
+			if (m_sol_stap[i][0] < 0.f) {
 				m_sedminps[i] = m_sedminps[i] + m_sol_stap[i][0];
-				m_sol_stap[i][0] = 0;
+				m_sol_stap[i][0] = 0.f;
 			}
 
 		}

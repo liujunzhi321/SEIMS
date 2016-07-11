@@ -103,11 +103,11 @@ void AtmosphericDeposition::initialOutputs() {
 	}
 	// allocate the output variables
 	if(m_addrnh3 < 0) {
-		m_addrnh3 = 0.;
-		m_addrno3 = 0.;
+		m_addrnh3 = 0.f;
+		m_addrno3 = 0.f;
 	}
-	if(m_wshd_rno3 < 0) {
-		m_wshd_rno3 = 0.;
+	if(m_wshd_rno3 < 0.f) {
+		m_wshd_rno3 = 0.f;
 	}
 }
 int AtmosphericDeposition::Execute() {
@@ -118,13 +118,13 @@ int AtmosphericDeposition::Execute() {
 	for(int i = 0; i < m_nCells; i++) {
 		for(int k = 0; k < m_nSoilLayers[i]; k++) {
 			// Calculate the amount of nitrite and ammonia added to the soil in rainfall, 
-		    m_addrno3 = 0.01 * m_rcn * m_preci[i];
-		    m_addrnh3 = 0.01 * m_rca * m_preci[i];
-			m_sol_nh3[i][0] = 0.;
-		    m_sol_no3[i][0] = m_sol_no3[i][0] + m_addrno3 + m_drydep_no3 / 365.;
-		    m_sol_nh3[i][0] = m_sol_nh3[i][0] + m_addrnh3 + m_drydep_nh4 / 365.;
+		    m_addrno3 = 0.01f * m_rcn * m_preci[i];
+		    m_addrnh3 = 0.01f * m_rca * m_preci[i];
+			m_sol_nh3[i][0] = 0.f;
+		    m_sol_no3[i][0] = m_sol_no3[i][0] + m_addrno3 + m_drydep_no3 / 365.f;
+		    m_sol_nh3[i][0] = m_sol_nh3[i][0] + m_addrnh3 + m_drydep_nh4 / 365.f;
 
-			m_wshd_rno3 = m_wshd_rno3 + m_addrno3 * (1 / m_cellWidth);
+			m_wshd_rno3 = m_wshd_rno3 + m_addrno3 * (1.f / m_cellWidth);
 		}
 	}
 	return 0;

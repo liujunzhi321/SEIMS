@@ -136,18 +136,18 @@ void NutrientOLRoute::initialOutputs() {
 	// allocate the output variables
 	if(m_surqno3ToCh == NULL) {
 		for(int i=0; i < m_nCells; i++) {
-			m_surqno3ToCh[i] = 0.;
-			m_latno3ToCh[i] = 0.;
-			m_no3gwToCh[i] = 0.;
-			m_surqsolpToCh[i] = 0.;
-			m_minpgwToCh[i] = 0.;
-			m_sedorgnToCh[i] = 0.;
-			m_sedorgpToCh[i] = 0.;
-			m_sedminpaToCh[i] = 0.;
-			m_sedminpsToCh[i] = 0.;
-			m_ammoToCh[i] = 0.;
-			m_nitriteToCh[i] = 0.;
-			m_codToCh[i] = 0.;
+			m_surqno3ToCh[i] = 0.f;
+			m_latno3ToCh[i] = 0.f;
+			m_no3gwToCh[i] = 0.f;
+			m_surqsolpToCh[i] = 0.f;
+			m_minpgwToCh[i] = 0.f;
+			m_sedorgnToCh[i] = 0.f;
+			m_sedorgpToCh[i] = 0.f;
+			m_sedminpaToCh[i] = 0.f;
+			m_sedminpsToCh[i] = 0.f;
+			m_ammoToCh[i] = 0.f;
+			m_nitriteToCh[i] = 0.f;
+			m_codToCh[i] = 0.f;
 		}
 	}
 }
@@ -176,9 +176,9 @@ void NutrientOLRoute::initial() {
 		m_ChV = new float[m_nCells];
 		m_fract = new float[m_nCells];
 		for (int i=0; i<m_nCells; i++) {
-			m_QV[i] = 0.;
+			m_QV[i] = 0.f;
 			m_ChV[i] = 0.f;
-			m_fract[i] = 0.;
+			m_fract[i] = 0.f;
 		}
 	}
 }
@@ -186,32 +186,32 @@ void NutrientOLRoute::NutrientinOverland(int i) {
 	//sum the nutrients of the upstream overland flow
 	float flowwidth = m_FlowWidth[i];
 	float cellArea = m_cellWidth * m_cellWidth;
-	float surqno3 = 0.;	// sum of surqno3 flow in
-	float latno3 = 0.;	// sum of latno3 flow in
-	float ammo = 0.;	// sum of ammonium flow in
-	float no3gw = 0.;	// sum of no3gw flow in
-	float surqsolp = 0.;	// sum of surqsolp flow in
-	float minpgw = 0.;	// sum of minpgw flow in
-	float sedorgn = 0.;	// sum of sedorgn flow in
-	float sedorgp = 0.;	// sum of sedorgp flow in
-	float sedminpa = 0.;	// sum of sedminpa flow in
-	float sedminps = 0.;	// sum of sedminps flow in
-	float cod = 0.;	// sum of cod flow in
+	float surqno3 = 0.f;	// sum of surqno3 flow in
+	float latno3 = 0.f;	// sum of latno3 flow in
+	float ammo = 0.f;	// sum of ammonium flow in
+	float no3gw = 0.f;	// sum of no3gw flow in
+	float surqsolp = 0.f;	// sum of surqsolp flow in
+	float minpgw = 0.f;	// sum of minpgw flow in
+	float sedorgn = 0.f;	// sum of sedorgn flow in
+	float sedorgp = 0.f;	// sum of sedorgp flow in
+	float sedminpa = 0.f;	// sum of sedminpa flow in
+	float sedminps = 0.f;	// sum of sedminps flow in
+	float cod = 0.f;	// sum of cod flow in
 
 	for (int k = 1; k <= (int)m_flowInIndex[i][0]; ++k)
 	{
 		int flowInID = (int)m_flowInIndex[i][k];
 		// Calculate amount of nutrients in surface runoff
-		m_surqno3[flowInID] = max(1.e-12, m_surqno3[flowInID]);
-		m_latno3[flowInID] = max(1.e-12, m_latno3[flowInID]);
-		m_no3gw[flowInID] = max(1.e-12, m_no3gw[flowInID]);
-		m_surqsolp[flowInID] = max(1.e-12, m_surqsolp[flowInID]);
-		m_minpgw[flowInID] = max(1.e-12, m_minpgw[flowInID]);
-		m_sedorgn[flowInID] = max(1.e-12, m_sedorgn[flowInID]);
-		m_sedorgp[flowInID] = max(1.e-12, m_sedorgp[flowInID]);
-		m_sedminpa[flowInID] = max(1.e-12, m_sedminpa[flowInID]);
-		m_sedminps[flowInID] = max(1.e-12, m_sedminps[flowInID]);
-		m_cod[flowInID] = max(1.e-12, m_cod[flowInID]);
+		m_surqno3[flowInID] = max(1.e-12f, m_surqno3[flowInID]);
+		m_latno3[flowInID] = max(1.e-12f, m_latno3[flowInID]);
+		m_no3gw[flowInID] = max(1.e-12f, m_no3gw[flowInID]);
+		m_surqsolp[flowInID] = max(1.e-12f, m_surqsolp[flowInID]);
+		m_minpgw[flowInID] = max(1.e-12f, m_minpgw[flowInID]);
+		m_sedorgn[flowInID] = max(1.e-12f, m_sedorgn[flowInID]);
+		m_sedorgp[flowInID] = max(1.e-12f, m_sedorgp[flowInID]);
+		m_sedminpa[flowInID] = max(1.e-12f, m_sedminpa[flowInID]);
+		m_sedminps[flowInID] = max(1.e-12f, m_sedminps[flowInID]);
+		m_cod[flowInID] = max(1.e-12f, m_cod[flowInID]);
 
 		//Sum
 		surqno3 = surqno3 + m_surqno3[flowInID];
@@ -238,7 +238,7 @@ void NutrientOLRoute::NutrientinOverland(int i) {
 		m_sedorgpToCh[i] = sedorgp * cellArea;
 		m_sedminpaToCh[i] = sedminpa * cellArea;
 		m_sedminpsToCh[i] = sedminps * cellArea;
-		m_cod[i] = cod * cellArea;
+		m_cod[i] = cod * cellArea; // TODO calculate volume
 		return;
 	}
 
@@ -253,10 +253,10 @@ void NutrientOLRoute::NutrientinOverland(int i) {
 	m_sedminpaToCh[i] = NutToChannel(i, m_sedminpaToCh[i]);
 	m_sedminpsToCh[i] = NutToChannel(i, m_sedminpsToCh[i]);
 	m_codToCh[i] = NutToChannel(i, m_codToCh[i]);
-	m_ammoToCh[i] = 0.;
-	m_nitriteToCh[i] = 0.;
+	m_ammoToCh[i] = 0.f;
+	m_nitriteToCh[i] = 0.f;
 
-	m_codToCh[i] = m_codToCh[i] / 1.E6; //mg to kg
+	m_codToCh[i] = m_codToCh[i] / 1.E6f; //mg to kg
 	
 }
 float NutrientOLRoute::NutToChannel(int id, float nut)
@@ -265,8 +265,8 @@ float NutrientOLRoute::NutToChannel(int id, float nut)
 	if (m_chWidth[id] > 0)
 	{
 		float tem = m_ChV[id] * m_TimeStep;
-		fractiontochannel = 2 * tem / (m_cellWidth - m_chWidth[id]);
-		fractiontochannel = min(fractiontochannel, 1.0f);
+		fractiontochannel = 2.f * tem / (m_cellWidth - m_chWidth[id]);
+		fractiontochannel = min(fractiontochannel, 1.f);
 	}
 	float nuttoch = fractiontochannel * nut;
 	return nuttoch;

@@ -93,8 +93,8 @@ void NutrientinGroundwater::initialOutputs() {
 	// allocate the output variables
 	if(m_no3gw == NULL) {
 		for(int i=0; i < m_nCells; i++) {
-			m_no3gw[i] = 0.;
-			m_minpgw[i] = 0.;
+			m_no3gw[i] = 0.f;
+			m_minpgw[i] = 0.f;
 		}
 	}
 }
@@ -105,8 +105,8 @@ int NutrientinGroundwater::Execute() {
 	this -> initialOutputs();
 	for(int i = 0; i < m_nCells; i++) {
 
-		m_no3gw[i] = m_gwno3[i] * m_gw_q[i] / 100.;
-		m_minpgw[i] = m_gwminp[i] * m_gw_q[i] / 100.;
+		m_no3gw[i] = m_gwno3[i] * m_gw_q[i] / 100.f;
+		m_minpgw[i] = m_gwminp[i] * m_gw_q[i] / 100.f;
 
 	}
 	//return ??
