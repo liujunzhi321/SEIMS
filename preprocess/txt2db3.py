@@ -74,12 +74,13 @@ def importData2Sqlite(dataImport, dbFile):
 
 def reConstructSQLiteDB():
     # If the database file existed, DELETE it.
-    if os.path.exists(sqliteFile):
-        os.remove(sqliteFile)
+    sqlPath = TXT_DB_DIR + os.sep + sqliteFile
+    if os.path.exists(sqlPath):
+        os.remove(sqlPath)
     dataFiles = [[Tag_Params, init_params]]
     for df in lookup_tabs:
         dataFiles.append([Tag_Lookup, df])
-    txt2Sqlite(dataFiles, sqliteFile)
+    txt2Sqlite(dataFiles, sqlPath)
 
 
 if __name__ == "__main__":

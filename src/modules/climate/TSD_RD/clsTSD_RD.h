@@ -12,12 +12,14 @@
  * 
  */
 #pragma once
+
 #include <string>
 #include "api.h"
 #include "util.h"
 #include "SimulationModule.h"
 
 using namespace std;
+
 /*!
  * \class clsTSD_RD
  * \ingroup TSD_RD
@@ -28,16 +30,18 @@ using namespace std;
 class clsTSD_RD : public SimulationModule
 {
 private:
-	/// data row number
-	int m_Rows;
-	/// time series data
-	float* m_Data;
+    /// data row number
+    int m_Rows;
+    /// time series data
+    float *m_Data;
 
 public:
-	clsTSD_RD(void);
-	~clsTSD_RD(void);
+    clsTSD_RD(void);
 
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
+    ~clsTSD_RD(void);
+
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Get1DData(const char *key, int *n, float **data);
 };
 

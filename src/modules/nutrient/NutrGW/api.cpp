@@ -19,39 +19,39 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-	return new NutrientinGroundwater();
+    return new NutrientinGroundwater();
 }
 
 //! function to return the XML Metadata document string
-extern "C" SEIMS_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 {
-	MetadataInfo mdi;
-	mdi.SetAuthor("Huiran Gao");
-	mdi.SetClass(MCLS_NutGW, MCLSDESC_NutGW);
-	mdi.SetDescription(MDESC_NutGW);
-	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetID(MDESC_NutGW);
-	mdi.SetName(MDESC_NutGW);
-	mdi.SetVersion("1.0");
-	mdi.SetWebsite(SEIMS_SITE);
-	mdi.SetHelpfile("NutGW.html");
+    MetadataInfo mdi;
+    mdi.SetAuthor("Huiran Gao");
+    mdi.SetClass(MCLS_NutGW, MCLSDESC_NutGW);
+    mdi.SetDescription(MDESC_NutGW);
+    mdi.SetEmail(SEIMS_EMAIL);
+    mdi.SetID(MDESC_NutGW);
+    mdi.SetName(MDESC_NutGW);
+    mdi.SetVersion("1.0");
+    mdi.SetWebsite(SEIMS_SITE);
+    mdi.SetHelpfile("NutGW.html");
 
-	// set the parameters
-	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
-	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+    // set the parameters
+    mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter(VAR_GWNO3, UNIT_KGM3, DESC_GWNO3, Source_ParameterDB, DT_Raster1D);
-	mdi.AddParameter(VAR_GWMINP, UNIT_KGM3, DESC_GWMINP, Source_ParameterDB, DT_Raster1D);
-	mdi.AddInput(VAR_GW_Q, UNIT_DEPTH_MM, DESC_GW_Q, Source_Module, DT_Raster1D);
+    mdi.AddParameter(VAR_GWNO3, UNIT_KGM3, DESC_GWNO3, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_GWMINP, UNIT_KGM3, DESC_GWMINP, Source_ParameterDB, DT_Raster1D);
+    mdi.AddInput(VAR_GW_Q, UNIT_DEPTH_MM, DESC_GW_Q, Source_Module, DT_Raster1D);
 
-	// set the output variables
-	mdi.AddOutput(VAR_NO3GW, UNIT_CONT_KGHA, DESC_NO3GW, DT_Raster1D);
-	mdi.AddOutput(VAR_MINPGW, UNIT_CONT_KGHA, DESC_MINPGW, DT_Raster1D);
+    // set the output variables
+    mdi.AddOutput(VAR_NO3GW, UNIT_CONT_KGHA, DESC_NO3GW, DT_Raster1D);
+    mdi.AddOutput(VAR_MINPGW, UNIT_CONT_KGHA, DESC_MINPGW, DT_Raster1D);
 
-	string res = mdi.GetXMLDocument();
-	char* tmp = new char[res.size()+1];
-	strprintf(tmp, res.size()+1, "%s", res.c_str());
-	return tmp;
+    string res = mdi.GetXMLDocument();
+    char *tmp = new char[res.size() + 1];
+    strprintf(tmp, res.size() + 1, "%s", res.c_str());
+    return tmp;
 }

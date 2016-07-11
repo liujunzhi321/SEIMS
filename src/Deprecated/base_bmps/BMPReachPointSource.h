@@ -1,22 +1,25 @@
 #pragma once
+
 #include "BMPReach.h"
 
 namespace MainBMP
 {
-	class BMPReachPointSource :
-		public BMPReach
-	{
-	public:
-		BMPReachPointSource(
-					string bmpDatabasePath,
-					string parameterTableName,
-					int reachId,
-					int pointSourceId);
-		~BMPReachPointSource(void);
+    class BMPReachPointSource :
+            public BMPReach
+    {
+    public:
+        BMPReachPointSource(
+                string bmpDatabasePath,
+                string parameterTableName,
+                int reachId,
+                int pointSourceId);
 
-		string ColumnName();
-		bool HasTimeSeriesData();
-	};
+        ~BMPReachPointSource(void);
+
+        string ColumnName();
+
+        bool HasTimeSeriesData();
+    };
 }
 
 

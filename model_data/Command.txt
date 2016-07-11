@@ -1,15 +1,23 @@
-OpenMP version example:
-..\seims_omp ..\model_data\model_dianbu_30m_longterm 6 0 127.0.0.1 27017 0
+## OpenMP version example:
++ ..\seims_omp ..\model_data\model_dianbu_30m_longterm 6 0 127.0.0.1 27017 0
 
-..\seims_omp ..\model_data\model_fenkeng_500m 6 0 127.0.0.1 27017 0
++ ..\seims_omp ..\model_data\model_fenkeng_500m 6 0 127.0.0.1 27017 0
 MPI version example:
 mpiexec -n 4 E:\github-zlj\SEIMS_VS\Debug\seims ..\model_data\cluster_model_fenkeng_90m\parallel.config 
 
 
-TEST COMMAND BY ZHULJ:
+## TEST COMMAND BY ZHULJ:
 
-D:\Compile\SEIMS_OMP\Release\seims_omp E:\code\Hydro\SEIMS\model_data\dianbu\model_dianbu_30m_longterm  6 0 127.0.0.1 27017 0
++ D:\Compile\SEIMS_OMP\Release\seims_omp E:\code\Hydro\SEIMS\model_data\dianbu\model_dianbu_30m_longterm  6 0 127.0.0.1 27017 0
 
-D:\Compile\SEIMS_OMP\Release\seims_omp E:\code\Hydro\SEIMS\model_data\TEST\model_dianbu_30m_longterm  6 0 127.0.0.1 27017 0
++ D:\Compile\SEIMS_OMP\Release\seims_omp E:\code\Hydro\SEIMS\model_data\TEST\model_dianbu_30m_longterm  6 0 192.168.6.57 27017 0
 
-D:\Compile\SEIMS_OMP\Release\seims_omp E:\code\Hydro\SEIMS\model_data\TEST\model_dianbu_30m_longterm  6 0 192.168.6.57 27017 0
++ G:\compile\SEIMS\Release\seims_omp G:\code_zhulj\SEIMS\model_data\TEST\model_dianbu_30m_longterm 8 0 127.0.0.1 27017 0
+
++ G:\compile\SEIMS\Release\seims_omp G:\code_zhulj\SEIMS\model_data\dianbu\model_dianbu_30m_longterm 8 0 127.0.0.1 27017 0
+
+
+## TEST COMMAND ON DGPM-cluster:
+
++ /home/zhulj/SEIMS/SEIMS_OMP/seims_omp /home/zhulj/code/SEIMS/model_data/TEST/model_dianbu_30m_longterm 8 0 127.0.0.1 27017 0
+

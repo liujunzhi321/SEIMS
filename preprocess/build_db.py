@@ -10,7 +10,7 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from import_bmp_scenario import ImportBMPTables
 from import_parameters import ImportParameters
-from import_parameters import ImportLookupTables
+from import_parameters import ImportLookupTables, ImportModelConfiguration
 from generate_stream_input import GenerateReachTable
 from find_sites import FindSites
 from weights_mongo import GenerateWeightInfo, GenerateWeightDependentParameters
@@ -21,7 +21,7 @@ def BuildMongoDB():
     f = open(statusFile, 'w')
     # build mongodb database
     try:
-        conn = MongoClient(host = HOSTNAME, port = PORT)
+        conn = MongoClient(host=HOSTNAME, port=PORT)
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
@@ -31,6 +31,8 @@ def BuildMongoDB():
     ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
     # import lookup tables from to MongoDB as GridFS. By LJ, 2016-6-13
     ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
+    # import model configuration
+    ImportModelConfiguration(db)
     f.write("10, Generating reach table...\n")
     f.flush()
     GenerateReachTable(WORKING_DIR, db, forCluster)

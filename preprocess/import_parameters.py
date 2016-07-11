@@ -42,7 +42,7 @@ def ImportParameters(sqlite_file, db):
                 else:
                     dic[field_list[i].upper()] = items[i]
             curfilter = {PARAM_FLD_NAME.upper(): dic[PARAM_FLD_NAME.upper()], Tag_DT_Type.upper(): tablename}
-            db[DB_TAB_PARAMETERS.upper()].find_one_and_replace(curfilter, dic, upsert = True)
+            db[DB_TAB_PARAMETERS.upper()].find_one_and_replace(curfilter, dic, upsert=True)
 
     db[DB_TAB_PARAMETERS.upper()].create_index(PARAM_FLD_NAME.upper())
     c.close()
@@ -88,11 +88,11 @@ def ImportLookupTables(sqlite_file, db):
             ### import to mongoDB as GridFS
             spatial = GridFS(db, DB_TAB_SPATIAL.upper())
             ### delete if the tablename file existed already.
-            if (spatial.exists(filename = tablename.upper())):
-                x = spatial.get_version(filename = tablename.upper())
+            if (spatial.exists(filename=tablename.upper())):
+                x = spatial.get_version(filename=tablename.upper())
                 spatial.delete(x._id)
             metadic = {META_LOOKUP_ITEM_COUNT.upper(): nRow, META_LOOKUP_FIELD_COUNT.upper(): nCol}
-            curLookupGridFS = spatial.new_file(filename = tablename.upper(), metadata = metadic)
+            curLookupGridFS = spatial.new_file(filename=tablename.upper(), metadata=metadic)
             fmt = '%df' % (nCol)
             for i in range(nRow):
                 s = pack(fmt, *itemValues[i])
@@ -103,9 +103,60 @@ def ImportLookupTables(sqlite_file, db):
     # print 'Lookup tables are imported.'
 
 
+def ImportModelConfiguration(db):
+    '''
+    Import Configuration information of SEIMS, i.e., file.in and file.out
+    :return:
+    '''
+    fileIn = MODEL_DIR + os.sep + FILE_IN
+    fileOut = MODEL_DIR + os.sep + FILE_OUT
+    ## create if collection not existed
+    cList = db.collection_names()
+    conf_tabs = [DB_TAB_FILE_IN.upper(), DB_TAB_FILE_OUT.upper()]
+    for item in conf_tabs:
+        if not StringInList(item, cList):
+            db.create_collection(item)
+    fileInItems = ReadDataItemsFromTxt(fileIn)
+    fileOutItems = ReadDataItemsFromTxt(fileOut)
+
+    for item in fileInItems:
+        fileInDict = {}
+        values = SplitStr(StripStr(item[0]), ['|'])
+        if len(values) != 2:
+            raise ValueError("One item should only have one Tag and one value string, split by '|'")
+        fileInDict[FLD_CONF_TAG] = values[0]
+        fileInDict[FLD_CONF_VALUE] = values[1]
+        db[DB_TAB_FILE_IN.upper()].find_one_and_replace(fileInDict, fileInDict, upsert=True)
+
+    outFieldArray = fileOutItems[0]
+    outDataArray = fileOutItems[1:]
+    for item in outDataArray:
+        fileOutDict = {}
+        for i in range(len(outFieldArray)):
+            if StringMatch(FLD_CONF_MODCLS, outFieldArray[i]):
+                fileOutDict[FLD_CONF_MODCLS] = item[i]
+            elif StringMatch(FLD_CONF_OUTPUTID, outFieldArray[i]):
+                fileOutDict[FLD_CONF_OUTPUTID] = item[i]
+            elif StringMatch(FLD_CONF_DESC, outFieldArray[i]):
+                fileOutDict[FLD_CONF_DESC] = item[i]
+            elif StringMatch(FLD_CONF_UNIT, outFieldArray[i]):
+                fileOutDict[FLD_CONF_UNIT] = item[i]
+            elif StringMatch(FLD_CONF_TYPE, outFieldArray[i]):
+                fileOutDict[FLD_CONF_TYPE] = item[i]
+            elif StringMatch(FLD_CONF_STIME, outFieldArray[i]):
+                fileOutDict[FLD_CONF_STIME] = item[i]
+            elif StringMatch(FLD_CONF_ETIME, outFieldArray[i]):
+                fileOutDict[FLD_CONF_ETIME] = item[i]
+            elif StringMatch(FLD_CONF_FILENAME, outFieldArray[i]):
+                fileOutDict[FLD_CONF_FILENAME] = item[i]
+            elif StringMatch(FLD_CONF_USE, outFieldArray[i]):
+                fileOutDict[FLD_CONF_USE] = item[i]
+        db[DB_TAB_FILE_OUT].find_one_and_replace(fileOutDict, fileOutDict, upsert=True)
+
+
 if __name__ == "__main__":
     try:
-        conn = MongoClient(host = HOSTNAME, port = PORT)
+        conn = MongoClient(HOSTNAME, PORT)
         # conn = Connection(host=HOSTNAME, port=PORT)
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
@@ -113,4 +164,5 @@ if __name__ == "__main__":
     db = conn[SpatialDBName]
     ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
     ### IMPORT LOOKUP TABLES AS GRIDFS, DT_Array2D
-    ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
+    # ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
+    ImportModelConfiguration(db)

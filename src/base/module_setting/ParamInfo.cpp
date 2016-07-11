@@ -10,12 +10,13 @@
  */
 #include "ParamInfo.h"
 #include "util.h"
-#include <iostream>
+//#include <iostream>
+
 using namespace std;
 
 ParamInfo::ParamInfo(void)
 {
-	Reset();
+    Reset();
 }
 
 ParamInfo::~ParamInfo(void)
@@ -24,80 +25,84 @@ ParamInfo::~ParamInfo(void)
 
 float ParamInfo::GetAdjustedValue()
 {
-	float res = Value;
+    float res = Value;
 
-	if (StringMatch(Use, PARAM_USE_Y))
-	{
-		//if (Change == PARAM_CHANGE_NC)
-		//{
-		//	don't change
-		//}
-		if (StringMatch(Change, PARAM_CHANGE_RC))
-		{
-			res = Value * Impact;
-		}
-		else if (StringMatch(Change, PARAM_CHANGE_AC))
-		{
-			res = Value + Impact;
-		}
-	}
-	return res;
+    if (StringMatch(Use, PARAM_USE_Y))
+    {
+        //if (Change == PARAM_CHANGE_NC)
+        //{
+        //	don't change
+        //}
+        if (StringMatch(Change, PARAM_CHANGE_RC))
+        {
+            res = Value * Impact;
+        }
+        else if (StringMatch(Change, PARAM_CHANGE_AC))
+        {
+            res = Value + Impact;
+        }
+    }
+    return res;
 }
 
-void ParamInfo::Adjust1DArray(int n, float* data)
+void ParamInfo::Adjust1DArray(int n, float *data)
 {
-	if (StringMatch(Use, PARAM_USE_Y))
-	{
-		if (StringMatch(Change, PARAM_CHANGE_RC) && !FloatEqual(Impact, 1.0))
-		{
-			for (int i = 0; i < n; i++)
-			{
-				data[i] *= Impact;
-			}
-		}
-		else if (StringMatch(Change, PARAM_CHANGE_AC) && !FloatEqual(Impact, 0))
-		{
-			for (int i = 0; i < n; i++)
-			{
-				data[i] += Impact;
-			}
-		}
-	}
+    if (StringMatch(Use, PARAM_USE_Y))
+    {
+        if (StringMatch(Change, PARAM_CHANGE_RC) && !FloatEqual(Impact, 1.0))
+        {
+            for (int i = 0; i < n; i++)
+            {
+                data[i] *= Impact;
+            }
+        }
+        else if (StringMatch(Change, PARAM_CHANGE_AC) && !FloatEqual(Impact, 0))
+        {
+            for (int i = 0; i < n; i++)
+            {
+                data[i] += Impact;
+            }
+        }
+    }
 }
-void ParamInfo::Adjust1DRaster(int n, float* data)
+
+void ParamInfo::Adjust1DRaster(int n, float *data)
 {
-	Adjust1DArray(n, data);
+    Adjust1DArray(n, data);
 }
-void ParamInfo::Adjust2DArray(int n, float** data)
+
+void ParamInfo::Adjust2DArray(int n, float **data)
 {
-	for (int i = 0; i < n; i++)
-	{
-		int curCols = data[i][0];
-		Adjust1DArray(curCols, data[i]+1);
-	}
+    for (int i = 0; i < n; i++)
+    {
+        int curCols = data[i][0];
+        Adjust1DArray(curCols, data[i] + 1);
+    }
 }
-void ParamInfo::Adjust2DRaster(int n, int lyrs, float** data)
+
+void ParamInfo::Adjust2DRaster(int n, int lyrs, float **data)
 {
-	for (int i = 0; i < n; i++)
-		Adjust1DArray(lyrs, data[i]);
+    for (int i = 0; i < n; i++)
+        Adjust1DArray(lyrs, data[i]);
 }
+
 void ParamInfo::Reset(void)
 {
-	Change = "";
-	Description = "";
-	Dimension = DT_Unknown;
-	Impact = 0.0;
-	Max = 0.0;
-	Min = 0.0;
-	ModuleID = "";
-	Name = "";
-	Source = "";
-	Units = "";
-	Use = "";
-	Value = 0.0;
-	DependPara = NULL;
-	IsConstant = false;
-	ClimateType = "";
-	IsOutput = false;
-	OutputToOthers = false;
+    Change = "";
+    Description = "";
+    Dimension = DT_Unknown;
+    Impact = 0.0;
+    Max = 0.0;
+    Min = 0.0;
+    ModuleID = "";
+    Name = "";
+    Source = "";
+    Units = "";
+    Use = "";
+    Value = 0.0;
+    DependPara = NULL;
+    IsConstant = false;
+    ClimateType = "";
+    IsOutput = false;
+    OutputToOthers = false;
 }

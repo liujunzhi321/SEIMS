@@ -38,115 +38,127 @@
 */
 
 #pragma once
+
 #include <string>
 #include <ctime>
 #include "api.h"
 
 using namespace std;
+
 #include "SimulationModule.h"
 
-class SUR_GA:public SimulationModule
+class SUR_GA : public SimulationModule
 {
 public:
-	SUR_GA(void);
-	~SUR_GA(void);
-	virtual int Execute();
-	virtual void SetValue(const char* key, float data);
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
+    SUR_GA(void);
 
-	bool CheckInputSize(const char* key, int n);
-	bool CheckInputData(void);
+    ~SUR_GA(void);
+
+    virtual int Execute();
+
+    virtual void SetValue(const char *key, float data);
+
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Get1DData(const char *key, int *n, float **data);
+
+    bool CheckInputSize(const char *key, int n);
+
+    bool CheckInputData(void);
 
 private:
 
-	/// count of valid cells
-	int m_cellSize;
-	/// length of time step used to report precipitation data for sub-daily modeling (minutes)
-	float m_TimeStep;
-	/// saturated hydraulic conductivity from parameter database (mm/h)
-	float* m_Conductivity;
-	/// soil porosity
-	float* m_porosity;
-	/// percent of clay content from parameter database
-	float* m_clay;
-	/// percent of sand content from parameter database
-	float* m_sand;
-	/// root depth of plants (m)
-	float* m_rootDepth;
-	/// CN under moisture condition II    
-	float* m_CN2;
-	/// Net precipitation calculated in the interception module (mm)
-	float* m_P_NET;
-	/// water content of soil at field capacity 
-	float* m_fieldCap;
-	/// plant wilting point moisture
-	float* m_wiltingPoint;
-	/*/// initial soil moisture
-	float* m_Moist_in;*/
-	/// soil moisture of each time step
-	float* m_soilMoisture;
-	/*/// initial infiltration rate
-	float* m_INFRate_in;*/
-	/// initial infiltration rate or infiltration rate of watershed (mm/hr) at previous time step (t-1)
-	float* m_INFRate;
-	/// Initial depression storage coefficient
-	///float m_Depre_in;
-	/// Depression storage capacity
-	///float* m_Depression;
-	/// depression storage
-	float* m_SD;    // SD(t-1) from the depression storage module
-	/// from interpolation module
-	/// air temperature of the current day
-	float *m_tMin, *m_tMax;
-	/// snowfall temperature from the parameter database (¡æ)
-	float m_Tsnow;
-	/// threshold soil freezing temperature (¡æ)
-	float m_Tsoil;
-	/// frozen soil moisture relative to saturation above which no infiltration occur (m3/m3)
-	float m_Sfrozen;
-	/// snowmelt threshold temperature from the parameter database (¡æ)
-	float m_T0;
-	/// snowmelt from the snowmelt module  (mm)
-	float* m_SM; 
-	/// snow accumulation from the snow balance module (mm) at t+1 timestep
-	float* m_SA;
-	/// soil temperature obtained from the soil temperature module (¡æ)
-	float* m_TS;
-	/// array containing the row and column numbers for valid cells
-	float **m_mask;
-	/// from GIS interface Project/model subdirectory
-	/// Julian day
-	///int m_julianDay;
-   
-	///output values
-	/// the excess precipitation (mm) of the total nCells
-	float* m_PE;
-	/// infiltration map of watershed (mm) of the total nCells 
-	float* m_INFIL;
+    /// count of valid cells
+    int m_cellSize;
+    /// length of time step used to report precipitation data for sub-daily modeling (minutes)
+    float m_TimeStep;
+    /// saturated hydraulic conductivity from parameter database (mm/h)
+    float *m_Conductivity;
+    /// soil porosity
+    float *m_porosity;
+    /// percent of clay content from parameter database
+    float *m_clay;
+    /// percent of sand content from parameter database
+    float *m_sand;
+    /// root depth of plants (m)
+    float *m_rootDepth;
+    /// CN under moisture condition II
+    float *m_CN2;
+    /// Net precipitation calculated in the interception module (mm)
+    float *m_P_NET;
+    /// water content of soil at field capacity
+    float *m_fieldCap;
+    /// plant wilting point moisture
+    float *m_wiltingPoint;
+    /*/// initial soil moisture
+    float* m_Moist_in;*/
+    /// soil moisture of each time step
+    float *m_soilMoisture;
+    /*/// initial infiltration rate
+    float* m_INFRate_in;*/
+    /// initial infiltration rate or infiltration rate of watershed (mm/hr) at previous time step (t-1)
+    float *m_INFRate;
+    /// Initial depression storage coefficient
+    ///float m_Depre_in;
+    /// Depression storage capacity
+    ///float* m_Depression;
+    /// depression storage
+    float *m_SD;    // SD(t-1) from the depression storage module
+    /// from interpolation module
+    /// air temperature of the current day
+    float *m_tMin, *m_tMax;
+    /// snowfall temperature from the parameter database (ï¿½ï¿½)
+    float m_Tsnow;
+    /// threshold soil freezing temperature (ï¿½ï¿½)
+    float m_Tsoil;
+    /// frozen soil moisture relative to saturation above which no infiltration occur (m3/m3)
+    float m_Sfrozen;
+    /// snowmelt threshold temperature from the parameter database (ï¿½ï¿½)
+    float m_T0;
+    /// snowmelt from the snowmelt module  (mm)
+    float *m_SM;
+    /// snow accumulation from the snow balance module (mm) at t+1 timestep
+    float *m_SA;
+    /// soil temperature obtained from the soil temperature module (ï¿½ï¿½)
+    float *m_TS;
+    /// array containing the row and column numbers for valid cells
+    float **m_mask;
+    /// from GIS interface Project/model subdirectory
+    /// Julian day
+    ///int m_julianDay;
 
-	time_t m_date;
+    ///output values
+    /// the excess precipitation (mm) of the total nCells
+    float *m_PE;
+    /// infiltration map of watershed (mm) of the total nCells
+    float *m_INFIL;
 
-	//add by Wu Hui  2011-02-16
-	float* m_w1;
-	float* m_w2;
-	float* m_sMax;
-	void   initalW1W2();
-	float  Calculate_CN(int cell);
-	/** 
-	*	@calculates wetting front matric potential.
-	*	
-	*	@param float sol_pol: soil porosity
-	*	@param float sol_clay: the percent clay content
-	*	@param float sand: the percent sand content
-	*	@return wetting front matric potential
-	*/
-	float Calculate_WFMP(float sol_pol, float sol_clay, float sand);
+    time_t m_date;
 
-	//add by Zhiqiang 2011-02-16
-	float* m_wfmp;
-	void initialWFMP();
+    //add by Wu Hui  2011-02-16
+    float *m_w1;
+    float *m_w2;
+    float *m_sMax;
 
-	void initalOutputs();
+    void initalW1W2();
+
+    float Calculate_CN(int cell);
+
+    /**
+    *	@calculates wetting front matric potential.
+    *
+    *	@param float sol_pol: soil porosity
+    *	@param float sol_clay: the percent clay content
+    *	@param float sand: the percent sand content
+    *	@return wetting front matric potential
+    */
+    float Calculate_WFMP(float sol_pol, float sol_clay, float sand);
+
+    //add by Zhiqiang 2011-02-16
+    float *m_wfmp;
+
+    void initialWFMP();
+
+    void initalOutputs();
 };
 
