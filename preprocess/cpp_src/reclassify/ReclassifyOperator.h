@@ -11,38 +11,39 @@
 
 using namespace GPRO;
 
-class ReclassifyOperator : public RasterOperator<float> 
+class ReclassifyOperator : public RasterOperator<float>
 {
-  public:
+public:
     ReclassifyOperator()
-      :RasterOperator<float>(),
-       _pTypeLayer(0), _pOutputLayer(0), num(0){}
-   
-    ~ReclassifyOperator() {}
+            : RasterOperator<float>(),
+              _pTypeLayer(0), _pOutputLayer(0), num(0) { }
 
-  
+    ~ReclassifyOperator() { }
+
+
     void SetTypeLayer(RasterLayer<float> &layerD);
-	void SetOutputLayer(RasterLayer<float> &layerD);
 
-	virtual bool isTermination();
+    void SetOutputLayer(RasterLayer<float> &layerD);
+
+    virtual bool isTermination();
 
     virtual bool Operator(const CellCoord &coord);
 
-    bool ReadReclassMap(const char* filename);
+    bool ReadReclassMap(const char *filename);
 
-	void SetDefualtType(int typeValue)
-	{
-		defaultType = typeValue;
-	}
+    void SetDefualtType(int typeValue)
+    {
+        defaultType = typeValue;
+    }
 
-  protected:
-	int cellSize;
-	int noData;
-	int num;
-	int defaultType;
-	RasterLayer<float> *_pTypeLayer;
-	RasterLayer<float> *_pOutputLayer;
-	Neighborhood<float> *_pNrhood;
+protected:
+    int cellSize;
+    int noData;
+    int num;
+    int defaultType;
+    RasterLayer<float> *_pTypeLayer;
+    RasterLayer<float> *_pOutputLayer;
+    Neighborhood<float> *_pNrhood;
 
     map<int, float> _reclassMap;
 };

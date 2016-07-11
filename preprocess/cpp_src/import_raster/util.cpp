@@ -25,10 +25,12 @@
 #include <sstream>
 
 #ifndef linux
-    #include <Windows.h>
-    #include <direct.h>
+
+#include <Windows.h>
+#include <direct.h>
+
 #else
-    #include <dirent.h>
+#include <dirent.h>
 
 #endif
 
@@ -37,40 +39,40 @@ using namespace std;
 #define UTIL_ZERO 0.0000000001
 #define PATH_MAX 255
 
-int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFiles)
+int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFiles)
 {
 #ifndef linux
-	char szFind[MAX_PATH];
-	strcpy(szFind,lpPath);
-	strcat(szFind,"\\");
-	strcat(szFind, expression);
+    char szFind[MAX_PATH];
+    strcpy(szFind, lpPath);
+    strcat(szFind, "\\");
+    strcat(szFind, expression);
 
-	WIN32_FIND_DATA findFileData;
-	HANDLE hFind=::FindFirstFile(szFind, &findFileData);
-	if(INVALID_HANDLE_VALUE == hFind) 
-		return -1;
-	do
-	{
-		if(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-			continue;
+    WIN32_FIND_DATA findFileData;
+    HANDLE hFind = ::FindFirstFile(szFind, &findFileData);
+    if (INVALID_HANDLE_VALUE == hFind)
+        return -1;
+    do
+    {
+        if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            continue;
 
-		char fullpath[MAX_PATH];
-		strcpy(fullpath,lpPath);
-		strcat(fullpath,"\\");
-		strcat(fullpath, findFileData.cFileName);
+        char fullpath[MAX_PATH];
+        strcpy(fullpath, lpPath);
+        strcat(fullpath, "\\");
+        strcat(fullpath, findFileData.cFileName);
 
-		vecFiles.push_back(fullpath);
+        vecFiles.push_back(fullpath);
 
-	}while (::FindNextFile(hFind, &findFileData));
+    } while (::FindNextFile(hFind, &findFileData));
 #else
-	char ch,infile[1024],outfile[1024];
-	struct dirent *ptr; 
-	DIR *dir;
+    char ch,infile[1024],outfile[1024];
+    struct dirent *ptr;
+    DIR *dir;
     dir = opendir(lpPath);
-	while((ptr=readdir(dir)) != NULL)
-	{
-		if(ptr->d_name[0] == '.')
-			continue;
+    while((ptr=readdir(dir)) != NULL)
+    {
+        if(ptr->d_name[0] == '.')
+            continue;
 
         string filename(ptr->d_name);
         int n = filename.length();
@@ -82,48 +84,49 @@ int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFil
             oss << lpPath << "/" <<  filename;
             vecFiles.push_back(oss.str());
         }
-	}
-	closedir(dir);
+    }
+    closedir(dir);
 #endif
 
-	return 0;
+    return 0;
 }
+
 vector<string> SplitString(string item, char delimiter)
 {
-	istringstream iss(item); 
-	vector<string> tokens; 
+    istringstream iss(item);
+    vector<string> tokens;
 
-	std::string field;
-	while (std::getline(iss, field, delimiter))
-	{
-		tokens.push_back(field);
-	}
+    std::string field;
+    while (std::getline(iss, field, delimiter))
+    {
+        tokens.push_back(field);
+    }
 
-	return tokens;
+    return tokens;
 }
 
-string GetCoreFileName(const string& fullFileName)
+string GetCoreFileName(const string &fullFileName)
 {
-	string::size_type start = fullFileName.find_last_of("\\");
-	if (start == string::npos)
-	{
-		start = fullFileName.find_last_of("/");
-	}
+    string::size_type start = fullFileName.find_last_of("\\");
+    if (start == string::npos)
+    {
+        start = fullFileName.find_last_of("/");
+    }
 
-	if (start == string::npos)
-		start = -1;///< added by ZhuLJ,2015/6/19
+    if (start == string::npos)
+        start = -1;///< added by ZhuLJ,2015/6/19
 
-	string::size_type end = fullFileName.find_last_of(".");
+    string::size_type end = fullFileName.find_last_of(".");
 
-	if (end == string::npos)
-		end = fullFileName.length();
+    if (end == string::npos)
+        end = fullFileName.length();
 
-	return fullFileName.substr(start+1, end-start-1);
+    return fullFileName.substr(start + 1, end - start - 1);
 }
 
-string& trim(string& s)
+string &trim(string &s)
 {
-    if(s.empty())
+    if (s.empty())
         return s;
     s.erase(0, s.find_first_not_of(" \n\r\t"));
     return s.erase(s.find_last_not_of(" \n\r\t") + 1);
@@ -132,179 +135,179 @@ string& trim(string& s)
 
 string GetUpper(string str)
 {
-	string strTmp1 = string(str);
-	for (int j=0; j<(int)strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
-	return strTmp1;
+    string strTmp1 = string(str);
+    for (int j = 0; j < (int) strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
+    return strTmp1;
 }
 
 bool StringMatch(string text1, string text2)
 {
-	// convert the key to UPPERCASE for comparison
-	string strTmp1 = string(text1);
-	for (int j=0; j<(int)strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
+    // convert the key to UPPERCASE for comparison
+    string strTmp1 = string(text1);
+    for (int j = 0; j < (int) strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
 
-	string strTmp2 = string(text2);
-	for (int j=0; j<(int)strTmp2.length(); j++) strTmp2[j] = toupper(strTmp2[j]);
+    string strTmp2 = string(text2);
+    for (int j = 0; j < (int) strTmp2.length(); j++) strTmp2[j] = toupper(strTmp2[j]);
 
-	return (strTmp1 == strTmp2);
+    return (strTmp1 == strTmp2);
 }
 
 bool DoubleEqual(double d1, double d2)
 {
-	if (abs(d1 - d2) < UTIL_ZERO)
-		return true;
-	else
-		return false;
+    if (abs(d1 - d2) < UTIL_ZERO)
+        return true;
+    else
+        return false;
 }
 
 bool FloatEqual(float d1, float d2)
 {
-	if (abs(d1 - d2) < UTIL_ZERO)
-		return true;
-	else
-		return false;
+    if (abs(d1 - d2) < UTIL_ZERO)
+        return true;
+    else
+        return false;
 }
 
-string GetPathFromFullName(string& fullFileName)
+string GetPathFromFullName(string &fullFileName)
 {
-	string::size_type i = fullFileName.find_last_of("\\");
-	if (i == string::npos)
-	{
-		i = fullFileName.find_last_of("/");
-	}
+    string::size_type i = fullFileName.find_last_of("\\");
+    if (i == string::npos)
+    {
+        i = fullFileName.find_last_of("/");
+    }
 
-	if (i == string::npos)
-		return "";
+    if (i == string::npos)
+        return "";
 
-	return fullFileName.substr(0, i+1);
+    return fullFileName.substr(0, i + 1);
 }
 
 //! Output a status message
-void StatusMessage(const char* msg)
+void StatusMessage(const char *msg)
 {
-	//cout << msg;
-	//cout << endl;
+    //cout << msg;
+    //cout << endl;
 }
 
-void Read2DArray(const char* filename, int& nRows, float**& data)
+void Read2DArray(const char *filename, int &nRows, float **&data)
 {
-	ifstream ifs(filename);
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float*[nRows];
-	int n;
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> n;
-		data[i] = new float[n+1];
-		data[i][0] = (float)n;
-		for (int j = 1; j <= n; j++)
-			ifs >> data[i][j];
-	}
-	ifs.close();
+    ifstream ifs(filename);
+    string tmp;
+    ifs >> tmp >> nRows;
+    data = new float *[nRows];
+    int n;
+    for (int i = 0; i < nRows; i++)
+    {
+        ifs >> n;
+        data[i] = new float[n + 1];
+        data[i][0] = (float) n;
+        for (int j = 1; j <= n; j++)
+            ifs >> data[i][j];
+    }
+    ifs.close();
 }
 
-void Read1DArray(const char* filename, int& nRows, float*& data)
+void Read1DArray(const char *filename, int &nRows, float *&data)
 {
-	ifstream ifs(filename);
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float[nRows];
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> data[i];
-	}
-	ifs.close();
+    ifstream ifs(filename);
+    string tmp;
+    ifs >> tmp >> nRows;
+    data = new float[nRows];
+    for (int i = 0; i < nRows; i++)
+    {
+        ifs >> data[i];
+    }
+    ifs.close();
 }
 
-void Read2DArrayFromString(const char* s, int& nRows, float**& data)
+void Read2DArrayFromString(const char *s, int &nRows, float **&data)
 {
-	istringstream ifs(s);
-	
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float*[nRows];
-	int n;
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> n;
-		data[i] = new float[n+1];
-		data[i][0] = (float)n;
-		for (int j = 1; j <= n; j++)
-			ifs >> data[i][j];
-	}
+    istringstream ifs(s);
+
+    string tmp;
+    ifs >> tmp >> nRows;
+    data = new float *[nRows];
+    int n;
+    for (int i = 0; i < nRows; i++)
+    {
+        ifs >> n;
+        data[i] = new float[n + 1];
+        data[i][0] = (float) n;
+        for (int j = 1; j <= n; j++)
+            ifs >> data[i][j];
+    }
 }
 
-void Output1DArray(int n, float* data, const char* filename)
+void Output1DArray(int n, float *data, const char *filename)
 {
-	ofstream ofs(filename);
+    ofstream ofs(filename);
 
-	for (int i = 0; i < n; ++i)
-		ofs << data[i] << "\n";
+    for (int i = 0; i < n; ++i)
+        ofs << data[i] << "\n";
 
-	ofs.close();
+    ofs.close();
 }
 
-void Output2DArray(int nRows, int nCols, float** data, const char* filename)
+void Output2DArray(int nRows, int nCols, float **data, const char *filename)
 {
-	ofstream ofs(filename);
+    ofstream ofs(filename);
 
-	for (int i = 0; i < nRows; ++i)
-	{
-		for (int j = 0; j < nCols; ++j)
-		{
-			ofs << data[i][j] << "\t";
-		}
-		ofs << "\n";
-	}
+    for (int i = 0; i < nRows; ++i)
+    {
+        for (int j = 0; j < nCols; ++j)
+        {
+            ofs << data[i][j] << "\t";
+        }
+        ofs << "\n";
+    }
 
-	ofs.close();
+    ofs.close();
 }
 
 double Sum(double *a, int n)
 {
-	double s = 0.0;
-	for (int i = 0; i < n; i++)
-	{
-		s += a[i];
-	}
-	return s;
+    double s = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        s += a[i];
+    }
+    return s;
 }
 
 double Max(double *a, int n)
 {
-	double m = a[0];
-	for (int i = 1; i < n; i++)
-	{
-		if (a[i] > m)
-		{
-			m = a[i];
-		}
-	}
-	return m;
+    double m = a[0];
+    for (int i = 1; i < n; i++)
+    {
+        if (a[i] > m)
+        {
+            m = a[i];
+        }
+    }
+    return m;
 }
 
 // gets the root path to the current executable.
 string GetAppPath()
 {
-	string RootPath;
+    string RootPath;
 #ifndef linux
-	TCHAR buffer[PATH_MAX];
-	GetModuleFileName(NULL, buffer, PATH_MAX);
-	RootPath = string((char*)buffer);
+    TCHAR buffer[PATH_MAX];
+    GetModuleFileName(NULL, buffer, PATH_MAX);
+    RootPath = string((char *) buffer);
 #else
-	static char buf[PATH_MAX];
-	int rslt = readlink("/proc/self/exe", buf, PATH_MAX);
-	if(rslt < 0 || rslt >= PATH_MAX)
-		buf[0] = '\0';
-	else
-		buf[rslt] = '\0';
-	RootPath = buf;
+    static char buf[PATH_MAX];
+    int rslt = readlink("/proc/self/exe", buf, PATH_MAX);
+    if(rslt < 0 || rslt >= PATH_MAX)
+        buf[0] = '\0';
+    else
+        buf[rslt] = '\0';
+    RootPath = buf;
 #endif
-	basic_string <char>::size_type idx = RootPath.find_last_of(SEP);
-	RootPath = RootPath.substr(0, idx+1);
+    basic_string<char>::size_type idx = RootPath.find_last_of(SEP);
+    RootPath = RootPath.substr(0, idx + 1);
 
-	return RootPath;
+    return RootPath;
 }
 
 //bool CopyFile (const char* srcFileName, const char* destFileName)

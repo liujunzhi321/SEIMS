@@ -21,10 +21,12 @@
 */
 
 #pragma once
+
 #include <string>
 #include <ctime>
 #include "api.h"
 #include "SimulationModule.h"
+
 using namespace std;
 /** \defgroup DEP_FS
  * \ingroup Hydrology
@@ -40,43 +42,49 @@ using namespace std;
 class DepressionFS : public SimulationModule
 {
 public:
-	//! Constructor
-	DepressionFS(void);
-	//! Destructor
-	~DepressionFS(void);
+    //! Constructor
+    DepressionFS(void);
 
-	virtual int Execute();
-	virtual void SetValue(const char* key, float data);
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
+    //! Destructor
+    ~DepressionFS(void);
+
+    virtual int Execute();
+
+    virtual void SetValue(const char *key, float data);
+
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Get1DData(const char *key, int *n, float **data);
 
 private:
-	bool CheckInputSize(const char* key, int n);
-	bool CheckInputData(void);
-	/// valid cells number
-	int m_nCells;
+    bool CheckInputSize(const char *key, int n);
 
-	/// initial depression storage coefficient
-	float m_depCo;
-	/// depression storage capacity
-	float* m_depCap;
+    bool CheckInputData(void);
 
-	/// pet
-	float* m_pet;
-	/// evaporation from the interception storage
-	float* m_ei;
+    /// valid cells number
+    int m_nCells;
 
-	// state variables (output)
-	/// depression storage
-	float* m_sd;
-	/// surface runoff
-	float* m_sr;
-	/// surplus of storage capacity
-	float *m_storageCapSurplus;
+    /// initial depression storage coefficient
+    float m_depCo;
+    /// depression storage capacity
+    float *m_depCap;
 
-	void initialOutputs();
+    /// pet
+    float *m_pet;
+    /// evaporation from the interception storage
+    float *m_ei;
 
-	/// whether check inputs, TODO Is it useless? By LJ
-	bool m_checkInput;
+    // state variables (output)
+    /// depression storage
+    float *m_sd;
+    /// surface runoff
+    float *m_sr;
+    /// surplus of storage capacity
+    float *m_storageCapSurplus;
+
+    void initialOutputs();
+
+    /// whether check inputs, TODO Is it useless? By LJ
+    bool m_checkInput;
 };
 

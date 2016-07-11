@@ -18,6 +18,7 @@
 #include "sqlite3.h"
 
 using namespace std;
+
 /*!
  * \ingroup data
  * \class slTable
@@ -30,14 +31,15 @@ using namespace std;
 class slTable
 {
 public:
-	int nRows; ///< rows
-	int nCols; ///< cols
-	char** pData; ///< data
+    int nRows; ///< rows
+    int nCols; ///< cols
+    char **pData; ///< data
 
-	slTable ();
-	virtual ~slTable();
+    slTable();
 
-	string FieldValue(int row, int col);
+    virtual ~slTable();
+
+    string FieldValue(int row, int col);
 };
 
 /*!
@@ -52,23 +54,27 @@ public:
 class DBManager
 {
 private:
-	sqlite3* m_Database;
-	char* errMsg;
+    sqlite3 *m_Database;
+    char *errMsg;
 
 public:
-	DBManager(void);
-	~DBManager(void);
+    DBManager(void);
 
-	bool Open(string filename);
-	void Close(void);
+    ~DBManager(void);
 
-	bool IsError();
-	string GetErrorMessage();
+    bool Open(string filename);
 
-	slTable* Load(string strSQL);
-	bool Execute(string strSQL);
-	
+    void Close(void);
+
+    bool IsError();
+
+    string GetErrorMessage();
+
+    slTable *Load(string strSQL);
+
+    bool Execute(string strSQL);
+
 public:
-	static bool IsTableExist(string databasePath,string tableName);
+    static bool IsTableExist(string databasePath, string tableName);
 };
 

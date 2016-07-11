@@ -19,10 +19,12 @@
 #include "utils.h"
 #include "util.h"
 #include "ModelException.h"
+
 using namespace std;
 
 //! \typdef 2D stringarray (vector)  
 typedef vector<vector<string> > string2DArray;
+
 /*!
  * \ingroup module_setting
  * \class Settings
@@ -32,23 +34,26 @@ typedef vector<vector<string> > string2DArray;
 class Settings
 {
 public:
-	//! Store setting key and values
-	string2DArray m_Settings;
+    //! Store setting key and values
+    string2DArray m_Settings;
 
 public:
-	//! Constructor
-	Settings(void);
-	//! Destructor
-	~Settings(void);
-	//! Load the settings value from the given file
-	virtual bool	LoadSettingsFromFile(string filename);
+    //! Constructor
+    Settings(void);
 
-	virtual void	Dump(string);
-	//! Return the value for the entry with the given tag
-	string			Value(string tag);
+    //! Destructor
+    ~Settings(void);
+
+    //! Load the settings value from the given file
+    virtual bool LoadSettingsFromFile(string filename);
+
+    virtual void Dump(string);
+
+    //! Return the value for the entry with the given tag
+    string Value(string tag);
 
 protected:
-	//! input setting file path
-	string m_settingFileName;
+    //! input setting file path
+    string m_settingFileName;
 };
 

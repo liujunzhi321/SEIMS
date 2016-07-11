@@ -4,7 +4,10 @@
 # Author: Junzhi Liu
 # Revised: Liang-Jun Zhu
 #
-import os, math, datetime, time
+import os
+import math
+import datetime
+import time
 from osgeo import gdal, osr, ogr
 from gdalconst import *
 import shutil
@@ -413,11 +416,14 @@ def StripStr(str):
     return newStr
 
 
-def SplitStr(str, spliter = None):
+def SplitStr(str, spliters = None):
     ### @Function: Split string by spliter space(' ') and indent('\t') as default
-    spliters = [' ', '\t']
-    if spliter is not None:
-        spliters.append(spliter)
+    # spliters = [' ', '\t']
+    # spliters = []
+    # if spliter is not None:
+    #     spliters.append(spliter)
+    if spliters is None:
+        spliters = [' ', '\t']
     destStrs = []
     srcStrs = [str]
     while True:

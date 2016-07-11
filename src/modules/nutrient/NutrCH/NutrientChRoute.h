@@ -12,11 +12,13 @@
 #pragma once
 #ifndef SEIMS_NutCHRout_PARAMS_INCLUDE
 #define SEIMS_NutCHRout_PARAMS_INCLUDE
+
 #include <string>
 #include <map>
 #include <vector>
 #include "api.h"
 #include "SimulationModule.h"
+
 using namespace std;
 /*!
  * \class NutrientCHRoute
@@ -32,28 +34,37 @@ using namespace std;
  * \brief Overland routing using 4-point implicit finite difference method
  * 
  */
-struct MuskWeights{
-	float c1;
-	float c2;
-	float c3;
-	float c4;
-	float dt;
-	int n;  ///< number of division of the origin time step
+struct MuskWeights
+{
+    float c1;
+    float c2;
+    float c3;
+    float c4;
+    float dt;
+    int n;  ///< number of division of the origin time step
 };
 
-class NutrientCHRoute : public SimulationModule {
-	public:
-		NutrientCHRoute(void);
-		~NutrientCHRoute(void);
+class NutrientCHRoute : public SimulationModule
+{
+public:
+    NutrientCHRoute(void);
 
-	virtual void SetValue(const char* key, float value);
-	virtual void Set1DData(const char* key, int n, float *data);
-	virtual void Set2DData(const char* key, int nRows, int nCols, float** data);
-	virtual int Execute();
-	virtual void GetValue(const char* key, float* value);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	//virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
+    ~NutrientCHRoute(void);
+
+    virtual void SetValue(const char *key, float value);
+
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
+
+    virtual int Execute();
+
+    virtual void GetValue(const char *key, float *value);
+
+    virtual void Get1DData(const char *key, int *n, float **data);
+    //virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
 private:
+
 	/// time step (hr)
 	int m_dt;
 	/// downstream id (The value is 0 if there if no downstream reach)
@@ -203,43 +214,44 @@ private:
 
 private:
 
-	/*!
-	 * \brief check the input data. Make sure all the input data is available.
-	 * \return bool The validity of the input data.
-	 */
-	bool CheckInputData(void);
+    /*!
+     * \brief check the input data. Make sure all the input data is available.
+     * \return bool The validity of the input data.
+     */
+    bool CheckInputData(void);
 
-	/*!
-	 * \brief check the input size. Make sure all the input data have same dimension.
-	 *
-	 * \param[in] key The key of the input data
-	 * \param[in] n The input data dimension
-	 * \return bool The validity of the dimension
-	 */
-	bool CheckInputSize(const char*,int);
+    /*!
+     * \brief check the input size. Make sure all the input data have same dimension.
+     *
+     * \param[in] key The key of the input data
+     * \param[in] n The input data dimension
+     * \return bool The validity of the dimension
+     */
+    bool CheckInputSize(const char *, int);
 
-	/*!
-	* \brief In-stream nutrient transformations and water quality calculations.
-	 *
-	 * \return void
-	 */
-	void NutrientinChannel(int);
-	
-	/*!
-	* \brief Corrects rate constants for temperature.
-	 *
-	 *    r20         1/day         value of the reaction rate coefficient at the standard temperature (20 degrees C)
-	 *    thk         none          temperature adjustment factor (empirical constant for each reaction coefficient)
-	 *    tmp         deg C         temperature on current day
-	 *
-	 * \return float
-	 */
-	float corTempc(float r20, float thk, float tmp);
+    /*!
+    * \brief In-stream nutrient transformations and water quality calculations.
+     *
+     * \return void
+     */
+    void NutrientinChannel(int);
 
-	void initialOutputs();
+    /*!
+    * \brief Corrects rate constants for temperature.
+     *
+     *    r20         1/day         value of the reaction rate coefficient at the standard temperature (20 degrees C)
+     *    thk         none          temperature adjustment factor (empirical constant for each reaction coefficient)
+     *    tmp         deg C         temperature on current day
+     *
+     * \return float
+     */
+    float corTempc(float r20, float thk, float tmp);
 
-	//void GetCoefficients(float reachLength, float v0, MuskWeights& weights);
+    void initialOutputs();
+
+    //void GetCoefficients(float reachLength, float v0, MuskWeights& weights);
 };
+
 #endif
 
 

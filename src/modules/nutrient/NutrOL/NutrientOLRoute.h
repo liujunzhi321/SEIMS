@@ -12,12 +12,15 @@
 #pragma once
 #ifndef SEIMS_NutOLRout_PARAMS_INCLUDE
 #define SEIMS_NutOLRout_PARAMS_INCLUDE
+
 #include <string>
 #include <map>
 #include <vector>
 #include "api.h"
 #include "SimulationModule.h"
+
 using namespace std;
+
 /*!
  * \class NutrientOLRoute
  * \ingroup NutOLRout
@@ -26,19 +29,26 @@ using namespace std;
  *
  */
 
-class NutrientOLRoute : public SimulationModule {
-	public:
-		NutrientOLRoute(void);
-		~NutrientOLRoute(void);
+class NutrientOLRoute : public SimulationModule
+{
+public:
+    NutrientOLRoute(void);
 
-	virtual void SetValue(const char* key, float value);
-	virtual void Set1DData(const char* key, int n, float *data);
-	virtual void Set2DData(const char* key, int nRows, int nCols, float** data);
-	virtual int Execute();
-	//virtual void GetValue(const char* key, float* value);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	//virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
+    ~NutrientOLRoute(void);
+
+    virtual void SetValue(const char *key, float value);
+
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
+
+    virtual int Execute();
+
+    //virtual void GetValue(const char* key, float* value);
+    virtual void Get1DData(const char *key, int *n, float **data);
+    //virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
 private:
+
 	/// cell width of grid map (m)
 	float m_cellWidth;
 	/// number of cells
@@ -115,38 +125,41 @@ private:
 
 private:
 
-	/*!
-	 * \brief check the input data. Make sure all the input data is available.
-	 * \return bool The validity of the input data.
-	 */
-	bool CheckInputData(void);
+    /*!
+     * \brief check the input data. Make sure all the input data is available.
+     * \return bool The validity of the input data.
+     */
+    bool CheckInputData(void);
 
-	void initial();
-	void initialOutputs();
-	/*!
-	 * \brief check the input size. Make sure all the input data have same dimension.
-	 *
-	 * \param[in] key The key of the input data
-	 * \param[in] n The input data dimension
-	 * \return bool The validity of the dimension
-	 */
-	bool CheckInputSize(const char*,int);
+    void initial();
 
-	/*!
-	* \brief Nutrient transformations in overland flow.
-	 *
-	 * \return void
-	 */
-	void NutrientinOverland(int);
+    void initialOutputs();
 
-	/*!
-	*	\brief calculate the sediment routing of overland flow.
-	*	
-	*	\param ID The id of cell in grid map
-	*	\return the nutrient of flowing to channel for each channel cell, kg
-	*/
-	float NutToChannel(int i, float nut);
+    /*!
+     * \brief check the input size. Make sure all the input data have same dimension.
+     *
+     * \param[in] key The key of the input data
+     * \param[in] n The input data dimension
+     * \return bool The validity of the dimension
+     */
+    bool CheckInputSize(const char *, int);
+
+    /*!
+    * \brief Nutrient transformations in overland flow.
+     *
+     * \return void
+     */
+    void NutrientinOverland(int);
+
+    /*!
+    *	\brief calculate the sediment routing of overland flow.
+    *
+    *	\param ID The id of cell in grid map
+    *	\return the nutrient of flowing to channel for each channel cell, kg
+    */
+    float NutToChannel(int i, float nut);
 };
+
 #endif
 
 

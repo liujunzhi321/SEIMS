@@ -8,7 +8,7 @@
 
 from config import *
 from util import *
-
+import sys
 sys.setrecursionlimit(10000)
 
 # SEIMS adaopts the D8 flow direction by the rule of TauDEM

@@ -6,7 +6,7 @@
 # Author: Junzhi Liu, 2012-4-12
 # Revised: Liang-Jun Zhu, 2016-7-7
 #
-
+import sys
 from numpy import zeros
 from config import *
 from util import *

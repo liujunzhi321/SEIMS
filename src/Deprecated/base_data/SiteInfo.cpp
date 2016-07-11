@@ -16,7 +16,7 @@
 
 SiteInfo::SiteInfo(void)
 {
-	Reset();
+    Reset();
 }
 
 
@@ -27,56 +27,56 @@ SiteInfo::~SiteInfo(void)
 
 void SiteInfo::Reset(void)
 {
-	m_ID = 0;
-	m_Name = "";
-	m_XPR = 0.0;
-	m_YPR = 0.0;
-	m_Latitude = 0.0;
-	m_Longitude = 0.0;
-	m_Elevation = 0.0;
-	m_Area = 0.0;
+    m_ID = 0;
+    m_Name = "";
+    m_XPR = 0.0;
+    m_YPR = 0.0;
+    m_Latitude = 0.0;
+    m_Longitude = 0.0;
+    m_Elevation = 0.0;
+    m_Area = 0.0;
 }
 
 
 int SiteInfo::ID(void)
 {
-	return m_ID;
+    return m_ID;
 }
 
 
 string SiteInfo::Name(void)
 {
-	return m_Name;
+    return m_Name;
 }
 
 
 float SiteInfo::XPR(void)
 {
-	return m_XPR;
+    return m_XPR;
 }
 
 float SiteInfo::YPR(void)
 {
-	return m_YPR;
+    return m_YPR;
 }
 
 
 float SiteInfo::Latitude(void)
 {
-	return m_Latitude;
+    return m_Latitude;
 }
 
 float SiteInfo::Longitude(void)
 {
-	return m_Longitude;
+    return m_Longitude;
 }
 
 float SiteInfo::Elevation(void)
 {
-	return m_Elevation;
+    return m_Elevation;
 }
 
 float SiteInfo::Area(void)
 {
-	return m_Area;
+    return m_Area;
 }
