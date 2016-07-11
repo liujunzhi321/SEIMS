@@ -13,9 +13,10 @@
 #include "ModelException.h"
 #include "util.h"
 #include <omp.h>
+
 using namespace std;
 
-NutrientCHRoute::NutrientCHRoute(void):
+NutrientCHRoute::NutrientCHRoute(void) :
 //input
 	m_dt(-1), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1),igropt(-1),  
 	m_ai0(-1), m_ai1(-1),m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1), m_lambda2(-1),
@@ -32,216 +33,431 @@ NutrientCHRoute::NutrientCHRoute(void):
 
 }
 
-NutrientCHRoute::~NutrientCHRoute(void) {
-	if (m_algae != NULL){
-		delete [] m_algae;
-	}
-	if (m_organicn != NULL){
-		delete [] m_organicn;
-	}
-	if (m_organicp != NULL){
-		delete [] m_organicp;
-	}
-	if (m_ammonian != NULL){
-		delete [] m_ammonian;
-	}
-	if (m_nitriten != NULL){
-		delete [] m_nitriten;
-	}
-	if (m_nitraten != NULL){
-		delete [] m_nitraten;
-	}
-	if (m_disolvp != NULL){
-		delete [] m_disolvp;
-	}
-	if (m_rch_cod != NULL){
-		delete [] m_rch_cod;
-	}
-	if (m_rch_dox != NULL){
-		delete [] m_rch_dox;
-	}
-	if (m_chlora != NULL){
-		delete [] m_chlora;
-	}
-	
-}
-bool NutrientCHRoute::CheckInputSize(const char* key, int n) {
-	if(n <= 0) {
-		throw ModelException(MID_NutCHRout, "CheckInputSize", "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
-		return false;
-	}
-	if(m_nReaches != n-1) {
-		if(m_nReaches <= 0)  {
-			m_nReaches = n-1;
-		} else {
-			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
-			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nReaches << ".\n";  
-			throw ModelException("NutCHRout","CheckInputSize",oss.str());
-		}
-	}
-	return true;
-}
-bool NutrientCHRoute::CheckInputData() {
-	if (this -> m_dt < 0) {throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_dt has not been set.");return false;}
-	if (this -> m_nReaches < 0) {throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_nReaches has not been set.");return false;}
-	if(this -> m_aBank < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_qUpReach < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_rnum1 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> igropt < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_ai0 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_ai1 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_ai2 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_ai3 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_ai4 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_ai5 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_ai6 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_lambda0 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_lambda1 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_lambda2 < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_k_l < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_k_n < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_k_p < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_p_n < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> tfact < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_mumax < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_rhoq < 0) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_daylen == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_sra == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_bankStorage == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_qsSub == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_qiSub == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_qgSub == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_qsCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_qiCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_qgCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_chStorage == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_chWTdepth == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_wattemp == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_latno3ToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_surqno3ToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_surqsolpToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_no3gwToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_minpgwToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_sedorgnToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_sedorgpToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_sedminpaToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_sedminpsToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_ammoToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	if(this -> m_nitriteToCh == NULL) {throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");return false;}
-	return true;
-}
-void NutrientCHRoute::SetValue(const char* key, float value)
+NutrientCHRoute::~NutrientCHRoute(void)
 {
-	string sk(key);
-	if (StringMatch(sk, VAR_OMP_THREADNUM)) {
-		omp_set_num_threads((int)value);
-	} 
-	else if (StringMatch(sk, Tag_ChannelTimeStep)) {this -> m_dt = (int)value;}
-	else if (StringMatch(sk, VAR_A_BNK)) {this -> m_aBank = value;}
-	else if (StringMatch(sk, VAR_QUPREACH)) {this -> m_qUpReach = value;}
-	else if (StringMatch(sk, VAR_RNUM1)) {this -> m_rnum1 = value;}
-	else if (StringMatch(sk, VAR_IGROPT)) {this -> igropt = value;}
-	else if (StringMatch(sk, VAR_AI0)) {this -> m_ai0 = value;}
-	else if (StringMatch(sk, VAR_AI1)) {this -> m_ai1 = value;}
-	else if (StringMatch(sk, VAR_AI2)) {this -> m_ai2 = value;}
-	else if (StringMatch(sk, VAR_AI3)) {this -> m_ai3 = value;}
-	else if (StringMatch(sk, VAR_AI4)) {this -> m_ai4 = value;}
-	else if (StringMatch(sk, VAR_AI5)) {this -> m_ai5 = value;}
-	else if (StringMatch(sk, VAR_AI6)) {this -> m_ai6 = value;}
-	else if (StringMatch(sk, VAR_LAMBDA0)) {this -> m_lambda0 = value;}
-	else if (StringMatch(sk, VAR_LAMBDA1)) {this -> m_lambda1 = value;}
-	else if (StringMatch(sk, VAR_LAMBDA2)) {this -> m_lambda2 = value;}
-	else if (StringMatch(sk, VAR_K_L)) {this -> m_k_l = value;}
-	else if (StringMatch(sk, VAR_K_N)) {this -> m_k_n = value;}
-	else if (StringMatch(sk, VAR_K_P)) {this -> m_k_p = value;}
-	else if (StringMatch(sk, VAR_P_N)) {this -> m_p_n = value;}
-	else if (StringMatch(sk, VAR_TFACT)) {this -> tfact = value;}
-	else if (StringMatch(sk, VAR_MUMAX)) {this -> m_mumax = value;}
-	else if (StringMatch(sk, VAR_RHOQ)) {this -> m_rhoq = value;}
-	//else if(StringMatch(sk, VAR_VSF)) {m_vScalingFactor = value;}
-	//else if (StringMatch(sk, VAR_MSK_X)) {m_x = value;}
-	//else if (StringMatch(sk, VAR_MSK_CO1)) {m_co1 = value;}
-	else {
-		throw ModelException("NutCHRout","SetValue","Parameter " + sk + " does not exist in CLIMATE method. Please contact the module developer.");
-	}
+    if (m_algae != NULL)
+    {
+        delete[] m_algae;
+    }
+    if (m_organicn != NULL)
+    {
+        delete[] m_organicn;
+    }
+    if (m_organicp != NULL)
+    {
+        delete[] m_organicp;
+    }
+    if (m_ammonian != NULL)
+    {
+        delete[] m_ammonian;
+    }
+    if (m_nitriten != NULL)
+    {
+        delete[] m_nitriten;
+    }
+    if (m_nitraten != NULL)
+    {
+        delete[] m_nitraten;
+    }
+    if (m_disolvp != NULL)
+    {
+        delete[] m_disolvp;
+    }
+    if (m_rch_cbod != NULL)
+    {
+        delete[] m_rch_cbod;
+    }
+    if (m_rch_dox != NULL)
+    {
+        delete[] m_rch_dox;
+    }
+    if (m_chlora != NULL)
+    {
+        delete[] m_chlora;
+    }
 }
-void NutrientCHRoute::Set1DData(const char* key,int n, float *data)
-{
-	if(!this->CheckInputSize(key,n)) {
-		return;
-	}
-	string sk(key);
-	if (StringMatch(sk, VAR_DAYLEN)) {this -> m_daylen = data;}
-	else if (StringMatch(sk, VAR_SRA)) {this -> m_sra = data;}
-	else if (StringMatch(sk, VAR_BKST)) {this -> m_bankStorage = data;}
-	else if (StringMatch(sk, VAR_SBOF)) {this -> m_qsSub = data;}
-	else if (StringMatch(sk, VAR_SBIF)) {this -> m_qiSub = data;}
-	else if (StringMatch(sk, VAR_SBQG)) {this -> m_qgSub = data;}
-	else if (StringMatch(sk, VAR_QS)) {this -> m_qsCh = data;}
-	else if (StringMatch(sk, VAR_QI)) {this -> m_qiCh = data;}
-	else if (StringMatch(sk, VAR_QG)) {this -> m_qgCh = data;}
-	else if (StringMatch(sk, VAR_CHST)) {this -> m_chStorage = data;}
-	else if (StringMatch(sk, VAR_CHWTDEPTH)) {this -> m_chWTdepth = data;}
-	else if (StringMatch(sk, VAR_WATTEMP)) {this -> m_wattemp = data;}
-	else if (StringMatch(sk, VAR_LATNO3_CH)) {this -> m_latno3ToCh = data;}
-	else if (StringMatch(sk, VAR_SURQNO3_CH)) {this -> m_surqno3ToCh = data;}
-	else if (StringMatch(sk, VAR_SURQSOLP_CH)) {this -> m_surqsolpToCh = data;}
-	else if (StringMatch(sk, VAR_NO3GW_CH)) {this -> m_no3gwToCh = data;}
-	else if (StringMatch(sk, VAR_MINPGW_CH)) {this -> m_minpgwToCh = data;}
-	else if (StringMatch(sk, VAR_SEDORGN_CH)) {this -> m_sedorgnToCh = data;}
-	else if (StringMatch(sk, VAR_SEDORGP_CH)) {this -> m_sedorgpToCh = data;}
-	else if (StringMatch(sk, VAR_SEDMINPA_CH)) {this -> m_sedminpaToCh = data;}
-	else if (StringMatch(sk, VAR_SEDMINPS_CH)) {this -> m_sedminpsToCh = data;}
-	else if (StringMatch(sk, VAR_AMMO_CH)) {this -> m_ammoToCh = data;}
-	else if (StringMatch(sk, VAR_NITRITE_CH)) {this -> m_nitriteToCh = data;}
-	else {
-		throw ModelException("NutCHRout","SetValue","Parameter " + sk + " does not exist in Nutrient module. Please contact the module developer.");
-	}
-}
-void NutrientCHRoute::Set2DData(const char* key, int nrows, int ncols, float** data)
-{
-	string sk(key);
 
-	if (StringMatch(sk, VAR_REACH_PARAM))
-	{
-		m_nReaches = ncols - 1;
-		m_reachId = data[0];
-		m_reachDownStream = data[1];
-		m_chOrder = data[2];
-		//m_chWidth = data[3];
-		//m_chLen = data[4];
-		//m_chDepth = data[5];
-		//m_chVel = data[6];
-		//m_area = data[7];
-		m_bc1 = data[8];
-		m_bc2 = data[9];
-		m_bc3 = data[10];
-		m_bc4 = data[11];
-		m_rk1 = data[12];
-		m_rk2 = data[13];
-		m_rk3 = data[14];
-		m_rk4 = data[15];
-		m_rs1 = data[16];
-		m_rs2 = data[17];
-		m_rs3 = data[18];
-		m_rs4 = data[19];
-		m_rs5 = data[20];
-		m_reachUpStream.resize(m_nReaches+1);
-		if (m_nReaches > 1)
-		{
-			for (int i = 1; i <= m_nReaches; i++)// index of the reach is the equal to stream link ID(1 to nReaches)
-			{
-				int downStreamId = int(m_reachDownStream[i]);
-				if(downStreamId <= 0)
-					continue;
-				m_reachUpStream[downStreamId].push_back(i);
-			}
-		}
-	}
-	else
-		throw ModelException("NutCHPout", "Set2DData", "Parameter " + sk + " does not exist. Please contact the module developer.");
+bool NutrientCHRoute::CheckInputSize(const char *key, int n)
+{
+    if (n <= 0)
+    {
+        throw ModelException(MID_NutCHRout, "CheckInputSize",
+                             "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
+        return false;
+    }
+    if (m_nReaches != n - 1)
+    {
+        if (m_nReaches <= 0)
+        {
+            m_nReaches = n - 1;
+        } else
+        {
+            //StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
+            ostringstream oss;
+            oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
+            m_nReaches << ".\n";
+            throw ModelException("NutCHRout", "CheckInputSize", oss.str());
+        }
+    }
+    return true;
 }
+
+bool NutrientCHRoute::CheckInputData()
+{
+    if (this->m_dt < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_dt has not been set.");
+        return false;
+    }
+    if (this->m_nReaches < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_nReaches has not been set.");
+        return false;
+    }
+    if (this->m_aBank < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_qUpReach < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_rnum1 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->igropt < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_ai0 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_ai1 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_ai2 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_ai3 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_ai4 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_ai5 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_ai6 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_lambda0 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_lambda1 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_lambda2 < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_k_l < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_k_n < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_k_p < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_p_n < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->tfact < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_mumax < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_rhoq < 0)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_daylen == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_sra == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_bankStorage == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_qsSub == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_qiSub == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_qgSub == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_qsCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_qiCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_qgCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_chStorage == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_chWTdepth == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_wattemp == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_latno3ToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_surqno3ToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_surqsolpToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_no3gwToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_minpgwToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_sedorgnToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_sedorgpToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_sedminpaToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_sedminpsToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_ammoToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    if (this->m_nitriteToCh == NULL)
+    {
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
+    }
+    return true;
+}
+
+void NutrientCHRoute::SetValue(const char *key, float value)
+{
+    string sk(key);
+    if (StringMatch(sk, VAR_OMP_THREADNUM))
+    {
+        omp_set_num_threads((int) value);
+    }
+    else if (StringMatch(sk, Tag_ChannelTimeStep)) { this->m_dt = (int) value; }
+    else if (StringMatch(sk, VAR_A_BNK)) { this->m_aBank = value; }
+    else if (StringMatch(sk, VAR_QUPREACH)) { this->m_qUpReach = value; }
+    else if (StringMatch(sk, VAR_RNUM1)) { this->m_rnum1 = value; }
+    else if (StringMatch(sk, VAR_IGROPT)) { this->igropt = value; }
+    else if (StringMatch(sk, VAR_AI0)) { this->m_ai0 = value; }
+    else if (StringMatch(sk, VAR_AI1)) { this->m_ai1 = value; }
+    else if (StringMatch(sk, VAR_AI2)) { this->m_ai2 = value; }
+    else if (StringMatch(sk, VAR_AI3)) { this->m_ai3 = value; }
+    else if (StringMatch(sk, VAR_AI4)) { this->m_ai4 = value; }
+    else if (StringMatch(sk, VAR_AI5)) { this->m_ai5 = value; }
+    else if (StringMatch(sk, VAR_AI6)) { this->m_ai6 = value; }
+    else if (StringMatch(sk, VAR_LAMBDA0)) { this->m_lambda0 = value; }
+    else if (StringMatch(sk, VAR_LAMBDA1)) { this->m_lambda1 = value; }
+    else if (StringMatch(sk, VAR_LAMBDA2)) { this->m_lambda2 = value; }
+    else if (StringMatch(sk, VAR_K_L)) { this->m_k_l = value; }
+    else if (StringMatch(sk, VAR_K_N)) { this->m_k_n = value; }
+    else if (StringMatch(sk, VAR_K_P)) { this->m_k_p = value; }
+    else if (StringMatch(sk, VAR_P_N)) { this->m_p_n = value; }
+    else if (StringMatch(sk, VAR_TFACT)) { this->tfact = value; }
+    else if (StringMatch(sk, VAR_MUMAX)) { this->m_mumax = value; }
+    else if (StringMatch(sk, VAR_RHOQ)) { this->m_rhoq = value; }
+        //else if(StringMatch(sk, VAR_VSF)) {m_vScalingFactor = value;}
+        //else if (StringMatch(sk, VAR_MSK_X)) {m_x = value;}
+        //else if (StringMatch(sk, VAR_MSK_CO1)) {m_co1 = value;}
+    else
+    {
+        throw ModelException("NutCHRout", "SetValue", "Parameter " + sk +
+                                                      " does not exist in CLIMATE method. Please contact the module developer.");
+    }
+}
+
+void NutrientCHRoute::Set1DData(const char *key, int n, float *data)
+{
+    if (!this->CheckInputSize(key, n))
+    {
+        return;
+    }
+    string sk(key);
+    if (StringMatch(sk, VAR_DAYLEN)) { this->m_daylen = data; }
+    else if (StringMatch(sk, VAR_SRA)) { this->m_sra = data; }
+    else if (StringMatch(sk, VAR_BKST)) { this->m_bankStorage = data; }
+    else if (StringMatch(sk, VAR_SBOF)) { this->m_qsSub = data; }
+    else if (StringMatch(sk, VAR_SBIF)) { this->m_qiSub = data; }
+    else if (StringMatch(sk, VAR_SBQG)) { this->m_qgSub = data; }
+    else if (StringMatch(sk, VAR_QS)) { this->m_qsCh = data; }
+    else if (StringMatch(sk, VAR_QI)) { this->m_qiCh = data; }
+    else if (StringMatch(sk, VAR_QG)) { this->m_qgCh = data; }
+    else if (StringMatch(sk, VAR_CHST)) { this->m_chStorage = data; }
+    else if (StringMatch(sk, VAR_CHWTDEPTH)) { this->m_chWTdepth = data; }
+    else if (StringMatch(sk, VAR_WATTEMP)) { this->m_wattemp = data; }
+    else if (StringMatch(sk, VAR_LATNO3_CH)) { this->m_latno3ToCh = data; }
+    else if (StringMatch(sk, VAR_SURQNO3_CH)) { this->m_surqno3ToCh = data; }
+    else if (StringMatch(sk, VAR_SURQSOLP_CH)) { this->m_surqsolpToCh = data; }
+    else if (StringMatch(sk, VAR_NO3GW_CH)) { this->m_no3gwToCh = data; }
+    else if (StringMatch(sk, VAR_MINPGW_CH)) { this->m_minpgwToCh = data; }
+    else if (StringMatch(sk, VAR_SEDORGN_CH)) { this->m_sedorgnToCh = data; }
+    else if (StringMatch(sk, VAR_SEDORGP_CH)) { this->m_sedorgpToCh = data; }
+    else if (StringMatch(sk, VAR_SEDMINPA_CH)) { this->m_sedminpaToCh = data; }
+    else if (StringMatch(sk, VAR_SEDMINPS_CH)) { this->m_sedminpsToCh = data; }
+    else if (StringMatch(sk, VAR_AMMO_CH)) { this->m_ammoToCh = data; }
+    else if (StringMatch(sk, VAR_NITRITE_CH)) { this->m_nitriteToCh = data; }
+    else
+    {
+        throw ModelException("NutCHRout", "SetValue", "Parameter " + sk +
+                                                      " does not exist in Nutrient module. Please contact the module developer.");
+    }
+}
+
+void NutrientCHRoute::Set2DData(const char *key, int nrows, int ncols, float **data)
+{
+    string sk(key);
+
+    if (StringMatch(sk, VAR_REACH_PARAM))
+    {
+        m_nReaches = ncols - 1;
+        m_reachId = data[0];
+        m_reachDownStream = data[1];
+        m_chOrder = data[2];
+        //m_chWidth = data[3];
+        //m_chLen = data[4];
+        //m_chDepth = data[5];
+        //m_chVel = data[6];
+        //m_area = data[7];
+        m_bc1 = data[8];
+        m_bc2 = data[9];
+        m_bc3 = data[10];
+        m_bc4 = data[11];
+        m_rk1 = data[12];
+        m_rk2 = data[13];
+        m_rk3 = data[14];
+        m_rk4 = data[15];
+        m_rs1 = data[16];
+        m_rs2 = data[17];
+        m_rs3 = data[18];
+        m_rs4 = data[19];
+        m_rs5 = data[20];
+        m_reachUpStream.resize(m_nReaches + 1);
+        if (m_nReaches > 1)
+        {
+            for (int i = 1; i <= m_nReaches; i++)// index of the reach is the equal to stream link ID(1 to nReaches)
+            {
+                int downStreamId = int(m_reachDownStream[i]);
+                if (downStreamId <= 0)
+                    continue;
+                m_reachUpStream[downStreamId].push_back(i);
+            }
+        }
+    }
+    else
+        throw ModelException("NutCHPout", "Set2DData",
+                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+}
+
 void  NutrientCHRoute::initialOutputs() {
 	if(m_nReaches <= 0) 
 		throw ModelException("NutCHPout","initialOutputs","The cell number of the input can not be less than zero.");
@@ -329,6 +545,7 @@ int NutrientCHRoute::Execute() {
 	//return ??
 	return 0;
 }
+
 /*
 //! Get coefficients
 void NutrientCHRoute::GetCoefficients(float reachLength, float v0, MuskWeights& weights)
@@ -363,6 +580,7 @@ void NutrientCHRoute::GetCoefficients(float reachLength, float v0, MuskWeights& 
 	}
 }
 */
+
 void NutrientCHRoute::NutrientinChannel(int i){
 
 	float thbc1 = 1.083;    ///temperature adjustment factor for local biological oxidation of NH3 to NO2
@@ -801,21 +1019,25 @@ void NutrientCHRoute::NutrientinChannel(int i){
 		ddisox = 0.0;
 		m_soxy = 0.0;
 	}
-
-}
-float NutrientCHRoute::corTempc(float r20, float thk, float tmp) {
-	float theta = 0.;
-	theta = r20 * pow(thk, (tmp - 20.f));
-	return theta;
 }
 
-void NutrientCHRoute::GetValue(const char* key, float* value) {
-	string sk(key);
-	 if (StringMatch(sk, VAR_SOXY)) {
-		*value = m_soxy;
-	}
+float NutrientCHRoute::corTempc(float r20, float thk, float tmp)
+{
+    float theta = 0.;
+    theta = r20 * pow(thk, (tmp - 20.f));
+    return theta;
+}
+
+void NutrientCHRoute::GetValue(const char *key, float *value)
+{
+    string sk(key);
+    if (StringMatch(sk, VAR_SOXY))
+    {
+        *value = m_soxy;
+    }
 
 }
+
 void NutrientCHRoute::Get1DData(const char* key, int* n, float** data) {
 	string sk(key);
 	*n = m_nReaches + 1;

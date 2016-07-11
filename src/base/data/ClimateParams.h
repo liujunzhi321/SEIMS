@@ -8,6 +8,7 @@
  *
  */
 #pragma once
+
 #include <string>
 
 using namespace std;
@@ -16,28 +17,33 @@ using namespace std;
  * \brief Get the year
  * \return int year
 */
-int		GetYear(time_t&);
+int GetYear(time_t &);
+
 /*!
  * \brief Get the month
  * \return int month
 */
-int		GetMonth(time_t&);
+int GetMonth(time_t &);
+
 /*!
  * \brief Get the day
  * \return int day
 */
-int		GetDay(time_t&);
+int GetDay(time_t &);
+
 /*!
  * \brief Get the Julian day of one day
  * \return int Julian day
 */
-int		JulianDay(time_t&);
+int JulianDay(time_t &);
+
 /*!
  * \brief Calculate latent heat of vaporization(MJ/kg)
  * \param[in] tmean Mean temperature
  * \return Latent heat of vaporization
 */
-float	LatentHeatVapor(float &tmean);
+float LatentHeatVapor(float &tmean);
+
 /*!
  * \brief Calculate the max solar radiation for a station of one day
  *
@@ -47,13 +53,15 @@ float	LatentHeatVapor(float &tmean);
  * \param[out] dayL day length (hr)
  * \param[out] maxSR The max solar radiation.
 */
-void	MaxSolarRadiation(int& jDay,float& lat, float& dayL, float& maxSR);
+void MaxSolarRadiation(int &jDay, float &lat, float &dayL, float &maxSR);
+
 /*!
  * \brief Calculate mean barometric pressure
  * \param[in] elev elevation of current cell or site
  * \return mean atmospheric pressure (kPa)
 */
-float	MeanBarometricPressure(float &elev);
+float MeanBarometricPressure(float &elev);
+
 /*!
  * \brief Calculate psychrometric constant
  * \param[in] elev elevation of current cell or site
@@ -62,9 +70,10 @@ float	MeanBarometricPressure(float &elev);
  * \return  Psychrometric constant
 */
 float PsychrometricConst(float &tmean, float &elev);
+
 /*!
  * \brief Calculates saturation vapor pressure at a given air temperature.
  * \param[in] float t: mean air temperature(deg C)
  * \return saturation vapor pressure(kPa)
 */
-float	SaturationVaporPressure(float &t);
+float SaturationVaporPressure(float &t);

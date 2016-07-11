@@ -12,288 +12,305 @@
 #include <cmath>
 #include "util.h"
 #include "utils.h"
-#include <iostream>
 #include <fstream>
-#include <string>
 #include <cstring>
-#include <vector>
-#include <algorithm>
-#include <functional>
+//#include <iostream>
+//#include <string>
+//#include <vector>
+//#include <algorithm>
+//#include <functional>
 
 #ifndef linux
+
 #include <WinSock2.h>
 #include <Windows.h>
 #include <direct.h>
+
+#else
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <fcntl.h>
 #endif
 
 using namespace std;
+
 bool DoubleEqual(double d1, double d2)
 {
-	if (abs(d1 - d2) < UTIL_ZERO)
-		return true;
-	else
-		return false;
+    if (abs(d1 - d2) < UTIL_ZERO)
+        return true;
+    else
+        return false;
 }
+
 float Expo(float xx)
 {
-	if(xx < -20.)
-		xx = -20.;
-	if(xx > 20.)
-		xx = 20.;
-	return exp(xx);
+    if (xx < -20.f)
+        xx = -20.f;
+    if (xx > 20.f)
+        xx = 20.f;
+    return exp(xx);
 }
-int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFiles)
+
+int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFiles)
 {
 #ifndef linux
-	char szFind[MAX_PATH];
-	strcpy_s(szFind,lpPath);
-	strcat_s(szFind,"\\");
-	strcat_s(szFind, expression);
+    char szFind[MAX_PATH];
+    strcpy_s(szFind, lpPath);
+    strcat_s(szFind, "\\");
+    strcat_s(szFind, expression);
 
-	WIN32_FIND_DATA findFileData;
-	HANDLE hFind=::FindFirstFile(szFind, &findFileData);
-	if(INVALID_HANDLE_VALUE == hFind) 
-		return -1;
-	do
-	{
-		if(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-			continue;
+    WIN32_FIND_DATA findFileData;
+    HANDLE hFind = ::FindFirstFile(szFind, &findFileData);
+    if (INVALID_HANDLE_VALUE == hFind)
+        return -1;
+    do
+    {
+        if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            continue;
 
-		char fullpath[MAX_PATH];
-		strcpy_s(fullpath,lpPath);
-		strcat_s(fullpath,"\\");
-		strcat_s(fullpath, findFileData.cFileName);
+        char fullpath[MAX_PATH];
+        strcpy_s(fullpath, lpPath);
+        strcat_s(fullpath, "\\");
+        strcat_s(fullpath, findFileData.cFileName);
 
-		vecFiles.push_back(fullpath);
+        vecFiles.push_back(fullpath);
 
-	}while (::FindNextFile(hFind, &findFileData));
+    } while (::FindNextFile(hFind, &findFileData));
 #endif
 
-	return 0;
+    return 0;
 }
 
 bool FloatEqual(float f1, float f2)
 {
-	if (abs(f1 - f2) < UTIL_ZERO)
-		return true;
-	else
-		return false;
+    if (abs(f1 - f2) < UTIL_ZERO)
+        return true;
+    else
+        return false;
 }
 
 string GetAppPath()
 {
-	string RootPath;
+    string RootPath;
+#ifndef PATH_MAX
 #define PATH_MAX 1024
-#ifndef linux
-	TCHAR buffer[PATH_MAX];
-	GetModuleFileName(NULL, buffer, PATH_MAX);
-	RootPath = string((char*)buffer);
-#else
-	static char buf[PATH_MAX];
-	int rslt = readlink("/proc/self/exe", buf, PATH_MAX);
-	if(rslt < 0 || rslt >= PATH_MAX)
-		buf[0] = '\0';
-	else
-		buf[rslt] = '\0';
-	RootPath = buf;
 #endif
-	basic_string <char>::size_type idx = RootPath.find_last_of(SEP);
-	RootPath = RootPath.substr(0, idx+1);
+#ifndef linux
+    TCHAR buffer[PATH_MAX];
+    GetModuleFileName(NULL, buffer, PATH_MAX);
+    RootPath = string((char *) buffer);
+#else
+    static char buf[PATH_MAX];
+    int rslt = readlink("/proc/self/exe", buf, PATH_MAX);
+    if(rslt < 0 || rslt >= PATH_MAX)
+        buf[0] = '\0';
+    else
+        buf[rslt] = '\0';
+    RootPath = buf;
+#endif
+    basic_string<char>::size_type idx = RootPath.find_last_of(SEP);
+    RootPath = RootPath.substr(0, idx + 1);
 
-	return RootPath;
+    return RootPath;
 }
 
-string GetCoreFileName(const string& fullFileName)
+string GetCoreFileName(const string &fullFileName)
 {
-	string::size_type start = fullFileName.find_last_of("\\");
-	if (start == string::npos)
-	{
-		start = fullFileName.find_last_of("/");
-	}
+    string::size_type start = fullFileName.find_last_of("\\");
+    if (start == string::npos)
+    {
+        start = fullFileName.find_last_of("/");
+    }
 
-	if (start == string::npos)
-		start = -1; // old code: start = 0; Modified by ZhuLJ, 2015/6/16
+    if (start == string::npos)
+        start = -1; // old code: start = 0; Modified by ZhuLJ, 2015/6/16
 
-	string::size_type end = fullFileName.find_last_of(".");
+    string::size_type end = fullFileName.find_last_of(".");
 
-	if (end == string::npos)
-		end = fullFileName.length();
+    if (end == string::npos)
+        end = fullFileName.length();
 
-	return fullFileName.substr(start+1, end-start-1);
+    return fullFileName.substr(start + 1, end - start - 1);
 }
-string GetSuffix(const string& fullFileName)
+
+string GetSuffix(const string &fullFileName)
 {
-	vector<string> tokens = utils::SplitString(fullFileName,'.');
-	if(tokens.size() == 2)
-		return tokens[1];
-	else
-		return "";
+    vector<string> tokens = utils::SplitString(fullFileName, '.');
+    if (tokens.size() == 2)
+        return tokens[1];
+    else
+        return "";
 }
-string GetPathFromFullName(string& fullFileName)
+
+string GetPathFromFullName(string &fullFileName)
 {
-	string::size_type i = fullFileName.find_last_of("\\");
-	if (i == string::npos)
-	{
-		i = fullFileName.find_last_of("/");
-	}
+    string::size_type i = fullFileName.find_last_of("\\");
+    if (i == string::npos)
+    {
+        i = fullFileName.find_last_of("/");
+    }
 
-	if (i == string::npos)
-		return "";
+    if (i == string::npos)
+        return "";
 
-	return fullFileName.substr(0, i+1);
+    return fullFileName.substr(0, i + 1);
 }
 
 string GetUpper(string str)
 {
-	string strTmp1 = string(str);
-	for (int j=0; j<(int)strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
-	return strTmp1;
+    string strTmp1 = string(str);
+    for (int j = 0; j < (int) strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
+    return strTmp1;
 }
 
 void LocalTime(time_t date, struct tm *t)
 {
 #ifndef linux
-	localtime_s(t, &date);
+    localtime_s(t, &date);
 #else
-	localtime_r(&date, t);
+    localtime_r(&date, t);
 #endif
 }
 
 double Max(double *a, int n)
 {
-	double m = a[0];
-	for (int i = 1; i < n; i++)
-	{
-		if (a[i] > m)
-		{
-			m = a[i];
-		}
-	}
-	return m;
+    double m = a[0];
+    for (int i = 1; i < n; i++)
+    {
+        if (a[i] > m)
+        {
+            m = a[i];
+        }
+    }
+    return m;
 }
 
-void Output1DArrayToTxtFile(int n, float* data, const char* filename)
+void Output1DArrayToTxtFile(int n, float *data, const char *filename)
 {
-	ofstream ofs(filename);
+    ofstream ofs(filename);
 
-	for (int i = 0; i < n; ++i)
-		ofs << data[i] << "\n";
+    for (int i = 0; i < n; ++i)
+        ofs << data[i] << "\n";
 
-	ofs.close();
+    ofs.close();
 }
 
-void Output2DArrayToTxtFile(int nRows, int nCols, float** data, const char* filename)
+void Output2DArrayToTxtFile(int nRows, int nCols, float **data, const char *filename)
 {
-	ofstream ofs(filename);
+    ofstream ofs(filename);
 
-	for (int i = 0; i < nRows; ++i)
-	{
-		for (int j = 0; j < nCols; ++j)
-		{
-			ofs << data[i][j] << "\t";
-		}
-		ofs << "\n";
-	}
+    for (int i = 0; i < nRows; ++i)
+    {
+        for (int j = 0; j < nCols; ++j)
+        {
+            ofs << data[i][j] << "\t";
+        }
+        ofs << "\n";
+    }
 
-	ofs.close();
+    ofs.close();
 }
 
 float Power(float a, float n)
 {
-	if (a >= 0)
-		return pow(a, n);
-	else
-		return -pow(-a, n);
+    if (a >= 0)
+        return pow(a, n);
+    else
+        return -pow(-a, n);
 }
-void Read1DArrayFromTxtFile(const char* filename, int& nRows, float*& data)
+
+void Read1DArrayFromTxtFile(const char *filename, int &nRows, float *&data)
 {
-	ifstream ifs(filename);
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float[nRows];
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> data[i];
-	}
-	ifs.close();
+    ifstream ifs(filename);
+    string tmp;
+    ifs >> tmp >> nRows;
+    data = new float[nRows];
+    for (int i = 0; i < nRows; i++)
+    {
+        ifs >> data[i];
+    }
+    ifs.close();
 }
 
-void Read2DArrayFromTxtFile(const char* filename, int& nRows, float**& data)
+void Read2DArrayFromTxtFile(const char *filename, int &nRows, float **&data)
 {
-	ifstream ifs(filename);
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float*[nRows];
-	int n;
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> n;
-		data[i] = new float[n+1];
-		data[i][0] = (float)n;
-		for (int j = 1; j <= n; j++)
-			ifs >> data[i][j];
-	}
-	ifs.close();
+    ifstream ifs(filename);
+    string tmp;
+    ifs >> tmp >> nRows;
+    data = new float *[nRows];
+    int n;
+    for (int i = 0; i < nRows; i++)
+    {
+        ifs >> n;
+        data[i] = new float[n + 1];
+        data[i][0] = (float) n;
+        for (int j = 1; j <= n; j++)
+            ifs >> data[i][j];
+    }
+    ifs.close();
 }
 
-void Read2DArrayFromString(const char* s, int& nRows, float**& data)
+void Read2DArrayFromString(const char *s, int &nRows, float **&data)
 {
-	istringstream ifs(s);
+    istringstream ifs(s);
 
-	string tmp;
-	ifs >> tmp >> nRows;
-	data = new float*[nRows];
-	int n;
-	for (int i = 0; i < nRows; i++)
-	{
-		ifs >> n;
-		data[i] = new float[n+1];
-		data[i][0] = (float)n;
-		for (int j = 1; j <= n; j++)
-			ifs >> data[i][j];
-	}
+    string tmp;
+    ifs >> tmp >> nRows;
+    data = new float *[nRows];
+    int n;
+    for (int i = 0; i < nRows; i++)
+    {
+        ifs >> n;
+        data[i] = new float[n + 1];
+        data[i][0] = (float) n;
+        for (int j = 1; j <= n; j++)
+            ifs >> data[i][j];
+    }
 }
 
-void StatusMessage(const char* msg)
+void StatusMessage(const char *msg)
 {
-	//cout << msg << endl;
+    //cout << msg << endl;
 }
 
-bool StrEqualIgnoreCase(const char* a, const char* b)
+bool StrEqualIgnoreCase(const char *a, const char *b)
 {
 #ifndef linux
-	return _stricmp(a, b) == 0;
+    return _stricmp(a, b) == 0;
 #else
-	return strcasecmp(a, b) == 0;
-#endif 
+    return strcasecmp(a, b) == 0;
+#endif
 
 }
 
 bool StringMatch(string text1, string text2)
 {
-	// convert the key to UPPERCASE for comparison
-	string strTmp1 = string(text1);
-	for (int j=0; j<(int)strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
+    // convert the key to UPPERCASE for comparison
+    string strTmp1 = string(text1);
+    for (int j = 0; j < (int) strTmp1.length(); j++) strTmp1[j] = toupper(strTmp1[j]);
 
-	string strTmp2 = string(text2);
-	for (int j=0; j<(int)strTmp2.length(); j++) strTmp2[j] = toupper(strTmp2[j]);
+    string strTmp2 = string(text2);
+    for (int j = 0; j < (int) strTmp2.length(); j++) strTmp2[j] = toupper(strTmp2[j]);
 
-	return (strTmp1 == strTmp2);
+    return (strTmp1 == strTmp2);
 }
 
 double Sum(double *a, int n)
 {
-	double s = 0.0;
-	for (int i = 0; i < n; i++)
-	{
-		s += a[i];
-	}
-	return s;
+    double s = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        s += a[i];
+    }
+    return s;
 }
 
-string& trim(string& s)
+string &trim(string &s)
 {
-    if(s.empty())
+    if (s.empty())
         return s;
     s.erase(0, s.find_first_not_of(" \n\r\t"));
     return s.erase(s.find_last_not_of(" \n\r\t") + 1);
@@ -334,12 +351,6 @@ string& trim(string& s)
 //}
 
 #ifdef linux
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-#include <fcntl.h>
 int copyfile_linux(const char* srcfile, const char* dstfile)
 {
     struct stat file;

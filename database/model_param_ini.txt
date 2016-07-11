@@ -13,10 +13,10 @@ Climate	Weight_T	Weight Coefficient of Temperature		ALL	-999		NC
 Climate	Weight_PET	Weight Coefficient of Potential Evapotranspiration		ALL	-999		NC			
 Climate	esco	soil evaporation compensation factor		AET_PTH	0.95	1	RC	1	0.01	Y
 
-Snow	T_snow	Snowfall temperature	oC	ALL	0	0	AC	2	-2	Y
-Snow	T0	Snowmelt temperature	oC	ALL	1	0	AC	3	-1	Y
-Snow	K_snow	Degree day coefficient	mm/oC/day	SNO_DD	2	0	AC	5	0.5	Y
-Snow	K_rain	Rainfall impact factor	mm/mm/oC/day	SNO_DD	0	0	AC	1	0	Y
+Snow	T_snow	Snowfall temperature	deg C	ALL	0	0	AC	2	-2	Y
+Snow	T0	Snowmelt temperature	deg C	ALL	1	0	AC	3	-1	Y
+Snow	K_snow	Degree day coefficient	mm/deg C/day	SNO_DD	2	0	AC	5	0.5	Y
+Snow	K_rain	Rainfall impact factor	mm/mm/deg C/day	SNO_DD	0	0	AC	1	0	Y
 Snow	D_snow	Snow redistribution coefficient		SNO_DD	-99	1	RC	1.5	0.5	Y
 Snow	curva_wind	Curvature along wind direction	%	SRD_MB	-99		NC			Y
 Snow	k_curvature	Curvature coefficient in wind direction		SRD_MB	145	0	AC	500	0	Y
@@ -29,13 +29,13 @@ Snow	k_blow	fraction of snow into or out of the watershed		ALL	0	0	AC	1	-1	Y
 Snow	swe0	Initial snow water equivalent	mm	ALL	20	0	AC	300	0	Y
 Snow	subbasin	subbasin identity		ALL	-99	0	NC	0	100	
 Snow	shc_crop	snow holding capacity of cropland	mm	SRD_MB	50	0	NC	0.1	0	Y
-Snow	T_wind	temperature at which wind transport of snow is most favorable	oC	SRD_MB	-27.27	0	NC	-20	-35	Y
+Snow	T_wind	temperature at which wind transport of snow is most favorable	deg C	SRD_MB	-27.27	0	NC	-20	-35	Y
 Snow	k_subli	Praction of PET for sublimation		SSM_PE	1	0	AC	5	0	Y
-Snow	c_snow	temperature impact factor	mm/oC/delta_t	SNO_DD	3	0	AC	6	0	Y
-Snow	c_rain	Rainfall impact factor	mm/mm/oC/delta_t	SNO_DD	0.04	0	AC	1	0	Y
+Snow	c_snow	temperature impact factor	mm/deg C/delta_t	SNO_DD	3	0	AC	6	0	Y
+Snow	c_rain	Rainfall impact factor	mm/mm/deg C/delta_t	SNO_DD	0.04	0	AC	1	0	Y
 Snow	lag_snow	Snow temperature lag factor		SNO_SP	0.8	0	AC	1	0	
-Snow	c_snow6	Melt factor on June 21	mm/oC/day	SNO_SP	2.5	0	AC	4	1	Y
-Snow	c_snow12	Melt factor on December 21	mm/oC/day	SNO_SP	6.5	0	AC	9	6	Y
+Snow	c_snow6	Melt factor on June 21	mm/deg C/day	SNO_SP	2.5	0	AC	4	1	Y
+Snow	c_snow12	Melt factor on December 21	mm/deg C/day	SNO_SP	6.5	0	AC	9	6	Y
 
 Interception	Interc_max	Maximum Interception Capacity	mm	ALL	-99	1	RC	1.5	0.5	Y
 Interception	Interc_min	Minimum Interception Capacity	mm	ALL	-99	1	RC	1.5	0.5	Y
@@ -58,23 +58,23 @@ WaterBalance	Conductivity	Soil hydraulic conductivity	mm/hr	ALL	-99	1	RC	10	0.1	
 WaterBalance	Porosity	Soil porosity	m3/m3	ALL	-99	1	RC	1.2	0.8	Y
 WaterBalance	Fieldcap	Soil field capacity	m3/m3	ALL	-99	1	RC	1.2	0.8	Y
 WaterBalance	Moist_in	Initial soil moisture	m3/m3	ALL	-99	1	RC	1	0.8	Y
-WaterBalance	soiltemp0	Initial soil temperature	oC	SOI_EB	-99	1	RC	1.2	0.8	Y
+WaterBalance	soiltemp0	Initial soil temperature	deg C	SOI_EB	-99	1	RC	1.2	0.8	Y
 WaterBalance	K_run	Runoff exponent when net rainfall approaches to zero		SUR_MR	2.5	0	AC	5	0	Y
 WaterBalance	P_max	Maximum rainfall intensity when k_run = 1.0	mm	SUR_MR	30	0	AC	60	10	Y
 WaterBalance	Depre_in	Initial depression storage coefficient		ALL	0	0	AC	1	0	Y
 WaterBalance	Rootdepth	Root depth	m	ALL	-99	1	RC	1.5	0.2	Y
-WaterBalance	soil_ta0	Empirical coefficient for estimating soil temperature	oC	STP_FP	4.768	0	AC	10	0	Y
+WaterBalance	soil_ta0	Empirical coefficient for estimating soil temperature	deg C	STP_FP	4.768	0	AC	10	0	Y
 WaterBalance	soil_ta1	Empirical coefficient for estimating soil temperature		STP_FP	0.174	0	AC	1	0	Y
 WaterBalance	soil_ta2	Empirical coefficient for estimating soil temperature		STP_FP	0.163	0	AC	1	0	Y
 WaterBalance	soil_ta3	Empirical coefficient for estimating soil temperature		STP_FP	0.223	0	AC	1	0	Y
-WaterBalance	soil_tb1	Empirical coefficient for estimating soil temperature	oC	STP_FP	-1.361	0	AC	0	-5	Y
-WaterBalance	soil_tb2	Empirical coefficient for estimating soil temperature	oC	STP_FP	-3.762	0	AC	0	-5	Y
-WaterBalance	soil_td1	Empirical coefficient for estimating soil temperature	oC	STP_FP	0.057	0	AC	1	0	Y
-WaterBalance	soil_td2	Empirical coefficient for estimating soil temperature	oC	STP_FP	0.339	0	AC	1	0	Y
+WaterBalance	soil_tb1	Empirical coefficient for estimating soil temperature	deg C	STP_FP	-1.361	0	AC	0	-5	Y
+WaterBalance	soil_tb2	Empirical coefficient for estimating soil temperature	deg C	STP_FP	-3.762	0	AC	0	-5	Y
+WaterBalance	soil_td1	Empirical coefficient for estimating soil temperature	deg C	STP_FP	0.057	0	AC	1	0	Y
+WaterBalance	soil_td2	Empirical coefficient for estimating soil temperature	deg C	STP_FP	0.339	0	AC	1	0	Y
 WaterBalance	k_soil10	ratio between soil temperature at 10 cm and the mean		STP_FP	1	0	AC	3	0	Y
-WaterBalance	soil_t10	soil temperature relative to short grass cover	oC	STP_FP	-99	1	RC	2	0	Y
+WaterBalance	soil_t10	soil temperature relative to short grass cover	deg C	STP_FP	-99	1	RC	2	0	Y
 WaterBalance	rv_co	Groundwater revap coefficient		GW_RSVR	0	0	AC	0.2	0	Y
-WaterBalance	t_soil	Soil freezing temperature	oC	ALL	-5	0	AC	0	-15	Y
+WaterBalance	t_soil	Soil freezing temperature	deg C	ALL	-5	0	AC	0	-15	Y
 WaterBalance	s_frozen	Frozen moisture relative to porosity with no infiltration		ALL	0.5	0	AC	1	0.1	Y
 WaterBalance	Residual	soil residual moisture	m3/m3	ALL	-99	1	RC	1.2	0.8	Y
 
@@ -126,7 +126,7 @@ Sediment	spcon	 Coefficient in sediment transport equation		ChannelRouting	0.000
 Sediment	p_rf	 Peak rate adjustment factor 		ChannelRouting	1	0.1	AC	3	1	Y
 Sediment	spexp	Exponent in sediment transport equation		ChannelRouting	1.5	0.1	AC	2	1	Y
 Sediment	sed_chi	Initial channel sediment concentration	ton/m^3	ChannelRouting	0.03	0.01	AC	1	0	Y
-Sediment	vcrit	critical veloctiy for sediment deposition	m/s	ChannelRouting	0.01	0.01	AC	1	0	Y
+Sediment	vcrit	critical veldeg Ctiy for sediment deposition	m/s	ChannelRouting	0.01	0.01	AC	1	0	Y
 Sediment	downcut	 whether do the channel downcutting and widening		ChannelRouting	1	0	NC	1	0	Y
 Sediment	rsd_covco	residue cover factor for computing fraction of cover		MUSLEC_LAI	0.3	0.1	AC	0.5	0.1	Y
 Sediment	Spl_delratio	Splash delivery ratio		SplashEro_KinEen	0.1	1	RC	1	0	Y
@@ -161,7 +161,7 @@ InstreamWQ	no2	NO2-N concentration in reach on the first day	mg N/L	ChannelRouti
 InstreamWQ	orgn	Organic N concentration in reach on the first day	mg N/L	ChannelRouting	0					
 InstreamWQ	orgp	Organic P concentration in reach on the first day	mg P/L	ChannelRouting	0					
 InstreamWQ	p_n	Algal preference factor for ammonia	none	ChannelRouting	0.5			1	0.01	
-InstreamWQ	cbod	Carbonaceous biochemical oxygen demand in reach on the frist day	mg O2/L	ChannelRouting	0					
+InstreamWQ	cbod	Carbonaceous bideg Chemical oxygen demand in reach on the frist day	mg O2/L	ChannelRouting	0					
 InstreamWQ	diso2	Dissolved oxygen concentration in reach on the first day	mg O2/L	ChannelRouting	0					
 InstreamWQ	rhoq	Algal respiration rate coefficient in reach at 20 deg C	1/day	ChannelRouting	0.3			0.5	0.05	
 InstreamWQ	tfact	Fraction of solar radiation computed in the temperature heat balance that is photosynthetically active	none	ChannelRouting	0.3			1	0.1	
@@ -202,7 +202,7 @@ Nutrient	mumax	Maximum specific algal growth rate at 20 deg C	none	NutCHRout	2	1
 Nutrient	rhoq	Algal respiration rate at 20 deg C	1/day	NutCHRout	0.3	1	RC	0.05	0.5	Y
 Nutrient	tfact	Fraction of solar radiation that is photosynthetically active	none	NutCHRout	0.3	1	RC	1	0	Y
 Nutrient	rnum1	Fraction of overland flow	none	NutCHRout	0.05	1	RC	1	0	Y
-Nutrient	rs1	Local algal settling rate in the reach at 20 deg C	m/day	NutCHRout	1	1	RC	1.82	0.15	Y
+Nutrient	rs1	Ldeg Cal algal settling rate in the reach at 20 deg C	m/day	NutCHRout	1	1	RC	1.82	0.15	Y
 Nutrient	rs2	Benthic (sediment) source rate for dissolved phosphorus in the reach at 20 deg C	mg disP-P)/((m**2)*day	NutCHRout	0.05	IMPACT	CHANGE	0.1	0.001	Y
 Nutrient	rs3	Benthic source rate for NH4-N in the reach at 20 deg C	mg NH4-N)/((m**2)*day	NutCHRout	0.5	IMPACT	RC	1	0	Y
 Nutrient	rs4	Rate coefficient for organic N settling in the reach at 20 deg C	1/day	NutCHRout	0.05	IMPACT	RC	0.1	0.001	Y

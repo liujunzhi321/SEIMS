@@ -1,9 +1,11 @@
 #pragma once
+
 #include <string>
 #include <ctime>
 #include "api.h"
 
 using namespace std;
+
 #include "SimulationModule.h"
 /** \defgroup SSM_PE
  * \ingroup Hydrology_longterm
@@ -17,44 +19,50 @@ using namespace std;
  * \brief Calculate distribution of snow sublimation
  * 
  */
-class SSM_PE:public SimulationModule
+class SSM_PE : public SimulationModule
 {
 public:
-	//! Constructor
-	SSM_PE(void);
-	//! Destructor
-	~SSM_PE(void);
-	virtual int Execute();
-	virtual void SetValue(const char* key, float data);
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
+    //! Constructor
+    SSM_PE(void);
 
-	bool CheckInputSize(const char* key, int n);
-	bool CheckInputData(void);
+    //! Destructor
+    ~SSM_PE(void);
+
+    virtual int Execute();
+
+    virtual void SetValue(const char *key, float data);
+
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Get1DData(const char *key, int *n, float **data);
+
+    bool CheckInputSize(const char *key, int n);
+
+    bool CheckInputData(void);
 
 private:
-	//! Valid cells number
-	int	  m_nCells;
+    //! Valid cells number
+    int m_nCells;
 
-	float m_t0;
-	float m_tsnow;
-	float m_ksubli;
-	float m_kblow;
-	float m_lastSWE;
+    float m_t0;
+    float m_tsnow;
+    float m_ksubli;
+    float m_kblow;
+    float m_lastSWE;
 
-	float* m_PET;
-	float* m_Pnet;
-	float* m_SA;	
-	float  m_swe;
-	float  m_swe0;
-	float* m_SR;
-	float* m_tMean;
+    float *m_PET;
+    float *m_Pnet;
+    float *m_SA;
+    float m_swe;
+    float m_swe0;
+    float *m_SR;
+    float *m_tMean;
 
-	//result
-	float* m_SE;
+    //result
+    float *m_SE;
 
-	bool m_isInitial;
+    bool m_isInitial;
 
-	void initialOutputs();
+    void initialOutputs();
 };
 

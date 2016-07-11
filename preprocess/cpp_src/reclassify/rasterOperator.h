@@ -33,164 +33,161 @@
 
 using namespace std;
 
-namespace GPRO 
+namespace GPRO
 {
-  
-  template <class elemType>
-  class RasterOperator 
-  {
+
+    template<class elemType>
+    class RasterOperator
+    {
     public:
-      RasterOperator()
-        :_pCellSpace(NULL),
-         _pNbrhood(NULL),
-		 pWorkBR(NULL),
-		 comm(false),
-		 Termination(true)
-         {}
+        RasterOperator()
+                : _pCellSpace(NULL),
+                  _pNbrhood(NULL),
+                  pWorkBR(NULL),
+                  comm(false),
+                  Termination(true) { }
 
-      virtual ~RasterOperator() {}
+        virtual ~RasterOperator() { }
 
-      virtual bool Operator(const CellCoord &coord) { return true; }
+        virtual bool Operator(const CellCoord &coord) { return true; }
 
-	  virtual bool isTermination() {return false;}
+        virtual bool isTermination() { return false; }
 
-      bool Work(const CoordBR *const pWorkBR);
-	  bool Run();
-	  bool Configure(RasterLayer<elemType>* pLayer, bool isCommunication);
+        bool Work(const CoordBR *const pWorkBR);
+
+        bool Run();
+
+        bool Configure(RasterLayer<elemType> *pLayer, bool isCommunication);
 
     public:
 
-	  vector<RasterLayer<elemType>* > CommVec;
-      CellSpace<elemType> *_pCellSpace;
-      Neighborhood<elemType> *_pNbrhood;
-	  CoordBR* pWorkBR;
-	  bool comm;
-	  bool Termination;;
-  };
+        vector<RasterLayer<elemType> *> CommVec;
+        CellSpace<elemType> *_pCellSpace;
+        Neighborhood<elemType> *_pNbrhood;
+        CoordBR *pWorkBR;
+        bool comm;
+        bool Termination;;
+    };
 };
 
-template <class elemType>
+template<class elemType>
 bool GPRO::RasterOperator<elemType>::
-Configure(RasterLayer<elemType>* pLayer, bool isCommunication)
+Configure(RasterLayer<elemType> *pLayer, bool isCommunication)
 {
-	if(pWorkBR == NULL)
-	{
-		pWorkBR = &pLayer->_pMetaData->_localworkBR;
-	}
-	if(isCommunication)
-	{
-		CommVec.push_back( pLayer );
-		//cout<<"_pCommVec->size is "<<endl;
-		if(comm == false)
-		{
-			comm = true;
-		}
-	}
+    if (pWorkBR == NULL)
+    {
+        pWorkBR = &pLayer->_pMetaData->_localworkBR;
+    }
+    if (isCommunication)
+    {
+        CommVec.push_back(pLayer);
+        //cout<<"_pCommVec->size is "<<endl;
+        if (comm == false)
+        {
+            comm = true;
+        }
+    }
 
-	return true;
+    return true;
 }
 
-template <class elemType>
+template<class elemType>
 bool GPRO::RasterOperator<elemType>::
 Work(const CoordBR *const pWBR)
 {
-	//cout<<"pWBR->minIRow() "<<pWBR->minIRow()<<"  pWBR->maxIRow()"<<pWBR->maxIRow()<<endl;
-	
-	
-	//cout<<"_pCommVec->size() "<<CommVec.size()<<endl;
-	//cout<<"Operator is OK!"<<endl;
-	Communication<elemType> COMNI(&CommVec);
-	//cout<<"COMNI is OK!!!!!!"<<endl;
-	bool flag = true;
-	bool noterm = true;
-	int itera = 0;
-	if(Application::_programType == MPI_Type)
-	{
-		MPI_Barrier(MPI_COMM_WORLD);
-		do
-		{
-			//Termination = true;
-			for(int iRow = pWBR->minIRow(); iRow <= pWBR->maxIRow(); iRow++) 
-			{
-				for(int iCol = pWBR->minICol();	iCol <= pWBR->maxICol(); iCol++) 
-				{
-					CellCoord coord(iRow, iCol);
-					if(!Operator(coord)) 
-					{
-						cout<<"Operator is not sucessess!"<<endl;
-						flag = false;
-						break;
-					}    
-				}
-			}
+    //cout<<"pWBR->minIRow() "<<pWBR->minIRow()<<"  pWBR->maxIRow()"<<pWBR->maxIRow()<<endl;
 
-			//cout<<"iterator is done one!!!!!!"<<endl;
 
-			COMNI.rowComm();
-			//bool noterm;
-			//MPI_Allreduce(&Termination, &noterm, 1, MPI_CHAR, MPI_LAND, MPI_COMM_WORLD);
+    //cout<<"_pCommVec->size() "<<CommVec.size()<<endl;
+    //cout<<"Operator is OK!"<<endl;
+    Communication<elemType> COMNI(&CommVec);
+    //cout<<"COMNI is OK!!!!!!"<<endl;
+    bool flag = true;
+    bool noterm = true;
+    int itera = 0;
+    if (Application::_programType == MPI_Type)
+    {
+        MPI_Barrier(MPI_COMM_WORLD);
+        do
+        {
+            //Termination = true;
+            for (int iRow = pWBR->minIRow(); iRow <= pWBR->maxIRow(); iRow++)
+            {
+                for (int iCol = pWBR->minICol(); iCol <= pWBR->maxICol(); iCol++)
+                {
+                    CellCoord coord(iRow, iCol);
+                    if (!Operator(coord))
+                    {
+                        cout << "Operator is not sucessess!" << endl;
+                        flag = false;
+                        break;
+                    }
+                }
+            }
 
-			//itera++;
-		}while( !noterm );
-		MPI_Barrier(MPI_COMM_WORLD);
-		//cout<<"iterative numerber is "<<itera<<endl;
-	}
-	else if (Application::_programType == MPI_OpenMP_Type)
-	{
-		MPI_Barrier(MPI_COMM_WORLD);
-		do
-		{
-			#pragma omp parallel for
-			for(int iRow = pWBR->minIRow(); iRow <= pWBR->maxIRow(); iRow++) 
-			{
-				for(int iCol = pWBR->minICol();	iCol <= pWBR->maxICol(); iCol++) 
-				{
-					CellCoord coord(iRow, iCol);
-					if(!Operator(coord)) 
-					{
-						cout<<"Operator is not sucessess!"<<endl;
-						flag = false;
-						break;
-					}    
-				}
-			}
+            //cout<<"iterator is done one!!!!!!"<<endl;
 
-			COMNI.rowComm();
+            COMNI.rowComm();
+            //bool noterm;
+            //MPI_Allreduce(&Termination, &noterm, 1, MPI_CHAR, MPI_LAND, MPI_COMM_WORLD);
 
-		}while( isTermination() );
-		MPI_Barrier(MPI_COMM_WORLD);
-	}
-	else if(Application::_programType == CUDA_Type)
-	{
-		;
-	}
-	else
-	{
-		;
-	}
+            //itera++;
+        } while (!noterm);
+        MPI_Barrier(MPI_COMM_WORLD);
+        //cout<<"iterative numerber is "<<itera<<endl;
+    }
+    else if (Application::_programType == MPI_OpenMP_Type)
+    {
+        MPI_Barrier(MPI_COMM_WORLD);
+        do
+        {
+#pragma omp parallel for
+            for (int iRow = pWBR->minIRow(); iRow <= pWBR->maxIRow(); iRow++)
+            {
+                for (int iCol = pWBR->minICol(); iCol <= pWBR->maxICol(); iCol++)
+                {
+                    CellCoord coord(iRow, iCol);
+                    if (!Operator(coord))
+                    {
+                        cout << "Operator is not sucessess!" << endl;
+                        flag = false;
+                        break;
+                    }
+                }
+            }
 
-	return flag;
+            COMNI.rowComm();
+
+        } while (isTermination());
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
+    else if (Application::_programType == CUDA_Type)
+    { ;
+    }
+    else
+    { ;
+    }
+
+    return flag;
 }
 
 
-template <class elemType>
+template<class elemType>
 bool GPRO::RasterOperator<elemType>::
 Run()
 {
-	//cout<<"begin run!"<<endl;
-	if(Work(pWorkBR))
-	{
-		//cout<<"Work is done!"<<endl;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+    //cout<<"begin run!"<<endl;
+    if (Work(pWorkBR))
+    {
+        //cout<<"Work is done!"<<endl;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 
 }
-
-
 
 
 #endif

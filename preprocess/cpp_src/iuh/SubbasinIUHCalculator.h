@@ -19,30 +19,31 @@
 class SubbasinIUHCalculator
 {
 public:
-	SubbasinIUHCalculator(int t, Raster<int>& rsMask, Raster<float>& rsTime, Raster<float>& rsDelta, gridfs* grdfs);
-	virtual ~SubbasinIUHCalculator(void);
+    SubbasinIUHCalculator(int t, Raster<int> &rsMask, Raster<float> &rsTime, Raster<float> &rsDelta, gridfs *grdfs);
+
+    virtual ~SubbasinIUHCalculator(void);
 
 
 private:
-	vector< vector<double> > uhCell, uh1;      //IUH from cell to watershed outlet
+    vector<vector<double> > uhCell, uh1;      //IUH from cell to watershed outlet
 
-	int noDataValue;
-	int nRows, nCols;    //number of rows and columns
-	int dt;              //time interval in hours
-	int nCells;          //number of cells
+    int noDataValue;
+    int nRows, nCols;    //number of rows and columns
+    int dt;              //time interval in hours
+    int nCells;          //number of cells
 
-	int** mask;  //value of subwatershed/subbasin
-	float** t0;          //flow time
-	float** delta;       //standard deviation of flow time
-	gridfs* gfs;
+    int **mask;  //value of subwatershed/subbasin
+    float **t0;          //flow time
+    float **delta;       //standard deviation of flow time
+    gridfs *gfs;
 
-	int mt;          //maximum length of IUH
-	int maxtSub;                     //maximum length of subwatershed IUH
+    int mt;          //maximum length of IUH
+    int maxtSub;                     //maximum length of subwatershed IUH
 
-	void readData();
+    void readData();
 
-	double IUHti(double delta0, double t00, double ti);
+    double IUHti(double delta0, double t00, double ti);
 
 public:
-	int calCell(int id);
+    int calCell(int id);
 };

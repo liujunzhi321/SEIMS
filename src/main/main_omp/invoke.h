@@ -27,17 +27,23 @@
 using namespace std;
 
 //! Get the root path of the current executable (i.e., seims_omp or seims).
-string	_GetApplicationPath();
+string _GetApplicationPath();
+
 //! Check database to make sure the collections (tables) are provided
-void	checkDatabase(mongoc_client_t* conn, string dbName);
+void checkDatabase(mongoc_client_t *conn, string dbName);
+
 //! Check project directory for the required input files
-void	checkProject(string projectPath);
+void checkProject(string projectPath);
+
 //! Check table exists or not
-void	checkTable(vector<string>& tableNameList, string dbName, const char* tableName);
+void checkTable(vector<string> &tableNameList, string dbName, const char *tableName);
+
 //! Is valid IP address?
-bool	isIPAddress(const char *ip);
+bool isIPAddress(const char *ip);
+
 //! Is file path existed?
-bool	isPathExists(const char *path);
+bool isPathExists(const char *path);
+
 /*!
  * \brief SEIMS main invoke entrance using MongoDB
  *
@@ -48,7 +54,7 @@ bool	isPathExists(const char *path);
  * \param[in] numThread \a int, thread number for OpenMP
  * \param[in] layingMethod \sa LayeringMethod, method for sequencing Grid
  */
-void	MainMongoDB(string,char*,int,int,int,LayeringMethod);
+void MainMongoDB(string, char *, int, int, int, LayeringMethod);
 
 
 //void	testMainSQLite(string,int,int,LayeringMethod); // Deprecated

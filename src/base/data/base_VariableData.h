@@ -10,7 +10,9 @@
 
 #include <string>
 #include "MetadataInfoConst.h"
+
 using namespace std;
+
 /*!
  * \ingroup data
  * \class base_VariableData
@@ -20,19 +22,23 @@ using namespace std;
 class base_VariableData
 {
 protected:
-	///< dimension type for the dataset, \sa dimensionTypes
-	dimensionTypes m_Dimension;
+    ///< dimension type for the dataset, \sa dimensionTypes
+    dimensionTypes m_Dimension;
 
 public:
-	//! Constructor (by default, m_Dimention is Unknown)
-	base_VariableData(void);
-	//! Copy Constructor
-	base_VariableData(const base_VariableData &obj);
-	//! Destructor
-	virtual ~base_VariableData(void);
-	//! Assignment operator overload
-	virtual base_VariableData& operator= (const base_VariableData &obj);
-	//! Returns the dimension type for the object instance
-	virtual dimensionTypes Dimension(void);
+    //! Constructor (by default, m_Dimention is Unknown)
+    base_VariableData(void);
+
+    //! Copy Constructor
+    base_VariableData(const base_VariableData &obj);
+
+    //! Destructor
+    virtual ~base_VariableData(void);
+
+    //! Assignment operator overload
+    virtual base_VariableData &operator=(const base_VariableData &obj);
+
+    //! Returns the dimension type for the object instance
+    virtual dimensionTypes Dimension(void);
 };
 

@@ -30,7 +30,7 @@ def ImportBMPTables():
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
     db = conn[BMPScenarioDBName]
-    ## delete if collection existed
+    ## create if collection not existed
     cList = db.collection_names()
     for item in BMP_tabs:
         if not StringInList(item.upper(), cList):

@@ -8,6 +8,7 @@
  */
 
 #pragma once
+
 #include <string>
 #include "SimulationModule.h"
 
@@ -27,82 +28,87 @@ using namespace std;
 class GWaterReservoir : public SimulationModule
 {
 public:
-	//! Constructor
-	GWaterReservoir(void);
-	//! Destructor
-	~GWaterReservoir(void);
-	
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Set2DData(const char* key, int nrows, int ncols, float** data);
-	virtual void SetValue(const char* key, float value);
-	//virtual void GetValue(const char* key, float* value);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	virtual int Execute(void);
+    //! Constructor
+    GWaterReservoir(void);
 
-	//virtual TimeStepType GetTimeStepType()
-	//{
-	//	return TIMESTEP_CHANNEL;
-	//};
+    //! Destructor
+    ~GWaterReservoir(void);
 
-private:
-	/**
-	*	@brief check the input data. Make sure all the input data is available.
-	*
-	*	@return bool The validity of the input data.
-	*/
-	bool CheckInputData(void);
+    virtual void Set1DData(const char *key, int n, float *data);
 
-	/**
-	*	@brief check the input size. Make sure all the input data have same dimension.
-	*	
-	*	@param key: The key of the input data
-	*	@param n: The input data dimension
-	*	@return bool The validity of the dimension
-	*/
-	bool CheckInputSize(const char*,int n);
+    virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
 
-	void InitOutputs(void);
+    virtual void SetValue(const char *key, float value);
+
+    //virtual void GetValue(const char* key, float* value);
+    virtual void Get1DData(const char *key, int *n, float **data);
+
+    virtual int Execute(void);
+
+    //virtual TimeStepType GetTimeStepType()
+    //{
+    //	return TIMESTEP_CHANNEL;
+    //};
 
 private:
+    /**
+    *	@brief check the input data. Make sure all the input data is available.
+    *
+    *	@return bool The validity of the input data.
+    */
+    bool CheckInputData(void);
 
-	/// time step(seconds)
-	float m_dt;
+    /**
+    *	@brief check the input size. Make sure all the input data have same dimension.
+    *
+    *	@param key: The key of the input data
+    *	@param n: The input data dimension
+    *	@return bool The validity of the dimension
+    */
+    bool CheckInputSize(const char *, int n);
 
-	/// count of valid cells
-	int m_nCells;
+    void InitOutputs(void);
 
-	/// count of reaches
-	int m_nReaches;
+private:
 
-	/// cell size
-	float m_CellWidth;
+    /// time step(seconds)
+    float m_dt;
 
-	float *m_subbasin;
+    /// count of valid cells
+    int m_nCells;
 
-	/// percolation from soil layer (mm)
-	float* m_recharge;
-	/// the amount of water recharged to the deep groundwater reservoir
-	float m_deepCoefficient;
+    /// count of reaches
+    int m_nReaches;
 
-	/// baseflow recession coefficient
-	float m_recessionCoefficient;
+    /// cell size
+    float m_CellWidth;
 
-	/// baseflow recession exponent
-	float m_recessionExponent;
+    float *m_subbasin;
 
-	/// ground water storage (mm)
-	float *m_storage;
-	/// Maximum groundwater storage
-	float m_storageMax;
+    /// percolation from soil layer (mm)
+    float *m_recharge;
+    /// the amount of water recharged to the deep groundwater reservoir
+    float m_deepCoefficient;
 
-	/// outflow at basin outlet
-	float m_qOutlet;
+    /// baseflow recession coefficient
+    float m_recessionCoefficient;
 
-	float *m_qg;
+    /// baseflow recession exponent
+    float m_recessionExponent;
 
-	/// temporary variables
-	float *m_percSubbasin;
-	int *m_nCellsSubbasin;
-	float m_initStorage;
+    /// ground water storage (mm)
+    float *m_storage;
+    /// Maximum groundwater storage
+    float m_storageMax;
+
+    /// outflow at basin outlet
+    float m_qOutlet;
+
+    float *m_qg;
+
+    /// temporary variables
+    float *m_percSubbasin;
+    int *m_nCellsSubbasin;
+    float m_initStorage;
 };
 

@@ -19,9 +19,10 @@ using namespace std;
 ///< enumerator 
 enum WgnType
 {
-	WGN_PRECIPITATION, ///< rainfall
-	WGN_SNOW           ///< snow
+    WGN_PRECIPITATION, ///< rainfall
+    WGN_SNOW           ///< snow
 };
+
 /*!
  * \ingroup data
  * \class clsWgnData
@@ -34,16 +35,20 @@ enum WgnType
 class clsWgnData
 {
 public:
-	clsWgnData(string databasePath,WgnType type);
-	~clsWgnData(void);
-	void getWgnData(int* nRows, int* nCols,float*** wgnData);
-	void show(void);
-private:
-	string m_wtgTableName; ///< table name
-	vector<string> m_columns; ///< table column name
-	float** m_wgnData; ///< wgn data
+    clsWgnData(string databasePath, WgnType type);
+
+    ~clsWgnData(void);
+
+    void getWgnData(int *nRows, int *nCols, float ***wgnData);
+
+    void show(void);
 
 private:
-	void readWgnData(string,WgnType type);
+    string m_wtgTableName; ///< table name
+    vector<string> m_columns; ///< table column name
+    float **m_wgnData; ///< wgn data
+
+private:
+    void readWgnData(string, WgnType type);
 };
 

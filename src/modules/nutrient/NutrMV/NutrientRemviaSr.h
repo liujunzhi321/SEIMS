@@ -12,10 +12,13 @@
 #pragma once
 #ifndef SEIMS_NutRemv_PARAMS_INCLUDE
 #define SEIMS_NutRemv_PARAMS_INCLUDE
+
 #include <string>
 #include "api.h"
 #include "SimulationModule.h"
+
 using namespace std;
+
 /*!
  * \class NutrientRemviaSr
  * \ingroup NutRemv
@@ -24,19 +27,29 @@ using namespace std;
  *
  */
 
-class NutrientRemviaSr : public SimulationModule {
-	public:
-	NutrientRemviaSr(void);
-	~NutrientRemviaSr(void);
+class NutrientRemviaSr : public SimulationModule
+{
+public:
+    NutrientRemviaSr(void);
 
-	virtual void Set1DData(const char* key, int n, float *data);
-	virtual void Set2DData(const char* key, int nRows, int nCols, float** data);
-	virtual void SetValue(const char* key, float value);
-	virtual int Execute();
-	virtual void GetValue(const char* key, float* value);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
+    ~NutrientRemviaSr(void);
+
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
+
+    virtual void SetValue(const char *key, float value);
+
+    virtual int Execute();
+
+    virtual void GetValue(const char *key, float *value);
+
+    virtual void Get1DData(const char *key, int *n, float **data);
+
+    virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
+
 private:
+
 	/// cell width of grid map (m)
 	float m_cellWidth;
 	/// number of cells
@@ -161,6 +174,7 @@ private:
 	float* CalculateEnrRatio();
 	void initialOutputs();
 };
+
 #endif
 
 

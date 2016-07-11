@@ -16,6 +16,7 @@
 #include <ostream>
 
 using namespace std;
+
 /*!
  * \ingroup data
  * \class clsSimpleTxtData
@@ -28,18 +29,22 @@ using namespace std;
 class clsSimpleTxtData
 {
 public:
-	//! Constructor, from text file read lines data
-	clsSimpleTxtData(string fileName);
-	//! Destructor
-	~clsSimpleTxtData();
-	//! Get line number and data
-	void getData(int *nRow, float **data);
-	//! Output lines data to \a ostream
-	void dump(ostream *fs);
+    //! Constructor, from text file read lines data
+    clsSimpleTxtData(string fileName);
+
+    //! Destructor
+    ~clsSimpleTxtData();
+
+    //! Get line number and data
+    void getData(int *nRow, float **data);
+
+    //! Output lines data to \a ostream
+    void dump(ostream *fs);
+
 private:
-	//! line number
-	int		m_row;
-	//! lines data
-	float*	m_data;
+    //! line number
+    int m_row;
+    //! lines data
+    float *m_data;
 };
 

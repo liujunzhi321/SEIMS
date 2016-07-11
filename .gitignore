@@ -32,6 +32,8 @@
 
 # Everything in the build directory
 build
+build/*
+**build
 # PyCharm project files
 .idea
 # Exclude SQLite Database, which will be reConstructor by preprocessing script

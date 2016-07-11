@@ -11,10 +11,10 @@
 //#define BMP_DATABASE_NAME	"BMP.db3"
 
 //base scenario id
-#define BASE_SCENARIO_ID	0
+#define BASE_SCENARIO_ID    0
 //Table names in BMP database
-#define TAB_BMP_INDEX				"BMP_INDEX"
-#define TAB_BMP_SCENARIO		"BMP_SCENARIOS"
+#define TAB_BMP_INDEX                "BMP_INDEX"
+#define TAB_BMP_SCENARIO        "BMP_SCENARIOS"
 //#define TAB_BMP_REACH				"REACH_BMP"
 //#define TAB_BMP_POINT_SRC	"POINTSOURCE"
 //#define TAB_BMP_FLOWDIVERSION	"FLOWDIVERSION"
@@ -22,56 +22,56 @@
 
 /// Table field names 
 /// TAB_BMP_SCENARIO
-#define FLD_SCENARIO_ID				"ID"
-#define FLD_SCENARIO_NAME		"NAME"
-#define FLD_SCENARIO_BMPID		"BMPID"
-#define FLD_SCENARIO_SUB			"SUBSCENARIO"
-#define FLD_SCENARIO_DIST			"DISTRIBUTION"
-#define FLD_SCENARIO_TABLE		"COLLECTION"
+#define FLD_SCENARIO_ID                "ID"
+#define FLD_SCENARIO_NAME        "NAME"
+#define FLD_SCENARIO_BMPID        "BMPID"
+#define FLD_SCENARIO_SUB            "SUBSCENARIO"
+#define FLD_SCENARIO_DIST            "DISTRIBUTION"
+#define FLD_SCENARIO_TABLE        "COLLECTION"
 #define FLD_SCENARIO_LOCATION "LOCATION"
 /// Options of FLD_SCENARIO_DIST
-#define FLD_SCENARIO_DIST_RASTER	"RASTER"
-#define FLD_SCENARIO_DIST_ARRAY		"ARRAY"
+#define FLD_SCENARIO_DIST_RASTER    "RASTER"
+#define FLD_SCENARIO_DIST_ARRAY        "ARRAY"
 
 /// TAB_BMP_INDEX
-#define FLD_BMP_ID							"ID"
-#define FLD_BMP_TYPE						"TYPE"
-#define FLD_BMP_PRIORITY			"PRIORITY"
+#define FLD_BMP_ID                            "ID"
+#define FLD_BMP_TYPE                        "TYPE"
+#define FLD_BMP_PRIORITY            "PRIORITY"
 
 //BMPs
 //also the column name in Reach_BMP table for reach BMPs
-#define BMP_NAME_POINTSOURCE			"POINT SOURCE"
-#define BMP_NAME_FLOWDIVERSION_STREAM	"STREAM FLOW DIVERSION"
-#define BMP_NAME_RESERVOIR				"RESERVOIR"
-#define BMP_NAME_RIPARIANWETLAND		"RIPARIAN WETLAND"
-#define BMP_NAME_RIPARIANBUFFER			"RIPARIAN BUFFER"
-#define BMP_NAME_GRASSWATERWAY			"GRASS WATERWAY"
-#define BMP_NAME_FILTERSTRIP			"FILTER STRIP"
-#define BMP_NAME_POND					"POND"
-#define BMP_NAME_ISOLATEDPOND			"ISOLATED POND"
-#define BMP_NAME_TERRACE				"TERRACE"
-#define BMP_NAME_FLOWDIVERSION_OVERLAND	"OVERLAND FLOW DIVERSION"
-#define BMP_NAME_CROP					"PLANT MANAGEMENT"
-#define BMP_NAME_RESIDUAL				"RESIDUAL MANAGEMENT"
-#define BMP_NAME_TILEDRAIN				"TILE DRAIN MANAGEMENT"
-#define BMP_NAME_URBAN					"URBAN MANAGEMENT"
+#define BMP_NAME_POINTSOURCE            "POINT SOURCE"
+#define BMP_NAME_FLOWDIVERSION_STREAM    "STREAM FLOW DIVERSION"
+#define BMP_NAME_RESERVOIR                "RESERVOIR"
+#define BMP_NAME_RIPARIANWETLAND        "RIPARIAN WETLAND"
+#define BMP_NAME_RIPARIANBUFFER            "RIPARIAN BUFFER"
+#define BMP_NAME_GRASSWATERWAY            "GRASS WATERWAY"
+#define BMP_NAME_FILTERSTRIP            "FILTER STRIP"
+#define BMP_NAME_POND                    "POND"
+#define BMP_NAME_ISOLATEDPOND            "ISOLATED POND"
+#define BMP_NAME_TERRACE                "TERRACE"
+#define BMP_NAME_FLOWDIVERSION_OVERLAND    "OVERLAND FLOW DIVERSION"
+#define BMP_NAME_CROP                    "PLANT MANAGEMENT"
+#define BMP_NAME_RESIDUAL                "RESIDUAL MANAGEMENT"
+#define BMP_NAME_TILEDRAIN                "TILE DRAIN MANAGEMENT"
+#define BMP_NAME_URBAN                    "URBAN MANAGEMENT"
 
 //BMP Type
-#define BMP_TYPE_POINTSOURCE			1
-#define BMP_TYPE_FLOWDIVERSION_STREAM	2
-#define BMP_TYPE_RESERVOIR				3
-#define BMP_TYPE_RIPARIANWETLAND		4
-#define BMP_TYPE_RIPARIANBUFFER			5
-#define BMP_TYPE_GRASSWATERWAY			6
-#define BMP_TYPE_FILTERSTRIP			7
-#define BMP_TYPE_POND					8
-#define BMP_TYPE_ISOLATEDPOND			9
-#define BMP_TYPE_TERRACE				10
-#define BMP_TYPE_FLOWDIVERSION_OVERLAND	11
-#define BMP_TYPE_PLANT_MGT		12
-#define BMP_TYPE_RESIDUAL				13
-#define BMP_TYPE_TILEDRAIN				14
-#define BMP_TYPE_URBAN					15
+#define BMP_TYPE_POINTSOURCE            1
+#define BMP_TYPE_FLOWDIVERSION_STREAM    2
+#define BMP_TYPE_RESERVOIR                3
+#define BMP_TYPE_RIPARIANWETLAND        4
+#define BMP_TYPE_RIPARIANBUFFER            5
+#define BMP_TYPE_GRASSWATERWAY            6
+#define BMP_TYPE_FILTERSTRIP            7
+#define BMP_TYPE_POND                    8
+#define BMP_TYPE_ISOLATEDPOND            9
+#define BMP_TYPE_TERRACE                10
+#define BMP_TYPE_FLOWDIVERSION_OVERLAND    11
+#define BMP_TYPE_PLANT_MGT        12
+#define BMP_TYPE_RESIDUAL                13
+#define BMP_TYPE_TILEDRAIN                14
+#define BMP_TYPE_URBAN                    15
 ////the hydro climate data columns of pointsource, flowdiversion and reservoir
 //#define BMP_REACH_FLOW_NAME			"flow"
 //#define BMP_REACH_SEDIMENT_NAME		"sediment"
@@ -96,61 +96,61 @@
 //#define BMP_REACH_Y_INDEX				2
 
 //// Common fields
-#define BMP_FLD_SUB									"SUBSCENARIO"
-#define BMP_FLD_NAME								"NAME"
-#define BMP_FLD_SEQUENCE						"SEQUENCE"
-#define BMP_FLD_SYEAR								"SYEAR"
-#define BMP_FLD_SMONTH							"SMONTH"
-#define BMP_FLD_SDAY								"SDAY"
-#define BMP_FLD_EYEAR								"EYEAR"
-#define BMP_FLD_EMONTH							"EMONTH"
-#define BMP_FLD_EDAY								"EDAY"
+#define BMP_FLD_SUB                                    "SUBSCENARIO"
+#define BMP_FLD_NAME                                "NAME"
+#define BMP_FLD_SEQUENCE                        "SEQUENCE"
+#define BMP_FLD_SYEAR                                "SYEAR"
+#define BMP_FLD_SMONTH                            "SMONTH"
+#define BMP_FLD_SDAY                                "SDAY"
+#define BMP_FLD_EYEAR                                "EYEAR"
+#define BMP_FLD_EMONTH                            "EMONTH"
+#define BMP_FLD_EDAY                                "EDAY"
 /// Point source management
-#define BMP_PTSRC_FLD_CODE				"PTSRC"
-#define BMP_PTSRC_FLD_Q						"Q"
-#define BMP_PTSRC_FLD_SED					"SED"
-#define BMP_PTSRC_FLD_TN						"TN"
-#define BMP_PTSRC_FLD_NO3					"NO3"
-#define BMP_PTSRC_FLD_NH3					"NH3"
-#define BMP_PTSRC_FLD_ORGN				"ORGN"
-#define BMP_PTSRC_FLD_TP						"TP"
-#define BMP_PTSRC_FLD_MINP					"MINP"
-#define BMP_PTSRC_FLD_ORGP				"ORGP"
-#define BMP_PTSRC_FLD_PTSRCID			"PTSRCID"
-#define BMP_PTSRC_FLD_LAT					"LAT"
-#define BMP_PTSRC_FLD_LON					"LON"
-#define BMP_PTSRC_FLD_LOCALX			"LOCALX"
-#define BMP_PTSRC_FLD_LOCALY			"LOCALY"
-#define BMP_PTSRC_FLD_SUBBSN			"SUBBASIN"
-#define BMP_PTSRC_FLD_SIZE					"SIZE"
-#define BMP_PTSRC_FLD_DISTDOWN		"DIST2REACH"
+#define BMP_PTSRC_FLD_CODE                "PTSRC"
+#define BMP_PTSRC_FLD_Q                        "Q"
+#define BMP_PTSRC_FLD_SED                    "SED"
+#define BMP_PTSRC_FLD_TN                        "TN"
+#define BMP_PTSRC_FLD_NO3                    "NO3"
+#define BMP_PTSRC_FLD_NH3                    "NH3"
+#define BMP_PTSRC_FLD_ORGN                "ORGN"
+#define BMP_PTSRC_FLD_TP                        "TP"
+#define BMP_PTSRC_FLD_MINP                    "MINP"
+#define BMP_PTSRC_FLD_ORGP                "ORGP"
+#define BMP_PTSRC_FLD_PTSRCID            "PTSRCID"
+#define BMP_PTSRC_FLD_LAT                    "LAT"
+#define BMP_PTSRC_FLD_LON                    "LON"
+#define BMP_PTSRC_FLD_LOCALX            "LOCALX"
+#define BMP_PTSRC_FLD_LOCALY            "LOCALY"
+#define BMP_PTSRC_FLD_SUBBSN            "SUBBASIN"
+#define BMP_PTSRC_FLD_SIZE                    "SIZE"
+#define BMP_PTSRC_FLD_DISTDOWN        "DIST2REACH"
 
 /// Plant management code
-#define BMP_PLTOP_Plant					1
-#define BMP_PLTOP_Irrigation			2
-#define BMP_PLTOP_Fertilizer			3
-#define BMP_PLTOP_Pesticide			4
-#define BMP_PLTOP_HarvestKill		5
-#define BMP_PLTOP_Tillage				6
-#define BMP_PLTOP_Harvest				7
-#define BMP_PLTOP_Kill					8
-#define BMP_PLTOP_Grazing			9
-#define BMP_PLTOP_AutoIrrigation	10
-#define BMP_PLTOP_AutoFertilizer	11
-#define BMP_PLTOP_ReleaseImpound		13
-#define BMP_PLTOP_ContinuousFertilizer	14
-#define BMP_PLTOP_ContinuousPesticide	15
-#define BMP_PLTOP_Burning							16
-#define BMP_PLTOP_SKIPYEAR					17
+#define BMP_PLTOP_Plant                    1
+#define BMP_PLTOP_Irrigation            2
+#define BMP_PLTOP_Fertilizer            3
+#define BMP_PLTOP_Pesticide            4
+#define BMP_PLTOP_HarvestKill        5
+#define BMP_PLTOP_Tillage                6
+#define BMP_PLTOP_Harvest                7
+#define BMP_PLTOP_Kill                    8
+#define BMP_PLTOP_Grazing            9
+#define BMP_PLTOP_AutoIrrigation    10
+#define BMP_PLTOP_AutoFertilizer    11
+#define BMP_PLTOP_ReleaseImpound        13
+#define BMP_PLTOP_ContinuousFertilizer    14
+#define BMP_PLTOP_ContinuousPesticide    15
+#define BMP_PLTOP_Burning                            16
+#define BMP_PLTOP_SKIPYEAR                    17
 
 /// Plant management fields
-#define BMP_PLTOP_FLD_LUCC					"LANDUSE_ID"
-#define BMP_PLTOP_FLD_YEAR					"YEAR"
-#define BMP_PLTOP_FLD_MONTH				"MONTH"
-#define BMP_PLTOP_FLD_DAY					"DAY"
-#define BMP_PLTOP_FLD_HUSC					"HUSC"
-#define BMP_PLTOP_FLD_MGTOP				"MGT_OP"
-#define BMP_PLTOP_FLD_MGT_PRE			"MGT"
+#define BMP_PLTOP_FLD_LUCC                    "LANDUSE_ID"
+#define BMP_PLTOP_FLD_YEAR                    "YEAR"
+#define BMP_PLTOP_FLD_MONTH                "MONTH"
+#define BMP_PLTOP_FLD_DAY                    "DAY"
+#define BMP_PLTOP_FLD_HUSC                    "HUSC"
+#define BMP_PLTOP_FLD_MGTOP                "MGT_OP"
+#define BMP_PLTOP_FLD_MGT_PRE            "MGT"
 
 
 ////BMP Type
@@ -200,143 +200,143 @@
 //#define RESERVOIR_NUT_METHOD_INDEX		40  //The method used to do nutrient routing
 
 //Crop classification
-#define CROP_IDC_WARM_SEASON_ANNUAL_LEGUME	1
-#define CROP_IDC_CODE_SEASON_ANNUAL_LEGUME	2
-#define CROP_IDC_PERENNIAL_LEGUME							3
-#define CROP_IDC_WARM_SEASON_ANNUAL						4
-#define CROP_IDC_COLD_SEASON_ANNUAL						5
-#define CROP_IDC_PERENNIAL												6
-#define CROP_IDC_TREES														7
+#define CROP_IDC_WARM_SEASON_ANNUAL_LEGUME    1
+#define CROP_IDC_CODE_SEASON_ANNUAL_LEGUME    2
+#define CROP_IDC_PERENNIAL_LEGUME                            3
+#define CROP_IDC_WARM_SEASON_ANNUAL                        4
+#define CROP_IDC_COLD_SEASON_ANNUAL                        5
+#define CROP_IDC_PERENNIAL                                                6
+#define CROP_IDC_TREES                                                        7
 
 /// Field index in CropLookup table
-#define CROP_PARAM_COUNT				48
+#define CROP_PARAM_COUNT                48
 /// Index started with 0
 /// ICNUM, IDC,BIO_E, HVSTI, BLAI, FRGRW1, LAIMX1, FRGRW2, LAIMX2, DLAI, CHTMX,     0-10
 /// RDMX, T_OPT, T_BASE, CNYLD, CPYLD, BN1, BN2, BN3, BP1, BP2,    11-20
 /// BP3, WSYF, USLE_C, GSI, VPDFR, FRGMAX, WAVP, CO2HI, BIOEHI, RSDCO_PL,  21-30
 /// OV_N, CN2A, CN2B, CN2C, CN2D, FERTFIELD, ALAI_MIN, BIO_LEAF, MAT_YRS, BMX_TREES, 31-40
 /// EXT_COEF, BM_DIEOFF, PHU, CNOP, LAI_INIT, BIO_INIT, CURYR_INIT 41-47
-#define   CROP_PARAM_IDX_ICNUM		0
-#define 	CROP_PARAM_IDX_IDC			1
-#define 	CROP_PARAM_IDX_BIO_E		2
-#define 	CROP_PARAM_IDX_HVSTI		3
-#define 	CROP_PARAM_IDX_BLAI			4
-#define 	CROP_PARAM_IDX_FRGRW1	5
-#define 	CROP_PARAM_IDX_LAIMX1		6
-#define 	CROP_PARAM_IDX_FRGRW2	7
-#define 	CROP_PARAM_IDX_LAIMX2		8
-#define 	CROP_PARAM_IDX_DLAI			9
-#define 	CROP_PARAM_IDX_CHTMX		10
-#define 	CROP_PARAM_IDX_RDMX		11
-#define 	CROP_PARAM_IDX_T_OPT		12
-#define 	CROP_PARAM_IDX_T_BASE	13
-#define 	CROP_PARAM_IDX_CNYLD		14
-#define 	CROP_PARAM_IDX_CPYLD		15
-#define 	CROP_PARAM_IDX_BN1			16
-#define 	CROP_PARAM_IDX_BN2	17
-#define 	CROP_PARAM_IDX_BN3	18
-#define 	CROP_PARAM_IDX_BP1	19
-#define 	CROP_PARAM_IDX_BP2	20
-#define 	CROP_PARAM_IDX_BP3	21
-#define 	CROP_PARAM_IDX_WSYF	22
-#define 	CROP_PARAM_IDX_USLE_C	23
-#define 	CROP_PARAM_IDX_GSI	24
-#define 	CROP_PARAM_IDX_VPDFR	25
-#define 	CROP_PARAM_IDX_FRGMAX	26
-#define 	CROP_PARAM_IDX_WAVP	27
-#define 	CROP_PARAM_IDX_CO2HI	28
-#define 	CROP_PARAM_IDX_BIOEHI	29
-#define 	CROP_PARAM_IDX_RSDCO_PL	30
-#define 	CROP_PARAM_IDX_OV_N	31
-#define 	CROP_PARAM_IDX_CN2A	32
-#define 	CROP_PARAM_IDX_CN2B	33
-#define 	CROP_PARAM_IDX_CN2C	34
-#define 	CROP_PARAM_IDX_CN2D	35
-#define 	CROP_PARAM_IDX_FERTFIELD	36
-#define 	CROP_PARAM_IDX_ALAI_MIN	37
-#define 	CROP_PARAM_IDX_BIO_LEAF	38
+#define   CROP_PARAM_IDX_ICNUM        0
+#define    CROP_PARAM_IDX_IDC            1
+#define    CROP_PARAM_IDX_BIO_E        2
+#define    CROP_PARAM_IDX_HVSTI        3
+#define    CROP_PARAM_IDX_BLAI            4
+#define    CROP_PARAM_IDX_FRGRW1    5
+#define    CROP_PARAM_IDX_LAIMX1        6
+#define    CROP_PARAM_IDX_FRGRW2    7
+#define    CROP_PARAM_IDX_LAIMX2        8
+#define    CROP_PARAM_IDX_DLAI            9
+#define    CROP_PARAM_IDX_CHTMX        10
+#define    CROP_PARAM_IDX_RDMX        11
+#define    CROP_PARAM_IDX_T_OPT        12
+#define    CROP_PARAM_IDX_T_BASE    13
+#define    CROP_PARAM_IDX_CNYLD        14
+#define    CROP_PARAM_IDX_CPYLD        15
+#define    CROP_PARAM_IDX_BN1            16
+#define    CROP_PARAM_IDX_BN2    17
+#define    CROP_PARAM_IDX_BN3    18
+#define    CROP_PARAM_IDX_BP1    19
+#define    CROP_PARAM_IDX_BP2    20
+#define    CROP_PARAM_IDX_BP3    21
+#define    CROP_PARAM_IDX_WSYF    22
+#define    CROP_PARAM_IDX_USLE_C    23
+#define    CROP_PARAM_IDX_GSI    24
+#define    CROP_PARAM_IDX_VPDFR    25
+#define    CROP_PARAM_IDX_FRGMAX    26
+#define    CROP_PARAM_IDX_WAVP    27
+#define    CROP_PARAM_IDX_CO2HI    28
+#define    CROP_PARAM_IDX_BIOEHI    29
+#define    CROP_PARAM_IDX_RSDCO_PL    30
+#define    CROP_PARAM_IDX_OV_N    31
+#define    CROP_PARAM_IDX_CN2A    32
+#define    CROP_PARAM_IDX_CN2B    33
+#define    CROP_PARAM_IDX_CN2C    34
+#define    CROP_PARAM_IDX_CN2D    35
+#define    CROP_PARAM_IDX_FERTFIELD    36
+#define    CROP_PARAM_IDX_ALAI_MIN    37
+#define    CROP_PARAM_IDX_BIO_LEAF    38
 
 /// Field index in TillageLookup table
-#define TILLAGE_PARAM_COUNT				7
+#define TILLAGE_PARAM_COUNT                7
 /// ITNUM, EFTMIX, DEPTIL, RRNS, CNOP_CN2, PRC, DSC
-#define TILLAGE_PARAM_ITNUM_IDX		0
-#define TILLAGE_PARAM_EFFMIX_IDX		1
-#define TILLAGE_PARAM_DEPTIL_IDX		2
-#define TILLAGE_PARAM_RRNS_IDX			3
-#define TILLAGE_PARAM_CNOP_IDX			4
-#define TILLAGE_PARAM_PRC_IDX			5
-#define TILLAGE_PARAM_DSC_IDX			6
+#define TILLAGE_PARAM_ITNUM_IDX        0
+#define TILLAGE_PARAM_EFFMIX_IDX        1
+#define TILLAGE_PARAM_DEPTIL_IDX        2
+#define TILLAGE_PARAM_RRNS_IDX            3
+#define TILLAGE_PARAM_CNOP_IDX            4
+#define TILLAGE_PARAM_PRC_IDX            5
+#define TILLAGE_PARAM_DSC_IDX            6
 
 /// Field index in FertilizerLookup table
 #define FERTILIZER_PARAM_COUNT 10
 /// IFNUM, FMINN, FMINP, FORGN, FORGP, FNH3N, BACTPDB, BACTLPDB, BACTKDDB, MANURE
-#define 	FERTILIZER_PARAM_IFNUM_IDX				0
-#define 	FERTILIZER_PARAM_FMINN_IDX				1
-#define 	FERTILIZER_PARAM_FMINP_IDX				2
-#define 	FERTILIZER_PARAM_FORGN_IDX				3
-#define 	FERTILIZER_PARAM_FORGP_IDX				4
-#define 	FERTILIZER_PARAM_FNH3N_IDX				5
-#define 	FERTILIZER_PARAM_BACTPDB_IDX			6
-#define 	FERTILIZER_PARAM_BATTLPDB_IDX		7
-#define 	FERTILIZER_PARAM_BACKTKDDB_IDX	8
-#define 	FERTILIZER_PARAM_MANURE_IDX			9
+#define    FERTILIZER_PARAM_IFNUM_IDX                0
+#define    FERTILIZER_PARAM_FMINN_IDX                1
+#define    FERTILIZER_PARAM_FMINP_IDX                2
+#define    FERTILIZER_PARAM_FORGN_IDX                3
+#define    FERTILIZER_PARAM_FORGP_IDX                4
+#define    FERTILIZER_PARAM_FNH3N_IDX                5
+#define    FERTILIZER_PARAM_BACTPDB_IDX            6
+#define    FERTILIZER_PARAM_BATTLPDB_IDX        7
+#define    FERTILIZER_PARAM_BACKTKDDB_IDX    8
+#define    FERTILIZER_PARAM_MANURE_IDX            9
 /// Field index in LanduseLookup table
 #define LANDUSE_PARAM_COUNT 49
-#define LANDUSE_PARAM_LANDUSE_ID_IDX	0
-#define LANDUSE_PARAM_CN2A_IDX	1
-#define LANDUSE_PARAM_CN2B_IDX	2
-#define LANDUSE_PARAM_CN2C_IDX	3
-#define LANDUSE_PARAM_CN2D_IDX	4
-#define LANDUSE_PARAM_ROOT_DEPTH_IDX	5
-#define LANDUSE_PARAM_MANNING_IDX	6
-#define LANDUSE_PARAM_INTERC_MAX_IDX	7
-#define LANDUSE_PARAM_INTERC_MIN_IDX	8
-#define LANDUSE_PARAM_SHC_IDX	9
-#define LANDUSE_PARAM_SOIL_T10_IDX	10
-#define LANDUSE_PARAM_USLE_C_IDX	11
-#define LANDUSE_PARAM_PET_FR_IDX	12
-#define LANDUSE_PARAM_PRC_ST1_IDX	13
-#define LANDUSE_PARAM_PRC_ST2_IDX	14
-#define LANDUSE_PARAM_PRC_ST3_IDX	15
-#define LANDUSE_PARAM_PRC_ST4_IDX	16
-#define LANDUSE_PARAM_PRC_ST5_IDX	17
-#define LANDUSE_PARAM_PRC_ST6_IDX	18
-#define LANDUSE_PARAM_PRC_ST7_IDX	19
-#define LANDUSE_PARAM_PRC_ST8_IDX	20
-#define LANDUSE_PARAM_PRC_ST9_IDX	21
-#define LANDUSE_PARAM_PRC_ST10_IDX	22
-#define LANDUSE_PARAM_PRC_ST11_IDX	23
-#define LANDUSE_PARAM_PRC_ST12_IDX	24
-#define LANDUSE_PARAM_SC_ST1_IDX	25
-#define LANDUSE_PARAM_SC_ST2_IDX	26
-#define LANDUSE_PARAM_SC_ST3_IDX	27
-#define LANDUSE_PARAM_SC_ST4_IDX	28
-#define LANDUSE_PARAM_SC_ST5_IDX	29
-#define LANDUSE_PARAM_SC_ST6_IDX	30
-#define LANDUSE_PARAM_SC_ST7_IDX	31
-#define LANDUSE_PARAM_SC_ST8_IDX	32
-#define LANDUSE_PARAM_SC_ST9_IDX	33
-#define LANDUSE_PARAM_SC_ST10_IDX	34
-#define LANDUSE_PARAM_SC_ST11_IDX	35
-#define LANDUSE_PARAM_SC_ST12_IDX	36
-#define LANDUSE_PARAM_DSC_ST1_IDX	37
-#define LANDUSE_PARAM_DSC_ST2_IDX	38
-#define LANDUSE_PARAM_DSC_ST3_IDX	39
-#define LANDUSE_PARAM_DSC_ST4_IDX	40
-#define LANDUSE_PARAM_DSC_ST5_IDX	41
-#define LANDUSE_PARAM_DSC_ST6_IDX	42
-#define LANDUSE_PARAM_DSC_ST7_IDX	43
-#define LANDUSE_PARAM_DSC_ST8_IDX	44
-#define LANDUSE_PARAM_DSC_ST9_IDX	45
-#define LANDUSE_PARAM_DSC_ST10_IDX	46
-#define LANDUSE_PARAM_DSC_ST11_IDX	47
-#define LANDUSE_PARAM_DSC_ST12_IDX	48
+#define LANDUSE_PARAM_LANDUSE_ID_IDX    0
+#define LANDUSE_PARAM_CN2A_IDX    1
+#define LANDUSE_PARAM_CN2B_IDX    2
+#define LANDUSE_PARAM_CN2C_IDX    3
+#define LANDUSE_PARAM_CN2D_IDX    4
+#define LANDUSE_PARAM_ROOT_DEPTH_IDX    5
+#define LANDUSE_PARAM_MANNING_IDX    6
+#define LANDUSE_PARAM_INTERC_MAX_IDX    7
+#define LANDUSE_PARAM_INTERC_MIN_IDX    8
+#define LANDUSE_PARAM_SHC_IDX    9
+#define LANDUSE_PARAM_SOIL_T10_IDX    10
+#define LANDUSE_PARAM_USLE_C_IDX    11
+#define LANDUSE_PARAM_PET_FR_IDX    12
+#define LANDUSE_PARAM_PRC_ST1_IDX    13
+#define LANDUSE_PARAM_PRC_ST2_IDX    14
+#define LANDUSE_PARAM_PRC_ST3_IDX    15
+#define LANDUSE_PARAM_PRC_ST4_IDX    16
+#define LANDUSE_PARAM_PRC_ST5_IDX    17
+#define LANDUSE_PARAM_PRC_ST6_IDX    18
+#define LANDUSE_PARAM_PRC_ST7_IDX    19
+#define LANDUSE_PARAM_PRC_ST8_IDX    20
+#define LANDUSE_PARAM_PRC_ST9_IDX    21
+#define LANDUSE_PARAM_PRC_ST10_IDX    22
+#define LANDUSE_PARAM_PRC_ST11_IDX    23
+#define LANDUSE_PARAM_PRC_ST12_IDX    24
+#define LANDUSE_PARAM_SC_ST1_IDX    25
+#define LANDUSE_PARAM_SC_ST2_IDX    26
+#define LANDUSE_PARAM_SC_ST3_IDX    27
+#define LANDUSE_PARAM_SC_ST4_IDX    28
+#define LANDUSE_PARAM_SC_ST5_IDX    29
+#define LANDUSE_PARAM_SC_ST6_IDX    30
+#define LANDUSE_PARAM_SC_ST7_IDX    31
+#define LANDUSE_PARAM_SC_ST8_IDX    32
+#define LANDUSE_PARAM_SC_ST9_IDX    33
+#define LANDUSE_PARAM_SC_ST10_IDX    34
+#define LANDUSE_PARAM_SC_ST11_IDX    35
+#define LANDUSE_PARAM_SC_ST12_IDX    36
+#define LANDUSE_PARAM_DSC_ST1_IDX    37
+#define LANDUSE_PARAM_DSC_ST2_IDX    38
+#define LANDUSE_PARAM_DSC_ST3_IDX    39
+#define LANDUSE_PARAM_DSC_ST4_IDX    40
+#define LANDUSE_PARAM_DSC_ST5_IDX    41
+#define LANDUSE_PARAM_DSC_ST6_IDX    42
+#define LANDUSE_PARAM_DSC_ST7_IDX    43
+#define LANDUSE_PARAM_DSC_ST8_IDX    44
+#define LANDUSE_PARAM_DSC_ST9_IDX    45
+#define LANDUSE_PARAM_DSC_ST10_IDX    46
+#define LANDUSE_PARAM_DSC_ST11_IDX    47
+#define LANDUSE_PARAM_DSC_ST12_IDX    48
 
 /// irrigation source code:
-#define IRR_SRC_RCH					1 /// divert water from reach
-#define IRR_SRC_RES					2 /// divert water from reservoir
-#define IRR_SRC_SHALLOW		3 ///  divert water from shallow aquifer
-#define IRR_SRC_DEEP					4 /// divert water from deep aquifer
-#define IRR_SRC_OUTWTSD		5 /// divert water from source outside watershed
+#define IRR_SRC_RCH                    1 /// divert water from reach
+#define IRR_SRC_RES                    2 /// divert water from reservoir
+#define IRR_SRC_SHALLOW        3 ///  divert water from shallow aquifer
+#define IRR_SRC_DEEP                    4 /// divert water from deep aquifer
+#define IRR_SRC_OUTWTSD        5 /// divert water from source outside watershed
 
 #endif

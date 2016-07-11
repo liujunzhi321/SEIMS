@@ -8,13 +8,17 @@
  * 
  */
 #pragma once
+
 #include <mongoc.h>
 #include <vector>
 #include <set>
 #include "clsRasterData.h"
 #include <ModelException.h>
+
 using namespace std;
+
 class clsRasterData;
+
 /*!
  * \brief Get Integer value from \a bson_iter_t 
  *
@@ -23,7 +27,7 @@ class clsRasterData;
  * \param[in] iter \a bson_iter_t
  * \return Integer value if success, or -1 if failed.
  */
-int			GetIntFromBSONITER(bson_iter_t *iter);
+int GetIntFromBSONITER(bson_iter_t *iter);
 
 /*!
  * \brief Get Float value from \a bson_iter_t 
@@ -33,7 +37,8 @@ int			GetIntFromBSONITER(bson_iter_t *iter);
  * \param[in] iter \a bson_iter_t
  * \return Float value if success, or -1.0 if failed.
  */
-float		GetFloatFromBSONITER(bson_iter_t *iter);
+float GetFloatFromBSONITER(bson_iter_t *iter);
+
 /*!
  * \brief Get Date time from \a bson_iter_t 
  *
@@ -42,7 +47,8 @@ float		GetFloatFromBSONITER(bson_iter_t *iter);
  * \param[in] iter \a bson_iter_t 
  * \return Float value if success, or -1 if failed.
  */
-time_t		GetDateTimeFromBSONITER(bson_iter_t *iter);
+time_t GetDateTimeFromBSONITER(bson_iter_t *iter);
+
 /*!
  * \brief Get String from \a bson_iter_t 
  * The \a bson_type_t can be BSON_TYPE_UTF8
@@ -50,7 +56,8 @@ time_t		GetDateTimeFromBSONITER(bson_iter_t *iter);
  * \param[in] iter \a bson_iter_t 
  * \return Float value if success, or "" if failed.
  */
-string		GetStringFromBSONITER(bson_iter_t *iter);
+string GetStringFromBSONITER(bson_iter_t *iter);
+
 /*!
  * \brief Get collection names in MongoDB database
  *
@@ -58,14 +65,16 @@ string		GetStringFromBSONITER(bson_iter_t *iter);
  * \param[in] dbName \string database name
  * \param[out] tableNameList \vector<string> collection names
  */
-int			GetCollectionNames(mongoc_client_t* conn, string& dbName, vector<string>& tableNameList);
+int GetCollectionNames(mongoc_client_t *conn, string &dbName, vector<string> &tableNameList);
+
 /*!
  * \brief Get GridFs file names in MongoDB database
  *
  * \param[in] gfs \mongoc_gridfs_t GridFS
  * \return filenames vector<string>
  */
-vector<string> GetGridFsFileNames(mongoc_gridfs_t *gfs, char* gridfsname);
+vector<string> GetGridFsFileNames(mongoc_gridfs_t *gfs);
+
 /*!
  * \brief Read 1D array data from MongoDB database
  *
@@ -74,7 +83,7 @@ vector<string> GetGridFsFileNames(mongoc_gridfs_t *gfs, char* gridfsname);
  * \param[out] num \int&, data length
  * \param[out] data \float*&, returned data
  */
-extern void Read1DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, int& num, float*& data);
+extern void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &num, float *&data);
 ///*!
 // * \brief Read 1D raster data from MongoDB database
 // *
@@ -103,7 +112,7 @@ extern void Read1DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteF
  * \param[out] n \int&, first dimension of the 2D Array, i.e., Rows
  * \param[out] data \float**&, returned data
  */
-extern void Read2DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, int& n, float**& data);
+extern void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &n, float **&data);
 ///*!
 // * \brief Read 2D raster data from MongoDB database
 // *
@@ -137,7 +146,9 @@ extern void Read2DArrayFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteF
  * \param[out] n \int&, valid cell number
  * \param[out] data \float*&, returned data
  */
-extern void ReadIUHFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilename, clsRasterData* templateRaster, int& n, float**& data);
+extern void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, clsRasterData *templateRaster,
+                               int &n, float **&data);
+
 /*!
  * \brief Read Longterm multi reach information from MongoDB database
  * Assume the reaches table contains all the reaches information
@@ -147,7 +158,8 @@ extern void ReadIUHFromMongoDB(mongoc_gridfs_t* spatialData, string& remoteFilen
  * \param[out] nc Number of reaches
  * \param[out] data \float*&, returned data
  */
-extern void ReadLongTermMutltiReachInfo(mongoc_client_t *conn,string& dbName, int& nr, int& nc, float**& data);
+extern void ReadLongTermMutltiReachInfo(mongoc_client_t *conn, string &dbName, int &nr, int &nc, float **&data);
+
 /*!
  * \brief Read Longterm reach information from MongoDB database
  * \param[in] conn \a mongoc_client_t
@@ -157,7 +169,9 @@ extern void ReadLongTermMutltiReachInfo(mongoc_client_t *conn,string& dbName, in
  * \param[out] nc Number of reaches
  * \param[out] data \float*&, returned data
  */
-extern void ReadLongTermReachInfo(mongoc_client_t *conn,string& dbName, int subbasinID, int& nr, int& nc, float**& data);
+extern void ReadLongTermReachInfo(mongoc_client_t *conn, string &dbName, int subbasinID, int &nr, int &nc,
+                                  float **&data);
+
 /*!
  * \brief Read multi reach information from MongoDB database
  * Assume the reaches table contains all the reaches information
@@ -168,7 +182,9 @@ extern void ReadLongTermReachInfo(mongoc_client_t *conn,string& dbName, int subb
  * \param[out] nc Number of reaches
  * \param[out] data \float*&, returned data
  */
-extern void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *conn,string& dbName, int& nr, int& nc, float**& data);
+extern void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *conn, string &dbName,
+                                           int &nr, int &nc, float **&data);
+
 /*!
  * \brief Read single reach information from MongoDB database
  * Assume the reaches table contains all the reaches information
@@ -180,5 +196,6 @@ extern void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc
  * \param[out] nc Number of reaches
  * \param[out] data \float*&, returned data
  */
-extern void ReadReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *conn,string& dbName, int nSubbasin, int& nr, int& nc, float**& data);
+extern void ReadReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *conn, string &dbName,
+                                     int nSubbasin, int &nr, int &nc, float **&data);
 
