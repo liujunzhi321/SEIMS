@@ -64,9 +64,9 @@ NutrientCHRoute::~NutrientCHRoute(void)
     {
         delete[] m_disolvp;
     }
-    if (m_rch_cbod != NULL)
+    if (m_rch_cod != NULL)
     {
-        delete[] m_rch_cbod;
+        delete[] m_rch_cod;
     }
     if (m_rch_dox != NULL)
     {
@@ -417,7 +417,6 @@ void NutrientCHRoute::Set1DData(const char *key, int n, float *data)
 void NutrientCHRoute::Set2DData(const char *key, int nrows, int ncols, float **data)
 {
     string sk(key);
-
     if (StringMatch(sk, VAR_REACH_PARAM))
     {
         m_nReaches = ncols - 1;
@@ -429,19 +428,6 @@ void NutrientCHRoute::Set2DData(const char *key, int nrows, int ncols, float **d
         //m_chDepth = data[5];
         //m_chVel = data[6];
         //m_area = data[7];
-        m_bc1 = data[8];
-        m_bc2 = data[9];
-        m_bc3 = data[10];
-        m_bc4 = data[11];
-        m_rk1 = data[12];
-        m_rk2 = data[13];
-        m_rk3 = data[14];
-        m_rk4 = data[15];
-        m_rs1 = data[16];
-        m_rs2 = data[17];
-        m_rs3 = data[18];
-        m_rs4 = data[19];
-        m_rs5 = data[20];
         m_reachUpStream.resize(m_nReaches + 1);
         if (m_nReaches > 1)
         {
@@ -486,7 +472,6 @@ void  NutrientCHRoute::initialOutputs()
         m_rch_dox = new float[m_nReaches + 1];
         m_chlora = new float[m_nReaches + 1];
         m_soxy = 0.;
-
 #pragma omp parallel for
         for (int i = 1; i <= m_nReaches; i++)
         {
@@ -500,7 +485,6 @@ void  NutrientCHRoute::initialOutputs()
             m_rch_cod[i] = 0.;
             m_rch_dox[i] = 0.;
             m_chlora[i] = 0.;
-
         }
     }
 }
@@ -1067,7 +1051,7 @@ void NutrientCHRoute::NutrientinChannel(int i)
 
 float NutrientCHRoute::corTempc(float r20, float thk, float tmp)
 {
-    float theta = 0.;
+    float theta = 0.f;
     theta = r20 * pow(thk, (tmp - 20.f));
     return theta;
 }

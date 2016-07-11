@@ -245,32 +245,31 @@ void NutrientRemviaSr::initialOutputs()
     {
         for (int i = 0; i < m_nCells; i++)
         {
-            m_latno3[i] = 0.;
-            m_percn[i] = 0.;
-            m_surqno3[i] = 0.;
-            m_surqsolp[i] = 0.;
+            m_latno3[i] = 0.f;
+            m_percn[i] = 0.f;
+            m_surqno3[i] = 0.f;
+            m_surqsolp[i] = 0.f;
         }
     }
     if (m_cod == NULL)
     {
         for (int i = 0; i < m_nCells; i++)
         {
-            m_cod[i] = 0.;
-            m_chl_a[i] = 0.;
-            //m_doxq[i] = 0.;
-            //m_soxy[i] = 0.;
+            m_cod[i] = 0.f;
+            m_chl_a[i] = 0.f;
+            //m_doxq[i] = 0.f;
+            //m_soxy[i] = 0.f;
         }
     }
     if (m_wshd_plch < 0)
     {
-        m_wshd_plch = 0.;
+        m_wshd_plch = 0.f;
     }
     // input variables
     if (m_flat == NULL) { Initialize2DArray(m_nCells, m_soiLayers, m_flat, 0.0001f); }
     if (m_sol_perco == NULL) { Initialize2DArray(m_nCells, m_soiLayers, m_sol_perco, 0.0001f); }
     if (m_ldrain == NULL) { Initialize1DArray(m_nCells, m_ldrain, -1.f); }
-    m_qtile = 0.0001;
-
+    m_qtile = 0.0001f;
 }
 
 int NutrientRemviaSr::Execute()
@@ -281,7 +280,7 @@ int NutrientRemviaSr::Execute()
     }
     this->initialOutputs();
     // Calculate total no3
-    float total_no3 = 0.;
+    float total_no3 = 0.f;
     for (int i = 0; i < m_nCells; i++)
     {
         for (int k = 0; k < m_nSoilLayers[i]; k++)
@@ -297,34 +296,7 @@ int NutrientRemviaSr::Execute()
     return 0;
 }
 
-
 void NutrientRemviaSr::Nitrateloss()
-{
-    //percnlyr nitrate moved to next lower layer with percolation (kg/km2)
-    float percnlyr = 0.;
-    float *tileno3;
-#pragma omp parallel for
-    for (int i = 0; i < m_nCells; i++)
-    {
-        for (int k = 0; k < m_nSoilLayers[i]; k++)
-        {
-            //add nitrate moved from layer above
-            m_sol_no3[i][k] = m_sol_no3[i][k] + percnlyr;
-            if (m_sol_no3[i][k] < 1e-6)
-            {
-                m_sol_no3[i][k] = 0.0;
-            }
-            // determine concentration of nitrate in mobile water
-            // surface runoff generated (sro)
-            float sro = 0.;
-            // amount of mobile water in the layer (mw)
-            float mw = 0.;
-            float vno3 = 0.;
-            float con = 0.;
-            float ww = 0.;
-
-
-            void NutrientRemviaSr::Nitrateloss()
             {
                 //percnlyr nitrate moved to next lower layer with percolation (kg/km2)
                 float percnlyr = 0.;
@@ -608,7 +580,6 @@ void NutrientRemviaSr::Nitrateloss()
                                          "Parameter " + sk + " does not exist. Please contact the module developer.");
                 }
             }
-
             void NutrientRemviaSr::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
             {
                 string sk(key);
@@ -627,6 +598,7 @@ void NutrientRemviaSr::Nitrateloss()
                                                                  +
                                                                  " does not exist in the NutRemv module. Please contact the module developer.");
             }
+
 // int main() {
 //	system("pause");
 //}

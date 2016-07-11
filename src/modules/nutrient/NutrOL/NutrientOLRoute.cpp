@@ -307,9 +307,9 @@ void NutrientOLRoute::initial()
         m_fract = new float[m_nCells];
         for (int i = 0; i < m_nCells; i++)
         {
-            m_QV[i] = 0.;
+            m_QV[i] = 0.f;
             m_ChV[i] = 0.f;
-            m_fract[i] = 0.;
+            m_fract[i] = 0.f;
         }
     }
 }
@@ -358,18 +358,22 @@ void NutrientOLRoute::NutrientinOverland(int i)
         sedminps = sedminps + m_sedminps[flowInID];
         cod = cod + m_cod[flowInID];
 
-        //Sum
-        surqno3 = surqno3 + m_surqno3[flowInID];
-        latno3 = latno3 + m_latno3[flowInID];
-        no3gw = no3gw + m_no3gw[flowInID];
-        surqsolp = surqsolp + m_surqsolp[flowInID];
-        minpgw = minpgw + m_minpgw[flowInID];
-        sedorgn = sedorgn + m_sedorgn[flowInID];
-        sedorgp = sedorgp + m_sedorgp[flowInID];
-        sedminpa = sedminpa + m_sedminpa[flowInID];
-        sedminps = sedminps + m_sedminps[flowInID];
-
-
+    }
+    // if the channel width is greater than the cell width
+    if (m_streamLink[i] >= 0 && flowwidth <= 0)
+    {
+        m_surqno3ToCh[i] = surqno3 * cellArea;
+        m_latno3ToCh[i] = latno3 * cellArea;
+        m_no3gwToCh[i] = no3gw * cellArea;
+        m_surqsolpToCh[i] = surqsolp * cellArea;
+        m_minpgwToCh[i] = minpgw * cellArea;
+        m_sedorgnToCh[i] = sedorgn * cellArea;
+        m_sedorgpToCh[i] = sedorgp * cellArea;
+        m_sedminpaToCh[i] = sedminpa * cellArea;
+        m_sedminpsToCh[i] = sedminps * cellArea;
+        m_cod[i] = cod * cellArea; // TODO calculate volume
+        return;
+    }
         // if the channel width is greater than the cell width
         if (m_streamLink[i] >= 0 && flowwidth <= 0)
         {
