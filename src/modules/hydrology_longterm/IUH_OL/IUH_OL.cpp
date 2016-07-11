@@ -292,8 +292,9 @@ void IUH_OL::Get1DData(const char *key, int *n, float **data)
     {
         *data = this->m_Q_SBOF;
     }
-    else throw ModelException("IUH_OL", "getResult", "Result " + sk +
-                                                     " does not exist in IUH_OL method. Please contact the module developer.");
+    else
+        throw ModelException("IUH_OL", "getResult", "Result " + sk +
+                                                    " does not exist in IUH_OL method. Please contact the module developer.");
 
     *n = this->m_nsub + 1;
 }
