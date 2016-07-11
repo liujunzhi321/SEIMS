@@ -15,3 +15,7 @@ D:\Compile\SEIMS_OMP\Release\seims_omp E:\code\Hydro\SEIMS\model_data\TEST\model
 G:\compile\SEIMS\Release\seims_omp G:\code_zhulj\SEIMS\model_data\TEST\model_dianbu_30m_longterm 8 0 127.0.0.1 27017 0
 
 G:\compile\SEIMS\Release\seims_omp G:\code_zhulj\SEIMS\model_data\dianbu\model_dianbu_30m_longterm 8 0 127.0.0.1 27017 0
+
+TEST COMMAND ON DGPM-cluster:
+
+/home/zhulj/SEIMS/SEIMS_OMP/seims_omp /home/zhulj/code/SEIMS/model_data/TEST/model_dianbu_30m_longterm 8 0 127.0.0.1 27017 0

@@ -327,15 +327,15 @@ void NutrientOLRoute::NutrientinOverland(int i)
     {
         int flowInID = (int) m_flowInIndex[i][k];
         // Calculate amount of nutrients in surface runoff
-        m_surqno3[flowInID] = max(1.e-12, m_surqno3[flowInID]);
-        m_latno3[flowInID] = max(1.e-12, m_latno3[flowInID]);
-        m_no3gw[flowInID] = max(1.e-12, m_no3gw[flowInID]);
-        m_surqsolp[flowInID] = max(1.e-12, m_surqsolp[flowInID]);
-        m_minpgw[flowInID] = max(1.e-12, m_minpgw[flowInID]);
-        m_sedorgn[flowInID] = max(1.e-12, m_sedorgn[flowInID]);
-        m_sedorgp[flowInID] = max(1.e-12, m_sedorgp[flowInID]);
-        m_sedminpa[flowInID] = max(1.e-12, m_sedminpa[flowInID]);
-        m_sedminps[flowInID] = max(1.e-12, m_sedminps[flowInID]);
+        m_surqno3[flowInID] = max(1.e-12f, m_surqno3[flowInID]);
+        m_latno3[flowInID] = max(1.e-12f, m_latno3[flowInID]);
+        m_no3gw[flowInID] = max(1.e-12f, m_no3gw[flowInID]);
+        m_surqsolp[flowInID] = max(1.e-12f, m_surqsolp[flowInID]);
+        m_minpgw[flowInID] = max(1.e-12f, m_minpgw[flowInID]);
+        m_sedorgn[flowInID] = max(1.e-12f, m_sedorgn[flowInID]);
+        m_sedorgp[flowInID] = max(1.e-12f, m_sedorgp[flowInID]);
+        m_sedminpa[flowInID] = max(1.e-12f, m_sedminpa[flowInID]);
+        m_sedminps[flowInID] = max(1.e-12f, m_sedminps[flowInID]);
 
         //Sum
         surqno3 = surqno3 + m_surqno3[flowInID];

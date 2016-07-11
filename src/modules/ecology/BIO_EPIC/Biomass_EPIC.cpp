@@ -626,13 +626,13 @@ void Biomass_EPIC::CalTempStress(int i)
     if (tgx <= 0.f)
         m_frStrsTmp[i] = 0.;
     else if (m_tMean[i] > m_tOpt[i])
-        tgx = 2. * m_tOpt[i] - m_tBase[i] - m_tMean[i];
-    rto = (m_tOpt[i] - m_tBase[i]) / pow((tgx + UTIL_ZERO), 2.);
-    if (rto <= 200. && tgx > 0)
-        m_frStrsTmp[i] = exp(-0.1054 * rto);
+        tgx = 2.f * m_tOpt[i] - m_tBase[i] - m_tMean[i];
+    rto = (m_tOpt[i] - m_tBase[i]) / pow((tgx + UTIL_ZERO), 2.f);
+    if (rto <= 200.f && tgx > 0)
+        m_frStrsTmp[i] = exp(-0.1054f * rto);
     else
         m_frStrsTmp[i] = 0.f;
-    if (m_tMin[i] <= m_tMeanAnn[i] - 15.)
+    if (m_tMin[i] <= m_tMeanAnn[i] - 15.f)
         m_frStrsTmp[i] = 0.f;
 }
 
@@ -653,7 +653,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
         /// Calculate optimal biomass
         /// 1. calculate photosynthetically active radiation
         float activeRadiation = 0.f;
-        activeRadiation = 0.5 * m_SR[i] * (1. - exp(-m_lightExtCoef[i] * (m_LAIDay[i] + 0.05)));
+        activeRadiation = 0.5f * m_SR[i] * (1.f - exp(-m_lightExtCoef[i] * (m_LAIDay[i] + 0.05f)));
         /// 2. Adjust radiation-use efficiency for CO2
         ////  determine shape parameters for the radiation use efficiency equation, readplant.f in SWAT
         if (FloatEqual(m_co2Hi[i], 330.0f)) m_co2Hi[i] = 660.f;
@@ -664,7 +664,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
 
         float beadj = 0.f;
         if (m_co2 > 330.)
-            beadj = 100. * m_co2 / (m_co2 + exp(m_RadUseEffiShpCoef1 - m_co2 * m_RadUseEffiShpCoef2));
+            beadj = 100.f * m_co2 / (m_co2 + exp(m_RadUseEffiShpCoef1 - m_co2 * m_RadUseEffiShpCoef2));
         else
             beadj = m_BIOE[i];
         /// 3. adjust radiation-use efficiency for vapor pressure deficit
@@ -672,9 +672,9 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
         float ruedecl = 0.f;
         if (m_VPD[i] > 1.0)
         {
-            ruedecl = m_VPD[i] - 1.;
+            ruedecl = m_VPD[i] - 1.f;
             beadj -= m_wavp[i] * ruedecl;
-            beadj = max(beadj, 0.27 * m_BIOE[i]);
+            beadj = max(beadj, 0.27f * m_BIOE[i]);
         }
         m_biomassDelta[i] = max(0.f, beadj * activeRadiation);
         /// 4. Calculate plant uptake of N and P to make sure no plant N and P uptake under temperature, water and aeration stress
@@ -718,8 +718,8 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
         }
         m_biomass[i] = max(m_biomass[i], 0.f);
         /// 7. calculate fraction of total biomass that is in the roots
-        float m_rootShootRatio1 = 0.4;
-        float m_rootShootRatio2 = 0.2;
+        float m_rootShootRatio1 = 0.4f;
+        float m_rootShootRatio2 = 0.2f;
         m_frRoot[i] = m_rootShootRatio1 * (m_rootShootRatio1 - m_rootShootRatio2) * m_frPHUacc[i];
         float LAIShpCoef1 = 0.f, LAIShpCoef2 = 0.f;
         PGCommon::getScurveShapeParameter(m_frMaxLAI1[i], m_frMaxLAI2[i], m_frGrowOptLAI1[i], m_frGrowOptLAI2[i],
@@ -744,7 +744,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
             else
                 laiMax = m_maxLAI[i];
             if (m_LAIDay[i] > laiMax) m_LAIDay[i] = laiMax;
-            laiDelta = ff * laiMax * (1.f - exp(5.0 * (m_LAIDay[i] - laiMax))) * sqrt(reg);
+            laiDelta = ff * laiMax * (1.f - exp(5.0f * (m_LAIDay[i] - laiMax))) * sqrt(reg);
             m_LAIDay[i] += laiDelta;
             if (m_LAIDay[i] > laiMax) m_LAIDay[i] = laiMax;
             m_oLAI[i] = m_LAIDay[i];
@@ -760,15 +760,15 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
             m_pltET[i] += (m_plantEPDay[i] + m_soilESDay[i]);
             m_pltPET[i] += m_PET[i];
         }
-        m_hvstIdxAdj[i] = m_hvstIdx[i] * 100. * m_frPHUacc[i] / (100. * m_frPHUacc[i] +
-                                                                 exp(11.1 - 10. * m_frPHUacc[i]));
+        m_hvstIdxAdj[i] = m_hvstIdx[i] * 100.f * m_frPHUacc[i] / (100.f * m_frPHUacc[i] +
+                                                                  exp(11.1f - 10.f * m_frPHUacc[i]));
     }
     else
     {
         if (m_frDLAI[i] > 1.f)
         {
             if (m_frPHUacc[i] > m_frDLAI[i])
-                m_LAIDay[i] = m_oLAI[i] * (1.f - (m_frPHUacc[i] - m_frDLAI[i]) / (1.2 - m_frDLAI[i]));
+                m_LAIDay[i] = m_oLAI[i] * (1.f - (m_frPHUacc[i] - m_frDLAI[i]) / (1.2f - m_frDLAI[i]));
         }
         if (m_LAIDay[i] < 0.f) m_LAIDay[i] = 0.f;
     }
@@ -782,7 +782,7 @@ void Biomass_EPIC::PlantNitrogenUptake(int i)
     for (int l = 0; l < m_nSoilLayers[i]; l++)
         tno3 += m_soilNO3[i][l];
     tno3 /= n_reduc;
-    float up_reduc = tno3 / (tno3 + exp(1.56 - 4.5 * tno3)); /// However, up_reduc is not used hereafter.
+    float up_reduc = tno3 / (tno3 + exp(1.56f - 4.5f * tno3)); /// However, up_reduc is not used hereafter.
     /// icrop is land cover code in SWAT.
     /// in SEIMS, it is no need to use it.
     //// determine shape parameters for plant nitrogen uptake equation, from readplant.f
@@ -853,14 +853,14 @@ void Biomass_EPIC::PlantNitrogenFixed(int i)
     /// compute fixation as a function of no3, soil water, and growth stage
     //// 1. compute soil water factor
     float fxw = 0.f;
-    fxw = m_totSOMO[i] / (0.85 * m_totSoilAWC[i]);
+    fxw = m_totSOMO[i] / (0.85f * m_totSoilAWC[i]);
     //// 2. compute no3 factor
     float sumn = 0.f; /// total amount of nitrate stored in soil profile (kg/ha)
     float fxn = 0.f;
     for (int l = 0; l < m_nSoilLayers[i]; l++)
         sumn += m_soilNO3[i][l];
     if (sumn > 300.) fxn = 0.f;
-    if (sumn > 100. && sumn <= 300.) fxn = 1.5 - 0.0005 * sumn;
+    if (sumn > 100. && sumn <= 300.) fxn = 1.5f - 0.0005f * sumn;
     if (sumn <= 100.) fxn = 1.0;
     //// 3. compute growth stage factor
     float fxg = 0.f;
@@ -869,10 +869,10 @@ void Biomass_EPIC::PlantNitrogenFixed(int i)
     if (m_frPHUacc[i] > 0.30 && m_frPHUacc[i] <= 0.55)
         fxg = 1.f;
     if (m_frPHUacc[i] > 0.55 && m_frPHUacc[i] <= 0.75)
-        fxg = 3.75 - 5. * m_frPHUacc[i];
+        fxg = 3.75f - 5.f * m_frPHUacc[i];
     float fxr = min(1.f, min(fxw, fxn)) * fxg;
     fxr = max(0.f, fxr);
-    if (m_NFixCoef <= 0.) m_NFixCoef = 0.5;
+    if (m_NFixCoef <= 0.) m_NFixCoef = 0.5f;
     if (m_NFixMax <= 0.) m_NFixMax = 20.f;
     m_fixN[i] = min(6.f, fxr * m_NO3Defic[i]);
     m_fixN[i] = m_NFixCoef * m_fixN[i] + (1.f - m_NFixCoef) * uno3l;
@@ -893,7 +893,7 @@ void Biomass_EPIC::PlantPhosphorusUptake(int i)
     up2 = m_frPlantP[i] * m_biomass[i];
     if (up2 < m_plantP[i]) up2 = m_plantP[i];
     uapd = up2 - m_plantP[i];
-    uapd *= 1.5;   /// luxury p uptake
+    uapd *= 1.5f;   /// luxury p uptake
     m_frStrsP[i] = 1.f;
     int ir = 0;
     if (uapd < UTIL_ZERO) return;
@@ -938,10 +938,10 @@ int Biomass_EPIC::Execute()
         {
             m_albedo[i] = m_soilALB[i];
             if (m_LAIDay[i] > 0.)  /// include the situation that m_LAIDay[i] == NODATA
-                m_albedo[i] = 0.23 * (1.f - eaj) + m_soilALB[i] * eaj;
+                m_albedo[i] = 0.23f * (1.f - eaj) + m_soilALB[i] * eaj;
         }
         else
-            m_albedo[i] = 0.8;
+            m_albedo[i] = 0.8f;
     }
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
@@ -952,7 +952,7 @@ int Biomass_EPIC::Execute()
         if (FloatEqual(m_igro[i], 1.0f))            /// land cover growing
         {
             DistributePlantET(i);                        /// swu.f
-            if (FloatEqual(m_dormFlag[i], 0.))    /// plant will not undergo stress if dormant
+            if (FloatEqual(m_dormFlag[i], 0.f))    /// plant will not undergo stress if dormant
                 AdjustPlantGrowth(i);                    /// plantmod.f
             CheckDormantStatus(i);                /// dormant.f
         }

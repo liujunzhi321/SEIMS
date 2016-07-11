@@ -23,7 +23,7 @@ ModelMain::ModelMain(mongoc_client_t *conn, string dbName, string projectPath, S
         : m_conn(conn), m_dbName(dbName), m_projectPath(projectPath), m_input(input), m_factory(factory),
           m_subBasinID(subBasinID), m_scenarioID(scenarioID), m_threadNum(numThread), m_layeringMethod(layeringMethod),
           m_templateRasterData(NULL), m_readFileTime(0), m_firstRunChannel(true), m_firstRunOverland(true),
-          m_initialized(false)
+          m_initialized(false), m_output(NULL)
 {
     mongoc_gridfs_t *spatialData;
     bson_error_t *err = NULL;
@@ -136,20 +136,24 @@ ModelMain::~ModelMain(void)
     {
         if (this->m_templateRasterData != NULL) delete this->m_templateRasterData;
         for (map<string, ParamInfo *>::iterator it = m_parameters.begin(); it != m_parameters.end(); ++it)
+        {
             delete it->second;
-        delete m_output;
+            it->second = NULL;
+            m_parameters.erase(it);
+        }
+        m_parameters.clear();
+        if (this->m_input != NULL) delete this->m_input;
+        if (this->m_output != NULL)
+            delete this->m_output;
+        if (m_outputGfs != NULL)
+            ModelMain::CloseGridFS();
+        if (!m_conn)
+            mongoc_client_destroy(m_conn);
     }
     catch (exception e)
     {
         cout << e.what() << endl;
     }
-
-    if (m_input != NULL)
-        delete m_input;
-    if (m_outputGfs != NULL)
-        ModelMain::CloseGridFS();
-    if (!m_conn)
-        mongoc_client_destroy(m_conn);
 }
 
 //void ModelMain::Step(time_t time)
@@ -297,7 +301,7 @@ void ModelMain::Execute()
     StepOverall(startTime, endTime);
     clock_t t2 = clock();
     //cout << "time(ms):  " << t2-t1 << endl;
-    cout << "[TIMESPAN][COMPUTING]\tALL\t" << (t2 - t1) / 1000. << endl;
+    cout << "[TIMESPAN][COMPUTING]\tALL\t" << fixed << setprecision(3) << (t2 - t1) / (float) CLOCKS_PER_SEC << endl;
     OutputExecuteTime();
 }
 
@@ -333,7 +337,8 @@ void ModelMain::OutputExecuteTime()
 {
     for (size_t i = 0; i < m_simulationModules.size(); i++)
     {
-        cout << "[TIMESPAN][COMPUTING]\t" << m_factory->GetModuleID(i) << "\t" << m_executeTime[i] / 1000. << endl;
+        cout << "[TIMESPAN][COMPUTING]\t" << m_factory->GetModuleID(i) << "\t" << fixed << setprecision(3) <<
+        m_executeTime[i] / (float) CLOCKS_PER_SEC << endl;
     }
 }
 

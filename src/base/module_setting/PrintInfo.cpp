@@ -553,7 +553,8 @@ PrintInfo::~PrintInfo(void)
     m_IntervalUnits = "";
     m_OutputID = "";
     m_PrintItems.clear();
-    if (m_subbasinSelectedArray != NULL) delete[] m_subbasinSelectedArray;
+    if (m_subbasinSelectedArray != NULL)
+        Release1DArray(m_subbasinSelectedArray);
 }
 
 

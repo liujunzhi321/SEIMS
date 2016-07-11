@@ -27,15 +27,14 @@ SettingsOutput::SettingsOutput(int subBasinID, mongoc_client_t *conn, string dbN
 SettingsOutput::~SettingsOutput(void)
 {
     StatusMessage("Start to release SettingsOutput ...");
-    vector<PrintInfo *>::iterator it;
-    for (it = m_printInfos.begin(); it < m_printInfos.end(); it++)
+    for (vector<PrintInfo *>::iterator it = m_printInfos.begin(); it != m_printInfos.end();)
     {
-        if ((*it) != NULL)
+        if (*it != NULL)
         {
-            delete (*it);
+            delete *it;
             *it = NULL;
         }
-        m_printInfos.erase(it);
+        it = m_printInfos.erase(it);
     }
     m_printInfos.clear();
     StatusMessage("End to release SettingsOutput ...");

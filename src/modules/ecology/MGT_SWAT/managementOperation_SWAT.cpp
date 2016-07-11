@@ -357,6 +357,7 @@ bool MGTOpt_SWAT::CheckInputData(void)
     if (m_soilRsd == NULL)
         throw ModelException(MID_MGT_SWAT, "CheckInputData",
                              "OM classified as residue in soil layers must not be NULL");
+    return true;
 }
 
 bool MGTOpt_SWAT::GetOperationCode(int i, int &factoryID, vector<int> &nOps)
@@ -688,12 +689,12 @@ void MGTOpt_SWAT::ExecuteFertilizerOperation(int i, int &factoryID, int nOp)
 
     /**summary output**/
     //!!    fertn         |kg N/ha       |total amount of nitrogen applied to soil in cell on day
-    float fertN;
+    float fertN = 0.f;
     //!!    fertp         |kg P/ha       |total amount of phosphorus applied to soil in cell on day
-    float fertP;
-    float fertNO3;
-    float fertNH3;
-    float fertSolP;
+    float fertP = 0.f;
+    float fertNO3 = 0.f;
+    float fertNH3 = 0.f;
+    float fertSolP = 0.f;
     /// cfertn       |kg N/ha       |total amount of nitrogen applied to soil during continuous fertilizer operation in cell on day
     float cFertN = 0.f;
     /// cfertp       |kg P/ha       |total amount of phosphorus applied to soil during continuous fertilizer operation in cell on day
@@ -841,8 +842,8 @@ void MGTOpt_SWAT::ExecuteHarvestKillOperation(int i, int &factoryID, int nOp)
     float yldpst = 0.f, yieldn = 0.f, yieldp = 0.f;
     yieldn = yield * cnyld;
     yieldp = yield * cpyld;
-    yieldn = min(yieldn, 0.80 * m_plantN[i]);
-    yieldp = min(yieldp, 0.80 * m_plantP[i]);
+    yieldn = min(yieldn, 0.80f * m_plantN[i]);
+    yieldp = min(yieldp, 0.80f * m_plantP[i]);
 
     /// call rootfr.f to distributes dead root mass through the soil profile
     /// i.e., derive fraction of roots in each layer
@@ -950,7 +951,7 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
     {
         /// biological mixing, TODO to find usage elsewhere
         emix = bmix;
-        dtil = min(m_soilDepth[i][(int) m_nSoilLayers[i] - 1], 50.);
+        dtil = min(m_soilDepth[i][(int) m_nSoilLayers[i] - 1], 50.f);
     }
     else
     {
@@ -1132,8 +1133,8 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
         clipTbr = m_biomass[i] * (1. - 1. / (1. + hiad1)) * (1. - harveff);
         m_biomass[i] -= (yieldTbr + clipTbr);
         /// calculate nutrients removed with yield
-        yieldNtbr = min(yieldTbr * cnyld, 0.80 * m_plantN[i]);
-        yieldPtbr = min(yieldTbr * cpyld, 0.80 * m_plantP[i]);
+        yieldNtbr = min(yieldTbr * cnyld, 0.80f * m_plantN[i]);
+        yieldPtbr = min(yieldTbr * cpyld, 0.80f * m_plantP[i]);
         /// calculate nutrients removed with clippings
         clipNtbr = min(clipTbr * m_frPlantN[i], m_plantN[i] - yieldNtbr);
         clipPtbr = min(clipTbr * m_frPlantP[i], m_plantP[i] - yieldPtbr);
@@ -1152,8 +1153,8 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
         clipBms = hi_bms * (1. - m_frRoot[i]) * m_biomass[i] * (1. - harveff);
         m_biomass[i] -= (yieldBms + clipBms);
         /// compute nutrients removed with yield
-        yieldNbms = min(yieldBms * cnyld, 0.80 * m_plantN[i]);
-        yieldPbms = min(yieldBms * cpyld, 0.80 * m_plantP[i]);
+        yieldNbms = min(yieldBms * cnyld, 0.80f * m_plantN[i]);
+        yieldPbms = min(yieldBms * cpyld, 0.80f * m_plantP[i]);
         /// calculate nutrients removed with clippings
         clipNbms = min(clipBms * m_frPlantN[i], m_plantN[i] - yieldNbms);
         clipPbms = min(clipBms * m_frPlantP[i], m_plantP[i] - yieldPbms);
@@ -1168,8 +1169,8 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
         clipGrn = (1. - m_frRoot[i]) * m_biomass[i] * hiad1 * (1. - harveff);
         m_biomass[i] -= (yieldGrn + clipGrn);
         /// calculate nutrients removed with yield
-        yieldNgrn = min(yieldGrn * cnyld, 0.80 * m_plantN[i]);
-        yieldPgrn = min(yieldGrn * cpyld, 0.80 * m_plantP[i]);
+        yieldNgrn = min(yieldGrn * cnyld, 0.80f * m_plantN[i]);
+        yieldPgrn = min(yieldGrn * cpyld, 0.80f * m_plantP[i]);
         /// calculate nutrients removed with clippings
         clipNgrn = min(clipGrn * m_frPlantN[i], m_plantN[i] - yieldNgrn);
         clipPgrn = min(clipGrn * m_frPlantP[i], m_plantP[i] - yieldPgrn);
@@ -1242,11 +1243,11 @@ void MGTOpt_SWAT::ExecuteKillOperation(int i, int &factoryID, int nOp)
     rootFraction(i, rtfr);
     /// update residue, N, P on soil surface
     m_soilRsd[i][0] += resnew;
-    m_soilFreshOrgN[i][0] += m_plantN[i] * (1. - m_frRoot[i]);
-    m_soilFreshOrgP[i][0] += m_plantP[i] * (1. - m_frRoot[i]);
-    m_soilRsd[i][0] = max(m_soilRsd[i][0], 0.);
-    m_soilFreshOrgN[i][0] = max(m_soilFreshOrgN[i][0], 0.);
-    m_soilFreshOrgP[i][0] = max(m_soilFreshOrgP[i][0], 0.);
+    m_soilFreshOrgN[i][0] += m_plantN[i] * (1.f - m_frRoot[i]);
+    m_soilFreshOrgP[i][0] += m_plantP[i] * (1.f - m_frRoot[i]);
+    m_soilRsd[i][0] = max(m_soilRsd[i][0], 0.f);
+    m_soilFreshOrgN[i][0] = max(m_soilFreshOrgN[i][0], 0.f);
+    m_soilFreshOrgP[i][0] = max(m_soilFreshOrgP[i][0], 0.f);
 
     /// allocate dead roots, N and P to soil layers
     for (int l = 0; l < (int) m_nSoilLayers[i]; l++)

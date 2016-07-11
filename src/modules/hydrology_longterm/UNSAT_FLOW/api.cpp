@@ -30,34 +30,34 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetWebsite("");
     mdi.SetHelpfile("UnsaturatedFlow.chm");
 
-    mdi.AddParameter("Rootdepth", "m", "Root depth", "ParameterDB_WaterBalance", DT_Raster);
+    mdi.AddParameter("Rootdepth", "m", "Root depth", "ParameterDB_WaterBalance", DT_Raster2D);
     mdi.AddParameter("Fieldcap", "m3/m3", "Soil field capacity", "ParameterDB_WaterBalance",
-                     DT_Raster);                                //0f
+                     DT_Raster2D);                                //0f
     mdi.AddParameter("Wiltingpoint", "m3/m3", "Plant wilting point moisture", "ParameterDB_WaterBalance",
-                     DT_Raster);                    //0w
+                     DT_Raster2D);                    //0w
     mdi.AddParameter("T_Soil", "oC", "threshold soil freezing temperature", "ParameterDB_WaterBalance",
                      DT_Single);                    //
 
     // set the parameters (non-time series)
     mdi.AddInput("D_PET", "mm", "pet", "Module",
-                 DT_Raster);                                        //from interpolation module			PET
+                 DT_Raster1D);                                        //from interpolation module			PET
     mdi.AddInput("D_INET", "mm", "Evaporation From Interception Storage", "Module",
-                 DT_Raster);    //from interception module			EI
+                 DT_Raster1D);    //from interception module			EI
     mdi.AddInput("D_DEET", "mm", "Distribution of depression ET", "Module",
-                 DT_Raster);            //from depression module			ED
+                 DT_Raster1D);            //from depression module			ED
     mdi.AddInput("D_SOMO", "mm", "Distribution of soil moisture", "Module",
-                 DT_Raster);            //from soil water balance module	0
-    mdi.AddInput("D_SOTE", "oC", "Soil Temperature", "Module", DT_Raster);                        //soil temperature
+                 DT_Raster2D);            //from soil water balance module	0
+    mdi.AddInput("D_SOTE", "oC", "Soil Temperature", "Module", DT_Raster1D);                        //soil temperature
     // set the parameters (non-time series)
     mdi.AddInput("D_GRRE", "mm", "percolation", "Module",
-                 DT_Raster);                                //from perculation module
+                 DT_Raster1D);                                //from percolation module
     mdi.AddInput("D_INFIL", "mm", "infiltration", "Module",
-                 DT_Raster);                            //from infiltration module
+                 DT_Raster1D);                            //from infiltration module
     mdi.AddInput("D_SSRU", "mm", "Distribution of subsurface runoff.", "Module",
-                 DT_Raster);            //form subsurface runoff module
+                 DT_Raster1D);            //form subsurface runoff module
 
     // set the output variables
-    mdi.AddOutput("SOET", "mm", "Distribution of soil evapotranspiration for a user defined period.", DT_Raster);
+    mdi.AddOutput("SOET", "mm", "Distribution of soil evapotranspiration for a user defined period.", DT_Raster1D);
 
     // write out the XML file.
     res = mdi.GetXMLDocument();

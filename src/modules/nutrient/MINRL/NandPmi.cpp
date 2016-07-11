@@ -6,7 +6,7 @@
  */
 
 #include <iostream>
-#include "nandpmi.h"
+#include "NandPmi.h"
 #include "MetadataInfo.h"
 #include <cmath>
 #include <iostream>
@@ -398,22 +398,22 @@ void NandPim::CalculateMinerandImmobi(int i)
             {
                 m_sol_st[i][kk] = 0.0000001f;
             }
-            sut = 0.1 + 0.9 * sqrt(m_sol_st[i][kk] / m_sol_fc[i][kk]);
-            sut = max(0.05, sut);
+            sut = 0.1f + 0.9f * sqrt(m_sol_st[i][kk] / m_sol_fc[i][kk]);
+            sut = max(0.05f, sut);
 
             //compute soil temperature factor
             //variable to hold intermediate calculation result (xx)
-            float xx = 0;
+            float xx = 0.f;
             //soil temperature factor (cdg)
-            float cdg = 0;
+            float cdg = 0.f;
             xx = m_sol_tmp[i][kk];
-            cdg = 0.9 * xx / (xx + exp(9.93 - 0.312 * xx)) + 0.1;
-            cdg = max(0.1, cdg);
+            cdg = 0.9f * xx / (xx + exp(9.93f - 0.312f * xx)) + 0.1f;
+            cdg = max(0.1f, cdg);
 
             // compute combined factor
-            xx = 0;
+            xx = 0.f;
             //combined temperature/soil water factor (csf)
-            float csf = 0;
+            float csf = 0.f;
             xx = cdg * sut;
             if (xx < 0)
             {
@@ -427,7 +427,7 @@ void NandPim::CalculateMinerandImmobi(int i)
 
             // compute flow from active to stable pools
             //amount of nitrogen moving from active organic to stable organic pool in layer (rwn)
-            float rwn = 0;
+            float rwn = 0.f;
             rwn = 0.1e-4 * (m_sol_aorgn[i][k] * (1 / m_nactfr - 1.) - m_sol_orgn[i][k]);
             if (rwn > 0.)
             {
@@ -436,30 +436,30 @@ void NandPim::CalculateMinerandImmobi(int i)
             {
                 rwn = -(min(abs(rwn), m_sol_orgn[i][k]));
             }
-            m_sol_orgn[i][k] = max(1.e-6, m_sol_orgn[i][k] + rwn);
-            m_sol_aorgn[i][k] = max(1.e-6, m_sol_aorgn[i][k] - rwn);
+            m_sol_orgn[i][k] = max(1.e-6f, m_sol_orgn[i][k] + rwn);
+            m_sol_aorgn[i][k] = max(1.e-6f, m_sol_aorgn[i][k] - rwn);
 
             // compute humus mineralization on active organic n
             //amount of nitrogen moving from active organic nitrogen pool to nitrate pool in layer (hmn)
-            float hmn = 0;
+            float hmn = 0.f;
             hmn = m_cmn * csf * m_sol_aorgn[i][k];
             hmn = min(hmn, m_sol_aorgn[i][k]);
             // compute humus mineralization on active organic p
             xx = 0;
             //amount of phosphorus moving from the organic pool to the labile pool in layer (hmp)
-            float hmp = 0;
+            float hmp = 0.f;
             xx = m_sol_orgn[i][k] + m_sol_aorgn[i][k];
             if (xx > 1e-6)
             {
-                hmp = 1.4 * hmn * m_sol_orgp[i][k] / xx;
+                hmp = 1.4f * hmn * m_sol_orgp[i][k] / xx;
             } else
             {
-                hmp = 0;
+                hmp = 0.f;
             }
             hmp = min(hmp, m_sol_orgp[i][k]);
 
             // move mineralized nutrients between pools;
-            m_sol_aorgn[i][k] = max(1e-6, m_sol_aorgn[i][k] - hmn);
+            m_sol_aorgn[i][k] = max(1e-6f, m_sol_aorgn[i][k] - hmn);
             m_sol_no3[i][k] = m_sol_no3[i][k] + hmn;
             m_sol_orgp[i][k] = m_sol_orgp[i][k] - hmp;
             m_sol_solp[i][k] = m_sol_solp[i][k] + hmp;
@@ -467,13 +467,13 @@ void NandPim::CalculateMinerandImmobi(int i)
             // compute residue decomp and mineralization of
             // fresh organic n and p (upper two layers only)
             //amount of nitrogen moving from fresh organic to nitrate(80%) and active organic(20%) pools in layer (rmn1)
-            float rmn1 = 0;
+            float rmn1 = 0.f;
             //amount of phosphorus moving from fresh organic to labile(80%) and organic(20%) pools in layer (rmp)
-            float rmp = 0;
+            float rmp = 0.f;
             if (k <= 2)
             {
                 //the C:N ratio (cnr)
-                float cnr = 0;
+                float cnr = 0.f;
                 //the C:P ratio (cnr)
                 float cpr = 0;
                 //the nutrient cycling water factor for layer (ca)
@@ -507,20 +507,20 @@ void NandPim::CalculateMinerandImmobi(int i)
                     cprf = 1;
                 }
                 //decay rate constant (decr)
-                float decr = 0;
+                float decr = 0.f;
 
-                float rdc = 0;
+                float rdc = 0.f;
                 //Calculate ca, equation 3:1.2.8 in SWAT Theory 2009, p190
-                ca = min(min(cnrf, cprf), 1);
+                ca = min(min(cnrf, cprf), 1.f);
                 if (m_landcover[i] > 0)
                 {
                     decr = m_rsdco_pl[(int) m_landcover[i]] * ca * csf;
                 } else
                 {
-                    decr = 0.05;
+                    decr = 0.05f;
                 }
                 decr = min(decr, 1.0f);
-                m_sol_rsd[i][k] = max(1.e-6, m_sol_rsd[i][k]);
+                m_sol_rsd[i][k] = max(1.e-6f, m_sol_rsd[i][k]);
                 rdc = decr * m_sol_rsd[i][k];
                 m_sol_rsd[i][k] = m_sol_rsd[i][k] - rdc;
                 if (m_sol_rsd[i][k] < 0)
@@ -528,11 +528,11 @@ void NandPim::CalculateMinerandImmobi(int i)
                     m_sol_rsd[i][k] = 0;
                 }
                 rmn1 = decr * m_sol_fon[i][k];
-                m_sol_fop[i][k] = max(1e-6, m_sol_fop[i][k]);
+                m_sol_fop[i][k] = max(1e-6f, m_sol_fop[i][k]);
                 rmp = decr * m_sol_fop[i][k];
 
                 m_sol_fop[i][k] = m_sol_fop[i][k] - rmp;
-                m_sol_fon[i][k] = max(1e-6, m_sol_fon[i][k]) - rmn1;;
+                m_sol_fon[i][k] = max(1e-6f, m_sol_fon[i][k]) - rmn1;;
                 //Calculate no3, aorgn, solp, orgp, equation 3:1.2.9 in SWAT Theory 2009, p190
                 m_sol_no3[i][k] = m_sol_no3[i][k] + 0.8 * rmn1;
                 m_sol_aorgn[i][k] = m_sol_aorgn[i][k] + 0.2 * rmn1;
@@ -646,7 +646,7 @@ void NandPim::CalculateMinerandVolati(int i)
                 {
                     rnit = 0;
                 }
-                m_sol_nh3[i][k] = max(1e-6, m_sol_nh3[i][k] - rnit);
+                m_sol_nh3[i][k] = max(1e-6f, m_sol_nh3[i][k] - rnit);
             }
             if (m_sol_nh3[i][k] < 0)
             {
@@ -655,15 +655,15 @@ void NandPim::CalculateMinerandVolati(int i)
             }
             m_sol_no3[i][k] = m_sol_no3[i][k] + rnit;
             //calculate ammonia volatilization
-            m_sol_nh3[i][k] = max(1e-6, m_sol_nh3[i][k] - rvol);
+            m_sol_nh3[i][k] = max(1e-6f, m_sol_nh3[i][k] - rvol);
             if (m_sol_nh3[i][k] < 0)
             {
                 rvol = rvol + m_sol_nh3[i][k];
                 m_sol_nh3[i][k] = 0;
             }
             //summary calculations
-            m_wshd_voln = m_wshd_voln + rvol * (1 / m_nCells);
-            m_wshd_nitn = m_wshd_nitn + rnit * (1 / m_nCells);
+            m_wshd_voln = m_wshd_voln + rvol * (1.f / m_nCells);
+            m_wshd_nitn = m_wshd_nitn + rnit * (1.f / m_nCells);
         }
     }
 }
@@ -675,12 +675,12 @@ void NandPim::CalculatePflux(int i)
     float rto = m_psp / (1 - m_psp);
     for (int k = 0; k < m_nSoilLayers[i]; k++)
     {
-        float rmn1 = 0;
+        float rmn1 = 0.f;
         rmn1 = (m_sol_solp[i][1] - m_sol_actp[i][1] * rto);
-        if (rmn1 > 0.) rmn1 = rmn1 * 0.1;
+        if (rmn1 > 0.) rmn1 = rmn1 * 0.1f;
         if (rmn1 < 0.)
         {
-            rmn1 = rmn1 * 0.6;
+            rmn1 = rmn1 * 0.6f;
         }
         rmn1 = min(rmn1, m_sol_solp[i][1]);
         //amount of phosphorus moving from the active mineral to the stable mineral pool in the soil layer (roc)
@@ -689,7 +689,7 @@ void NandPim::CalculatePflux(int i)
         roc = bk * (4. * m_sol_actp[i][1] - m_sol_stap[i][1]);
         if (roc < 0)
         {
-            roc = roc * 0.1;
+            roc *= 0.1f;
         }
         roc = min(roc, m_sol_actp[i][1]);
         m_sol_stap[i][1] = m_sol_stap[i][1] + roc;

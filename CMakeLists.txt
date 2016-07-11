@@ -100,7 +100,7 @@ IF (WIN32)## copy external dll libraries to Debug and Release folder
 ENDIF ()
 
 ADD_SUBDIRECTORY(${BASE_HOME})
-#ADD_SUBDIRECTORY(${MODULE_HOME})
+ADD_SUBDIRECTORY(${MODULE_HOME})
 ADD_SUBDIRECTORY(${MAIN_HOME})
 
 MESSAGE(STATUS "SEIMS is Ready for you!")

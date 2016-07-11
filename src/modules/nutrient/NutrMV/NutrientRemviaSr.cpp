@@ -305,7 +305,7 @@ void NutrientRemviaSr::Nitrateloss()
             vno3 = m_sol_no3[i][k] * (1. - exp(ww));
             if (mw > 1.e-10)
             {
-                con = max(vno3 / mw, 0.);
+                con = max(vno3 / mw, 0.f);
             }
 
             // calculate nitrate in surface runoff
@@ -369,8 +369,8 @@ void NutrientRemviaSr::Nitrateloss()
         // average distance to the stream(m), default is 35m.
         float dis_stream = 35.0;
         nloss = (2.18 * dis_stream - 8.63) / 100.;
-        nloss = max(0., nloss);
-        nloss = min(1., nloss);
+        nloss = max(0.f, nloss);
+        nloss = min(1.f, nloss);
         m_latno3[i] = (1. - nloss) * m_latno3[i];
     }
 }
@@ -398,18 +398,18 @@ void NutrientRemviaSr::Phosphorusloss()
         xx = m_sol_bd[i][0] * m_sol_z[i][0] * m_phoskd;
         m_surqsolp[i] = m_sol_solp[i][0] * m_surfr[i] / xx;
         m_surqsolp[i] = min(m_surqsolp[i], m_sol_solp[i][0]);
-        m_surqsolp[i] = max(m_surqsolp[i], 0.);
+        m_surqsolp[i] = max(m_surqsolp[i], 0.f);
         m_sol_solp[i][0] = m_sol_solp[i][0] - m_surqsolp[i];
 
         // compute soluble P leaching
         vap = m_sol_solp[i][0] * m_sol_perco[i][0] / ((conv_wt / 1000.) * m_pperco);
-        vap = min(vap, 0.5 * m_sol_solp[i][0]);
+        vap = min(vap, 0.5f * m_sol_solp[i][0]);
         m_sol_solp[i][0] = m_sol_solp[i][0] - vap;
 
         // estimate soluble p in tiles due to crack flow
         if (m_ldrain[i] > 0)
         {
-            xx = min(1., m_sol_crk[i] / 3.0);
+            xx = min(1.f, m_sol_crk[i] / 3.f);
             vap_tile = xx * vap;
             vap = vap - vap_tile;
         }
@@ -422,7 +422,7 @@ void NutrientRemviaSr::Phosphorusloss()
             vap = 0.;
             //if (k != m_i_sep[i]) {  // soil layer where biozone exists (m_i_sep)
             vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((conv_wt / 1000.) * m_pperco);
-            vap = min(vap, .2 * m_sol_solp[i][k]);
+            vap = min(vap, .2f * m_sol_solp[i][k]);
             m_sol_solp[i][k] = m_sol_solp[i][k] - vap;
             //}
         }

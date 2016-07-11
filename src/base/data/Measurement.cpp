@@ -32,5 +32,7 @@ Measurement::Measurement(mongoc_client_t *conn, string hydroDBName, string sites
 
 Measurement::~Measurement(void)
 {
+    if (pData != NULL)
+        Release1DArray(pData);
 }
 

@@ -179,7 +179,7 @@ void MainMongoDB(string modelPath, char *host, int port, int scenarioID, int num
         unsigned i;
         bool dbExist = false;
         dbnames = mongoc_client_get_database_names(conn, err);
-        if (err != NULL)
+        if (err == NULL)
         {
             for (i = 0; dbnames[i]; i++)
             {

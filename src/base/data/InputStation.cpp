@@ -30,29 +30,36 @@ InputStation::InputStation(mongoc_client_t *conn, time_t dtHillslope, time_t dtC
 
 InputStation::~InputStation(void)
 {
-    map<string, Measurement *>::iterator it;
-    for (it = m_measurement.begin(); it != m_measurement.end(); it++)
+    for (map<string, Measurement *>::iterator it = m_measurement.begin();
+         it != m_measurement.end();)
     {
         if (it->second != NULL)
-            it->second->~Measurement();
-//			delete it->second;
-        m_measurement.erase(it);
+        {
+            delete it->second;
+            it->second = NULL;
+        }
+        it = m_measurement.erase(it);
     }
     m_measurement.clear();
 
-    map<string, float *>::iterator it2;
-    for (it2 = m_latitude.begin(); it2 != m_latitude.end(); it2++)
+    for (map<string, float *>::iterator it = m_latitude.begin(); it != m_latitude.end();)
     {
-        if (it2->second != NULL)
-            delete it2->second;
-        m_latitude.erase(it2);
+        if (it->second != NULL)
+        {
+            delete[] it->second;
+            it->second = NULL;
+        }
+        it = m_latitude.erase(it);
     }
     m_latitude.clear();
-    for (it2 = m_elevation.begin(); it2 != m_elevation.end(); it2++)
+    for (map<string, float *>::iterator it = m_elevation.begin(); it != m_elevation.end();)
     {
-        if (it2->second != NULL)
-            delete it2->second;
-        m_elevation.erase(it2);
+        if (it->second != NULL)
+        {
+            delete[] it->second;
+            it->second = NULL;
+        }
+        it = m_elevation.erase(it);
     }
     m_elevation.clear();
 }
