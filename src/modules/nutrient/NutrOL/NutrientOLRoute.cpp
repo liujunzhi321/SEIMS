@@ -259,18 +259,18 @@ void NutrientOLRoute::initialOutputs()
     {
         for (int i = 0; i < m_nCells; i++)
         {
-            m_surqno3ToCh[i] = 0.;
-            m_latno3ToCh[i] = 0.;
-            m_no3gwToCh[i] = 0.;
-            m_surqsolpToCh[i] = 0.;
-            m_minpgwToCh[i] = 0.;
-            m_sedorgnToCh[i] = 0.;
-            m_sedorgpToCh[i] = 0.;
-            m_sedminpaToCh[i] = 0.;
-            m_sedminpsToCh[i] = 0.;
-            m_ammoToCh[i] = 0.;
-            m_nitriteToCh[i] = 0.;
-            m_codToCh[i] = 0.;
+            m_surqno3ToCh[i] = 0.f;
+            m_latno3ToCh[i] = 0.f;
+            m_no3gwToCh[i] = 0.f;
+            m_surqsolpToCh[i] = 0.f;
+            m_minpgwToCh[i] = 0.f;
+            m_sedorgnToCh[i] = 0.f;
+            m_sedorgpToCh[i] = 0.f;
+            m_sedminpaToCh[i] = 0.f;
+            m_sedminpsToCh[i] = 0.f;
+            m_ammoToCh[i] = 0.f;
+            m_nitriteToCh[i] = 0.f;
+            m_codToCh[i] = 0.f;
         }
     }
 }
@@ -319,33 +319,32 @@ void NutrientOLRoute::NutrientinOverland(int i)
     //sum the nutrients of the upstream overland flow
     float flowwidth = m_FlowWidth[i];
     float cellArea = m_cellWidth * m_cellWidth;
-    float surqno3 = 0.;    // sum of surqno3 flow in
-    float latno3 = 0.;    // sum of latno3 flow in
-    float ammo = 0.;    // sum of ammonium flow in
-    float no3gw = 0.;    // sum of no3gw flow in
-    float surqsolp = 0.;    // sum of surqsolp flow in
-    float minpgw = 0.;    // sum of minpgw flow in
-    float sedorgn = 0.;    // sum of sedorgn flow in
-    float sedorgp = 0.;    // sum of sedorgp flow in
-    float sedminpa = 0.;    // sum of sedminpa flow in
-    float sedminps = 0.;    // sum of sedminps flow in
-    float cod = 0.;    // sum of cod flow in
+    float surqno3 = 0.f;    // sum of surqno3 flow in
+    float latno3 = 0.f;    // sum of latno3 flow in
+    float ammo = 0.f;    // sum of ammonium flow in
+    float no3gw = 0.f;    // sum of no3gw flow in
+    float surqsolp = 0.f;    // sum of surqsolp flow in
+    float minpgw = 0.f;    // sum of minpgw flow in
+    float sedorgn = 0.f;    // sum of sedorgn flow in
+    float sedorgp = 0.f;    // sum of sedorgp flow in
+    float sedminpa = 0.f;    // sum of sedminpa flow in
+    float sedminps = 0.f;    // sum of sedminps flow in
+    float cod = 0.f;    // sum of cod flow in
 
     for (int k = 1; k <= (int) m_flowInIndex[i][0]; ++k)
     {
         int flowInID = (int) m_flowInIndex[i][k];
         // Calculate amount of nutrients in surface runoff
-        m_surqno3[flowInID] = max(1.e-12, m_surqno3[flowInID]);
-        m_latno3[flowInID] = max(1.e-12, m_latno3[flowInID]);
-        m_no3gw[flowInID] = max(1.e-12, m_no3gw[flowInID]);
-        m_surqsolp[flowInID] = max(1.e-12, m_surqsolp[flowInID]);
-        m_minpgw[flowInID] = max(1.e-12, m_minpgw[flowInID]);
-        m_sedorgn[flowInID] = max(1.e-12, m_sedorgn[flowInID]);
-        m_sedorgp[flowInID] = max(1.e-12, m_sedorgp[flowInID]);
-        m_sedminpa[flowInID] = max(1.e-12, m_sedminpa[flowInID]);
-        m_sedminps[flowInID] = max(1.e-12, m_sedminps[flowInID]);
-        m_cod[flowInID] = max(1.e-12, m_cod[flowInID]);
-
+        m_surqno3[flowInID] = max(1.e-12f, m_surqno3[flowInID]);
+        m_latno3[flowInID] = max(1.e-12f, m_latno3[flowInID]);
+        m_no3gw[flowInID] = max(1.e-12f, m_no3gw[flowInID]);
+        m_surqsolp[flowInID] = max(1.e-12f, m_surqsolp[flowInID]);
+        m_minpgw[flowInID] = max(1.e-12f, m_minpgw[flowInID]);
+        m_sedorgn[flowInID] = max(1.e-12f, m_sedorgn[flowInID]);
+        m_sedorgp[flowInID] = max(1.e-12f, m_sedorgp[flowInID]);
+        m_sedminpa[flowInID] = max(1.e-12f, m_sedminpa[flowInID]);
+        m_sedminps[flowInID] = max(1.e-12f, m_sedminps[flowInID]);
+        m_cod[flowInID] = max(1.e-12f, m_cod[flowInID]);
         //Sum
         surqno3 = surqno3 + m_surqno3[flowInID];
         latno3 = latno3 + m_latno3[flowInID];
@@ -357,7 +356,6 @@ void NutrientOLRoute::NutrientinOverland(int i)
         sedminpa = sedminpa + m_sedminpa[flowInID];
         sedminps = sedminps + m_sedminps[flowInID];
         cod = cod + m_cod[flowInID];
-
     }
     // if the channel width is greater than the cell width
     if (m_streamLink[i] >= 0 && flowwidth <= 0)
@@ -374,40 +372,28 @@ void NutrientOLRoute::NutrientinOverland(int i)
         m_cod[i] = cod * cellArea; // TODO calculate volume
         return;
     }
-        // if the channel width is greater than the cell width
-        if (m_streamLink[i] >= 0 && flowwidth <= 0)
-        {
-            m_surqno3ToCh[i] = surqno3 * cellArea;
-            m_latno3ToCh[i] = latno3 * cellArea;
-            m_no3gwToCh[i] = no3gw * cellArea;
-            m_surqsolpToCh[i] = surqsolp * cellArea;
-            m_minpgwToCh[i] = minpgw * cellArea;
-            m_sedorgnToCh[i] = sedorgn * cellArea;
-            m_sedorgpToCh[i] = sedorgp * cellArea;
-            m_sedminpaToCh[i] = sedminpa * cellArea;
-            m_sedminpsToCh[i] = sedminps * cellArea;
-            m_cod[i] = cod * cellArea;
-            return;
-        }
 
-        // Calculate nutrients to channel
-        m_surqno3ToCh[i] = NutToChannel(i, m_surqno3ToCh[i]);
-        m_latno3ToCh[i] = NutToChannel(i, m_latno3ToCh[i]);
-        m_no3gwToCh[i] = NutToChannel(i, m_no3gwToCh[i]);
-        m_surqsolpToCh[i] = NutToChannel(i, m_surqsolpToCh[i]);
-        m_minpgwToCh[i] = NutToChannel(i, m_minpgwToCh[i]);
-        m_sedorgnToCh[i] = NutToChannel(i, m_sedorgnToCh[i]);
-        m_sedorgpToCh[i] = NutToChannel(i, m_sedorgpToCh[i]);
-        m_sedminpaToCh[i] = NutToChannel(i, m_sedminpaToCh[i]);
-        m_sedminpsToCh[i] = NutToChannel(i, m_sedminpsToCh[i]);
-        m_codToCh[i] = NutToChannel(i, m_codToCh[i]);
-        m_ammoToCh[i] = 0.;
-        m_nitriteToCh[i] = 0.;
+    // Calculate nutrients to channel
+    m_surqno3ToCh[i] = NutToChannel(i, m_surqno3ToCh[i]);
+    m_latno3ToCh[i] = NutToChannel(i, m_latno3ToCh[i]);
+    m_no3gwToCh[i] = NutToChannel(i, m_no3gwToCh[i]);
+    m_surqsolpToCh[i] = NutToChannel(i, m_surqsolpToCh[i]);
+    m_minpgwToCh[i] = NutToChannel(i, m_minpgwToCh[i]);
+    m_sedorgnToCh[i] = NutToChannel(i, m_sedorgnToCh[i]);
+    m_sedorgpToCh[i] = NutToChannel(i, m_sedorgpToCh[i]);
+    m_sedminpaToCh[i] = NutToChannel(i, m_sedminpaToCh[i]);
+    m_sedminpsToCh[i] = NutToChannel(i, m_sedminpsToCh[i]);
+    m_codToCh[i] = NutToChannel(i, m_codToCh[i]);
+    m_ammoToCh[i] = 0.f;
+    m_nitriteToCh[i] = 0.f;
+    m_codToCh[i] = m_codToCh[i] / 1.E6; //mg to kg
+}
 
-        m_codToCh[i] = m_codToCh[i] / 1.E6; //mg to kg
-    }
+float NutrientOLRoute::NutToChannel(int id, float nut)
+{
 
-    float NutrientOLRoute::NutToChannel(int id, float nut)
+    float fractiontochannel = 0.0f;
+    if (m_chWidth[id] > 0)
     {
         float fractiontochannel = 0.0f;
         if (m_chWidth[id] > 0)
@@ -419,26 +405,26 @@ void NutrientOLRoute::NutrientinOverland(int i)
         float nuttoch = fractiontochannel * nut;
         return nuttoch;
     }
-
-    void NutrientOLRoute::Get1DData(const char *key, int *n, float **data)
+}
+void NutrientOLRoute::Get1DData(const char *key, int *n, float **data)
+{
+    string sk(key);
+    *n = m_nCells;
+    if (StringMatch(sk, VAR_SURQNO3_CH)) { *data = this->m_surqno3ToCh; }
+    else if (StringMatch(sk, VAR_LATNO3_CH)) { *data = this->m_latno3ToCh; }
+    else if (StringMatch(sk, VAR_NO3GW_CH)) { *data = this->m_no3gwToCh; }
+    else if (StringMatch(sk, VAR_SURQSOLP_CH)) { *data = this->m_surqsolpToCh; }
+    else if (StringMatch(sk, VAR_MINPGW_CH)) { *data = this->m_minpgwToCh; }
+    else if (StringMatch(sk, VAR_SEDORGN_CH)) { *data = this->m_sedorgnToCh; }
+    else if (StringMatch(sk, VAR_SEDORGP_CH)) { *data = this->m_sedorgpToCh; }
+    else if (StringMatch(sk, VAR_SEDMINPA_CH)) { *data = this->m_sedminpaToCh; }
+    else if (StringMatch(sk, VAR_SEDMINPS_CH)) { *data = this->m_sedminpsToCh; }
+    else if (StringMatch(sk, VAR_AMMO_CH)) { *data = this->m_ammoToCh; }
+    else if (StringMatch(sk, VAR_NITRITE_CH)) { *data = this->m_nitriteToCh; }
+    else if (StringMatch(sk, VAR_COD_CH)) { *data = this->m_codToCh; }
+    else
     {
-        string sk(key);
-        *n = m_nCells;
-        if (StringMatch(sk, VAR_SURQNO3_CH)) { *data = this->m_surqno3ToCh; }
-        else if (StringMatch(sk, VAR_LATNO3_CH)) { *data = this->m_latno3ToCh; }
-        else if (StringMatch(sk, VAR_NO3GW_CH)) { *data = this->m_no3gwToCh; }
-        else if (StringMatch(sk, VAR_SURQSOLP_CH)) { *data = this->m_surqsolpToCh; }
-        else if (StringMatch(sk, VAR_MINPGW_CH)) { *data = this->m_minpgwToCh; }
-        else if (StringMatch(sk, VAR_SEDORGN_CH)) { *data = this->m_sedorgnToCh; }
-        else if (StringMatch(sk, VAR_SEDORGP_CH)) { *data = this->m_sedorgpToCh; }
-        else if (StringMatch(sk, VAR_SEDMINPA_CH)) { *data = this->m_sedminpaToCh; }
-        else if (StringMatch(sk, VAR_SEDMINPS_CH)) { *data = this->m_sedminpsToCh; }
-        else if (StringMatch(sk, VAR_AMMO_CH)) { *data = this->m_ammoToCh; }
-        else if (StringMatch(sk, VAR_NITRITE_CH)) { *data = this->m_nitriteToCh; }
-        else if (StringMatch(sk, VAR_COD_CH)) { *data = this->m_codToCh; }
-        else
-        {
-            throw ModelException("NutOLRout", "GetValue",
-                                 "Parameter " + sk + " does not exist. Please contact the module developer.");
-        }
+        throw ModelException("NutOLRout", "GetValue",
+                             "Parameter " + sk + " does not exist. Please contact the module developer.");
     }
+}
