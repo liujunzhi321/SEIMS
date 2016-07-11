@@ -71,17 +71,20 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     // set the input variables
     mdi.AddInput(VAR_SRA, UNIT_SR, DESC_SRA, Source_Module, DT_Array1D);
 
-    mdi.AddInput(VAR_LATNO3_CH, UNIT_KG, DESC_LATNO3_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_SURQNO3_CH, UNIT_KG, DESC_SURQNO3_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_SURQSOLP_CH, UNIT_KG, DESC_SURQSOLP_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_NO3GW_CH, UNIT_KG, DESC_NO3GW_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_MINPGW_CH, UNIT_KG, DESC_MINPGW_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_SEDORGN_CH, UNIT_KG, DESC_SEDORGN_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_SEDORGP_CH, UNIT_KG, DESC_SEDORGP_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_SEDMINPA_CH, UNIT_KG, DESC_SEDMINPA_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_SEDMINPS_CH, UNIT_KG, DESC_SEDMINPS_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_AMMO_CH, UNIT_KG, DESC_AMMO_CH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_NITRITE_CH, UNIT_KG, DESC_NITRITE_CH, Source_Module, DT_Array1D);
+
+	// set the output variables
+	mdi.AddOutput(VAR_SOXY, UNIT_DENSITY_L, DESC_SOXY, DT_Array1D);
+	mdi.AddOutput(VAR_ALGAE, UNIT_DENSITY_L, DESC_ALGAE, DT_Array1D);
+	mdi.AddOutput(VAR_ORGANICN, UNIT_DENSITY_L, DESC_ORGANICN, DT_Array1D);
+	mdi.AddOutput(VAR_ORGANICP, UNIT_DENSITY_L, DESC_ORGANICP, DT_Array1D);
+	mdi.AddOutput(VAR_AMMONIAN, UNIT_DENSITY_L, DESC_AMMONIAN, DT_Array1D);
+	mdi.AddOutput(VAR_NITRITEN, UNIT_DENSITY_L, DESC_NITRITEN, DT_Array1D);
+	mdi.AddOutput(VAR_NITRATEN, UNIT_DENSITY_L, DESC_NITRATEN, DT_Array1D);
+	mdi.AddOutput(VAR_DISOLVP, UNIT_DENSITY_L, DESC_DISOLVP, DT_Array1D);
+	mdi.AddOutput(VAR_RCH_COD, UNIT_DENSITY_L, DESC_RCH_COD, DT_Array1D);
+	//mdi.AddOutput(VAR_RCH_DOX, UNIT_DENSITY_L, DESC_RCH_DOX, DT_Array1D);
+	mdi.AddOutput(VAR_CHLORA, UNIT_DENSITY_L, DESC_CHLORA, DT_Array1D);
+
 
     // set the output variables
     mdi.AddOutput(VAR_SOXY, UNIT_DENSITY_L, DESC_SOXY, DT_Array1D);

@@ -530,6 +530,7 @@
 #define VAR_CH_V "CHANV"
 #define VAR_CH_VOL "CHANVOL"
 #define VAR_CHLORA "chlora"
+#define VAR_CHL_A "chl_a"
 #define VAR_CHS0 "Chs0"                               /// initial channel storage per meter of reach length
 #define VAR_CHSB "CHSB"
 #define VAR_CHST "CHST"                               /// channel storage
@@ -542,6 +543,8 @@
 #define VAR_CN2 "CN2"
 #define VAR_CO2 "Co2"                                 /// CO2 Concentration
 #define VAR_CO2HI "CO2HI"
+#define VAR_COD_CH "codToCh"
+#define VAR_COD "cod"
 #define VAR_COND_MAX "Cond_max"                       /// "Maximum automata's conductance"
 #define VAR_COND_RATE "Cond_rate"                     /// Rate of decline in automata's conductance per unit increase in vapor pressure deficit
 #define VAR_CONDUCT "Conductivity"
@@ -722,7 +725,7 @@
 #define VAR_QUPREACH "QUPREACH"                     /// upreach
 #define VAR_RadianSlope "RadianSlope"
 #define VAR_RCA "rca"                               /// concentration of ammonia in the rain (mg N/m3)  L -> 0.001 * m3
-#define VAR_RCH_CBOD "rch_cbod"
+#define VAR_RCH_COD "rch_cod"
 #define VAR_RCH_DOX "rch_dox"
 #define VAR_RCN "rcn"                               /// concentration of nitrate in the rain (mg N/m3)  L -> 0.001 * m3
 #define VAR_Reinfiltration "Reinfiltration"
@@ -884,6 +887,7 @@
 #define VAR_WSYF "wsyf"
 
 
+
 //////////////////////////////////////////////////////////////////////////
 /// Define units common used in SEIMS, in case of inconsistency //////////
 /// By LiangJun Zhu, HuiRan Gao ///
@@ -1010,6 +1014,7 @@
 #define DESC_CH_V "flow velocity"
 #define DESC_CH_VOL "water volume"
 #define DESC_CHLORA "chlorophyll-a concentration in reach"
+#define DESC_CHL_A "chlorophyll-a concentration in water yield"
 #define DESC_CHS0 "initial channel storage per meter of reach length"
 #define DESC_CHSB "Channel sediment balance in a text format for each reach and at each time step (unit?)"
 #define DESC_CHST "channel storage"
@@ -1022,6 +1027,8 @@
 #define DESC_CN2 "CN under moisture condition II"
 #define DESC_CO2 "CO2 Concentration"
 #define DESC_CO2HI "elevated CO2 atmospheric concentration corresponding the 2nd point on the radiation use efficiency curve"
+#define DESC_COD "carbonaceous oxygen demand of surface runoff"
+#define DESC_COD_CH "carbonaceous oxygen demand loading to reach"
 #define DESC_CONDRATE "Rate of decline in stomatal conductance per unit increase in vapor pressure deficit"
 #define DESC_CONDUCT "saturation hydraulic conductivity"
 #define DESC_CONV_WT "factor which converts kg/kg soil to kg/ha"
@@ -1213,7 +1220,7 @@
 #define DESC_QUPREACH "Upreach"
 #define DESC_RadianSlope  "radian slope"
 #define DESC_RCA "concentration of ammonia in the rain"
-#define DESC_RCH_CBOD "carbonaceous biochemical oxygen demand in reach"
+#define DESC_RCH_COD "carbonaceous oxygen demand in reach"
 #define DESC_RCH_DOX "dissolved oxygen concentration in reach"
 #define DESC_RCN "concentration of nitrate in the rain"
 #define DESC_Reinfiltration "TODO: meaning?"
