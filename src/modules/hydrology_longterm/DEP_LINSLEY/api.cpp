@@ -9,48 +9,48 @@
 #include "MetadataInfoConst.h"
 
 //! Get instance of SimulationModule class
-extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-	return new DepressionFSDaily();
+    return new DepressionFSDaily();
 }
 
-extern "C" SEIMS_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 {
-	MetadataInfo mdi;
+    MetadataInfo mdi;
 
-	// set the information properties
-	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass(MCLS_DEP, MCLSDESC_DEP);
-	mdi.SetDescription(MDESC_DEP_LINSLEY);
-	mdi.SetEmail(SEIMS_EMAIL);
-	mdi.SetHelpfile("DEP_LINSLEY.chm");
-	mdi.SetID(MID_DEP_LINSLEY);
-	mdi.SetName(MID_DEP_LINSLEY);
-	mdi.SetVersion("1.1");
-	mdi.SetWebsite(SEIMS_SITE);
+    // set the information properties
+    mdi.SetAuthor("Junzhi Liu");
+    mdi.SetClass(MCLS_DEP, MCLSDESC_DEP);
+    mdi.SetDescription(MDESC_DEP_LINSLEY);
+    mdi.SetEmail(SEIMS_EMAIL);
+    mdi.SetHelpfile("DEP_LINSLEY.chm");
+    mdi.SetID(MID_DEP_LINSLEY);
+    mdi.SetName(MID_DEP_LINSLEY);
+    mdi.SetVersion("1.1");
+    mdi.SetWebsite(SEIMS_SITE);
 
-	mdi.AddParameter(VAR_DEPREIN, UNIT_NON_DIM, DESC_DEPREIN, Source_ParameterDB, DT_Single); 
-	mdi.AddParameter(VAR_DEPRESSION,UNIT_DEPTH_MM,DESC_DEPRESSION,Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_DEPREIN, UNIT_NON_DIM, DESC_DEPREIN, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_DEPRESSION, UNIT_DEPTH_MM, DESC_DEPRESSION, Source_ParameterDB, DT_Raster1D);
 
-	mdi.AddInput(VAR_INET, UNIT_DEPTH_MM, DESC_INET, Source_Module, DT_Raster1D);	//EI
-	mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);		 //PET
-	mdi.AddInput(VAR_EXCP, UNIT_DEPTH_MM, DESC_EXCP, Source_Module, DT_Raster1D);	 //PE
+    mdi.AddInput(VAR_INET, UNIT_DEPTH_MM, DESC_INET, Source_Module, DT_Raster1D);    //EI
+    mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);         //PET
+    mdi.AddInput(VAR_EXCP, UNIT_DEPTH_MM, DESC_EXCP, Source_Module, DT_Raster1D);     //PE
 
-	mdi.AddOutput(VAR_DPST, UNIT_DEPTH_MM, DESC_DPST, DT_Raster1D);
-	mdi.AddOutput(VAR_DEET, UNIT_DEPTH_MM, DESC_DEET, DT_Raster1D);
-	mdi.AddOutput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, DT_Raster1D);
+    mdi.AddOutput(VAR_DPST, UNIT_DEPTH_MM, DESC_DPST, DT_Raster1D);
+    mdi.AddOutput(VAR_DEET, UNIT_DEPTH_MM, DESC_DEET, DT_Raster1D);
+    mdi.AddOutput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, DT_Raster1D);
 
-	// set the dependencies
-	mdi.AddDependency(MCLS_CLIMATE, MCLSDESC_CLIMATE);
-	mdi.AddDependency(MCLS_INTERC,MCLSDESC_INTERC);
-	mdi.AddDependency(MCLS_SUR_RUNOFF,MCLSDESC_SUR_RUNOFF);
+    // set the dependencies
+    mdi.AddDependency(MCLS_CLIMATE, MCLSDESC_CLIMATE);
+    mdi.AddDependency(MCLS_INTERC, MCLSDESC_INTERC);
+    mdi.AddDependency(MCLS_SUR_RUNOFF, MCLSDESC_SUR_RUNOFF);
 
-	string res = mdi.GetXMLDocument();
+    string res = mdi.GetXMLDocument();
 
-	char* tmp = new char[res.size()+1];
-	strprintf(tmp, res.size()+1, "%s", res.c_str());
-	return tmp;
+    char *tmp = new char[res.size() + 1];
+    strprintf(tmp, res.size() + 1, "%s", res.c_str());
+    return tmp;
 }
-	//mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
-	//mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
-	//mdi.AddInput(VAR_D_INFIL, UNIT_DEPTH_MM, DESC_D_INFIL, Source_Module, DT_Raster);							//Infiltration
+//mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+//mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+//mdi.AddInput(VAR_D_INFIL, UNIT_DEPTH_MM, DESC_D_INFIL, Source_Module, DT_Raster);							//Infiltration

@@ -11,35 +11,38 @@
 #ifndef SEIMS_UTIL_INCLUDE
 #define SEIMS_UTIL_INCLUDE
 #pragma once
+
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <stdio.h>
 #include "text.h"
 #include <cmath>
+#include <sstream>
 
 using namespace std;
 /**
  * \def NODATA_VALUE
  * \brief NODATA value
  */
-#define NODATA_VALUE	-9999.0f
-#define NODATA					-99.0f
+#define NODATA_VALUE    -9999.0f
+#define NODATA          -99.0f
 
 /**
  * \def ZERO
  * \brief zero value used in numeric calculation
  */
-#define UTIL_ZERO				1.0e-6
+#define UTIL_ZERO                1.0e-6f
 /**
  * \def PI
  * \brief PI value used in numeric calculation
  */
-#define PI								3.14159265358979323846
+#define PI                                3.14159265358979323846f
 /**
  * \def MINI_SLOPE
  * \brief Minimum slope gradient
  */
-#define MINI_SLOPE			0.0001
+#define MINI_SLOPE            0.0001
 
 /*!
  * \ingroup util
@@ -48,11 +51,12 @@ using namespace std;
  */
 enum LayeringMethod
 {
-	/// layering-from-source method
-	UP_DOWN, 
-	/// layering-from-outlet method
-	DOWN_UP
+    /// layering-from-source method
+            UP_DOWN,
+    /// layering-from-outlet method
+            DOWN_UP
 };
+
 /*!
  * \brief Whether d1 is equal to d2 or not
  *
@@ -61,15 +65,18 @@ enum LayeringMethod
  * \sa ZERO
  */
 extern bool DoubleEqual(double d1, double d2);
+
 /// Check the argument against upper and lower boundary values prior to taking the Exponential
 extern float Expo(float xx);
+
 /*!
  * \brief Find files in given paths (Windows version)
  * \param[in] lpPath, expression
  * \param[out] vecFiles
  * \return 0 means success
  */
-extern int FindFiles(const char *lpPath, const char *expression, vector<string>& vecFiles);
+extern int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFiles);
+
 /*!
  * \brief Whether f1 is equal to f2
  *
@@ -77,11 +84,13 @@ extern int FindFiles(const char *lpPath, const char *expression, vector<string>&
  * \return true or false
  */
 extern bool FloatEqual(float d1, float d2);
+
 /*!
  * \brief Get the root path of the current executable file
  * \return \a string root path
  */
 string GetAppPath();
+
 /*!
  * \brief Return the file name from a given file's path
  *
@@ -89,7 +98,8 @@ string GetAppPath();
  * \return CoreFileName
  * \sa GetPathFromFullName
  */
-extern string GetCoreFileName(const string& fullFileName);
+extern string GetCoreFileName(const string &fullFileName);
+
 /*!
  * \brief Return the suffix of a given file's path
  *
@@ -97,7 +107,8 @@ extern string GetCoreFileName(const string& fullFileName);
  * \return Suffix
  * \sa GetPathFromFullName
  */
-extern string GetSuffix(const string& fullFileName);
+extern string GetSuffix(const string &fullFileName);
+
 /*!
  * \brief Get Path From full file path string
  *
@@ -105,7 +116,8 @@ extern string GetSuffix(const string& fullFileName);
  * \return filePath string
  * \sa GetCoreFileName
  */
-extern string GetPathFromFullName(string& fullFileName);
+extern string GetPathFromFullName(string &fullFileName);
+
 /*!
  * \brief Get Uppercase of given string
  *
@@ -113,6 +125,7 @@ extern string GetPathFromFullName(string& fullFileName);
  * \return Uppercase string
  */
 extern string GetUpper(string);
+
 /*!
  * \brief Initialize DT_Array1D data
  *
@@ -121,13 +134,14 @@ extern string GetUpper(string);
  * \param[in] initialValue
  */
 template<typename T>
-void Initialize1DArray(int row, T*& data, T initialValue)
+void Initialize1DArray(int row, T *&data, T initialValue)
 {
-	data = new T[row];
+    data = new T[row];
 #pragma omp parallel for
-	for (int i = 0; i < row; i++)
-		data[i] = initialValue;
+    for (int i = 0; i < row; i++)
+        data[i] = initialValue;
 }
+
 /*!
  * \brief Initialize DT_Array2D data
  *
@@ -137,29 +151,31 @@ void Initialize1DArray(int row, T*& data, T initialValue)
  * \param[in] initialValue
  */
 template<typename T>
-void Initialize2DArray(int row, int col, T**& data, T initialValue)
+void Initialize2DArray(int row, int col, T **&data, T initialValue)
 {
-	data = new T*[row];
+    data = new T *[row];
 #pragma omp parallel for
-	for(int i = 0; i < row; i++)
-	{
-		data[i] = new T[col];
-		for (int j = 0; j < col; j++)
-		{
-			data[i][j] = initialValue;
-		}
-	}
+    for (int i = 0; i < row; i++)
+    {
+        data[i] = new T[col];
+        for (int j = 0; j < col; j++)
+        {
+            data[i][j] = initialValue;
+        }
+    }
 }
+
 /*!
  * \brief Release DT_Array1D data
  * \param[in] data
  */
 template<typename T>
-void Release1DArray(T*& data)
+void Release1DArray(T *&data)
 {
-	delete[] data;
-	data = NULL;
+    delete[] data;
+    data = NULL;
 }
+
 /*!
  * \brief Release DT_Array2D data
  *
@@ -168,17 +184,18 @@ void Release1DArray(T*& data)
  * \param[in] data
  */
 template<typename T>
-void Release2DArray(int row, T**& data)
+void Release2DArray(int row, T **&data)
 {
 #pragma omp parallel for
-	for(int i = 0; i < row; i++)
-	{
-		if(data[i] != NULL)
-			delete[] data[i];
-	}
-	delete[] data;
-	data = NULL;
+    for (int i = 0; i < row; i++)
+    {
+        if (data[i] != NULL)
+            delete[] data[i];
+    }
+    delete[] data;
+    data = NULL;
 }
+
 /*!
  * \brief Get local time
  *
@@ -186,6 +203,7 @@ void Release2DArray(int row, T**& data)
  * \param[out] tmStruct \a tm struct date
  */
 void LocalTime(time_t tValue, struct tm *tmStruct);
+
 /*!
  * \brief Max value of a double array
  *
@@ -195,6 +213,7 @@ void LocalTime(time_t tValue, struct tm *tmStruct);
  * \return max value
  */
 extern double Max(double *a, int n);
+
 /*!
  * \brief Write 1D array to a file
  *
@@ -202,7 +221,8 @@ extern double Max(double *a, int n);
  *
  * \param[in] n, data, filename
  */
-extern void Output1DArrayToTxtFile(int n, float* data, const char* filename);
+extern void Output1DArrayToTxtFile(int n, float *data, const char *filename);
+
 /*!
  * \brief Write 2D array to a file
  *
@@ -210,9 +230,11 @@ extern void Output1DArrayToTxtFile(int n, float* data, const char* filename);
  *
  * \param[in] nRows, nCols, data, filename
  */
-extern void Output2DArrayToTxtFile(int nRows, int nCols, float** data, const char* filename);
+extern void Output2DArrayToTxtFile(int nRows, int nCols, float **data, const char *filename);
+
 /// deal with positive and negative float numbers
 float Power(float a, float n);
+
 /*!
  * \brief Read 1D array from file
  *
@@ -223,7 +245,8 @@ float Power(float a, float n);
  * \param[in] filename, nRows
  * \param[out] data
  */
-extern void Read1DArrayFromTxtFile(const char* filename, int& nRows, float*& data);
+extern void Read1DArrayFromTxtFile(const char *filename, int &nRows, float *&data);
+
 /*!
  * \brief Read 2D array from file
  *
@@ -234,7 +257,8 @@ extern void Read1DArrayFromTxtFile(const char* filename, int& nRows, float*& dat
  * \param[in] filename, nRows
  * \param[out] data
  */
-extern void Read2DArrayFromTxtFile(const char* filename, int& nRows, float**& data);
+extern void Read2DArrayFromTxtFile(const char *filename, int &nRows, float **&data);
+
 /*!
  * \brief Read 2D array from string
  *
@@ -245,12 +269,13 @@ extern void Read2DArrayFromTxtFile(const char* filename, int& nRows, float**& da
  * \param[in] s, nRows
  * \param[out] data
  */
-extern void Read2DArrayFromString(const char* s, int& nRows, float**& data);
+extern void Read2DArrayFromString(const char *s, int &nRows, float **&data);
 
 /*!
  * \brief Print status messages for Debug
  */
-extern void StatusMessage(const char* msg);
+extern void StatusMessage(const char *msg);
+
 /*!
  * \brief Match \a char ignore cases
  *
@@ -258,7 +283,8 @@ extern void StatusMessage(const char* msg);
  * \return true or false
  * \sa StringMatch()
  */
-extern bool StrEqualIgnoreCase(const char*, const char*);
+extern bool StrEqualIgnoreCase(const char *, const char *);
+
 /*!
  * \brief Match Strings in UPPERCASE manner
  *
@@ -266,6 +292,7 @@ extern bool StrEqualIgnoreCase(const char*, const char*);
  * \return true or false
  */
 extern bool StringMatch(string text1, string text2);
+
 /*!
  * \brief Sum of a double array
  *
@@ -276,34 +303,39 @@ extern bool StringMatch(string text1, string text2);
  * \sa StrEqualIgnoreCase()
  */
 extern double Sum(double *a, int n);
+
 /*!
  * \brief Trim given string's heading and tailing by "<space>,\n,\t,\r"
  *
  * \param[in] s \a string information
  * \return Trimmed string
  */
-extern string& trim(string& s);
+extern string &trim(string &s);
+
 #ifndef linux
-    #define strprintf sprintf_s
-	#define StringTok strtok_s
-	#ifndef max
-        #define max(a,b)  (((a) > (b)) ? (a) : (b))
-    #endif
-    #ifndef min
-        #define min(a,b)  (((a) < (b)) ? (a) : (b))
-    #endif
+#define strprintf sprintf_s
+#define StringTok strtok_s
+#ifdef MSVC
+#ifndef max
+#define max(a, b)  (((a) > (b)) ? (a) : (b))
+#endif
+#ifndef min
+#define min(a, b)  (((a) < (b)) ? (a) : (b))
+#endif
+#endif
 #else
-    #define strprintf snprintf
-	#define StringTok strtok_r
-	/*!
-	 * \brief Copy file in linux
-	 *
-	 * \param[in] srcfile \a char source file path
-	 * \param[in] dstfile \a char destination file path
-	 */
-    extern int copyfile_linux(const char* srcfile, const char* dstfile);
+#define strprintf snprintf
+#define StringTok strtok_r
+/*!
+ * \brief Copy file in linux
+ *
+ * \param[in] srcfile \a char source file path
+ * \param[in] dstfile \a char destination file path
+ */
+extern int copyfile_linux(const char* srcfile, const char* dstfile);
 #endif
 #endif
+
 /*!
 * \brief Convert value to string
 *
@@ -313,10 +345,11 @@ extern string& trim(string& s);
 template<typename T>
 string ValueToString(T val)
 {
-	ostringstream oss;
-	oss << val;
-	return oss.str();
+    ostringstream oss;
+    oss << val;
+    return oss.str();
 }
+
 /*!
 * \brief If value in vector container
 *
@@ -325,13 +358,13 @@ string ValueToString(T val)
 * \return True if val is in vec, otherwise False
 */
 template<typename T>
-bool ValueInVector(T &val, vector<T>& vec)
+bool ValueInVector(T &val, vector<T> &vec)
 {
-	vector<T>::iterator findIter = find(vec.begin(), vec.end(), val);
-	if(findIter == vec.end())
-		return false;
-	else
-		return true;
+    typename vector<T>::iterator findIter = find(vec.begin(), vec.end(), val);
+    if (findIter == vec.end())
+        return false;
+    else
+        return true;
 }
 
 /*!
@@ -341,13 +374,14 @@ bool ValueInVector(T &val, vector<T>& vec)
 * \param[in] vec Vector container, data type is consistent with val
 */
 template<typename T>
-void RemoveValueInVector(T &val, vector<T>& vec)
+void RemoveValueInVector(T &val, vector<T> &vec)
 {
-	for(vector<T>::iterator Iter = vec.begin(); Iter != vec.end(); Iter++) 
-	{ 
-		if(*Iter == val) 
-			Iter = vec.erase(Iter);
-		if(Iter == vec.end()) 
-			break;
-	}
+    typename vector<T>::iterator Iter = vec.begin();
+    for (; Iter != vec.end(); Iter++)
+    {
+        if (*Iter == val)
+            Iter = vec.erase(Iter);
+        if (Iter == vec.end())
+            break;
+    }
 }

@@ -9,64 +9,66 @@
 #include <iostream>
 #include "util.h"
 #include "gdal_priv.h"
-#include "omp.h"
+//#include "omp.h"
 #include "mongoc.h"
-#include <string>
+//#include <string>
 #include "clsRasterData.h"
+
 #define TEST
-int main(int argc, const char* argv[])
+
+int main(int argc, const char *argv[])
 {
-	GDALAllRegister();
-	mongoc_client_t		*client;
-	mongoc_database_t	*database;
-	mongoc_collection_t	*collection;
-	mongoc_cursor_t		*cursor;
-	bson_t				*query = bson_new();
-	const bson_t		*doc;
-	bson_error_t		*err = NULL;
-	char				*str;
-	//char* dbname = "climate_dianbu";
-	char* dbname = "model_dianbu_10m_longterm";
-	//char* collname = "DataValues";
-	char* collname = "spatial";
-	char* newGridFS = "output";
-	mongoc_init();
-	mongoc_uri_t *uri;
-	char* hostname = "127.0.0.1";
-	uint16_t port = 27017;
-	uri = mongoc_uri_new_for_host_port(hostname, port);
-	client = mongoc_client_new_from_uri(uri);
-	//mongoc_collection_t	*collection;
-	mongoc_gridfs_t *gfs = mongoc_client_get_gridfs(client,dbname,collname,err);
+    GDALAllRegister();
+    mongoc_client_t *client;
+    mongoc_database_t *database;
+    mongoc_collection_t *collection;
+    mongoc_cursor_t *cursor;
+    bson_t *query = bson_new();
+    const bson_t *doc;
+    bson_error_t *err = NULL;
+    char *str;
+    //char* dbname = "climate_dianbu";
+    const char *dbname = "model_dianbu_10m_longterm";
+    //char* collname = "DataValues";
+    const char *collname = "spatial";
+    const char *newGridFS = "output";
+    mongoc_init();
+    mongoc_uri_t *uri;
+    const char *hostname = "127.0.0.1";
+    uint16_t port = 27017;
+    uri = mongoc_uri_new_for_host_port(hostname, port);
+    client = mongoc_client_new_from_uri(uri);
+    //mongoc_collection_t	*collection;
+    mongoc_gridfs_t *gfs = mongoc_client_get_gridfs(client, dbname, collname, err);
 
-	//clsRasterData *test = new clsRasterData("E:\\data\\Dianbu\\patch_partition\\dianbu\\flow_dir.tif");
+    //clsRasterData *test = new clsRasterData("E:\\data\\Dianbu\\patch_partition\\dianbu\\flow_dir.tif");
 
-	clsRasterData *mask = new clsRasterData(gfs,"1_MASK",NULL);
-	clsRasterData *raster1d = new clsRasterData(gfs,"1_PHU0",mask);
-	//clsRasterData *raster2d = new clsRasterData(gfs,"1_DENSITY",mask);
-	//string rs1dascfile = "e:/test/1_blai_asc.asc";
-	//string rs2dascfile = "e:/test/1_density_asc.asc";
-	string rs1dtiffile = "e:/test/1_phu0.tif";
-	//string rs2dtiffile = "e:/test/1_density_asc.tif";
-	//string rs1dMongo = "2_BLAI";
-	//string rs2dMongo = "2_DENSITY";
-	//raster1d->outputASCFile(rs1dascfile);
-	//raster2d->outputASCFile(rs2dascfile);
-	raster1d->outputGTiff(rs1dtiffile);
-	//raster2d->outputGTiff(rs2dtiffile);
-	//raster1d->outputToMongoDB(rs1dMongo, gfs);
-	//raster2d->outputToMongoDB(rs2dMongo, gfs);
+    clsRasterData *mask = new clsRasterData(gfs, "1_MASK", NULL);
+    clsRasterData *raster1d = new clsRasterData(gfs, "1_PHU0", mask);
+    //clsRasterData *raster2d = new clsRasterData(gfs,"1_DENSITY",mask);
+    //string rs1dascfile = "e:/test/1_blai_asc.asc";
+    //string rs2dascfile = "e:/test/1_density_asc.asc";
+    string rs1dtiffile = "e:/test/1_phu0.tif";
+    //string rs2dtiffile = "e:/test/1_density_asc.tif";
+    //string rs1dMongo = "2_BLAI";
+    //string rs2dMongo = "2_DENSITY";
+    //raster1d->outputASCFile(rs1dascfile);
+    //raster2d->outputASCFile(rs2dascfile);
+    raster1d->outputGTiff(rs1dtiffile);
+    //raster2d->outputGTiff(rs2dtiffile);
+    //raster1d->outputToMongoDB(rs1dMongo, gfs);
+    //raster2d->outputToMongoDB(rs2dMongo, gfs);
 
 
 
-	//bson_destroy(query);
-	//mongoc_cursor_destroy(cursor);
-	mongoc_gridfs_destroy(gfs);
-	//mongoc_gridfs_destroy(newGridFS);
-	//mongoc_collection_destroy(collection);
-	//mongoc_database_destroy(database);
-	mongoc_client_destroy(client);
-	mongoc_cleanup();
-	system("pause");
-	return 0;
+    //bson_destroy(query);
+    //mongoc_cursor_destroy(cursor);
+    mongoc_gridfs_destroy(gfs);
+    //mongoc_gridfs_destroy(newGridFS);
+    //mongoc_collection_destroy(collection);
+    //mongoc_database_destroy(database);
+    mongoc_client_destroy(client);
+    mongoc_cleanup();
+    system("pause");
+    return 0;
 }

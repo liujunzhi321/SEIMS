@@ -23,139 +23,149 @@
 
 namespace GPRO
 {
-  template <class elemType>
-  class DeComposition 
-  {
+    template<class elemType>
+    class DeComposition
+    {
     public:
-      DeComposition()
-        :_pNbrhood(0) {}
+        DeComposition()
+                : _pNbrhood(0) { }
 
-      DeComposition(const SpaceDims &cellSpaceDims,
-               const Neighborhood<elemType> &nbrhood);
-      ~DeComposition() {}
+        DeComposition(const SpaceDims &cellSpaceDims,
+                      const Neighborhood<elemType> &nbrhood);
 
-      bool rowDcmp(MetaData &metaData,
-                   int nSubSpcs) const;
-      /*bool colDcmp(MetaData &metaData,
-                   int nSubSpcs) const;
-      bool blockDcmp(MetaData &metaData,
-                     int nRowSubSpcs,
-                     int nColSubSpcs) const;*/
+        ~DeComposition() { }
 
-    private:
-      void _smpl1DDcmp(int &subBegin, int &subEnd,
-                       int glbBegin, int glbEnd,
-                       int nSubSpcs, int iSubSpc) const;
+        bool rowDcmp(MetaData &metaData,
+                     int nSubSpcs) const;
+        /*bool colDcmp(MetaData &metaData,
+                     int nSubSpcs) const;
+        bool blockDcmp(MetaData &metaData,
+                       int nRowSubSpcs,
+                       int nColSubSpcs) const;*/
 
     private:
-      SpaceDims _glbDims;
-      CoordBR _glbWorkBR;
-      const Neighborhood<elemType> *_pNbrhood;
-  };
+        void _smpl1DDcmp(int &subBegin, int &subEnd,
+                         int glbBegin, int glbEnd,
+                         int nSubSpcs, int iSubSpc) const;
+
+    private:
+        SpaceDims _glbDims;
+        CoordBR _glbWorkBR;
+        const Neighborhood<elemType> *_pNbrhood;
+    };
 };
 
 /****************************************
 *             Private Methods           *
 *****************************************/
 
-template <class elemType>
+template<class elemType>
 void GPRO::DeComposition<elemType>::
 _smpl1DDcmp(int &subBegin, int &subEnd,
             int glbBegin, int glbEnd,
-            int nSubSpcs, int iSubSpc) const {
-  int glbRange = glbEnd - glbBegin + 1;
-  int remainder = glbRange % nSubSpcs;
-  int blockSize;
-  if(remainder == 0) {
-    blockSize = glbRange / nSubSpcs;
-    subBegin = glbBegin + iSubSpc * blockSize;
-    subEnd = subBegin + blockSize - 1;
-  }
-  else {
-    blockSize = glbRange / nSubSpcs + 1;
-    if(iSubSpc < remainder) {
-      subBegin = glbBegin + iSubSpc * blockSize;
-      subEnd = subBegin + blockSize - 1;
+            int nSubSpcs, int iSubSpc) const
+{
+    int glbRange = glbEnd - glbBegin + 1;
+    int remainder = glbRange % nSubSpcs;
+    int blockSize;
+    if (remainder == 0)
+    {
+        blockSize = glbRange / nSubSpcs;
+        subBegin = glbBegin + iSubSpc * blockSize;
+        subEnd = subBegin + blockSize - 1;
     }
-    else {
-      if(iSubSpc == remainder) {
-        subBegin = glbBegin+ iSubSpc * blockSize;
-        subEnd = subBegin + blockSize - 2;	
-      }
-      else {
-        subBegin = glbBegin 
-                + remainder * blockSize 
-                + (iSubSpc - remainder)*(blockSize-1);
-        subEnd = subBegin + blockSize - 2;
-      }
+    else
+    {
+        blockSize = glbRange / nSubSpcs + 1;
+        if (iSubSpc < remainder)
+        {
+            subBegin = glbBegin + iSubSpc * blockSize;
+            subEnd = subBegin + blockSize - 1;
+        }
+        else
+        {
+            if (iSubSpc == remainder)
+            {
+                subBegin = glbBegin + iSubSpc * blockSize;
+                subEnd = subBegin + blockSize - 2;
+            }
+            else
+            {
+                subBegin = glbBegin
+                           + remainder * blockSize
+                           + (iSubSpc - remainder) * (blockSize - 1);
+                subEnd = subBegin + blockSize - 2;
+            }
+        }
     }
-  }
 }
 
 /****************************************
 *             Public Methods            *
 *****************************************/
 
-template <class elemType>
+template<class elemType>
 GPRO::DeComposition<elemType>::
 DeComposition(const SpaceDims &cellSpaceDims,
-         const Neighborhood<elemType> &nbrhood) 
+              const Neighborhood<elemType> &nbrhood)
 {
- 
-  if(!nbrhood.calcWorkBR(_glbWorkBR, cellSpaceDims)) {
-    cerr << __FILE__ << " " << __FUNCTION__ \
-         << " Error: invalid Neighborhood to construct a DeComposition" \
-         << endl;
-    exit(-1);
-  }
-  _glbDims = cellSpaceDims;
-  _pNbrhood = &nbrhood;
+
+    if (!nbrhood.calcWorkBR(_glbWorkBR, cellSpaceDims))
+    {
+        cerr << __FILE__ << " " << __FUNCTION__ \
+ << " Error: invalid Neighborhood to construct a DeComposition" \
+ << endl;
+        exit(-1);
+    }
+    _glbDims = cellSpaceDims;
+    _pNbrhood = &nbrhood;
 }
 
-template <class elemType>
+template<class elemType>
 bool GPRO::DeComposition<elemType>::
 rowDcmp(MetaData &metaData,
-        int nSubSpcs) const 
+        int nSubSpcs) const
 {
-  if(nSubSpcs < 1 ||
-     nSubSpcs > _glbWorkBR.nRows()) {
-    cerr << __FILE__ << " " << __FUNCTION__ \
-         << " Error: invalid number of SubSpaces (" << nSubSpcs << ")" \
-         << " considering the global working bounding rectangle (" << _glbWorkBR << ")" \
-         << endl;
-    return false;
-  }
-  
-  DomDcmpType dcmpType = ROWWISE_DCMP;
-  metaData._domDcmpType = dcmpType;
+    if (nSubSpcs < 1 ||
+        nSubSpcs > _glbWorkBR.nRows())
+    {
+        cerr << __FILE__ << " " << __FUNCTION__ \
+ << " Error: invalid number of SubSpaces (" << nSubSpcs << ")" \
+ << " considering the global working bounding rectangle (" << _glbWorkBR << ")" \
+ << endl;
+        return false;
+    }
 
-  int glbBegin = _glbWorkBR.nwCorner().iRow();
-  int glbEnd = _glbWorkBR.seCorner().iRow();
+    DomDcmpType dcmpType = ROWWISE_DCMP;
+    metaData._domDcmpType = dcmpType;
 
- 
-	int iSubSpc = metaData.myrank;
-	int subBegin, subEnd;
-	_smpl1DDcmp(subBegin, subEnd,
-				glbBegin, glbEnd,
-				nSubSpcs, iSubSpc);
-	CellCoord nwCorner(subBegin + _pNbrhood->minIRow(),
-						0);
-	CellCoord seCorner(subEnd + _pNbrhood->maxIRow(),
-						_glbDims.nCols() - 1);
-	CoordBR subMBR(nwCorner, seCorner);
+    int glbBegin = _glbWorkBR.nwCorner().iRow();
+    int glbEnd = _glbWorkBR.seCorner().iRow();
 
-	metaData._MBR = subMBR;
 
-	SpaceDims dims(subMBR.nRows(), subMBR.nCols());
-	metaData._localdims = dims;
-	CoordBR workBR;
-	if(!_pNbrhood->calcWorkBR(workBR, dims))
-	{
-		return false;
-	}
-	metaData._localworkBR = workBR;
+    int iSubSpc = metaData.myrank;
+    int subBegin, subEnd;
+    _smpl1DDcmp(subBegin, subEnd,
+                glbBegin, glbEnd,
+                nSubSpcs, iSubSpc);
+    CellCoord nwCorner(subBegin + _pNbrhood->minIRow(),
+                       0);
+    CellCoord seCorner(subEnd + _pNbrhood->maxIRow(),
+                       _glbDims.nCols() - 1);
+    CoordBR subMBR(nwCorner, seCorner);
 
-  return true;
+    metaData._MBR = subMBR;
+
+    SpaceDims dims(subMBR.nRows(), subMBR.nCols());
+    metaData._localdims = dims;
+    CoordBR workBR;
+    if (!_pNbrhood->calcWorkBR(workBR, dims))
+    {
+        return false;
+    }
+    metaData._localworkBR = workBR;
+
+    return true;
 }
 //
 //template <class elemType>

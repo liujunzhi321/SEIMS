@@ -1,285 +1,290 @@
 #pragma once
+
 #include "ArealParameter.h"
 
 namespace MainBMP
 {
-	namespace BMPParameter
-	{
-		/*!
-		 * \class CropParameter
-		 * \ingroup BMPParameter
-		 *
-		 * \brief Crop parameter class
-		 *
-		 */
-		class CropParameter :
-			public ArealParameter
-		{
-		public:
-			/// Constructor, previous version, with string vector as input
-			CropParameter(vector<string> *oneRow);
-			/// Constructor, latest version, with float array as input
-			CropParameter(float* cropFlds, int count);
-			/// Destructor
-			~CropParameter(void);
-			/// Output
-			void Dump(ostream* fs);
+    namespace BMPParameter
+    {
+        /*!
+         * \class CropParameter
+         * \ingroup BMPParameter
+         *
+         * \brief Crop parameter class
+         *
+         */
+        class CropParameter :
+                public ArealParameter
+        {
+        public:
+            /// Constructor, previous version, with string vector as input
+            CropParameter(vector<string> *oneRow);
 
-			/// Land cover/plant classification, IDC
-			int Claasification() const {return m_classification;}
+            /// Constructor, latest version, with float array as input
+            CropParameter(float *cropFlds, int count);
 
-			/// Radiation-use efficicency or biomass-energy ratio ((kg/ha)/(MJ/m**2)),BIO_E
-			float RadiationUseEfficiency() const {return m_radiationUseEfficiency;}
+            /// Destructor
+            ~CropParameter(void);
 
-			/// Harvest index for optimal growing conditions, HVSTI
-			float HarvestIndex() const {return m_harvestIndex;}
+            /// Output
+            void Dump(ostream *fs);
 
-			/// Maximum potential leaf area index, BLAI
-			float PotentialLeafAreaIndex() const {return m_potentialLeafAreaIndex;}
+            /// Land cover/plant classification, IDC
+            int Claasification() const { return m_classification; }
 
-			/// Fraction of the plant growing season or fraction of total potential head units corresponding to the 1st point on the optimal leaf area development curve, FRGRW1
-			float X1() const {return m_x1;}
+            /// Radiation-use efficicency or biomass-energy ratio ((kg/ha)/(MJ/m**2)),BIO_E
+            float RadiationUseEfficiency() const { return m_radiationUseEfficiency; }
 
-			/// Fraction of the maximum leaf area index corresponding to the 1st point on the optimal leaf area development curve, LAIMX1
-			float Y1() const {return m_y1;}
+            /// Harvest index for optimal growing conditions, HVSTI
+            float HarvestIndex() const { return m_harvestIndex; }
 
-			/// Fraction of the plant growing season or fraction of total potential head units corresponding to the 2nd point on the optimal leaf area development curve, FRGRW2
-			float X2() const {return m_x2;}
+            /// Maximum potential leaf area index, BLAI
+            float PotentialLeafAreaIndex() const { return m_potentialLeafAreaIndex; }
 
-			/// Fraction of the maximum leaf area index corresponding to the 2nd point on the optimal leaf area development curve, LAIMX2
-			float Y2() const {return m_y2;}
+            /// Fraction of the plant growing season or fraction of total potential head units corresponding to the 1st point on the optimal leaf area development curve, FRGRW1
+            float X1() const { return m_x1; }
 
-			/// Fraction of growing season leaf area index begins to decline, DLAI
-			float DeclineLAIFraction() const {return m_declineLAIFraction;}
+            /// Fraction of the maximum leaf area index corresponding to the 1st point on the optimal leaf area development curve, LAIMX1
+            float Y1() const { return m_y1; }
 
-			/// Maximum canopy height (m), CHTMX
-			float MaxHeight() const {return m_maxHeight;}	
+            /// Fraction of the plant growing season or fraction of total potential head units corresponding to the 2nd point on the optimal leaf area development curve, FRGRW2
+            float X2() const { return m_x2; }
 
-			/// Maximum root depth (m), RDMX
-			float MaxRoot() const {return m_maxRoot;}
+            /// Fraction of the maximum leaf area index corresponding to the 2nd point on the optimal leaf area development curve, LAIMX2
+            float Y2() const { return m_y2; }
 
-			/// Optimal temperature for plant growth (0C), T_OPT
-			float OptTemperature() const {return m_optTemperature;}
+            /// Fraction of growing season leaf area index begins to decline, DLAI
+            float DeclineLAIFraction() const { return m_declineLAIFraction; }
 
-			/// Minimum (base) temperature for plant growth (0C), T_BASE
-			float MinTemperature() const {return m_minTemperature;}
+            /// Maximum canopy height (m), CHTMX
+            float MaxHeight() const { return m_maxHeight; }
 
-			/// Normal fraction of nitrogen in yield (kg N/kg yield), CNYLD
-			float YieldNFraction() const {return m_yieldNFraction;}
+            /// Maximum root depth (m), RDMX
+            float MaxRoot() const { return m_maxRoot; }
 
-			/// Normal fraction of phosphorus in yield (kg P/kg yield), CPYLD
-			float YieldPFraction() const {return m_yieldPFraction;}
+            /// Optimal temperature for plant growth (0C), T_OPT
+            float OptTemperature() const { return m_optTemperature; }
 
-			/// Nitrogen uptake parameter #1: normal fraction of nitrogen in plant biomass at emergence (kg N/kg biomass), BN1
-			float BiomassNFraction1() const {return m_biomassNFraction1;}
+            /// Minimum (base) temperature for plant growth (0C), T_BASE
+            float MinTemperature() const { return m_minTemperature; }
 
-			/// Nitrogen uptake parameter #2: normal fraction of nitrogen in plant biomass at 50% maturity (kg N/kg biomass), BN2
-			float iomassNFraction2() const {return m_biomassNFraction2;}
+            /// Normal fraction of nitrogen in yield (kg N/kg yield), CNYLD
+            float YieldNFraction() const { return m_yieldNFraction; }
 
-			/// Nitrogen uptake parameter #3: normal fraction of nitrogen in plant biomass at maturity (kg N/kg biomass), BN3
-			float BiomassNFraction3() const {return m_biomassNFraction3;}
+            /// Normal fraction of phosphorus in yield (kg P/kg yield), CPYLD
+            float YieldPFraction() const { return m_yieldPFraction; }
 
-			/// Nitrogen uptake parameter #1: normal fraction of phosphorus in plant biomass at emergence (kg P/kg biomass), BP1
-			float BiomassPFraction1() const {return m_biomassPFraction1;}
+            /// Nitrogen uptake parameter #1: normal fraction of nitrogen in plant biomass at emergence (kg N/kg biomass), BN1
+            float BiomassNFraction1() const { return m_biomassNFraction1; }
 
-			/// Nitrogen uptake parameter #2: normal fraction of phosphorus in plant biomass at 50% maturity (kg P/kg biomass), BP2
-			float BiomassPFraction2() const {return m_biomassPFraction2;}
+            /// Nitrogen uptake parameter #2: normal fraction of nitrogen in plant biomass at 50% maturity (kg N/kg biomass), BN2
+            float iomassNFraction2() const { return m_biomassNFraction2; }
 
-			/// Nitrogen uptake parameter #3: normal fraction of phosphorus in plant biomass at maturity (kg P/kg biomass), BP3
-			float BiomassPFraction3() const {return m_biomassPFraction3;}
+            /// Nitrogen uptake parameter #3: normal fraction of nitrogen in plant biomass at maturity (kg N/kg biomass), BN3
+            float BiomassNFraction3() const { return m_biomassNFraction3; }
 
-			/// Lower limit of harvest index ((kg/ha)/(kg/ha)), WSYF
-			float HarvestIndexLowerLimit() const {return m_harvestIndexLowerLimit;}
+            /// Nitrogen uptake parameter #1: normal fraction of phosphorus in plant biomass at emergence (kg P/kg biomass), BP1
+            float BiomassPFraction1() const { return m_biomassPFraction1; }
 
-			/// Minimum value of USLE_C factor for water erosion applicable to the land cover/plant
-			float MinUSLEC() const {return m_minUSLEC;}
+            /// Nitrogen uptake parameter #2: normal fraction of phosphorus in plant biomass at 50% maturity (kg P/kg biomass), BP2
+            float BiomassPFraction2() const { return m_biomassPFraction2; }
 
-			/// Maximum stomatal conductance at high solar radiation and low vapor pressure deficit (m.s-1), GSI
-			float MaxStomatalConductance() {return m_maxStomatalConductance;}
+            /// Nitrogen uptake parameter #3: normal fraction of phosphorus in plant biomass at maturity (kg P/kg biomass), BP3
+            float BiomassPFraction3() const { return m_biomassPFraction3; }
 
-			/// Vaper pressure dificit (kPa) corresponding to the second point on the stomatal conductance curve, VPDFR
-			float SecondVPD() const {return m_secondVPD;}
+            /// Lower limit of harvest index ((kg/ha)/(kg/ha)), WSYF
+            float HarvestIndexLowerLimit() const { return m_harvestIndexLowerLimit; }
 
-			/// Fraction of maximum stomatal conductance corresponding to the second point on the stomatal conductance curve, FRGMAX
-			float SecondStomatalConductance() const {return m_secondStomatalConductance;}
+            /// Minimum value of USLE_C factor for water erosion applicable to the land cover/plant
+            float MinUSLEC() const { return m_minUSLEC; }
 
-			/// Rate of decline in radiation use efficiency per unit increace in vapor pressure dificit, WAVP
-			float RadiationUseEfficiencyDeclineRateWithVPD() const {return m_radiationUseEfficiencyDeclineRateWithVPD;}
+            /// Maximum stomatal conductance at high solar radiation and low vapor pressure deficit (m.s-1), GSI
+            float MaxStomatalConductance() { return m_maxStomatalConductance; }
 
-			/// Elevated CO2 atmospheric concentration (uL CO2/L air) corresponding the 2nd on the radition use efficiency curve, CO2HI
-			float SecondCO2Concentration() const {return m_secondCO2Concentration;}
+            /// Vaper pressure dificit (kPa) corresponding to the second point on the stomatal conductance curve, VPDFR
+            float SecondVPD() const { return m_secondVPD; }
 
-			/// Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve, BIOEHI
-			float SecondBiomassEnergyRatio() const {return m_secondBiomassEnergyRatio;}
+            /// Fraction of maximum stomatal conductance corresponding to the second point on the stomatal conductance curve, FRGMAX
+            float SecondStomatalConductance() const { return m_secondStomatalConductance; }
 
-			/// Plant residue decomposition coefficient, RSDCO_PL
-			float PlantResidueDecompositionCoefficient() const {return m_plantResidueDecompositionCoefficient;}
+            /// Rate of decline in radiation use efficiency per unit increace in vapor pressure dificit, WAVP
+            float RadiationUseEfficiencyDeclineRateWithVPD() const { return m_radiationUseEfficiencyDeclineRateWithVPD; }
 
-			/// Default Manning's 'n' value for overland flow for land cover/plant, OV_N
-			float DefaultManningN() const {return m_defaultManningN;}
+            /// Elevated CO2 atmospheric concentration (uL CO2/L air) corresponding the 2nd on the radition use efficiency curve, CO2HI
+            float SecondCO2Concentration() const { return m_secondCO2Concentration; }
 
-			/// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of A
-			float CN2A() const {return m_CN2A;}
+            /// Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve, BIOEHI
+            float SecondBiomassEnergyRatio() const { return m_secondBiomassEnergyRatio; }
 
-			/// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of B
-			float CN2B() const {return m_CN2B;}
+            /// Plant residue decomposition coefficient, RSDCO_PL
+            float PlantResidueDecompositionCoefficient() const { return m_plantResidueDecompositionCoefficient; }
 
-			/// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of C
-			float CN2C() const {return m_CN2C;}
+            /// Default Manning's 'n' value for overland flow for land cover/plant, OV_N
+            float DefaultManningN() const { return m_defaultManningN; }
 
-			/// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of D
-			float CN2D() const {return m_CN2D;}
+            /// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of A
+            float CN2A() const { return m_CN2A; }
 
-			/// Fertilizer flag, FERTFIELD
-			/// 1. include auto-fertilizer operation in default mgt file
-			/// 2. do not include auto-fertilizer operation in default mgt file
-			bool IsAutoFertilizer() const {return m_isAutoFertilizer;}
+            /// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of B
+            float CN2B() const { return m_CN2B; }
 
-			/// Minimum leaf area index for plant during dormant period (m**2/m**2), ALAI_MIN
-			float MinDormantLAI() const {return m_minDormantLAI;}
+            /// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of C
+            float CN2C() const { return m_CN2C; }
 
-			/// Fraction of tree biomass accumulated each year that is converted to residue during dormancy, BIO_LEAF
-			float TreeDormantResidueBiomassFraction() const {return m_treeDormantResidueBiomassFraction;}
+            /// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of D
+            float CN2D() const { return m_CN2D; }
 
-			/// Number of years required for tree species to reach full development (years), MAT_YRS
-			int TreeFullDevelopmentYear() const {return m_treeFullDevelopmentYear;}
+            /// Fertilizer flag, FERTFIELD
+            /// 1. include auto-fertilizer operation in default mgt file
+            /// 2. do not include auto-fertilizer operation in default mgt file
+            bool IsAutoFertilizer() const { return m_isAutoFertilizer; }
 
-			/// Maximum biomass for a forest (metric tons/ha), BMX_TREES
-			float MaxBiomass() const {return m_maxBiomass;}
+            /// Minimum leaf area index for plant during dormant period (m**2/m**2), ALAI_MIN
+            float MinDormantLAI() const { return m_minDormantLAI; }
 
-			/// Light extinction coefficient, EXT_COEF
-			float LightExtinctionCoefficient() const {return m_lightExtinctionCoefficient;}
-		private:
-			/// Land cover/plant classification, IDC
-			int m_classification;
+            /// Fraction of tree biomass accumulated each year that is converted to residue during dormancy, BIO_LEAF
+            float TreeDormantResidueBiomassFraction() const { return m_treeDormantResidueBiomassFraction; }
 
-			/// Radiation-use efficicency or biomass-energy ratio ((kg/ha)/(MJ/m**2)),BIO_E
-			float m_radiationUseEfficiency;
+            /// Number of years required for tree species to reach full development (years), MAT_YRS
+            int TreeFullDevelopmentYear() const { return m_treeFullDevelopmentYear; }
 
-			/// Harvest index for optimal growing conditions, HVSTI
-			float m_harvestIndex;
+            /// Maximum biomass for a forest (metric tons/ha), BMX_TREES
+            float MaxBiomass() const { return m_maxBiomass; }
 
-			/// Maximum potential leaf area index, BLAI
-			float m_potentialLeafAreaIndex;
+            /// Light extinction coefficient, EXT_COEF
+            float LightExtinctionCoefficient() const { return m_lightExtinctionCoefficient; }
 
-			/// Fraction of the plant growing season or fraction of total potential head units corresponding to the 1st point on the optimal leaf area development curve, FRGRW1
-			float m_x1;
+        private:
+            /// Land cover/plant classification, IDC
+            int m_classification;
 
-			/// Fraction of the maximum leaf area index corresponding to the 1st point on the optimal leaf area development curve, LAIMX1
-			float m_y1;
+            /// Radiation-use efficicency or biomass-energy ratio ((kg/ha)/(MJ/m**2)),BIO_E
+            float m_radiationUseEfficiency;
 
-			/// Fraction of the plant growing season or fraction of total potential head units corresponding to the 2nd point on the optimal leaf area development curve, FRGRW2
-			float m_x2;
+            /// Harvest index for optimal growing conditions, HVSTI
+            float m_harvestIndex;
 
-			/// Fraction of the maximum leaf area index corresponding to the 2nd point on the optimal leaf area development curve, LAIMX2
-			float m_y2;
+            /// Maximum potential leaf area index, BLAI
+            float m_potentialLeafAreaIndex;
 
-			/// Fraction of growing season leaf area index begins to decline, DLAI
-			float m_declineLAIFraction;
+            /// Fraction of the plant growing season or fraction of total potential head units corresponding to the 1st point on the optimal leaf area development curve, FRGRW1
+            float m_x1;
 
-			/// Maximum canopy height (m), CHTMX
-			float m_maxHeight;
+            /// Fraction of the maximum leaf area index corresponding to the 1st point on the optimal leaf area development curve, LAIMX1
+            float m_y1;
 
-			/// Maximum root depth (m), RDMX
-			float m_maxRoot;
+            /// Fraction of the plant growing season or fraction of total potential head units corresponding to the 2nd point on the optimal leaf area development curve, FRGRW2
+            float m_x2;
 
-			/// Optimal temperature for plant growth (0C), T_OPT
-			float m_optTemperature;
+            /// Fraction of the maximum leaf area index corresponding to the 2nd point on the optimal leaf area development curve, LAIMX2
+            float m_y2;
 
-			/// Minimum (base) temperature for plant growth (0C), T_BASE
-			float m_minTemperature;
+            /// Fraction of growing season leaf area index begins to decline, DLAI
+            float m_declineLAIFraction;
 
-			/// Normal fraction of nitrogen in yield (kg N/kg yield), CNYLD
-			float m_yieldNFraction;
+            /// Maximum canopy height (m), CHTMX
+            float m_maxHeight;
 
-			/// Normal fraction of phosphorus in yield (kg P/kg yield), CPYLD
-			float m_yieldPFraction;
+            /// Maximum root depth (m), RDMX
+            float m_maxRoot;
 
-			/// Nitrogen uptake parameter #1: normal fraction of nitrogen in plant biomass at emergence (kg N/kg biomass), BN1
-			float m_biomassNFraction1;
+            /// Optimal temperature for plant growth (0C), T_OPT
+            float m_optTemperature;
 
-			/// Nitrogen uptake parameter #2: normal fraction of nitrogen in plant biomass at 50% maturity (kg N/kg biomass), BN2
-			float m_biomassNFraction2;
+            /// Minimum (base) temperature for plant growth (0C), T_BASE
+            float m_minTemperature;
 
-			/// Nitrogen uptake parameter #3: normal fraction of nitrogen in plant biomass at maturity (kg N/kg biomass), BN3
-			float m_biomassNFraction3;
+            /// Normal fraction of nitrogen in yield (kg N/kg yield), CNYLD
+            float m_yieldNFraction;
 
-			/// Nitrogen uptake parameter #1: normal fraction of phosphorus in plant biomass at emergence (kg P/kg biomass), BP1
-			float m_biomassPFraction1;
+            /// Normal fraction of phosphorus in yield (kg P/kg yield), CPYLD
+            float m_yieldPFraction;
 
-			/// Nitrogen uptake parameter #2: normal fraction of phosphorus in plant biomass at 50% maturity (kg P/kg biomass), BP2
-			float m_biomassPFraction2;
+            /// Nitrogen uptake parameter #1: normal fraction of nitrogen in plant biomass at emergence (kg N/kg biomass), BN1
+            float m_biomassNFraction1;
 
-			/// Nitrogen uptake parameter #3: normal fraction of phosphorus in plant biomass at maturity (kg P/kg biomass), BP3
-			float m_biomassPFraction3;
+            /// Nitrogen uptake parameter #2: normal fraction of nitrogen in plant biomass at 50% maturity (kg N/kg biomass), BN2
+            float m_biomassNFraction2;
 
-			/// Lower limit of harvest index ((kg/ha)/(kg/ha)), WSYF
-			float m_harvestIndexLowerLimit;
+            /// Nitrogen uptake parameter #3: normal fraction of nitrogen in plant biomass at maturity (kg N/kg biomass), BN3
+            float m_biomassNFraction3;
 
-			/// Minimum value of USLE_C factor for water erosion applicable to the land cover/plant
-			float m_minUSLEC;
+            /// Nitrogen uptake parameter #1: normal fraction of phosphorus in plant biomass at emergence (kg P/kg biomass), BP1
+            float m_biomassPFraction1;
 
-			/// Maximum stomatal conductance at high solar radiation and low vapor pressure deficit (m.s-1), GSI
-			float m_maxStomatalConductance;
+            /// Nitrogen uptake parameter #2: normal fraction of phosphorus in plant biomass at 50% maturity (kg P/kg biomass), BP2
+            float m_biomassPFraction2;
 
-			/// Vaper pressure dificit (kPa) corresponding to the second point on the stomatal conductance curve, VPDFR
-			float m_secondVPD;
+            /// Nitrogen uptake parameter #3: normal fraction of phosphorus in plant biomass at maturity (kg P/kg biomass), BP3
+            float m_biomassPFraction3;
 
-			/// Fraction of maximum stomatal conductance corresponding to the second point on the stomatal conductance curve, FRGMAX
-			float m_secondStomatalConductance;
+            /// Lower limit of harvest index ((kg/ha)/(kg/ha)), WSYF
+            float m_harvestIndexLowerLimit;
 
-			/// Rate of decline in radiation use efficiency per unit increace in vapor pressure dificit, WAVP
-			float m_radiationUseEfficiencyDeclineRateWithVPD;
+            /// Minimum value of USLE_C factor for water erosion applicable to the land cover/plant
+            float m_minUSLEC;
 
-			/// Elevated CO2 atmospheric concentration (uL CO2/L air) corresponding the 2nd on the radition use efficiency curve, CO2HI
-			float m_secondCO2Concentration;
+            /// Maximum stomatal conductance at high solar radiation and low vapor pressure deficit (m.s-1), GSI
+            float m_maxStomatalConductance;
 
-			/// Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve, BIOEHI
-			float m_secondBiomassEnergyRatio;
+            /// Vaper pressure dificit (kPa) corresponding to the second point on the stomatal conductance curve, VPDFR
+            float m_secondVPD;
 
-			/// Plant residue decomposition coefficient, RSDCO_PL
-			float m_plantResidueDecompositionCoefficient;
+            /// Fraction of maximum stomatal conductance corresponding to the second point on the stomatal conductance curve, FRGMAX
+            float m_secondStomatalConductance;
 
-			//-------- OV_N,CN2A,CN2B,CN2C,CN2D,FERTFIELD just existing in ArcSWAT ----------
+            /// Rate of decline in radiation use efficiency per unit increace in vapor pressure dificit, WAVP
+            float m_radiationUseEfficiencyDeclineRateWithVPD;
 
-			/// Default Manning's 'n' value for overland flow for land cover/plant, OV_N
-			float m_defaultManningN;
+            /// Elevated CO2 atmospheric concentration (uL CO2/L air) corresponding the 2nd on the radition use efficiency curve, CO2HI
+            float m_secondCO2Concentration;
 
-			/// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of A
-			float m_CN2A;
+            /// Biomass-energy ratio corresponding to the 2nd point on the radiation use efficiency curve, BIOEHI
+            float m_secondBiomassEnergyRatio;
 
-			/// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of B
-			float m_CN2B;
+            /// Plant residue decomposition coefficient, RSDCO_PL
+            float m_plantResidueDecompositionCoefficient;
 
-			/// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of C
-			float m_CN2C;
+            //-------- OV_N,CN2A,CN2B,CN2C,CN2D,FERTFIELD just existing in ArcSWAT ----------
 
-			/// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of D
-			float m_CN2D;
+            /// Default Manning's 'n' value for overland flow for land cover/plant, OV_N
+            float m_defaultManningN;
 
-			/// Fertilizer flag, FERTFIELD
-			/// 1. include auto-fertilizer operation in default mgt file
-			/// 2. do not include auto-fertilizer operation in default mgt file
-			bool m_isAutoFertilizer;
+            /// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of A
+            float m_CN2A;
 
-			//-------------------------------------------------------------------------------
+            /// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of B
+            float m_CN2B;
 
-			/// Minimum leaf area index for plant during dormant period (m**2/m**2), ALAI_MIN
-			float m_minDormantLAI;
+            /// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of C
+            float m_CN2C;
 
-			/// Fraction of tree biomass accumulated each year that is converted to residue during dormancy, BIO_LEAF
-			float m_treeDormantResidueBiomassFraction;
+            /// Default SCS CN value for moisure condition II used for the land cover/plant where the plant is growing on a soil with a hydrologic group classification of D
+            float m_CN2D;
 
-			/// Number of years required for tree species to reach full development (years), MAT_YRS
-			int m_treeFullDevelopmentYear;
+            /// Fertilizer flag, FERTFIELD
+            /// 1. include auto-fertilizer operation in default mgt file
+            /// 2. do not include auto-fertilizer operation in default mgt file
+            bool m_isAutoFertilizer;
 
-			/// Maximum biomass for a forest (metric tons/ha), BMX_TREES
-			float m_maxBiomass;
+            //-------------------------------------------------------------------------------
 
-			/// Light extinction coefficient, EXT_COEF
-			float m_lightExtinctionCoefficient;
-		};
-	}
+            /// Minimum leaf area index for plant during dormant period (m**2/m**2), ALAI_MIN
+            float m_minDormantLAI;
+
+            /// Fraction of tree biomass accumulated each year that is converted to residue during dormancy, BIO_LEAF
+            float m_treeDormantResidueBiomassFraction;
+
+            /// Number of years required for tree species to reach full development (years), MAT_YRS
+            int m_treeFullDevelopmentYear;
+
+            /// Maximum biomass for a forest (metric tons/ha), BMX_TREES
+            float m_maxBiomass;
+
+            /// Light extinction coefficient, EXT_COEF
+            float m_lightExtinctionCoefficient;
+        };
+    }
 }
 
 

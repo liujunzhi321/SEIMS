@@ -11,19 +11,19 @@ Climate::~Climate()
 {
 }
 
-void Climate::SetClimate(float tMin,float tMax,float PET,float soilET,float sr,float rhd,float co2)
+void Climate::SetClimate(float tMin, float tMax, float PET, float soilET, float sr, float rhd, float co2)
 {
-	m_averageTemperature = tMin/2.0f + tMax/2.0f;
-	m_PET = PET;
-	m_solarRadiation = sr;
-	m_relativeHumidity = rhd;
-	m_co2 = co2;
-	m_soilET = soilET;
+    m_averageTemperature = tMin / 2.0f + tMax / 2.0f;
+    m_PET = PET;
+    m_solarRadiation = sr;
+    m_relativeHumidity = rhd;
+    m_co2 = co2;
+    m_soilET = soilET;
 }
 
 float Climate::AverageTemperature(void) const
 {
-	return m_averageTemperature;
+    return m_averageTemperature;
 }
 
 //float Climate::MaximumPlantEvapotranpiration(IPlant* plant) const
@@ -42,34 +42,35 @@ float Climate::AverageTemperature(void) const
 
 float Climate::SolarRadiation() const
 {
-	return m_solarRadiation;
+    return m_solarRadiation;
 }
 
 float Climate::CO2() const
 {
-	return m_co2;
+    return m_co2;
 }
 
 float Climate::VaporPressureDeficit() const
 {
-	return CalSaturationVaporPressure(m_averageTemperature) * (1.0f - m_relativeHumidity);
+    return CalSaturationVaporPressure(m_averageTemperature) * (1.0f - m_relativeHumidity);
 }
 
 float Climate::CalSaturationVaporPressure(float t)
 {
-	if ( abs(t + 237.3f) >= 1.0e-6f)
-	{
-		float ee = (16.78f * t - 116.9f) / (t + 237.3f);
-		return exp(ee);
-	}
-	return 0.0f;
+    if (abs(t + 237.3f) >= 1.0e-6f)
+    {
+        float ee = (16.78f * t - 116.9f) / (t + 237.3f);
+        return exp(ee);
+    }
+    return 0.0f;
 }
 
 float Climate::PET(void) const
 {
-	return m_PET;
+    return m_PET;
 }
+
 float Climate::SoilET(void) const
 {
-	return m_soilET;
+    return m_soilET;
 }

@@ -7,11 +7,13 @@
  * \date June 2010
  */
 #pragma once
+
 #include "Settings.h"
 #include "PrintInfo.h"
 #include <vector>
 #include "clsRasterData.h"
 #include "mongoc.h"
+
 /*!
  * \ingroup module_setting
  * \class SettingsOutput
@@ -22,33 +24,46 @@
  *
  */
 class SettingsOutput :
-	public Settings
+        public Settings
 {
 public:
-	//! Constructor
-	SettingsOutput(int, string, mongoc_client_t* conn=NULL, mongoc_gridfs_t* gfs=NULL);
-	//! Destructor
-	~SettingsOutput(void);
-	//! Load output setting from file
-	bool LoadSettingsFromFile(int, string);	
-	//! Write output information to log file
-	void Dump(string);
-	//! Check date of output settings
-	void checkDate(time_t,time_t);
-	//! is output be an ASC file? Deprecated by LJ
-	//bool isOutputASCFile(void);
-	
-	///void setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData);
+    //! Constructor, read from file.out
+    SettingsOutput(int subBasinID, string fileName, mongoc_client_t *conn, string dbName, mongoc_gridfs_t *gfs);
+
+    //! Constructor, read from MongoDB
+    SettingsOutput(int subBasinID, mongoc_client_t *conn, string dbName, mongoc_gridfs_t *gfs);
+
+    //! Destructor
+    ~SettingsOutput(void);
+
+    //! Load output setting from file
+    bool LoadSettingsFromFile(int, string);
+
+    //! Load output setting from MongoDB
+    bool LoadSettingsOutputFromMongoDB();
+
+    //! Write output information to log file
+    void Dump(string);
+
+    //! Check date of output settings
+    void checkDate(time_t, time_t);
+    //! is output be an ASC file? Deprecated by LJ
+    //bool isOutputASCFile(void);
+
+    ///void setSpecificCellRasterOutput(string projectPath,string databasePath,clsRasterData* templateRasterData);
 public:
-	//! All the print settings
-	vector<PrintInfo*> m_printInfos;
+    //! All the print settings
+    vector<PrintInfo *> m_printInfos;
 
 private:
-	//! MongoDB client
-	mongoc_client_t* m_conn;
-	//! Output GridFS
-	mongoc_gridfs_t* m_outputGfs;
-	//! Parse output settings for given subBasinID
-	bool ParseOutputSettings(int);
+    //! MongoDB client
+    mongoc_client_t *m_conn;
+    //! Parameter database name
+    string m_dbName;
+    //! Output GridFS
+    mongoc_gridfs_t *m_outputGfs;
+
+    //! Parse output settings for given subBasinID
+    bool ParseOutputSettings(int);
 };
 

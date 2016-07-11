@@ -12,6 +12,7 @@
 #include <string>
 
 using namespace std;
+
 /*!
  * \ingroup util
  * \class ModelException
@@ -22,26 +23,29 @@ using namespace std;
  *
  */
 class ModelException :
-	public exception
+        public exception
 {
 public:
-	/*!
-	 * \brief Constructor
-	 * \param[in] className, functionName, msg \a string
-	 */
-	ModelException(string, string, string);
-	//! Destructor (void)
-	~ModelException(void) throw();
-	/*!
-	 * \brief Construct error information (string version)
-	 * \param[out] \a string error information
-	 */
-	string toString();
-	/*!
-	 * \brief Construct error information (char* version)
-	 * \param[out] \a char* error information
-	 */
-    const char* what() const throw()
+    /*!
+     * \brief Constructor
+     * \param[in] className, functionName, msg \a string
+     */
+    ModelException(string, string, string);
+
+    //! Destructor (void)
+    ~ModelException(void) throw();
+
+    /*!
+     * \brief Construct error information (string version)
+     * \param[out] \a string error information
+     */
+    string toString();
+
+    /*!
+     * \brief Construct error information (char* version)
+     * \param[out] \a char* error information
+     */
+    const char *what() const throw()
     {
         string descri = "\n";
         descri = "Class:" + m_className + "\n";
@@ -50,9 +54,10 @@ public:
 
         return descri.c_str();
     }
+
 private:
-	string m_className;
-	string m_functionName;
-	string m_msg;
+    string m_className;
+    string m_functionName;
+    string m_msg;
 };
 

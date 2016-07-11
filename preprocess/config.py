@@ -2,29 +2,32 @@
 # coding=utf-8
 ## @Configuration of Preprocessing for SEIMS
 #
-import os, platform, sys
+import os, platform
 from text import *
 
 ## Directionaries
 if platform.system() == "Windows":
     ### GAO HR
-    # BASE_DATA_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\model_data\model_dianbu_30m_longterm\data_prepare'
+    # BASE_DATA_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\model_data\dianbu\data_prepare'
+    # MODEL_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\model_data\dianbu\model_dianbu_30m_longterm'
     # TXT_DB_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\database'
     # PREPROC_SCRIPT_DIR = r'D:\GaohrWS\GithubPrj\SEIMS\preprocess'
     # CPP_PROGRAM_DIR = r'D:\SEIMS_model\SEIMS_preprocessing\build\Release'
     # METIS_DIR = r'D:\SEIMS_model\SEIMS_preprocessing\build\metis\programs'
     # MPIEXEC_DIR = r'"D:\Program Files\Microsoft HPC Pack 2012\Bin"'
-    # WORKING_DIR = r'E:\data_m\SEIMS\dianbu_10m_output'
+    # WORKING_DIR = r'E:\data_m\SEIMS\dianbu_30m_output'
     ### SHEN F
-    # BASE_DATA_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\model_data\model_dianbu_30m_longterm\data_prepare'
+    # BASE_DATA_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\model_data\dianbu\data_prepare'
+    # MODEL_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\model_data\dianbu\model_dianbu_30m_longterm'
     # TXT_DB_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\database'
     # PREPROC_SCRIPT_DIR = r'C:\Users\Administrator\Desktop\seims\SEIMS\preprocess'
     # CPP_PROGRAM_DIR = r'C:\Users\Administrator\Desktop\seims\preprocessBuild\Release'
     # METIS_DIR = r'C:\Users\Administrator\Desktop\seims\preprocessBuild\metis\programs\Release'
     # MPIEXEC_DIR = None
-    # WORKING_DIR = r'E:\data_m\SEIMS\dianbu_10m_output'
+    # WORKING_DIR = r'E:\data_m\SEIMS\dianbu_30m_output'
     ### ZHU LJ
     # BASE_DATA_DIR = r'E:\code\Hydro\SEIMS\model_data\dianbu\data_prepare'
+    # MODEL_DIR = r'E:\code\Hydro\SEIMS\model_data\dianbu\model_dianbu_30m_longterm'
     # TXT_DB_DIR = r'E:\code\Hydro\SEIMS\database'
     # PREPROC_SCRIPT_DIR = r'E:\code\Hydro\SEIMS\preprocess'
     # CPP_PROGRAM_DIR = r'D:\Compile\SEIMS_Preprocess\Release'
@@ -33,6 +36,7 @@ if platform.system() == "Windows":
     # WORKING_DIR = r'E:\data_m\SEIMS\dianbu_30m_output'
     ### ZHU LJ-WindowsServer-6.57
     BASE_DATA_DIR = r'G:\code_zhulj\SEIMS\model_data\dianbu\data_prepare'
+    MODEL_DIR = r'G:\code_zhulj\SEIMS\model_data\dianbu\model_dianbu_30m_longterm'
     TXT_DB_DIR = r'G:\code_zhulj\SEIMS\database'
     PREPROC_SCRIPT_DIR = r'G:\code_zhulj\SEIMS\preprocess'
     CPP_PROGRAM_DIR = r'G:\Compile\SEIMS_Preprocess\Release'
@@ -40,13 +44,14 @@ if platform.system() == "Windows":
     MPIEXEC_DIR = None
     WORKING_DIR = r'G:\data_m\SEIMS_dataprepare\model_dianbu_30m_longterm'
 else:  # platform.system() == "Linux": ### Linux and any other system? Hasn't tested yet, Apr.,2016, LJ.
-    BASE_DATA_DIR = r'/data/liujz/data'
-    TXT_DB_DIR = r'/data/liujz/data/database'
-    PREPROC_SCRIPT_DIR = r'/data/hydro_preprocessing'
-    CPP_PROGRAM_DIR = r'/data/hydro_preprocessing/cpp_programs'
+    BASE_DATA_DIR = r'/data'
+    MODEL_DIR = r'/data'
+    TXT_DB_DIR = r'/data'
+    PREPROC_SCRIPT_DIR = r'/data'
+    CPP_PROGRAM_DIR = r'/data'
     METIS_DIR = r'/soft/programming/metis-5.1.0/build/programs'
     MPIEXEC_DIR = None
-    WORKING_DIR = r'E:\data_m\SEIMS\dianbu_10m_output'
+    WORKING_DIR = r'/data'
 
 CLIMATE_DATA_DIR = BASE_DATA_DIR + os.sep + 'climate'
 SPATIAL_DATA_DIR = BASE_DATA_DIR + os.sep + 'spatial'
@@ -92,8 +97,8 @@ mgtFiedlFile = SPATIAL_DATA_DIR + os.sep + 'mgt_fields_30m.tif'
 D8DownMethod = 'Surface'  # Horizontal, Vertical, Pythagoras or Surface
 ## Hydrological parameters
 # Adopted from WetSpa, used in radius.py
-coeTable = {"T2"  : [0.05, 0.48],
-            "T10" : [0.12, 0.52],
+coeTable = {"T2": [0.05, 0.48],
+            "T10": [0.12, 0.52],
             "T100": [0.18, 0.55]}
 # time threshold used to define dormant period for plant, default is -1.
 dorm_hr = -1.

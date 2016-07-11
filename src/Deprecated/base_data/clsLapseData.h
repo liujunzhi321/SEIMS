@@ -15,6 +15,7 @@
 #include <string>
 
 using namespace std;
+
 /*!
  * \ingroup data
  * \class clsLapseData
@@ -27,16 +28,19 @@ using namespace std;
 class clsLapseData
 {
 public:
-	clsLapseData(string);
-	~clsLapseData(void);
+    clsLapseData(string);
 
-	void getLapseData(int* nRows,float*** lapseData);
-	void show(void);
-private:
-	string m_lapseName;
-	float** m_lapseData;
+    ~clsLapseData(void);
+
+    void getLapseData(int *nRows, float ***lapseData);
+
+    void show(void);
 
 private:
-	void readLapseData(string);
+    string m_lapseName;
+    float **m_lapseData;
+
+private:
+    void readLapseData(string);
 };
 

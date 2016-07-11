@@ -1,22 +1,25 @@
 #pragma once
+
 #include "BMPReach.h"
 
 namespace MainBMP
 {
-	class BMPReachFlowDiversion :
-		public BMPReach
-	{
-	public:
-		BMPReachFlowDiversion(
-					string bmpDatabasePath,
-					string parameterTableName,
-					int reachId,
-					int flowDiversionId);
-		~BMPReachFlowDiversion(void);
+    class BMPReachFlowDiversion :
+            public BMPReach
+    {
+    public:
+        BMPReachFlowDiversion(
+                string bmpDatabasePath,
+                string parameterTableName,
+                int reachId,
+                int flowDiversionId);
 
-		string ColumnName();
-		bool HasTimeSeriesData();
-	};
+        ~BMPReachFlowDiversion(void);
+
+        string ColumnName();
+
+        bool HasTimeSeriesData();
+    };
 }
 
 
