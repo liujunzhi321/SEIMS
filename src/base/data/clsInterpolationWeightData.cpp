@@ -110,7 +110,7 @@ void clsInterpolationWeightData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const cha
     iov.iov_len = length;
     mongoc_stream_t *stream;
     stream = mongoc_stream_gridfs_new(gfile);
-//    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0); /// m_weightData read completed!
+    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0); /// m_weightData read completed!
     /// Get metadata
     const bson_t *md;
     md = mongoc_gridfs_file_get_metadata(gfile);
