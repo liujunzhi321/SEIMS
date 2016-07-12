@@ -170,17 +170,18 @@ dimensionTypes ModulesIOList::MatchType(string strType)
     // default
     dimensionTypes typ = DT_Unknown;
 
-    if (StringMatch(strType, Type_Single)) typ = DT_Single;
-    if (StringMatch(strType, Type_Array1D)) typ = DT_Array1D;
-    if (StringMatch(strType, Type_Array2D)) typ = DT_Array2D;
-    if (StringMatch(strType, Type_Array3D)) typ = DT_Array3D;
-    if (StringMatch(strType, Type_Array1DDateValue)) typ = DT_Array1DDateValue;
-    if (StringMatch(strType, Type_Raster1D)) typ = DT_Raster1D;
-    if (StringMatch(strType, Type_Raster2D)) typ = DT_Raster2D;
-    if (StringMatch(strType, Type_SiteInformation)) typ = DT_SiteInformation;
-    if (StringMatch(strType, Type_LapseRateArray)) typ = DT_LapseRateArray;
-    if (StringMatch(strType, Type_Scenario)) typ = DT_Scenario;
-
+	if (StringMatch(strType, Type_Single)) typ = DT_Single;
+	if (StringMatch(strType, Type_Array1D)) typ = DT_Array1D;
+	if (StringMatch(strType, Type_Array2D)) typ = DT_Array2D;
+	if (StringMatch(strType, Type_Array3D)) typ = DT_Array3D;
+	if (StringMatch(strType, Type_Array1DDateValue)) typ = DT_Array1DDateValue;
+	if (StringMatch(strType, Type_Raster1D)) typ = DT_Raster1D;
+	if (StringMatch(strType, Type_Raster2D)) typ = DT_Raster2D;
+	if (StringMatch(strType, Type_Scenario)) typ = DT_Scenario;
+	if (StringMatch(strType, Type_Reach)) typ = DT_Reach;
+	//if (StringMatch(strType, Type_SiteInformation)) typ = DT_SiteInformation;
+	//if (StringMatch(strType, Type_LapseRateArray)) typ = DT_LapseRateArray;
+	//if (StringMatch(strType, Type_LookupTable)) typ = DT_LookupTable;
     return typ;
 }
 
@@ -1031,9 +1032,21 @@ string DimentionType2String(dimensionTypes dimType)
         case DT_Single:
             strTmp = Type_Single;
             break;
-        case DT_SiteInformation:
-            strTmp = Type_SiteInformation;
-            break;
+		case DT_Scenario:
+			strTmp = Type_Scenario;
+			break;
+		case DT_Reach:
+			strTmp = Type_Reach;
+			break;
+		//case DT_LapseRateArray:
+		//	strTmp = Type_LapseRateArray;
+		//	break;
+		//case DT_LookupTable:
+		//	strTmp = Type_LookupTable;
+		//	break;
+        //case DT_SiteInformation:
+        //    strTmp = Type_SiteInformation;
+        //    break;
         default:
             break;
     }

@@ -45,11 +45,11 @@ int main(int argc, const char *argv[])
     //clsRasterData *test = new clsRasterData("E:\\data\\Dianbu\\patch_partition\\dianbu\\flow_dir.tif");
 
     clsRasterData *mask = new clsRasterData(gfs, "1_MASK", NULL);
-    clsRasterData *raster1d = new clsRasterData(gfs, "1_DEM", mask);
+    clsRasterData *raster1d = new clsRasterData(gfs, "1_PHU0", mask);
     //clsRasterData *raster2d = new clsRasterData(gfs,"1_DENSITY",mask);
     //string rs1dascfile = "e:/test/1_blai_asc.asc";
     //string rs2dascfile = "e:/test/1_density_asc.asc";
-    string rs1dtiffile = "G:/code_zhulj/SEIMS/model_data/TEST/model_dianbu_30m_longterm/OUTPUT/1_DEM.tif";
+    string rs1dtiffile = "G:/code_zhulj/SEIMS/model_data/TEST/model_dianbu_30m_longterm/OUTPUT/1_PHU0.tif";
     //string rs2dtiffile = "e:/test/1_density_asc.tif";
     //string rs1dMongo = "2_BLAI";
     //string rs2dMongo = "2_DENSITY";
