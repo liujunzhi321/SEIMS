@@ -10,22 +10,22 @@
 #2 | Snow accumulation and melt
 #2 | Snow redistribution | | SRD_MB ### NEED TO PREPARE INPUT DATA BEFORE!
 #2 | Snow Sublimation | WetSpa | SSM_PE
-2 | Snow melt | Degree-Day | SNO_DD
+#2 | Snow melt | Degree-Day | SNO_DD
 #2 | Snow | Water balance | SNO_WB
 #2 | Snow | Snowpeak Daily | SNO_SP
 #3 | Infiltration and Surface runoff
-3 | Infiltration | Modified rational | SUR_MR
+#3 | Infiltration | Modified rational | SUR_MR
 #3 | Infiltration | SCS-CN | SUR_CN
 #3 | Infiltration | Green-Ampt | SUR_SGA ### NOT UPDATED AND/OR TESTED.
 #4 | Depression
-4 | Depression | Linsley | DEP_LINSLEY
+#4 | Depression | Linsley | DEP_LINSLEY
 #4 | Depression | Fill and spill | DEP_FS  ### NOT UPDATED AND/OR TESTED.
 #9 | Erosion
 #9 | Hillslope erosion | MUSLE | MUSLE_AS
 #xx| Management Operation | SWAT | MGT_SWAT
 #5 | Percolation
 #5 | Percolation | Darcy and Brooks-Corey | PER_PI
-5 | Percolation | Storage routing | PER_STR
+#5 | Percolation | Storage routing | PER_STR
 #5 | Percolation | Darcy | PER_DARCY ### NOT UPDATED AND/OR TESTED.
 0 | PET | Hargreaves | PET_H
 #0 | PET | PriestleyTaylor | PET_PT

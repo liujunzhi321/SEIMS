@@ -191,17 +191,14 @@ double Max(double *a, int n)
 void Output1DArrayToTxtFile(int n, float *data, const char *filename)
 {
     ofstream ofs(filename);
-
     for (int i = 0; i < n; ++i)
         ofs << data[i] << "\n";
-
     ofs.close();
 }
 
 void Output2DArrayToTxtFile(int nRows, int nCols, float **data, const char *filename)
 {
-    ofstream ofs(filename);
-
+	ofstream ofs(filename);
     for (int i = 0; i < nRows; ++i)
     {
         for (int j = 0; j < nCols; ++j)
@@ -210,7 +207,6 @@ void Output2DArrayToTxtFile(int nRows, int nCols, float **data, const char *file
         }
         ofs << "\n";
     }
-
     ofs.close();
 }
 

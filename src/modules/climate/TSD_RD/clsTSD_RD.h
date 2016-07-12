@@ -34,14 +34,14 @@ private:
     int m_Rows;
     /// time series data
     float *m_Data;
-
+	int counter;
 public:
     clsTSD_RD(void);
 
     ~clsTSD_RD(void);
 
-    virtual void Set1DData(const char *key, int n, float *data);
+    void Set1DData(const char *key, int n, float *data);
 
-    virtual void Get1DData(const char *key, int *n, float **data);
+    void Get1DData(const char *key, int *n, float **data);
 };
 

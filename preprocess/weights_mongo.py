@@ -28,7 +28,7 @@ def idw(x, y, locList):
         dis = cal_dis(x, y, pt[0], pt[1])
         coef = math.pow(dis, -ex)
         coef_list.append(coef)
-        sum = sum + coef
+        sum += coef
     weightList = []
     for coef in coef_list:
         weightList.append(coef / sum)
@@ -132,11 +132,11 @@ def GenerateWeightDependentParameters(conn, subbasinID):
     maskData = unpack(fmt, maskData.read())
     fname = "%s_%s" % (str(subbasinID), Datatype_PHU0.upper())
     fname2 = "%s_%s" % (str(subbasinID), DataType_MeanTemperature0.upper())
-    if (spatial.exists(filename = fname)):
-        x = spatial.get_version(filename = fname)
+    if (spatial.exists(filename=fname)):
+        x = spatial.get_version(filename=fname)
         spatial.delete(x._id)
-    if (spatial.exists(filename = fname2)):
-        x = spatial.get_version(filename = fname2)
+    if (spatial.exists(filename=fname2)):
+        x = spatial.get_version(filename=fname2)
         spatial.delete(x._id)
     metaDic = mask["metadata"]
     metaDic["TYPE"] = Datatype_PHU0
@@ -148,8 +148,8 @@ def GenerateWeightDependentParameters(conn, subbasinID):
     metaDic2["ID"] = fname2
     metaDic2["DESCRIPTION"] = DataType_MeanTemperature0
 
-    myfile = spatial.new_file(filename = fname, metadata = metaDic)
-    myfile2 = spatial.new_file(filename = fname2, metadata = metaDic2)
+    myfile = spatial.new_file(filename=fname, metadata=metaDic)
+    myfile2 = spatial.new_file(filename=fname2, metadata=metaDic2)
     vaildCount = 0
     for i in range(0, ysize):
         curRow = []
@@ -172,7 +172,7 @@ def GenerateWeightDependentParameters(conn, subbasinID):
     print "Valid Cell Number is: %d" % vaildCount
 
 
-def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData = False):
+def GenerateWeightInfo(conn, modelName, subbasinID, stormMode=False, useRsData=False):
     '''
     Generate and import weight information using Thiessen polygon method.
     :param conn:
@@ -212,7 +212,7 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
 
     # read stations information from database
     metadic = {
-        'SUBBASIN' : subbasinID,
+        'SUBBASIN': subbasinID,
         'NUM_CELLS': num}
 
     siteLists = dbModel[DB_TAB_SITELIST.upper()].find({FLD_SUBBASINID.upper(): subbasinID})
@@ -240,6 +240,9 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
     for i in range(len(typeList)):
         fname = '%d_WEIGHT_%s' % (subbasinID, typeList[i])
         print fname
+        if (spatial.exists(filename=fname)):
+            x = spatial.get_version(filename=fname)
+            spatial.delete(x._id)
         siteList = siteLists[i]
         if siteList != None:
             siteList = siteList.split(',')
@@ -247,26 +250,25 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
             siteList = [int(item) for item in siteList]
             metadic['NUM_SITES'] = len(siteList)
             # print siteList
-            qDic = {Tag_ST_StationID: {'$in': siteList}, Tag_ST_Type: typeList[i]}
-            cursor = dbHydro[Tag_ClimateDB_Sites].find(qDic).sort(Tag_ST_StationID, 1)
+            qDic = {Tag_ST_StationID.upper(): {'$in': siteList}, Tag_ST_Type.upper(): typeList[i]}
+            cursor = dbHydro[Tag_ClimateDB_Sites.upper()].find(qDic).sort(Tag_ST_StationID.upper(), 1)
 
             # meteorology station can also be used as precipitation station
             if cursor.count() == 0 and typeList[i] == DataType_Precipitation:
-                qDic = {Tag_ST_StationID: {'$in': siteList}, Tag_ST_Type: DataType_Meteorology}
-                cursor = dbHydro[Tag_ClimateDB_Sites].find(qDic).sort(Tag_ST_StationID, 1)
+                qDic = {Tag_ST_StationID.upper(): {'$in': siteList}, Tag_ST_Type.upper(): DataType_Meteorology}
+                cursor = dbHydro[Tag_ClimateDB_Sites.upper()].find(qDic).sort(Tag_ST_StationID.upper(), 1)
 
             # get site locations
             idList = []
             LocList = []
             for site in cursor:
-                idList.append(site[Tag_ST_StationID])
-                LocList.append([site[Tag_ST_LocalX], site[Tag_ST_LocalY]])
-                # print site['ID'], [site['LocalX'], site['LocalY']]
+                idList.append(site[Tag_ST_StationID.upper()])
+                LocList.append([site[Tag_ST_LocalX.upper()], site[Tag_ST_LocalY.upper()]])
             # print 'loclist', locList
             # interpolate using the locations
             # weightList = []
-            myfile = spatial.new_file(filename = fname, metadata = metadic)
-            # fTest = open(r"/data/tmp/weight_%d_%s.txt"%(subbasinID, typeList[i]), 'w')
+            myfile = spatial.new_file(filename=fname, metadata=metadic)
+            fTest = open(r"%s/weight_%d_%s.txt" % (WORKING_DIR, subbasinID, typeList[i]), 'w')
             for i in range(0, ysize):
                 for j in range(0, xsize):
                     index = i * xsize + j
@@ -285,7 +287,8 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode = False, useRsData
                             line, nearIndex = thiessen(x, y, LocList)
                         # weightList.append(line)
                         myfile.write(line)
-                        # fTest.write("%f %f "%(x,y) + line+"\n")
+                        fmt = '%df' % (len(LocList))
+                        fTest.write("%f %f " % (x, y) + unpack(fmt, line).__str__() + "\n")
 
                         # print line
             # weightStr = '\n'.join(weightList)
@@ -301,4 +304,4 @@ if __name__ == "__main__":
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
     GenerateWeightInfo(conn, SpatialDBName, 1, False)
-    GenerateWeightDependentParameters(conn, 1)
+    # GenerateWeightDependentParameters(conn, 1)

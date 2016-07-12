@@ -10,13 +10,14 @@
 #include "clsTSD_RD.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
-
+#include "utils.h"
 using namespace std;
 
 clsTSD_RD::clsTSD_RD(void)
 {
     this->m_Rows = -1;
     this->m_Data = NULL;
+	this->counter = 1;
 }
 
 
@@ -29,9 +30,10 @@ void clsTSD_RD::Set1DData(const char *key, int n, float *data)
     this->m_Rows = n;
     this->m_Data = data;
     /// Test Code of Reading time series data
-    //for (int i = 0; i < n; i++)
-    //	cout << key << ": " << data[i] << " ";
-    //cout<<endl;
+	//for (int i = 0; i < n; i++)
+	//	 cout << counter << ":" << key << ": " << data[i] << " ";
+	//cout<<endl;
+	//counter++;
 }
 
 void clsTSD_RD::Get1DData(const char *key, int *n, float **data)

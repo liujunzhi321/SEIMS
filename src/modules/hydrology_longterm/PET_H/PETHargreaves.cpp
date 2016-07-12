@@ -28,10 +28,10 @@ PETHargreaves::PETHargreaves(void) : m_nCells(-1), m_petFactor(1.f), m_HCoef_pet
 
 PETHargreaves::~PETHargreaves(void)
 {
-    if (this->m_dayLen != NULL) delete[] this->m_dayLen;
-    if (this->m_phuBase != NULL) delete[] this->m_phuBase;
-    if (this->m_pet != NULL) delete[] this->m_pet;
-    if (this->m_vpd != NULL) delete[] this->m_vpd;
+    if (this->m_dayLen != NULL) Release1DArray(this->m_dayLen);
+    if (this->m_phuBase != NULL) Release1DArray(this->m_phuBase);
+    if (this->m_pet != NULL) Release1DArray(this->m_pet);
+    if (this->m_vpd != NULL) Release1DArray(this->m_vpd);
 }
 
 void PETHargreaves::SetValue(const char *key, float value)
@@ -68,21 +68,25 @@ void PETHargreaves::Set1DData(const char *key, int n, float *value)
 
 void PETHargreaves::initialOutputs()
 {
-    if (NULL == m_pet || NULL == m_vpd || NULL == m_dayLen || NULL == m_phuBase)
-    {
-        this->m_pet = new float[m_nCells];
-        this->m_vpd = new float[m_nCells];
-        this->m_dayLen = new float[m_nCells];
-        this->m_phuBase = new float[m_nCells];
-#pragma omp parallel for
-        for (int i = 0; i < m_nCells; ++i)
-        {
-            m_pet[i] = 0.f;
-            m_vpd[i] = 0.f;
-            m_dayLen[i] = 0.f;
-            m_phuBase[i] = 0.f;
-        }
-    }
+	if(this->m_pet == NULL) Initialize1DArray(m_nCells, m_pet, 0.f);
+	if(this->m_vpd == NULL) Initialize1DArray(m_nCells, m_vpd, 0.f);
+	if(this->m_dayLen == NULL) Initialize1DArray(m_nCells, m_dayLen, 0.f);
+	if(this->m_phuBase == NULL) Initialize1DArray(m_nCells, m_phuBase, 0.f);
+//	if (NULL == m_pet || NULL == m_vpd || NULL == m_dayLen || NULL == m_phuBase)
+//	{
+//		this->m_pet = new float[m_nCells];
+//		this->m_vpd = new float[m_nCells];
+//		this->m_dayLen = new float[m_nCells];
+//		this->m_phuBase = new float[m_nCells];
+//#pragma omp parallel for
+//		for (int i = 0; i < m_nCells; ++i)
+//		{
+//			m_pet[i] = 0.f;
+//			m_vpd[i] = 0.f;
+//			m_dayLen[i] = 0.f;
+//			m_phuBase[i] = 0.f;
+//		}
+//	}
 }
 
 int PETHargreaves::Execute()
@@ -99,8 +103,8 @@ int PETHargreaves::Execute()
         if (tmpav(j) > 0. .and. phutot(hru_sub(j)) > 0.01) then
             phubase(j) = phubase(j) + tmpav(j) / phutot(hru_sub(j))
         end if*/
-        if (m_jday == 1) m_phuBase[i] = 0.;
-        if (m_tMean[i] > 0. && m_phutot[i] > 0.01)
+        if (m_jday == 1) m_phuBase[i] = 0.f;
+        if (m_tMean[i] > 0.f && m_phutot[i] > 0.01f)
             m_phuBase[i] += m_tMean[i] / m_phutot[i];
         MaxSolarRadiation(m_jday, m_cellLat[i], m_dayLen[i], m_srMax);
         ///calculate latent heat of vaporization(from swat)
@@ -117,7 +121,7 @@ int PETHargreaves::Execute()
         float satVaporPressure = SaturationVaporPressure(m_tMean[i]);
         float actualVaporPressure = 0.f;
         if (m_rhd[i] > 1)   /// IF percent unit.
-            actualVaporPressure = m_rhd[i] * satVaporPressure * 0.01;
+            actualVaporPressure = m_rhd[i] * satVaporPressure * 0.01f;
         else
             actualVaporPressure = m_rhd[i] * satVaporPressure;
         m_vpd[i] = satVaporPressure - actualVaporPressure;
@@ -128,7 +132,7 @@ int PETHargreaves::Execute()
 
 void PETHargreaves::Get1DData(const char *key, int *n, float **data)
 {
-    CheckInputData();
+    //CheckInputData(); // Plz avoid putting CheckInputData() in Get1DData, this may cause Set time error! By LJ
     initialOutputs();
     string sk(key);
     *n = this->m_nCells;
@@ -161,10 +165,7 @@ bool PETHargreaves::CheckInputSize(const char *key, int n)
 bool PETHargreaves::CheckInputData()
 {
     if (this->m_date == -1)
-    {
         throw ModelException(MID_PET_H, "CheckInputData", "You have not set the time.");
-        return false;
-    }
     if (m_nCells <= 0)
         throw ModelException(MID_PET_H, "CheckInputData", "The dimension of the input data can not be less than zero.");
     if (this->m_tMax == NULL)

@@ -20,9 +20,9 @@ SoilTemperatureFINPL::SoilTemperatureFINPL(void) : m_a0(NODATA), m_a1(NODATA), m
 
 SoilTemperatureFINPL::~SoilTemperatureFINPL(void)
 {
-    if (m_soilTemp != NULL) delete[]m_soilTemp;
-    if (m_t1 != NULL) delete[]m_t1;
-    if (m_t2 != NULL) delete[]m_t2;
+    if (m_soilTemp != NULL) Release1DArray(m_soilTemp);
+    if (m_t1 != NULL) Release1DArray(m_t1);
+    if (m_t2 != NULL) Release1DArray(m_t2);
 }
 
 int SoilTemperatureFINPL::Execute()
@@ -32,19 +32,6 @@ int SoilTemperatureFINPL::Execute()
     /// initial output of m_t1 and m_t2 for the first run
     initialOutputs();
     m_julianDay = JulianDay(m_date);
-    if (this->m_soilTemp == NULL)
-    {
-        this->m_soilTemp = new float[this->m_nCells];
-        //this->m_t1 = new float[this->m_nCells];
-        //this->m_t2 = new float[this->m_nCells];
-
-/*		#pragma omp parallel for
-		for (int i=0; i<m_nCells; ++i)
-		{
-			m_t1[i] = m_tMean[i];
-			m_t2[i] = m_t1[i];
-		}	*/
-    }
 
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; ++i)
@@ -54,9 +41,9 @@ int SoilTemperatureFINPL::Execute()
         float t2 = m_t2[i];
         float t10 = m_a0 + m_a1 * t2 + m_a2 * t1 + m_a3 * t
                     + m_b1 * sin(w * m_julianDay) + m_d1 * cos(w * m_julianDay)
-                    + m_b2 * sin(2 * w * m_julianDay) + m_d2 * cos(2 * w * m_julianDay);
+                    + m_b2 * sin(2.f * w * m_julianDay) + m_d2 * cos(2.f * w * m_julianDay);
         m_soilTemp[i] = t10 * m_kSoil10 + m_relativeFactor[i];
-        if (m_soilTemp[i] > 60.0f || m_soilTemp[i] < -90.0f)
+        if (m_soilTemp[i] > 60.f || m_soilTemp[i] < -90.f)
         {
             ostringstream oss;
             oss << "The calculated soil temperature at cell (" << i
@@ -126,28 +113,16 @@ bool SoilTemperatureFINPL::CheckInputSize(const char *key, int n)
 void SoilTemperatureFINPL::SetValue(const char *key, float value)
 {
     string sk(key);
-    if (StringMatch(sk, VAR_OMP_THREADNUM))
-    {
-        omp_set_num_threads((int) value);
-    }
-    else if (StringMatch(sk, VAR_SOL_TA0))
-        m_a0 = value;
-    else if (StringMatch(sk, VAR_SOL_TA1))
-        m_a1 = value;
-    else if (StringMatch(sk, VAR_SOL_TA2))
-        m_a2 = value;
-    else if (StringMatch(sk, VAR_SOL_TA3))
-        m_a3 = value;
-    else if (StringMatch(sk, VAR_SOL_TB1))
-        m_b1 = value;
-    else if (StringMatch(sk, VAR_SOL_TB2))
-        m_b2 = value;
-    else if (StringMatch(sk, VAR_SOL_TD1))
-        m_d1 = value;
-    else if (StringMatch(sk, VAR_SOL_TD2))
-        m_d2 = value;
-    else if (StringMatch(sk, VAR_K_SOIL10))
-        m_kSoil10 = value;
+    if (StringMatch(sk, VAR_OMP_THREADNUM)) omp_set_num_threads((int) value);
+    else if (StringMatch(sk, VAR_SOL_TA0)) m_a0 = value;
+    else if (StringMatch(sk, VAR_SOL_TA1)) m_a1 = value;
+    else if (StringMatch(sk, VAR_SOL_TA2)) m_a2 = value;
+    else if (StringMatch(sk, VAR_SOL_TA3)) m_a3 = value;
+    else if (StringMatch(sk, VAR_SOL_TB1)) m_b1 = value;
+    else if (StringMatch(sk, VAR_SOL_TB2)) m_b2 = value;
+    else if (StringMatch(sk, VAR_SOL_TD1)) m_d1 = value;
+    else if (StringMatch(sk, VAR_SOL_TD2)) m_d2 = value;
+    else if (StringMatch(sk, VAR_K_SOIL10)) m_kSoil10 = value;
 }
 
 void SoilTemperatureFINPL::Set1DData(const char *key, int n, float *data)
@@ -191,16 +166,20 @@ void SoilTemperatureFINPL::initialOutputs()
 
     if (m_t1 == NULL && m_tMean != NULL)
     {
-        m_t1 = new float[m_nCells];
+		Initialize1DArray(m_nCells, m_t1, m_tMean);
+        /*m_t1 = new float[m_nCells];
 #pragma omp parallel for
         for (int i = 0; i < m_nCells; ++i)
-            m_t1[i] = m_tMean[i];
+            m_t1[i] = m_tMean[i];*/
     }
     if (m_t2 == NULL && m_tMean != NULL)
     {
-        m_t2 = new float[m_nCells];
-#pragma omp parallel for
-        for (int i = 0; i < m_nCells; ++i)
-            m_t2[i] = m_tMean[i];
+		Initialize1DArray(m_nCells, m_t2, m_tMean);
+//        m_t2 = new float[m_nCells];
+//#pragma omp parallel for
+//        for (int i = 0; i < m_nCells; ++i)
+//            m_t2[i] = m_tMean[i];
     }
+	if (this->m_soilTemp == NULL)
+		Initialize1DArray(m_nCells, m_soilTemp, 0.f);
 }

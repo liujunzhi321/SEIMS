@@ -31,23 +31,24 @@ using namespace std;
 class Interpolate : public SimulationModule
 {
 public:
+	//! Constructor
     Interpolate();
-
+	//! Destructor
     ~Interpolate(void);
+	//! Set data type
+    void SetDataType(float value);
 
-    virtual void SetDataType(float value);
+    int Execute();
 
-    virtual int Execute();
+    void SetDate(time_t date, int yearIdx);
 
-    virtual void SetDate(time_t date);
+    void SetValue(const char *key, float value);
 
-    virtual void SetValue(const char *key, float value);
+    void Set1DData(const char *key, int n, float *value);
 
-    virtual void Set1DData(const char *key, int n, float *value);
+    void Set2DData(const char *key, int nRows, int nCols, float **data);
 
-    virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
-
-    virtual void Get1DData(const char *key, int *n, float **data);
+    void Get1DData(const char *key, int *n, float **data);
 
     /*!
      * \brief Check length of the input variable
@@ -63,7 +64,7 @@ private:
     // This is the climate data type. It is used to get the specific lapse rate from lapse_rate table.
     // It is also used to create a string which can match the output id.
     // For example, if data_type = 1, i.e. the data type is P, main program will connect the output variable name "D"
-    // and the data type to create a string like ��D_P��,
+    // and the data type to create a string like D_P,
     // this string is the same with the output id in the output lookup table and file.out.
     int m_dataType;
     /// count of stations
