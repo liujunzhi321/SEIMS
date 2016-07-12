@@ -19,6 +19,8 @@ private:
     float *m_raster1D;
     /// maximum number of soil layers
     int m_soilLayers;
+	/// soil layers
+	float *m_nSoilLayrs;
     /// input 2D raster data
     float **m_raster2D;
     /// output 1D raster data

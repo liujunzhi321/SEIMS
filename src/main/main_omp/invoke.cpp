@@ -196,11 +196,12 @@ void MainMongoDB(string modelPath, char *host, int port, int scenarioID, int num
         /// CHECK FINISHED
 
         int nSubbasin = 1;
-        //SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, nSubbasin);
+		/// Load Setting Input from file.in, which is deprecated now! By LJ
+        /// SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, nSubbasin);
         SettingsInput *input = new SettingsInput(conn, dbName, nSubbasin);
         ModuleFactory *factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName, layingMethod,
                                                    scenarioID);
-
+		/// Setting Output is loaded in ModelMain. 
         ModelMain main(conn, dbName, projectPath, input, factory, nSubbasin, scenarioID, numThread, layingMethod);
         main.Execute();
         main.Output();

@@ -26,7 +26,7 @@ using namespace std;
 class ParamInfo
 {
 public:
-    //! Constructor
+    //! Construct an empty instance.
     ParamInfo(void);
 
     //! Destructor

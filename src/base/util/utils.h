@@ -76,10 +76,9 @@ public:
     static time_t ConvertToTime(string strDate, string format, bool includeHour);
 
     /*!
-     * \brief Convert string to date time, string format could be "%4d-%2d-%2d %2d:%2d:%2d" or %d-%d-%d
+     * \brief Convert string to date time, string format could be "%4d-%2d-%2d %2d:%2d:%2d"
      *
-     * e.g.: strDate => 20000323, format=> %4d%2d%2d
-     *       strDate => 2000-03-23, format => %d-%d-%d
+     * e.g.: strDate => 2000-03-23 10:30:00, format=> %4d-%2d-%2d %2d:%2d:%2d
      *
      *
      * \param[in] strDate \a string date

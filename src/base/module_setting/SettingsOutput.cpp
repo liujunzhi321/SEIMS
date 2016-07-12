@@ -21,7 +21,7 @@ SettingsOutput::SettingsOutput(int subBasinID, string fileName, mongoc_client_t 
 SettingsOutput::SettingsOutput(int subBasinID, mongoc_client_t *conn, string dbName, mongoc_gridfs_t *gfs)
         : m_conn(conn), m_dbName(dbName), m_outputGfs(gfs)
 {
-    LoadSettingsOutputFromMongoDB();
+    LoadSettingsOutputFromMongoDB(subBasinID);
 }
 
 SettingsOutput::~SettingsOutput(void)
@@ -40,7 +40,7 @@ SettingsOutput::~SettingsOutput(void)
     StatusMessage("End to release SettingsOutput ...");
 }
 
-bool SettingsOutput::LoadSettingsOutputFromMongoDB()
+bool SettingsOutput::LoadSettingsOutputFromMongoDB(int subBasinID)
 {
     bson_t *b = bson_new();
     bson_t *child1 = bson_new();
@@ -53,24 +53,84 @@ bool SettingsOutput::LoadSettingsOutputFromMongoDB()
     mongoc_collection_t *collection;
     bson_error_t *err = NULL;
 
-    collection = mongoc_client_get_collection(m_conn, m_dbName.c_str(), DB_TAB_FILEIN);
-    if (err != NULL)
-        throw ModelException("SettingsInput", "LoadSettingsFromMongoDB",
-                             "Failed to get collection: " + string(DB_TAB_FILEIN) + ".\n");
+    collection = mongoc_client_get_collection(m_conn, m_dbName.c_str(), DB_TAB_FILEOUT);
     cursor = mongoc_collection_find(collection, MONGOC_QUERY_NONE, 0, 0, 0, b, NULL, NULL);
 
     bson_iter_t itertor;
     while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &bsonTable))
     {
-        vector<string> tokens(2);
-        if (bson_iter_init_find(&itertor, bsonTable, FLD_CONF_TAG))
-            tokens[0] = GetStringFromBSONITER(&itertor);
-        if (bson_iter_init_find(&itertor, bsonTable, FLD_CONF_VALUE))
-            tokens[1] = GetStringFromBSONITER(&itertor);
-        int sz = m_Settings.size();        // get the current number of rows
-        m_Settings.resize(sz + 1);        // resize with one more row
-        m_Settings[sz] = tokens;
+        int use = -1;
+		string modCls = "", outputID = "", descprition = "";
+		string outFileName = "", aggType = "", unit = "", subBsn = "";
+		string dataType = "", intervalUnit = "";
+		int interval = -1;
+		string sTimeStr = "", eTimeStr = "";
+        if (bson_iter_init_find(&itertor, bsonTable, Tag_OutputUSE))
+            use = GetIntFromBSONITER(&itertor);
+        if (bson_iter_init_find(&itertor, bsonTable, Tag_MODCLS))
+			modCls = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_OutputID))
+			outputID = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_OutputDESC))
+			descprition = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_FileName))
+			outFileName = GetStringFromBSONITER(&itertor);
+		string coreFileName = GetCoreFileName(outFileName);
+		string suffix = GetSuffix(outFileName);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_AggType))
+			aggType = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_OutputUNIT))
+			unit = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_OutputSubbsn))
+			subBsn = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_StartTime))
+			sTimeStr = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_EndTime))
+			eTimeStr = GetStringFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_Interval))
+			interval = GetIntFromBSONITER(&itertor);
+		if (bson_iter_init_find(&itertor, bsonTable, Tag_IntervalUnit))
+			intervalUnit = GetStringFromBSONITER(&itertor);
+		if(use <= 0)
+			continue;
+		/// First, if OutputID does not existed in m_printInfos, then create a new one.
+		if(m_printInfos2.find(outputID) == m_printInfos2.end())
+		{
+			m_printInfos2[outputID] = new PrintInfo();
+			m_printInfos2[outputID]->setOutputID(outputID);/// set the OUTPUTID for the new PrintInfo
+		}
+		PrintInfo *pi = NULL; /// reset the pointer
+		pi = m_printInfos2[outputID];
+
+		ostringstream oss;
+		oss << subBasinID << "_";
+		string strSubbasinID = oss.str();
+		/// Check Tag_OutputSubbsn first
+		if (StringMatch(subBsn, Tag_Outlet)) /// Output of outlet, such as Qoutlet, SEDoutlet, etc.
+		{
+			pi->setInterval(interval);
+			pi->setIntervalUnits(intervalUnit);
+			pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName, suffix);
+		}
+		else if (StringMatch(subBsn, Tag_AllSubbsn)) /// Output of all subbasins
+		{
+			vector<string> aggTypes = utils::SplitString(aggType, ',');
+			for(vector<string>::iterator it = aggTypes.begin(); it != aggTypes.end(); it++)
+				pi->AddPrintItem(*it, sTimeStr, eTimeStr, strSubbasinID + coreFileName, suffix, m_conn, m_outputGfs);
+		}
+		else
+		{
+			pi->setInterval(interval);
+			pi->setIntervalUnits(intervalUnit);
+			vector<string> subBsns = utils::SplitString(subBsn, ',');
+			for(vector<string>::iterator it = subBsns.begin(); it != subBsns.end(); it++)
+				pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName,*it, suffix, true);
+		}
     }
+	for (map<string, PrintInfo*>::iterator it = m_printInfos2.begin(); it != m_printInfos2.end(); it++)
+	{
+		m_printInfos.push_back(it->second);
+	}
     bson_destroy(b);
     mongoc_collection_destroy(collection);
     mongoc_cursor_destroy(cursor);
@@ -319,7 +379,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
                 for (int flag = 0; flag < 4; flag++)
                 {
                     i++;
-                    if (StringMatch(m_Settings[i][0], Tag_Type))
+                    if (StringMatch(m_Settings[i][0], Tag_AggType))
                     {
                         // get the type
                         type = m_Settings[i][1];

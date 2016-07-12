@@ -1012,7 +1012,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char *remoteFilen
     iov.iov_len = length;
     mongoc_stream_t *stream;
     stream = mongoc_stream_gridfs_new(gfile);
-//    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
     float *data = (float *) buf;
     /// Get metadata
     const bson_t *bmeta;
@@ -1144,8 +1144,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char *remoteFilen
         bmeta = mongoc_gridfs_file_get_metadata(gfile);
         /// Get value of given keys
         bson_iter_t iter;
-        if (bson_iter_init(&iter, bmeta) && bson_iter_find(&iter, HEADER_RS_LAYERS)) \
-
+        if (bson_iter_init(&iter, bmeta) && bson_iter_find(&iter, HEADER_RS_LAYERS)) 
             m_nLyrs = GetFloatFromBSONITER(&iter);
         else
             throw ModelException("clsRasterData", "ReadRasterFromMongoDB", "Failed in get FLOAT value: LAYERS.\n");
@@ -1156,7 +1155,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char *remoteFilen
         iov.iov_len = length;
         mongoc_stream_t *stream;
         stream = mongoc_stream_gridfs_new(gfile);
-//        ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+        ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
         float *data = (float *) buf;
         /// Get the valid raster data positions from mask
         int nRows;

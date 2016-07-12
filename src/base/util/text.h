@@ -80,20 +80,37 @@
 #define PARAM_USE_Y                    "Y"
 #define PARAM_USE_N                    "N"
 
-/// Tags in file.out
+
+////////////  Input and Output Tags   ///////////////
+// Fields in Model Configuration Collections //
+//// Tags in file.in
+#define Tag_ConfTag "TAG"
+#define Tag_ConfValue "VALUE"
+#define Tag_MODCLS "MODULE_CLASS"
+//// Tags in file.out
+#define Tag_OutputUSE						"USE"
 #define Tag_OutputID                        "OUTPUTID"
-#define Tag_Interval                            "INTERVAL"
+#define Tag_OutputDESC						"DESCRIPTION"
+#define Tag_OutputUNIT						"UNIT"
+#define Tag_StartTime                       "STARTTIME"
+#define Tag_EndTime							"ENDTIME"
+#define Tag_FileName                        "FILENAME"
+#define Tag_AggType                         "TYPE"
+#define Tag_OutputSubbsn					"SUBBASIN"
+#define Tag_Interval                        "INTERVAL"
+#define Tag_IntervalUnit					"INTERVAL_UNIT"
+#define Tag_DataType                        "DATATYPE"
+
+/// Available values of Tag_outputSubbsn
+#define Tag_AllSubbsn						"ALL"
+#define Tag_Outlet							"OUTLET"
+
 #define Tag_SiteCount                        "SITECOUNT"
 #define Tag_SiteName                        "SITENAME"
 #define Tag_SiteID                            "SITEID"
 #define Tag_ReachName                    "REACHNAME"
-#define Tag_StartTime                        "STARTTIME"
-#define Tag_EndTime                        "ENDTIME"
-#define Tag_FileName                        "FILENAME"
-#define Tag_Type                                "TYPE"
 #define Tag_Count                            "COUNT"
-#define Tag_DataType                        "DATA_TYPE"
-////////////  Output Tags   ///////////////
+
 //// Output aggregation type //////
 #define Tag_Unknown            "UNKNOWN"
 #define Tag_Sum                    "SUM"
@@ -111,7 +128,7 @@
 #define Tag_DisPOutlet "DissovePOutlet"
 #define Tag_AmmoOutlet "AmmoniumOutlet"
 #define Tag_NitrOutlet "NitrateOutlet"
-#define TAG_OUT_QSUBBASIN "QSUBBASIN"
+
 
 #define Tag_SubbasinCount            "SUBBASINCOUNT"
 #define Tag_SubbasinId                    "SUBBASINID"
@@ -215,20 +232,6 @@
 #define REACH_RK2                    "RK2"
 #define REACH_RK3                    "RK3"
 #define REACH_RK4                    "RK4"
-
-// Field in Model Configuration Collections, FILE_IN and FILE_OUT
-#define FLD_CONF_TAG "TAG"
-#define FLD_CONF_VALUE "VALUE"
-#define FLD_CONF_MODCLS "MODULE_CLASS"
-#define FLD_CONF_OUTPUTID "OUTPUTID"
-#define FLD_CONF_DESC "DESCRIPTION"
-#define FLD_CONF_UNIT "UNIT"
-#define FLD_CONF_TYPE "TYPE"
-#define FLD_CONF_STIME "STARTTIME"
-#define FLD_CONF_ETIME "ENDTIME"
-#define FLD_CONF_SUBBSN "SUBBASIN"
-#define FLD_CONF_FILENAME "FILENAME"
-#define FLD_CONF_USE "USE"
 
 /// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
 #define SITELIST_TABLE_M        "SITELISTM"
@@ -715,7 +718,7 @@
 #define VAR_QI "QI"                                 /// Interflow at each reach outlet and at each time step
 #define VAR_QOUTLET "QOUTLET"                       /// discharge at the watershed outlet
 #define VAR_QOVERLAND "QOverland"
-#define VAR_QRECH "QRECH"                           /// Discharge in a text format at each reach outlet and at each time step
+#define VAR_QRECH "QRECH"                           /// Discharge at reach outlet of each time step
 #define VAR_QS "QS"                                 /// Overland discharge at each reach outlet and at each time step
 #define VAR_QSOIL "QSoil"
 #define VAR_QSOUTLET "QSOUTLET"                     /// discharge at the watershed outlet
@@ -852,6 +855,7 @@
 #define VAR_TMEAN1 "TMEAN1"
 #define VAR_TMEAN2 "TMEAN2"
 #define VAR_TMIN "TMIN"
+
 #define VAR_TREEYRS "CURYR_INIT"
 #define VAR_TSD_DT "data_type"                      /// Time series data type
 #define VAR_USLE_C "USLE_C"
@@ -926,8 +930,9 @@
 #define UNIT_STRG_M3M "m3/m"                       /// storage per meter of reach length
 #define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
 #define UNIT_TEMP_FACTOR "mm/deg C"                 /// temperature factor
+#define UNIT_TIMESTEP_DAY "day"                    /// Time step (day)
 #define UNIT_TIMESTEP_HOUR "hr"                     /// Time step (h)
-#define UNIT_TIMESTEP_SEC "s"                      /// Time step (s)
+#define UNIT_TIMESTEP_SEC "sec"                      /// Time step (sec)
 #define UNIT_TONS "t"                               /// metric tons
 #define UNIT_VOL_FRA_M3M3 "m3/m3"
 #define UNIT_VOL_M3 "m3"                           /// volume

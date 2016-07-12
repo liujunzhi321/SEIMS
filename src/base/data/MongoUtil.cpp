@@ -60,11 +60,18 @@ time_t GetDateTimeFromBSONITER(bson_iter_t *iter)
     const bson_value_t *vv = bson_iter_value(iter);
     if (vv->value_type == BSON_TYPE_DATE_TIME)
         return (time_t) vv->value.v_datetime;
+	else if (vv->value_type == BSON_TYPE_UTF8)
+	{
+		string tmpTimeStr = vv->value.v_utf8.str;
+		if(tmpTimeStr.size() > 12)
+			return utils::ConvertToTime2(tmpTimeStr,"%4d-%2d-%2d %2d:%2d:%2d", true);
+		else
+			return utils::ConvertToTime2(tmpTimeStr, "%4d-%2d-%2d", false);
+	}
     else
     {
         throw ModelException("MongoDB Utility", "ReadFromMongoDB", "Failed in get Date Time value.\n");
     }
-    /// TODO: Add string to datetime
 }
 
 string GetStringFromBSONITER(bson_iter_t *iter)
@@ -147,7 +154,7 @@ void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename
     mongoc_iovec_t iov;
     iov.iov_base = (char *) data;
     iov.iov_len = length;
-//    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
     mongoc_stream_destroy(stream);
     mongoc_gridfs_file_destroy(gfile);
     bson_destroy(b);
@@ -170,7 +177,7 @@ void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename
     mongoc_iovec_t iov;
     iov.iov_base = (char *) floatValues;
     iov.iov_len = length;
-//    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
     int nRows = (int) floatValues[0];
     n = nRows;
     data = new float *[n];
@@ -210,7 +217,7 @@ void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, cl
     mongoc_iovec_t iov;
     iov.iov_base = (char *) floatValues;
     iov.iov_len = length;
-//    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
 
     n = (int) floatValues[0];
     data = new float *[n];

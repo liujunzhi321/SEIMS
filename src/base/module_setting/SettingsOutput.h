@@ -37,10 +37,13 @@ public:
     ~SettingsOutput(void);
 
     //! Load output setting from file
-    bool LoadSettingsFromFile(int, string);
+    bool LoadSettingsFromFile(int subBasinID, string fileOutPath);
 
-    //! Load output setting from MongoDB
-    bool LoadSettingsOutputFromMongoDB();
+    /*
+     * \brief Load output setting from MongoDB
+     * Which is combination of \sa LoadSettingsFromFile() and ParseOutputSettings()
+     */
+    bool LoadSettingsOutputFromMongoDB(int subBasinID);
 
     //! Write output information to log file
     void Dump(string);
@@ -54,6 +57,11 @@ public:
 public:
     //! All the print settings
     vector<PrintInfo *> m_printInfos;
+	/* All the output settings
+	 * key: OutputID
+	 * value: \sa PrintInfo instance
+	 */
+	map<string, PrintInfo*> m_printInfos2;
 
 private:
     //! MongoDB client
