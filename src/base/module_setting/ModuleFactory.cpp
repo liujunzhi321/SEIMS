@@ -466,11 +466,11 @@ dimensionTypes ModuleFactory::MatchType(string strType)
     if (StringMatch(strType, Type_Array1DDateValue)) typ = DT_Array1DDateValue;
     if (StringMatch(strType, Type_Raster1D)) typ = DT_Raster1D;
     if (StringMatch(strType, Type_Raster2D)) typ = DT_Raster2D;
-    if (StringMatch(strType, Type_SiteInformation)) typ = DT_SiteInformation;
-    if (StringMatch(strType, Type_LapseRateArray)) typ = DT_LapseRateArray;
     if (StringMatch(strType, Type_Scenario)) typ = DT_Scenario;
     if (StringMatch(strType, Type_Reach)) typ = DT_Reach;
-    if (StringMatch(strType, Type_LookupTable)) typ = DT_LookupTable;
+    //if (StringMatch(strType, Type_SiteInformation)) typ = DT_SiteInformation;
+    //if (StringMatch(strType, Type_LapseRateArray)) typ = DT_LapseRateArray;
+    //if (StringMatch(strType, Type_LookupTable)) typ = DT_LookupTable;
     return typ;
 }
 
@@ -1036,20 +1036,20 @@ void ModuleFactory::SetData(string &dbName, int nSubbasin, SEIMSModuleSetting *s
         case DT_Raster2D:
             /// Fix by LiangJun Zhu, 5-27-2016
             SetRaster(dbName, name, remoteFileName, templateRaster, pModule);
-            break;
-        case DT_SiteInformation:
-            break;
-        case DT_LapseRateArray:
-            //SetLapseRateArray();
-            break;
-        case DT_Scenario:
-            SetScenario(pModule);
-            break;
-        case DT_Reach:
-            SetReaches(pModule);
-            break;
-        case DT_LookupTable:
-            break;
+			break;
+		case DT_Scenario:
+			SetScenario(pModule);
+			break;
+		case DT_Reach:
+			SetReaches(pModule);
+			break;
+        //case DT_SiteInformation:
+        //    break;
+        //case DT_LapseRateArray:
+        //    //SetLapseRateArray();
+        //    break;
+        //case DT_LookupTable:
+        //    break;
         default:
             break;
     }
@@ -1292,15 +1292,16 @@ void ModuleFactory::Set2DData(string &dbName, string &paraName, int nSubbasin, s
         else if (StringMatch(paraName, Tag_LapseRate)) /// Match to the format of DT_Array2D, By LJ.
         {
             nRows = 12;
-            nCols = 4;
+            nCols = 5;
             data = new float *[nRows];
             for (int i = 0; i < nRows; i++)
             {
                 data[i] = new float[nCols];
-                data[i][0] = 3; /// element number
+                data[i][0] = 4.f; /// element number
                 data[i][1] = 0.03f; // P
                 data[i][2] = -0.65f; // T
                 data[i][3] = 0.f;    // PET
+				data[i][4] = 0.f;    // other Meteorology variables 
             }
         }
         else

@@ -127,7 +127,8 @@ public:
     string Suffix;
     //! output filename without suffix
     string Filename;
-
+	//! Aggregation type string
+	string AggType;
     //! create "output" folder to store all results
     void Flush(string, clsRasterData *, string);
 

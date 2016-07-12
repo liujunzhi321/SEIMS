@@ -113,7 +113,8 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
 
     /// Get filenames existed in GridFS, i.e., "output.files"
     vector<string> outputExisted = GetGridFsFileNames(gfs);
-
+	/// Filename should appended by AggregateType to avoiding the same names. By LJ, 2016-7-12
+	Filename = Filename + "_" + AggType;
     StatusMessage(("Creating output file " + Filename + "...").c_str());
     // Don't forget add appropriate suffix to Filename... ZhuLJ, 2015/6/16
     if (m_AggregationType == AT_SpecificCells)
@@ -254,43 +255,52 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
             // create the aggregate array
             m_nRows = nRows;
             m_nLayers = nCols;
-            m_2DData = new float *[m_nRows];
-            for (int i = 0; i < m_nRows; i++)
-            {
-                m_2DData[i] = new float[m_nLayers];
-                for (int j = 0; j < m_nLayers; j++)
-                    m_2DData[i][j] = 0.0f;
-            }
+			Initialize2DArray(m_nRows, m_nLayers, m_2DData, 0.f);
+            //m_2DData = new float *[m_nRows];
+            //for (int i = 0; i < m_nRows; i++)
+            //{
+            //    m_2DData[i] = new float[m_nLayers];
+            //    for (int j = 0; j < m_nLayers; j++)
+            //        m_2DData[i][j] = 0.0f;
+            //}
             m_Counter = 0;
         }
 
         switch (m_AggregationType)
         {
             case AT_Average:
-                for (int i = 0; i < m_nRows; i++)
+				#pragma omp parallel for
+                for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++)
                         m_2DData[i][j] = (m_2DData[i][j] * m_Counter + data[i][j]) / (m_Counter + 1.f);
+				}
                 break;
             case AT_Sum:
-                for (int i = 0; i < m_nRows; i++)
+				#pragma omp parallel for
+                for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++)
                         m_2DData[i][j] += data[i][j];
+				}
                 break;
             case AT_Minimum:
-                for (int i = 0; i < m_nRows; i++)
+				#pragma omp parallel for
+                for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++)
                     {
                         if (data[i][j] < m_2DData[i][j])
                             m_2DData[i][j] = data[i][j];
                     }
+				}
                 break;
             case AT_Maximum:
-                for (int i = 0; i < m_nRows; i++)
+				#pragma omp parallel for
+                for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++)
                     {
                         if (data[i][j] > m_2DData[i][j])
                             m_2DData[i][j] = data[i][j];
                     }
+				}
                 break;
             default:
                 break;
@@ -316,15 +326,17 @@ void PrintInfoItem::AggregateData(time_t time, int numrows, float *data)
         {
             // create the aggregate array
             m_nRows = numrows;
-            m_1DData = new float[m_nRows];
-            for (int i = 0; i < m_nRows; i++)
-            {
-                m_1DData[i] = 0.0f;
-            }
+			Initialize1DArray(m_nRows, m_1DData, 0.f);
+            //m_1DData = new float[m_nRows];
+            //for (int i = 0; i < m_nRows; i++)
+            //{
+            //    m_1DData[i] = 0.0f;
+            //}
             m_Counter = 0;
         }
 
         // depending on the type of aggregation
+		#pragma omp parallel for
         for (int rw = 0; rw < m_nRows; rw++)
         {
             switch (m_AggregationType)
@@ -372,6 +384,7 @@ void PrintInfoItem::AggregateData(int numrows, float **data, AggregationType typ
     switch (type)
     {
         case AT_Average:
+			#pragma omp parallel for
             for (int rw = 0; rw < m_nRows; rw++)
             {
                 if (!FloatEqual(data[rw][2], NoDataValue))
@@ -395,6 +408,7 @@ void PrintInfoItem::AggregateData(int numrows, float **data, AggregationType typ
             m_Counter++;
             break;
         case AT_Sum:
+			#pragma omp parallel for
             for (int rw = 0; rw < m_nRows; rw++)
             {
                 if (!FloatEqual(data[rw][2], NoDataValue))
@@ -409,6 +423,7 @@ void PrintInfoItem::AggregateData(int numrows, float **data, AggregationType typ
             }
             break;
         case AT_Minimum:
+			#pragma omp parallel for
             for (int rw = 0; rw < m_nRows; rw++)
             {
                 if (!FloatEqual(data[rw][2], NoDataValue))
@@ -427,6 +442,7 @@ void PrintInfoItem::AggregateData(int numrows, float **data, AggregationType typ
             }
             break;
         case AT_Maximum:
+			#pragma omp parallel for
             for (int rw = 0; rw < m_nRows; rw++)
             {
                 if (!FloatEqual(data[rw][2], NoDataValue))
@@ -680,6 +696,7 @@ void PrintInfo::AddPrintItem(string type, string start, string end, string file,
 
 
     type = trim(type);
+	itm->AggType = type;
     AggregationType enumType = PrintInfoItem::MatchAggregationType(type);
     if (enumType == AT_Unknown)
         throw ModelException("PrintInfo", "AddPrintItem", "The type of output " + m_OutputID +
