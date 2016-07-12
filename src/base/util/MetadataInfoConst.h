@@ -95,7 +95,7 @@ enum dimensionTypes
             DT_Scenario = 9,
     /// Reach parameters
             DT_Reach = 10,
-    /// Lookup tables
+    /// Lookup tables, TODO LJ
             DT_LookupTable = 11
 };
 
