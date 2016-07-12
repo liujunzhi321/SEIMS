@@ -147,14 +147,25 @@ def ImportModelConfiguration(db):
                 fileOutDict[FLD_CONF_STIME] = item[i]
             elif StringMatch(FLD_CONF_ETIME, outFieldArray[i]):
                 fileOutDict[FLD_CONF_ETIME] = item[i]
+            elif StringMatch(FLD_CONF_INTERVAL, outFieldArray[i]):
+                fileOutDict[FLD_CONF_INTERVAL] = item[i]
+            elif StringMatch(FLD_CONF_INTERVALUNIT, outFieldArray[i]):
+                fileOutDict[FLD_CONF_INTERVALUNIT] = item[i]
             elif StringMatch(FLD_CONF_FILENAME, outFieldArray[i]):
                 fileOutDict[FLD_CONF_FILENAME] = item[i]
             elif StringMatch(FLD_CONF_USE, outFieldArray[i]):
                 fileOutDict[FLD_CONF_USE] = item[i]
-        db[DB_TAB_FILE_OUT].find_one_and_replace(fileOutDict, fileOutDict, upsert=True)
+            elif StringMatch(FLD_CONF_SUBBSN, outFieldArray[i]):
+                fileOutDict[FLD_CONF_SUBBSN] = item[i]
+        curFileter = {FLD_CONF_MODCLS: fileOutDict[FLD_CONF_MODCLS],
+                      FLD_CONF_OUTPUTID: fileOutDict[FLD_CONF_OUTPUTID],
+                      FLD_CONF_STIME: fileOutDict[FLD_CONF_STIME],
+                      FLD_CONF_ETIME: fileOutDict[FLD_CONF_ETIME]}
+        db[DB_TAB_FILE_OUT].find_one_and_replace(curFileter, fileOutDict, upsert=True)
 
 
 if __name__ == "__main__":
+    import sys
     try:
         conn = MongoClient(HOSTNAME, PORT)
         # conn = Connection(host=HOSTNAME, port=PORT)
@@ -162,7 +173,7 @@ if __name__ == "__main__":
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
     db = conn[SpatialDBName]
-    ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
+    # ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
     ### IMPORT LOOKUP TABLES AS GRIDFS, DT_Array2D
     # ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
     ImportModelConfiguration(db)
