@@ -6,23 +6,18 @@
 
 using namespace std;
 
-IO_TEST::IO_TEST(void) : m_nCells(-1), m_raster1D(NULL), m_raster2D(NULL),
-                         m_output1Draster(NULL), m_output2Draster(NULL), m_scenario(NULL), m_reaches(NULL)
+IO_TEST::IO_TEST(void) : m_nCells(-1), m_soilLayers(-1), m_raster1D(NULL), m_raster2D(NULL),
+                         m_output1Draster(NULL), m_output2Draster(NULL), m_nSoilLayrs(NULL),
+						 m_scenario(NULL), m_reaches(NULL)
 {
 }
 
 IO_TEST::~IO_TEST(void)
 {
     if (m_output1Draster != NULL)
-        delete[] m_output1Draster;
-    m_output1Draster = NULL;
+        Release1DArray(m_output1Draster);
     if (m_output2Draster != NULL)
-    {
-        for (int i = 0; i < m_nCells; i++)
-            delete[] m_output2Draster[i];
-        delete[] m_output2Draster;
-        m_output2Draster = NULL;
-    }
+		Release2DArray(m_nCells, m_output2Draster);
     if (m_scenario != NULL)
         delete m_scenario;
     if (m_reaches != NULL)
@@ -34,6 +29,7 @@ void IO_TEST::Set1DData(const char *key, int n, float *data)
     if (!this->CheckInputSize(key, n)) return;
     string sk(key);
     if (StringMatch(sk, VAR_CN2)) this->m_raster1D = data;
+	if (StringMatch(sk, VAR_SOILLAYERS))this->m_nSoilLayrs = data;
 }
 
 void IO_TEST::Set2DData(const char *key, int n, int col, float **data)
@@ -44,6 +40,7 @@ void IO_TEST::Set2DData(const char *key, int n, int col, float **data)
         this->m_raster2D = data;
         this->m_soilLayers = col;
     }
+	
 }
 
 void IO_TEST::SetScenario(MainBMP::Scenario *sce)
@@ -80,9 +77,11 @@ bool IO_TEST::CheckInputData()
     if (m_nCells <= 0)
         throw ModelException("IO_TEST", "CheckInputData", "The dimension of the input data can not be less than zero.");
     if (m_raster1D == NULL)
-        throw ModelException("IO_TEST", "CheckInputData", "The 1D raster input data can not be less than zero.");
+        throw ModelException("IO_TEST", "CheckInputData", "The 1D raster input data can not be NULL.");
     if (m_raster2D == NULL)
-        throw ModelException("IO_TEST", "CheckInputData", "The 2D raster input data can not be less than zero.");
+		throw ModelException("IO_TEST", "CheckInputData", "The 2D raster input data can not be NULL.");
+	if (m_nSoilLayrs == NULL)
+		throw ModelException("IO_TEST", "CheckInputData", "The soil layers of raster data can not be NULL.");
     return true;
 }
 
@@ -90,33 +89,21 @@ int IO_TEST::Execute()
 {
     /// Initialize output variables
     if (m_output1Draster == NULL)
-    {
-        m_output1Draster = new float[m_nCells];
-#pragma omp parallel for
-        for (int i = 0; i < m_nCells; ++i)
-            m_output1Draster[i] = 0.f;
-    }
+		Initialize1DArray(m_nCells, m_output1Draster, 0.f);
+    
     if (m_output2Draster == NULL)
-    {
-        m_output2Draster = new float *[m_nCells];
-#pragma omp parallel for
-        for (int i = 0; i < m_nCells; ++i)
-        {
-            m_output2Draster[i] = new float[m_soilLayers];
-            for (int j = 0; j < m_soilLayers; j++)
-                m_output2Draster[i][j] = 0.f;
-        }
-    }
+		Initialize2DArray(m_nCells, m_soilLayers, m_output2Draster, NODATA_VALUE);
+    
     /// Execute function
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; ++i)
     {
         m_output1Draster[i] = m_raster1D[i] * 0.5f;
-        for (int j = 0; j < m_soilLayers; j++)
+        for (int j = 0; j < m_nSoilLayrs[i]; j++)
             m_output2Draster[i][j] = m_raster2D[i][j] + 2.f;
     }
     /// Write Scenario Information
-    m_scenario->Dump("e:\\test\\bmpScenario2.txt");
+   // m_scenario->Dump("e:\\test\\bmpScenario2.txt");
     int nReaches = m_reaches->GetReachNumber();
     vector<int> reachIDs = m_reaches->GetReachIDs();
     /// Get reach information by subbasin ID
