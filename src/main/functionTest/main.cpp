@@ -28,13 +28,14 @@ int main(int argc, const char *argv[])
     bson_error_t *err = NULL;
     char *str;
     //char* dbname = "climate_dianbu";
-    const char *dbname = "model_dianbu_10m_longterm";
+    const char *dbname = "model_dianbu_30m_longterm";
     //char* collname = "DataValues";
-    const char *collname = "spatial";
-    const char *newGridFS = "output";
+    const char *collname = "SPATIAL";
+    const char *newGridFS = "OUTPUT";
     mongoc_init();
     mongoc_uri_t *uri;
     const char *hostname = "127.0.0.1";
+	//const char *hostname = "192.168.6.55";
     uint16_t port = 27017;
     uri = mongoc_uri_new_for_host_port(hostname, port);
     client = mongoc_client_new_from_uri(uri);
@@ -44,11 +45,11 @@ int main(int argc, const char *argv[])
     //clsRasterData *test = new clsRasterData("E:\\data\\Dianbu\\patch_partition\\dianbu\\flow_dir.tif");
 
     clsRasterData *mask = new clsRasterData(gfs, "1_MASK", NULL);
-    clsRasterData *raster1d = new clsRasterData(gfs, "1_PHU0", mask);
+    clsRasterData *raster1d = new clsRasterData(gfs, "1_DEM", mask);
     //clsRasterData *raster2d = new clsRasterData(gfs,"1_DENSITY",mask);
     //string rs1dascfile = "e:/test/1_blai_asc.asc";
     //string rs2dascfile = "e:/test/1_density_asc.asc";
-    string rs1dtiffile = "e:/test/1_phu0.tif";
+    string rs1dtiffile = "G:/code_zhulj/SEIMS/model_data/TEST/model_dianbu_30m_longterm/OUTPUT/1_DEM.tif";
     //string rs2dtiffile = "e:/test/1_density_asc.tif";
     //string rs1dMongo = "2_BLAI";
     //string rs2dMongo = "2_DENSITY";
@@ -59,8 +60,8 @@ int main(int argc, const char *argv[])
     //raster1d->outputToMongoDB(rs1dMongo, gfs);
     //raster2d->outputToMongoDB(rs2dMongo, gfs);
 
-
-
+	string maskfile = "G:/code_zhulj/SEIMS/model_data/TEST/model_dianbu_30m_longterm/OUTPUT/1_MASK.tif";
+	mask->outputGTiff(maskfile);
     //bson_destroy(query);
     //mongoc_cursor_destroy(cursor);
     mongoc_gridfs_destroy(gfs);

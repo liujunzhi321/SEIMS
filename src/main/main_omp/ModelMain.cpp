@@ -38,9 +38,9 @@ ModelMain::ModelMain(mongoc_client_t *conn, string dbName, string projectPath, S
     m_dtDaily = m_input->getDtDaily();
     m_dtHs = m_input->getDtHillslope();
     m_dtCh = m_input->getDtChannel();
-
-    m_output = new SettingsOutput(m_subBasinID, m_projectPath + File_Output, m_conn, m_dbName, m_outputGfs);
-
+	/// Load Setting Output from file.out, which is deprecated now! By LJ, 2016-7-11
+    /// m_output = new SettingsOutput(m_subBasinID, m_projectPath + File_Output, m_conn, m_dbName, m_outputGfs);
+	m_output = new SettingsOutput(m_subBasinID, m_conn, dbName, m_outputGfs);
     CheckOutput(spatialData);
 
     m_readFileTime = factory->CreateModuleList(m_dbName, m_subBasinID, m_threadNum, m_layeringMethod,
