@@ -22,13 +22,13 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     MetadataInfo mdi;
 
     // set the information properties
-    mdi.SetAuthor("Junzhi Liu");
+    mdi.SetAuthor("Junzhi Liu, Liang-Jun Zhu");
     mdi.SetClass(MCLS_PET, MCLSDESC_PET);
     mdi.SetDescription(MDESC_PET_H);
     mdi.SetEmail(SEIMS_EMAIL);
     mdi.SetID(MID_PET_H);
     mdi.SetName(MID_PET_H);
-    mdi.SetVersion("1.0");
+    mdi.SetVersion("2.0");
     mdi.SetWebsite(SEIMS_SITE);
     mdi.SetHelpfile("PET_H.html");
 
@@ -57,6 +57,4 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
     return tmp;
 }
-//mdi.AddParameter(Tag_Latitude_Meteorology,UNIT_LONLAT_DEG,DESC_METEOLAT,Source_HydroClimateDB, DT_Array1D);
-//mdi.AddInput(VAR_JULIAN_DAY,UNIT_NON_DIM,DESC_JULIAN_DAY,Source_Module,DT_Single); /// ICLIM
-//mdi.AddInput(VAR_SR_MAX,UNIT_SR,DESC_SR_MAX,Source_Module,DT_Array1D);/// ICLIM
+

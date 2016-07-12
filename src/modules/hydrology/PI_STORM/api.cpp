@@ -32,7 +32,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetHelpfile("");
 
     // set the input variables (time series)
-    mdi.AddInput(VAR_PCP, UNIT_DEPTH_MM, DESC_D_P, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_PCP, UNIT_DEPTH_MM, DESC_PCP, Source_Module, DT_Raster1D);
     mdi.AddParameter(VAR_SLOPE, UNIT_PERCENT, DESC_SLOPE, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(Tag_HillSlopeTimeStep, UNIT_SECOND, DESC_TIMESTEP, File_Input, DT_Single);
     // set the parameters (non-time series)

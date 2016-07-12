@@ -14,20 +14,17 @@
 #include <time.h>
 #include <omp.h>
 
-clsPI_MSM::clsPI_MSM(void) : m_st(NULL)
+clsPI_MSM::clsPI_MSM(void) : m_nCells(-1), m_Pi_b(-1.f), m_dateLastTimeStep(-1), m_Init_IS(0.f), 
+	m_netPrecipitation(NULL), m_evaporation(NULL), m_interceptionLoss(NULL), m_st(NULL)
 {
-    m_nCells = -1;
-    this->m_Pi_b = -1.0f;
-    this->m_dateLastTimeStep = -1;
-    this->m_Init_IS = 0.0f;
 }
 
 clsPI_MSM::~clsPI_MSM(void)
 {
-    if (this->m_interceptionLoss != NULL) delete[] this->m_interceptionLoss;
-    if (this->m_st != NULL) delete[] this->m_st;
-    if (this->m_netPrecipitation != NULL) delete[] this->m_netPrecipitation;
-    if (this->m_evaporation != NULL) delete[] this->m_evaporation;
+    if (this->m_interceptionLoss != NULL) Release1DArray(this->m_interceptionLoss);
+    if (this->m_st != NULL) Release1DArray(this->m_st);
+    if (this->m_netPrecipitation != NULL) Release1DArray(this->m_netPrecipitation);
+    if (this->m_evaporation != NULL) Release1DArray(this->m_evaporation);
 }
 
 void clsPI_MSM::Set1DData(const char *key, int nRows, float *data)
@@ -74,29 +71,41 @@ void clsPI_MSM::Get1DData(const char *key, int *nRows, float **data)
     *nRows = this->m_nCells;
 }
 
-//! 
+void clsPI_MSM::initialOutputs()
+{
+	if(this->m_st == NULL)
+		Initialize1DArray(m_nCells, m_st, m_Init_IS);
+	if(this->m_evaporation == NULL)
+		Initialize1DArray(m_nCells, m_evaporation, 0.f);
+	if(this->m_netPrecipitation == NULL)
+		Initialize1DArray(m_nCells, m_netPrecipitation, 0.f);
+	if(this->m_interceptionLoss == NULL)
+		Initialize1DArray(m_nCells, m_interceptionLoss, 0.f);
+}
+
 int clsPI_MSM::Execute()
 {
     //check input data
-    this->CheckInputData();
-
-    //initial the state variable
-    if (this->m_st == NULL)
-    {
-        m_st = new float[this->m_nCells];
-        this->m_evaporation = new float[this->m_nCells];
-        this->m_interceptionLoss = new float[this->m_nCells];
-        this->m_netPrecipitation = new float[this->m_nCells];
-
-#pragma omp parallel for
-        for (int i = 0; i < this->m_nCells; i++)
-        {
-            m_st[i] = this->m_Init_IS;
-            m_evaporation[i] = 0.f;
-            m_interceptionLoss[i] = 0.f;
-            m_netPrecipitation[i] = 0.f;
-        }
-    }
+    CheckInputData();
+	/// initialize outputs
+	initialOutputs();
+//    //initial the state variable
+//    if (this->m_st == NULL)
+//    {
+//        m_st = new float[this->m_nCells];
+//        this->m_evaporation = new float[this->m_nCells];
+//        this->m_interceptionLoss = new float[this->m_nCells];
+//        this->m_netPrecipitation = new float[this->m_nCells];
+//
+//#pragma omp parallel for
+//        for (int i = 0; i < this->m_nCells; i++)
+//        {
+//            m_st[i] = this->m_Init_IS;
+//            m_evaporation[i] = 0.f;
+//            m_interceptionLoss[i] = 0.f;
+//            m_netPrecipitation[i] = 0.f;
+//        }
+//    }
 
     int julian = JulianDay(m_date);
 #pragma omp parallel for
@@ -105,10 +114,10 @@ int clsPI_MSM::Execute()
         if (m_P[i] > 0)
         {
             //interception storage capacity
-            float degree = 2 * PI * (julian - 87) / 365.f;
+            float degree = 2.f * PI * (julian - 87.f) / 365.f;
             float min = m_minSt[i];
             float max = m_maxSt[i];
-            float capacity = min + (max - min) * pow(0.5 + 0.5 * sin(degree), double(m_Pi_b));
+            float capacity = min + (max - min) * pow(0.5f + 0.5f * sin(degree), m_Pi_b);
 
             //interception
             float availableSpace = capacity - m_st[i];

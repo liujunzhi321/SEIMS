@@ -58,9 +58,4 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
     return tmp;
 }
-//mdi.AddInput(VAR_TMEAN1, UNIT_TEMP_DEG, DESC_TMEAN1, Source_Module, DT_Raster);
-//mdi.AddInput(VAR_TMAX1, UNIT_TEMP_DEG, DESC_TMAX1, Source_Module, DT_Raster);
-//mdi.AddInput(VAR_TMIN2, UNIT_TEMP_DEG, DESC_TMIN2, Source_Module, DT_Raster);
-//mdi.AddInput(VAR_TMAX2, UNIT_TEMP_DEG, DESC_TMAX2, Source_Module, DT_Raster);
-//mdi.AddInput(VAR_TMIN, UNIT_TEMP_DEG, DESC_TMIN, Source_Module, DT_Raster1D);
-//mdi.AddInput(VAR_TMAX, UNIT_TEMP_DEG, DESC_TMAX, Source_Module, DT_Raster1D);
+

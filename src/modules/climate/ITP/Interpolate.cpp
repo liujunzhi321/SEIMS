@@ -32,34 +32,27 @@ void Interpolate::SetDataType(float value)
         m_dataType = 1; /// Temperature
     else if (FloatEqual(value, 5.0f))
         m_dataType = 2; /// PET
+	else if (FloatEqual(value, 6.0f) || FloatEqual(value, 7.0f) || FloatEqual(value, 8.0f))
+		m_dataType = 3; /// Meteorology 
 }
 
 Interpolate::~Interpolate(void)
 {
-    if (m_output != NULL)
-        delete[] m_output;
+    if (m_output != NULL) Release1DArray(m_output);
 };
 
 int Interpolate::Execute()
 {
+	CheckInputData();
     if (m_output == NULL)
-    {
-        CheckInputData();
-
-        m_output = new float[m_nCells];
-
-#pragma omp parallel for
-        for (int i = 0; i < m_nCells; ++i)
-            m_output[i] = 0.f;
-    }
-
-    //this->StatusMsg("execute ITP...");
-    //#pragma omp parallel for
-    int index = 0;
+		Initialize1DArray(m_nCells,m_output,0.f);
+    
     //cout<<"ITP: ";
     //for (int j = 0; j < m_nStatioins; ++j)
     //	cout<<m_stationData[j]<<",";
     //cout<<endl;
+    int index = 0;
+#pragma omp parallel for
     for (int i = 0; i < m_nCells; ++i)
     {
         float value = 0.f;
@@ -68,9 +61,9 @@ int Interpolate::Execute()
             index = i * m_nStatioins + j;
 
             value += m_stationData[j] * m_weights[index];
-            //if(value < 0.f)
+            //if(m_weights[index] > 1)
             //	cout<<"CELL:"<<i<<", Site: "<<j<<", Weight: "<<m_weights[index]<<", Value:"<<value<<";"<<endl;
-            //cout << m_weights[index] << endl;
+
             if (m_vertical)
             {
                 float delta = m_dem[i] - m_hStations[j];
@@ -82,15 +75,16 @@ int Interpolate::Execute()
         }
         m_output[i] = value;
     }
-    //Output1DArray(m_nCells, m_output, "F:\\p.txt");
-    //this->StatusMsg("end execute ITP...");
+	//for (int i = 0; i < m_nCells; ++i)
+	//	cout<<m_output[i]<<",";
     return true;
 }
 
 
-void Interpolate::SetDate(time_t date)
+void Interpolate::SetDate(time_t date, int yearIdx)
 {
     m_date = date;
+	m_yearIdx = yearIdx;
     struct tm t;
 #ifndef linux
     localtime_s(&t, &m_date);
@@ -110,9 +104,10 @@ void Interpolate::SetValue(const char *key, float value)
     }
     else if (StringMatch(sk, VAR_TSD_DT))
     {
-        if (value == 1.0f) m_dataType = 0;
-        if (value == 2.0f || value == 3.0f || value == 4.0f) m_dataType = 1;
-        if (value == 5.0f) m_dataType = 2;
+		this->SetDataType(value);
+        //if (value == 1.0f) m_dataType = 0;
+        //if (value == 2.0f || value == 3.0f || value == 4.0f) m_dataType = 1;
+        //if (value == 5.0f) m_dataType = 2;
     }
     else if (StringMatch(sk, Tag_VerticalInterpolation))
     {
@@ -124,8 +119,7 @@ void Interpolate::SetValue(const char *key, float value)
     else
     {
         throw ModelException(MID_ITP, "SetValue", "Parameter " + sk
-                                                  +
-                                                  " does not exist in the Interpolate module. Please contact the module developer.");
+                + " does not exist in the Interpolate module. Please contact the module developer.");
     }
 
 }
@@ -146,8 +140,7 @@ void Interpolate::Set2DData(const char *key, int nRows, int nCols, float **data)
     else
     {
         throw ModelException(MID_ITP, "Set2DData", "Parameter " + sk
-                                                   +
-                                                   " does not exist in the Interpolate module. Please contact the module developer.");
+           + " does not exist in the Interpolate module. Please contact the module developer.");
     }
 
 }
@@ -192,8 +185,7 @@ void Interpolate::Set1DData(const char *key, int n, float *data)
         else
         {
             throw ModelException(MID_ITP, "Set1DData", "Parameter " + sk
-                                                       +
-                                                       " does not exist in the Interpolate module. Please contact the module developer.");
+             + " does not exist in the Interpolate module. Please contact the module developer.");
         }
     }
 }
@@ -219,7 +211,6 @@ bool Interpolate::CheckInputSize(string &key, int n, int &m_n)
                                  ". The number of columns in weight file and the number of stations should be same.");
         }
     }
-
     return true;
 }
 

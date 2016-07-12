@@ -45,7 +45,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_RadianSlope, UNIT_NON_DIM, DESC_RadianSlope, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_QOVERLAND, UNIT_FLOW_CMS, DESC_QOVERLAND, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_QSOIL, UNIT_FLOW_CMS, DESC_QSOIL, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_PCP, UNIT_DEPTH_MM, DESC_D_P, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_PCP, UNIT_DEPTH_MM, DESC_PCP, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_SBQG, UNIT_FLOW_CMS, DESC_SBQG, Source_Module, DT_Array1D);
 
     // output
