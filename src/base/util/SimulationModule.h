@@ -24,9 +24,9 @@ using namespace std;
 enum TimeStepType
 {
     TIMESTEP_HILLSLOPE, /**< Hillslope scale */
-            TIMESTEP_CHANNEL, /**< Channel scale */
-            TIMESTEP_ECOLOGY, /**< Ecology scale, currently not necessary? */
-            TIMESTEP_SIMULATION /**< Whole simulation scale */
+    TIMESTEP_CHANNEL, /**< Channel scale */
+    TIMESTEP_ECOLOGY, /**< Ecology scale, currently not necessary? */
+    TIMESTEP_SIMULATION /**< Whole simulation scale */
 };
 
 /*!
@@ -46,7 +46,7 @@ public:
     //! Execute the simulation
     virtual int Execute() { return -1; };
 
-    //! Set date time, as well as the sequence number of the entire simulation
+    //! Set date time, as well as the sequence number of the entire simulation. Added by LJ for statistics convenient.
     virtual void SetDate(time_t t, int yearIdx)
     {
         m_date = t;
@@ -59,7 +59,7 @@ public:
         omp_set_num_threads(threadNum);
     };
 
-    //! Set data type among
+    //! Set climate data type, P, M, PET etc.
     virtual void SetDataType(float value)
     {
     };

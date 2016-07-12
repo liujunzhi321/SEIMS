@@ -143,6 +143,22 @@ void Initialize1DArray(int row, T *&data, T initialValue)
 }
 
 /*!
+ * \brief Initialize DT_Array1D data based on an existed array
+ *
+ * \param[in] row
+ * \param[in] data
+ * \param[in] iniData
+ */
+template<typename T>
+void Initialize1DArray(int row, T *&data, T *&iniData)
+{
+    data = new T[row];
+#pragma omp parallel for
+    for (int i = 0; i < row; i++)
+        data[i] = iniData[i];
+}
+
+/*!
  * \brief Initialize DT_Array2D data
  *
  * \param[in] row
@@ -161,6 +177,29 @@ void Initialize2DArray(int row, int col, T **&data, T initialValue)
         for (int j = 0; j < col; j++)
         {
             data[i][j] = initialValue;
+        }
+    }
+}
+
+/*!
+ * \brief Initialize DT_Array2D data based on an existed array
+ *
+ * \param[in] row
+ * \param[in] row
+ * \param[in] data
+ * \param[in] iniData
+ */
+template<typename T>
+void Initialize2DArray(int row, int col, T **&data, T **&iniData)
+{
+    data = new T *[row];
+#pragma omp parallel for
+    for (int i = 0; i < row; i++)
+    {
+        data[i] = new T[col];
+        for (int j = 0; j < col; j++)
+        {
+            data[i][j] = iniData[i][j];
         }
     }
 }

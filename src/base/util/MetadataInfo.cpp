@@ -113,21 +113,21 @@ void MetadataInfo::DimensionTag(string tag, int indent, dimensionTypes dimType, 
         case DT_Single:
             strTmp = Type_Single;
             break;
-        case DT_SiteInformation:
-            strTmp = Type_SiteInformation;
-            break;
-        case DT_LapseRateArray:
-            strTmp = Type_LapseRateArray;
-            break;
         case DT_Scenario:
             strTmp = Type_Scenario;
             break;
         case DT_Reach:
             strTmp = Type_Reach;
             break;
-        case DT_LookupTable:
-            strTmp = Type_LookupTable;
-            break;
+        //case DT_SiteInformation:
+        //    strTmp = Type_SiteInformation;
+        //    break;
+        //case DT_LapseRateArray:
+        //    strTmp = Type_LapseRateArray;
+        //    break;
+        //case DT_LookupTable:
+        //    strTmp = Type_LookupTable;
+        //    break;
         default:
             break;
     }

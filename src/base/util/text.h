@@ -62,7 +62,7 @@
 #define Tag_StationElevation "StationElevation"
 #define Tag_VerticalInterpolation "VERTICALINTERPOLATION"
 #define Tag_Weight "WEIGHT"
-
+#define Tag_DataType                        "DATATYPE"   /// For TSD_RD module
 ///////  define parameter calibration related string constants  ///////
 #define PARAM_CHANGE_RC        "RC"
 #define PARAM_CHANGE_AC        "AC"
@@ -99,7 +99,7 @@
 #define Tag_OutputSubbsn					"SUBBASIN"
 #define Tag_Interval                        "INTERVAL"
 #define Tag_IntervalUnit					"INTERVAL_UNIT"
-#define Tag_DataType                        "DATATYPE"
+
 
 /// Available values of Tag_outputSubbsn
 #define Tag_AllSubbsn						"ALL"
@@ -248,9 +248,9 @@
 
 #define Type_Scenario            "SCENARIO"
 #define Type_Reach                "REACH"
-#define Type_LookupTable    "LOOKUPTABLE"
-#define Type_LapseRateArray        "LAPSERATEARRAY"
-#define Type_SiteInformation    "SITEINFORMATION"
+//#define Type_LookupTable    "LOOKUPTABLE"
+//#define Type_LapseRateArray        "LAPSERATEARRAY"
+//#define Type_SiteInformation    "SITEINFORMATION"
 #define Type_Raster1D        "RASTER1D"
 #define Type_Raster2D        "RASTER2D"
 #define Type_Array1DDateValue    "ARRAY1DDATEVALUE"
@@ -554,7 +554,7 @@
 #define VAR_CONV_WT "conv_wt"
 #define VAR_CROP_LOOKUP "CropLookup"
 #define VAR_CSWAT "cswat"
-#define VAR_PCP "D_P" /// Distribution of precipitation
+#define VAR_PCP "P" /// Distribution of precipitation
 #define VAR_DAYLEN "daylength"
 #define VAR_DAYLEN_MIN "daylenmin"  /// minimum day length
 #define VAR_DEEPST "deepst"
@@ -857,7 +857,7 @@
 #define VAR_TMIN "TMIN"
 
 #define VAR_TREEYRS "CURYR_INIT"
-#define VAR_TSD_DT "data_type"                      /// Time series data type
+#define VAR_TSD_DT "DATATYPE"                      /// Time series data type
 #define VAR_USLE_C "USLE_C"
 #define VAR_USLE_K "USLE_K"
 #define VAR_USLE_LS "USLE_LS"
@@ -1039,7 +1039,7 @@
 #define DESC_CONV_WT "factor which converts kg/kg soil to kg/ha"
 #define DESC_CROP_LOOKUP "Crop database"
 #define DESC_CSWAT "carbon modeling method"
-#define DESC_D_P "Precipitation distrubution raster"
+#define DESC_PCP "Precipitation of each time step on current cell"
 #define DESC_DAYLEN "day length"
 #define DESC_DAYLEN_MIN  "minimum day length"
 #define DESC_DEEPST "depth of water in deep aquifer"
@@ -1106,7 +1106,7 @@
 #define DESC_INFIL "Infiltration"
 #define DESC_INFILCAPSURPLUS "surplus of infiltration capacity"
 #define DESC_INIT_IS "Initial interception storage"
-#define DESC_INLO "Interception Loss Distribution"
+#define DESC_INLO "Interception loss"
 #define DESC_INTERC_MAX "Maximum Interception Storage Capacity"
 #define DESC_INTERC_MIN "Minimum Interception Storage Capacity"
 #define DESC_IRR_FLAG "irrigation flag, 1 or 0"

@@ -87,16 +87,16 @@ enum dimensionTypes
             DT_Raster1D = 5,
     /// 2D raster, e.g., multi-layers of soil properties
             DT_Raster2D = 6,
-    /// Hydrological or meteorological site information
-            DT_SiteInformation = 7,
-    /// Lapse rate array, TODO need more detail description
-            DT_LapseRateArray = 8,
     /// Scenario used by BMPs
-            DT_Scenario = 9,
+            DT_Scenario = 7,
     /// Reach parameters
-            DT_Reach = 10,
-    /// Lookup tables, TODO LJ
-            DT_LookupTable = 11
+            DT_Reach = 8,
+    ///// Lookup tables, TODO LJ
+    //        DT_LookupTable = 9,
+    ///// Lapse rate array, TODO need more detail description
+    //        DT_LapseRateArray = 10,
+    ///// Hydrological or meteorological site information
+    //        DT_SiteInformation = 11
 };
 
 
