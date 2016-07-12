@@ -26,13 +26,10 @@ ParamInfo::~ParamInfo(void)
 float ParamInfo::GetAdjustedValue()
 {
     float res = Value;
-
+	if(FloatEqual(res, NODATA_VALUE))  /// Do not change NoData value
+		return res;
     if (StringMatch(Use, PARAM_USE_Y))
     {
-        //if (Change == PARAM_CHANGE_NC)
-        //{
-        //	don't change
-        //}
         if (StringMatch(Change, PARAM_CHANGE_RC))
         {
             res = Value * Impact;
@@ -41,6 +38,10 @@ float ParamInfo::GetAdjustedValue()
         {
             res = Value + Impact;
         }
+		else if (Change == PARAM_CHANGE_NC)
+		{
+			//don't change
+		}
     }
     return res;
 }
@@ -53,14 +54,16 @@ void ParamInfo::Adjust1DArray(int n, float *data)
         {
             for (int i = 0; i < n; i++)
             {
-                data[i] *= Impact;
+				if(!FloatEqual(data[i], NODATA_VALUE))  /// Do not change NoData value
+					data[i] *= Impact;
             }
         }
         else if (StringMatch(Change, PARAM_CHANGE_AC) && !FloatEqual(Impact, 0))
         {
             for (int i = 0; i < n; i++)
             {
-                data[i] += Impact;
+				if(!FloatEqual(data[i], NODATA_VALUE))  /// Do not change NoData value
+					data[i] += Impact;
             }
         }
     }

@@ -165,9 +165,9 @@ bool SettingsInput::LoadSettingsInputFromMongoDB()
     while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &bsonTable))
     {
         vector<string> tokens(2);
-        if (bson_iter_init_find(&itertor, bsonTable, FLD_CONF_TAG))
+        if (bson_iter_init_find(&itertor, bsonTable, Tag_ConfTag))
             tokens[0] = GetStringFromBSONITER(&itertor);
-        if (bson_iter_init_find(&itertor, bsonTable, FLD_CONF_VALUE))
+        if (bson_iter_init_find(&itertor, bsonTable, Tag_ConfValue))
             tokens[1] = GetStringFromBSONITER(&itertor);
         int sz = m_Settings.size();        // get the current number of rows
         m_Settings.resize(sz + 1);        // resize with one more row

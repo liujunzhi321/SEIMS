@@ -170,7 +170,7 @@ private:
     //! Initialization, read the config.fig file and initialize
     void Init(const string &configFileName);
 
-    //! Load settings from file
+    //! Load modules setting from file
     bool LoadSettingsFromFile(const char *filename, vector<vector<string> > &settings);
 
     //! Read configuration file

@@ -43,15 +43,14 @@
 ModuleFactory::ModuleFactory(const string &configFileName, const string &modelPath, mongoc_client_t *conn,
                              const string &dbName, LayeringMethod layingMethod, int scenarioID)
         : m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod),
-          m_scenarioID(scenarioID),
-          m_reaches(NULL), m_scenario(NULL)
+          m_scenarioID(scenarioID), m_reaches(NULL), m_scenario(NULL)
 {
     Init(configFileName);
 #ifdef USE_MONGODB
     bson_error_t *err = NULL;
     m_spatialData = mongoc_client_get_gridfs(m_conn, m_dbName.c_str(), DB_TAB_SPATIAL, err);
     if (err != NULL)
-        throw ModelException("ModuleFactory", "Constructor", "Failed to connect to \"spatial\" GridFS!\n");
+        throw ModelException("ModuleFactory", "Constructor", "Failed to connect to " + string(DB_TAB_SPATIAL) + " GridFS!\n");
 
     if (m_scenarioID != -1) /// -1 means this model doesn't need scenario information
     {
@@ -82,76 +81,76 @@ ModuleFactory::~ModuleFactory(void)
     mongoc_client_destroy(m_conn);
 #endif
     /// Improved by Liangjun, 2016-7-6
-    /// First release memory, then erase map element.
-    for (map<string, SEIMSModuleSetting *>::iterator it = m_settings.begin(); it != m_settings.end(); it++)
+    /// First release memory, then erase map element. BE CAUTION WHEN USE ERASE!!!
+    for (map<string, SEIMSModuleSetting *>::iterator it = m_settings.begin(); it != m_settings.end(); )
     {
         if (it->second != NULL)
         {
             delete it->second;
             it->second = NULL;
         }
-        m_settings.erase(it);
+        it = m_settings.erase(it);
     }
     m_settings.clear();
 
-    for (map<string, const char *>::iterator it = m_metadata.begin(); it != m_metadata.end(); it++)
+    for (map<string, const char *>::iterator it = m_metadata.begin(); it != m_metadata.end(); )
     {
         if (it->second != NULL)
         {
             delete it->second;
             it->second = NULL;
         }
-        m_metadata.erase(it);
+        it = m_metadata.erase(it);
     }
     m_metadata.clear();
 
-    for (map<string, ParamInfo *>::iterator it = m_parametersInDB.begin(); it != m_parametersInDB.end(); it++)
+    for (map<string, ParamInfo *>::iterator it = m_parametersInDB.begin(); it != m_parametersInDB.end(); )
     {
         if (it->second != NULL)
         {
             delete it->second;
             it->second = NULL;
         }
-        m_parametersInDB.erase(it);
+        it = m_parametersInDB.erase(it);
     }
     m_parametersInDB.clear();
 
     for (map<string, clsInterpolationWeightData *>::iterator it = m_weightDataMap.begin();
-         it != m_weightDataMap.end(); it++)
+         it != m_weightDataMap.end(); )
     {
         if (it->second != NULL)
         {
             delete it->second;
             it->second = NULL;
         }
-        m_weightDataMap.erase(it);
+        it = m_weightDataMap.erase(it);
     }
     m_weightDataMap.clear();
 
-    for (map<string, clsRasterData *>::iterator it = m_rsMap.begin(); it != m_rsMap.end(); it++)
+    for (map<string, clsRasterData *>::iterator it = m_rsMap.begin(); it != m_rsMap.end(); it)
     {
         if (it->second != NULL)
         {
             delete it->second;
             it->second = NULL;
         }
-        m_rsMap.erase(it);
+        it = m_rsMap.erase(it);
     }
     m_rsMap.clear();
 
-    for (map<string, float *>::iterator it = m_1DArrayMap.begin(); it != m_1DArrayMap.end(); it++)
+    for (map<string, float *>::iterator it = m_1DArrayMap.begin(); it != m_1DArrayMap.end(); )
     {
         if (it->second != NULL)
             Release1DArray(it->second);
-        m_1DArrayMap.erase(it);
+        it = m_1DArrayMap.erase(it);
     }
     m_1DArrayMap.clear();
 
-    for (map<string, float **>::iterator it = m_2DArrayMap.begin(); it != m_2DArrayMap.end(); it++)
+    for (map<string, float **>::iterator it = m_2DArrayMap.begin(); it != m_2DArrayMap.end(); )
     {
         if (it->second != NULL)
             Release2DArray(m_2DRowsLenMap[it->first], it->second);
-        m_2DArrayMap.erase(it);
+        it = m_2DArrayMap.erase(it);
     }
     m_2DArrayMap.clear();
 
@@ -1126,11 +1125,6 @@ void ModuleFactory::Set1DData(string &dbName, string &paraName, string &remoteFi
         {
 #ifdef USE_MONGODB
             Read1DArrayFromMongoDB(m_spatialData, remoteFileName, n, data);
-//#else
-//			ostringstream oss;
-//			oss << dbName << remoteFileName << TextExtension;
-//			//cout << oss.str() << endl;
-//			Read1DArrayFromTxtFile(oss.str().c_str(), n, data);
 #endif
             if (templateRaster->getCellNumber() != n)
                 throw ModelException("ModuleFactory", "Set1DArray",

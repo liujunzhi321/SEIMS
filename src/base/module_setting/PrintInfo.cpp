@@ -1,6 +1,7 @@
 /*!
  * \file PrintInfo.cpp
- * \brief Class to store and manage the PRINT information from the file.out file
+ * \brief Class to store and manage the PRINT information 
+ * From the file.out file or FILE_OUT collection in MongoDB
  *
  * \author Junzhi Liu, LiangJun Zhu
  * \version 1.1
@@ -24,22 +25,19 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #endif
+//////////////////////////////////////////////
+///////////PrintInfoItem Class//////////////// 
+//////////////////////////////////////////////
 
-
-PrintInfoItem::PrintInfoItem(void) : m_2dData(NULL), m_nCols(0)
+PrintInfoItem::PrintInfoItem(void) : m_Counter(-1), m_nRows(-1), m_nLayers(-1), 
+	SubbasinID(-1), SubbasinIndex(-1), SiteID(-1), SiteIndex(-1),
+	m_1DData(NULL), m_2DData(NULL), m_1DDataWithRowCol(NULL), 
+	TimeSeriesDataForSubbasinCount(-1), m_AggregationType(AT_Unknown),
+	StartTime(""), EndTime(""), m_startTime(0), m_endTime(0),
+	Filename(""), Suffix("") 
 {
-    m_Counter = 0;
-    Data = NULL;
-    Numrows = 0;
-    SiteID = -1;
-    SiteIndex = -1;
-    SubbasinID = -1;
-    SubbasinIndex = -1;
-    RasterData = NULL;
-    ValidCellCount = -1;
-    TimeSeriesDataForSubbasinCount = -1;
-    m_AggregationType = AT_Unknown;
-
+    TimeSeriesData.clear();
+	TimeSeriesDataForSubbasin.clear();
 }
 //Deprecated
 //void PrintInfoItem::setSpecificCellRasterOutput(string projectPath,string databasePath,
@@ -51,44 +49,28 @@ PrintInfoItem::PrintInfoItem(void) : m_2dData(NULL), m_nCols(0)
 
 PrintInfoItem::~PrintInfoItem(void)
 {
-    string file = Filename;
-    StatusMessage(("Start to release PrintInfoItem for " + file + " ...").c_str());
+    StatusMessage(("Start to release PrintInfoItem for " + Filename + " ...").c_str());
 
-    if (Data != NULL)
+    if (m_1DDataWithRowCol != NULL)
+		Release2DArray(m_Counter, m_1DDataWithRowCol);
+    if (m_1DData != NULL)
+		Release1DArray(m_1DData);
+    if (m_2DData != NULL)
+		Release2DArray(m_nRows, m_2DData);
+	TimeSeriesData.clear();
+
+    for (map<time_t, float *>::iterator it = TimeSeriesDataForSubbasin.begin(); it != TimeSeriesDataForSubbasin.end();)
     {
-        for (int rw = 0; rw < m_Counter; rw++)
-        {
-            delete[] Data[rw];
-        }
-        delete[] Data;
+        if (it->second != NULL)
+		{
+			delete[] it->second;
+			it->second = NULL;
+		}
+		it = TimeSeriesDataForSubbasin.erase(it);
     }
-    if (RasterData != NULL)
-    {
-        delete[] RasterData;
-        RasterData = NULL;
-    }
+	TimeSeriesDataForSubbasin.clear();
 
-    if (m_2dData != NULL)
-    {
-        for (int i = 0; i < ValidCellCount; i++)
-            delete[] m_2dData[i];
-        delete[] m_2dData;
-        m_2dData = NULL;
-    }
-
-
-    map<time_t, float *>::iterator it;
-    for (it = TimeSeriesDataForSubbasin.begin(); it != TimeSeriesDataForSubbasin.end(); it++)
-    {
-        if (it->second != NULL) delete[] it->second;
-    }
-
-    Data = NULL;
-    m_Counter = 0;
-    Numrows = 0;
-    m_AggregationType = AT_Unknown;
-
-    StatusMessage(("End to release PrintInfoItem for " + file + " ...").c_str());
+    StatusMessage(("End to release PrintInfoItem for " + Filename + " ...").c_str());
 }
 
 bool PrintInfoItem::IsDateInRange(time_t dt)
@@ -99,16 +81,6 @@ bool PrintInfoItem::IsDateInRange(time_t dt)
         bStatus = true;
     }
     return bStatus;
-}
-
-time_t PrintInfoItem::getStartTime()
-{
-    return m_startTime;
-}
-
-time_t PrintInfoItem::getEndTime()
-{
-    return m_endTime;
 }
 
 void PrintInfoItem::add1DTimeSeriesResult(time_t t, int n, float *data)
@@ -197,7 +169,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
         }
         return;
     }
-    if (RasterData != NULL && ValidCellCount > -1)    // ASC or GeoTIFF file
+    if (m_1DData != NULL && m_nRows > -1)    // ASC or GeoTIFF file
     {
         if (templateRaster == NULL)
             throw ModelException("PrintInfoItem", "Flush", "The templateRaster is NULL.");
@@ -205,26 +177,26 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
         bson_error_t *err = NULL;
         if (find(outputExisted.begin(), outputExisted.end(), Filename.c_str()) != outputExisted.end())
             mongoc_gridfs_remove_by_filename(gfs, Filename.c_str(), err);
-        clsRasterData::outputToMongoDB(templateRaster, RasterData, Filename, gfs);
+        clsRasterData::outputToMongoDB(templateRaster, m_1DData, Filename, gfs);
         string ascii(ASCIIExtension);
         if (ascii.find(Suffix) != ascii.npos)
-            clsRasterData::outputASCFile(templateRaster, RasterData, projectPath + Filename + ASCIIExtension);
+            clsRasterData::outputASCFile(templateRaster, m_1DData, projectPath + Filename + ASCIIExtension);
         else
-            clsRasterData::outputGTiff(templateRaster, RasterData, projectPath + Filename + GTiffExtension);
+            clsRasterData::outputGTiff(templateRaster, m_1DData, projectPath + Filename + GTiffExtension);
         return;
     }
 
-    if (m_2dData != NULL && ValidCellCount > -1 && m_nCols > 0) /// Multi-Layers raster data
+    if (m_2DData != NULL && m_nRows > -1 && m_nLayers > 0) /// Multi-Layers raster data
     {
         if (templateRaster == NULL)
             throw ModelException("PrintInfoItem", "Flush", "The templateRaster is NULL.");
 
-        float *tmpData = new float[ValidCellCount];
+        float *tmpData = new float[m_nRows];
         ostringstream oss;
-        for (int j = 0; j < m_nCols; j++)
+        for (int j = 0; j < m_nLayers; j++)
         {
-            for (int i = 0; i < ValidCellCount; i++)
-                tmpData[i] = m_2dData[i][j];
+            for (int i = 0; i < m_nRows; i++)
+                tmpData[i] = m_2DData[i][j];
             oss.str("");
             oss << projectPath << Filename << "_" << (j + 1);  // Filename_1.tif means layer 1
             string ascii(ASCIIExtension);
@@ -237,7 +209,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
         bson_error_t *err = NULL;
         if (find(outputExisted.begin(), outputExisted.end(), Filename.c_str()) != outputExisted.end())
             mongoc_gridfs_remove_by_filename(gfs, Filename.c_str(), err);
-        clsRasterData::outputToMongoDB(templateRaster, m_2dData, m_nCols, Filename, gfs);
+        clsRasterData::outputToMongoDB(templateRaster, m_2DData, m_nLayers, Filename, gfs);
         return;
     }
 
@@ -277,17 +249,17 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
     else
     {
         // check to see if there is an aggregate array to add data to
-        if (m_2dData == NULL)
+        if (m_2DData == NULL)
         {
             // create the aggregate array
-            ValidCellCount = nRows;
-            m_nCols = nCols;
-            m_2dData = new float *[ValidCellCount];
-            for (int i = 0; i < ValidCellCount; i++)
+            m_nRows = nRows;
+            m_nLayers = nCols;
+            m_2DData = new float *[m_nRows];
+            for (int i = 0; i < m_nRows; i++)
             {
-                m_2dData[i] = new float[m_nCols];
-                for (int j = 0; j < m_nCols; j++)
-                    m_2dData[i][j] = 0.0f;
+                m_2DData[i] = new float[m_nLayers];
+                for (int j = 0; j < m_nLayers; j++)
+                    m_2DData[i][j] = 0.0f;
             }
             m_Counter = 0;
         }
@@ -295,29 +267,29 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
         switch (m_AggregationType)
         {
             case AT_Average:
-                for (int i = 0; i < ValidCellCount; i++)
-                    for (int j = 0; j < nCols; j++)
-                        m_2dData[i][j] = (m_2dData[i][j] * m_Counter + data[i][j]) / (m_Counter + 1.f);
+                for (int i = 0; i < m_nRows; i++)
+                    for (int j = 0; j < m_nLayers; j++)
+                        m_2DData[i][j] = (m_2DData[i][j] * m_Counter + data[i][j]) / (m_Counter + 1.f);
                 break;
             case AT_Sum:
-                for (int i = 0; i < ValidCellCount; i++)
-                    for (int j = 0; j < nCols; j++)
-                        m_2dData[i][j] += data[i][j];
+                for (int i = 0; i < m_nRows; i++)
+                    for (int j = 0; j < m_nLayers; j++)
+                        m_2DData[i][j] += data[i][j];
                 break;
             case AT_Minimum:
-                for (int i = 0; i < ValidCellCount; i++)
-                    for (int j = 0; j < nCols; j++)
+                for (int i = 0; i < m_nRows; i++)
+                    for (int j = 0; j < m_nLayers; j++)
                     {
-                        if (data[i][j] < m_2dData[i][j])
-                            m_2dData[i][j] = data[i][j];
+                        if (data[i][j] < m_2DData[i][j])
+                            m_2DData[i][j] = data[i][j];
                     }
                 break;
             case AT_Maximum:
-                for (int i = 0; i < ValidCellCount; i++)
-                    for (int j = 0; j < nCols; j++)
+                for (int i = 0; i < m_nRows; i++)
+                    for (int j = 0; j < m_nLayers; j++)
                     {
-                        if (data[i][j] > m_2dData[i][j])
-                            m_2dData[i][j] = data[i][j];
+                        if (data[i][j] > m_2DData[i][j])
+                            m_2DData[i][j] = data[i][j];
                     }
                 break;
             default:
@@ -340,34 +312,34 @@ void PrintInfoItem::AggregateData(time_t time, int numrows, float *data)
     else
     {
         // check to see if there is an aggregate array to add data to
-        if (RasterData == NULL)
+        if (m_1DData == NULL)
         {
             // create the aggregate array
-            ValidCellCount = numrows;
-            RasterData = new float[ValidCellCount];
-            for (int i = 0; i < ValidCellCount; i++)
+            m_nRows = numrows;
+            m_1DData = new float[m_nRows];
+            for (int i = 0; i < m_nRows; i++)
             {
-                RasterData[i] = 0.0f;
+                m_1DData[i] = 0.0f;
             }
             m_Counter = 0;
         }
 
         // depending on the type of aggregation
-        for (int rw = 0; rw < ValidCellCount; rw++)
+        for (int rw = 0; rw < m_nRows; rw++)
         {
             switch (m_AggregationType)
             {
                 case AT_Average:
-                    RasterData[rw] = (RasterData[rw] * m_Counter + data[rw]) / (m_Counter + 1.f);
+                    m_1DData[rw] = (m_1DData[rw] * m_Counter + data[rw]) / (m_Counter + 1.f);
                     break;
                 case AT_Sum:
-                    RasterData[rw] += data[rw];
+                    m_1DData[rw] += data[rw];
                     break;
                 case AT_Minimum:
-                    if (RasterData[rw] > data[rw]) RasterData[rw] = data[rw];
+                    if (m_1DData[rw] > data[rw]) m_1DData[rw] = data[rw];
                     break;
                 case AT_Maximum:
-                    if (RasterData[rw] < data[rw]) RasterData[rw] = data[rw];
+                    if (m_1DData[rw] < data[rw]) m_1DData[rw] = data[rw];
                     break;
                 default:
                     break;
@@ -381,17 +353,17 @@ void PrintInfoItem::AggregateData(time_t time, int numrows, float *data)
 void PrintInfoItem::AggregateData(int numrows, float **data, AggregationType type, float NoDataValue)
 {
     // check to see if there is an aggregate array to add data to
-    if (Data == NULL)
+    if (m_1DDataWithRowCol == NULL)
     {
         // create the aggregate array
-        Numrows = numrows;
-        Data = new float *[Numrows];
-        for (int i = 0; i < Numrows; i++)
+        m_nRows = numrows;
+        m_1DDataWithRowCol = new float *[m_nRows];
+        for (int i = 0; i < m_nRows; i++)
         {
-            Data[i] = new float[3];
-            Data[i][0] = NoDataValue;
-            Data[i][1] = NoDataValue;
-            Data[i][2] = NoDataValue;
+            m_1DDataWithRowCol[i] = new float[3];
+            m_1DDataWithRowCol[i][0] = NoDataValue;
+            m_1DDataWithRowCol[i][1] = NoDataValue;
+            m_1DDataWithRowCol[i][2] = NoDataValue;
         }
         m_Counter = 0;
     }
@@ -400,74 +372,74 @@ void PrintInfoItem::AggregateData(int numrows, float **data, AggregationType typ
     switch (type)
     {
         case AT_Average:
-            for (int rw = 0; rw < Numrows; rw++)
+            for (int rw = 0; rw < m_nRows; rw++)
             {
                 if (!FloatEqual(data[rw][2], NoDataValue))
                 {
                     // initialize value to 0.0 if this is the first time
-                    if (FloatEqual(Data[rw][2], NoDataValue)) Data[rw][2] = 0.0f;
-                    Data[rw][0] = data[rw][0]; // store the row number
-                    Data[rw][1] = data[rw][1]; // store the column number
+                    if (FloatEqual(m_1DDataWithRowCol[rw][2], NoDataValue)) m_1DDataWithRowCol[rw][2] = 0.0f;
+                    m_1DDataWithRowCol[rw][0] = data[rw][0]; // store the row number
+                    m_1DDataWithRowCol[rw][1] = data[rw][1]; // store the column number
                     if (m_Counter == 0)
                     {
                         // first value so average = value
-                        Data[rw][2] = data[rw][2];    // store the value
+                        m_1DDataWithRowCol[rw][2] = data[rw][2];    // store the value
                     }
                     else
                     {
                         // calculate the incremental average
-                        Data[rw][2] = ((Data[rw][2] * m_Counter) + data[rw][2]) / (m_Counter + 1);
+                        m_1DDataWithRowCol[rw][2] = ((m_1DDataWithRowCol[rw][2] * m_Counter) + data[rw][2]) / (m_Counter + 1);
                     }
                 }
             }
             m_Counter++;
             break;
         case AT_Sum:
-            for (int rw = 0; rw < Numrows; rw++)
+            for (int rw = 0; rw < m_nRows; rw++)
             {
                 if (!FloatEqual(data[rw][2], NoDataValue))
                 {
                     // initialize value to 0.0 if this is the first time
-                    if (FloatEqual(Data[rw][2], NoDataValue)) Data[rw][2] = 0.0f;
-                    Data[rw][0] = data[rw][0];
-                    Data[rw][1] = data[rw][1];
+                    if (FloatEqual(m_1DDataWithRowCol[rw][2], NoDataValue)) m_1DDataWithRowCol[rw][2] = 0.0f;
+                    m_1DDataWithRowCol[rw][0] = data[rw][0];
+                    m_1DDataWithRowCol[rw][1] = data[rw][1];
                     // add the next value to the current sum
-                    Data[rw][2] += data[rw][2];
+                    m_1DDataWithRowCol[rw][2] += data[rw][2];
                 }
             }
             break;
         case AT_Minimum:
-            for (int rw = 0; rw < Numrows; rw++)
+            for (int rw = 0; rw < m_nRows; rw++)
             {
                 if (!FloatEqual(data[rw][2], NoDataValue))
                 {
                     // initialize value to 0.0 if this is the first time
-                    if (FloatEqual(Data[rw][2], NoDataValue)) Data[rw][2] = 0.0f;
-                    Data[rw][0] = data[rw][0];
-                    Data[rw][1] = data[rw][1];
+                    if (FloatEqual(m_1DDataWithRowCol[rw][2], NoDataValue)) m_1DDataWithRowCol[rw][2] = 0.0f;
+                    m_1DDataWithRowCol[rw][0] = data[rw][0];
+                    m_1DDataWithRowCol[rw][1] = data[rw][1];
                     // if the next value is smaller than the current value
-                    if (data[rw][2] < Data[rw][2])
+                    if (data[rw][2] < m_1DDataWithRowCol[rw][2])
                     {
                         // set the current value to the next (smaller) value
-                        Data[rw][2] = data[rw][2];
+                        m_1DDataWithRowCol[rw][2] = data[rw][2];
                     }
                 }
             }
             break;
         case AT_Maximum:
-            for (int rw = 0; rw < Numrows; rw++)
+            for (int rw = 0; rw < m_nRows; rw++)
             {
                 if (!FloatEqual(data[rw][2], NoDataValue))
                 {
                     // initialize value to 0.0 if this is the first time
-                    if (FloatEqual(Data[rw][2], NoDataValue)) Data[rw][2] = 0.0f;
-                    Data[rw][0] = data[rw][0];
-                    Data[rw][1] = data[rw][1];
+                    if (FloatEqual(m_1DDataWithRowCol[rw][2], NoDataValue)) m_1DDataWithRowCol[rw][2] = 0.0f;
+                    m_1DDataWithRowCol[rw][0] = data[rw][0];
+                    m_1DDataWithRowCol[rw][1] = data[rw][1];
                     // if the next value is larger than the current value
-                    if (data[rw][2] > Data[rw][2])
+                    if (data[rw][2] > m_1DDataWithRowCol[rw][2])
                     {
                         // set the current value to the next (larger) value
-                        Data[rw][2] = data[rw][2];
+                        m_1DDataWithRowCol[rw][2] = data[rw][2];
                     }
                 }
             }
@@ -508,22 +480,9 @@ AggregationType PrintInfoItem::MatchAggregationType(string type)
 }
 
 
-void PrintInfoItem::setAggregationType(AggregationType type)
-{
-    m_AggregationType = type;
-}
-
-
-AggregationType PrintInfoItem::getAggregationType(void)
-{
-    return m_AggregationType;
-}
-
-
-void PrintInfo::setInterval(int interval)
-{
-    m_Interval = interval;
-}
+//////////////////////////////////////////
+///////////PrintInfo Class//////////////// 
+//////////////////////////////////////////
 
 //void PrintInfo::setSpecificCellRasterOutput(string projectPath, string databasePath,
 //clsRasterData* templateRasterData)
@@ -549,24 +508,22 @@ PrintInfo::PrintInfo(void)
 
 PrintInfo::~PrintInfo(void)
 {
-    m_Interval = 0;
-    m_IntervalUnits = "";
-    m_OutputID = "";
-    m_PrintItems.clear();
+	// no need to reset the basic data type. LJ
+    //m_Interval = 0;
+    //m_IntervalUnits = "";
+    //m_OutputID = "";
+	for(vector<PrintInfoItem *>::iterator it = m_PrintItems.begin(); it != m_PrintItems.end();)
+	{
+		if(*it != NULL)
+		{
+			delete *it;
+			*it = NULL;
+		}
+		it = m_PrintItems.erase(it);
+	}
+	m_PrintItems.clear();
     if (m_subbasinSelectedArray != NULL)
         Release1DArray(m_subbasinSelectedArray);
-}
-
-
-void PrintInfo::setOutputID(string id)
-{
-    m_OutputID = id;
-}
-
-
-string PrintInfo::getOutputID(void)
-{
-    return m_OutputID;
 }
 
 string PrintInfo::getOutputTimeSeriesHeader()
@@ -684,23 +641,6 @@ string PrintInfo::getOutputTimeSeriesHeader()
     return oss.str();
 }
 
-
-void PrintInfo::setIntervalUnits(string units)
-{
-    m_IntervalUnits = units;
-}
-
-
-int PrintInfo::getInterval(void)
-{
-    return m_Interval;
-}
-
-string PrintInfo::getIntervalUnits(void)
-{
-    return m_IntervalUnits;
-}
-
 void PrintInfo::AddPrintItem(string start, string end, string file, string sufi)
 {
     // create a new object instance
@@ -712,7 +652,7 @@ void PrintInfo::AddPrintItem(string start, string end, string file, string sufi)
     itm->EndTime = end;
     itm->Filename = file;
     itm->Suffix = sufi;
-    /// TODO  do check if the date time has hours
+    /// Be default, date time format has hour info.
     itm->m_startTime = utils::ConvertToTime2(start, "%d-%d-%d %d:%d:%d", true);
     itm->m_endTime = utils::ConvertToTime2(end, "%d-%d-%d %d:%d:%d", true);
     // add it to the list
@@ -787,14 +727,7 @@ void PrintInfo::getSubbasinSelected(int *count, float **subbasins)
             index++;
         }
     }
-
     *subbasins = m_subbasinSelectedArray;
-}
-
-
-int PrintInfo::ItemCount(void)
-{
-    return m_PrintItems.size();
 }
 
 
@@ -809,7 +742,6 @@ PrintInfoItem *PrintInfo::getPrintInfoItem(int index)
         // assign the reference to the given item
         res = m_PrintItems.at(index);
     }
-
     // return the reference
     return res;
 }
