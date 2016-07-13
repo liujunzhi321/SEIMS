@@ -25,8 +25,8 @@ Snow	shc	Snow holding capacity	m	SRD_MB	-99	1	RC	3	0.5	Y
 Snow	slope_wind	Slope along wind direction	%	SRD_MB	-99		NC			Y
 Snow	U0	Wind speed over Ut at which WWi=1	m/s	SRD_MB	10	0	AC	1	0.2	Y
 Snow	Ut0	Threshold wind speed at -27 degree	m/s	SRD_MB	6.98	0	AC	10	4	Y
-Snow	k_blow	fraction of snow into or out of the watershed		ALL	0	0	AC	1	-1	Y
-Snow	swe0	Initial snow water equivalent	mm	ALL	20	0	AC	300	0	Y
+Snow	k_blow	fraction of precipitation as snow	None	SNO_SP	1	1	RC	1	0	Y
+Snow	swe0	Initial snow water equivalent	mm	ALL	10	0	AC	300	0	Y
 Snow	subbasin	subbasin identity		ALL	-99	0	NC	0	100	
 Snow	shc_crop	snow holding capacity of cropland	mm	SRD_MB	50	0	NC	0.1	0	Y
 Snow	T_wind	temperature at which wind transport of snow is most favorable	deg C	SRD_MB	-27.27	0	NC	-20	-35	Y
@@ -224,5 +224,7 @@ PlantGrowth	nfixmx	Maximum daily-n fixation (kg/ha)	kg/ha	BIO_EPIC	20	1	RC	20	1	
 PlantGrowth	dormhr	time threshold used to define dormant period for plant	hr	BIO_EPIC	0	1	AC	24	0	Y
 PlantGrowth	cswat	carbon modeling method		MGT_SWAT	0	0	AC	2	0	Y
 Bacteria	bact_swf	fraction of manure containing active colony forming units (cfu)		MGT_SWAT	0.15	1	RC	1	0	Y
+Snow	SNOCOVMX	Minimum snow water content that corresponds to 100% snow cover.	mm	SNO_SP	1	0	AC	500	0	Y
+Snow	SNO50COV	Fraction of snow water equivalent that corresponds to 50% snow cover.	None	SNO_SP	0.5	1	RC	1	0	Y
 
 
