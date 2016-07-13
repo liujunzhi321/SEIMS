@@ -5,7 +5,7 @@
  * \date Nov. 2010
  * \revised LiangJun Zhu
  * \date May. 2016
- * \note: 1. Add m_tMean from database, which may be measurement value or the mean of tMax and tMin;
+ * \note:     1. Add m_tMean from database, which may be measurement value or the mean of tMax and tMin;
 			  2. The PET calculate is changed from site-based to cell-based, because PET is not only dependent on Climate site data;
 			  3. Add m_VPD, m_dayLen as outputs, which will be used in BIO_EPIC module
 			  4. Add m_phuBase as outputs, which will be used in MGT_SWAT module
@@ -92,6 +92,7 @@ private:
     float m_srMax;
     /// Julian day
     int m_jday;
+
     /// output
 
     /// day length (hr)
@@ -105,28 +106,3 @@ private:
 };
 
 #endif
-
-/// size of the input array
-//int m_size;
-///*!
-// * \brief calculates saturation vapor pressure at a given air temperature.
-// * \param[in] float t: mean air temperature(deg C)
-// * \return saturation vapor pressure(kPa)
-// */
-//float SaturationVaporPressure(float t);
-
-///*!
-// * \brief Calculate the max solar radiation for a station of one day
-// *
-// *
-// * \param[in] day Julian day.
-// * \param[in] lat Latitude of the station
-// * \return float The max solar radiation.
-// */
-//float MaxSolarRadiation(int,float);
-
-///*!
-// * \brief Get the Julian day of one day
-// * \return int Julian day
-// */
-//int JulianDay(time_t);
