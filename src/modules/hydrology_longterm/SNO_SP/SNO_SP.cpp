@@ -5,42 +5,23 @@
 #include <cmath>
 #include "util.h"
 #include "ClimateParams.h"
+#include "PlantGrowthCommon.h"
 #include <omp.h>
 
-SNO_SP::SNO_SP(void)
-{
-    // set default values for member variables
-    this->m_nCells = -1;
-    this->m_t0 = NODATA;
-    this->m_kblow = NODATA;
-    //this->m_crain = NODATA;
-    //this->m_csnow = NODATA;
-    this->m_swe = NODATA;
-    this->m_lastSWE = NODATA;
-    this->m_tsnow = NODATA;
-    this->m_swe0 = NODATA;
-    this->m_lagSnow = NODATA;
-    this->m_csnow6 = NODATA;
-    this->m_csnow12 = NODATA;
-
-    this->m_Pnet = NULL;
-    this->m_tMean = NULL;
-    this->m_tMax = NULL;
-    this->m_SA = NULL;
-    this->m_SR = NULL;
-    this->m_SE = NULL;
-
-    this->m_SM = NULL;
-    ///m_isInitial = true;
-
-    this->m_packT = NULL;
+SNO_SP::SNO_SP(void): m_nCells(-1), m_t0(NODATA_VALUE), m_kblow(NODATA_VALUE), 
+	m_tsnow(NODATA_VALUE), m_lagSnow(NODATA_VALUE), m_csnow6(NODATA_VALUE), m_csnow12(NODATA_VALUE), 
+	m_snowCoverMax(NODATA_VALUE), m_snowCover50(NODATA_VALUE),
+	m_snowCoverCoef1(NODATA_VALUE), m_snowCoverCoef2(NODATA_VALUE),
+	m_Pnet(NULL), m_tMean(NULL), m_tMax(NULL), m_SE(NULL), 
+	m_SR(NULL), m_SM(NULL), m_SA(NULL), m_packT(NULL)
+{//m_swe(NODATA_VALUE), m_lastSWE(NODATA_VALUE), m_swe0(NODATA_VALUE),
 }
 
 SNO_SP::~SNO_SP(void)
 {
-    //// cleanup
-    if (this->m_SM != NULL) delete[] this->m_SM;
-    if (this->m_packT != NULL) delete[] this->m_packT;
+    if (this->m_SM != NULL) Release1DArray(this->m_SM);
+	if (this->m_SA != NULL) Release1DArray(this->m_SA);
+    if (this->m_packT != NULL) Release1DArray(this->m_packT);
 }
 
 bool SNO_SP::CheckInputData(void)
@@ -49,149 +30,139 @@ bool SNO_SP::CheckInputData(void)
     if (this->m_nCells <= 0)
         throw ModelException(MID_SNO_SP, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
-    if (this->m_kblow == NODATA)
-        throw ModelException(MID_SNO_SP, "CheckInputData",
-                             "The fraction coefficient of snow blowing into or out of the watershed can not be NULL.");
-    if (this->m_Pnet == NULL)
-        throw ModelException(MID_SNO_SP, "CheckInputData", "The net precipitation data can not be NULL.");
+    if (this->m_t0 == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The Snow melt temperature can not be NODATA.");
+    if (this->m_kblow == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData",
+                             "The fraction coefficient of precipitation as snow can not be NODATA.");
+    //if (this->m_swe == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The average snow accumulation of watershed can not be NODATA.");
+	//if (this->m_swe0 == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The swe0 can not be NODATA.");
+	if (this->m_tsnow == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The snow fall temperature can not be NODATA.");
+    if (this->m_lagSnow == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The lag snow can not be NODATA.");
+    if (this->m_csnow6 == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The csnow6 can not be NODATA.");
+    if (this->m_csnow12 == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The csnow12 can not be NODATA.");
+	if (this->m_snowCoverMax == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The snowCoverMax can not be NODATA.");
+	if (this->m_snowCover50 == NODATA_VALUE) throw ModelException(MID_SNO_SP, "CheckInputData", "The snowCover50 can not be NODATA.");
     if (this->m_tMean == NULL)
         throw ModelException(MID_SNO_SP, "CheckInputData", "The mean temperature data can not be NULL.");
     if (this->m_tMax == NULL)
         throw ModelException(MID_SNO_SP, "CheckInputData", "The max temperature data can not be NULL.");
-    /// m_SA should be the output! By LJ
-    //if(this->m_SA == NULL)			throw ModelException(MID_SNO_SP,"CheckInputData","The snow accumulation data can not be NULL.");
-    if (this->m_swe == NODATA) throw ModelException(MID_SNO_SP, "CheckInputData", "The swe can not be NODATA.");
-    if (this->m_swe0 == NODATA) throw ModelException(MID_SNO_SP, "CheckInputData", "The swe0 can not be NODATA.");
-    //if(this->m_csnow == NODATA)		throw ModelException(MID_SNO_SP,"CheckInputData","The temperature impact factor can not be NODATA.");
-    //if(this->m_crain == NODATA)		throw ModelException(MID_SNO_SP,"CheckInputData","The rainfall impact factor can not be NODATA.");
-    if (this->m_t0 == NODATA)
-        throw ModelException(MID_SNO_SP, "CheckInputData", "The Snowmelt temperature can not be NODATA.");
-    if (this->m_tsnow == NODATA)
-        throw ModelException(MID_SNO_SP, "CheckInputData", "The snow fall temperature can not be NODATA.");
-    if (this->m_lagSnow == NODATA)
-        throw ModelException(MID_SNO_SP, "CheckInputData", "The lag snow can not be NODATA.");
-    if (this->m_csnow6 == NODATA) throw ModelException(MID_SNO_SP, "CheckInputData", "The csnow6 can not be NODATA.");
-    if (this->m_csnow12 == NODATA) throw ModelException(MID_SNO_SP, "CheckInputData", "The csnow12 can not be NODATA.");
-
-    //if(this->m_SR == NULL)			throw ModelException(MID_SNO_SP,"CheckInputData","The snow redistribution data can not be NULL.");
-    if (this->m_SE == NULL)
-        throw ModelException(MID_SNO_SP, "CheckInputData", "The snow sublimation data can not be NULL.");
+	if (this->m_Pnet == NULL)
+        throw ModelException(MID_SNO_SP, "CheckInputData", "The net precipitation data can not be NULL.");
+    //if (this->m_SE == NULL) throw ModelException(MID_SNO_SP, "CheckInputData", "The snow sublimation data can not be NULL.");
     return true;
 }
 
 void SNO_SP::initialOutputs()
 {
     if (m_nCells <= 0)
-        throw ModelException(MID_SNO_SP, "CheckInputData",
-                             "The dimension of the input data can not be less than zero.");
-    if (m_SM == NULL || m_SA == NULL)
-    {
-        m_SM = new float[this->m_nCells];
-        m_SA = new float[this->m_nCells];
-        for (int rw = 0; rw < this->m_nCells; rw++)
-        {
-            m_SM[rw] = 0.0f;
-            m_SA[rw] = 0.0f;
-        }
-    }
+        throw ModelException(MID_SNO_SP, "CheckInputData", "The dimension of the input data can not be less than zero.");
+	if(m_SM == NULL) Initialize1DArray(m_nCells, m_SM, 0.f);
+	if(m_SA == NULL) Initialize1DArray(m_nCells, m_SA, 0.f);
+	if(m_packT == NULL) Initialize1DArray(m_nCells, m_packT, 0.f);
+    //if (m_SM == NULL || m_SA == NULL)
+    //{
+    //    m_SM = new float[this->m_nCells];
+    //    m_SA = new float[this->m_nCells];
+    //    for (int rw = 0; rw < this->m_nCells; rw++)
+    //    {
+    //        m_SM[rw] = 0.0f;
+    //        m_SA[rw] = 0.0f;
+    //    }
+    //}
+	//if (this->m_swe == NODATA_VALUE) 
+	//	this->m_swe = this->m_swe0;
+	//if (this->m_lastSWE == NODATA_VALUE) 
+	//	this->m_lastSWE = this->m_swe;
+	if (m_SR == NULL)  /// the initialization should be removed when snow redistribution module is accomplished. LJ
+		Initialize1DArray(m_nCells, m_SR, 0.f);
+	if (m_SE == NULL) /// Snow sublimation will be considered in AET_PTH
+		Initialize1DArray(m_nCells, m_SE, 0.f);
 }
 
 int SNO_SP::Execute()
 {
     this->CheckInputData();
-
     this->initialOutputs();
-    if (m_SR == NULL)  /// the initialization should be removed when snow redistribution module is accomplished. LJ
-    {
-        m_SR = new float[m_nCells];
-        for (int i = 0; i < this->m_nCells; i++)
-            m_SR[i] = 0.f;
-    }
-    ////the first time
-    //if(m_isInitial)
+	/// determine the shape parameters for the equation which describes area of
+	/// snow cover as a function of amount of snow
+	if(m_snowCoverCoef1 == NODATA_VALUE || m_snowCoverCoef2 == NODATA_VALUE)
+		PGCommon::getScurveShapeParameter(0.5f, 0.95f, m_snowCover50, 0.95, &m_snowCoverCoef1, &m_snowCoverCoef2);
+  //  if (this->m_lastSWE == NODATA_VALUE) /// moved to initialOutputs()
+		//this->m_lastSWE = this->m_swe;
+	//If all cells have no snow, snow melt is set to zero.
+    //if (m_swe < 0.01)
     //{
-    //	int count = 0;
-    //	for(int i=0;i<this->m_nCells;i++)
-    //	{
-    //		if(this->m_tMean[i] < this->m_tsnow)	{this->m_SA[i] = this->m_swe0; count++;}	//winter
-    //		else
-    //			this->m_SA[i] = 0.0f;						// other seasons
-    //		m_packT[i] = this->m_tMean[i];	//initial pack T as average air temperature
-    //	}
+    //    if (this->m_lastSWE >= 0.01)
+    //    {
+    //        for (int rw = 0; rw < this->m_nCells; rw++)
+    //            m_SM[rw] = 0.f;
+    //    }
+    //    this->m_lastSWE = this->m_swe;
 
-    //	m_swe =  this->m_swe0 * count / this->m_nCells;
-    //	m_isInitial = false;
+    //    return 0;
     //}
-    //else	//not the first time, update pack T using eq. 1:2.5.1 SWAT p57
-    //{
-    //	for(int i=0;i<this->m_nCells;i++) m_packT[i] = m_packT[i] * (1 - this->m_lagSnow) + this->m_tMean[i] * this->m_lagSnow;
-    //}
-    for (int i = 0; i < this->m_nCells; i++)
-        m_packT[i] = m_packT[i] * (1 - this->m_lagSnow) + this->m_tMean[i] * this->m_lagSnow;
-    //begin
-    if (this->m_lastSWE == NODATA) this->m_lastSWE = this->m_swe;
-    if (m_swe < 0.01)    //all cells have not snow, so snowmelt is 0.
-    {
-        if (this->m_lastSWE >= 0.01)
-        {
-            for (int rw = 0; rw < this->m_nCells; rw++)
-                m_SM[rw] = 0.0f;
-        }
-        this->m_lastSWE = this->m_swe;
 
-        return true;
-    }
-
-    float cmelt = -1.0f; //cmelt
-    for (int rw = 0; rw < this->m_nCells; rw++)
+	/// adjust melt factor for time of year, i.e., smfac in snom.f
+	// which only need to computed once.
+	int d = JulianDay(this->m_date);
+	float sinv = float(sin(2.f * PI / 365.f * (d - 81.f)));
+	float cmelt = (m_csnow6 + m_csnow12) / 2.f + (m_csnow6 - m_csnow12) / 2.f * sinv;
+#pragma omp parallel for
+    for (int rw = 0; rw < m_nCells; rw++)
     {
-        float snow = this->m_SA[rw] + this->m_SR[rw] - this->m_SE[rw];
-        float tmean = this->m_tMean[rw];
-        if (tmean < this->m_tsnow) snow += (1 + this->m_kblow) * this->m_Pnet[rw];
-        if (snow < 0.01) this->m_SM[rw] = 0.0f;
+		/// estimate snow pack temperature
+		m_packT[rw] = m_packT[rw] * (1 - m_lagSnow) + m_tMean[rw] * m_lagSnow;
+		/// calculate snow fall
+        m_SA[rw] = m_SA[rw] + m_SR[rw] - m_SE[rw];
+        if (m_tMean[rw] < m_tsnow) /// precipitation will be snow
+		{
+			m_SA[rw] += m_kblow * m_Pnet[rw];
+			m_Pnet[rw] *= (1.f - m_kblow); 
+		}
+
+        if (m_SA[rw] < 0.01) 
+			m_SM[rw] = 0.f;
         else
         {
-            float dt = tmean - this->m_t0;
-            if (dt < 0) m_SM[rw] = 0.0f;  //if temperature is lower than t0, the snowmelt is 0.
+            float dt = m_tMax[rw] - m_t0;
+            if (dt < 0)
+				m_SM[rw] = 0.f;  //if temperature is lower than t0, the snowmelt is 0.
             else
             {
-                if (cmelt == -1.0f) cmelt = CMelt();    //just calculate once
                 //calculate using eq. 1:2.5.2 SWAT p58
-                float sm = cmelt * (m_packT[rw] / 2 + this->m_tMax[rw] / 2 - this->m_t0);
-                this->m_SM[rw] = min(snow, sm);
+                m_SM[rw] = cmelt * ((m_packT[rw] + m_tMax[rw]) / 2.f - m_t0);
+				// adjust for areal extent of snow cover
+				float snowCoverFrac = 0.f; //fraction of HRU area covered with snow
+				if (m_SA[rw] < m_snowCoverMax)
+				{
+					float xx = m_SA[rw] / m_snowCoverMax;
+					snowCoverFrac = xx / (xx + exp(m_snowCoverCoef1 = m_snowCoverCoef2 * xx));
+				}
+				else
+					snowCoverFrac = 1.f;
+				m_SM[rw] *= snowCoverFrac;
+				if(m_SM[rw] < 0.f) m_SM[rw] = 0.f;
+				if(m_SM[rw] > m_SA[rw]) m_SM[rw] = m_SA[rw];
+				m_SA[rw] -= m_SM[rw];
+				m_Pnet[rw] += m_SM[rw];
+				if(m_Pnet[rw] < 0.f) m_Pnet[rw] = 0.f;
             }
         }
     }
-
-    this->m_lastSWE = this->m_swe;
+    //this->m_lastSWE = this->m_swe;
     return 0;
-}
-
-//calculate cmelt using eq. 1:2.5.2 SWAT p58
-float SNO_SP::CMelt()
-{
-    int d = JulianDay(this->m_date);
-    float sinv = float(sin(2 * PI / 365.0f * (d - 81)));
-    return (this->m_csnow6 + this->m_csnow12) / 2.0f + (this->m_csnow6 - this->m_csnow12) / 2.0f * sinv;
 }
 
 bool SNO_SP::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
-    {
         throw ModelException(MID_SNO_SP, "CheckInputSize",
                              "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
-        return false;
-    }
     if (this->m_nCells != n)
     {
         if (this->m_nCells <= 0) this->m_nCells = n;
         else
-        {
             throw ModelException(MID_SNO_SP, "CheckInputSize", "Input data for " + string(key) +
                                                                " is invalid. All the input data should have same size.");
-            return false;
-        }
     }
     return true;
 }
@@ -202,13 +173,14 @@ void SNO_SP::SetValue(const char *key, float data)
     if (StringMatch(s, VAR_K_BLOW)) this->m_kblow = data;
     else if (StringMatch(s, VAR_T0)) this->m_t0 = data;
     else if (StringMatch(s, VAR_T_SNOW)) this->m_tsnow = data;
-    else if (StringMatch(s, VAR_SWE)) this->m_swe = data;
-    else if (StringMatch(s, VAR_SWE0)) this->m_swe0 = data;
+    //else if (StringMatch(s, VAR_SWE)) this->m_swe = data;
+    //else if (StringMatch(s, VAR_SWE0)) this->m_swe0 = data;
     else if (StringMatch(s, VAR_LAG_SNOW)) this->m_lagSnow = data;
     else if (StringMatch(s, VAR_C_SNOW6)) this->m_csnow6 = data;
     else if (StringMatch(s, VAR_C_SNOW12)) this->m_csnow12 = data;
+	else if (StringMatch(s, VAR_SNOCOVMX)) this->m_snowCoverMax = data;
+	else if (StringMatch(s, VAR_SNO50COV)) this->m_snowCover50 = data;
     else if (StringMatch(s, VAR_OMP_THREADNUM)) omp_set_num_threads((int) data);
-    else if (StringMatch(s, Tag_CellSize)) this->m_nCells = (int) data;
     else
         throw ModelException(MID_SNO_SP, "SetValue", "Parameter " + s
                                                      +
@@ -223,9 +195,8 @@ void SNO_SP::Set1DData(const char *key, int n, float *data)
     if (StringMatch(s, VAR_TMEAN)) this->m_tMean = data;
     else if (StringMatch(s, VAR_TMAX)) this->m_tMax = data;
     else if (StringMatch(s, VAR_NEPR)) this->m_Pnet = data;
-        /// else if(StringMatch(s, VAR_SNAC))		this->m_SA = data;	 m_SA should be a output. By LJ
-    else if (StringMatch(s, VAR_SNRD)) this->m_SR = data;
-    else if (StringMatch(s, VAR_SNSB)) this->m_SE = data;
+    //else if (StringMatch(s, VAR_SNRD)) this->m_SR = data;
+    //else if (StringMatch(s, VAR_SNSB)) this->m_SE = data;
     else
         throw ModelException(MID_SNO_SP, "Set1DData", "Parameter " + s +
                                                       " does not exist in current module. Please contact the module developer.");
@@ -237,6 +208,7 @@ void SNO_SP::Get1DData(const char *key, int *n, float **data)
     string s(key);
     if (StringMatch(s, VAR_SNME)) *data = this->m_SM;
     else if (StringMatch(s, VAR_SNAC)) *data = this->m_SR;
+	else if (StringMatch(s, VAR_NEPR)) *data = this->m_Pnet;
     else
         throw ModelException(MID_SNO_SP, "Get1DData", "Result " + s
                                                       +

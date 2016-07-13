@@ -25,7 +25,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetEmail(SEIMS_EMAIL);
     mdi.SetID(MID_SSM_PE);
     mdi.SetName(MID_SSM_PE);
-    mdi.SetVersion("0.5");
+    mdi.SetVersion("1.1");
     mdi.SetWebsite(SEIMS_SITE);
     mdi.SetHelpfile("SSM_PE.chm");
 
@@ -35,18 +35,15 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_T_SNOW, UNIT_TEMP_DEG, DESC_T_SNOW, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_SWE0, UNIT_DEPTH_MM, DESC_SWE0, Source_ParameterDB, DT_Single);
 
-    mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);                    // from PET module
-    mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module,
-                 DT_Raster1D);                // from interception module
-    mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module,
-                 DT_Raster1D);            // from snow water balance module
-    mdi.AddInput(VAR_SWE, UNIT_DEPTH_MM, DESC_SWE, Source_Module,
-                 DT_Single);                        // from snow water balance module
+    mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);  // from PET module
+    mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module, DT_Raster1D); // from interception module
+    mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module, DT_Raster1D); // from snow melt module
+    mdi.AddInput(VAR_SWE, UNIT_DEPTH_MM, DESC_SWE, Source_Module, DT_Single); // from snow water balance module
     // SNRD should be added as input when snow redistribution module is accomplished. LJ
-    //mdi.AddInput(VAR_SNRD, UNIT_DEPTH_MM, DESC_SNRD, Source_Module, DT_Raster1D);			// from snow redistribution module
-    mdi.AddInput(VAR_TMEAN, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module,
-                 DT_Raster1D);                // from interpolation module
-    // set the output variables
+    //mdi.AddInput(VAR_SNRD, UNIT_DEPTH_MM, DESC_SNRD, Source_Module, DT_Raster1D);	 // from snow redistribution module
+    mdi.AddInput(VAR_TMEAN, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module, DT_Raster1D); // from interpolation module
+    
+	// set the output variables
     mdi.AddOutput(VAR_SNSB, UNIT_DEPTH_MM, DESC_SNSB, DT_Raster1D);
 
     // write out the XML file.

@@ -1,17 +1,3 @@
-/*!
- * \file PETPenmanMonteith.cpp
- * \author Junzhi Liu
- * \date Nov. 2010
- * \revised LiangJun Zhu
- * \date May. 2016
- * \note: 1. Add m_tMean from database, which may be measurement value or the mean of tMax and tMin;
-              2. The PET calculate is changed from site-based to cell-based, because PET is not only dependent on Climate site data;
-			  3. Add ecology related parameters (initialized value).
-			  4. Add potential plant transpiration(PPT) as output.
-			  5. Add m_VPD, m_dayLen as outputs, which will be used in BIO_EPIC module
-			  6. change m_vpd2 and m_gsi from DT_Single to DT_Raster1D, see readplant.f of SWAT
-			  7. Add m_phuBase as outputs, which will be used in MGT_SWAT module
- */
 #include "PETPenmanMonteith.h"
 #include "MetadataInfo.h"
 #include <cmath>
@@ -24,156 +10,80 @@
 
 using namespace std;
 
-PETPenmanMonteith::PETPenmanMonteith(void) : m_elev(NULL), m_rhd(NULL), m_sr(NULL), m_tMean(NULL), m_tMin(NULL),
-                                             m_tMax(NULL), m_ws(NULL), m_phutot(NULL), m_growCode(NULL), m_cht(NULL),
-                                             m_lai(NULL), m_petFactor(1.f), m_tSnow(-1), m_nCells(-1),
+PETPenmanMonteith::PETPenmanMonteith(void) : m_tSnow(-1), m_nCells(-1),
+                                             m_elev(NULL), m_rhd(NULL), m_sr(NULL), m_tMean(NULL), m_tMin(NULL),
+                                             m_tMax(NULL), m_ws(NULL), m_phutot(NULL), 
+											 m_growCode(NULL), m_cht(NULL), m_lai(NULL), m_petFactor(1.f), 
                                              m_cellLat(NULL), m_albedo(NULL), m_gsi(NULL), m_vpd2(NULL), m_frgmax(NULL),
                                              m_vpdfr(NULL),
-                                             m_pet(NULL), m_vpd(NULL), m_ppt(NULL), m_dayLen(NULL), m_phuBase(NULL)
+                                             m_pet(NULL), m_vpd(NULL), m_dayLen(NULL), m_phuBase(NULL), m_ppt(NULL)		 
 {
 }
 
 PETPenmanMonteith::~PETPenmanMonteith(void)
 {
-    if (this->m_dayLen != NULL) delete[] this->m_dayLen;
-    if (this->m_pet != NULL) delete[] this->m_pet;
-    if (this->m_vpd != NULL) delete[] this->m_vpd;
-    if (this->m_phuBase != NULL) delete[] this->m_phuBase;
-
-    /// This code would be removed if the grow code is got from main.
-    /// Comment these code since m_growCode is provided as Parameters and be updated by plant growth module. By LJ
-    //if(this->m_growCode != NULL)
-    //	delete [] this->m_growCode;
-
-    /// Since these two variables will be update by plant growth modules, the destruction code are commented. By LJ, May. 2016.
-    //if(this->m_cht != NULL)
-    //	delete [] this->m_cht;
-    //if(this->m_lai != NULL)
-    //	delete [] this->m_lai;
+    if (this->m_dayLen != NULL) Release1DArray(this->m_dayLen);
+    if (this->m_pet != NULL) Release1DArray(this->m_pet);
+    if (this->m_vpd != NULL) Release1DArray(this->m_vpd);
+    if (this->m_phuBase != NULL) Release1DArray(this->m_phuBase);
 }
-
-//void PETPenmanMonteith::clearInputs()
-//{
-//	this->m_date = -1;
-//}
 
 bool PETPenmanMonteith::CheckInputData()
 {
-    if (this->m_date == -1)
-    {
+    if (this->m_date < 0)
         throw ModelException(MID_PET_PM, "CheckInputData", "You have not set the time.");
-        return false;
-    }
     if (m_nCells <= 0)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
-        return false;
-    }
     if (this->m_cht == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The canopy height can not be NULL.");
-        return false;
-    }
     if (this->m_elev == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The elevation can not be NULL.");
-        return false;
-    }
     if (this->m_growCode == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The land cover status code can not be NULL.");
-        return false;
-    }
     if (this->m_lai == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The leaf area index can not be NULL.");
-        return false;
-    }
     if (this->m_albedo == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The albedo of the current day can not be NULL.");
-        return false;
-    }
     if (this->m_rhd == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The relative humidity can not be NULL.");
-        return false;
-    }
     if (this->m_sr == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The solar radiation can not be NULL.");
-        return false;
-    }
     if (this->m_tMean == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The mean temperature can not be NULL.");
-        return false;
-    }
     if (this->m_tMin == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The min temperature can not be NULL.");
-        return false;
-    }
     if (this->m_tMax == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The max temperature can not be NULL.");
-        return false;
-    }
     if (this->m_ws == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The wind speed can not be NULL.");
-        return false;
-    }
     if (this->m_cellLat == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The latitude can not be NULL.");
-        return false;
-    }
     if (this->m_phutot == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The PHU0 can not be NULL.");
-        return false;
-    }
     if (this->m_gsi == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData", "The maximum stomatal conductance can not be NULL.");
-        return false;
-    }
     if (this->m_vpdfr == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData",
                              "The vapor pressure deficit(kPa) corresponding to the second point on the stomatal conductance curve can not be NULL.");
-        return false;
-    }
     if (this->m_frgmax == NULL)
-    {
         throw ModelException(MID_PET_PM, "CheckInputData",
                              "The fraction of maximum stomatal conductance can not be NULL.");
-        return false;
-    }
     return true;
 }
 
 bool PETPenmanMonteith::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
-    {
         throw ModelException(MID_PET_PM, "CheckInputSize",
                              "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
-        return false;
-    }
     if (this->m_nCells != n)
     {
         if (this->m_nCells <= 0) this->m_nCells = n;
         else
-        {
             throw ModelException(MID_PET_PM, "CheckInputSize", "Input data for " + string(key) +
                                                                " is invalid. All the input data should have same size.");
-            return false;
-        }
     }
-
     return true;
 }
 
@@ -209,7 +119,7 @@ void PETPenmanMonteith::Set1DData(const char *key, int n, float *value)
         this->m_ws = value;
     else if (StringMatch(sk, VAR_DEM))
         this->m_elev = value;
-        //from LAI model
+        //from PG model, such as BIO_EPIC
     else if (StringMatch(sk, VAR_CHT))
         this->m_cht = value;
     else if (StringMatch(sk, VAR_ALBDAY))
@@ -234,23 +144,28 @@ void PETPenmanMonteith::Set1DData(const char *key, int n, float *value)
 
 void PETPenmanMonteith::initialOutputs()
 {
-    if (NULL == m_pet)
-    {
-        this->m_dayLen = new float[this->m_nCells];
-        this->m_pet = new float[this->m_nCells];
-        this->m_ppt = new float[this->m_nCells];
-        this->m_vpd = new float[this->m_nCells];
-        this->m_phuBase = new float[this->m_nCells];
-#pragma omp parallel for
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_dayLen[i] = 0.f;
-            m_pet[i] = 0.f;
-            m_ppt[i] = 0.f;
-            m_vpd[i] = 0.f;
-            m_phuBase[i] = 0.f;
-        }
-    }
+	if(this->m_vpd == NULL) Initialize1DArray(m_nCells, m_vpd, 0.f);
+	if(this->m_dayLen == NULL) Initialize1DArray(m_nCells, m_dayLen, 0.f);
+	if(this->m_phuBase == NULL) Initialize1DArray(m_nCells, m_phuBase, 0.f);
+	if(this->m_pet == NULL) Initialize1DArray(m_nCells, m_pet, 0.f);
+	if(this->m_ppt == NULL) Initialize1DArray(m_nCells, m_ppt, 0.f);
+//    if (NULL == m_pet)
+//    {
+//        this->m_dayLen = new float[this->m_nCells];
+//        this->m_pet = new float[this->m_nCells];
+//        this->m_ppt = new float[this->m_nCells];
+//        this->m_vpd = new float[this->m_nCells];
+//        this->m_phuBase = new float[this->m_nCells];
+//#pragma omp parallel for
+//        for (int i = 0; i < m_nCells; i++)
+//        {
+//            m_dayLen[i] = 0.f;
+//            m_pet[i] = 0.f;
+//            m_ppt[i] = 0.f;
+//            m_vpd[i] = 0.f;
+//            m_phuBase[i] = 0.f;
+//        }
+//    }
 
     if (NULL == m_vpd2) this->m_vpd2 = new float[this->m_nCells];
 #pragma omp parallel for
@@ -278,16 +193,16 @@ int PETPenmanMonteith::Execute()
         if (tmpav(j) > 0. .and. phutot(hru_sub(j)) > 0.01) then
             phubase(j) = phubase(j) + tmpav(j) / phutot(hru_sub(j))
         end if*/
-        if (m_jday == 1) m_phuBase[j] = 0.;
-        if (m_tMean[j] > 0. && m_phutot[j] > 0.01)
+        if (m_jday == 1) m_phuBase[j] = 0.f;
+        if (m_tMean[j] > 0.f && m_phutot[j] > 0.01f)
             m_phuBase[j] += m_tMean[j] / m_phutot[j];
 
         //////////////////////////////////////////////////////////////////////////
         //               compute net radiation
         //net short-wave radiation for PET (from swat)
-        float raShortWave = m_sr[j] * (1.0f - 0.23f);
+        float raShortWave = m_sr[j] * (1.f - 0.23f);
         if (m_tMean[j] < this->m_tSnow)        //if the mean t < snow t, consider the snow depth is larger than 0.5mm.
-            raShortWave = m_sr[j] * (1.0f - 0.8f);
+            raShortWave = m_sr[j] * (1.f - 0.8f);
 
         //calculate the max solar radiation
         float srMax = 0.f;
@@ -297,24 +212,24 @@ int PETPenmanMonteith::Execute()
         float satVaporPressure = SaturationVaporPressure(m_tMean[j]);//kPa
         float actualVaporPressure = 0.f;
         if (m_rhd[j] > 1)   /// IF percent unit.
-            actualVaporPressure = m_rhd[j] * satVaporPressure * 0.01;
+            actualVaporPressure = m_rhd[j] * satVaporPressure * 0.01f;
         else
             actualVaporPressure = m_rhd[j] * satVaporPressure;
         m_vpd[j] = satVaporPressure - actualVaporPressure;
         float rbo = -(0.34f - 0.139f * sqrt(actualVaporPressure)); //P37 1:1.2.22
         //cloud cover factor equation 2.2.19
         float rto = 0.0f;
-        if (srMax >= 1.0e-4)
+        if (srMax >= 1.0e-4f)
             rto = 0.9f * (m_sr[j] / srMax) + 0.1f;
         //net long-wave radiation equation 2.2.21
         float tk = m_tMean[j] + 273.15f;
-        float raLongWave = rbo * rto * 4.9e-9f * pow(tk, 4);
+        float raLongWave = rbo * rto * 4.9e-9f * pow(tk, 4.f);
         // calculate net radiation
         float raNet = raShortWave + raLongWave;
 
         //////////////////////////////////////////////////////////////////////////
         //calculate the slope of the saturation vapor pressure curve
-        float dlt = 4098.f * satVaporPressure / pow((m_tMean[j] + 237.3f), 2);
+        float dlt = 4098.f * satVaporPressure / pow((m_tMean[j] + 237.3f), 2.f);
 
         //calculate latent heat of vaporization(MJ/kg, from swat)
         float latentHeat = 2.501f - 0.002361f * m_tMean[j];
@@ -331,7 +246,7 @@ int PETPenmanMonteith::Execute()
         float rc = 49.f / (1.4f - 0.4f * m_co2 / 330.f);  //P128 2:2.2.22
         float petValue = (dlt * raNet + gma * rho * m_vpd[j] / rv) /
                          (latentHeat * (dlt + gma * (1.f + rc / rv)));  //P122 2:2.2.2
-        petValue = m_petFactor * max(0.0f, petValue);
+        petValue = m_petFactor * max(0.f, petValue);
         m_pet[j] = petValue;
         //*********************************************************
         //The albedo would be obtained from plant growth module. But now it is assumed to be a constant.
@@ -344,29 +259,29 @@ int PETPenmanMonteith::Execute()
         float raShortWavePlant = m_sr[j] * (1.0f - m_albedo[j]);
         float raNetPlant = raShortWavePlant + raLongWave;
 
-        float epMax = 0.0f;
+        float epMax = 0.f;
         if (m_growCode[j] > 0) //land cover growing
         {
             //determine wind speed and height of wind speed measurement
             //adjust to 100 cm (1 m) above canopy if necessary
             float zz = 0.f;  //height at which wind speed is determined(cm)
-            if (m_cht[j] <= 1.0f)
-                zz = 170.0f;
+            if (m_cht[j] <= 1.f)
+                zz = 170.f;
             else
                 zz = m_cht[j] * 100.f + 100.f;
             //wind speed at height zz(m/s)
             float uzz = m_ws[j] * pow(zz / 1000.f, 0.2f);
 
             //calculate canopy height in cm
-            float chz = 0.0f;
+            float chz = 0.f;
             if (m_cht[j] < 0.01f)
                 chz = 1.0f;
             else
-                chz = m_cht[j] * 100.0f;
+                chz = m_cht[j] * 100.f;
 
             //calculate roughness length for momentum transfer
-            float zom = 0.0f;
-            if (chz <= 200.0f)
+            float zom = 0.f;
+            if (chz <= 200.f)
                 zom = 0.123f * chz;
             else
                 zom = 0.058f * pow(chz, 1.19f);
@@ -379,27 +294,27 @@ int PETPenmanMonteith::Execute()
 
             //calculate aerodynamic resistance
             float rv = log((zz - d) / zom) * log((zz - d) / zov);
-            rv = rv / (pow(0.41f, 2) * uzz);
+            rv = rv / (pow(0.41f, 2.f) * uzz);
 
             //adjust stomatal conductivity for low vapor pressure
             //this adjustment will lower maximum plant ET for plants
             //sensitive to very low vapor pressure
-            float xx = m_vpd[j] - 1.0f;//difference between vpd and vpthreshold
+            float xx = m_vpd[j] - 1.f;//difference between vpd and vpthreshold
             //amount of vapor pressure deficit over threshold value
-            float fvpd = 1.0f;
-            if (xx > 0.0f)
-                fvpd = max(0.1f, 1.0f - m_vpd2[j] * xx);
+            float fvpd = 1.f;
+            if (xx > 0.f)
+                fvpd = max(0.1f, 1.f - m_vpd2[j] * xx);
             float gsi_adj = m_gsi[j] * fvpd;
 
 
-            if (gsi_adj > 1.e-6)
+            if (gsi_adj > 1.e-6f)
             {
                 //calculate canopy resistance
-                float rc = 1.0f / gsi_adj;    //single leaf resistance
+                float rc = 1.f / gsi_adj;    //single leaf resistance
                 rc = rc / (0.5f * (m_lai[j] + 0.01f) * (1.4f - 0.4f * m_co2 / 330.f));
                 //calculate maximum plant ET
                 epMax = (dlt * raNetPlant + gma * rho * m_vpd[j] / rv) / (latentHeat * (dlt + gma * (1.f + rc / rv)));
-                epMax = max(0.0f, epMax);
+                epMax = max(0.f, epMax);
                 epMax = min(epMax, petValue);
             }
             else
@@ -412,34 +327,15 @@ int PETPenmanMonteith::Execute()
 
 void PETPenmanMonteith::Get1DData(const char *key, int *n, float **data)
 {
-    CheckInputData();
+    // CheckInputData(); // Plz avoid putting CheckInputData() in Get1DData, this may cause Set time error! By LJ
     initialOutputs();
-    string sk(key);
-    if (StringMatch(sk, VAR_PET))
-    {
-        *data = this->m_pet;
-        *n = this->m_nCells;
-    }
-    else if (StringMatch(sk, VAR_PPT))
-    {
-        *data = this->m_ppt;
-        *n = this->m_nCells;
-    }
-    else if (StringMatch(sk, VAR_VPD))
-    {
-        *data = this->m_vpd;
-        *n = this->m_nCells;
-    }
-    else if (StringMatch(sk, VAR_DAYLEN))
-    {
-        *data = this->m_dayLen;
-        *n = this->m_nCells;
-    }
-    else if (StringMatch(sk, VAR_PHUBASE))
-    {
-        *data = this->m_phuBase;
-        *n = this->m_nCells;
-    }
+	string sk(key);
+	*n = this->m_nCells;
+    if (StringMatch(sk, VAR_PET)) *data = this->m_pet; 
+    else if (StringMatch(sk, VAR_PPT)) *data = this->m_ppt; 
+    else if (StringMatch(sk, VAR_VPD)) *data = this->m_vpd; 
+	else if (StringMatch(sk, VAR_DAYLEN)) *data = this->m_dayLen; 
+    else if (StringMatch(sk, VAR_PHUBASE)) *data = this->m_phuBase; 
 }
 
 

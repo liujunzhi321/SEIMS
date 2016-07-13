@@ -1,11 +1,3 @@
-/*!
- * \file PETHargreaves.cpp
- *
- * \author Junzhi Liu
- * \date Nov. 2010
- * \revised LiangJun Zhu
- *
- */
 #include "PETHargreaves.h"
 #include "MetadataInfo.h"
 #include <vector>
@@ -164,7 +156,7 @@ bool PETHargreaves::CheckInputSize(const char *key, int n)
 
 bool PETHargreaves::CheckInputData()
 {
-    if (this->m_date == -1)
+    if (this->m_date < 0)
         throw ModelException(MID_PET_H, "CheckInputData", "You have not set the time.");
     if (m_nCells <= 0)
         throw ModelException(MID_PET_H, "CheckInputData", "The dimension of the input data can not be less than zero.");

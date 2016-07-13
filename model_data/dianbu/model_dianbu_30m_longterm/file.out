@@ -19,7 +19,8 @@ Interception	NEPR	Net Precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:
 Interception	INET	Evaporation from the interception storage	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	INET.tif	1
 Interception	INLO	Interception loss	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	INLO.tif	1
 PET	PET	Potential Evapotranspiration	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	PET.tif	1
-Snow melt	SNME	Snow melt	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	SNME.tif	0
+Snow melt	SNME	Snow melt	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	SNME.tif	1
+Snow melt	SNAC	Snow accumulation	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	SNAC.tif	1
 Infiltration	INFIL	Infiltration	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	INFIL.tif	0
 Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 00:00:00	1	DAY	OUTLET	Q.txt	0
 Sediment	QSED	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 00:00:00	1	DAY	OUTLET	SED.txt	0

@@ -10,9 +10,9 @@
 #2 | Snow accumulation and melt
 #2 | Snow redistribution | | SRD_MB ### NEED TO PREPARE INPUT DATA BEFORE!
 #2 | Snow Sublimation | WetSpa | SSM_PE
-2 | Snow melt | Degree-Day | SNO_DD
+#2 | Snow melt | Degree-Day | SNO_DD
 #2 | Snow melt| Water balance | SNO_WB
-#2 | Snow melt | Snowpeak Daily | SNO_SP
+2 | Snow melt | Snowpeak Daily | SNO_SP
 #3 | Infiltration and Surface runoff
 #3 | Infiltration | Modified rational | SUR_MR
 #3 | Infiltration | SCS-CN | SUR_CN
