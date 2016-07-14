@@ -29,11 +29,10 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetWebsite(SEIMS_SITE);
     mdi.SetHelpfile("MUSLE_AS.chm");
 
-    //3 grid parameter
     mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
     mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
-
-    mdi.AddParameter(VAR_USLE_K, UNIT_NON_DIM, DESC_USLE_K, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_DEPRATIO, UNIT_NON_DIM, DESC_DEPRATIO, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_USLE_K, UNIT_NON_DIM, DESC_USLE_K, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_USLE_C, UNIT_NON_DIM, DESC_USLE_C, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_USLE_P, UNIT_NON_DIM, DESC_USLE_P, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_ACC, UNIT_NON_DIM, DESC_ACC, Source_ParameterDB, DT_Raster1D);
@@ -46,10 +45,10 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module, DT_Raster1D);    //from snow water balance module
 
     // set the output variables
-    mdi.AddOutput(VAR_SOER, UNIT_TONS, DESC_SOER, DT_Raster1D);
+    mdi.AddOutput(VAR_SOER, UNIT_KG, DESC_SOER, DT_Raster1D);
     mdi.AddOutput(VAR_USLE_LS, UNIT_NON_DIM, DESC_USLE_LS, DT_Raster1D);
 
-    mdi.AddOutput(VAR_SED_TO_CH, UNIT_TONS, DESC_SED_TO_CH, DT_Array1D);  // added by wu hui
+    mdi.AddOutput(VAR_SED_TO_CH, UNIT_KG, DESC_SED_TO_CH, DT_Array1D);  // added by wu hui
     mdi.AddOutput(VAR_SED_TO_CH_T, UNIT_KG, DESC_SED_TO_CH_T, DT_Single); // added by wu hui
     // write out the XML file.
 

@@ -137,6 +137,8 @@ Sediment	eco1	calibration coefficient of transport capacity calculation		KinWavS
 Sediment	eco2	calibration coefficient of transport capacity calculation		KinWavSed_OL	14600	1	RC	1000	0.001	Y
 Sediment	ChTcCo	calibration coefficient of transport capacity calculation		KinWavSed_CH	0.8	1	RC	100000	0.001	Y
 Sediment	ChDetCo	calibration coefficient of channel flow detachment		KinWavSed_CH	0.001	1	RC	1	0.0001	Y
+Sediment	depRatio	deposition ratio	None	MUSLE_AS	0.8	1	RC	1	0	Y
+
 
 InstreamWQ	ai0	Ratio of algal biomass to chlorophyII-a	ug chla/mg alg	ChannelRouting	50			100	10	
 InstreamWQ	ai1	Fraction of algal biomass that is nitrogen	mg N/mg alg	ChannelRouting	0.08			0.09	0.07	

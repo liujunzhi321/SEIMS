@@ -560,6 +560,7 @@
 #define VAR_DEEPST "deepst"
 #define VAR_DEET "DEET"                               /// evaporation from the depression storage
 #define VAR_DEM "DEM"                                 /// Digital Elevation Model
+#define VAR_DEPRATIO "depRatio"
 #define VAR_DEPREIN "Depre_in"                        /// initial depression storage coefficient
 #define VAR_DEPRESSION "Depression"                   /// Depression storage capacity
 #define VAR_DETSPLASH "DETSplash"
@@ -1047,6 +1048,7 @@
 #define DESC_DEEPST "depth of water in deep aquifer"
 #define DESC_DEET "Distribution of evaporation from depression storage"
 #define DESC_DEM "Digital Elevation Model"
+#define DESC_DEPRATIO "Deposition ratio of sediment"
 #define DESC_DEPREIN "initial depression storage coefficient"
 #define DESC_DEPRESSION "Depression storage capacity"
 #define DESC_DETSPLASH "distribution of splash detachment"
@@ -1256,7 +1258,7 @@
 #define DESC_SED_DEP "distribution of sediment deposition"
 #define DESC_SED_OUTLET "Sediment concentration at the watershed outlet"
 #define DESC_SED_RECH "Sediment in a text format at each reach outlet and at each time step"
-#define DESC_SED_TO_CH "Distribution of sediment flowing to channel"
+#define DESC_SED_TO_CH "sediment flowing to channel"
 #define DESC_SED_TO_CH_T  "Total sediment flowing to channel"
 #define DESC_SEDMINPA " amount of active mineral phosphorus sorbed to sediment in surface runoff"
 #define DESC_SEDMINPA_CH "amount of active mineral phosphorus absorbed to sediment in surface runoff"
