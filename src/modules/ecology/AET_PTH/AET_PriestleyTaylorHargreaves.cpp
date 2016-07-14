@@ -207,7 +207,7 @@ int AET_PT_H::Execute()
                 else
                 {
                     /// take all soil evap from snow cover then start taking from soil
-                    esleft = esleft - m_snowAcc[i];
+                    esleft -= m_snowAcc[i];
                     m_snowSB[i] += m_snowAcc[i];
                     m_snowAcc[i] = 0.f;
                 }
