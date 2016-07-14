@@ -221,6 +221,7 @@ filledDem = "demFilledTau.tif"
 flowDir = "flowDirTauD8.tif"
 slope = "slopeTau.tif"
 acc = "accTauD8.tif"
+accWithWeight = "accTauD8WithWeight.tif"
 streamRaster = "streamRasterTau.tif"
 
 flowDirDinf = "flowDirDinfTau.tif"

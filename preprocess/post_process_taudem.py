@@ -66,7 +66,7 @@ def GenerateSubbasinVector(dstdir, subbasinRaster, subbasinVector):
 def SerializeStreamNet(streamNetFile, outputReachFile):
     CopyShpFile(streamNetFile, outputReachFile)
 
-    dsReach = ogr.Open(outputReachFile, update = True)
+    dsReach = ogr.Open(outputReachFile, update=True)
     layerReach = dsReach.GetLayer(0)
     layerDef = layerReach.GetLayerDefn()
     iLink = layerDef.GetFieldIndex(FLD_LINKNO)
@@ -235,7 +235,7 @@ def AddWidthToReach(reachFile, stramLinkFile, width):
         chWidthDic[k] = chWidthDic[k] / chNumDic[k]
 
     # add channel width field to reach shp file
-    dsReach = ogr.Open(reachFile, update = True)
+    dsReach = ogr.Open(reachFile, update=True)
     layerReach = dsReach.GetLayer(0)
     layerDef = layerReach.GetLayerDefn()
     iLink = layerDef.GetFieldIndex(FLD_LINKNO)
