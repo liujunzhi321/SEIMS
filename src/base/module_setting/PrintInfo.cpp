@@ -271,15 +271,23 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
             case AT_Average:
 				#pragma omp parallel for
                 for (int i = 0; i < m_nRows; i++){
-                    for (int j = 0; j < m_nLayers; j++)
-                        m_2DData[i][j] = (m_2DData[i][j] * m_Counter + data[i][j]) / (m_Counter + 1.f);
+                    for (int j = 0; j < m_nLayers; j++){
+						if(!FloatEqual(data[i][j], NODATA_VALUE))
+							m_2DData[i][j] = (m_2DData[i][j] * m_Counter + data[i][j]) / (m_Counter + 1.f);
+						else
+							m_2DData[i][j] = NODATA_VALUE;
+					}
 				}
                 break;
             case AT_Sum:
 				#pragma omp parallel for
                 for (int i = 0; i < m_nRows; i++){
-                    for (int j = 0; j < m_nLayers; j++)
-                        m_2DData[i][j] += data[i][j];
+					for (int j = 0; j < m_nLayers; j++){
+						if(!FloatEqual(data[i][j], NODATA_VALUE))
+							m_2DData[i][j] += data[i][j];
+						else
+							m_2DData[i][j] = NODATA_VALUE;
+					}
 				}
                 break;
             case AT_Minimum:
@@ -287,8 +295,11 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
                 for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++)
                     {
-                        if (data[i][j] < m_2DData[i][j])
+                        if (!FloatEqual(data[i][j], NODATA_VALUE) && 
+							data[i][j] < m_2DData[i][j])
                             m_2DData[i][j] = data[i][j];
+						else
+							m_2DData[i][j] = NODATA_VALUE;
                     }
 				}
                 break;
@@ -297,8 +308,11 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
                 for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++)
                     {
-                        if (data[i][j] > m_2DData[i][j])
+                        if (!FloatEqual(data[i][j], NODATA_VALUE) && 
+							data[i][j] > m_2DData[i][j])
                             m_2DData[i][j] = data[i][j];
+						else
+							m_2DData[i][j] = NODATA_VALUE;
                     }
 				}
                 break;
@@ -342,16 +356,30 @@ void PrintInfoItem::AggregateData(time_t time, int numrows, float *data)
             switch (m_AggregationType)
             {
                 case AT_Average:
-                    m_1DData[rw] = (m_1DData[rw] * m_Counter + data[rw]) / (m_Counter + 1.f);
+					if(!FloatEqual(data[rw], NODATA_VALUE))
+						m_1DData[rw] = (m_1DData[rw] * m_Counter + data[rw]) / (m_Counter + 1.f);
+					else
+						m_1DData[rw] = NODATA_VALUE;
                     break;
                 case AT_Sum:
-                    m_1DData[rw] += data[rw];
+					if(!FloatEqual(data[rw], NODATA_VALUE))
+						m_1DData[rw] += data[rw];
+					else
+						m_1DData[rw] = NODATA_VALUE;
                     break;
                 case AT_Minimum:
-                    if (m_1DData[rw] > data[rw]) m_1DData[rw] = data[rw];
+					if(!FloatEqual(data[rw], NODATA_VALUE)){
+						if (m_1DData[rw] > data[rw])
+							m_1DData[rw] = data[rw];}
+					else
+						m_1DData[rw] = NODATA_VALUE;
                     break;
                 case AT_Maximum:
-                    if (m_1DData[rw] < data[rw]) m_1DData[rw] = data[rw];
+					if(!FloatEqual(data[rw], NODATA_VALUE)){
+						if (m_1DData[rw] < data[rw]) 
+							m_1DData[rw] = data[rw];}
+					else
+						m_1DData[rw] = NODATA_VALUE;
                     break;
                 default:
                     break;

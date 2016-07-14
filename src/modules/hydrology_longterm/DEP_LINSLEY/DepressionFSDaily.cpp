@@ -15,37 +15,27 @@
 #include <cmath>
 #include <omp.h>
 
-DepressionFSDaily::DepressionFSDaily(void) : m_nCells(-1),
-                                             m_depCo(NODATA), m_depCap(NULL), m_pet(NULL), m_ei(NULL), m_pe(NULL),
+DepressionFSDaily::DepressionFSDaily(void) : m_nCells(-1),m_depCo(NODATA),
+                                             m_depCap(NULL), 
+											 m_pet(NULL), m_ei(NULL), m_pe(NULL),
                                              m_sd(NULL), m_ed(NULL), m_sr(NULL)
 {
 }
 
 DepressionFSDaily::~DepressionFSDaily(void)
 {
-    if (m_sd != NULL)
-        delete[] m_sd;
-    if (m_ed != NULL)
-        delete[] m_ed;
-    if (m_sr != NULL)
-        delete[] m_sr;
+    if (m_sd != NULL) Release1DArray(m_sd);
+    if (m_ed != NULL) Release1DArray(m_ed);
+    if (m_sr != NULL) Release1DArray(m_sr);
 }
 
 bool DepressionFSDaily::CheckInputData(void)
 {
-    if (this->m_date == -1)
-    {
+    if (this->m_date < 0)
         throw ModelException(MID_DEP_LINSLEY, "CheckInputData", "You have not set the time.");
-        return false;
-    }
-
     if (this->m_nCells <= 0)
-    {
         throw ModelException(MID_DEP_LINSLEY, "CheckInputData",
                              "The cell number of the input can not be less than zero.");
-        return false;
-    }
-
     if (m_depCo == NODATA)
         throw ModelException(MID_DEP_LINSLEY, "CheckInputData",
                              "The parameter: initial depression storage coefficient has not been set.");
@@ -78,8 +68,8 @@ void  DepressionFSDaily::initialOutputs()
         for (int i = 0; i < m_nCells; ++i)
         {
             m_sd[i] = m_depCo * m_depCap[i];
-            m_ed[i] = 0.0f;
-            m_sr[i] = 0.0f;
+            m_ed[i] = 0.f;
+            m_sr[i] = 0.f;
         }
     }
 }
@@ -100,7 +90,7 @@ int DepressionFSDaily::Execute()
             m_sr[i] = m_pe[i];
             m_sd[i] = 0.f;
         }
-        else if (m_pe[i] > 0)
+        else if (m_pe[i] > 0.f)
         {
             float pc = m_pe[i] - m_depCap[i] * log(1.f - m_sd[i] / m_depCap[i]);
             float deltaSd = m_pe[i] * exp(-pc / m_depCap[i]);
@@ -119,6 +109,9 @@ int DepressionFSDaily::Execute()
         // evaporation
         if (m_sd[i] > 0)
         {
+			/// TODO: Is this logically right? PET is just potential, which include 
+			///       not only ET from surface water, but also from plant and soil.
+			///       Please Check the corresponding theory. By LJ.
             // evaporation from depression storage
             if (m_pet[i] - m_ei[i] < m_sd[i])
             {
@@ -132,8 +125,8 @@ int DepressionFSDaily::Execute()
         }
         else
         {
-            m_ed[i] = 0.0f;
-            m_sd[i] = 0.0f;
+            m_ed[i] = 0.f;
+            m_sd[i] = 0.f;
         }
     }
     return true;
@@ -149,9 +142,8 @@ bool DepressionFSDaily::CheckInputSize(const char *key, int n)
     {
         if (this->m_nCells <= 0) this->m_nCells = n;
         else
-        {
-            return false;
-        }
+			throw ModelException(MID_DEP_LINSLEY, "CheckInputSize", "Input data for " + string(key) +
+			" is invalid. All the input data should have same size.");
     }
     return true;
 }
@@ -159,12 +151,8 @@ bool DepressionFSDaily::CheckInputSize(const char *key, int n)
 void DepressionFSDaily::SetValue(const char *key, float data)
 {
     string sk(key);
-    if (StringMatch(sk, VAR_DEPREIN))
-        m_depCo = data;
-    else if (StringMatch(sk, VAR_OMP_THREADNUM))
-    {
-        omp_set_num_threads((int) data);
-    }
+    if (StringMatch(sk, VAR_DEPREIN)) m_depCo = data;
+    else if (StringMatch(sk, VAR_OMP_THREADNUM))omp_set_num_threads((int) data); 
     else
         throw ModelException(MID_DEP_LINSLEY, "SetValue", "Parameter " + sk
                                                           +

@@ -21,6 +21,12 @@ Interception	INLO	Interception loss	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:
 PET	PET	Potential Evapotranspiration	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	PET.tif	1
 Snow melt	SNME	Snow melt	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	SNME.tif	1
 Snow melt	SNAC	Snow accumulation	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	SNAC.tif	1
-Infiltration	INFIL	Infiltration	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	INFIL.tif	0
+Infiltration	INFIL	Infiltration	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	INFIL.tif	1
+Surface Runoff	EXCP	Excess precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	EXCP.tif	1
+Surface Runoff	SOMO	Soil moisture	mm/mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	SOMO.tif	1
+Surface Runoff	SURU	Surface Runoff	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	SURU.tif	1
+Depression	DPST	Depression storage	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	DPST.tif	1
+Depression	DEET	Depression ET	mm	SUM	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	DEET.tif	1
+Percolation	PERCO	Percolation	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 00:00:00	-9999	-9999	ALL	PERCO.tif	1
 Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 00:00:00	1	DAY	OUTLET	Q.txt	0
 Sediment	QSED	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 00:00:00	1	DAY	OUTLET	SED.txt	0

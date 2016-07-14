@@ -330,7 +330,7 @@ int StormGreenAmpt::Execute(void)
                     m_infilCapacitySurplus[i] = 0.f;
                 }
 
-                //Compute the cumulative depth of infitration
+                //Compute the cumulative depth of infiltration
                 m_accumuDepth[i] += m_infil[i];
                 m_sr[i] = hWater -
                           m_infil[i];  // sr is temporarily used to stored the water depth including the depression storage

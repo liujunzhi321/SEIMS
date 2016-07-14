@@ -29,7 +29,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetID("SUR_ES");
     mdi.SetName("SUR_ES");
     mdi.SetVersion("0.1");
-    mdi.SetWebsite("http://www.website.com");
+    mdi.SetWebsite("");
 
     mdi.AddParameter("TimeStep", "s", "time step", "file.in", DT_Single);
     mdi.AddParameter("Conductivity", "mm/h", "Soil hydraulic conductivity", "ParameterDB_WaterBalance", DT_Raster2D);
