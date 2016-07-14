@@ -1,5 +1,4 @@
 /*!
- * \file MUSLE_AS.h
  * \brief use MUSLE method to calculate sediment yield of each cell
  * \author Zhiqiang Yu
  * \date Feb. 2012
@@ -29,8 +28,9 @@ using namespace std;
 class MUSLE_AS : public SimulationModule
 {
 public:
+	//! Constructor
     MUSLE_AS(void);
-
+	//! Destructor
     ~MUSLE_AS(void);
 
     virtual int Execute();
@@ -41,6 +41,8 @@ public:
 
     virtual void Set1DData(const char *key, int n, float *data);
 
+	virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
+
     virtual void Get1DData(const char *key, int *n, float **data);
 
     bool CheckInputSize(const char *key, int n);
@@ -48,42 +50,61 @@ public:
     bool CheckInputData(void);
 
 private:
-
+	//! valid cell number
     int m_nCells;
+	//! cell width (m)
     float m_cellWidth;
+	//! subbasin number
     int m_nsub;
-
+	//! soil layer number
+	int m_nSoilLayers;
+	//! deposition ratio
+	float m_depRatio;  // added by Wu Hui, 2013.11.16
     //grid from parameter
+
+	//! USLE P factor (Practice)
     float *m_usle_p;
-    float *m_usle_k;
+	//! USLE K factor (erodibility), multi-layer paramters. By LJ
+    float **m_usle_k;
+	//! USLE C factor (land cover)
     float *m_usle_c;
+	//! Slope gradient (drop/distance)
     float *m_slope;
+	//! flow accumulation (number of accumulated cells)
     float *m_flowacc;
-    /// stream link
+    //! stream link
     float *m_streamLink;
+	//! Subbasin map
     float *m_subbasin;
-
-    float *m_usle_ls;   //LS factor
-    float m_cellAreaKM;    //A in qp, km^2
+	//! USLE LS factor
+    float *m_usle_ls;
+	//! cell area (A, km^2)
+    float m_cellAreaKM;
+	//! cell area factor (3.79 * A^0.7)
     float m_cellAreaKM1;
-    //3.79*A^0.7 in qp
+    //! cell area factor (0.903 * A^0.017)
     float m_cellAreaKM2;
-    //0.903 * A^0.017 in qp
-    float *m_slopeForPq;//S^0.16 in qp
+    //! Slope^0.16
+    float *m_slopeForPq;
 
-    //grid from module
+    //grid from other modules
+
+	//! snow accumulation
     float *m_snowAccumulation;
+	//! surface runoff (mm)
     float *m_surfaceRunoff;
 
     //result
+
+	//! sediment yield on each cell
     float *m_sedimentYield;
+	//! sediment transported to reach, kg
     float *m_sedtoCh;
+	//! total sediment transported to reach, kg
     float m_sedtoCh_T;
-    /// deposition ratio
-    float m_depRatio;  // added by Wu Hui, 2013.11.16
-
+	//! initialize outputs
     void initialOutputs();
-
+	//! 
     float getPeakRunoffRate(int);
 };
 
