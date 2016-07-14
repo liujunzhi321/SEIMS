@@ -20,6 +20,11 @@
 *		variables should be initial in the Get1DData function. This 
 *		initialization is realized by function initalOutputs. 
 *	4.	Delete input D_INFIL and add input D_EXCP.
+*	
+*	Revision:    LiangJunZhu
+*	Date    :    2016-7-14
+*	Description:
+*	1. 
 *---------------------------------------------------------------------*/
 
 #pragma once
@@ -69,7 +74,7 @@ private:
 
     /// initial depression storage coefficient
     float m_depCo;
-    /// depression storage capacity
+    /// depression storage capacity (mm)
     float *m_depCap;
 
     /// pet

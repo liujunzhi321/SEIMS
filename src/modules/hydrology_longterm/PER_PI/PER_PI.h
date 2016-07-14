@@ -31,12 +31,17 @@ using namespace std;
 class PER_PI : public SimulationModule
 {
 private:
-    /// number of soil layers
+    /// maximum number of soil layers
     int m_nSoilLayers;
-    /// soil depth
-    float **m_soilDepth;
-    /// depth of the up soil layer
-    float *m_upSoilDepth;
+	/// soil layers
+	float *m_soilLayers;
+    ///// soil depth
+    //float **m_soilDepth;
+	/// soil thickness
+	float **m_soilThick;
+    ///// depth of the up soil layer
+    //float *m_upSoilDepth;
+ 
     /// time step
     int m_dt;
     /// valid cells number
@@ -47,18 +52,22 @@ private:
     float **m_ks;
     /// soil porosity
     float **m_porosity;
-    /// field capacity
+    /// field capacity (mm H2O/ mm Soil)
     float **m_fc;
+	/// wilting point (mm H2O/ mm Soil)
+	float **m_wp;
     /// pore index
     float **m_poreIndex;
-    /// soil moisture
+    /// soil moisture  (mm H2O/ mm Soil)
     float **m_somo;
     /// soil temperature
     float *m_soilT;
-    /// infiltration
+    /// infiltration (mm)
     float *m_infil;
 
-    /// Output: percolation
+    /// Output
+	
+	///percolation (mm)
     float **m_perc;
 
 public:
@@ -94,6 +103,8 @@ private:
     *	@return bool The validity of the dimension
     */
     bool CheckInputSize(const char *, int);
+
+	void initialOutputs();
 };
 
 

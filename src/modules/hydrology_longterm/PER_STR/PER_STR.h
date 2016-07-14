@@ -33,10 +33,10 @@ class PER_STR : public SimulationModule
 private:
     /// number of soil layers
     int m_nSoilLayers;
-    /// soil depth
-    float **m_soilDepth;
-    /// depth of the up soil layer
-    float *m_upSoilDepth;
+	/// soil layers
+	float *m_soilLayers;
+    /// soil thickness
+    float **m_soilThick;
     /// time step
     int m_dt;
     /// valid cells number
@@ -48,9 +48,9 @@ private:
     /// soil porosity
     float **m_porosity;
     /// field capacity
-    float **m_fc;
-    /// pore index
-    float **m_poreIndex;
+	float **m_fc;
+	/// wilting point (mm H2O/ mm Soil)
+	float **m_wp;
     /// soil moisture
     float **m_somo;
     /// soil temperature
@@ -94,5 +94,7 @@ private:
     *	@return bool The validity of the dimension
     */
     bool CheckInputSize(const char *, int);
+
+	void initialOutputs();
 };
 

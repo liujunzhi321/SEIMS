@@ -314,7 +314,6 @@ int SUR_CN::Execute()
             m_PE[iCell] = 0.0f;
             m_INFIL[iCell] = 0.0f;
         }
-
     }
     return 0;
 }

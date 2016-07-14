@@ -26,7 +26,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetHelpfile("DEP_LINSLEY.chm");
     mdi.SetID(MID_DEP_LINSLEY);
     mdi.SetName(MID_DEP_LINSLEY);
-    mdi.SetVersion("1.1");
+    mdi.SetVersion("1.2");
     mdi.SetWebsite(SEIMS_SITE);
 
     mdi.AddParameter(VAR_DEPREIN, UNIT_NON_DIM, DESC_DEPREIN, Source_ParameterDB, DT_Single);
