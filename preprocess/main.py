@@ -4,8 +4,7 @@
 # Author: Liang-Jun Zhu
 #
 
-from text import *
-from config import *
+## Intermediate SQLite database
 from txt2db3 import reConstructSQLiteDB
 ## HydroClimate modules
 from hydroclimate_sites import ImportHydroClimateSitesInfo

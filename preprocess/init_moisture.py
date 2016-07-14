@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # coding=utf-8
-# Initializa soil moisture, improve calculation efficiency by numpy
+# Initializa soil moisture fraction of field capacity, improve calculation efficiency by numpy
 # Author: Junzhi Liu
 # Revised: Liang-Jun Zhu
 #
@@ -46,7 +46,7 @@ def InitMoisture(dstdir):
         else:
             if (abs(slp) < UTIL_ZERO):
                 slp = 0.1 / dx * 100.
-            return math.log((acc + 1) * cellArea / (slp / 100.))
+            return math.log((acc + 1.) * cellArea / (slp / 100.))
 
     wiGridCal_numpy = numpy.frompyfunc(wiGridCal, 2, 1)
     wiGrid = wiGridCal_numpy(dataAcc, dataSlope)
@@ -70,18 +70,24 @@ def InitMoisture(dstdir):
     #             elif (wiGrid[i][j] < wiMin):
     #                 wiMin = wiGrid[i][j]
 
-    sMin = 0.6  # minimum relative saturation
-    sMax = 1.0
+    soilMoisFrMin = 0.6  # minimum relative saturation
+    soilMoisFrMax = 1.0
 
     wiUplimit = wiMax
-    a = (sMax - sMin) / (wiUplimit - wiMin)
-    b = sMin - a * wiMin
+    a = (soilMoisFrMax - soilMoisFrMin) / (wiUplimit - wiMin)
+    b = soilMoisFrMin - a * wiMin
 
     def moistureCal(acc, wigrid):
         if (abs(acc - noDataValue) < UTIL_ZERO):
             return DEFAULT_NODATA
         else:
-            return a * wigrid + b
+            tmp = a * wigrid + b
+            if tmp > soilMoisFrMax:
+                return soilMoisFrMax
+            elif tmp < soilMoisFrMin:
+                return soilMoisFrMin
+            else:
+                return tmp
 
     moistureCal_numpy = numpy.frompyfunc(moistureCal, 2, 1)
     moisture = moistureCal_numpy(dataAcc, wiGrid)

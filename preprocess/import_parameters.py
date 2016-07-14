@@ -173,7 +173,9 @@ if __name__ == "__main__":
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
     db = conn[SpatialDBName]
-    # ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
+    from txt2db3 import reConstructSQLiteDB
+    #reConstructSQLiteDB()
+    #ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
     ### IMPORT LOOKUP TABLES AS GRIDFS, DT_Array2D
     # ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
     ImportModelConfiguration(db)
