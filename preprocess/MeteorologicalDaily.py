@@ -227,11 +227,9 @@ def ImportDailyMeteoData(siteMLoc):
     ImportDayData(db, MeteoDailyFile, siteMLoc, firstImport)
     connMongo.close()
 
-
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     from hydroclimate_sites import ImportHydroClimateSitesInfo
-
-    s = time.clock()
     SitesMList, SitesPList = ImportHydroClimateSitesInfo()
     ImportDailyMeteoData(SitesMList)
-    print "%f" % (time.clock() - s)
+

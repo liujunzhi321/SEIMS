@@ -80,7 +80,7 @@ def ImportDailyPrecData(sitePLoc):
 
 
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     from hydroclimate_sites import ImportHydroClimateSitesInfo
-
     SitesMList, SitesPList = ImportHydroClimateSitesInfo()
     ImportDailyPrecData(SitesPList)
