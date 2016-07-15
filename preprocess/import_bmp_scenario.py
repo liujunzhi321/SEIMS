@@ -35,7 +35,8 @@ def ImportBMPTables():
     for item in BMP_tabs:
         if not StringInList(item.upper(), cList):
             db.create_collection(item.upper())
-
+        else:
+            db.drop_collection(item.upper())
     ## Read subbasin.tif and dist2Stream.tif
     subbasinR = ReadRaster(WORKING_DIR + os.sep + subbasinOut)
     dist2StreamR = ReadRaster(WORKING_DIR + os.sep + dist2StreamD8M)
@@ -76,4 +77,5 @@ def ImportBMPTables():
 
 
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     ImportBMPTables()

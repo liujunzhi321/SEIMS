@@ -8,10 +8,14 @@ import os
 import math
 import datetime
 import time
+
+import sys
 from osgeo import gdal, osr, ogr
 from gdalconst import *
 import shutil
 import numpy
+import socket
+import argparse
 
 UTIL_ZERO = 1.e-6
 MINI_SLOPE = 0.0001
@@ -20,6 +24,26 @@ SQ2 = math.sqrt(2.)
 shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx']
 
 
+class C(object):
+    pass
+def GetINIfile():
+    # Get model configuration file name
+    c = C()
+    parser = argparse.ArgumentParser(description="Read SEIMS Preprocessing configuration file.")
+    parser.add_argument('-ini', help="Full path of configuration file")
+    args = parser.parse_args(namespace=c)
+    iniFile = args.ini
+    if not os.path.exists(iniFile):
+        raise IOError("%s is not exist, please check and retry!"%iniFile)
+    else:
+        return iniFile
+
+def isIPValid(address):
+    try:
+        socket.inet_aton(address)
+        return True
+    except:
+        return False
 def FloatEqual(a, b):
     return abs(a - b) < UTIL_ZERO
 
@@ -468,14 +492,29 @@ def GetFileNameWithSuffixes(filePath, suffixes):
             reFiles.append(f)
     return reFiles
 
-
+def isPathExists(path):
+    if os.path.isdir(path):
+        if os.path.exists(path):
+            return True
+        else:
+            return False
+    else:
+        return False
 def GetFullPathWithSuffixes(filePath, suffixes):
     fullPaths = []
     for name in GetFileNameWithSuffixes(filePath, suffixes):
         fullPaths.append(filePath + os.sep + name)
     return fullPaths
-
-
+def currentPath():
+    path = sys.path[0]
+    if os.path.isdir(path):
+        return path
+    elif os.path.isfile(path):
+        return os.path.dirname(path)
+def LoadConfiguration(inifile):
+    strCmd = '%s %s/config.py -ini %s' % (sys.executable, currentPath(), inifile)
+    # print strCmd
+    os.system(strCmd)
 ### TEST CODE
 if __name__ == "__main__":
     # p = r'E:\data\model_data\model_dianbu_10m_longterm\data_prepare\spatial'

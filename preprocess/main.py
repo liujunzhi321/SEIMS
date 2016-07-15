@@ -3,7 +3,10 @@
 ## @Main function entrance for preprocessing
 # Author: Liang-Jun Zhu
 #
-
+import sys
+import os
+## Load configuration file
+from util import GetINIfile, LoadConfiguration
 ## Intermediate SQLite database
 from txt2db3 import reConstructSQLiteDB
 ## HydroClimate modules
@@ -18,7 +21,9 @@ from parameters_extraction import ExtractParameters
 from build_db import BuildMongoDB
 
 if __name__ == "__main__":
-    ## Update SQLite Parameters.db3 database
+    ## Load Configuration file
+    LoadConfiguration(GetINIfile())
+    # ## Update SQLite Parameters.db3 database
     reConstructSQLiteDB()
     ## Climate Data
     SitesMList, SitesPList = ImportHydroClimateSitesInfo()

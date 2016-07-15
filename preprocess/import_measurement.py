@@ -136,4 +136,5 @@ def ImportMeasurementData():
 
 
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     ImportMeasurementData()

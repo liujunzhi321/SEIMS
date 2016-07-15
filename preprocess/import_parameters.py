@@ -14,6 +14,12 @@ from util import *
 
 
 def ImportParameters(sqlite_file, db):
+    # delete if existed, create if not existed
+    cList = db.collection_names()
+    if not StringInList(DB_TAB_PARAMETERS.upper(), cList):
+        db.create_collection(DB_TAB_PARAMETERS.upper())
+    else:
+        db.drop_collection(DB_TAB_PARAMETERS.upper())
     # read sqlite database
     conn = sqlite3.connect(sqlite_file)
     c = conn.cursor()
@@ -116,6 +122,8 @@ def ImportModelConfiguration(db):
     for item in conf_tabs:
         if not StringInList(item, cList):
             db.create_collection(item)
+        else:
+            db.drop_collection(item)
     fileInItems = ReadDataItemsFromTxt(fileIn)
     fileOutItems = ReadDataItemsFromTxt(fileOut)
 
@@ -165,17 +173,18 @@ def ImportModelConfiguration(db):
 
 
 if __name__ == "__main__":
+    ## Load Configuration file
+    LoadConfiguration(GetINIfile())
     import sys
     try:
         conn = MongoClient(HOSTNAME, PORT)
-        # conn = Connection(host=HOSTNAME, port=PORT)
     except ConnectionFailure, e:
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
     db = conn[SpatialDBName]
     from txt2db3 import reConstructSQLiteDB
-    # reConstructSQLiteDB()
-    # ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
-    ### IMPORT LOOKUP TABLES AS GRIDFS, DT_Array2D
-    # ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
+    reConstructSQLiteDB()
+    ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
+    ## IMPORT LOOKUP TABLES AS GRIDFS, DT_Array2D
+    ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
     ImportModelConfiguration(db)

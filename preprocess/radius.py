@@ -28,6 +28,9 @@ def GenerateRadius(filepath, stormProbability):
     # srs.ImportFromWkt(ds.GetProjection())
     #
     # cellsize = geotransform[1]
+    coeTable = {"T2": [0.05, 0.48],
+            "T10": [0.12, 0.52],
+            "T100": [0.18, 0.55]}
     ap = coeTable[stormProbability][0]
     bp = coeTable[stormProbability][1]
 
