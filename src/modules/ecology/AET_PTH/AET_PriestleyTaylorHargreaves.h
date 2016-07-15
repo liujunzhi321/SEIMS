@@ -1,10 +1,15 @@
 /*!
- * \file AET_PriestleyTaylorHargreaves.h
  * \brief Potential plant transpiration for Priestley-Taylor and Hargreaves ET methods
+ * and potential and actual soil evaporation.
  * Code from SWAT, etact.f
  * \author Liang-Jun Zhu
  * \date May 2016
  *
+ * \revision: 1.1
+ * \date: 2016-7-15
+ * \description: 1. Code reformat with common functions, such as Release1DArray.
+ *               2. VAR_SNSB should be ouput other than input.
+ *               3.
  * 
  */
 #pragma once
@@ -32,7 +37,7 @@ class AET_PT_H : public SimulationModule
 private:
     /// valid cells number
     int m_nCells;
-    /// leaf area index(m**2/m**2)
+    /// leaf area index(m^2/m^2)
     float *m_lai;
     /// potential evapotranspiration on current day
     float *m_pet;
