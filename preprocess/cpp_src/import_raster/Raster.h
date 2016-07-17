@@ -70,9 +70,9 @@ public:
 
     T **GetData() { return m_data; }
 
-    static void OutputRaster(const char *rasterName, int nRows, int nCols, T xll, T yll, T dx, T noDataValue, T **data);
+    void OutputRaster(const char *rasterName, int nRows, int nCols, T xll, T yll, T dx, T noDataValue, T **data);
 
-    static void OutputGTiff(const char *rasterName, int nRows, int nCols, T xll, T yll, T dx, T noDataValue, T *data);
+    void OutputGTiff(const char *rasterName, int nRows, int nCols, T xll, T yll, T dx, T noDataValue, T *data);
 
 private:
     T **m_data;

@@ -434,7 +434,7 @@ void Raster<T>::OutputGTiff(const char *rasterName, int nRows, int nCols, T xll,
     geoTrans[4] = 0;
     geoTrans[5] = -dx;
     poDstDS->SetGeoTransform(geoTrans);
-    poDstDS->SetProjection(m_srs);
+    poDstDS->SetProjection(m_srs.c_str());
     /*OGRSpatialReference srs;
     srs.SetACEA(25, 47, 0, 105, 0, 0);
     srs.SetWellKnownGeogCS("WGS84");

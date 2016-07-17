@@ -53,7 +53,7 @@ def ImportParameters(sqlite_file, db):
     db[DB_TAB_PARAMETERS.upper()].create_index(PARAM_FLD_NAME.upper())
     c.close()
     conn.close()
-    print 'Parameter tables are imported.'
+    print 'Model parameter tables are imported.'
 
 
 def ImportLookupTables(sqlite_file, db):
@@ -106,7 +106,7 @@ def ImportLookupTables(sqlite_file, db):
             curLookupGridFS.close()
     c.close()
     conn.close()
-    # print 'Lookup tables are imported.'
+    print 'Lookup tables are imported.'
 
 
 def ImportModelConfiguration(db):
@@ -138,6 +138,7 @@ def ImportModelConfiguration(db):
 
     outFieldArray = fileOutItems[0]
     outDataArray = fileOutItems[1:]
+    # print outDataArray
     for item in outDataArray:
         fileOutDict = {}
         for i in range(len(outFieldArray)):
@@ -165,12 +166,14 @@ def ImportModelConfiguration(db):
                 fileOutDict[FLD_CONF_USE] = item[i]
             elif StringMatch(FLD_CONF_SUBBSN, outFieldArray[i]):
                 fileOutDict[FLD_CONF_SUBBSN] = item[i]
+        if fileOutDict.keys() is []:
+            raise ValueError("There are not any valid output item stored in file.out!")
         curFileter = {FLD_CONF_MODCLS: fileOutDict[FLD_CONF_MODCLS],
                       FLD_CONF_OUTPUTID: fileOutDict[FLD_CONF_OUTPUTID],
                       FLD_CONF_STIME: fileOutDict[FLD_CONF_STIME],
                       FLD_CONF_ETIME: fileOutDict[FLD_CONF_ETIME]}
         db[DB_TAB_FILE_OUT].find_one_and_replace(curFileter, fileOutDict, upsert=True)
-
+    print 'Model configuration tables are imported.'
 
 if __name__ == "__main__":
     ## Load Configuration file

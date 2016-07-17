@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 # coding=utf-8
-# Initializa soil moisture fraction of field capacity, improve calculation efficiency by numpy
+# Initializa soil moisture fraction of field capacity, based on TWI
+#     improve calculation efficiency by numpy
 # Author: Junzhi Liu
 # Revised: Liang-Jun Zhu
 #
@@ -40,19 +41,32 @@ def InitMoisture(dstdir):
     # dx = geotransform[1]
     cellArea = dx * dx
 
+    # TWI, ln(a/tan(b))
     def wiGridCal(acc, slp):
         if (abs(acc - noDataValue) < UTIL_ZERO):
             return DEFAULT_NODATA
         else:
             if (abs(slp) < UTIL_ZERO):
-                slp = 0.1 / dx * 100.
-            return math.log((acc + 1.) * cellArea / (slp / 100.))
+                slp = UTIL_ZERO
+                # slp = 0.1 / dx * 100.
+            return math.log((acc + 1.) * cellArea / slp)
+            # return math.log((acc + 1.) * cellArea / (slp / 100.))
 
     wiGridCal_numpy = numpy.frompyfunc(wiGridCal, 2, 1)
     wiGrid = wiGridCal_numpy(dataAcc, dataSlope)
-    wiGrid_valid = numpy.where(acc_R.validZone, wiGrid, numpy.nan)
-    wiMax = numpy.nanmax(wiGrid_valid)
-    wiMin = numpy.nanmin(wiGrid_valid)
+    # wiGrid_valid = numpy.where(acc_R.validZone, wiGrid, numpy.nan)
+    # wiMax = numpy.nanmax(wiGrid_valid)
+    # wiMin = numpy.nanmin(wiGrid_valid)
+    # WARNING: numpy.nanmax and numpy.nanmin are un-stabilized in Linux, so replaced by the for loops. By LJ
+    wiMax = -numpy.inf
+    wiMin = numpy.inf
+    for i in range(0, ysize):
+        for j in range(0, xsize):
+            if wiMax < wiGrid[i][j]:
+                wiMax = wiGrid[i][j]
+            if wiMin > wiGrid[i][j] and wiGrid[i][j] != DEFAULT_NODATA:
+                wiMin = wiGrid[i][j]
+    # print "TWIMax:%f, TWIMin:%f" % (wiMax, wiMin)
     # wiGrid = zeros((ysize, xsize))
     # wiMax = -1
     # wiMin = 1000
@@ -107,6 +121,5 @@ def InitMoisture(dstdir):
 
 
 if __name__ == "__main__":
-    s = time.clock()
+    LoadConfiguration(GetINIfile())
     InitMoisture(WORKING_DIR)
-    print "%f" % (time.clock() - s)

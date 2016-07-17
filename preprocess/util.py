@@ -26,6 +26,8 @@ shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx']
 
 class C(object):
     pass
+
+
 def GetINIfile():
     # Get model configuration file name
     c = C()
@@ -34,9 +36,10 @@ def GetINIfile():
     args = parser.parse_args(namespace=c)
     iniFile = args.ini
     if not os.path.exists(iniFile):
-        raise IOError("%s is not exist, please check and retry!"%iniFile)
+        raise IOError("%s is not exist, please check and retry!" % iniFile)
     else:
         return iniFile
+
 
 def isIPValid(address):
     try:
@@ -44,6 +47,8 @@ def isIPValid(address):
         return True
     except:
         return False
+
+
 def FloatEqual(a, b):
     return abs(a - b) < UTIL_ZERO
 
@@ -141,7 +146,7 @@ class Raster:
 
     '''
 
-    def __init__(self, nRows, nCols, data, noDataValue = None, geotransform = None, srs = None):
+    def __init__(self, nRows, nCols, data, noDataValue=None, geotransform=None, srs=None):
         self.nRows = nRows
         self.nCols = nCols
         self.data = numpy.copy(data)
@@ -379,7 +384,7 @@ def WriteGTiffFileByMask(filename, data, mask, gdalType):
     ds = None
 
 
-def MaskRaster(cppDir, maskFile, inputFile, outputFile, outputAsc = False, noDataValue = DEFAULT_NODATA):
+def MaskRaster(cppDir, maskFile, inputFile, outputFile, outputAsc=False, noDataValue=DEFAULT_NODATA):
     id = os.path.basename(maskFile) + "_" + os.path.basename(inputFile)
     configFile = "%s%smaskConfig_%s_%s.txt" % (cppDir, os.sep, id, str(time.time()))
     fMask = open(configFile, 'w')
@@ -412,6 +417,9 @@ def StringMatch(str1, str2):
         return False
 
 
+LFs = ['\r\n', '\n\r', '\r', '\n']
+
+
 def ReadDataItemsFromTxt(txtFile):
     '''
     Read data items include title from text file
@@ -421,7 +429,11 @@ def ReadDataItemsFromTxt(txtFile):
     f = open(txtFile)
     dataItems = []
     for line in f:
-        strLine = line.split('\n')[0]
+        for LF in LFs:
+            if LF in line:
+                strLine = line.split(LF)[0]
+                break
+        # strLine = line.split(LF)[0]
         if strLine != '' and strLine.find('#') < 0:
             lineList = strLine.split('\t')
             dataItems.append(lineList)
@@ -440,7 +452,7 @@ def StripStr(str):
     return newStr
 
 
-def SplitStr(str, spliters = None):
+def SplitStr(str, spliters=None):
     ### @Function: Split string by spliter space(' ') and indent('\t') as default
     # spliters = [' ', '\t']
     # spliters = []
@@ -492,6 +504,7 @@ def GetFileNameWithSuffixes(filePath, suffixes):
             reFiles.append(f)
     return reFiles
 
+
 def isPathExists(path):
     if os.path.isdir(path):
         if os.path.exists(path):
@@ -500,21 +513,29 @@ def isPathExists(path):
             return False
     else:
         return False
+
+
 def GetFullPathWithSuffixes(filePath, suffixes):
     fullPaths = []
     for name in GetFileNameWithSuffixes(filePath, suffixes):
         fullPaths.append(filePath + os.sep + name)
     return fullPaths
+
+
 def currentPath():
     path = sys.path[0]
     if os.path.isdir(path):
         return path
     elif os.path.isfile(path):
         return os.path.dirname(path)
+
+
 def LoadConfiguration(inifile):
     strCmd = '%s %s/config.py -ini %s' % (sys.executable, currentPath(), inifile)
     # print strCmd
     os.system(strCmd)
+
+
 ### TEST CODE
 if __name__ == "__main__":
     # p = r'E:\data\model_data\model_dianbu_10m_longterm\data_prepare\spatial'

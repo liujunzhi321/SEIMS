@@ -13,7 +13,7 @@ import os, platform
 import subprocess
 
 
-def Fill(np, workingDir, dem, filledDem, mpiexeDir = None, exeDir = None):
+def Fill(np, workingDir, dem, filledDem, mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "pitremove"
@@ -23,11 +23,11 @@ def Fill(np, workingDir, dem, filledDem, mpiexeDir = None, exeDir = None):
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
-def FlowDirD8(np, workingDir, filledDem, flowDir, slope, mpiexeDir = None, exeDir = None):
+def FlowDirD8(np, workingDir, filledDem, flowDir, slope, mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "d8flowdir"
@@ -37,12 +37,12 @@ def FlowDirD8(np, workingDir, filledDem, flowDir, slope, mpiexeDir = None, exeDi
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
-def D8DistDownToStream(np, workingDir, p, fel, src, dist, distancemethod, thresh, mpiexeDir = None, exeDir = None,
-                       hostfile = None):
+def D8DistDownToStream(np, workingDir, p, fel, src, dist, distancemethod, thresh, mpiexeDir=None, exeDir=None,
+                       hostfile=None):
     os.chdir(workingDir)
     if distancemethod == 'Horizontal':
         distmeth = 'h'
@@ -72,11 +72,11 @@ def D8DistDownToStream(np, workingDir, p, fel, src, dist, distancemethod, thresh
 
     print cmd
     # os.system(cmd)
-    process = subprocess.Popen(cmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
-def FlowDirDinf(np, workingDir, filledDem, flowAngle, slope, mpiexeDir = None, exeDir = None):
+def FlowDirDinf(np, workingDir, filledDem, flowAngle, slope, mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "dinfflowdir"
@@ -86,11 +86,11 @@ def FlowDirDinf(np, workingDir, filledDem, flowAngle, slope, mpiexeDir = None, e
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
-def FlowAccD8(np, workingDir, flowDir, acc, outlet = None, streamSkeleton = None, mpiexeDir = None, exeDir = None):
+def FlowAccD8(np, workingDir, flowDir, acc, outlet=None, streamSkeleton=None, mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "aread8"
@@ -110,11 +110,11 @@ def FlowAccD8(np, workingDir, flowDir, acc, outlet = None, streamSkeleton = None
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
-def StreamRaster(np, workingDir, acc, streamRaster, threshold = 1000, mpiexeDir = None, exeDir = None):
+def StreamRaster(np, workingDir, acc, streamRaster, threshold=1000, mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "threshold"
@@ -124,11 +124,11 @@ def StreamRaster(np, workingDir, acc, streamRaster, threshold = 1000, mpiexeDir 
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
-def MoveOutlet(np, workingDir, flowDir, streamRaster, outlet, modifiedOutlet, mpiexeDir = None, exeDir = None):
+def MoveOutlet(np, workingDir, flowDir, streamRaster, outlet, modifiedOutlet, mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "moveoutletstostreams"
@@ -138,11 +138,11 @@ def MoveOutlet(np, workingDir, flowDir, streamRaster, outlet, modifiedOutlet, mp
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
-def StreamSkeleton(np, workingDir, filledDem, streamSkeleton, mpiexeDir = None, exeDir = None):
+def StreamSkeleton(np, workingDir, filledDem, streamSkeleton, mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "peukerdouglas"
@@ -152,12 +152,12 @@ def StreamSkeleton(np, workingDir, filledDem, streamSkeleton, mpiexeDir = None, 
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
 def StreamNet(np, workingDir, filledDem, flowDir, acc, streamRaster, modifiedOutlet, streamOrder, chNetwork, chCoord,
-              streamNet, subbasin, mpiexeDir = None, exeDir = None):
+              streamNet, subbasin, mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "streamnet"
@@ -169,12 +169,12 @@ def StreamNet(np, workingDir, filledDem, flowDir, acc, streamRaster, modifiedOut
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
 
 
 def DropAnalysis(np, workingDir, fel, p, ad8, ssa, shapefile, minthresh, maxthresh, numthresh, logspace, drp,
-                 mpiexeDir = None, exeDir = None):
+                 mpiexeDir=None, exeDir=None):
     os.chdir(workingDir)
     if exeDir is not None:
         exe = exeDir + os.sep + "dropanalysis"
@@ -189,5 +189,5 @@ def DropAnalysis(np, workingDir, fel, p, ad8, ssa, shapefile, minthresh, maxthre
     if mpiexeDir is not None:
         strCmd = mpiexeDir + os.sep + strCmd
     print strCmd
-    process = subprocess.Popen(strCmd, shell = True, stdout = subprocess.PIPE)
+    process = subprocess.Popen(strCmd, shell=True, stdout=subprocess.PIPE)
     return process.stdout.readlines()
