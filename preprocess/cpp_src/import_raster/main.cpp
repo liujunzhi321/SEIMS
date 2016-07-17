@@ -332,12 +332,19 @@ int main(int argc, char **argv)
     const char *hostname = argv[5];
     int port = atoi(argv[6]);
     const char *outTifFolder = NULL;
+	
     if (argc >= 8)
         outTifFolder = argv[7];
-
+	//cout<<argc<<endl;
+	//for(int i = 0; i < argc; i++)
+	//	cout<<argv[i]<<endl;
     vector<string> dstFiles;
-    FindFiles(folder, "*.tif", dstFiles);
-
+    FindFiles(folder, ".tif", dstFiles);
+	cout << "File number:"<<dstFiles.size()<<endl;
+	//for (vector<string>::iterator it = dstFiles.begin(); it != dstFiles.end(); it++)
+	//{
+	//	cout<<*it<<",";
+	//}
     /// Identify Array1D and Array2D dstFiles, respectively
     vector<string> coreFileNames;
     vector<string> array1DFiles;
@@ -418,10 +425,17 @@ int main(int argc, char **argv)
     bson_init(query);
     bson_finish(query);
     char spatialCollection[255];
+#ifndef linux
     strcpy_s(spatialCollection, modelName);
     strcpy_s(spatialCollection, ".");
     strcat_s(spatialCollection, gridFSName);
     strcat_s(spatialCollection, ".files");
+#else
+	strcpy(spatialCollection, modelName);
+	strcpy(spatialCollection, ".");
+	strcat(spatialCollection, gridFSName);
+	strcat(spatialCollection, ".files");
+#endif
     mongo_cursor_init(cursor, conn, spatialCollection);
     mongo_cursor_set_query(cursor, query);
     vector<string> fileNamesExisted;

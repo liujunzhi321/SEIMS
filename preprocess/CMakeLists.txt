@@ -2,7 +2,7 @@
 # This is preprocessing for SEIMS.
 # First released : Liangjun Zhu
 # Date           : Jun. 19, 2015
-# Latest Update  : May. 12, 2016
+# Latest Update  : Jul. 15, 2016
 cmake_minimum_required(VERSION 2.6)
 IF(COMMAND CMAKE_POLICY)
 	CMAKE_POLICY(SET CMP0015 NEW)
@@ -42,11 +42,10 @@ IF(WIN32)
 ELSE()
 	SET (CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -fopenmp -fPIC -g -ggdb")
 	SET (CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall -fopenmp -fPIC")
-	SET (MPI_HOME /usr/lib64/openmpi)
+	SET (MPI_HOME /home/zhulj/mpich/)
 	SET (CMAKE_CXX_COMPILER ${MPI_HOME}/bin/mpic++)
 	SET (GDAL_HOME /soft/share)
-	SET (MONGO_HOME /soft/share/mongo-c-driver-f06669b)
-	SET (LIB_DIR /usr/lib)
+	SET (MONGO_HOME ${CMAKE_CURRENT_SOURCE_DIR}/../include/mongo-c-driver-0.6-linux)
 ENDIF(WIN32)
 
 INCLUDE_DIRECTORIES(${MONGO_HOME}/include ${GDAL_HOME}/include)

@@ -1,6 +1,7 @@
 set exePath=G:\Compile\SEIMS_Preprocess\Release
 netsh advfirewall firewall add rule name=AreaD8 dir=in action=allow program=%exePath%\aread8.exe ENABLE=yes
 netsh advfirewall firewall add rule name=D8FlowDir dir=in action=allow program=%exePath%\d8flowdir.exe ENABLE=yes
+netsh advfirewall firewall add rule name=D8DistDownToStream dir=in action=allow program=%exePath%\d8distdowntostream.exe ENABLE=yes
 netsh advfirewall firewall add rule name=DinfFlowDir dir=in action=allow program=%exePath%\dinfflowdir.exe ENABLE=yes
 netsh advfirewall firewall add rule name=DropAnalysis dir=in action=allow program=%exePath%\dropanalysis.exe ENABLE=yes
 netsh advfirewall firewall add rule name=Grid_Layering dir=in action=allow program=%exePath%\grid_layering.exe ENABLE=yes

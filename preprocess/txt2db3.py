@@ -14,6 +14,7 @@ def txt2Sqlite(dataFiles, dbFile):
         # print dataFileItem
         dataPath = TXT_DB_DIR + os.sep + dataFileItem[1] + ".txt"
         dataItems = ReadDataItemsFromTxt(dataPath)
+        # print dataItems
         if dataFileItem[0] == Tag_Params:
             fieldNames = dataItems[0][1:]
             units = dataItems[1][1:]
@@ -23,6 +24,7 @@ def txt2Sqlite(dataFiles, dbFile):
             MIN_IDX = fieldNames.index(PARAM_FLD_MIN) + 1
             for i in range(2, len(dataItems)):
                 curDataItem = dataItems[i]
+                # print curDataItem
                 if curDataItem[CHANGE_IDX] == PARAM_CHANGE_NC or curDataItem[CHANGE_IDX] == '':
                     curDataItem[IMPACT_IDX] = 0
                 if curDataItem[CHANGE_IDX] == PARAM_CHANGE_RC and curDataItem[IMPACT_IDX] == '':

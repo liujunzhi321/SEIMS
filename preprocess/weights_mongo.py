@@ -298,6 +298,7 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode=False, useRsData=F
 
 
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     try:
         conn = MongoClient(HOSTNAME, PORT)
     except ConnectionFailure, e:

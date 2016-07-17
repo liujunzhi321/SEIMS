@@ -26,7 +26,7 @@ else:
 if not (isPathExists(BASE_DATA_DIR) and isPathExists(MODEL_DIR) and isPathExists(TXT_DB_DIR)
         and isPathExists(PREPROC_SCRIPT_DIR) and isPathExists(CPP_PROGRAM_DIR) and isPathExists(METIS_DIR)):
     raise IOError("Please Check Directories defined in [PATH]")
-if isPathExists(MPIEXEC_DIR):
+if not isPathExists(MPIEXEC_DIR):
     MPIEXEC_DIR = None
 if os.path.isdir(WORKING_DIR):
     if not os.path.exists(WORKING_DIR):

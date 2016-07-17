@@ -81,4 +81,5 @@ def GenerateVelocity(filepath):
 
 
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     GenerateVelocity(WORKING_DIR)

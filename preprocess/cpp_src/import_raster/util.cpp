@@ -25,13 +25,19 @@
 #include <sstream>
 
 #ifndef linux
-
+#include <WinSock2.h>
 #include <Windows.h>
 #include <direct.h>
 
 #else
 #include <dirent.h>
-
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <dlfcn.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #endif
 
 using namespace std;
@@ -75,6 +81,7 @@ int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFil
             continue;
 
         string filename(ptr->d_name);
+		//cout << filename<<endl;
         int n = filename.length();
         string ext = filename.substr(n-4, 4);
         //cout << ext << "\t" << expression << endl;
@@ -82,6 +89,7 @@ int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFil
         {
             ostringstream oss;
             oss << lpPath << "/" <<  filename;
+			//cout<<oss.str()<<endl;
             vecFiles.push_back(oss.str());
         }
     }

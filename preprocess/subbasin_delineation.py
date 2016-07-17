@@ -127,7 +127,7 @@ def SubbasinDelineation():
     tauDir = WORKING_DIR + os.sep + DIR_NAME_TAUDEM
     if not os.path.exists(tauDir):
         os.mkdir(tauDir)
-
+    # print MPIEXEC_DIR
     status = "Fill DEM..."
     fStatus.write("%d,%s\n" % (10, status))
     fStatus.flush()
@@ -250,6 +250,7 @@ def SubbasinDelineation():
 
 
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     SubbasinDelineation()
     # tauDir = WORKING_DIR + os.sep + DIR_NAME_TAUDEM
     # FlowAccD8(np, tauDir, flowDir, acc, outlet=None, streamSkeleton=None, mpiexeDir=MPIEXEC_DIR,
