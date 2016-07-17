@@ -29,3 +29,7 @@ python G:\code_zhulj\SEIMS\preprocess\main.py -ini G:\code_zhulj\SEIMS\preproces
 python G:\code_zhulj\SEIMS\preprocess\import_parameters.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu_30m_longterm_omp_zhulj_winserver.ini
 
 python G:\code_zhulj\SEIMS\preprocess\import_bmp_scenario.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu_30m_longterm_omp_zhulj_winserver.ini
+
+## COMMAND in DGPM 6.55
+
++ python /home/zhulj/SEIMS/SEIMS/preprocess/main.py /home/zhulj/SEIMS/SEIMS/preprocess/dianbu_30m_longterm_omp_dgpm.ini
