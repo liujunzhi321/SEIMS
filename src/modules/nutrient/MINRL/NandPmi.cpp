@@ -762,6 +762,3 @@ void NandPim::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
         throw ModelException(MID_MINRL, "Get2DData", "Output " + sk +
                                                      " does not exist in the current module. Please contact the module developer.");
 }
-// int main() {
-//	system("pause");
-//}

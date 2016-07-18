@@ -346,16 +346,20 @@ void NutrientOLRoute::NutrientinOverland(int i)
         m_sedminps[flowInID] = max(1.e-12f, m_sedminps[flowInID]);
         m_cod[flowInID] = max(1.e-12f, m_cod[flowInID]);
         //Sum
-        surqno3 = surqno3 + m_surqno3[flowInID];
-        latno3 = latno3 + m_latno3[flowInID];
-        no3gw = no3gw + m_no3gw[flowInID];
-        surqsolp = surqsolp + m_surqsolp[flowInID];
-        minpgw = minpgw + m_minpgw[flowInID];
-        sedorgn = sedorgn + m_sedorgn[flowInID];
-        sedorgp = sedorgp + m_sedorgp[flowInID];
-        sedminpa = sedminpa + m_sedminpa[flowInID];
-        sedminps = sedminps + m_sedminps[flowInID];
-        cod = cod + m_cod[flowInID];
+		// if the upstream cell is not a channel cell
+		 if (m_streamLink[flowInID] <= 0) 
+		 {
+			surqno3 = surqno3 + m_surqno3[flowInID];
+			latno3 = latno3 + m_latno3[flowInID];
+			no3gw = no3gw + m_no3gw[flowInID];
+			surqsolp = surqsolp + m_surqsolp[flowInID];
+			minpgw = minpgw + m_minpgw[flowInID];
+			sedorgn = sedorgn + m_sedorgn[flowInID];
+			sedorgp = sedorgp + m_sedorgp[flowInID];
+			sedminpa = sedminpa + m_sedminpa[flowInID];
+			sedminps = sedminps + m_sedminps[flowInID];
+			cod = cod + m_cod[flowInID];
+		 }
     }
     // if the channel width is greater than the cell width
     if (m_streamLink[i] >= 0 && flowwidth <= 0)
@@ -386,25 +390,20 @@ void NutrientOLRoute::NutrientinOverland(int i)
     m_codToCh[i] = NutToChannel(i, m_codToCh[i]);
     m_ammoToCh[i] = 0.f;
     m_nitriteToCh[i] = 0.f;
-    m_codToCh[i] = m_codToCh[i] / 1.E6; //mg to kg
+    m_codToCh[i] = m_codToCh[i] / 1.e6; //mg to kg
 }
 
 float NutrientOLRoute::NutToChannel(int id, float nut)
 {
-
-    float fractiontochannel = 0.0f;
-    if (m_chWidth[id] > 0)
-    {
-        float fractiontochannel = 0.0f;
+        float fractiontochannel = 0.f;
         if (m_chWidth[id] > 0)
         {
             float tem = m_ChV[id] * m_TimeStep;
-            fractiontochannel = 2 * tem / (m_cellWidth - m_chWidth[id]);
-            fractiontochannel = min(fractiontochannel, 1.0f);
+            fractiontochannel = 2.f * tem / (m_cellWidth - m_chWidth[id]);
+            fractiontochannel = min(fractiontochannel, 1.f);
         }
         float nuttoch = fractiontochannel * nut;
         return nuttoch;
-    }
 }
 void NutrientOLRoute::Get1DData(const char *key, int *n, float **data)
 {

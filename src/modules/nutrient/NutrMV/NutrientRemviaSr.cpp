@@ -439,7 +439,7 @@ void NutrientRemviaSr::Nitrateloss()
                         }
                         // CREAMS method for calculating enrichment ratio
                         float cy = 0.f;
-                        // Calculate sediment calculations, equation 4:2.2.3 in SWAT Theory 2009, p272
+                        // Calculate sediment, equation 4:2.2.3 in SWAT Theory 2009, p272
                         cy = 0.1f * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * 0.0001f * m_surfr[i] + 1e-6f);
                         if (cy > 1e-6f)
                         {
