@@ -89,6 +89,8 @@ private:
     float *m_soilALB;
     /// soil depth of all layers
     float **m_soilDepth;
+	/// soil thickness of all layers
+	float **m_soilThick;
     /// amount of organic matter in the soil layer classified as residue,sol_rsd(:,:)|kg/ha
     float **m_soilRsd;
     /// amount of water available to plants in soil layer at field capacity (fc - wp water), sol_fc in SWAT

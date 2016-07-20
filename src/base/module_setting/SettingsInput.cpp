@@ -22,7 +22,7 @@ SettingsInput::SettingsInput(string fileName, mongoc_client_t *conn, string dbNa
     LoadSettingsFromFile(fileName, dbName);
     if (!readDate())
         throw ModelException("SettingsInput", "LoadSettingsFromFile",
-                             "The start time and end time in file.in is invalid. The format would be YYYY/MM/DD/HH. Please check it.");
+                             "The start time and end time in file.in is invalid or missed. The format would be YYYY/MM/DD/HH. Please check it.");
     m_inputStation = new InputStation(m_conn, m_dtHs, m_dtCh);
     ReadSiteList();
 }
@@ -32,8 +32,8 @@ SettingsInput::SettingsInput(mongoc_client_t *conn, string dbName, int nSubbasin
 {
     LoadSettingsInputFromMongoDB();
     if (!readDate())
-        throw ModelException("SettingsInput", "LoadSettingsFromFile",
-                             "The start time and end time in file.in is invalid. The format would be YYYY/MM/DD/HH. Please check it.");
+        throw ModelException("SettingsInput", "LoadSettingsFromMongoDB",
+                             "The start time and end time in file.in is invalid or missed. The format would be YYYY/MM/DD/HH. Please check it.");
     m_inputStation = new InputStation(m_conn, m_dtHs, m_dtCh);
     ReadSiteList();
 }
