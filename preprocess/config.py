@@ -111,7 +111,8 @@ if 'SPATIAL' in cf.sections():
     outlet_file = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'outlet_file'.lower())
     if not os.path.exists(outlet_file):
         outlet_file = None
-    landuseFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'landuseFile'.lower())
+    landuseOriginFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'landuseFile'.lower())
+    landcoverInitFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'landcoverInitFile'.lower())
     soilSEQNFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'soilSEQNFile'.lower())
     soilSEQNText = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'soilSEQNText'.lower())
     mgtFiedlFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'mgtFiedlFile'.lower())

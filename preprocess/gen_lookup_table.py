@@ -44,4 +44,4 @@ def CreateLanduseLookupTable(dbname, property_namelist, str_sql, dstdir):
             f.write(s)
         f.close()
 
-# if __name__ == "__main__":
+

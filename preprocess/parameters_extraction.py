@@ -83,6 +83,16 @@ def soil_parameters2(dstdir, maskFile, soilSEQNTif, soilSEQNTxt):
                 curSoilIns.Poreindex = curFlds
             elif StringMatch(soilPropFlds[j], SOL_ALB) or StringMatch(soilPropFlds[j], 'SOL_ALB'):
                 curSoilIns.Sol_ALB = curFlds
+            elif StringMatch(soilPropFlds[j], ESCO):
+                curSoilIns.ESCO = curFlds[0]
+            elif StringMatch(soilPropFlds[j], SOL_NO3):
+                curSoilIns.Sol_no3 = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_ORGN):
+                curSoilIns.Sol_orgn = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_SOLP):
+                curSoilIns.Sol_solp = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_ORGP):
+                curSoilIns.Sol_orgp = curFlds
         curSoilIns.CheckData()
         soilInstances.append(curSoilIns)
     soilPropDict = {}
@@ -174,7 +184,7 @@ def soil_parameters2(dstdir, maskFile, soilSEQNTif, soilSEQNTxt):
 
 def landuse_parameters(dstdir, maskFile, inputLanduse, landuseFile, sqliteFile, defaultLanduse):
     ## mask landuse map using the mask_raster program
-    configFile = "%s%smaskLanduseConfig.txt" % (dstdir, os.sep)
+    configFile = "%s%s%s" % (dstdir, os.sep, FN_STATUS_MASKLANDUSE)
     fMask = open(configFile, 'w')
     fMask.write(maskFile + "\n")
     fMask.write("%d\n" % (1,))
@@ -187,7 +197,7 @@ def landuse_parameters(dstdir, maskFile, inputLanduse, landuseFile, sqliteFile, 
     ## reclassify
     reclassLuFile = "%s/reclassLanduseConfig.txt" % (dstdir)
     fReclassLu = open(reclassLuFile, 'w')
-    fReclassLu.write("%s\t%d\n" % (landuseFile, 8))
+    fReclassLu.write("%s\t%d\n" % (landuseFile, defaultLanduse))
     fReclassLu.write("%s/lookup\n" % (dstdir))
     fReclassLu.write(dstdir + "\n")
     landuseAttrList = LANDUSE_ATTR_LIST
@@ -224,7 +234,7 @@ def ExtractParameters():
     print "[Output] %s, %s" % (WORKING_DIR, status)
     f.write("%d,%s\n" % (20, status))
     f.flush()
-    landuse_parameters(WORKING_DIR, maskFile, landuseFile, landuseFile, TXT_DB_DIR + os.sep + sqliteFile,
+    landuse_parameters(WORKING_DIR, maskFile, landuseOriginFile, landuseFile, TXT_DB_DIR + os.sep + sqliteFile,
                        defaultLanduse)
 
     ## soil physical and chemical parameters
@@ -299,5 +309,6 @@ def ExtractParameters():
 
 if __name__ == "__main__":
     LoadConfiguration(GetINIfile())
-    maskFile = WORKING_DIR + os.sep + mask_to_ext
-    soil_parameters2(WORKING_DIR, maskFile, soilSEQNFile, soilSEQNText)
+    # maskFile = WORKING_DIR + os.sep + mask_to_ext
+    # soil_parameters2(WORKING_DIR, maskFile, soilSEQNFile, soilSEQNText)
+    ExtractParameters()

@@ -5,7 +5,9 @@
 # Reference: soil_chem.f in SWAT 2012
 # Author: Liangjun Zhu, Huiran Gao
 # Date: 2016-3-28
-#
+# Revised date: 2016-7-20
+# Note: Deprecated the initialization of soil chemical properties in preprocess, and move it to
+#       the corresponding modules.
 
 from util import *
 from config import *
@@ -141,7 +143,7 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
         sol_cov = sol_rsd[1]
 
         # if (sol_no3[j] <= 0.) :
-        zdst = math.exp(-depth[j] / 1000.)
+        zdst = math.exp(-depth[j] / 1000.)  # No need to divided by 1000., because the unit of depth is mm!
         sol_no3[j] = 10. * zdst * .7
         sol_no3[j] = sol_no3[j] * wt1  ## mg/kg => kg/ha
         sumno3 = sumno3 + sol_no3[j]
