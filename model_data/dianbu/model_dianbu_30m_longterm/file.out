@@ -19,6 +19,8 @@ Interception	NEPR	Net Precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:
 Interception	INET	Evaporation from the interception storage	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INET.tif	0
 Interception	INLO	Interception loss	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INLO.tif	0
 PET	PET	Potential Evapotranspiration	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PET.tif	0
+PET	PPT	Potential Plant Evapotranspiration	mm/d	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PPT.tif	1
+PET	SOET	Actual Soil Evaporation	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOET.tif	1
 Snow melt	SNME	Snow melt	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SNME.tif	0
 Snow melt	SNAC	Snow accumulation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SNAC.tif	0
 Infiltration	INFIL	Infiltration	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INFIL.tif	0
@@ -30,6 +32,6 @@ Depression	DEET	Depression ET	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-99
 Percolation	PERCO	Percolation	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PERCO.tif	0
 Erosion	SOER	soil loss caused by water erosion	kg	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOER.tif	1
 Erosion	USLE_LS	USLE LS factor	None	MAX	2014-01-01 00:00:00	2014-01-01 23:59:59	-9999	-9999	ALL	USLE_LS.tif	1
-Erosion	SEDTOCH	Sediment to reach	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDtoCH.tif	1
+Erosion	SEDTOCH_T	Sediment to reach	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDtoCH_T.txt	1
 Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	Q.txt	0
 Sediment	QSED	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	0

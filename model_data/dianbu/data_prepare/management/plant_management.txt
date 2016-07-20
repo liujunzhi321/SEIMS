@@ -16,7 +16,7 @@
 ##14	ContinuousFertilizerOperation	year	month	day	husc	14	FERT_DAYS	CFRT_ID	IFRT_FREQ	CFRT_KG	NONE	NONE	NONE	NONE	NONE	NONE
 ##15	ContinuousPesticideOperation	year	month	day	husc	15	IPST_ID	PEST_DAYS	IPST_FREQ	CPST_KG	NONE	NONE	NONE	NONE	NONE	NONE
 ##16	BurningOperation	year	month	day	husc	16	NONE	NONE	NONE	BURN_FRLB	NONE	NONE	NONE	NONE	NONE	NONE
-SUBSCENARIO	Name	year	month	day	husc	mgt_op	mgt1i	mgt2i	mgt3i	mgt4	mgt5	mgt6	mgt7	mgt8	mgt9	mgt10i
+SUBSCENARIO	Name	year	month	day	husc	mgt_op	mgt1	mgt2	mgt3	mgt4	mgt5	mgt6	mgt7	mgt8	mgt9	mgt10
 0	generalAGRL	1	-9999	-9999	0.23	6	1	0	0	0	0	0	0	0	0	0
 0	generalAGRL	1	-9999	-9999	0.23	13	0	0	0	0	0	0	0	0	0	0
 0	generalAGRL	1	-9999	-9999	0.23	3	1	0	0	97.5	1	0	0	0	0	0
