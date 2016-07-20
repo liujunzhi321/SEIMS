@@ -339,7 +339,11 @@ int main(int argc, char **argv)
 	//for(int i = 0; i < argc; i++)
 	//	cout<<argv[i]<<endl;
     vector<string> dstFiles;
-    FindFiles(folder, ".tif", dstFiles);
+#ifndef linux
+    FindFiles(folder, "*.tif", dstFiles);
+#else
+	FindFiles(folder, ".tif", dstFiles);
+#endif
 	cout << "File number:"<<dstFiles.size()<<endl;
 	//for (vector<string>::iterator it = dstFiles.begin(); it != dstFiles.end(); it++)
 	//{
@@ -427,12 +431,12 @@ int main(int argc, char **argv)
     char spatialCollection[255];
 #ifndef linux
     strcpy_s(spatialCollection, modelName);
-    strcpy_s(spatialCollection, ".");
+    strcat_s(spatialCollection, ".");
     strcat_s(spatialCollection, gridFSName);
     strcat_s(spatialCollection, ".files");
 #else
 	strcpy(spatialCollection, modelName);
-	strcpy(spatialCollection, ".");
+	strcat(spatialCollection, ".");
 	strcat(spatialCollection, gridFSName);
 	strcat(spatialCollection, ".files");
 #endif
