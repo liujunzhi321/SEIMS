@@ -34,3 +34,5 @@ python G:\code_zhulj\SEIMS\preprocess\parameters_extraction.py -ini G:\code_zhul
 ## COMMAND in DGPM 6.55
 
 + python /home/zhulj/SEIMS/SEIMS/preprocess/main.py /home/zhulj/SEIMS/SEIMS/preprocess/dianbu_30m_longterm_omp_dgpm.ini
+
+G:\compile\SEIMS_Preprocess\Release\grid_layering 192.168.6.55 27017 G:\data_m\SEIMS_dataprepare\model_dianbu_30m_longterm\layering_info model_dianbu_30m_longterm SPATIAL 1
