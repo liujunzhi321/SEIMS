@@ -8,8 +8,8 @@
  * \revision: 1.1
  * \date: 2016-7-15
  * \description: 1. Code reformat with common functions, such as Release1DArray.
- *               2. VAR_SNSB should be ouput other than input.
- *               3.
+ *               2. VAR_SNSB should be output other than input.
+ *               3. 
  * 
  */
 #pragma once
@@ -52,6 +52,8 @@ private:
     int m_soilLayers;
     /// soil depth
     float **m_soilDepth;
+	/// soil thickness
+	float **m_soilThick;
     /// amount of water available to plants in soil layer at field capacity (FC-WP)
     float **m_solAWC;
     /// amount of residue on soil surface (kg/ha)
@@ -111,5 +113,8 @@ private:
      * \return bool The validity of the dimension
      */
     bool CheckInputSize(const char *, int);
+
+	//! initialize outputs
+	void initialOutputs();
 };
 

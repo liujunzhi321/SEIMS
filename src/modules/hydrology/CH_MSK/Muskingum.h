@@ -114,7 +114,7 @@ private:
     *
         The value of direction is as following (TauDEM):
         4  3  2
-        5      1
+        5     1
         6  7  8
         The value of direction is as following (ArcGIS):
         32 64 128

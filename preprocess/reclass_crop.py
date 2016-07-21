@@ -5,6 +5,7 @@
 # Revised: Liang-Jun Zhu
 #
 import re
+
 from config import *
 from util import *
 
@@ -43,44 +44,69 @@ def ReadCropAttrs(cropFile):
     return attrDic
 
 
-def GenerateInitLandcoverFile(landuseFile, dstdir):
-    LUFile = ReadRaster(landuseFile)
-    xsize = LUFile.nCols
-    ysize = LUFile.nRows
-    nAll = xsize * ysize
-    data = LUFile.data
-    data.shape = nAll
-    dataAttr = numpy.zeros(nAll)
-    noDataValue = LUFile.noDataValue
-    geotransform = LUFile.geotrans
-    srs = LUFile.srs
-    lu2crop = {192: 12, 101: DEFAULT_NODATA, 102: DEFAULT_NODATA, 103: DEFAULT_NODATA,
-               104: DEFAULT_NODATA, 105: DEFAULT_NODATA, 106: DEFAULT_NODATA,
-               107: DEFAULT_NODATA, 108: DEFAULT_NODATA, 191: 33, 98: DEFAULT_NODATA}
-    print 'Generating crop/landcover GTIFF file...'
-    filename = dstdir + os.sep + cropMFile
-    ### Get all crop/landcover code
-    attrList = []
-    for i in xrange(nAll):
-        if data[i] == noDataValue:
-            dataAttr[i] = DEFAULT_NODATA
-        else:
-            id = int(data[i])
-            if id in lu2crop.keys():
-                dataAttr[i] = lu2crop[id]
-            if (id < 98):
-                dataAttr[i] = id
-                if (id not in attrList):
-                    attrList.append(id)
-            else:
-                dataAttr[i] = DEFAULT_NODATA
-    dataAttr.shape = (ysize, xsize)
-    WriteGTiffFile(filename, ysize, xsize, dataAttr, geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
-    return attrList
+def GenerateLandcoverInitialParameters(landuseFile, dstdir):
+    LC_dataItems = ReadDataItemsFromTxt(landcoverInitFile)
+    # print LC_dataItems
+    fieldNames = LC_dataItems[0]
+    LUID = -1
+    for i in range(len(fieldNames)):
+        if StringMatch(fieldNames[i], 'LANDUSE_ID'):
+            LUID = i
+            break
+    dataItems = LC_dataItems[1:]
+    replaceDicts = {}
+    for item in dataItems:
+        for i in range(len(item)):
+            if i != LUID:
+                if fieldNames[i].upper() not in replaceDicts.keys():
+                    replaceDicts[fieldNames[i].upper()] = {float(item[LUID]): float(item[i])}
+                else:
+                    replaceDicts[fieldNames[i].upper()][float(item[LUID])] = float(item[i])
+    print replaceDicts
+
+    ## Generate GTIFF
+    for item in replaceDicts.keys():
+        filename = WORKING_DIR + os.sep + item + '.tif'
+        print filename
+        replaceByDict(landuseFile, replaceDicts[item], filename)
+    return replaceDicts['LANDCOVER'].values()
+        # LUFile = ReadRaster(landuseFile)
+        # xsize = LUFile.nCols
+        # ysize = LUFile.nRows
+        # nAll = xsize * ysize
+        # data = LUFile.data
+        # data.shape = nAll
+        # dataAttr = numpy.zeros(nAll)
+        # noDataValue = LUFile.noDataValue
+        # geotransform = LUFile.geotrans
+        # srs = LUFile.srs
+        # lu2crop = {192: 12, 101: DEFAULT_NODATA, 102: DEFAULT_NODATA, 103: DEFAULT_NODATA,
+        #            104: DEFAULT_NODATA, 105: DEFAULT_NODATA, 106: DEFAULT_NODATA,
+        #            107: DEFAULT_NODATA, 108: DEFAULT_NODATA, 191: 33, 98: DEFAULT_NODATA}
+        # print 'Generating crop/landcover GTIFF file...'
+        # filename = dstdir + os.sep + cropMFile
+        # ### Get all crop/landcover code
+        # attrList = []
+        # for i in xrange(nAll):
+        #     if data[i] == noDataValue:
+        #         dataAttr[i] = DEFAULT_NODATA
+        #     else:
+        #         id = int(data[i])
+        #         if id in lu2crop.keys():
+        #             dataAttr[i] = lu2crop[id]
+        #         if (id < 98):
+        #             dataAttr[i] = id
+        #             if (id not in attrList):
+        #                 attrList.append(id)
+        #         else:
+        #             dataAttr[i] = DEFAULT_NODATA
+        # dataAttr.shape = (ysize, xsize)
+        # WriteGTiffFile(filename, ysize, xsize, dataAttr, geotransform, srs, DEFAULT_NODATA, gdal.GDT_Float32)
+        # return attrList
 
 
 def ReclassCrop(landuseFile, dstdir):
-    LandCoverCodes = GenerateInitLandcoverFile(landuseFile, dstdir)
+    LandCoverCodes = GenerateLandcoverInitialParameters(landuseFile, dstdir)
     cropFile = CROP_FILE
     attrMap = ReadCropAttrs(cropFile)
     attrNames = CROP_ATTR_LIST
@@ -92,6 +118,8 @@ def ReclassCrop(landuseFile, dstdir):
         curDict = {}
         dic = attrMap[curAttr]
         for code in LandCoverCodes:
+            if code == DEFAULT_NODATA:
+                continue
             if code not in curDict.keys():
                 curDict[code] = dic[code]
         replaceDicts.append(curDict)
@@ -107,5 +135,6 @@ def ReclassCrop(landuseFile, dstdir):
 
 
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     # ReclassCrop(WORKING_DIR + os.sep + landuseMFile, WORKING_DIR)
-    GenerateInitLandcoverFile(WORKING_DIR + os.sep + landuseMFile, WORKING_DIR)
+    GenerateLandcoverInitialParameters(WORKING_DIR + os.sep + landuseMFile, WORKING_DIR)

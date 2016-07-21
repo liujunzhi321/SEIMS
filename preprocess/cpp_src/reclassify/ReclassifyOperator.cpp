@@ -1,4 +1,4 @@
-#include "ReclassifyOperator.h"
+﻿#include "ReclassifyOperator.h"
 #include <iostream>
 
 using namespace std;
@@ -66,4 +66,5 @@ bool ReclassifyOperator::Operator(const CellCoord &coord)
 
     return true;
 }
+
 

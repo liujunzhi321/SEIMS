@@ -192,7 +192,9 @@ int WriteStringToMongoDB(gridfs *gfs, int id, const char *type, int number, cons
     bson_finish(p);
 
     gridfile gfile[1];
-
+	/// If the file is already existed in MongoDB, if existed, then delete it!
+	gridfs_remove_filename(gfs, remoteFilename);
+	/// create a new one
     int n = number * 4;
     int index = 0;
     gridfile_writer_init(gfile, gfs, remoteFilename, type);

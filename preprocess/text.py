@@ -40,8 +40,7 @@ CROP_ATTR_LIST = ["IDC", "BIO_E", "HVSTI", "BLAI", "FRGRW1", "LAIMX1", "FRGRW2",
                   "CPYLD", "BN1", "BN2", "BN3", "BP1", "BP2", "BP3", "WSYF",
                   "USLE_C", "GSI", "VPDFR", "FRGMAX", "WAVP", "CO2HI", "BIOEHI",
                   "RSDCO_PL", "OV_N", "CN2A", "CN2B", "CN2C", "CN2D", "FERTFIELD",
-                  "ALAI_MIN", "BIO_LEAF", "MAT_YRS", "BMX_TREES", "EXT_COEF", "BM_DIEOFF",
-                  "PLTHU", "CNOP", "LAI_INIT", "BIO_INIT", "CURYR_INIT"]
+                  "ALAI_MIN", "BIO_LEAF", "MAT_YRS", "BMX_TREES", "EXT_COEF", "BM_DIEOFF"]
 
 ### USLE_C is extracted from cropLookup database
 LANDUSE_ATTR_LIST = ["CN2A", "CN2B", "CN2C", "CN2D", "ROOTDEPTH", "MANNING",
@@ -82,9 +81,14 @@ SOL_POROSITY = "porosity"
 SOL_P_INDEX = "poreindex"
 SOL_USLE_K = "usle_k"
 SOL_ALB = "sol_alb"
-# SOL_RM      = "Residual"
+ESCO = "ESCO"
 SOL_TEXTURE = "soil_texture"
-## soil chemical properties
+## soil N and P concentrate
+SOL_NO3 = "SOL_NO3"
+SOL_ORGN = "SOL_ORGN"
+SOL_ORGP = "SOL_ORGP"
+SOL_SOLP = "SOL_SOLP"
+
 
 ## Climate datatype tags, MUST BE coincident with text.h in SEIMS
 ## /src/base/util/text.h
@@ -297,6 +301,7 @@ GEOJSON_OUTLET = "outlet.json"
 ## Other filenames used in preprocessing
 FN_STATUS_DELINEATION = "status_SubbasinDelineation.txt"
 FN_STATUS_MASKRASTERS = "maskDemConfig.txt"
+FN_STATUS_MASKLANDUSE = "maskLanduseConfig.txt"
 FN_STATUS_GENSUBBSN = "status_GenerateSubbasins.txt"
 FN_STATUS_EXTRACTPARAM = "status_ExtractParameters.txt"
 FN_STATUS_MONGO = "status_BuildMongoDB.txt"

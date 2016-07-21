@@ -1,6 +1,4 @@
 // main function of the IUH calculation
-//#include "WatershedIUHCalculator.h"
-//#include "RiverIUHCalculator.h"
 #include "SubbasinIUHCalculator.h"
 #include <iostream>
 #include <fstream>
@@ -10,7 +8,6 @@
 #include "mongo.h"
 #include "bson.h"
 #include "gridfs.h"
-
 #include "Raster.h"
 
 using namespace std;
@@ -56,8 +53,6 @@ void MainMongoDB(const char *modelStr, const char *gridFSName, int nSubbasins, c
 
         SubbasinIUHCalculator iuh(dt, rsMask, rsTime, rsDelta, gfs);
         iuh.calCell(i);
-
-
     }
 
     gridfs_destroy(gfs);

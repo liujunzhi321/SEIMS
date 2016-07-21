@@ -69,4 +69,5 @@ def ReclassLanduse(landuseFile, dbname, dstdir):
 
 
 if __name__ == '__main__':
+    LoadConfiguration(GetINIfile())
     ReclassLanduse(WORKING_DIR + os.sep + landuseMFile, TXT_DB_DIR + os.sep + sqliteFile, WORKING_DIR)

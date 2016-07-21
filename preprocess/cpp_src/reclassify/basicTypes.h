@@ -1,3 +1,4 @@
+﻿#pragma once
 #ifndef BASICTYPES_H
 #define BASICTYPES_H
 
@@ -642,3 +643,4 @@ operator<<(ostream &os, const DomDcmpMethod &dcmpMethod)
 }
 
 #endif
+

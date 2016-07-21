@@ -1,3 +1,4 @@
+﻿#pragma once
 #ifndef DeComposition_H
 #define DeComposition_H
 
@@ -296,3 +297,4 @@ rowDcmp(MetaData &metaData,
 //}
 
 #endif
+

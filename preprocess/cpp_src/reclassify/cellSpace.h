@@ -1,4 +1,4 @@
-#ifndef CELLSPACE_H
+﻿#ifndef CELLSPACE_H
 #define CELLSPACE_H
 
 /***************************************************************************

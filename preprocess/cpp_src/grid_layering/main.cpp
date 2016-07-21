@@ -4,8 +4,8 @@
 *	Created:	Junzhi Liu
 *	Date:		28-March-2013
 *
-*	Revision:
-*   Date:
+*	Revision:   Liangjun Zhu
+*   Date:       21-July-2016
 *---------------------------------------------------------------------*/
 
 
@@ -64,6 +64,7 @@ int main(int argc, char **argv)
         int *compressedIndex = new int[n];
         int nValidGrids = CalCompressedIndex(n, dirMatrix, header.noDataValue, compressedIndex);
 
+		TauDEM2ArcGIS(nRows, nCols, dirMatrix);
         OutputFlowOutD8(gfs, i, nRows, nCols, nValidGrids, dirMatrix, header.noDataValue, compressedIndex);
 
         string layeringFile = LayeringFromSourceD8(outputDir, gfs, i, nValidGrids, dirMatrix, compressedIndex, header,

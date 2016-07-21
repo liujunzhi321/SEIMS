@@ -1,4 +1,4 @@
-#ifndef BASICCELL_H
+﻿#ifndef BASICCELL_H
 #define BASICCELL_H
 
 /***************************************************************************
@@ -138,3 +138,4 @@ namespace GPRO
 };
 
 #endif
+

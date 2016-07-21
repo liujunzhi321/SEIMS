@@ -1,4 +1,4 @@
-#ifndef COMMUNICATION_H
+﻿#ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 
 /***************************************************************************
@@ -143,3 +143,4 @@ rowComm()
 }
 
 #endif
+

@@ -5,9 +5,8 @@
 # Revised: Liang-Jun Zhu
 # Note: Improve calculation efficiency by numpy
 #
-from post_process_taudem import *
-from text import *
 from config import *
+from post_process_taudem import *
 
 
 def GetMaskFromRaster(rasterFile, dstdir):
@@ -72,7 +71,7 @@ def GetMaskFromRaster(rasterFile, dstdir):
     return outputFile, Raster(ySizeMask, xSizeMask, mask, DEFAULT_NODATA, maskGeotrans, srs)
 
 
-def MaskDEMFiles(workingDir, exeDir = None):
+def MaskDEMFiles(workingDir, exeDir=None):
     tauDir = workingDir + os.sep + DIR_NAME_TAUDEM
     subbasinTauFile = tauDir + os.sep + subbasin
     originalFiles = [subbasin, flowDir, streamRaster,
@@ -114,7 +113,7 @@ def GenerateSubbasins():
 
     fStatus.write("%d,%s\n" % (10, "Masking subbasin files..."))
     fStatus.flush()
-    MaskDEMFiles(WORKING_DIR, exeDir = CPP_PROGRAM_DIR)
+    MaskDEMFiles(WORKING_DIR, exeDir=CPP_PROGRAM_DIR)
 
     fStatus.write("%d,%s\n" % (50, "Output files..."))
     fStatus.flush()
@@ -133,7 +132,7 @@ def GenerateSubbasins():
             (src_srs, dst_srs, jsonFile, src_file)
         os.system(s)
 
-    geoJson_dict = {GEOJSON_REACH : WORKING_DIR + os.sep + DIR_NAME_REACH + os.sep + reachesOut,
+    geoJson_dict = {GEOJSON_REACH: WORKING_DIR + os.sep + DIR_NAME_REACH + os.sep + reachesOut,
                     GEOJSON_SUBBSN: WORKING_DIR + os.sep + DIR_NAME_SUBBSN + os.sep + subbasinVec,
                     GEOJSON_OUTLET: WORKING_DIR + os.sep + DIR_NAME_TAUDEM + os.sep + modifiedOutlet}
     for jsonName in geoJson_dict.keys():

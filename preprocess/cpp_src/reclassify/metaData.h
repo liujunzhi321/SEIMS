@@ -1,4 +1,4 @@
-#ifndef METADATA_H
+﻿#ifndef METADATA_H
 #define METADATA_H
 
 #include <utility>
@@ -53,3 +53,4 @@ namespace GPRO
 
 
 #endif
+

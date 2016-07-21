@@ -40,51 +40,40 @@ Biomass_EPIC::Biomass_EPIC(void) : m_nCells(-1), m_nClimDataYrs(-1), m_co2(NODAT
                                    m_frStrsTmp(NULL), m_frStrsWa(NULL),
                                    m_biomassDelta(NULL), m_biomass(NULL)
 {
-    uobw = 0.0;
-    ubw = 10.0; /// the uptake distribution for water is hardwired, users are not allowed to modify
+    uobw = 0.f;
+    ubw = 10.f; /// the uptake distribution for water is hardwired, users are not allowed to modify
     uobw = PGCommon::getNormalization(ubw);
 }
 
 Biomass_EPIC::~Biomass_EPIC(void)
 {
-    //// cleanup output variables
-    if (m_somo != NULL)
-    {
-        for (int i = 0; i < m_soilLayers; i++)
-            delete[] m_somo[i];
-        m_somo = NULL;
-    }
-    if (m_soilNO3 != NULL)
-    {
-        for (int i = 0; i < m_soilLayers; i++)
-            delete[] m_soilNO3[i];
-        m_soilNO3 = NULL;
-    }
-    if (m_soilPsol != NULL)
-    {
-        for (int i = 0; i < m_soilLayers; i++)
-            delete[] m_soilPsol[i];
-        m_soilPsol = NULL;
-    }
-    if (m_soilRsd != NULL)
-    {
-        for (int i = 0; i < m_soilLayers; i++)
-            delete[] m_soilRsd[i];
-        m_soilRsd = NULL;
-    }
-    if (m_totSOMO != NULL) delete[] m_totSOMO;
-    if (m_soilCov != NULL) delete[] m_soilCov;
-    if (m_LAIDay != NULL) delete[] m_LAIDay;
-    if (m_cht != NULL) delete[] m_cht;
-    if (m_dormFlag != NULL) delete[] m_dormFlag;
-    if (m_LAIYrMax != NULL) delete[] m_LAIYrMax;
-    if (m_frPHUacc != NULL) delete[] m_frPHUacc;
-    if (m_pltET != NULL) delete[] m_pltET;
-    if (m_pltPET != NULL) delete[] m_pltPET;
-    if (m_plantN != NULL) delete[] m_plantN;
-    if (m_plantP != NULL) delete[] m_plantP;
-    if (m_plantEPDay != NULL) delete[] m_plantEPDay;
-    if (m_biomass != NULL) delete[] m_biomass;
+    if (m_LAIDay != NULL) Release1DArray(m_LAIDay);
+	if (m_LAIYrMax != NULL) Release1DArray(m_LAIYrMax);
+	if (m_frPHUacc != NULL) Release1DArray(m_frPHUacc);
+    if (m_pltET != NULL) Release1DArray(m_pltET);
+    if (m_pltPET != NULL) Release1DArray(m_pltPET);
+	if (m_hvstIdxAdj != NULL) Release1DArray(m_hvstIdxAdj);
+	if (m_LAIMaxFr != NULL) Release1DArray(m_LAIMaxFr);
+	if (m_frPHUacc != NULL) Release1DArray(m_frPHUacc);
+	if (m_oLAI != NULL) Release1DArray(m_oLAI);
+	if (m_lastSoilRootDepth != NULL) Release1DArray(m_lastSoilRootDepth);
+    if (m_plantEPDay != NULL) Release1DArray(m_plantEPDay);
+	if (m_frRoot != NULL) Release1DArray(m_frRoot);
+    if (m_fixN != NULL) Release1DArray(m_fixN);
+	if (m_plantUpTkN != NULL) Release1DArray(m_plantUpTkN);
+	if (m_plantUpTkP != NULL) Release1DArray(m_plantUpTkP);
+	if (m_plantN != NULL) Release1DArray(m_plantN);
+	if (m_plantP != NULL) Release1DArray(m_plantP);
+	if (m_frPlantN != NULL) Release1DArray(m_frPlantN);
+	if (m_frPlantP != NULL) Release1DArray(m_frPlantP);
+	if (m_NO3Defic != NULL) Release1DArray(m_NO3Defic);
+    if (m_frStrsAe != NULL) Release1DArray(m_frStrsAe);
+    if (m_frStrsN != NULL) Release1DArray(m_frStrsN);
+	if (m_frStrsP != NULL) Release1DArray(m_frStrsP);
+	if (m_frStrsTmp != NULL) Release1DArray(m_frStrsTmp);
+	if (m_frStrsWa != NULL) Release1DArray(m_frStrsWa);
+	if (m_biomassDelta != NULL) Release1DArray(m_biomassDelta);
+	if (m_biomass != NULL) Release1DArray(m_biomass);
 }
 
 void Biomass_EPIC::SetValue(const char *key, float data)
@@ -112,11 +101,8 @@ bool Biomass_EPIC::CheckInputSize(const char *key, int n)
         if (m_nCells <= 0)
             m_nCells = n;
         else
-        {
             throw ModelException(MID_BIO_EPIC, "CheckInputSize", "Input data for " + string(key) +
                                                                  " is invalid. All the input raster data should have same size.");
-            return false;
-        }
     }
     return true;
 }
@@ -146,7 +132,7 @@ void Biomass_EPIC::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_SOET)) m_soilESDay = data;
     else if (StringMatch(sk, VAR_SOL_COV)) m_soilCov = data;
     else if (StringMatch(sk, VAR_SNAC)) m_snowAcc = data;
-        //// land cover
+    //// land cover
     else if (StringMatch(sk, VAR_IGRO)) m_igro = data;
     else if (StringMatch(sk, VAR_IDC)) m_landCoverCls = data;
     else if (StringMatch(sk, VAR_ALAIMIN)) m_aLAIMin = data;
@@ -182,12 +168,6 @@ void Biomass_EPIC::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_PHUPLT)) m_PHUPlt = data;
     else if (StringMatch(sk, VAR_CHT)) m_cht = data;
     else if (StringMatch(sk, VAR_DORMI)) m_dormFlag = data;
-
-        //// need to be initialized in this module
-    else if (StringMatch(sk, VAR_LAIDAY)) m_LAIDay = data;
-    else if (StringMatch(sk, VAR_FR_PHU_ACC)) m_frPHUacc = data;
-    else if (StringMatch(sk, VAR_PLTET_TOT)) m_pltET = data;
-    else if (StringMatch(sk, VAR_PLTPET_TOT)) m_pltPET = data;
     else
         throw ModelException(MID_BIO_EPIC, "Set1DData", "Parameter " + sk +
                                                         " does not exist in current module. Please contact the module developer.");
@@ -204,11 +184,8 @@ bool Biomass_EPIC::CheckInputSize2D(const char *key, int n, int col)
         if (m_soilLayers <= 0)
             m_soilLayers = col;
         else
-        {
             throw ModelException(MID_BIO_EPIC, "CheckInputSize2D", "Input data for " + string(key) +
                                                                    " is invalid. All the layers of input 2D raster data should have same size.");
-            return false;
-        }
     }
     return true;
 }
@@ -218,6 +195,7 @@ void Biomass_EPIC::Set2DData(const char *key, int nRows, int nCols, float **data
     string sk(key);
     CheckInputSize2D(key, nRows, nCols);
     if (StringMatch(sk, VAR_SOILDEPTH)) m_soilDepth = data;
+	else if (StringMatch(sk, VAR_SOILTHICK)) m_soilThick = data;
     else if (StringMatch(sk, VAR_SOL_RSD)) m_soilRsd = data;
     else if (StringMatch(sk, VAR_SOL_AWC)) m_soilAWC = data;
     else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
@@ -381,7 +359,9 @@ bool Biomass_EPIC::CheckInputData(void)
 
     /// DT_Raster2D
     if (m_soilDepth == NULL)
-        throw ModelException(MID_BIO_EPIC, "CheckInputData", "The soil depth data can not be NULL.");
+		throw ModelException(MID_BIO_EPIC, "CheckInputData", "The soil depth data can not be NULL.");
+	if (m_soilThick == NULL)
+		throw ModelException(MID_BIO_EPIC, "CheckInputData", "The soil thickness data can not be NULL.");
     if (m_soilRsd == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData",
                              "The organic matter in the soil classified as residue can not be NULL.");
@@ -402,14 +382,12 @@ bool Biomass_EPIC::CheckInputData(void)
 void Biomass_EPIC::initialOutputs()
 {
     if (m_LAIDay == NULL && m_initLAI != NULL)
-    {
-        m_LAIDay = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-            m_LAIDay[i] = m_initLAI[i];
-    }
+		Initialize1DArray(m_nCells, m_LAIDay, m_initLAI);
+
     if (m_LAIYrMax == NULL)
     {
         m_LAIYrMax = new float[m_nCells];
+#pragma omp parallel for
         for (int i = 0; i < m_nCells; i++)
         {
             if (PGCommon::IsTree((int) (m_landCoverCls[i])))
@@ -419,121 +397,59 @@ void Biomass_EPIC::initialOutputs()
         }
     }
     if (m_frPHUacc == NULL)
-    {
-        m_frPHUacc = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-            m_frPHUacc[i] = 0.0f;
-    }
-    if (m_pltET == NULL || m_pltPET == NULL)
-    {
-        m_pltET = new float[m_nCells];
-        m_pltPET = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_pltET[i] = 0.f;
-            m_pltPET[i] = 0.f;
-        }
-    }
+		Initialize1DArray(m_nCells, m_frPHUacc, 0.f);
+    if(m_pltET == NULL)
+		Initialize1DArray(m_nCells, m_pltET, 0.f);
+	if(m_pltPET == NULL)
+		Initialize1DArray(m_nCells, m_pltPET, 0.f);
     if (m_hvstIdxAdj == NULL)
-    {
-        m_hvstIdxAdj = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-            m_hvstIdxAdj[i] = 0.0f;
-    }
-    if (m_LAIMaxFr == NULL || m_oLAI == NULL)
-    {
-        m_LAIMaxFr = new float[m_nCells];
-        m_oLAI = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_LAIMaxFr[i] = 0.f;
-            m_oLAI[i] = 0.f;
-        }
-    }
+		Initialize1DArray(m_nCells, m_hvstIdxAdj, 0.f);
+	if(m_LAIMaxFr == NULL)
+		Initialize1DArray(m_nCells, m_LAIMaxFr, 0.f);
+	if (m_oLAI == NULL)
+		Initialize1DArray(m_nCells, m_oLAI, 0.f);
     if (m_lastSoilRootDepth == NULL)
     {
         m_lastSoilRootDepth = new float[m_nCells];
         for (int i = 0; i < m_nCells; i++)
-            m_lastSoilRootDepth[i] = 10.;  /// TODO, check it out
+            m_lastSoilRootDepth[i] = 10.f;  /// TODO, check it out
     }
-    if (m_plantEPDay == NULL)
-    {
-        m_plantEPDay = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-            m_plantEPDay[i] = 0.0f;
-    }
-    if (m_frRoot == NULL)
-    {
-        m_frRoot = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-            m_frRoot[i] = 0.0f;
-    }
-    if (m_fixN == NULL)
-    {
-        m_fixN = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-            m_fixN[i] = 0.0f;
-    }
-    if (m_plantUpTkN == NULL || m_plantUpTkP == NULL)
-    {
-        m_plantUpTkN = new float[m_nCells];
-        m_plantUpTkP = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_plantUpTkN[i] = 0.f;
-            m_plantUpTkP[i] = 0.f;
-        }
-    }
-    if (m_plantN == NULL || m_plantP == NULL)
-    {
-        m_plantN = new float[m_nCells];
-        m_plantP = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_plantN[i] = 0.f;
-            m_plantP[i] = 0.f;
-        }
-    }
-    if (m_frPlantN == NULL || m_frPlantP == NULL)
-    {
-        m_frPlantN = new float[m_nCells];
-        m_frPlantP = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_frPlantN[i] = 0.f;
-            m_frPlantP[i] = 0.f;
-        }
-    }
-    if (m_NO3Defic == NULL || m_frStrsAe == NULL || m_frStrsN == NULL || m_frStrsP == NULL || m_frStrsTmp == NULL ||
-        m_frStrsWa == NULL)
-    {
-        m_NO3Defic = new float[m_nCells];
-        m_frStrsAe = new float[m_nCells];
-        m_frStrsN = new float[m_nCells];
-        m_frStrsP = new float[m_nCells];
-        m_frStrsTmp = new float[m_nCells];
-        m_frStrsWa = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_NO3Defic[i] = 0.f;
-            m_frStrsAe[i] = 0.f;
-            m_frStrsN[i] = 0.f;
-            m_frStrsP[i] = 0.f;
-            m_frStrsTmp[i] = 0.f;
-            m_frStrsWa[i] = 0.f;
-        }
-    }
+	if(m_plantEPDay == NULL)
+		Initialize1DArray(m_nCells, m_plantEPDay, 0.f);
+	if (m_frRoot == NULL)
+		Initialize1DArray(m_nCells, m_frRoot, 0.f);
+	if(m_fixN == NULL)
+		Initialize1DArray(m_nCells, m_fixN, 0.f);
+	if (m_plantUpTkN == NULL)
+		Initialize1DArray(m_nCells, m_plantUpTkN, 0.f);
+	if(m_plantUpTkP == NULL)
+		Initialize1DArray(m_nCells, m_plantUpTkP, 0.f);
+	if (m_plantN == NULL)
+		Initialize1DArray(m_nCells, m_plantN, 0.f);
+	if (m_plantP == NULL)
+		Initialize1DArray(m_nCells, m_plantP, 0.f);
+	if (m_frPlantN == NULL)
+		Initialize1DArray(m_nCells, m_frPlantN, 0.f);
+	if (m_frPlantP == NULL)
+		Initialize1DArray(m_nCells, m_frPlantP, 0.f);
+   
 
-    if (m_biomassDelta == NULL || m_biomass == NULL)
-    {
-        m_biomassDelta = new float[m_nCells];
-        m_biomass = new float[m_nCells];
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_biomassDelta[i] = 0.0f;
-            m_biomass[i] = m_initBiomass[i];
-        }
-    }
+	if(m_NO3Defic == NULL)
+		Initialize1DArray(m_nCells, m_NO3Defic, 0.f);
+	if (m_frStrsAe == NULL)
+		Initialize1DArray(m_nCells, m_frStrsAe, 0.f);
+	if(m_frStrsN == NULL)
+		Initialize1DArray(m_nCells, m_frStrsN, 0.f);
+	if (m_frStrsP == NULL)
+		Initialize1DArray(m_nCells, m_frStrsP, 0.f);
+	if (m_frStrsTmp == NULL)
+		Initialize1DArray(m_nCells, m_frStrsTmp, 0.f);
+	if (m_frStrsWa == NULL)
+		Initialize1DArray(m_nCells, m_frStrsWa, 0.f);
+	if (m_biomassDelta == NULL)
+		Initialize1DArray(m_nCells, m_biomassDelta, 0.f);
+	if (m_biomass == NULL)
+		Initialize1DArray(m_nCells, m_biomass, m_initBiomass);
 }
 
 void Biomass_EPIC::DistributePlantET(int i)
@@ -550,14 +466,14 @@ void Biomass_EPIC::DistributePlantET(int i)
     int idc = int(m_landCoverCls[i]);
     if (idc == 1 || idc == 2 || idc == 4 || idc == 5)
     {
-        m_soilRD = 2.5 * m_frPHUacc[i] * m_soilZMX[i];
+        m_soilRD = 2.5f * m_frPHUacc[i] * m_soilZMX[i];
         if (m_soilRD > m_soilZMX[i]) m_soilRD = m_soilZMX[i];
         if (m_soilRD < 10.f) m_soilRD = 10.f;   /// minimum root depth is 10mm
     }
     else
         m_soilRD = m_soilZMX[i];
     m_lastSoilRootDepth[i] = m_soilRD;
-    if (m_ppt[i] <= 0.01)
+    if (m_ppt[i] <= 0.01f)
         m_frStrsWa[i] = 1.f;
     else
     {
@@ -570,13 +486,13 @@ void Biomass_EPIC::DistributePlantET(int i)
         xx = 0.f;
     }
     /// compute aeration stress
-    if (m_totSOMO[i] > m_totSoilAWC[i])
+    if (m_totSOMO[i] > m_totSoilAWC[i]) // mm
     {
         float satco = (m_totSOMO[i] - m_totSoilAWC[i]) / (m_totSoilSat[i] - m_totSoilAWC[i]);
-        float pl_aerfac = 0.85;
-        float scparm = 100. * (satco - pl_aerfac) / (1.0001 - pl_aerfac);
+        float pl_aerfac = 0.85f;
+        float scparm = 100.f * (satco - pl_aerfac) / (1.0001f - pl_aerfac);
         if (scparm > 0.f)
-            m_frStrsAe[i] = 1. - (scparm / (scparm + exp(2.9014 - 0.03867 * scparm)));
+            m_frStrsAe[i] = 1.f - (scparm / (scparm + exp(2.9014f - 0.03867f * scparm)));
         else
             m_frStrsAe[i] = 1.f;
     }
@@ -591,17 +507,17 @@ void Biomass_EPIC::DistributePlantET(int i)
         else
             gx = m_soilDepth[i][j];
         sum = 0.f;
-        if (m_soilRD <= 0.01)
+        if (m_soilRD <= 0.01f)
             sum = m_ppt[i] / uobw;
         else
-            sum = m_ppt[i] * (1. - exp(-ubw * gx / m_soilRD)) / uobw;
+            sum = m_ppt[i] * (1.f - exp(-ubw * gx / m_soilRD)) / uobw;
         wuse[j] = sum - sump + 1. * m_epco[i];
         wuse[j] = sum - sump + (sump - xx) * m_epco[i];
         sump = sum;
         /// adjust uptake if sw is less than 25% of plant available water
         reduc = 0.f;
-        if (m_somo[i][j] < m_soilAWC[i][j] / 4.)
-            reduc = exp(5. * (4. * m_somo[i][j] / m_soilAWC[i][j] - 1.));
+        if (m_somo[i][j] < m_soilAWC[i][j] / 4.f)
+            reduc = exp(5.f * (4.f * m_somo[i][j] / m_soilAWC[i][j] - 1.f));
         else
             reduc = 1.f;
         reduc = 1.f;  ///// Is SWAT wrong here? by LJ
@@ -624,7 +540,7 @@ void Biomass_EPIC::CalTempStress(int i)
     float tgx = 0.f, rto = 0.f;
     tgx = m_tMean[i] - m_tBase[i];
     if (tgx <= 0.f)
-        m_frStrsTmp[i] = 0.;
+        m_frStrsTmp[i] = 0.f;
     else if (m_tMean[i] > m_tOpt[i])
         tgx = 2.f * m_tOpt[i] - m_tBase[i] - m_tMean[i];
     rto = (m_tOpt[i] - m_tBase[i]) / pow((tgx + UTIL_ZERO), 2.f);
@@ -642,11 +558,11 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
     float delg = 0.f;
     if (m_PHUPlt[i] > 0.1)
         delg = (m_tMean[i] - m_tBase[i]) / m_PHUPlt[i];
-    if (delg < 0.)
+    if (delg < 0.f)
         delg = 0.f;
     m_frPHUacc[i] += delg;
     /// If plant hasn't reached maturity
-    if (m_frPHUacc[i] <= 1.)
+    if (m_frPHUacc[i] <= 1.f)
     {
         ///compute temperature stress - strstmp(j) , tstr.f in SWAT
         CalTempStress(i);
@@ -663,7 +579,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
                                           &m_RadUseEffiShpCoef1, &m_RadUseEffiShpCoef2);
 
         float beadj = 0.f;
-        if (m_co2 > 330.)
+        if (m_co2 > 330.f)
             beadj = 100.f * m_co2 / (m_co2 + exp(m_RadUseEffiShpCoef1 - m_co2 * m_RadUseEffiShpCoef2));
         else
             beadj = m_BIOE[i];
@@ -744,7 +660,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
             else
                 laiMax = m_maxLAI[i];
             if (m_LAIDay[i] > laiMax) m_LAIDay[i] = laiMax;
-            laiDelta = ff * laiMax * (1.f - exp(5.0f * (m_LAIDay[i] - laiMax))) * sqrt(reg);
+            laiDelta = ff * laiMax * (1.f - exp(5.f * (m_LAIDay[i] - laiMax))) * sqrt(reg);
             m_LAIDay[i] += laiDelta;
             if (m_LAIDay[i] > laiMax) m_LAIDay[i] = laiMax;
             m_oLAI[i] = m_LAIDay[i];
@@ -755,7 +671,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
         if (m_LAIDay[i] < m_aLAIMin[i])
             m_LAIDay[i] = m_aLAIMin[i];
         /// 10. calculate plant ET values
-        if (m_frPHUacc[i] > 0.5 && m_frPHUacc[i] < m_frDLAI[i])
+        if (m_frPHUacc[i] > 0.5f && m_frPHUacc[i] < m_frDLAI[i])
         {
             m_pltET[i] += (m_plantEPDay[i] + m_soilESDay[i]);
             m_pltPET[i] += m_PET[i];
@@ -829,7 +745,7 @@ void Biomass_EPIC::PlantNitrogenUptake(int i)
         {
             PGCommon::calPlantStressByLimitedNP(m_plantN[i], un2, &m_frStrsN[i]);
             float xx = 0.f;
-            if (m_NO3Defic[i] > 1.e-5)
+            if (m_NO3Defic[i] > 1.e-5f)
                 xx = m_plantUpTkN[i] / m_NO3Defic[i];
             else
                 xx = 1.f;
@@ -847,7 +763,7 @@ void Biomass_EPIC::PlantNitrogenFixed(int i)
         uno3l = m_NO3Defic[i] - m_plantUpTkN[i];
     else /// if supply is being met, fixation = 0 and return
     {
-        m_fixN[i] = 0;
+        m_fixN[i] = 0.f;
         return;
     }
     /// compute fixation as a function of no3, soil water, and growth stage
@@ -861,11 +777,11 @@ void Biomass_EPIC::PlantNitrogenFixed(int i)
         sumn += m_soilNO3[i][l];
     if (sumn > 300.) fxn = 0.f;
     if (sumn > 100. && sumn <= 300.) fxn = 1.5f - 0.0005f * sumn;
-    if (sumn <= 100.) fxn = 1.0;
+    if (sumn <= 100.) fxn = 1.f;
     //// 3. compute growth stage factor
     float fxg = 0.f;
     if (m_frPHUacc[i] > 0.15 && m_frPHUacc[i] <= 0.30)
-        fxg = 6.67 * m_frPHUacc[i] - 1.f;
+        fxg = 6.67f * m_frPHUacc[i] - 1.f;
     if (m_frPHUacc[i] > 0.30 && m_frPHUacc[i] <= 0.55)
         fxg = 1.f;
     if (m_frPHUacc[i] > 0.55 && m_frPHUacc[i] <= 0.75)
@@ -949,7 +865,7 @@ int Biomass_EPIC::Execute()
         /// calculate residue on soil surface for current day
         m_soilCov[i] = 0.8 * m_biomass[i] + m_soilRsd[i][0];
         m_soilCov[i] = max(m_soilCov[i], 0.f);
-        if (FloatEqual(m_igro[i], 1.0f))            /// land cover growing
+        if (FloatEqual(m_igro[i], 1.f))            /// land cover growing
         {
             DistributePlantET(i);                        /// swu.f
             if (FloatEqual(m_dormFlag[i], 0.f))    /// plant will not undergo stress if dormant
