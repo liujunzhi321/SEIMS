@@ -1069,7 +1069,7 @@
 #define DESC_FERTILIZER_LOOKUP "Fertilizer database"
 #define DESC_FIELDCAP "Soil field capacity"
 #define DESC_FLAT "lateral flow in soil layer"
-#define DESC_FLOWDIR "Flow direction by the rule of ArcGIS"
+#define DESC_FLOWDIR "Flow direction by the rule of TauDEM"
 #define DESC_FLOWIN_INDEX_D8 "The index of flow in (D8) cell in the compressed array, and the first element in each sub-array is the number of flow in cells in this sub-array"
 #define DESC_FLOWIN_PERCENTAGE_D8 "percentage of flow out to current cell from each upstream cells"
 #define DESC_FLOWOUT_INDEX_D8 "The index of flow out (D8) cell of each cells in the compressed array"
