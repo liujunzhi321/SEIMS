@@ -4,7 +4,54 @@
 #include "GridLayering.h"
 
 using namespace std;
-
+void TauDEM2ArcGIS(int nRows, int nCols, int *&dirMatrix)
+{
+	/// Find out D8 coding system, TauDEM or ArcGIS
+	int maxDirection = -1;
+	for (int i = 0; i < nRows; ++i)
+	{
+		for (int j = 0; j < nCols; ++j)
+		{
+			int index = i * nCols + j;
+			if(dirMatrix[index] >= maxDirection)
+				maxDirection = dirMatrix[index];
+		}
+	}
+	///cout<<maxDirection<<endl;
+	bool isTauDEM = false;
+	if(maxDirection == 8)
+		isTauDEM = true;
+	if (isTauDEM)
+	{
+		for (int i = 0; i < nRows; ++i)
+		{
+			for (int j = 0; j < nCols; ++j)
+			{
+				int index = i * nCols + j;
+				if(dirMatrix[index] == 1)
+					dirMatrix[index] = 1;
+				else if(dirMatrix[index] == 2)
+					dirMatrix[index] = 128;
+				else if(dirMatrix[index] == 3)
+					dirMatrix[index] = 64;
+				else if(dirMatrix[index] == 4)
+					dirMatrix[index] = 32;
+				else if(dirMatrix[index] == 5)
+					dirMatrix[index] = 16;
+				else if(dirMatrix[index] == 6)
+					dirMatrix[index] = 8;
+				else if(dirMatrix[index] == 7)
+					dirMatrix[index] = 4;
+				else if(dirMatrix[index] == 8)
+					dirMatrix[index] = 2;
+				else
+					dirMatrix[index] = -9999;
+			}
+		}
+	}
+	//if(isTauDEM)
+	//	cout<<"TauDEM D8 to ArcGIS Done!"<<endl;
+}
 void OutputFlowOutD8(gridfs *gfs, int id, int nRows, int nCols, int validCount, const int *dirMatrix,
                      int dirNoDataValue, const int *compressedIndex)
 {

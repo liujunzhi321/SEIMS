@@ -166,7 +166,8 @@ def SerializeSubbasin(subbasinFile, streamRasterFile, idMap,
 
 
 def ChangeFlowDir(flowDirFileTau, flowDirFileEsri):
-    dirMap = {1: 1, 2: 128, 3: 64, 4: 32, 5: 16, 6: 8, 7: 4, 8: 2}
+    # flowDirFileTau is float
+    dirMap = {1.: 1., 2.: 128., 3.: 64., 4.: 32., 5.: 16., 6.: 8., 7.: 4., 8.: 2.}
     replaceByDict(flowDirFileTau, dirMap, flowDirFileEsri)
     # dirMap = [1, 128, 64, 32, 16, 8, 4, 2]
     # flowDirTau = ReadRaster(flowDirFileTau)
@@ -291,8 +292,10 @@ def PostProcessTauDEM(dstdir):
     SerializeSubbasin(subbasinFile, streamRasterFile, idMap,
                       outputSubbasinFile, outputStreamLinkFile)
     ## Change TauDEM code to ArcGIS. Now, it is deprecated, By LJ.
-    # ChangeFlowDir(flowDirFileTau, outputFlowDirFile)
-    shutil.copy(flowDirFileTau, outputFlowDirFile)
+    if(isTauDEM):
+        shutil.copy(flowDirFileTau, outputFlowDirFile)
+    else:
+        ChangeFlowDir(flowDirFileTau, outputFlowDirFile)
 
     accFile = dstdir + os.sep + accM
     chwidthFile = dstdir + os.sep + chwidthName
@@ -343,4 +346,5 @@ def PostProcessTauDEM(dstdir):
 
 
 if __name__ == '__main__':
+    LoadConfiguration(GetINIfile())
     PostProcessTauDEM(WORKING_DIR)

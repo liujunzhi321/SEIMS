@@ -1,4 +1,4 @@
-#ifndef RASTEROPERATOR_H
+﻿#ifndef RASTEROPERATOR_H
 #define RASTEROPERATOR_H
 
 /***************************************************************************
@@ -191,3 +191,4 @@ Run()
 
 
 #endif
+

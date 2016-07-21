@@ -1,4 +1,4 @@
-#ifndef WEIGHTEDCELL_H
+﻿#ifndef WEIGHTEDCELL_H
 #define WEIGHTEDCELL_H
 
 /***************************************************************************
@@ -98,3 +98,4 @@ namespace GPRO
 };
 
 #endif
+

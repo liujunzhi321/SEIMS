@@ -1,4 +1,4 @@
-#ifndef Application_H
+﻿#ifndef Application_H
 #define Application_H
 
 /***************************************************************************
@@ -35,3 +35,4 @@ namespace GPRO
 
 
 #endif
+

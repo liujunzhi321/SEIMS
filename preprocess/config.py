@@ -122,6 +122,7 @@ else:
     raise ValueError("Spatial input file names MUST be provided in [SPATIAL]!")
 
 # 6. Option parameters
+isTauDEM = True
 D8AccThreshold = 0
 np = 4
 D8DownMethod = 'Surface'
@@ -131,6 +132,7 @@ imperviousPercInUrbanCell = 0.3
 default_reach_depth = 5.
 defaultLanduse = 8
 if 'SPATIAL' in cf.sections():
+    isTauDEM = cf.getboolean('OPTIONAL_PARAMETERS', 'isTauDEMD8'.lower())
     D8AccThreshold = cf.getfloat('OPTIONAL_PARAMETERS', 'D8AccThreshold'.lower())
     np = cf.getint('OPTIONAL_PARAMETERS', 'np')
     D8DownMethod = cf.get('OPTIONAL_PARAMETERS', 'D8DownMethod'.lower())

@@ -36,6 +36,8 @@ void ReadFromMongo(gridfs *gfs, const char *remoteFilename, RasterHeader &rs, in
 
 int WriteStringToMongoDB(gridfs *gfs, int id, const char *type, int number, const char *s);
 
+void TauDEM2ArcGIS(int nRows, int nCols, int *&dirMatrix);
+
 void OutputFlowOutD8(gridfs *gfs, int id, int nRows, int nCols, int validCount, const int *dirMatrix, int noDataValue,
                      const int *compressedIndex);
 

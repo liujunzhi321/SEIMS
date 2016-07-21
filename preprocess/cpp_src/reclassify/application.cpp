@@ -1,4 +1,4 @@
-#include"application.h"
+﻿#include"application.h"
 
 GPRO::ProgramType GPRO::Application::_programType = Serial_Type;
 
@@ -36,3 +36,4 @@ bool GPRO::Application::END()
     }
     return true;
 }
+

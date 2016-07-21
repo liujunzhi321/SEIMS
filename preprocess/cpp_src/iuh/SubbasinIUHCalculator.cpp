@@ -56,6 +56,7 @@ SubbasinIUHCalculator::~SubbasinIUHCalculator(void)
 
 int SubbasinIUHCalculator::calCell(int id)
 {
+	
     bson *p = (bson *) malloc(sizeof(bson));
     bson_init(p);
     bson_append_int(p, "SUBBASIN", id);
@@ -70,8 +71,10 @@ int SubbasinIUHCalculator::calCell(int id)
     bson_append_string(p, "DESCRIPTION", type);
     bson_append_double(p, "NUMBER", nCells);
     bson_finish(p);
-
-    gridfile gfile[1];
+	gridfile gfile[1];
+	/// If the file is already existed in MongoDB, if existed, then delete it!
+    gridfs_remove_filename(gfs, remoteFilename.c_str());
+	/// create a new one
     gridfile_writer_init(gfile, gfs, remoteFilename.c_str(), type);
 
     float nCellsFloat = nCells;

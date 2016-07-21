@@ -23,7 +23,7 @@ from build_db import BuildMongoDB
 if __name__ == "__main__":
     ## Load Configuration file
     LoadConfiguration(GetINIfile())
-    # ## Update SQLite Parameters.db3 database
+    ## Update SQLite Parameters.db3 database
     reConstructSQLiteDB()
     ## Climate Data
     SitesMList, SitesPList = ImportHydroClimateSitesInfo()

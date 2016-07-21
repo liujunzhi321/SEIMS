@@ -7,6 +7,7 @@
 #
 
 from math import *
+
 from soil_texture import *
 # from soil_chem import * # Moved to SEIMS modules
 from util import *
@@ -103,7 +104,7 @@ class SoilProperty:
         for ele in solDict.keys():
             if solDict[ele] == []:
                 solDict.pop(ele)
-        #print solDict
+        # print solDict
         return solDict
 
     def CheckData(self):  ## check the required input, and calculate all physical and chemical properties
@@ -121,19 +122,21 @@ class SoilProperty:
             self.SAND.insert(0, self.SAND[0])
             self.ROCK.insert(0, self.ROCK[0])
             if self.WiltingPoint != []:
-                self.WiltingPoint.insert(0, DEFAULT_NODATA)
+                self.WiltingPoint.insert(0, self.WiltingPoint[0])
             if self.Density != []:
-                self.Density.insert(0, DEFAULT_NODATA)
+                self.Density.insert(0, self.Density[0])
+            if self.Conductivity != []:
+                self.Conductivity.insert(0, self.Conductivity[0])
             if self.FieldCap != []:
-                self.FieldCap.insert(0, DEFAULT_NODATA)
+                self.FieldCap.insert(0, self.FieldCap[0])
             if self.Sol_AWC != []:
-                self.Sol_AWC.insert(0, DEFAULT_NODATA)
+                self.Sol_AWC.insert(0, self.Sol_AWC[0])
             if self.Poreindex != []:
-                self.Poreindex.insert(0, DEFAULT_NODATA)
+                self.Poreindex.insert(0, self.Poreindex[0])
             if self.POROSITY != []:
-                self.POROSITY.insert(0, DEFAULT_NODATA)
+                self.POROSITY.insert(0, self.POROSITY[0])
             if self.USLE_K != []:
-                self.USLE_K.insert(0, DEFAULT_NODATA)
+                self.USLE_K.insert(0, self.USLE_K[0])
             if self.Sol_no3 != []:
                 self.Sol_no3.insert(0, self.Sol_no3[0])
             if self.Sol_orgn != []:
@@ -371,30 +374,30 @@ class SoilProperty:
         if self.Sol_orgp != []:
             for j in range(self.SoilLAYERS):
                 self.Sol_orgp[j] = self.Sol_orgp[j] * wt1[j]
-        #### Deprecated in 2016-7-20, and moved to SEIMS modules.
-        ### Here after is initialization of soil chemical properties. Algorithms from SWAT.
-        ### Prepared by Huiran Gao
-        ### Revised by LiangJun Zhu
-        ### Date: 2016-5-23
-        ### sol_fop, sol_fon, sol_no3, sol_orgn, sol_aorgn, sol_orgp, sol_solp, sol_actp,
-        ###    sol_stap, sol_hum, sol_cov, sumno3, sumorgn, summinp, sumorgp
-        # tmpSolChem = SoilChemProperties(self.SoilLAYERS, self.SoilDepth, self.OM, self.CLAY, self.ROCK, self.Density)
-        # self.Sol_FOP = tmpSolChem[0]
-        # self.Sol_fon = tmpSolChem[1]
-        # self.Sol_no3 = tmpSolChem[2]
-        # self.Sol_orgn = tmpSolChem[3]
-        # self.Sol_aorgn = tmpSolChem[4]
-        # self.Sol_orgp = tmpSolChem[5]
-        # self.Sol_solp = tmpSolChem[6]
-        # self.Sol_actp = tmpSolChem[7]
-        # self.Sol_stap = tmpSolChem[8]
-        # self.Sol_hum = tmpSolChem[9]
-        # self.sol_cov = tmpSolChem[10]
-        # self.sumno3 = tmpSolChem[11]
-        # self.sumorgn = tmpSolChem[12]
-        # self.summinp = tmpSolChem[13]
-        # self.sumorgp = tmpSolChem[14]
-        ### SOIL CHEMICAL PROPERTIES INITIALIATION DONE
+                #### Deprecated in 2016-7-20, and moved to SEIMS modules.
+                ### Here after is initialization of soil chemical properties. Algorithms from SWAT.
+                ### Prepared by Huiran Gao
+                ### Revised by LiangJun Zhu
+                ### Date: 2016-5-23
+                ### sol_fop, sol_fon, sol_no3, sol_orgn, sol_aorgn, sol_orgp, sol_solp, sol_actp,
+                ###    sol_stap, sol_hum, sol_cov, sumno3, sumorgn, summinp, sumorgp
+                # tmpSolChem = SoilChemProperties(self.SoilLAYERS, self.SoilDepth, self.OM, self.CLAY, self.ROCK, self.Density)
+                # self.Sol_FOP = tmpSolChem[0]
+                # self.Sol_fon = tmpSolChem[1]
+                # self.Sol_no3 = tmpSolChem[2]
+                # self.Sol_orgn = tmpSolChem[3]
+                # self.Sol_aorgn = tmpSolChem[4]
+                # self.Sol_orgp = tmpSolChem[5]
+                # self.Sol_solp = tmpSolChem[6]
+                # self.Sol_actp = tmpSolChem[7]
+                # self.Sol_stap = tmpSolChem[8]
+                # self.Sol_hum = tmpSolChem[9]
+                # self.sol_cov = tmpSolChem[10]
+                # self.sumno3 = tmpSolChem[11]
+                # self.sumorgn = tmpSolChem[12]
+                # self.summinp = tmpSolChem[13]
+                # self.sumorgp = tmpSolChem[14]
+                ### SOIL CHEMICAL PROPERTIES INITIALIATION DONE
 
 
 ## Calculate soil properties from sand, clay and organic matter.

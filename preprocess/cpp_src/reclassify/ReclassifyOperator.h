@@ -1,4 +1,4 @@
-#ifndef SLOPEOPERATOR_H
+﻿#ifndef SLOPEOPERATOR_H
 #define SLOPEOPERATOR_H
 
 #include "cellSpace.h"
@@ -49,3 +49,4 @@ protected:
 };
 
 #endif
+
