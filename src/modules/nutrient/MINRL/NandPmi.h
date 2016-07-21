@@ -46,7 +46,7 @@ public:
 
     virtual void GetValue(const char *key, float *value);
 
-    //virtual void Get1DData(const char* key, int* n, float** data);
+    virtual void Get1DData(const char* key, int* n, float** data);
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
 
 private:
@@ -73,9 +73,17 @@ private:
     float *m_landcover;
     ///plant residue decomposition coefficient.
     ///The fraction of residue which will decompose in a day assuming optimal moisture, temperature, C:N ratio, and C:P ratio
-    float *m_rsdco_pl;
+	float *m_rsdco_pl;
+	///amount of residue on soil surface (kg/ha)
+	float *m_sol_cov;
+	///amount of residue on soil surface (kg/ha)
+	float *m_sol_rsdin;
     ///percent organic matter in soil layer (%)
-    float **m_sol_om;
+	float **m_sol_om;
+	///bulk density of the soil (mg/m3)
+	float **m_sol_bd;
+	/// percent organic carbon in soil layer (%)
+	float **m_sol_cbn;
     ///amount of water stored in the soil layer on current day(mm H2O)
     float **m_sol_st;
     ///Water content of soil profile at field capacity(mm H2O)
@@ -83,7 +91,17 @@ private:
     ///daily average temperature of soil layer(deg C)
     float **m_sol_tmp;
     ///depth to bottom of soil layer
-    float **m_sol_z;
+	float **m_sol_z;
+	///Percent of clay content
+	float **m_sol_clay;
+	/// thick of each soil layer
+	float **m_sol_thick;
+	///amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/km2)
+	float **m_sol_aorgn;
+	///amount of nitrogen stored in the fresh organic (residue) pool(kg N/km2)
+	float **m_sol_fon;
+	///amount of phosphorus stored in the fresh organic (residue) pool(kg P/km2)
+	float **m_sol_fop;
     ///amount of phosphorus stored in the active mineral phosphorus pool
     float **m_sol_actp;
     ///amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool
@@ -108,12 +126,6 @@ private:
     float m_roctl;
 
     ///input & output data
-    ///amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/km2)
-    float **m_sol_aorgn;
-    ///amount of nitrogen stored in the fresh organic (residue) pool(kg N/km2)
-    float **m_sol_fon;
-    ///amount of phosphorus stored in the fresh organic (residue) pool(kg P/km2)
-    float **m_sol_fop;
     ///amount of nitrogen stored in the nitrate pool in soil layer(kg N/km2)
     float **m_sol_no3;
     ///amount of nitrogen stored in the stable organic N pool(kg N/km2)

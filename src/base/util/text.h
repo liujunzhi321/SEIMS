@@ -806,6 +806,7 @@
 #define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/ha)
 #define VAR_SOL_PERCO "sol_perco"
 #define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/ha)
+#define VAR_SOL_RSDIN "rsdin"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/ha)
 #define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/ha)
 #define VAR_SOL_SUMAWC "sol_sumAWC"  /// mm H2O
@@ -1306,6 +1307,7 @@
 #define DESC_SOL_ORGP "amount of phosphorus stored in the organic P pool in soil layer"
 #define DESC_SOL_PERCO "percolation from soil layer"
 #define DESC_SOL_RSD "amount of organic matter in the soil classified as residue"
+#define DESC_SOL_RSDIN "amount of organic matter in the soil classified as residue"
 #define DESC_SOL_SOLP "amount of phosphorus stored in solution"
 #define DESC_SOL_STAP "amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool"
 #define DESC_SOL_SUMAWC "amount of water held in soil profile at field capacity"

@@ -377,8 +377,8 @@ void NutrientCHRoute::SetValue(const char *key, float value)
     {
         omp_set_num_threads((int) value);
 	}
-	else if (StringMatch(s, Tag_CellWidth))  { this->m_CellWith = value;}
-	else if (StringMatch(s, Tag_CellSize))  { this->m_nCells = (int) value;}
+	else if (StringMatch(sk, Tag_CellWidth))  { this->m_CellWith = value;}
+	else if (StringMatch(sk, Tag_CellSize))  { this->m_nCells = (int) value;}
     else if (StringMatch(sk, Tag_ChannelTimeStep)) { this->m_dt = (int) value; }
     else if (StringMatch(sk, VAR_A_BNK)) { this->m_aBank = value; }
     else if (StringMatch(sk, VAR_QUPREACH)) { this->m_qUpReach = value; }
