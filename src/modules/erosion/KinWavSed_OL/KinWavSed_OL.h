@@ -186,7 +186,7 @@ private:
     float *m_FlowWidth;
     /// channel width (zero for non-channel cells)
     float *m_chWidth;
-    /// kinematic wave flow in the time step, ��m3/s��
+    /// kinematic wave flow in the time step, m3/s
     float *m_Qkin;
     /// Water depth added to channel water depth
     float *m_whtoCh;

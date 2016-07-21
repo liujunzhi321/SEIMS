@@ -67,7 +67,7 @@ private:
     /// channel width (zero for non-channel cells)
     float *m_chWidth;
     /// stream link
-    float *m_streamLink;
+	float *m_streamLink;
 
     /// amount of nitrate transported with lateral flow
     float *m_latno3;
@@ -158,6 +158,7 @@ private:
     *	\return the nutrient of flowing to channel for each channel cell, kg
     */
     float NutToChannel(int i, float nut);
+	
 };
 
 #endif

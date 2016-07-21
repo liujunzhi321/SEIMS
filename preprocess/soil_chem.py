@@ -97,7 +97,7 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
     sol_cov = numpy.ones((nlyrs))  # residue on soil surface
 
     sol_orgn = numpy.ones((nlyrs))
-    sol_no3 = numpy.zeros((nlyrs))
+    #sol_no3 = numpy.zeros((nlyrs))
     sol_aorgn = numpy.zeros((nlyrs))
     sol_orgp = numpy.ones((nlyrs))
     sol_solp = numpy.zeros((nlyrs))
@@ -140,10 +140,11 @@ def SoilChemProperties(nlyrs, depth, om, clay, rock, bd):
         sol_fon[j] = sol_rsd[j] * .0055
         sol_cov = sol_rsd[1]
 
-        # if (sol_no3[j] <= 0.) :
-        zdst = math.exp(-depth[j] / 1000.)
-        sol_no3[j] = 10. * zdst * .7
-        sol_no3[j] = sol_no3[j] * wt1  ## mg/kg => kg/ha
+        if (sol_no3[j] <= 0.) :
+            sol_no3[j] = 0.
+            zdst = math.exp(-depth[j] / 1000.) #zdst = math.exp(-depth[j]) in SEIMS
+            sol_no3[j] = 10. * zdst * .7
+            sol_no3[j] = sol_no3[j] * wt1  ## mg/kg => kg/ha
         sumno3 = sumno3 + sol_no3[j]
 
         sol_orgn[j] = sol_orgn[j] * wt1

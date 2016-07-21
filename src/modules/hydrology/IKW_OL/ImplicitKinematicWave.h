@@ -156,7 +156,7 @@ private:
     float *m_flowLen;
     /// alpha in manning equation
     float *m_alpha;
-    /// sin value of slope
+    /// slope (radian)
     float *m_sRadian;
 
     /// sqrt(2.0f)
