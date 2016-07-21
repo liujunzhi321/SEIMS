@@ -18,9 +18,9 @@ using namespace std;
 
 NutrientCHRoute::NutrientCHRoute(void) :
 //input
-        m_dt(-1), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1), igropt(-1),
-        m_ai0(-1), m_ai1(-1), m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1),
-        m_lambda2(-1),
+        m_CellWith(-1), m_nCells(-1), m_chNumber(-1),  m_dt(-1), m_flowInIndex(NULL), m_flowOutIndex(NULL), m_sourceCellIds(NULL),
+		m_streamOrder(NULL),  m_streamLink(NULL), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1), igropt(-1),
+        m_ai0(-1), m_ai1(-1), m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1), m_lambda2(-1),
         m_k_l(-1), m_k_n(-1), m_k_p(-1), m_p_n(-1), tfact(-1), m_mumax(-1), m_rhoq(-1),
         m_daylen(NULL), m_sra(NULL), m_bankStorage(NULL), m_qsSub(NULL), m_qiSub(NULL), m_qgSub(NULL),
         m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL), m_chStorage(NULL), m_chWTdepth(NULL), m_wattemp(NULL),
@@ -105,6 +105,38 @@ bool NutrientCHRoute::CheckInputSize(const char *key, int n)
 
 bool NutrientCHRoute::CheckInputData()
 {
+
+	if (m_CellWith <= 0)
+	{
+		throw ModelException(MID_NutCHRout, "CheckInputData", "The cell width can not be less than zero.");
+		return false;
+	}
+	if (m_nCells <= 0)
+	{
+		throw ModelException(MID_NutCHRout, "CheckInputData", "The cell number can not be less than zero.");
+		return false;
+	}
+	if (m_chNumber <= 0)
+	{
+		throw ModelException(MID_NutCHRout, "CheckInputData", "The channel reach number can not be less than zero.");
+		return false;
+	}
+	if (m_flowOutIndex == NULL)
+	{
+		throw ModelException(MID_NutCHRout, "CheckInputData", "The flow out index can not be NULL.");
+		return false;
+	}
+	if (m_streamOrder == NULL)
+	{
+		throw ModelException(MID_NutCHRout, "CheckInputData",
+			"The stream order of reach parameter can not be NULL.");
+		return false;
+	}
+	if (m_streamLink == NULL)
+	{
+		throw ModelException(MID_NutCHRout, "CheckInputData", "The stream link can not be NULL.");
+		return false;
+	}
     if (this->m_dt < 0)
     {
         throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_dt has not been set.");
@@ -344,7 +376,9 @@ void NutrientCHRoute::SetValue(const char *key, float value)
     if (StringMatch(sk, VAR_OMP_THREADNUM))
     {
         omp_set_num_threads((int) value);
-    }
+	}
+	else if (StringMatch(sk, Tag_CellWidth))  { this->m_CellWith = value;}
+	else if (StringMatch(sk, Tag_CellSize))  { this->m_nCells = (int) value;}
     else if (StringMatch(sk, Tag_ChannelTimeStep)) { this->m_dt = (int) value; }
     else if (StringMatch(sk, VAR_A_BNK)) { this->m_aBank = value; }
     else if (StringMatch(sk, VAR_QUPREACH)) { this->m_qUpReach = value; }
@@ -384,7 +418,9 @@ void NutrientCHRoute::Set1DData(const char *key, int n, float *data)
         return;
     }
     string sk(key);
-    if (StringMatch(sk, VAR_DAYLEN)) { this->m_daylen = data; }
+	if (StringMatch(sk, VAR_DAYLEN)) { this->m_daylen = data; }
+	else if (StringMatch(sk, Tag_FLOWOUT_INDEX_D8)) { this->m_flowOutIndex = data;}
+	else if (StringMatch(sk, VAR_STREAM_LINK)) { this->m_streamLink = data;}
     else if (StringMatch(sk, VAR_SRA)) { this->m_sra = data; }
     else if (StringMatch(sk, VAR_BKST)) { this->m_bankStorage = data; }
     else if (StringMatch(sk, VAR_SBOF)) { this->m_qsSub = data; }
@@ -419,26 +455,23 @@ void NutrientCHRoute::Set2DData(const char *key, int nrows, int ncols, float **d
     string sk(key);
     if (StringMatch(sk, VAR_REACH_PARAM))
     {
-        m_nReaches = ncols - 1;
-        m_reachId = data[0];
-        m_reachDownStream = data[1];
-        m_chOrder = data[2];
-        //m_chWidth = data[3];
-        //m_chLen = data[4];
-        //m_chDepth = data[5];
-        //m_chVel = data[6];
-        //m_area = data[7];
+		m_chNumber = ncols; // overland is nrows;
+		m_reachId = data[0];
+		m_streamOrder = data[1];
+		m_reachDownStream = data[2];
         m_reachUpStream.resize(m_nReaches + 1);
-        if (m_nReaches > 1)
-        {
-            for (int i = 1; i <= m_nReaches; i++)// index of the reach is the equal to stream link ID(1 to nReaches)
-            {
-                int downStreamId = int(m_reachDownStream[i]);
-                if (downStreamId <= 0)
-                    continue;
-                m_reachUpStream[downStreamId].push_back(i);
-            }
-        }
+		for (int i = 0; i < m_chNumber; i++)
+			m_idToIndex[(int) m_reachId[i]] = i;
+
+		m_reachUpStream.resize(m_chNumber);
+		for (int i = 0; i < m_chNumber; i++)
+		{
+			int downStreamId = int(m_reachDownStream[i]);
+			if (downStreamId == 0)
+				continue;
+			int downStreamIndex = m_idToIndex[downStreamId];
+			m_reachUpStream[downStreamIndex].push_back(i);
+		}
     }
     else
         throw ModelException("NutCHPout", "Set2DData",
@@ -459,34 +492,98 @@ void  NutrientCHRoute::initialOutputs()
             m_reachLayers[order].push_back(i);
         }
     }
-    if (m_organicn == NULL)
-    {
-        m_algae = new float[m_nReaches + 1];
-        m_organicn = new float[m_nReaches + 1];
-        m_organicp = new float[m_nReaches + 1];
-        m_ammonian = new float[m_nReaches + 1];
-        m_nitriten = new float[m_nReaches + 1];
-        m_nitraten = new float[m_nReaches + 1];
-        m_disolvp = new float[m_nReaches + 1];
-        m_rch_cod = new float[m_nReaches + 1];
-        m_rch_dox = new float[m_nReaches + 1];
-        m_chlora = new float[m_nReaches + 1];
-        m_soxy = 0.f;
-#pragma omp parallel for
-        for (int i = 1; i <= m_nReaches; i++)
-        {
-            m_algae[i] = 0.f;
-            m_organicn[i] = 0.f;
-            m_organicp[i] = 0.f;
-            m_ammonian[i] = 0.f;
-            m_nitriten[i] = 0.f;
-            m_nitraten[i] = 0.f;
-            m_disolvp[i] = 0.f;
-            m_rch_cod[i] = 0.f;
-            m_rch_dox[i] = 0.f;
-            m_chlora[i] = 0.f;
-        }
-    }
+
+	if (m_organicn == NULL)
+	{
+		// find source cells the reaches
+		m_sourceCellIds = new int[m_chNumber];
+		for (int i = 0; i < m_chNumber; ++i)
+			m_sourceCellIds[i] = -1;
+		for (int i = 0; i < m_nCells; i++)
+		{
+			if (FloatEqual(m_streamLink[i], NODATA_VALUE))
+				continue;
+			int reachId = (int) m_streamLink[i];
+			bool isSource = true;
+			for (int k = 1; k <= (int) m_flowInIndex[i][0]; ++k)
+			{
+				int flowInId = (int) m_flowInIndex[i][k];
+				int flowInReachId = (int) m_streamLink[flowInId];
+				if (flowInReachId == reachId)
+				{
+					isSource = false;
+					break;
+				}
+			}
+			if ((int) m_flowInIndex[i][0] == 0)
+				isSource = true;
+
+			if (isSource)
+			{
+				int reachIndex = m_idToIndex[reachId];
+				m_sourceCellIds[reachIndex] = i;
+			}
+		}
+		// get the cells in reaches according to flow direction
+		for (int iCh = 0; iCh < m_chNumber; iCh++)
+		{
+			int iCell = m_sourceCellIds[iCh];
+			int reachId = (int) m_streamLink[iCell];
+			while ((int) m_streamLink[iCell] == reachId)
+			{
+				m_reachs[iCh].push_back(iCell);
+				iCell = (int) m_flowOutIndex[iCell];
+			}
+		}
+
+		if (m_reachLayers.empty())
+		{
+			for (int i = 0; i < m_chNumber; i++)
+			{
+				int order = (int) m_streamOrder[i];
+				m_reachLayers[order].push_back(i);
+			}
+		}
+		m_algae = new float *[m_chNumber];
+		m_organicn = new float *[m_chNumber];
+		m_organicp = new float *[m_chNumber];
+		m_ammonian = new float *[m_chNumber];
+		m_nitriten = new float *[m_chNumber];
+		m_nitraten = new float *[m_chNumber];
+		m_disolvp = new float *[m_chNumber];
+		m_rch_cod = new float *[m_chNumber];
+		m_rch_dox = new float *[m_chNumber];
+		m_chlora = new float *[m_chNumber];
+		m_soxy = 0.f;
+		for (int i = 0; i < m_chNumber; ++i)
+		{
+			int n = m_reachs[i].size();
+			m_algae[i] = new float [n];
+			m_organicn[i] = new float [n];
+			m_organicp[i] = new float [n];
+			m_ammonian[i] = new float [n];
+			m_nitriten[i] = new float [n];
+			m_nitraten[i] = new float [n];
+			m_disolvp[i] = new float [n];
+			m_rch_cod[i] = new float [n];
+			m_rch_dox[i] = new float [n];
+			m_chlora[i] = new float [n];
+			for (int j = 0; j < n; ++j)
+			{
+				m_algae[i][j]  = 0.f;
+				m_organicn[i][j]  = 0.f;
+				m_organicp[i][j]  = 0.f;
+				m_ammonian[i][j]  = 0.f;
+				m_nitriten[i][j]  = 0.f;
+				m_nitraten[i][j]  = 0.f;
+				m_disolvp[i][j]  = 0.f;
+				m_rch_cod[i][j]  = 0.f;
+				m_rch_dox[i][j]  = 0.f;
+				m_chlora[i][j]  = 0.f;
+
+			}
+		}
+	}
 }
 
 int NutrientCHRoute::Execute()
@@ -496,10 +593,10 @@ int NutrientCHRoute::Execute()
         return false;
     }
     this->initialOutputs();
-    ///////////////////////////////////////Get reach information/////////////////////////////////////
+    // Get reach information
     int nReaches = m_reaches->GetReachNumber();
     vector<int> reachIDs = m_reaches->GetReachIDs();
-    /// Get reach information by subbasin ID
+    // Get reach information by subbasin ID
     for (vector<int>::iterator it = reachIDs.begin(); it != reachIDs.end(); it++)
     {
         clsReach *reach = m_reaches->GetReachByID(*it);
@@ -519,64 +616,32 @@ int NutrientCHRoute::Execute()
         m_rs5[*it] = reach->GetRs5();
 
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    map<int, vector<int> > ::iterator it;
-    for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
-    {
-        // There are not any flow relationship within each routing layer.
-        // So parallelization can be done here.
-        m_nReaches = it->second.size();
-        // the size of m_reachLayers (map) is equal to the maximum stream order
-#pragma omp parallel for
-        for (int i = 0; i < m_nReaches; ++i)
-        {
-            // index in the array
-            int reachIndex = it->second[i];
-            NutrientinChannel(reachIndex);
-        }
-    }
+
+	map<int, vector<int> >::iterator it;
+	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
+	{
+		// There are not any flow relationship within each routing layer.
+		int nReaches = it->second.size();
+		// the size of m_reachLayers (map) is equal to the maximum stream order
+		// #pragma omp parallel for
+		for (int i = 0; i < nReaches; ++i)
+		{
+			int reachIndex = it->second[i]; // index in the array
+			vector<int> & vecCells = m_reachs[reachIndex];
+			int n = vecCells.size();
+			for (int iCell = 0; iCell < n; ++iCell)
+			{
+				NutrientinChannel(reachIndex, iCell, vecCells[iCell]);
+			}
+			//m_SedSubbasin[reachIndex] = m_Qsn[reachIndex][n-1]/1000;   //kg/s -> ton/s
+		}
+	}
     //return ??
     return 0;
 }
 
-/*
-//! Get coefficients
-void NutrientCHRoute::GetCoefficients(float reachLength, float v0, MuskWeights& weights)
+void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
 {
-	v0 = m_vScalingFactor * v0;
-	float K = (4.64f - 3.64f * m_co1) * reachLength / (5.f * v0 / 3.f);
-
-	float min = 2.0f * K * m_x;
-	float max = 2.0f * K * (1 - m_x);
-	float dt;
-	int n;
-	weights.dt = dt;
-
-	//get coefficient
-	float temp = max + dt;
-	weights.c1 = (dt - min)/temp;
-	weights.c2 = (dt + min)/temp;
-	weights.c3 = (max - dt)/temp;
-	weights.c4 = 2*dt/temp;
-	weights.n = n;
-
-	//make sure any coefficient is positive
-	if(weights.c1 < 0) 
-	{
-		weights.c2 += weights.c1;
-		weights.c1 = 0.0f;
-	}
-	if(weights.c3 < 0)
-	{
-		weights.c2 += weights.c1;
-		weights.c3 = 0.0f;
-	}
-}
-*/
-
-void NutrientCHRoute::NutrientinChannel(int i)
-{
-
     float thbc1 = 1.083f;    ///temperature adjustment factor for local biological oxidation of NH3 to NO2
     float thbc2 = 1.047f;    ///temperature adjustment factor for local biological oxidation of NO2 to NO3
     float thbc3 = 1.04f;    ///temperature adjustment factor for local hydrolysis of organic N to ammonia N
@@ -686,15 +751,15 @@ void NutrientCHRoute::NutrientinChannel(int i)
         float o2con = 0.f;
         wtrTotal = wtrIn + m_chStorage[i];
 
-        algcon = m_algae[i];
-        orgncon = m_organicn[i];
-        nh3con = m_ammonian[i];
-        no2con = m_nitriten[i];
-        no3con = m_nitraten[i];
-        orgpcon = m_organicp[i];
-        solpcon = m_disolvp[i];
-        cbodcon = m_rch_cod[i];
-        o2con = m_rch_dox[i];
+        algcon = m_algae[i][iCell];
+        orgncon = m_organicn[i][iCell];
+        nh3con = m_ammonian[i][iCell];
+        no2con = m_nitriten[i][iCell];
+        no3con = m_nitraten[i][iCell];
+        orgpcon = m_organicp[i][iCell];
+        solpcon = m_disolvp[i][iCell];
+        cbodcon = m_rch_cod[i][iCell];
+        o2con = m_rch_dox[i][iCell];
         // temperature of water in reach (wtmp deg C)
         float wtmp = 0.f;
         wtmp = m_wattemp[i];
@@ -839,7 +904,7 @@ void NutrientCHRoute::NutrientinChannel(int i)
                  (corTempc(gra, thgra, wtmp) * algcon - corTempc(m_rhoq, thrho, wtmp) * algcon - setl * algcon) * tday;
         if (dalgae < 0.00001f)
         {
-            m_algae[i] = 0.00001f;
+            m_algae[i][iCell] = 0.00001f;
         }
         // calculate chlorophyll-a concentration at end of day
         dchla = 0.f;
@@ -1010,19 +1075,19 @@ void NutrientCHRoute::NutrientinChannel(int i)
         }
 
         m_wattemp[i] = (heatin * wtrIn + wtmp * m_chStorage[i]) / wtrTotal;
-        m_algae[i] = (algin * wtrIn + dalgae * m_chStorage[i]) / wtrTotal;
-        m_organicn[i] = (orgnin * wtrIn + dorgn * m_chStorage[i]) / wtrTotal;
-        m_ammonian[i] = (ammoin * wtrIn + dnh4 * m_chStorage[i]) / wtrTotal;
-        m_nitriten[i] = (nitritin * wtrIn + dno2 * m_chStorage[i]) / wtrTotal;
-        m_nitraten[i] = (nitratin * wtrIn + dno3 * m_chStorage[i]) / wtrTotal;
-        m_organicp[i] = (orgpin * wtrIn + dorgp * m_chStorage[i]) / wtrTotal;
-        m_disolvp[i] = (dispin * wtrIn + dsolp * m_chStorage[i]) / wtrTotal;
-        m_rch_cod[i] = (codin * wtrIn + dbod * m_chStorage[i]) / wtrTotal;
+        m_algae[i][iCell] = (algin * wtrIn + dalgae * m_chStorage[i]) / wtrTotal;
+        m_organicn[i][iCell] = (orgnin * wtrIn + dorgn * m_chStorage[i]) / wtrTotal;
+        m_ammonian[i][iCell] = (ammoin * wtrIn + dnh4 * m_chStorage[i]) / wtrTotal;
+        m_nitriten[i][iCell] = (nitritin * wtrIn + dno2 * m_chStorage[i]) / wtrTotal;
+        m_nitraten[i][iCell] = (nitratin * wtrIn + dno3 * m_chStorage[i]) / wtrTotal;
+        m_organicp[i][iCell] = (orgpin * wtrIn + dorgp * m_chStorage[i]) / wtrTotal;
+        m_disolvp[i][iCell] = (dispin * wtrIn + dsolp * m_chStorage[i]) / wtrTotal;
+        m_rch_cod[i][iCell] = (codin * wtrIn + dbod * m_chStorage[i]) / wtrTotal;
         //m_rch_dox[i] = (disoxin * wtrIn +  ddisox * m_chStorage[i]) / wtrTotal;
 
         // calculate chlorophyll-a concentration at end of day
-        m_chlora[i] = 0.f;
-        m_chlora[i] = m_algae[i] * m_ai0 / 1000.f;
+        m_chlora[i][iCell] = 0.f;
+        m_chlora[i][iCell] = m_algae[i][iCell] * m_ai0 / 1000.f;
     } else
     {
         // all water quality variables set to zero when no flow
@@ -1036,16 +1101,16 @@ void NutrientCHRoute::NutrientinChannel(int i)
         dispin = 0.f;
         codin = 0.f;
         disoxin = 0.f;
-        m_algae[i] = 0.f;
-        m_chlora[i] = 0.f;
-        m_organicn[i] = 0.f;
-        m_ammonian[i] = 0.f;
-        m_nitriten[i] = 0.f;
-        m_nitraten[i] = 0.f;
-        m_organicp[i] = 0.f;
-        m_disolvp[i] = 0.f;
-        m_rch_cod[i] = 0.f;
-        m_rch_dox[i] = 0.f;
+        m_algae[i][iCell] = 0.f;
+        m_chlora[i][iCell] = 0.f;
+        m_organicn[i][iCell] = 0.f;
+        m_ammonian[i][iCell] = 0.f;
+        m_nitriten[i][iCell] = 0.f;
+        m_nitraten[i][iCell] = 0.f;
+        m_organicp[i][iCell] = 0.f;
+        m_disolvp[i][iCell] = 0.f;
+        m_rch_cod[i][iCell] = 0.f;
+        m_rch_dox[i][iCell] = 0.f;
         dalgae = 0.f;
         dchla = 0.f;
         dorgn = 0.f;
@@ -1077,23 +1142,23 @@ void NutrientCHRoute::GetValue(const char *key, float *value)
 
 }
 
-void NutrientCHRoute::Get1DData(const char *key, int *n, float **data)
+void NutrientCHRoute::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 {
-    string sk(key);
-    *n = m_nReaches + 1;
-    if (StringMatch(sk, VAR_ALGAE)) { *data = this->m_algae; }
-    else if (StringMatch(sk, VAR_ORGANICN)) { *data = this->m_organicn; }
-    else if (StringMatch(sk, VAR_ORGANICP)) { *data = this->m_organicp; }
-    else if (StringMatch(sk, VAR_AMMONIAN)) { *data = this->m_ammonian; }
-    else if (StringMatch(sk, VAR_NITRITEN)) { *data = this->m_nitriten; }
-    else if (StringMatch(sk, VAR_NITRATEN)) { *data = this->m_nitraten; }
-    else if (StringMatch(sk, VAR_DISOLVP)) { *data = this->m_disolvp; }
-    else if (StringMatch(sk, VAR_RCH_COD)) { *data = this->m_rch_cod; }
-        //else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
-    else if (StringMatch(sk, VAR_CHLORA)) { *data = this->m_chlora; }
-    else
-    {
-        throw ModelException("NutCHRout", "GetValue",
-                             "Parameter " + sk + " does not exist. Please contact the module developer.");
-    }
+	string sk(key);
+    *nRows = m_nReaches;
+	if (StringMatch(sk, VAR_ALGAE)) { *data = this->m_algae; }
+	else if (StringMatch(sk, VAR_ORGANICN)) { *data = this->m_organicn; }
+	else if (StringMatch(sk, VAR_ORGANICP)) { *data = this->m_organicp; }
+	else if (StringMatch(sk, VAR_AMMONIAN)) { *data = this->m_ammonian; }
+	else if (StringMatch(sk, VAR_NITRITEN)) { *data = this->m_nitriten; }
+	else if (StringMatch(sk, VAR_NITRATEN)) { *data = this->m_nitraten; }
+	else if (StringMatch(sk, VAR_DISOLVP)) { *data = this->m_disolvp; }
+	else if (StringMatch(sk, VAR_RCH_COD)) { *data = this->m_rch_cod; }
+	//else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
+	else if (StringMatch(sk, VAR_CHLORA)) { *data = this->m_chlora; }
+	else
+	{
+		throw ModelException("NutCHRout", "GetValue",
+			"Parameter " + sk + " does not exist. Please contact the module developer.");
+	}
 }

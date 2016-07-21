@@ -389,13 +389,13 @@ void KinWavSed_OL::GetTransportCapacity(int id)
 {
     float q, S0, K;
     q = m_V[id] * m_WH[id] *
-        60;   // m2/s -> m2/min                                 // m_Qkin[id]*60;   // convert to m3/min
+        60.f;   // m2/s -> m2/min                                 // m_Qkin[id]*60;   // convert to m3/min
     float s = max(0.001f, m_Slope[id]);
     S0 = sin(atan(s));
     K = m_USLE_K[id];
     float threadhold = 0.046f;
-    if (q <= 0.0f)
-        m_Ctrans[id] = 0;
+    if (q <= 0.f)
+        m_Ctrans[id] = 0.f;
     else
     {
         if (q < threadhold)
@@ -557,7 +557,7 @@ float KinWavSed_OL::simpleSedCalc(float Qn, float Qin, float Sin, float dt, floa
 float KinWavSed_OL::complexSedCalc(float Qj1i1, float Qj1i, float Qji1, float Sj1i, float Sji1, float alpha, float dt,
                                    float dx)
 {
-    float Sj1i1, Cavg, Qavg, aQb, abQb_1, A, B, C, s = 0;
+    float Sj1i1, Cavg, Qavg, aQb, abQb_1, A, B, C, s = 0.f;
     const float beta = 0.6f;
 
 
@@ -579,7 +579,7 @@ float KinWavSed_OL::complexSedCalc(float Qj1i1, float Qj1i, float Qji1, float Sj
         Sj1i1 = (dx * dt * s + A + C + B) / (dt + dx * aQb / Qj1i1);    //why s = 0 ?
     else
         Sj1i1 = 0;
-    Sj1i1 = max(0.0f, Sj1i1);
+    Sj1i1 = max(0.f, Sj1i1);
     return Sj1i1;
 }
 
@@ -632,7 +632,6 @@ void KinWavSed_OL::OverlandflowSedRouting(int id)
     //calculate sediment to channel
     m_SedToChannel[id] = SedToChannel(id);
     //MaxConcentration(WtVol, m_Sed_kg[id], id);
-
 
     //if(m_chWidth[id] > 0)
     //{
