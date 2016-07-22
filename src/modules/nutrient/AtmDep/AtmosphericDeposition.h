@@ -3,7 +3,6 @@
  * \brief Calculate the atmospheric deposition of nitrogen, include nitrate and ammonia.
  */
 /*!
- * \file AtmosphericDeposition.h
  * \ingroup ATMDEP
  * \author Huiran Gao
  * \date May 2016
