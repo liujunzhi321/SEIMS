@@ -176,6 +176,7 @@ Nutrient	ConRainAmm	Concentration of ammonia in rainfall	mg N/L	ATMDEP	0	0	AC	15
 Nutrient	cmn	Rate coefficient for mineralization of the humus active organic nutrients	none	NMINRL	0.002	0	AC	0.003	0.001	Y
 Nutrient	cdn	rate coefficient for denitrification	none	NMINRL	1	1	RC	3	0	Y
 Nutrient	nactfr	nitrogen active pool fraction	none	NMINRL	0.02	1	RC	1	0	Y
+Nutrient	sdnco	denitrification threshold: fraction of field capacity	none	NMINRL	1.02	1	RC	1	0	Y
 Nutrient	psp	nitrogen active pool fraction	none	NMINRL	0.02	1	RC	1	0	Y
 Nutrient	nperco	Nitrogen percolation coefficient	none	NutRemv	0.5	1	RC	1	0	Y
 Nutrient	pperco	Phosphorus percolation coefficient	none	NutRemv	10	0	AC	17.5	10	Y
