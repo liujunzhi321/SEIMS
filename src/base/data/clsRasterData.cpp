@@ -1139,6 +1139,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char *remoteFilen
             throw ModelException("clsRasterData", "ReadRasterFromMongoDB",
                                  "The file " + string(remoteFilename) + " does not exist.");
         }
+		//cout<<"Read "<<remoteFilename<<endl;
         /// Get metadata
         const bson_t *bmeta;
         bmeta = mongoc_gridfs_file_get_metadata(gfile);

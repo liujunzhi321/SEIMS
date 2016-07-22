@@ -48,7 +48,7 @@ private:
     float *m_esco;
     /// soil layers
     float *m_nSoilLayers;
-    /// maximum soil layers
+    /// maximum soil layers, mlyr in SWAT
     int m_soilLayers;
     /// soil depth
     float **m_soilDepth;

@@ -554,7 +554,7 @@
 #define VAR_CONV_WT "conv_wt"
 #define VAR_CROP_LOOKUP "CropLookup"
 #define VAR_CSWAT "cswat"
-#define VAR_PCP "P" /// Distribution of precipitation
+#define VAR_PCP "D_P" /// Distribution of precipitation
 #define VAR_DAYLEN "daylength"
 #define VAR_DAYLEN_MIN "daylenmin"  /// minimum day length
 #define VAR_DEEPST "deepst"
@@ -700,7 +700,7 @@
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PHOSKD "phoskd"
 #define VAR_PHUBASE "PHUBASE"
-#define VAR_PHUPLT "PHUPLT"
+#define VAR_PHUPLT "PHU_PLT"
 #define VAR_PHUTOT "PHU0"
 #define VAR_PI_B "Pi_b"
 #define VAR_PL_RSDCO "rsdco_pl"                     /// Plant residue decomposition coefficient
@@ -811,6 +811,7 @@
 #define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/ha)
 #define VAR_SOL_SUMAWC "sol_sumAWC"  /// mm H2O sol_sumfc in SWAT
 #define VAR_SOL_SUMSAT "sol_sumul"  /// mm H2O  sol_sumul in SWAT
+#define VAR_SOL_UL "sol_ul"
 #define VAR_SOL_TA0 "soil_ta0"
 #define VAR_SOL_TA1 "soil_ta1"
 #define VAR_SOL_TA2 "soil_ta2"
@@ -1321,8 +1322,9 @@
 #define DESC_SOL_TD1 "Coefficient d1 for Finn Plauborg Method"
 #define DESC_SOL_TD2 "Coefficient d2 for Finn Plauborg Method"
 #define DESC_SOL_TMP "daily average temperature of soil layer"
+#define DESC_SOL_UL "amount of water held in the soil layer at saturation (sat - wp water)"
 #define DESC_SOL_WFC "Water content of soil profile at field capacity"
-#define DESC_SOL_WPMM " water content of soil at -1.5 MPa (wilting point)"
+#define DESC_SOL_WPMM "water content of soil at -1.5 MPa (wilting point)"
 #define DESC_SOL_WST "amount of water stored in the soil layer on current day"
 #define DESC_SOL_ZMX "Maximum rooting depth of soil profile (mm)"
 #define DESC_SOMO "soil moisture in soil layers"

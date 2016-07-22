@@ -33,19 +33,19 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_DORMHR, UNIT_TIMESTEP_HOUR, DESC_DORMHR, Source_ParameterDB, DT_Raster1D);
     /// Single values
     /// in SWAT, CO2 is assigned by subbasin
-    mdi.AddParameter(VAR_CO2, UNIT_GAS_PPMV, DESC_CO2, Source_ParameterDB, DT_Single);  
-    mdi.AddParameter(VAR_TMEAN_ANN, UNIT_TEMP_DEG, DESC_TMEAN_ANN, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_CO2, UNIT_GAS_PPMV, DESC_CO2, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_NUPDIS, UNIT_NON_DIM, DESC_NUPDIS, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_PUPDIS, UNIT_NON_DIM, DESC_PUPDIS, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_NFIXCO, UNIT_NON_DIM, DESC_NFIXCO, Source_ParameterDB, DT_Single);
-    mdi.AddParameter(VAR_NFIXMX, UNIT_NON_DIM, DESC_NFIXMX, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_NFIXMX, UNIT_NON_DIM, DESC_NFIXMX, Source_ParameterDB, DT_Single);  
+    mdi.AddParameter(VAR_TMEAN_ANN, UNIT_TEMP_DEG, DESC_TMEAN_ANN, Source_ParameterDB, DT_Raster1D);
     /// Soil parameters related raster data
     mdi.AddParameter(VAR_SOILLAYERS, UNIT_NON_DIM, DESC_SOILLAYERS, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_SOL_ZMX, UNIT_DEPTH_MM, DESC_SOL_ZMX, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_SOL_ALB, UNIT_NON_DIM, DESC_SOL_ALB, Source_ParameterDB, DT_Raster1D); /// soil surface
     mdi.AddParameter(VAR_SOILDEPTH, UNIT_DEPTH_MM, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOILTHICK, UNIT_DEPTH_MM, DESC_SOILTHICK, Source_ParameterDB, DT_Raster2D);
-    mdi.AddParameter(VAR_SOL_AWC, UNIT_WAT_RATIO, DESC_SOL_AWC, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_AWC, UNIT_DEPTH_MM, DESC_SOL_AWC, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_SUMAWC, UNIT_DEPTH_MM, DESC_SOL_SUMAWC, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_SOL_SUMSAT, UNIT_DEPTH_MM, DESC_SOL_SUMSAT, Source_ParameterDB, DT_Raster1D);
     
@@ -86,8 +86,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_CHT, UNIT_LEN_M, DESC_CHT, Source_ParameterDB,DT_Raster1D);/// also as OUTPUT
     mdi.AddParameter(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, Source_ParameterDB, DT_Raster1D);/// also as OUTPUT
     /// nutrient
-    mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
-    mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
+    mdi.AddInput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
+    mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
     /// lookup table as 2D array, such as crop, management, landuse, tillage, etc.
 
     /// climate parameters INPUT
@@ -100,7 +100,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_SOMO_TOT, UNIT_DEPTH_MM, DESC_SOMO_TOT, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_VPD, UNIT_PRESSURE, DESC_VPD, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_PPT, UNIT_WTRDLT_MMD, DESC_PPT, Source_Module, DT_Raster1D);/// maximum plant et
+    mdi.AddInput(VAR_PPT, UNIT_DEPTH_MM, DESC_PPT, Source_Module, DT_Raster1D);/// maximum plant et
     mdi.AddInput(VAR_SOET, UNIT_DEPTH_MM, DESC_SOET, Source_Module, DT_Raster1D);/// actual soil evaporation
     mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module, DT_Raster1D);
 	/// from nutrient module and as the output in the meantime

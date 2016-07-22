@@ -43,19 +43,14 @@ void PETPriestleyTaylor::Get1DData(const char *key, int *n, float **data)
 bool PETPriestleyTaylor::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
-    {
         throw ModelException(MID_PET_PT, "CheckInputSize",
                              "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
-    }
     if (this->m_nCells != n)
     {
         if (this->m_nCells <= 0) this->m_nCells = n;
         else
-        {
             throw ModelException(MID_PET_PT, "CheckInputSize", "Input data for " + string(key) +
                                                                " is invalid. All the input data should have same size.");
-            return false;
-        }
     }
     return true;
 }
@@ -63,10 +58,7 @@ bool PETPriestleyTaylor::CheckInputSize(const char *key, int n)
 bool PETPriestleyTaylor::CheckInputData()
 {
     if (this->m_date < 0)
-    {
         throw ModelException(MID_PET_PT, "CheckInputData", "You have not set the time.");
-        return false;
-    }
     if (m_nCells <= 0)
         throw ModelException(MID_PET_PT, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");

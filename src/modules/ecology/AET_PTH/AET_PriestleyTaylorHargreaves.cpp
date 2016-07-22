@@ -51,7 +51,7 @@ void AET_PT_H::Set2DData(const char *key, int n, int col, float **data)
     m_soilLayers = col;
     if (StringMatch(sk, VAR_SOILDEPTH)) m_soilDepth = data;
 	else if(StringMatch(sk, VAR_SOILTHICK)) m_soilThick = data;
-    else if (StringMatch(sk, VAR_FIELDCAP)) m_solAWC = data;
+    else if (StringMatch(sk, VAR_SOL_AWC)) m_solAWC = data;
     else if (StringMatch(sk, VAR_SOL_NO3)) m_solNo3 = data;
     else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
     else
@@ -112,7 +112,7 @@ bool AET_PT_H::CheckInputData(void)
 		"The soil thickness can not be NULL.");
     if (this->m_solAWC == NULL)
         throw ModelException(MID_AET_PTH, "CheckInputData",
-                             "The field capacity can not be NULL.");
+                             "The available water capacity at field capacity can not be NULL.");
     if (this->m_solNo3 == NULL)
         throw ModelException(MID_AET_PTH, "CheckInputData",
                              "Nitrogen stored in the nitrate pool can not be NULL.");
@@ -222,18 +222,18 @@ int AET_PT_H::Execute()
                         xx = 2.5f * (m_somo[i][ly] - m_solAWC[i][ly]) / m_solAWC[i][ly]; /// non dimension
                         sev *= Expo(xx);
                     }
-                    sev = min(sev, m_somo[i][ly] * m_soilThick[i][ly] * etco);
+                    sev = min(sev, m_somo[i][ly] * etco);
                     if (sev < 0.f) sev = 0.f;
                     if (sev > esleft) sev = esleft;
                     /// adjust soil storage, potential evap
-                    if (m_somo[i][ly] * m_soilThick[i][ly] > sev)
+                    if (m_somo[i][ly] > sev)
                     {
                         esleft -= sev;
-                        m_somo[i][ly] = (max(UTIL_ZERO, m_somo[i][ly] * m_soilThick[i][ly] - sev)) / m_soilThick[i][ly];
+                        m_somo[i][ly] = max(UTIL_ZERO, m_somo[i][ly] - sev);
                     }
                     else
                     {
-                        esleft -= m_somo[i][ly] * m_soilThick[i][ly];
+                        esleft -= m_somo[i][ly];
                         m_somo[i][ly] = 0.f;
                     }
                 }
@@ -241,7 +241,7 @@ int AET_PT_H::Execute()
                 if (ly == 1)  /// index of layer 2 is 1 (soil surface, 10mm)
                 {
                     no3up = 0.f;
-                    no3up = effnup * sev * m_solNo3[i][ly] / (m_somo[i][ly] * m_soilThick[i][ly] + UTIL_ZERO);
+                    no3up = effnup * sev * m_solNo3[i][ly] / (m_somo[i][ly] + UTIL_ZERO);
                     no3up = min(no3up, m_solNo3[i][ly]);
                     m_no3Up += no3up / m_nCells;
                     m_solNo3[i][ly] -= no3up;
@@ -251,7 +251,7 @@ int AET_PT_H::Execute()
             /// update total soil water content
             m_totSOMO[i] = 0.f;
             for (int ly = 0; ly < (int)m_nSoilLayers[i]; ly++)
-                m_totSOMO[i] += m_somo[i][ly] * m_soilThick[i][ly];
+                m_totSOMO[i] += m_somo[i][ly];
             /// calculate actual amount of evaporation from soil
             m_soilESDay[i] = es_max - esleft;
             if (m_soilESDay[i] < 0.f) m_soilESDay[i] = 0.f;
