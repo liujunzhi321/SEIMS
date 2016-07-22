@@ -201,7 +201,7 @@ void NutrientRemviaSr::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_ANION_EXCL)) { this->m_anion_excl = data; }
     else if (StringMatch(sk, VAR_LDRAIN)) { this->m_ldrain = data; }
     else if (StringMatch(sk, VAR_SOL_CRK)) { this->m_sol_crk = data; }
-    else if (StringMatch(sk, VAR_SOL_SUMSAT)) { this->m_sol_wsatur = data; }
+    else if (StringMatch(sk, VAR_SOL_UL)) { this->m_sol_wsatur = data; }
     else if (StringMatch(sk, VAR_SOER)) { this->m_sedimentYield = data; }
     else if (StringMatch(sk, VAR_SEDORGN)) { this->m_sedorgn = data; }
     else if (StringMatch(sk, VAR_SEDORGP)) { this->m_sedorgp = data; }

@@ -69,7 +69,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddParameter(VAR_CLAY, UNIT_PERCENT, DESC_CLAY, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOL_BD, UNIT_DENSITY, DESC_SOL_BD, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_WST, UNIT_DEPTH_MM, DESC_SOL_WST, Source_ParameterDB, DT_Raster2D);
-    mdi.AddParameter(VAR_FIELDCAP, UNIT_VOL_FRA_M3M3, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_AWC, UNIT_DEPTH_MM, DESC_SOL_AWC, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_TMP, UNIT_TEMP_DEG, DESC_SOL_TMP, Source_ParameterDB, DT_Raster2D);
     //mdi.AddParameter(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
     //mdi.AddParameter(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
@@ -83,7 +83,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.AddParameter(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_NH3, UNIT_CONT_KGHA, DESC_SOL_NH3, Source_ParameterDB, DT_Raster2D);
-    mdi.AddParameter(VAR_SOL_WPMM, UNIT_CONT_KGHA, DESC_SOL_WPMM, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_WPMM, UNIT_DEPTH_MM, DESC_SOL_WPMM, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOILDEPTH, UNIT_DEPTH_MM, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOILTHICK, UNIT_DEPTH_MM, DESC_SOILTHICK, Source_ParameterDB, DT_Raster2D);
 
@@ -118,7 +118,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Raster2D);
     mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, DT_Raster2D);
     mdi.AddOutput(VAR_SOL_NH3, UNIT_CONT_KGHA, DESC_SOL_NH3, DT_Raster2D);
-    mdi.AddOutput(VAR_SOL_WPMM, UNIT_CONT_KGHA, DESC_SOL_WPMM, DT_Raster2D);
+    mdi.AddOutput(VAR_SOL_WPMM, UNIT_DEPTH_MM, DESC_SOL_WPMM, DT_Raster2D);
     mdi.AddOutput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, DT_Raster2D);
     mdi.AddOutput(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, DT_Raster2D);
     mdi.AddOutput(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, DT_Raster2D);
