@@ -56,13 +56,18 @@ int Interpolate::Execute()
     for (int i = 0; i < m_nCells; ++i)
     {
         float value = 0.f;
+		//for (int j = 0; j < m_nStatioins; ++j){
+		//	index = i * m_nStatioins + j;
+		//	cout<<m_weights[index]<<",";
+		//}
+		//cout<<endl;
         for (int j = 0; j < m_nStatioins; ++j)
         {
             index = i * m_nStatioins + j;
-
+			//cout<<m_stationData[j]<<",";
+			//cout<<endl;
             value += m_stationData[j] * m_weights[index];
-            //if(m_weights[index] > 1)
-            //	cout<<"CELL:"<<i<<", Site: "<<j<<", Weight: "<<m_weights[index]<<", Value:"<<value<<";"<<endl;
+            // cout<<"CELL:"<<i<<", Site: "<<j<<", Weight: "<<m_weights[index]<<", Value:"<<value<<";"<<endl;
 
             if (m_vertical)
             {
@@ -77,6 +82,7 @@ int Interpolate::Execute()
     }
 	//for (int i = 0; i < m_nCells; ++i)
 	//	cout<<m_output[i]<<",";
+	//Output1DArrayToTxtFile(m_nCells, m_output, "G:\\data_m\\itp.txt");
     return true;
 }
 

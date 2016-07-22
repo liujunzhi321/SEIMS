@@ -111,7 +111,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
     }
 #endif
 
-    /// Get filenames existed in GridFS, i.e., "output.files"
+    /// Get filenames existed in GridFS, i.e., "OUTPUT.files"
     vector<string> outputExisted = GetGridFsFileNames(gfs);
 	/// Filename should appended by AggregateType to avoiding the same names. By LJ, 2016-7-12
 	Filename = Filename + "_" + AggType;

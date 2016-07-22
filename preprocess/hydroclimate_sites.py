@@ -60,10 +60,7 @@ def ImportSitesTable(db, siteFile, siteType, isFirst):
         dic[Tag_ST_Type.upper()] = siteType
         curfilter = {Tag_ST_StationID.upper(): dic[Tag_ST_StationID.upper()],
                      Tag_ST_Type.upper()     : dic[Tag_ST_Type.upper()]}
-        if (isFirst):
-            db[Tag_ClimateDB_Sites.upper()].insert_one(dic)
-        else:
-            db[Tag_ClimateDB_Sites.upper()].find_one_and_replace(curfilter, dic, upsert = True)
+        db[Tag_ClimateDB_Sites.upper()].find_one_and_replace(curfilter, dic, upsert = True)
 
         if dic[Tag_ST_StationID.upper()] not in sitesLoc.keys():
             sitesLoc[dic[Tag_ST_StationID.upper()]] = SiteInfo(dic[Tag_ST_StationID.upper()],
@@ -95,10 +92,7 @@ def ImportVariableTable(db, varFile, isFirst):
                 #     dic[Tag_VAR_Time.upper()] = float(varDataItems[i][j])
         ## If this item existed already, then update it, otherwise insert one.
         curfilter = {Tag_VAR_Type.upper(): dic[Tag_VAR_Type.upper()]}
-        if (isFirst):
-            db[Tag_ClimateDB_VARs.upper()].insert_one(dic)
-        else:
-            db[Tag_ClimateDB_VARs.upper()].find_one_and_replace(curfilter, dic, upsert = True)
+        db[Tag_ClimateDB_VARs.upper()].find_one_and_replace(curfilter, dic, upsert = True)
 
 
 def ImportHydroClimateSitesInfo():
@@ -125,4 +119,5 @@ def ImportHydroClimateSitesInfo():
 
 
 if __name__ == "__main__":
+    LoadConfiguration(GetINIfile())
     SitesMList, SitesPList = ImportHydroClimateSitesInfo()

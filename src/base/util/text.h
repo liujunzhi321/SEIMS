@@ -809,8 +809,8 @@
 #define VAR_SOL_RSDIN "rsdin"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/ha)
 #define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/ha)
-#define VAR_SOL_SUMAWC "sol_sumAWC"  /// mm H2O
-#define VAR_SOL_SUMSAT "sol_sumSAT"  /// mm H2O
+#define VAR_SOL_SUMAWC "sol_sumAWC"  /// mm H2O sol_sumfc in SWAT
+#define VAR_SOL_SUMSAT "sol_sumul"  /// mm H2O  sol_sumul in SWAT
 #define VAR_SOL_TA0 "soil_ta0"
 #define VAR_SOL_TA1 "soil_ta1"
 #define VAR_SOL_TA2 "soil_ta2"

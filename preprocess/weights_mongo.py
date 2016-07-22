@@ -262,8 +262,9 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode=False, useRsData=F
             idList = []
             LocList = []
             for site in cursor:
-                idList.append(site[Tag_ST_StationID.upper()])
-                LocList.append([site[Tag_ST_LocalX.upper()], site[Tag_ST_LocalY.upper()]])
+                if site[Tag_ST_StationID.upper()] in siteList:
+                    idList.append(site[Tag_ST_StationID.upper()])
+                    LocList.append([site[Tag_ST_LocalX.upper()], site[Tag_ST_LocalY.upper()]])
             # print 'loclist', locList
             # interpolate using the locations
             # weightList = []
@@ -296,7 +297,6 @@ def GenerateWeightInfo(conn, modelName, subbasinID, stormMode=False, useRsData=F
             myfile.close()
             # fTest.close()
 
-
 if __name__ == "__main__":
     LoadConfiguration(GetINIfile())
     try:
@@ -305,4 +305,5 @@ if __name__ == "__main__":
         sys.stderr.write("Could not connect to MongoDB: %s" % e)
         sys.exit(1)
     GenerateWeightInfo(conn, SpatialDBName, 1, False)
-    # GenerateWeightDependentParameters(conn, 1)
+    GenerateWeightDependentParameters(conn, 1)
+
