@@ -6,21 +6,21 @@
 ### Variable Name	Definition
 ### SEQN			(required) Sequence number of soil catogory, CAUTION: No need to be consistent with SOIL CLASS.
 ### NAME			(required) Soil name, CAUTION: a soil name may have multi SEQN to represent heterogeneity according to LANDUSE or SLOPE, etc.
-### NLAYERS			(required) Soil layers number, BE AWARE that NLAYERS may be different in this lookup table.
+### SOILLAYERS		(required) Soil layers number, BE AWARE that NLAYERS may be different in this lookup table.
 ### SOL_Z			(required, multi-values) Depth from soil surface to bottom of layer (mm), e.g., 100, 400, 800.
 ### SOL_OM			(required, multi-values) Organic matter content (% soil weight)
 ### SOL_CLAY		(required, multi-values) Clay content (% soil weight), diameter < 0.002 mm
 ### SOL_SILT		(required, multi-values) Silt content (% soil weight), diameter between 0.002 mm and 0.05 mm
 ### SOL_SAND		(required, multi-values) Sand content (% soil weight), diameter between 0.05 mm and 2 mm
 ### SOL_ROCK		(required, multi-values) Rock fragment content (% total weight), diameter > 2 mm
+### SOL_BD			(required, multi-values) Moist bulk density (Mg/m3 or g/cm3), value should between 1.1 and 1.9
+### SOL_AWC			(required, multi-values) Available water capacity
 ### SOL_ZMX			(optional)Maximum rooting depth of soil profile(mm)
 ### ANION_EXCL		(optional) Fraction of porosity (void space) from which anions are excluded, default is 0.5.
 ### SOL_CRK			(optional) Potential or maximum crack volume of the soil profile expressed as a fraction of the total soil volume. 
-### SOL_BD			(optional, multi-values) Moist bulk density (Mg/m3 or g/cm3), value should between 1.1 and 1.9
 ### SOL_K			(optional, multi-values) Saturated hydraulic conductivity (mm/hr)
 ### SOL_WP			(optional, multi-values) Wilting point
 ### SOL_FC			(optional, multi-values) Field capacity
-### SOL_AWC			(optional, multi-values) Available water capacity
 ### SOL_POROSITY	(optional, multi-values) Porosity
 ### SOL_USLE_K		(optional, multi-values) USLE K factor
 ### SOL_ALB			(optional) Albedo when soil is moist
@@ -30,7 +30,7 @@
 ### SOL_ORGP		(required and can be 0, multi-values) concentration of organic phosphorus in soil layers
 ### SOL_SOLP		(required and can be 0, multi-values) concentration of soluble phosphorus in soil layers
 
-SEQN	SNAM	NLAYERS	SOL_ZMX	SOL_Z	SOL_BD	SOL_OM	CLAY	SILT	SAND	ROCK	SOL_WP	SOL_FC	SOL_POROSITY	SOL_K	SOL_AWC	SOL_NO3	SOL_ORGN	SOL_SOLP	SOL_ORGP
+SEQN	SNAM	SOILLAYERS	SOL_ZMX	SOL_Z	SOL_BD	SOL_OM	SOL_CLAY	SOL_SILT	SOL_SAND	SOL_ROCK	SOL_WP	SOL_FC	SOL_POROSITY	SOL_K	SOL_AWC	SOL_NO3	SOL_ORGN	SOL_SOLP	SOL_ORGP
 202	HuangMaGanTu	3	600	150,300,600	1.21,1.48,1.44	1.29,0.88,0.53	32.52,31.76,37.62	37.25,37.22,33.02	30.23,31.01,29.36	0,0,0	0.202,0.19,0.222	0.346,0.329,0.366	0.502,0.44,0.458	5.59,3.56,2.03	0.144,0.139,0.144		0,0,0	0,0,0	0,0,0
 203	HuangBaiTu	3	600	150,300,600	1.19,1.49,1.48	1.42,0.86,0.58	28.37,29.59,34.96	37.05,37.09,34.14	34.57,33.31,30.9	0,0,0	0.175,0.178,0.206	0.315,0.32,0.343	0.502,0.436,0.442	5.59,4.32,2.54	0.14,0.142,0.137		0,0,0	0,0,0	0,0,0
 301	HuangMaGanTian	3	600	150,300,600	0.98,1.38,1.55	1.71,1.04,0.43	41.93,44.04,26.22	35.24,32.51,36.57	22.83,23.45,37.21	0,0,0	0.247,0.263,0.159	0.387,0.397,0.292	0.601,0.481,0.416	2.29,1.52,5.08	0.14,0.134,0.133		0,0,0	0,0,0	0,0,0

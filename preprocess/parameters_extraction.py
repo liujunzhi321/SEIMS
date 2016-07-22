@@ -45,54 +45,52 @@ def soil_parameters2(dstdir, maskFile, soilSEQNTif, soilSEQNTxt):
         for j in range(2, len(soilPropFlds)):
             curFlds = SplitStr(curSoilDataItem[j], ',')  ## Get field values
             for k in range(len(curFlds)): curFlds[k] = float(curFlds[k])  ## Convert to float
-            if StringMatch(soilPropFlds[j], SOL_NLYRS) or StringMatch(soilPropFlds[j], 'NLAYERS'):
-                curSoilIns.SoilLAYERS = int(curFlds[0])
-            elif StringMatch(soilPropFlds[j], SOL_Z) or StringMatch(soilPropFlds[j], 'SOL_Z'):
-                curSoilIns.SoilDepth = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_OM) or StringMatch(soilPropFlds[j], 'SOL_OM'):
+            if StringMatch(soilPropFlds[j], SOL_NLYRS):
+                curSoilIns.SOILLAYERS = int(curFlds[0])
+            elif StringMatch(soilPropFlds[j], SOL_Z):
+                curSoilIns.SOILDEPTH = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_OM):
                 curSoilIns.OM = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_CLAY) or StringMatch(soilPropFlds[j], 'SOL_CLAY'):
+            elif StringMatch(soilPropFlds[j], SOL_CLAY):
                 curSoilIns.CLAY = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_SILT) or StringMatch(soilPropFlds[j], 'SOL_SILT'):
+            elif StringMatch(soilPropFlds[j], SOL_SILT):
                 curSoilIns.SILT = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_SAND) or StringMatch(soilPropFlds[j], 'SOL_SAND'):
+            elif StringMatch(soilPropFlds[j], SOL_SAND):
                 curSoilIns.SAND = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_ROCK) or StringMatch(soilPropFlds[j], 'SOL_ROCK'):
+            elif StringMatch(soilPropFlds[j], SOL_ROCK):
                 curSoilIns.ROCK = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_ZMX) or StringMatch(soilPropFlds[j], 'SOL_ZMX'):
-                curSoilIns.Sol_ZMX = curFlds[0]
-            elif StringMatch(soilPropFlds[j], SOL_ANIONEXCL) or StringMatch(soilPropFlds[j], 'ANIONEXCL'):
+            elif StringMatch(soilPropFlds[j], SOL_ZMX):
+                curSoilIns.SOL_ZMX = curFlds[0]
+            elif StringMatch(soilPropFlds[j], SOL_ANIONEXCL):
                 curSoilIns.ANION_EXCL = curFlds[0]
-            elif StringMatch(soilPropFlds[j], SOL_CRK) or StringMatch(soilPropFlds[j], 'SOL_CRK'):
-                curSoilIns.Sol_CRK = curFlds[0]
-            elif StringMatch(soilPropFlds[j], SOL_BD) or StringMatch(soilPropFlds[j], 'SOL_BD'):
-                curSoilIns.Density = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_K) or StringMatch(soilPropFlds[j], 'SOL_K'):
-                curSoilIns.Conductivity = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_WP) or StringMatch(soilPropFlds[j], 'SOL_WP'):
-                curSoilIns.WiltingPoint = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_FC) or StringMatch(soilPropFlds[j], 'SOL_FC'):
-                curSoilIns.FieldCap = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_AWC) or StringMatch(soilPropFlds[j], 'SOL_AWC'):
-                curSoilIns.Sol_AWC = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_POROSITY) or StringMatch(soilPropFlds[j], 'SOL_POROSITY'):
+            elif StringMatch(soilPropFlds[j], SOL_CRK):
+                curSoilIns.SOL_CRK = curFlds[0]
+            elif StringMatch(soilPropFlds[j], SOL_BD):
+                curSoilIns.DENSITY = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_K):
+                curSoilIns.CONDUCTIVITY = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_WP):
+                curSoilIns.WILTINGPOINT = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_FC):
+                curSoilIns.FIELDCAP = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_AWC):
+                curSoilIns.AWC = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_POROSITY):
                 curSoilIns.POROSITY = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_USLE_K) or StringMatch(soilPropFlds[j], 'SOL_USLE_K'):
+            elif StringMatch(soilPropFlds[j], SOL_USLE_K):
                 curSoilIns.USLE_K = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_P_INDEX) or StringMatch(soilPropFlds[j], 'SOL_P_INDEX'):
-                curSoilIns.Poreindex = curFlds
-            elif StringMatch(soilPropFlds[j], SOL_ALB) or StringMatch(soilPropFlds[j], 'SOL_ALB'):
-                curSoilIns.Sol_ALB = curFlds
+            elif StringMatch(soilPropFlds[j], SOL_ALB):
+                curSoilIns.SOL_ALB = curFlds
             elif StringMatch(soilPropFlds[j], ESCO):
                 curSoilIns.ESCO = curFlds[0]
             elif StringMatch(soilPropFlds[j], SOL_NO3):
-                curSoilIns.Sol_no3 = curFlds
+                curSoilIns.SOL_NO3 = curFlds
             elif StringMatch(soilPropFlds[j], SOL_ORGN):
-                curSoilIns.Sol_orgn = curFlds
+                curSoilIns.SOL_ORGN = curFlds
             elif StringMatch(soilPropFlds[j], SOL_SOLP):
-                curSoilIns.Sol_solp = curFlds
+                curSoilIns.SOL_SOLP = curFlds
             elif StringMatch(soilPropFlds[j], SOL_ORGP):
-                curSoilIns.Sol_orgp = curFlds
+                curSoilIns.SOL_ORGP = curFlds
         curSoilIns.CheckData()
         soilInstances.append(curSoilIns)
     soilPropDict = {}
@@ -142,45 +140,6 @@ def soil_parameters2(dstdir, maskFile, soilSEQNTif, soilSEQNTxt):
     for i in range(len(dstSoilTifs)):
         print dstSoilTifs[i]
         replaceByDict(soiltypeFile, replaceDicts[i], dstSoilTifs[i])
-
-
-### Deprecated by LJ, 2016-5-21
-# def soil_parameters(dstdir, maskFile, sandList, clayList, orgList=None):
-#     # mask soil map using the mask_raster program
-#     configFile = "%s%smaskSoilConfig.txt" % (dstdir, os.sep)
-#     n = 0
-#     for item in sandList:
-#         if item is not None:
-#             n += 1
-#     if orgList is None:
-#         total = n * 2
-#     else:
-#         total = n * 3
-#     fMask = open(configFile, 'w')
-#     fMask.write(maskFile+"\n")
-#     fMask.write("%d\n"%(total))  # modified by Zhu LJ,2015-04-01
-#
-#     for i in range(n):
-#         #strLayer = str(i+1) if i > 0 else ''
-#         sandFile = "%s/sand_%s.tif" % (dstdir, str(i+1))
-#         clayFile = "%s/clay_%s.tif" % (dstdir, str(i+1))
-#         orgFile = "%s/org_%s.tif" % (dstdir, str(i+1))
-#         fMask.write("%s\t%d\t%s\n" % (sandList[i], defaultSand, sandFile))
-#         fMask.write("%s\t%d\t%s\n" % (clayList[i], defaultClay, clayFile))
-#         if orgList is not None:
-#             fMask.write("%s\t%f\t%s\n" % (orgList[i], defaultOrg, orgFile))
-#     fMask.close()
-#
-#     s = "%s/mask_raster %s" % (CPP_PROGRAM_DIR, configFile)
-#     os.system(s)
-#
-#     for i in range(n):
-#         #strLayer = str(i+1) if i > 0 else ''
-#         sandFile = "%s/sand_%s.tif" % (dstdir, str(i+1))
-#         clayFile = "%s/clay_%s.tif" % (dstdir, str(i+1))
-#         orgFile = "%s/org_%s.tif" % (dstdir, str(i+1))
-#         GenerateSoilAttributes(dstdir, i+1, sandFile, clayFile, orgFile)
-#     SoilTexture(dstdir)
 
 def landuse_parameters(dstdir, maskFile, inputLanduse, landuseFile, sqliteFile, defaultLanduse):
     ## mask landuse map using the mask_raster program
