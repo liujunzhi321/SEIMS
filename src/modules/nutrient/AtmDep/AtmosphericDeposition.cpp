@@ -149,10 +149,10 @@ void AtmosphericDeposition::SetValue(const char *key, float value)
 
 void AtmosphericDeposition::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
-    if (!this->CheckInputSize(key, nCols)) return;
+    if (!this->CheckInputSize(key, nRows)) return;
     string sk(key);
     m_soiLayers = nCols;
-    if (StringMatch(sk, VAR_ROOTDEPTH)) { this->m_sol_z = data; }
+    if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
     else if (StringMatch(sk, VAR_SOL_NO3)) { this->m_sol_no3 = data; }
     else if (StringMatch(sk, VAR_SOL_NH3)) { this->m_sol_nh3 = data; }
     else
