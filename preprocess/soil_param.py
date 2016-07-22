@@ -60,6 +60,7 @@ from util import *
 # 'VOLCR            |mm    : (volcr) crack volume for soil layer, should be calculated in SEIMS, using moist_ini
 
 # SOL_NO3           |kg/ha : (sol_no3) concentration of nitrate in soil layers
+# SOL_NH3           |kg/ha : (sol_nh3) concentration of ammonium-N in soil layers
 # SOL_ORGN          |kg/ha : (sol_orgn) organic N concentration in soil layers
 # SOL_ORGP          |kg/ha : (sol_orgp) organic P concentration in soil layers
 # SOL_SOLP          |kg/ha : (sol_solp) soluble P concentration in soil layers
@@ -116,6 +117,7 @@ class SoilProperty:
         self.ESCO = DEFAULT_NODATA
         # Here after are general soil chemical properties
         self.SOL_NO3 = []
+        self.SOL_NH3 = []
         self.SOL_ORGN = []
         self.SOL_ORGP = []
         self.SOL_SOLP = []
@@ -186,12 +188,24 @@ class SoilProperty:
                 self.USLE_K.insert(0, self.USLE_K[0])
             if self.SOL_NO3 != []:
                 self.SOL_NO3.insert(0, self.SOL_NO3[0])
+            else:
+                self.SOL_NO3 = list(numpy.zeros(self.SOILLAYERS))
+            if self.SOL_NH3 != []:
+                self.SOL_NH3.insert(0, self.SOL_NH3[0])
+            else:
+                self.SOL_NH3 = list(numpy.zeros(self.SOILLAYERS))
             if self.SOL_ORGN != []:
                 self.SOL_ORGN.insert(0, self.SOL_ORGN[0])
+            else:
+                self.SOL_ORGN = list(numpy.zeros(self.SOILLAYERS))
             if self.SOL_SOLP != []:
                 self.SOL_SOLP.insert(0, self.SOL_SOLP[0])
+            else:
+                self.SOL_SOLP = list(numpy.zeros(self.SOILLAYERS))
             if self.SOL_ORGP != []:
                 self.SOL_ORGP.insert(0, self.SOL_ORGP[0])
+            else:
+                self.SOL_ORGP = list(numpy.zeros(self.SOILLAYERS))
         if self.SOILDEPTH == [] or len(self.SOILDEPTH) != self.SOILLAYERS or DEFAULT_NODATA in self.SOILDEPTH:
             raise IndexError("Soil depth must have a size equal to NLAYERS and should not include NODATA (-9999)!")
         # Calculate soil thickness of each layer
@@ -489,6 +503,9 @@ class SoilProperty:
         if self.SOL_NO3 != []:
             for j in range(self.SOILLAYERS):
                 self.SOL_NO3[j] = self.SOL_NO3[j] * wt1[j]
+        if self.SOL_NH3 != []:
+            for j in range(self.SOILLAYERS):
+                self.SOL_NH3[j] = self.SOL_NH3[j] * wt1[j]
         if self.SOL_ORGN != []:
             for j in range(self.SOILLAYERS):
                 self.SOL_ORGN[j] = self.SOL_ORGN[j] * wt1[j]

@@ -83,6 +83,7 @@ SOL_ALB = "SOL_ALB"
 ESCO = "ESCO"
 ## soil N and P concentrate
 SOL_NO3 = "SOL_NO3"
+SOL_NH3 = "SOL_NH3"
 SOL_ORGN = "SOL_ORGN"
 SOL_ORGP = "SOL_ORGP"
 SOL_SOLP = "SOL_SOLP"
