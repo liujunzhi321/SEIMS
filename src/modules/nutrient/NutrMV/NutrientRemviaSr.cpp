@@ -216,7 +216,7 @@ void NutrientRemviaSr::Set1DData(const char *key, int n, float *data)
 
 void NutrientRemviaSr::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
-    if (!this->CheckInputSize(key, nCols)) return;
+    if (!this->CheckInputSize(key, nRows)) return;
     string sk(key);
     m_soiLayers = nCols;
     if (StringMatch(sk, VAR_FLAT)) { this->m_flat = data; }

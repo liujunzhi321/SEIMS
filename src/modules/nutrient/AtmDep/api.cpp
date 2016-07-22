@@ -41,7 +41,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.AddInput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_Module, DT_Raster2D);
-    mdi.AddInput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_Module, DT_Raster2D);
+    mdi.AddInput(VAR_SOILDEPTH, UNIT_DEPTH_MM, DESC_SOILDEPTH, Source_Module, DT_Raster2D);
 
     // set output
     mdi.AddOutput(VAR_ADDRNO3, UNIT_CONT_KGHA, DESC_ADDRNO3, DT_Single);
