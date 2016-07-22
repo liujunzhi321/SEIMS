@@ -2,10 +2,6 @@
  * \ingroup Nutrient
  * \brief Daily nitrogen and phosphorus mineralization and immobilization.
  * From nminrl.f, nitvol.f, pminrl
- */
-/*!
- * \file NandPmi.h
- * \ingroup MINRL
  * \author Huiran Gao
  * \date April 2016
  */

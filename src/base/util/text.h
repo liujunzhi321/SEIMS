@@ -466,8 +466,8 @@
 #define VAR_A_BNK "a_bnk"                           /// bank flow recession constant
 #define VAR_ACC "acc"
 #define VAR_ACC_INFIL "AccumuInfil"
-#define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/km2)
-#define VAR_ADDRNO3 "addrno3"                       /// nitrate added by rainfall (kg/km2)
+#define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/ha)
+#define VAR_ADDRNO3 "addrno3"                       /// nitrate added by rainfall (kg/ha)
 #define VAR_AET_PLT "AET_PLT"
 #define VAR_AFERT_AMAXN "afert_AmaxN"
 #define VAR_AFERT_FRTEFF "afert_frteff"
@@ -657,7 +657,7 @@
 #define VAR_LAST_SOILRD "lastSoilRD"
 #define VAR_LATNO3 "latno3"
 #define VAR_LATNO3_CH "latno3ToCh"
-#define VAR_LCC "landcover"                             /// land cover code
+#define VAR_LCC "landcover"                             /// land cover code, idplt in SWAT
 #define VAR_LDRAIN "ldrain"
 #define VAR_MANNING "Manning"
 #define VAR_MAT_YRS "MAT_YRS"

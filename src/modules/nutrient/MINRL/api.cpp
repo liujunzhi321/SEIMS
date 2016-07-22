@@ -1,14 +1,3 @@
-/*!
- * \file api.cpp
- * \brief Define MetadataInfo of MINRL module.
-/*!
- * \file api.cpp
- * \ingroup MINRL
- * \author Huiran Gao
- * \date April 2016
- */
-
-
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -38,9 +27,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetWebsite(SEIMS_SITE);
     mdi.SetHelpfile("MINRL.html");
 
-    // set the parameters
-    //Latitude is used to calculate max solar radiation. It is read in the similar format with elevation.
-    mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+    //mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
     mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
     mdi.AddParameter(VAR_CMN, UNIT_NON_DIM, DESC_CMN, Source_ParameterDB, DT_Single);
@@ -59,8 +46,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_WSHD_PAL, UNIT_CONT_KGHA, DESC_WSHD_PAL, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_WSHD_PAS, UNIT_CONT_KGHA, DESC_WSHD_PAS, Source_ParameterDB, DT_Single);
 
-    mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB,
-                     DT_Raster1D);  /// idplt in SWAT is a lookup array. in SEIMS, use landcover
+	/// idplt in SWAT is a lookup array. in SEIMS, use landcover
+    mdi.AddParameter(VAR_LCC, UNIT_NON_DIM, DESC_LCC, Source_ParameterDB, DT_Raster1D);  
     mdi.AddParameter(VAR_PL_RSDCO, UNIT_NON_DIM, DESC_PL_RSDCO, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_SOILLAYERS, UNIT_NON_DIM, DESC_SOILLAYERS, Source_ParameterDB, DT_Raster1D);
 	mdi.AddParameter(VAR_SOL_RSDIN, UNIT_CONT_KGHA, DESC_SOL_RSDIN, Source_ParameterDB, DT_Raster1D);
