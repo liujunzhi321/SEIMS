@@ -821,6 +821,7 @@
 #define VAR_SOL_TD1 "soil_td1"
 #define VAR_SOL_TD2 "soil_td2"
 #define VAR_SOL_TMP "sol_tmp"                       /// daily average temperature of soil layer(deg C)
+#define VAR_SOL_UL "sol_ul"                       /// mm H2O
 #define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)
 #define VAR_SOL_WST "sol_st"                        /// amount of water stored in the soil layer on current day(mm H2O)
 #define VAR_SOL_ZMX "SOL_ZMX"          /// Maximum rooting depth of soil profile (mm)
@@ -860,7 +861,6 @@
 #define VAR_TMEAN1 "TMEAN1"
 #define VAR_TMEAN2 "TMEAN2"
 #define VAR_TMIN "TMIN"
-
 #define VAR_TREEYRS "CURYR_INIT"
 #define VAR_TSD_DT "DATATYPE"                      /// Time series data type
 #define VAR_USLE_C "USLE_C"
@@ -894,8 +894,15 @@
 #define VAR_WSHD_RWN "wshd_rwn"                     /// average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/km2)
 #define VAR_WSHD_VOLN "wshd_voln"                   /// average annual amount if nitrogen lost by ammonia volatilization in watershed
 #define VAR_WSYF "wsyf"
-
-
+#define VAR_AL_OUTLET "algae_outlet"
+#define VAR_ON_OUTLET "organicn_outlet"
+#define VAR_AN_OUTLET "ammonian_outlet"
+#define VAR_NIN_OUTLET "nitriten_outlet"
+#define VAR_NAN_OUTLET "nitraten_outlet"
+#define VAR_OP_OUTLET "organicp_outlet"
+#define VAR_DP_OUTLET "disolvp_outlet"
+#define VAR_COD_OUTLET "cod_outlet"
+#define VAR_CHL_OUTLET "chlora_outlet"
 
 //////////////////////////////////////////////////////////////////////////
 /// Define units common used in SEIMS, in case of inconsistency //////////
@@ -1404,6 +1411,15 @@
 #define DESC_WSHD_RWN "average annual amount of nitrogen moving from active organic to stable organic pool in watershed"
 #define DESC_WSHD_VOLN "average annual amount if nitrogen lost by ammonia volatilization in watershed"
 #define DESC_WSYF "Lower limit of harvest index ((kg/ha)/(kg/ha))"
+#define DESC_AL_OUTLET "algae concentration at the watershed outlet"
+#define DESC_ON_OUTLET "organicn concentration at the watershed outlet"
+#define DESC_AN_OUTLET "ammonian concentration at the watershed outlet"
+#define DESC_NIN_OUTLET "nitriten concentration at the watershed outlet"
+#define DESC_NAN_OUTLET "nitraten concentration at the watershed outlet"
+#define DESC_OP_OUTLET "organicp concentration at the watershed outlet"
+#define DESC_DP_OUTLET "disolvp concentration at the watershed outlet"
+#define DESC_COD_OUTLET "cod concentration at the watershed outlet"
+#define DESC_CHL_OUTLET "chlora concentration at the watershed outlet"
 
 //////////////////////////////////////////////////////////////////////////
 /// Define MongoDB related constant strings used in SEIMS and preprocess//

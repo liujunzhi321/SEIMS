@@ -231,6 +231,7 @@ void NutrientOLRoute::Set1DData(const char *key, int n, float *data)
 
 void NutrientOLRoute::Set2DData(const char *key, int nrows, int ncols, float **data)
 {
+	if (!this->CheckInputSize(key, nrows)) return;
     string sk(key);
     if (StringMatch(sk, Tag_ROUTING_LAYERS))
     {

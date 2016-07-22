@@ -183,7 +183,7 @@ void SurrunoffTransfer::Set1DData(const char *key, int n, float *data)
 
 void SurrunoffTransfer::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
-    if (!this->CheckInputSize(key, nCols)) return;
+    if (!this->CheckInputSize(key, nRows)) return;
     string sk(key);
     m_soiLayers = nCols;
     if (StringMatch(sk, VAR_ROOTDEPTH)) { this->m_sol_z = data; }

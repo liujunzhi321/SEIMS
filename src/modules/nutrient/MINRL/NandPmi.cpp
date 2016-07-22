@@ -296,14 +296,14 @@ void NandPim::Set1DData(const char *key, int n, float *data)
 
 void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
-    if (!this->CheckInputSize(key, nCols)) return;
+    if (!this->CheckInputSize(key, nRows)) return;
     string sk(key);
     m_soiLayers = nCols;
 	if (StringMatch(sk, VAR_SOL_OM)) { this->m_sol_om = data; }
 	else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
 	else if (StringMatch(sk, VAR_CLAY)) { this->m_sol_clay = data; }
     else if (StringMatch(sk, VAR_SOL_WST)) { this->m_sol_st = data; }
-    else if (StringMatch(sk, VAR_FIELDCAP)) { this->m_sol_fc = data; }
+    else if (StringMatch(sk, VAR_SOL_AWC)) { this->m_sol_fc = data; }
     else if (StringMatch(sk, VAR_SOL_TMP)) { this->m_sol_tmp = data; }
     //else if (StringMatch(sk, VAR_SOL_AORGN)) { this->m_sol_aorgn = data; }
     //else if (StringMatch(sk, VAR_SOL_FON)) { this->m_sol_fon = data; }
