@@ -820,6 +820,7 @@
 #define VAR_SOL_TD1 "soil_td1"
 #define VAR_SOL_TD2 "soil_td2"
 #define VAR_SOL_TMP "sol_tmp"                       /// daily average temperature of soil layer(deg C)
+#define VAR_SOL_UL "sol_ul"                       /// mm H2O
 #define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)
 #define VAR_SOL_WST "sol_st"                        /// amount of water stored in the soil layer on current day(mm H2O)
 #define VAR_SOL_ZMX "SOL_ZMX"          /// Maximum rooting depth of soil profile (mm)
@@ -1327,6 +1328,7 @@
 #define DESC_SOL_TD1 "Coefficient d1 for Finn Plauborg Method"
 #define DESC_SOL_TD2 "Coefficient d2 for Finn Plauborg Method"
 #define DESC_SOL_TMP "daily average temperature of soil layer"
+#define DESC_SOL_UL "amount of water held in the soil layer at saturation (sat - wp water)"
 #define DESC_SOL_WFC "Water content of soil profile at field capacity"
 #define DESC_SOL_WPMM " water content of soil at -1.5 MPa (wilting point)"
 #define DESC_SOL_WST "amount of water stored in the soil layer on current day"

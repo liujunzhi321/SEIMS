@@ -303,7 +303,7 @@ void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
 	else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
 	else if (StringMatch(sk, VAR_CLAY)) { this->m_sol_clay = data; }
     else if (StringMatch(sk, VAR_SOL_WST)) { this->m_sol_st = data; }
-    else if (StringMatch(sk, VAR_FIELDCAP)) { this->m_sol_fc = data; }
+    else if (StringMatch(sk, VAR_SOL_AWC)) { this->m_sol_fc = data; }
     else if (StringMatch(sk, VAR_SOL_TMP)) { this->m_sol_tmp = data; }
     //else if (StringMatch(sk, VAR_SOL_AORGN)) { this->m_sol_aorgn = data; }
     //else if (StringMatch(sk, VAR_SOL_FON)) { this->m_sol_fon = data; }

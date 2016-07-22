@@ -1134,12 +1134,55 @@ float NutrientCHRoute::corTempc(float r20, float thk, float tmp)
 
 void NutrientCHRoute::GetValue(const char *key, float *value)
 {
-    string sk(key);
+	string sk(key);
+	map<int, vector<int> >::iterator it = m_reachLayers.end();
+	it--;
+	int reachId = it->second[0];
+	int iLastCell = m_reachs[reachId].size() - 1;
     if (StringMatch(sk, VAR_SOXY))
     {
         *value = m_soxy;
     }
-
+	else if (StringMatch(sk, VAR_AL_OUTLET))
+    {
+        *value = m_algae[reachId][iLastCell];	//mg/L
+	}
+	else if (StringMatch(sk, VAR_ON_OUTLET))
+	{
+		*value = m_organicn[reachId][iLastCell];	//mg/L
+	}
+	else if (StringMatch(sk, VAR_AN_OUTLET))
+	{
+		*value = m_ammonian[reachId][iLastCell];	//mg/L
+	}
+	else if (StringMatch(sk, VAR_NIN_OUTLET))
+	{
+		*value = m_nitriten[reachId][iLastCell];	//mg/L
+	}
+	else if (StringMatch(sk, VAR_NAN_OUTLET))
+	{
+		*value = m_nitraten[reachId][iLastCell];	//mg/L
+	}
+	else if (StringMatch(sk, VAR_OP_OUTLET))
+	{
+		*value = m_organicp[reachId][iLastCell];	//mg/L
+	}
+	else if (StringMatch(sk, VAR_DP_OUTLET))
+	{
+		*value = m_disolvp[reachId][iLastCell];	//mg/L
+	}
+	else if (StringMatch(sk, VAR_COD_OUTLET))
+	{
+		*value = m_rch_cod[reachId][iLastCell];	//mg/L
+	}
+	else if (StringMatch(sk, VAR_CHL_OUTLET))
+	{
+		*value = m_chlora[reachId][iLastCell];	//mg/L
+	}
+	else
+		throw ModelException(MID_NutCHRout, "GetValue", "Output " + sk
+		+
+		" does not exist in the current module. Please contact the module developer.");
 }
 
 void NutrientCHRoute::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
