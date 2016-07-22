@@ -65,6 +65,8 @@ private:
     float m_cmn;
     ///nitrogen active pool fraction. The fraction of organic nitrogen in the active pool.
     float m_nactfr;
+	/// denitrification threshold: fraction of field capacity
+	float m_sdnco;
     ///Phosphorus availability index. The fraction of fertilizer P remaining in labile pool after initial rapid phase of P sorption
     float m_psp;
     //rate coefficient for denitrification
@@ -78,6 +80,8 @@ private:
 	float *m_sol_cov;
 	///amount of residue on soil surface (kg/ha)
 	float *m_sol_rsdin;
+	///daily average temperature of soil layer(deg C)
+	float *m_sol_tmp;
     ///percent organic matter in soil layer (%)
 	float **m_sol_om;
 	///bulk density of the soil (mg/m3)
@@ -88,8 +92,6 @@ private:
     float **m_sol_st;
     ///Water content of soil profile at field capacity(mm H2O)
     float **m_sol_fc;
-    ///daily average temperature of soil layer(deg C)
-    float **m_sol_tmp;
     ///depth to bottom of soil layer
 	float **m_sol_z;
 	///Percent of clay content

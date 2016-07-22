@@ -68,7 +68,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 
-    mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);
 
     // set the input variables
     mdi.AddInput(VAR_SRA, UNIT_SR, DESC_SRA, Source_Module, DT_Array1D);
