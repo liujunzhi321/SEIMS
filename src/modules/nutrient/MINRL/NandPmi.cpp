@@ -19,8 +19,8 @@ using namespace std;
 
 NandPim::NandPim(void) :
 //input
-        m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_cmn(NULL), m_cdn(NULL),
-        m_landcover(NULL), m_nactfr(NULL), m_psp(NULL), m_sol_z(NULL), m_sol_thick(NULL), m_sol_cbn(NULL), m_sol_bd(NULL),
+        m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_cmn(NULL), m_cdn(NULL), m_sdnco(-1),
+        m_landcover(NULL), m_nactfr(-1), m_psp(NULL), m_sol_z(NULL), m_sol_thick(NULL), m_sol_cbn(NULL), m_sol_bd(NULL),
         m_rsdco_pl(NULL), m_sol_om(NULL), m_sol_st(NULL), m_sol_tmp(NULL), m_sol_nh3(NULL), m_sol_fc(NULL),
         m_sol_cov(NULL), m_sol_rsdin(NULL), m_sol_wpmm(NULL), m_sol_clay(NULL), 
         m_sol_actp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL), m_sol_fop(NULL), m_sol_no3(NULL),
@@ -106,6 +106,12 @@ bool NandPim::CheckInputData()
         throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");
         return false;
     }
+
+	if (this->m_sdnco == NULL)
+	{
+		throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");
+		return false;
+	}
     if (this->m_psp == NULL)
     {
         throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");
@@ -196,56 +202,6 @@ bool NandPim::CheckInputData()
         throw ModelException(MID_MINRL, "CheckInputData", "The data can not be NULL.");
         return false;
     }
-    if (this->m_wshd_dnit < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_hmn < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_hmp < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_rmn < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_rmp < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_rwn < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_nitn < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_voln < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_pal < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
-    if (this->m_wshd_pas < 0)
-    {
-        throw ModelException(MID_MINRL, "CheckInputData", "The data can not be less than zero.");
-        return false;
-    }
     return true;
 }
 
@@ -258,20 +214,21 @@ void NandPim::SetValue(const char *key, float value)
     }
     else if (StringMatch(sk, Tag_CellSize)) { this->m_nCells = (int) value; }
     else if (StringMatch(sk, Tag_CellWidth)) { this->m_cellWidth = value; }
-    else if (StringMatch(sk, VAR_NACTFR)) { this->m_nactfr = value; }
+	else if (StringMatch(sk, VAR_NACTFR)) { this->m_nactfr = value; }
+	else if (StringMatch(sk, VAR_SDNCO)) { this->m_sdnco = value; }
     else if (StringMatch(sk, VAR_CMN)) { this->m_cmn = value; }
     else if (StringMatch(sk, VAR_CDN)) { this->m_cdn = value; }
     else if (StringMatch(sk, VAR_PSP)) { this->m_psp = value; }
-    else if (StringMatch(sk, VAR_WSHD_DNIT)) { this->m_wshd_dnit = value; }
-    else if (StringMatch(sk, VAR_WSHD_HMN)) { this->m_wshd_hmn = value; }
-    else if (StringMatch(sk, VAR_WSHD_HMP)) { this->m_wshd_hmp = value; }
-    else if (StringMatch(sk, VAR_WSHD_RMN)) { this->m_wshd_rmn = value; }
-    else if (StringMatch(sk, VAR_WSHD_RMP)) { this->m_wshd_rmp = value; }
-    else if (StringMatch(sk, VAR_WSHD_RWN)) { this->m_wshd_rwn = value; }
-    else if (StringMatch(sk, VAR_WSHD_NITN)) { this->m_wshd_nitn = value; }
-    else if (StringMatch(sk, VAR_WSHD_VOLN)) { this->m_wshd_voln = value; }
-    else if (StringMatch(sk, VAR_WSHD_PAL)) { this->m_wshd_pal = value; }
-    else if (StringMatch(sk, VAR_WSHD_PAS)) { this->m_wshd_pas = value; }
+    //else if (StringMatch(sk, VAR_WSHD_DNIT)) { this->m_wshd_dnit = value; }
+    //else if (StringMatch(sk, VAR_WSHD_HMN)) { this->m_wshd_hmn = value; }
+    //else if (StringMatch(sk, VAR_WSHD_HMP)) { this->m_wshd_hmp = value; }
+    //else if (StringMatch(sk, VAR_WSHD_RMN)) { this->m_wshd_rmn = value; }
+    //else if (StringMatch(sk, VAR_WSHD_RMP)) { this->m_wshd_rmp = value; }
+    //else if (StringMatch(sk, VAR_WSHD_RWN)) { this->m_wshd_rwn = value; }
+    //else if (StringMatch(sk, VAR_WSHD_NITN)) { this->m_wshd_nitn = value; }
+    //else if (StringMatch(sk, VAR_WSHD_VOLN)) { this->m_wshd_voln = value; }
+    //else if (StringMatch(sk, VAR_WSHD_PAL)) { this->m_wshd_pal = value; }
+    //else if (StringMatch(sk, VAR_WSHD_PAS)) { this->m_wshd_pas = value; }
     else
     {
         throw ModelException(MID_MINRL, "SetValue", "Parameter " + sk +
@@ -286,7 +243,8 @@ void NandPim::Set1DData(const char *key, int n, float *data)
     if (StringMatch(sk, VAR_LCC)) { this->m_landcover = data; }
 	else if (StringMatch(sk, VAR_PL_RSDCO)) { this->m_rsdco_pl = data; }
 	else if (StringMatch(sk, VAR_SOL_RSDIN)) { this->m_sol_rsdin = data; }
-    else if (StringMatch(sk, VAR_SOILLAYERS)) { this->m_nSoilLayers = data; }
+	else if (StringMatch(sk, VAR_SOILLAYERS)) { this->m_nSoilLayers = data; }
+	else if (StringMatch(sk, VAR_SOTE)) { this->m_sol_tmp = data; }
     else
     {
         throw ModelException(MID_MINRL, "SetValue", "Parameter " + sk +
@@ -302,9 +260,8 @@ void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
 	if (StringMatch(sk, VAR_SOL_OM)) { this->m_sol_om = data; }
 	else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
 	else if (StringMatch(sk, VAR_CLAY)) { this->m_sol_clay = data; }
-    else if (StringMatch(sk, VAR_SOL_WST)) { this->m_sol_st = data; }
+    else if (StringMatch(sk, VAR_SOMO)) { this->m_sol_st = data; }
     else if (StringMatch(sk, VAR_SOL_AWC)) { this->m_sol_fc = data; }
-    else if (StringMatch(sk, VAR_SOL_TMP)) { this->m_sol_tmp = data; }
     //else if (StringMatch(sk, VAR_SOL_AORGN)) { this->m_sol_aorgn = data; }
     //else if (StringMatch(sk, VAR_SOL_FON)) { this->m_sol_fon = data; }
     //else if (StringMatch(sk, VAR_SOL_FOP)) { this->m_sol_fop = data; }
@@ -313,7 +270,6 @@ void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
     else if (StringMatch(sk, VAR_SOL_NO3)) { this->m_sol_no3 = data; }
     else if (StringMatch(sk, VAR_SOL_ORGN)) { this->m_sol_orgn = data; }
     else if (StringMatch(sk, VAR_SOL_ORGP)) { this->m_sol_orgp = data; }
-    else if (StringMatch(sk, VAR_SOL_RSD)) { this->m_sol_rsd = data; }
     else if (StringMatch(sk, VAR_SOL_SOLP)) { this->m_sol_solp = data; }
     else if (StringMatch(sk, VAR_SOL_NH3)) { this->m_sol_nh3 = data; }
     else if (StringMatch(sk, VAR_SOL_WPMM)) { this->m_sol_wpmm = data; }
@@ -469,7 +425,7 @@ void NandPim::initialOutputs()
 	 }
 	
     // allocate the output variables
-    if (this->m_wshd_dnit < 0 || this->m_wshd_dnit == NULL)
+    if (this->m_wshd_dnit < 0)
     {
         m_wshd_dnit = 0.f;
         m_wshd_hmn = 0.f;
@@ -529,7 +485,7 @@ void NandPim::CalculateMinerandImmobi(int i)
         }
         float sut = 0.f;
         // mineralization can occur only if temp above 0 deg
-        if (m_sol_tmp[i][kk] > 0)
+        if (m_sol_tmp[i] > 0)
         {
             // compute soil water factor (sut)
             sut = 0.f;
@@ -545,7 +501,7 @@ void NandPim::CalculateMinerandImmobi(int i)
             float xx = 0.f;
             //soil temperature factor (cdg)
             float cdg = 0.f;
-            xx = m_sol_tmp[i][kk];
+            xx = m_sol_tmp[i];
             cdg = 0.9f * xx / (xx + exp(9.93f - 0.312f * xx)) + 0.1f;
             cdg = max(0.1f, cdg);
 
@@ -681,10 +637,8 @@ void NandPim::CalculateMinerandImmobi(int i)
             //  compute denitrification
             //amount of nitrogen lost from nitrate pool in layer due to denitrification
             float wdn = 0;
-            //denitrification threshold: fraction of field capacity (sdnco)
-            float *sdnco(NULL);////////////////////////////////////////////////////////////////////////parameter
             //Calculate wdn, equation 3:1.4.1 and 3:1.4.2 in SWAT Theory 2009, p194
-            if (sut >= sdnco[i])
+            if (sut >= m_sdnco)
             {
                 wdn = m_sol_no3[i][k] * (1. - exp(-m_cdn * cdg * m_sol_cbn[i][k]));    // sol_cbn = sol_om * 0.58
             } else
@@ -719,7 +673,7 @@ void NandPim::CalculateMinerandVolati(int i)
         //nitrification/volatilization temperature factor (nvtf)
         float nvtf = 0;
         //Calculate nvtf, equation 3:1.3.1 in SWAT Theory 2009, p192
-        nvtf = 0.41f * (m_sol_tmp[i][k] - 5.f) / 10.f;
+        nvtf = 0.41f * (m_sol_tmp[i] - 5.f) / 10.f;
         if (m_sol_nh3[i][k] > 0 && nvtf >= 0.001)
         {
             float sw25 = 0.f;
