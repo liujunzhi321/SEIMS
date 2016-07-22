@@ -240,6 +240,8 @@ private:
     // saturation concentration of dissolved oxygen (mg/L)
     float m_soxy;
 
+	// Outlet
+
 private:
 
     /*!
