@@ -34,7 +34,7 @@
 *   Date:       2016-7-14
 *   1. Remove snowmelt as AddInput, because snowmelt is considered into net precipitation in SnowMelt moudule,
 *      by the meantime, this can avoid runtime error when SnowMelt module is not configured.
-*   2. 
+*   2. Change the unit of soil moisture from mm H2O/mm Soil to mm H2O, which is more rational.
 */
 
 #pragma once
@@ -104,11 +104,9 @@ private:
 
     /// soil porosity
     float **m_porosity;
-    /// soil moisture
-    float **m_soilMoisture;
     /// water content of soil at field capacity
     float **m_fieldCap;
-    /// initial soil moisture
+    /// initial soil moisture fraction related to field capacity
     float *m_initSoilMoisture;
 
     /// runoff exponent
@@ -141,7 +139,9 @@ private:
     /// the excess precipitation (mm) of the total nCells
     float *m_pe;
     /// infiltration map of watershed (mm) of the total nCells
-    float *m_infil;
+	float *m_infil;
+	/// soil moisture (mm)
+	float **m_soilMoisture;
 
     /// initial output for the first run
     void initialOutputs();

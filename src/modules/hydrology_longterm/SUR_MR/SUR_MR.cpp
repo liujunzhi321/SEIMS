@@ -68,7 +68,7 @@ void SUR_MR::CheckInputData(void)
 		throw ModelException(MID_SUR_MR, "CheckInputData", "the input data: Soil thickness can not be NULL.");
     if (m_porosity == NULL)
         throw ModelException(MID_SUR_MR, "CheckInputData", "The soil porosity of the input data can not be NULL.");
-    if (m_tMean == NULL)
+	if (m_tMean == NULL)
         throw ModelException(MID_SUR_MR, "CheckInputData",
                              "The mean air temperature of the input data can not be NULL.");
     if (m_soilTemp == NULL)
@@ -98,10 +98,10 @@ void SUR_MR::initialOutputs()
         for (int i = 0; i < m_nCells; i++)
         {
 			m_soilMoisture[i] = new float[m_nSoilLayers];
-            m_pe[i] = 0.0f;
-            m_infil[i] = 0.0f;
+            m_pe[i] = 0.f;
+            m_infil[i] = 0.f;
             for (int j = 0; j < (int)m_soilLayers[i]; j++)
-                m_soilMoisture[i][j] = m_initSoilMoisture[i] * m_fieldCap[i][j];
+                m_soilMoisture[i][j] = m_initSoilMoisture[i] * m_fieldCap[i][j] * m_soilThick[i][j]; /// mm
 			for(int k = (int)m_soilLayers[i]; k < m_nSoilLayers; k++)
 				m_soilMoisture[i][k] = NODATA_VALUE;
         }
@@ -136,39 +136,21 @@ int SUR_MR::Execute()
 		hWater = m_pNet[i] + m_sd[i];
         if (hWater > 0.f)
         {
-            /// Update soil layers from solid two layers to multi-layers by m_nSoilLayers, m_soilLayers. By LJ
-            //int curSoilLayers = -1, j;
-            //m_soilThick[0] = m_soilDepth[i][0];
-            /*for (j = 1; j < m_nSoilLayers; j++)
-            {
-                if (!FloatEqual(m_soilDepth[i][j], NODATA_VALUE))
-                    m_soilThick[j] = m_soilDepth[i][j] - m_soilDepth[i][j - 1];
-                else
-                    break;
-            }*/
-            //curSoilLayers = j;
             float sm = 0.f, por = 0.f;
             for (int j = 0; j < (int)m_soilLayers[i]; j++)
             {
-                sm += m_soilMoisture[i][j] * m_soilThick[i][j]; ///  mm H2O
+                sm += m_soilMoisture[i][j]; ///  mm H2O
                 por += m_porosity[i][j] * m_soilThick[i][j]; /// unit can be seen as mm H2O 
             }
 
-            //float smFraction = sm / por;
             float smFraction = min(sm / por, 1.f);
 
             // for frozen soil, no infiltration will occur
             if (m_soilTemp[i] <= m_tFrozen && smFraction >= m_sFrozen)
             {
-                //m_pe[i] = m_pNet[i] + snowMelt;
 				m_pe[i] = m_pNet[i];
-                m_infil[i] = 0.0f;
+                m_infil[i] = 0.f;
             }
-                //else if (m_soilMoisture[i] >= m_porosity[i])//for saturation overland flow
-                //{
-                //	m_pe[i] = m_pNet[i] + snowMelt;
-                //	m_infil[i] = 0.0f;
-                //}
             else
             {
                 float alpha = m_kRunoff - (m_kRunoff - 1.f) * hWater / m_pMax;
@@ -186,7 +168,7 @@ int SUR_MR::Execute()
 				if (surfq > hWater) surfq = hWater;
                 m_infil[i] = hWater - surfq;
                 m_pe[i] = surfq;
-				/// Soil moisture will be updated in Percolation modules,  commented by LJ
+				
 				
 				/// TODO: Why calculate surfq first, rather than infiltration first?
 				///       I think we should calculate infiltration first, until saturation, 
@@ -211,6 +193,8 @@ int SUR_MR::Execute()
             m_pe[i] = 0.f;
             m_infil[i] = 0.f;
         }
+		/// if m_infil > 0., m_soilMoisture need to be updated here. 
+		/// But currently, this is implemented in percolation modules. 		
     }
     return 0;
 }

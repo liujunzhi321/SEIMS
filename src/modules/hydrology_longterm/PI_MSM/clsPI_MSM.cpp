@@ -152,80 +152,48 @@ int clsPI_MSM::Execute()
 bool clsPI_MSM::CheckInputData()
 {
     if (this->m_date == -1)
-    {
         throw ModelException(MID_PI_MSM, "CheckInputData", "You have not set the time.");
-        return false;
-    }
 
     if (m_nCells <= 0)
-    {
         throw ModelException(MID_PI_MSM, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
-        return false;
-    }
 
     if (this->m_P == NULL)
-    {
         throw ModelException(MID_PI_MSM, "CheckInputData", "The precipitation data can not be NULL.");
-        return false;
-    }
 
     if (this->m_PET == NULL)
-    {
         throw ModelException(MID_PI_MSM, "CheckInputData", "The PET data can not be NULL.");
-        return false;
-    }
 
     if (this->m_maxSt == NULL)
-    {
         throw ModelException(MID_PI_MSM, "CheckInputData",
                              "The maximum interception storage capacity can not be NULL.");
-        return false;
-    }
 
     if (this->m_minSt == NULL)
-    {
         throw ModelException(MID_PI_MSM, "CheckInputData",
                              "The minimum interception storage capacity can not be NULL.");
-        return false;
-    }
 
     if (this->m_Pi_b > 1.5 || this->m_Pi_b < 0.5)
-    {
         throw ModelException(MID_PI_MSM, "CheckInputData",
                              "The interception storage capacity exponent can not be " + ValueToString(this->m_Pi_b) +
                              ". It should between 0.5 and 1.5.");
-        return false;
-    }
-
-    if (this->m_Init_IS > 1 || this->m_Init_IS < 0)
-    {
+    if (this->m_Init_IS > 1.f || this->m_Init_IS < 0.f)
         throw ModelException(MID_PI_MSM, "CheckInputData",
                              "The Initial interception storage can not be " + ValueToString(this->m_Init_IS) +
                              ". It should between 0 and 1.");
-        return false;
-    }
-
     return true;
 }
 
 bool clsPI_MSM::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
-    {
         throw ModelException(MID_PI_MSM, "CheckInputSize",
                              "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
-        return false;
-    }
     if (this->m_nCells != n)
     {
         if (this->m_nCells <= 0) this->m_nCells = n;
         else
-        {
             throw ModelException(MID_PI_MSM, "CheckInputSize", "Input data for " + string(key) +
                                                                " is invalid. All the input data should have same size.");
-            return false;
-        }
     }
     return true;
 }

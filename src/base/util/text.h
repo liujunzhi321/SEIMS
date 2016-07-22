@@ -466,8 +466,8 @@
 #define VAR_A_BNK "a_bnk"                           /// bank flow recession constant
 #define VAR_ACC "acc"
 #define VAR_ACC_INFIL "AccumuInfil"
-#define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/km2)
-#define VAR_ADDRNO3 "addrno3"                       /// nitrate added by rainfall (kg/km2)
+#define VAR_ADDRNH3 "addrnh3"                       /// ammonium added by rainfall (kg/ha)
+#define VAR_ADDRNO3 "addrno3"                       /// nitrate added by rainfall (kg/ha)
 #define VAR_AET_PLT "AET_PLT"
 #define VAR_AFERT_AMAXN "afert_AmaxN"
 #define VAR_AFERT_FRTEFF "afert_frteff"
@@ -554,7 +554,7 @@
 #define VAR_CONV_WT "conv_wt"
 #define VAR_CROP_LOOKUP "CropLookup"
 #define VAR_CSWAT "cswat"
-#define VAR_PCP "P" /// Distribution of precipitation
+#define VAR_PCP "D_P" /// Distribution of precipitation
 #define VAR_DAYLEN "daylength"
 #define VAR_DAYLEN_MIN "daylenmin"  /// minimum day length
 #define VAR_DEEPST "deepst"
@@ -657,7 +657,7 @@
 #define VAR_LAST_SOILRD "lastSoilRD"
 #define VAR_LATNO3 "latno3"
 #define VAR_LATNO3_CH "latno3ToCh"
-#define VAR_LCC "landcover"                             /// land cover code
+#define VAR_LCC "landcover"                             /// land cover code, idplt in SWAT
 #define VAR_LDRAIN "ldrain"
 #define VAR_MANNING "Manning"
 #define VAR_MAT_YRS "MAT_YRS"
@@ -700,7 +700,7 @@
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PHOSKD "phoskd"
 #define VAR_PHUBASE "PHUBASE"
-#define VAR_PHUPLT "PHUPLT"
+#define VAR_PHUPLT "PHU_PLT"
 #define VAR_PHUTOT "PHU0"
 #define VAR_PI_B "Pi_b"
 #define VAR_PL_RSDCO "rsdco_pl"                     /// Plant residue decomposition coefficient
@@ -810,8 +810,9 @@
 #define VAR_SOL_RSDIN "rsdin"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_SOLP "sol_solp"                     /// amount of phosphorus stored in solution(kg P/ha)
 #define VAR_SOL_STAP "sol_stap"                     /// amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool(kg P/ha)
-#define VAR_SOL_SUMAWC "sol_sumAWC"  /// mm H2O
-#define VAR_SOL_SUMSAT "sol_sumSAT"  /// mm H2O
+#define VAR_SOL_SUMAWC "sol_sumAWC"  /// mm H2O sol_sumfc in SWAT
+#define VAR_SOL_SUMSAT "sol_sumul"  /// mm H2O  sol_sumul in SWAT
+#define VAR_SOL_UL "sol_ul"
 #define VAR_SOL_TA0 "soil_ta0"
 #define VAR_SOL_TA1 "soil_ta1"
 #define VAR_SOL_TA2 "soil_ta2"
@@ -1332,7 +1333,7 @@
 #define DESC_SOL_TMP "daily average temperature of soil layer"
 #define DESC_SOL_UL "amount of water held in the soil layer at saturation (sat - wp water)"
 #define DESC_SOL_WFC "Water content of soil profile at field capacity"
-#define DESC_SOL_WPMM " water content of soil at -1.5 MPa (wilting point)"
+#define DESC_SOL_WPMM "water content of soil at -1.5 MPa (wilting point)"
 #define DESC_SOL_WST "amount of water stored in the soil layer on current day"
 #define DESC_SOL_ZMX "Maximum rooting depth of soil profile (mm)"
 #define DESC_SOMO "soil moisture in soil layers"

@@ -38,15 +38,19 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_CONDUCT, UNIT_WTRDLT_MMH, DESC_CONDUCT, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_POROST, UNIT_NON_DIM, DESC_POROST, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_POREID, UNIT_NON_DIM, DESC_POREID, Source_ParameterDB, DT_Raster2D);
-    mdi.AddParameter(VAR_FIELDCAP, UNIT_WAT_RATIO, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_WILTPOINT,UNIT_WAT_RATIO, DESC_WILTPOINT, Source_ParameterDB, DT_Raster2D);
+    //mdi.AddParameter(VAR_FIELDCAP, UNIT_WAT_RATIO, DESC_FIELDCAP, Source_ParameterDB, DT_Raster2D); => VAR_SOL_UL
+	//mdi.AddParameter(VAR_WILTPOINT,UNIT_WAT_RATIO, DESC_WILTPOINT, Source_ParameterDB, DT_Raster2D); => VAR_SOL_WPMM
+
+	mdi.AddParameter(VAR_SOL_UL, UNIT_DEPTH_MM, DESC_SOL_UL, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_WPMM, UNIT_DEPTH_MM, DESC_SOL_WPMM, Source_ParameterDB, DT_Raster2D);
 
     mdi.AddInput(VAR_SOTE, UNIT_TEMP_DEG, DESC_SOTE, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_INFIL, UNIT_DEPTH_MM, DESC_INFIL, Source_Module, DT_Raster1D);
 
-    mdi.AddInput(VAR_SOMO, UNIT_WAT_RATIO, DESC_SOMO, Source_Module, DT_Raster2D);
+    mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);
 
     // set the output variables
+	mdi.AddOutput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, DT_Raster2D);
     mdi.AddOutput(VAR_PERCO, UNIT_DEPTH_MM, DESC_PERCO, DT_Raster2D);
 
     string res = mdi.GetXMLDocument();

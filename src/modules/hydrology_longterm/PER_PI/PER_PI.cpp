@@ -45,7 +45,7 @@ int PER_PI::Execute()
         float k = 0.f, maxSoilWater = 0.f, fcSoilWater = 0.f;
 		float swater = 0.f, wpSoilWater = 0.f;        
         /// firstly, assume all infiltrated water is added to the first soil layer.
-		m_somo[i][0] += m_infil[i] / m_soilThick[i][0];
+		m_somo[i][0] += m_infil[i];
 		/// secondly, model water percolation across layers
         for (int j = 0; j < (int)m_soilLayers[i]; j++)
         {
@@ -56,16 +56,17 @@ int PER_PI::Execute()
             if (m_somo[i][j] > m_fc[i][j])
             {
                 maxSoilWater = m_soilThick[i][j] * m_porosity[i][j];
-                swater = m_soilThick[i][j] * m_somo[i][j];
-                fcSoilWater = m_soilThick[i][j] * m_fc[i][j];
-				wpSoilWater = m_soilThick[i][j] * m_wp[i][j];
+                swater = m_somo[i][j];
+                fcSoilWater = m_fc[i][j];
+				wpSoilWater = m_wp[i][j];
                 //the moisture content can exceed the porosity in the way the algorithm is implemented
-                if (m_somo[i][j] > m_porosity[i][j])
+                if (swater > maxSoilWater) //(m_somo[i][j] > m_porosity[i][j])
                     k = m_ks[i][j];
                 else
                 {
                     float dcIndex = 2.f / m_poreIndex[i][j] + 3.f; // pore disconnectedness index
-                    k = m_ks[i][j] * pow(m_somo[i][j] / m_porosity[i][j], dcIndex);
+					k = m_ks[i][j] * pow(swater / maxSoilWater, dcIndex);
+                    //k = m_ks[i][j] * pow(m_somo[i][j] / m_porosity[i][j], dcIndex);
                 }
 
                 m_perc[i][j] = k * m_dt / 3600.f;  /// mm
@@ -76,13 +77,13 @@ int PER_PI::Execute()
                     m_perc[i][j] = swater - fcSoilWater;
 				else if (swater - m_perc[i][j] < wpSoilWater)
 					m_perc[i][j] = swater - wpSoilWater;
-				else  /// percolation is not allowed!
+				else if (swater - m_perc[i][j] < 0.f)  /// percolation is not allowed!
 					m_perc[i][j] = 0.f;
 
                 //Adjust the moisture content in the current layer, and the layer immediately below it
-                m_somo[i][j] -= m_perc[i][j] / m_soilThick[i][j];
+                m_somo[i][j] -= m_perc[i][j];// / m_soilThick[i][j];
                 if (j < m_soilLayers[i] - 1)
-                    m_somo[i][j + 1] += m_perc[i][j] / m_soilThick[i][j + 1];
+                    m_somo[i][j + 1] += m_perc[i][j];// / m_soilThick[i][j + 1];
 
 				/// TODO: Where is the water percolated from the last soil layers??? By LJ
                 //if (m_somo[i][j] != m_somo[i][j] || m_somo[i][j] < 0.f)
@@ -100,6 +101,10 @@ int PER_PI::Execute()
 			}
 			for (int j = (int)m_soilLayers[i]; j < m_nSoilLayers; j++)
 				m_perc[i][j] = NODATA_VALUE;
+			if(m_perc[i][(int)m_soilLayers[i]-1] > 0.f) /// If there have water percolated down to groundwater
+			{
+				/// update groundwater variables
+			}
         }
     }
     return 0;
@@ -112,6 +117,7 @@ void PER_PI::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
     *nRows = m_nCells;
     *nCols = m_nSoilLayers;
     if (StringMatch(sk, VAR_PERCO)) *data = m_perc;
+	else if (StringMatch(sk, VAR_SOMO)) *data = m_somo;
     else
         throw ModelException(MID_PER_PI, "Get2DData", "Output " + sk
                                                       + " does not exist. Please contact the module developer.");
@@ -141,8 +147,10 @@ void PER_PI::Set2DData(const char *key, int nrows, int ncols, float **data)
     if (StringMatch(sk, VAR_CONDUCT)) m_ks = data;
 	else if (StringMatch(sk, VAR_SOILTHICK)) m_soilThick = data;
     else if (StringMatch(sk, VAR_POROST)) m_porosity = data;
-    else if (StringMatch(sk, VAR_FIELDCAP)) m_fc = data;
-	else if (StringMatch(sk, VAR_WILTPOINT)) m_wp = data;
+ //   else if (StringMatch(sk, VAR_FIELDCAP)) m_fc = data;
+	//else if (StringMatch(sk, VAR_WILTPOINT)) m_wp = data;
+	else if (StringMatch(sk, VAR_SOL_UL)) m_fc = data;
+	else if (StringMatch(sk, VAR_SOL_WPMM)) m_wp = data;
     else if (StringMatch(sk, VAR_POREID)) m_poreIndex = data;
     else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
     else

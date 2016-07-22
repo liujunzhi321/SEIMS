@@ -52,9 +52,13 @@ private:
     float **m_ks;
     /// soil porosity
     float **m_porosity;
-    /// field capacity (mm H2O/ mm Soil)
-    float **m_fc;
-	/// wilting point (mm H2O/ mm Soil)
+    ///// field capacity (mm H2O/ mm Soil)
+    //float **m_fc;
+	/// amount of water held in the soil layer at saturation (sat - wp water) mm H2O
+	float **m_fc;
+	///// wilting point (mm H2O/ mm Soil)
+	//float **m_wp;
+	/// water content of soil at -1.5 MPa (wilting point) mm H2O
 	float **m_wp;
     /// pore index
     float **m_poreIndex;

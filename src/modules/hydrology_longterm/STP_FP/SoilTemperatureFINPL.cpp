@@ -96,16 +96,14 @@ bool SoilTemperatureFINPL::CheckInputData(void)
 bool SoilTemperatureFINPL::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
-    {
-        return false;
-    }
+		throw ModelException(MID_STP_FP, "CheckInputSize",
+		"Input data for " + string(key) + " is invalid. The size could not be less than zero.");
     if (this->m_nCells != n)
     {
         if (this->m_nCells <= 0) this->m_nCells = n;
         else
-        {
-            return false;
-        }
+			throw ModelException(MID_STP_FP, "CheckInputSize", "Input data for " + string(key) +
+			" is invalid. All the input raster data should have same size.");
     }
     return true;
 }

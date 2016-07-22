@@ -1134,11 +1134,12 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char *remoteFilen
         mongoc_gridfs_file_t *gfile;
         bson_error_t *err = NULL;
         gfile = mongoc_gridfs_find_one_by_filename(gfs, remoteFilename, err);
-        if (err != NULL)
+        if (err != NULL || gfile == NULL)
         {
             throw ModelException("clsRasterData", "ReadRasterFromMongoDB",
                                  "The file " + string(remoteFilename) + " does not exist.");
         }
+		//cout<<"Read "<<remoteFilename<<endl;
         /// Get metadata
         const bson_t *bmeta;
         bmeta = mongoc_gridfs_file_get_metadata(gfile);

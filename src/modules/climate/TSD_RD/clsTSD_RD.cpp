@@ -30,6 +30,7 @@ void clsTSD_RD::Set1DData(const char *key, int n, float *data)
     this->m_Rows = n;
     this->m_Data = data;
     /// Test Code of Reading time series data
+	//cout<<"TSD_RD, SetData: ";
 	//for (int i = 0; i < n; i++)
 	//	 cout << counter << ":" << key << ": " << data[i] << " ";
 	//cout<<endl;
@@ -45,7 +46,7 @@ void clsTSD_RD::Get1DData(const char *key, int *n, float **data)
     }
     *data = this->m_Data;
     *n = this->m_Rows;
-    //cout<<"TSD_RD: ";
+    //cout<<"TSD_RD, GetData: ";
     //for(int i = 0; i < m_Rows; i++)
     //	cout << m_Data[i]<<",";
     //cout<<endl;

@@ -1,11 +1,7 @@
 /** \defgroup MINRL
  * \ingroup Nutrient
  * \brief Daily nitrogen and phosphorus mineralization and immobilization.
- * From nminrl.f, nitvol.f, pminrl
- */
-/*!
- * \file NandPmi.h
- * \ingroup MINRL
+ * From nminrl.f, nitvol.f, pminrl.f of SWAT
  * \author Huiran Gao
  * \date April 2016
  */
@@ -61,6 +57,7 @@ private:
     int m_soiLayers;
 
     ///input data
+    
     ///rate factor for humus mineralization on active organic N
     float m_cmn;
     ///nitrogen active pool fraction. The fraction of organic nitrogen in the active pool.
@@ -81,28 +78,28 @@ private:
 	///amount of residue on soil surface (kg/ha)
 	float *m_sol_rsdin;
 	///daily average temperature of soil layer(deg C)
-	float *m_sol_tmp;
+	float *m_sote;
     ///percent organic matter in soil layer (%)
 	float **m_sol_om;
-	///bulk density of the soil (mg/m3)
+	///bulk density of the soil (Mg/m3)
 	float **m_sol_bd;
 	/// percent organic carbon in soil layer (%)
 	float **m_sol_cbn;
     ///amount of water stored in the soil layer on current day(mm H2O)
-    float **m_sol_st;
+    float **m_somo;
     ///Water content of soil profile at field capacity(mm H2O)
-    float **m_sol_fc;
+    float **m_sol_awc;
     ///depth to bottom of soil layer
 	float **m_sol_z;
 	///Percent of clay content
 	float **m_sol_clay;
 	/// thick of each soil layer
 	float **m_sol_thick;
-	///amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/km2)
+	///amount of nitrogen stored in the active organic (humic) nitrogen pool(kg N/ha)
 	float **m_sol_aorgn;
-	///amount of nitrogen stored in the fresh organic (residue) pool(kg N/km2)
+	///amount of nitrogen stored in the fresh organic (residue) pool(kg N/ha)
 	float **m_sol_fon;
-	///amount of phosphorus stored in the fresh organic (residue) pool(kg P/km2)
+	///amount of phosphorus stored in the fresh organic (residue) pool(kg P/ha)
 	float **m_sol_fop;
     ///amount of phosphorus stored in the active mineral phosphorus pool
     float **m_sol_actp;
@@ -110,53 +107,54 @@ private:
     float **m_sol_stap;
 
     ///output data
-    ///amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
+    
+    ///amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/ha)
     float m_hmntl;
-    ///amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
+    ///amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/ha)
     float m_hmptl;
-    ///amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/km2)
+    ///amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/ha)
     float m_rmn2tl;
-    ///amount of phosphorus moving from the fresh organic (residue) to the labile(80%) and organic(20%) pools in soil profile on current day in cell(kg P/km2)
+    ///amount of phosphorus moving from the fresh organic (residue) to the labile(80%) and organic(20%) pools in soil profile on current day in cell(kg P/ha)
     float m_rmptl;
-    ///amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell(kg N/km2)
+    ///amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell(kg N/ha)
     float m_rwntl;
-    ///amount of nitrogen lost from nitrate pool by denitrification in soil profile on current day in cell(kg N/km2)
+    ///amount of nitrogen lost from nitrate pool by denitrification in soil profile on current day in cell(kg N/ha)
     float m_wdntl;
-    ///amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell(kg P/km2)
+    ///amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell(kg P/ha)
     float m_rmp1tl;
-    ///amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell(kg P/km2)
+    ///amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell(kg P/ha)
     float m_roctl;
 
     ///input & output data
-    ///amount of nitrogen stored in the nitrate pool in soil layer(kg N/km2)
+    ///amount of nitrogen stored in the nitrate pool in soil layer(kg N/ha)
     float **m_sol_no3;
-    ///amount of nitrogen stored in the stable organic N pool(kg N/km2)
+    ///amount of nitrogen stored in the stable organic N pool(kg N/ha)
     float **m_sol_orgn;
-    ///amount of phosphorus stored in the organic P pool in soil layer(kg P/km2)
+    ///amount of phosphorus stored in the organic P pool in soil layer(kg P/ha)
     float **m_sol_orgp;
-    ///amount of organic matter in the soil classified as residue(kg/km2)
+    ///amount of organic matter in the soil classified as residue(kg/ha)
     float **m_sol_rsd;
-    ///amount of phosohorus stored in solution(kg P/km2)
+    ///amount of phosphorus stored in solution(kg P/ha)
     float **m_sol_solp;
-    ///amount of nitrogen stored in the ammonium pool in soil layer(kg/km2)
+    ///amount of nitrogen stored in the ammonium pool in soil layer(kg/ha)
     float **m_sol_nh3;
     ///water content of soil at -1.5 MPa (wilting point)
     float **m_sol_wpmm;
-    ///average annual amount of nitrogen lost from nitrate pool due to denitrification in watershed(kg N/km2)
+    ///average annual amount of nitrogen lost from nitrate pool due to denitrification in watershed(kg N/ha)
     float m_wshd_dnit;
-    ///average annual amount of nitrogen moving from active organic to nitrate pool in watershed(kg N/km2)
+    ///average annual amount of nitrogen moving from active organic to nitrate pool in watershed(kg N/ha)
     float m_wshd_hmn;
-    ///average annual amount of phosphorus moving from organic to labile pool in watershed(kg P/km2)
+    ///average annual amount of phosphorus moving from organic to labile pool in watershed(kg P/ha)
     float m_wshd_hmp;
-    ///average annual amount of nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed(kg N/km2)
+    ///average annual amount of nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed(kg N/ha)
     float m_wshd_rmn;
-    ///average annual amount of phosphorus moving from fresh organic (residue) to labile and organic pools in watershed(kg P/km2)
+    ///average annual amount of phosphorus moving from fresh organic (residue) to labile and organic pools in watershed(kg P/ha)
     float m_wshd_rmp;
-    ///average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/km2)
+    ///average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/ha)
     float m_wshd_rwn;
-    ///average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/km2)
+    ///average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/ha)
     float m_wshd_nitn;
-    ///average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/km2)
+    ///average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/ha)
     float m_wshd_voln;
     ///average annual amount of phosphorus moving from labile mineral to active mineral pool in watershed
     float m_wshd_pal;
