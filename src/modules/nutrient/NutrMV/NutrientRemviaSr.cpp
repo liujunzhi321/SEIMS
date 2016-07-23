@@ -21,11 +21,11 @@ NutrientRemviaSr::NutrientRemviaSr(void) :
 //input
         m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_sedimentYield(NULL), m_nperco(-1), m_phoskd(-1), m_pperco(-1),
         m_qtile(-1),
-        m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(NULL), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
+        m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(-1), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
         m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_sol_depth(NULL),
         m_sol_om(NULL), m_gw_q(NULL),
         //output
-        m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(NULL),
+        m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(-1),
         m_sol_solp(NULL),
         m_cod(NULL), m_chl_a(NULL) //,m_doxq(), m_soxy()
 {
@@ -99,7 +99,7 @@ bool NutrientRemviaSr::CheckInputData()
         throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
         return false;
     }
-    if (this->m_isep_opt == NULL)
+    if (this->m_isep_opt <= 0)
     {
         throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
         return false;
@@ -114,7 +114,7 @@ bool NutrientRemviaSr::CheckInputData()
         throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
         return false;
     }
-    if (this->m_nperco == NULL)
+    if (this->m_nperco <= 0)
     {
         throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
         return false;
@@ -134,7 +134,7 @@ bool NutrientRemviaSr::CheckInputData()
         throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
         return false;
     }
-    if (this->m_phoskd == NULL)
+    if (this->m_phoskd <= 0)
     {
         throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
         return false;
@@ -144,7 +144,7 @@ bool NutrientRemviaSr::CheckInputData()
         throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
         return false;
     }
-    if (this->m_pperco == NULL)
+    if (this->m_pperco <= 0)
     {
         throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
         return false;
@@ -301,7 +301,7 @@ void NutrientRemviaSr::Nitrateloss()
                 //percnlyr nitrate moved to next lower layer with percolation (kg/km2)
                 float percnlyr = 0.f;
                 float *tileno3;
-#pragma omp parallel for
+				#pragma omp parallel for
                 for (int i = 0; i < m_nCells; i++)
                 {
                     for (int k = 0; k < m_nSoilLayers[i]; k++)
