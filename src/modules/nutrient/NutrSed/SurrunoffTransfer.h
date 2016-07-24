@@ -1,10 +1,7 @@
-/** \defgroup SurTra
- * \ingroup Nutrient
- * \brief Nutrient removed and lost in surface runoff.
- */
+
 /*!
  * \file SurrunoffTransfer.h
- * \ingroup SurTra
+ * \brief Nutrient removed and lost in surface runoff.
  * \author Huiran Gao
  * \date April 2016
  */
@@ -18,6 +15,10 @@
 #include "SimulationModule.h"
 
 using namespace std;
+/** \defgroup SurTra
+ * \ingroup Nutrient
+ * \brief Nutrient removed and lost in surface runoff.
+ */
 
 /*!
  * \class SurrunoffTransfer

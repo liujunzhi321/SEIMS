@@ -1,10 +1,7 @@
-/** \defgroup NutGW
- * \ingroup Nutrient
- * \brief Calculates the nitrate and soluble phosphorus loading contributed by groundwater flow.
- */
+
 /*!
  * \file NutrientinGroundwater.h
- * \ingroup NutGW
+ * \brief Calculates the nitrate and soluble phosphorus loading contributed by groundwater flow.
  * \author Huiran Gao
  * \date Jun 2016
  */
@@ -18,6 +15,10 @@
 #include "SimulationModule.h"
 
 using namespace std;
+/** \defgroup NutGW
+ * \ingroup Nutrient
+ * \brief Calculates the nitrate and soluble phosphorus loading contributed by groundwater flow.
+ */
 
 /*!
  * \class NutrientinGroundwater

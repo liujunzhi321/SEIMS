@@ -1,10 +1,7 @@
-/** \defgroup NutCHRout
- * \ingroup Nutrient
- * \brief Calculates in-stream nutrient transformations.
- */
+
 /*!
  * \file NutrientCHRoute.h
- * \ingroup NutCHRout
+ * \brief Calculates in-stream nutrient transformations.
  * \author Huiran Gao
  * \date Jun 2016
  */
@@ -20,6 +17,11 @@
 #include "SimulationModule.h"
 
 using namespace std;
+/** \defgroup NutCHRout
+ * \ingroup Nutrient
+ * \brief Calculates in-stream nutrient transformations.
+ */
+
 /*!
  * \class NutrientCHRoute
  * \ingroup NutCHRout
@@ -28,12 +30,6 @@ using namespace std;
  *
  */
 
-/*!
- * \class NutrientCHRoute
- * \ingroup NutCHRout
- * \brief Overland routing using 4-point implicit finite difference method
- * 
- */
 struct MuskWeights
 {
     float c1;
@@ -125,7 +121,7 @@ private:
     float m_lambda2;     /// nonlinear algal self-shading coefficient
 
     float m_k_l;        /// half saturation coefficient for light (MJ/(m2*hr))
-    float m_k_n;        /// half-saturation constant for nitrogen (mg N/L)
+    float m_k_n;        /// half saturation constant for nitrogen (mg N/L)
     float m_k_p;        /// half saturation constant for phosphorus (mg P/L)
     /// algal preference factor for ammonia
     float m_p_n;

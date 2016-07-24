@@ -1,9 +1,3 @@
-/*!
- * \file SurrunoffTransfer.cpp
- * \ingroup SurTra
- * \author Huiran Gao
- * \date May 2016
- */
 
 #include <iostream>
 #include "SurrunoffTransfer.h"
@@ -31,7 +25,11 @@ SurrunoffTransfer::SurrunoffTransfer(void) :
 
 SurrunoffTransfer::~SurrunoffTransfer(void)
 {
-    ///TODO
+	if (m_sedorgp != NULL) Release1DArray(m_sedorgp);
+	if (m_sedorgn != NULL) Release1DArray(m_sedorgn);
+	if (m_sedminpa != NULL) Release1DArray(m_sedminpa);
+	if (m_sedminps != NULL) Release1DArray(m_sedminps);
+    
 }
 
 bool SurrunoffTransfer::CheckInputSize(const char *key, int n)
@@ -63,79 +61,63 @@ bool SurrunoffTransfer::CheckInputData()
     if (this->m_nCells <= 0)
     {
         throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be less than zero.");
-        return false;
     }
-    if (this->m_cellWidth < 0)
+    if (this->m_cellWidth <= 0)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The cell width can not be less than zero.");
     }
-    if (this->m_soiLayers < 0)
+    if (this->m_soiLayers <= 0)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The layer number of the input 2D raster data can not be less than zero.");
     }
     if (this->m_nSoilLayers == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "Soil layers number must not be NULL.");
     }
     if (this->m_sedimentYield == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The distribution of soil loss caused by water erosion can not be NULL.");
     }
     if (this->m_surfr == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The distribution of surface runoff generated data can not be NULL.");
     }
     if (this->m_sol_bd == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The bulk density of the soil data can not be NULL.");
     }
     if (this->m_sol_z == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The depth to bottom of soil layer can not be NULL.");
     }
     if (this->m_sol_actp == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The amount of phosphorus stored in the active mineral phosphorus pool can not be NULL.");
     }
     if (this->m_sol_orgn == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+		throw ModelException(MID_SurTra, "CheckInputData", "The amount of nitrogen stored in the stable organic N pool can not be NULL.");
     }
     if (this->m_sol_orgp == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The amount of phosphorus stored in the organic P pool can not be NULL.");
     }
     if (this->m_sol_stap == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The amount of phosphorus in the soil layer stored in the stable mineral phosphorus pool can not be NULL.");
     }
     if (this->m_sol_aorgn == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The amount of nitrogen stored in the active organic nitrogen pool data can not be NULL.");
     }
     if (this->m_sol_fon == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The amount of nitrogen stored in the fresh organic pool can not be NULL.");
     }
     if (this->m_sol_fop == NULL)
     {
-        throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_SurTra, "CheckInputData", "The amount of phosphorus stored in the fresh organic pool can not be NULL.");
     }
-    //if(this -> m_sol_mp == NULL) {throw ModelException(MID_SurTra, "CheckInputData", "The input data can not be NULL.");return false;}
     return true;
 }
 
@@ -156,7 +138,7 @@ void SurrunoffTransfer::SetValue(const char *key, float value)
     }
     else
     {
-        throw ModelException("SurTra", "SetValue", "Parameter " + sk +
+        throw ModelException(MID_SurTra, "SetValue", "Parameter " + sk +
                                                    " does not exist in CLIMATE method. Please contact the module developer.");
     }
 }
@@ -176,7 +158,7 @@ void SurrunoffTransfer::Set1DData(const char *key, int n, float *data)
     }
     else
     {
-        throw ModelException("SurTra", "SetValue", "Parameter " + sk +
+        throw ModelException(MID_SurTra, "SetValue", "Parameter " + sk +
                                                    " does not exist in CLIMATE module. Please contact the module developer.");
     }
 }
@@ -198,7 +180,7 @@ void SurrunoffTransfer::Set2DData(const char *key, int nRows, int nCols, float *
         //else if (StringMatch(sk, VAR_SOL_MP)) {this -> m_sol_mp = data;}
     else
     {
-        throw ModelException("SurTra", "SetValue", "Parameter " + sk +
+        throw ModelException(MID_SurTra, "SetValue", "Parameter " + sk +
                                                    " does not exist in CLIMATE module. Please contact the module developer.");
     }
 }
@@ -207,7 +189,7 @@ void SurrunoffTransfer::initialOutputs()
 {
     if (this->m_nCells <= 0)
     {
-        throw ModelException("SurTra", "CheckInputData", "The dimension of the input data can not be less than zero.");
+        throw ModelException(MID_SurTra, "CheckInputData", "The dimension of the input data can not be less than zero.");
     }
     // allocate the output variables
     if (m_sedorgn == NULL)
@@ -390,7 +372,7 @@ void SurrunoffTransfer::Get1DData(const char *key, int *n, float **data)
     if (StringMatch(sk, VAR_SEDMINPS)) { *data = this->m_sedminps; }
     else
     {
-        throw ModelException("SurTra", "GetValue",
+        throw ModelException(MID_SurTra, "GetValue",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
     }
 }
@@ -408,7 +390,7 @@ void SurrunoffTransfer::Get2DData(const char *key, int *nRows, int *nCols, float
     if (StringMatch(sk, VAR_SOL_STAP)) { *data = this->m_sol_stap; }
     if (StringMatch(sk, VAR_SOL_ACTP)) { *data = this->m_sol_actp; }
     else
-        throw ModelException("SurTra", "Get2DData", "Output " + sk +
+        throw ModelException(MID_SurTra, "Get2DData", "Output " + sk +
                                                     " does not exist in the SurTra module. Please contact the module developer.");
 }
 // int main() {

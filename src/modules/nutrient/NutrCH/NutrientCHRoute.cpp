@@ -38,8 +38,8 @@ NutrientCHRoute::~NutrientCHRoute(void)
 {
     if (m_algae != NULL)
     {
-        delete[] m_algae;
-    }
+		delete[] m_algae;
+	}
     if (m_organicn != NULL)
     {
         delete[] m_organicn;
@@ -97,7 +97,7 @@ bool NutrientCHRoute::CheckInputSize(const char *key, int n)
             ostringstream oss;
             oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
             m_nReaches << ".\n";
-            throw ModelException("NutCHRout", "CheckInputSize", oss.str());
+            throw ModelException(MID_NutCHRout, "CheckInputSize", oss.str());
         }
     }
     return true;
@@ -109,263 +109,210 @@ bool NutrientCHRoute::CheckInputData()
 	if (m_CellWith <= 0)
 	{
 		throw ModelException(MID_NutCHRout, "CheckInputData", "The cell width can not be less than zero.");
-		return false;
 	}
 	if (m_nCells <= 0)
 	{
 		throw ModelException(MID_NutCHRout, "CheckInputData", "The cell number can not be less than zero.");
-		return false;
 	}
 	if (m_chNumber <= 0)
 	{
 		throw ModelException(MID_NutCHRout, "CheckInputData", "The channel reach number can not be less than zero.");
-		return false;
 	}
 	if (m_flowOutIndex == NULL)
 	{
 		throw ModelException(MID_NutCHRout, "CheckInputData", "The flow out index can not be NULL.");
-		return false;
 	}
 	if (m_streamOrder == NULL)
 	{
-		throw ModelException(MID_NutCHRout, "CheckInputData",
-			"The stream order of reach parameter can not be NULL.");
-		return false;
+		throw ModelException(MID_NutCHRout, "CheckInputData", "The stream order of reach parameter can not be NULL.");
 	}
 	if (m_streamLink == NULL)
 	{
 		throw ModelException(MID_NutCHRout, "CheckInputData", "The stream link can not be NULL.");
-		return false;
 	}
     if (this->m_dt < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_dt has not been set.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The parameter: m_dt has not been set.");
     }
     if (this->m_nReaches < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_nReaches has not been set.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The parameter: m_nReaches has not been set.");
     }
     if (this->m_aBank < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The bank flow recession constant can not be less than zero.");
     }
     if (this->m_qUpReach < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data qUpReach can not be less than zero.");
     }
     if (this->m_rnum1 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The fraction of overland flow can not be less than zero.");
     }
     if (this->igropt < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The option for calculating the local specific growth rate of algae can not be less than zero.");
     }
     if (this->m_ai0 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The ratio of chlorophyll-a to algal biomass can not be less than zero.");
     }
     if (this->m_ai1 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The fraction of algal biomass that is nitrogen can not be less than zero.");
     }
     if (this->m_ai2 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The fraction of algal biomass that is phosphorus can not be less than zero.");
     }
     if (this->m_ai3 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The the rate of oxygen production per unit of algal photosynthesis can not be less than zero.");
     }
     if (this->m_ai4 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The the rate of oxygen uptake per unit of algae respiration can not be less than zero.");
     }
     if (this->m_ai5 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The the rate of oxygen uptake per unit of NH3 nitrogen oxidation can not be less than zero.");
     }
     if (this->m_ai6 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The the rate of oxygen uptake per unit of NO2 nitrogen oxidation can not be less than zero.");
     }
     if (this->m_lambda0 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The non-algal portion of the light extinction coefficient can not be less than zero.");
     }
     if (this->m_lambda1 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The linear algal self-shading coefficient can not be less than zero.");
     }
     if (this->m_lambda2 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The nonlinear algal self-shading coefficient can not be less than zero.");
     }
     if (this->m_k_l < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The half saturation coefficient for light can not be less than zero.");
     }
     if (this->m_k_n < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The half saturation constant for nitrogen can not be less than zero.");
     }
     if (this->m_k_p < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The half saturation constant for phosphorus can not be less than zero.");
     }
     if (this->m_p_n < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The algal preference factor for ammonia can not be less than zero.");
     }
     if (this->tfact < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The fraction of solar radiation computed can not be less than zero.");
     }
     if (this->m_mumax < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The maximum specific algal growth rate at 20 deg C can not be less than zero.");
     }
     if (this->m_rhoq < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The algal respiration rate at 20 deg C can not be less than zero.");
     }
     if (this->m_daylen == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The day length for current day can not be NULL.");
     }
     if (this->m_sra == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The solar radiation for the day data can not be NULL.");
     }
     if (this->m_bankStorage == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The bank storage can not be NULL.");
     }
     if (this->m_qsSub == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The overland flow to streams from each subbasin can not be NULL.");
     }
     if (this->m_qiSub == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The inter-flow to streams from each subbasin can not be NULL.");
     }
     if (this->m_qgSub == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The groundwater flow out of the subbasin can not be NULL.");
     }
     if (this->m_qsCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The input qsCh can not be NULL.");
     }
     if (this->m_qiCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The input qiCh can not be NULL.");
     }
     if (this->m_qgCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The input qgCh can not be NULL.");
     }
     if (this->m_chStorage == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The  reach storage data can not be NULL.");
     }
     if (this->m_chWTdepth == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The channel water depth data can not be NULL.");
     }
     if (this->m_wattemp == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The temperature of water in reach data can not be NULL.");
     }
     if (this->m_latno3ToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of nitrate transported with lateral flow can not be NULL.");
     }
     if (this->m_surqno3ToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of nitrate transported with surface runoff can not be NULL.");
     }
     if (this->m_surqsolpToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of soluble phosphorus in surface runoff can not be NULL.");
     }
     if (this->m_no3gwToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The nitrate loading to reach in groundwater can not be NULL.");
     }
     if (this->m_minpgwToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The soluble P loading to reach in groundwater can not be NULL.");
     }
     if (this->m_sedorgnToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of organic nitrogen in surface runoff can not be NULL.");
     }
     if (this->m_sedorgpToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of organic phosphorus in surface runoff can not be NULL.");
     }
     if (this->m_sedminpaToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of active mineral phosphorus absorbed to sediment in surface runoff can not be NULL.");
     }
     if (this->m_sedminpsToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of stable mineral phosphorus absorbed to sediment in surface runoff can not be NULL.");
     }
     if (this->m_ammoToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of ammonium transported with lateral flow can not be NULL.");
     }
     if (this->m_nitriteToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of nitrite transported with lateral flow can not be NULL.");
     }
     return true;
 }
@@ -406,7 +353,7 @@ void NutrientCHRoute::SetValue(const char *key, float value)
         //else if (StringMatch(sk, VAR_MSK_CO1)) {m_co1 = value;}
     else
     {
-        throw ModelException("NutCHRout", "SetValue", "Parameter " + sk +
+        throw ModelException(MID_NutCHRout, "SetValue", "Parameter " + sk +
                                                       " does not exist in CLIMATE method. Please contact the module developer.");
     }
 }
@@ -445,7 +392,7 @@ void NutrientCHRoute::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_NITRITE_CH)) { this->m_nitriteToCh = data; }
     else
     {
-        throw ModelException("NutCHRout", "SetValue", "Parameter " + sk +
+        throw ModelException(MID_NutCHRout, "SetValue", "Parameter " + sk +
                                                       " does not exist in Nutrient module. Please contact the module developer.");
     }
 }
@@ -1201,7 +1148,7 @@ void NutrientCHRoute::Get2DData(const char *key, int *nRows, int *nCols, float *
 	else if (StringMatch(sk, VAR_CHLORA)) { *data = this->m_chlora; }
 	else
 	{
-		throw ModelException("NutCHRout", "GetValue",
+		throw ModelException(MID_NutCHRout, "GetValue",
 			"Parameter " + sk + " does not exist. Please contact the module developer.");
 	}
 }
