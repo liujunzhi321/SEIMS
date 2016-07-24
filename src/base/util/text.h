@@ -570,8 +570,8 @@
 #define VAR_DORMHR "dormhr"
 #define VAR_DORMI "dormi"
 #define VAR_DPST "DPST"                               /// Distribution of depression storage
-#define VAR_DRYDEP_NH4 "drydep_nh4"                 /// atmospheric dry deposition of ammonia (kg/km2)
-#define VAR_DRYDEP_NO3 "drydep_no3"                 /// atmospheric dry deposition of nitrates (kg/km2)
+#define VAR_DRYDEP_NH4 "drydep_nh4"                 /// atmospheric dry deposition of ammonia (kg/ha)
+#define VAR_DRYDEP_NO3 "drydep_no3"                 /// atmospheric dry deposition of nitrates (kg/ha)
 #define VAR_EP_CH "Ep_ch"                           /// reach evaporation adjustment factor
 #define VAR_EPCO "epco"                              /// plant water uptake compensation factor
 #define VAR_ESCO "esco"
@@ -589,7 +589,7 @@
 #define VAR_FR_STRSWTR "frStrsWtr"
 #define VAR_FRGMAX "frgmax"
 #define VAR_FRGRW1 "FRGRW1"
-#define VAR_FRGRW2 "FRGRW1"
+#define VAR_FRGRW2 "FRGRW2"
 #define VAR_GRRE "GRRE"
 #define VAR_GRZ_DAYS "grz_days"
 #define VAR_GRZ_FLAG "grz_flag"
@@ -604,8 +604,8 @@
 #define VAR_GWWB "GWWB"
 #define VAR_HCH "HCH"
 #define VAR_HITARG "hi_targ"
-#define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/km2)
-#define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/km2)
+#define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/ha)
+#define VAR_HMPTL "hmptl"                           /// amount of phosphorus moving from the organic to labile pool in soil profile on current day in cell(kg P/ha)
 #define VAR_HVSTI "hvsti"   /// harvest index
 #define VAR_HVSTI_ADJ "hvsti_adj"
 #define VAR_HVSTI_TARG "hi_targ"
@@ -737,15 +737,15 @@
 #define VAR_REVAP "Revap"
 #define VAR_RG "RG"
 #define VAR_RHOQ "rhoq"
-#define VAR_RMN2TL "rmn2tl"                         /// amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/km2)
+#define VAR_RMN2TL "rmn2tl"                         /// amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell(kg N/ha)
 #define VAR_RMP1TL "rmp1tl"                         /// amount of phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile on the current day in cell
-#define VAR_RMPTL "rmptl"                           /// amount of phosphorus moving from the fresh organic (residue) to the labile(80%) and organic(20%) pools in soil profile on current day in cell(kg P/km2)
+#define VAR_RMPTL "rmptl"                           /// amount of phosphorus moving from the fresh organic (residue) to the labile(80%) and organic(20%) pools in soil profile on current day in cell(kg P/ha)
 #define VAR_RNUM1 "rnum1"
 #define VAR_ROCK "rock"
 #define VAR_ROCTL "roctl"                           /// amount of phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile on the current day in cell
 #define VAR_ROOTDEPTH "rootdepth"      /// Maximum root depth of plant/land cover (mm)
 #define VAR_RUNOFF_CO "Runoff_co"
-#define VAR_RWNTL "rwntl"                           /// amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell(kg N/km2)
+#define VAR_RWNTL "rwntl"                           /// amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell(kg N/ha)
 #define VAR_S_FROZEN "s_frozen"
 #define VAR_SAND "sand"
 #define VAR_SBGS "SBGS"
@@ -882,18 +882,18 @@
 #define VAR_WDNTL "wdntl"                           /// amount of nitrogen lost from nitrate pool by denitrification in soil profile on current day in cell(kg N/ha)
 #define VAR_WILTPOINT "WiltingPoint"
 #define VAR_WS "WS"
-#define VAR_WSHD_DNIT "wshd_dnit"                   /// average annual amount of nitrogen lost from nitrate pool due to denitrification in watershed(kg N/ha)
-#define VAR_WSHD_HMN "wshd_hmn"                     /// average annual amount of nitrogen moving from active organic to nitrate pool in watershed(kg N/ha)
-#define VAR_WSHD_HMP "wshd_hmp"                     /// average annual amount of phosphorus moving from organic to labile pool in watershed(kg P/ha)
-#define VAR_WSHD_NITN "wshd_nitn"                   /// average annual amount of nitrogen moving from the NH3 to the NO3 pool by nitrification in the watershed
-#define VAR_WSHD_PAL "wshd_pal"                     /// average annual amount of phosphorus moving from labile mineral to active mineral pool in watershed
-#define VAR_WSHD_PAS "wshd_pas"                     /// average annual amount of phosphorus moving from active mineral to stable mineral pool in watershed
+#define VAR_WSHD_DNIT "wshd_dnit"                   ///  nitrogen lost from nitrate pool due to denitrification in watershed(kg N/ha)
+#define VAR_WSHD_HMN "wshd_hmn"                     ///  nitrogen moving from active organic to nitrate pool in watershed(kg N/ha)
+#define VAR_WSHD_HMP "wshd_hmp"                     ///  phosphorus moving from organic to labile pool in watershed(kg P/ha)
+#define VAR_WSHD_NITN "wshd_nitn"                   ///  nitrogen moving from the NH3 to the NO3 pool by nitrification in the watershed
+#define VAR_WSHD_PAL "wshd_pal"                     ///  phosphorus moving from labile mineral to active mineral pool in watershed
+#define VAR_WSHD_PAS "wshd_pas"                     ///  phosphorus moving from active mineral to stable mineral pool in watershed
 #define VAR_WSHD_PLCH "wshd_plch"
-#define VAR_WSHD_RMN "wshd_rmn"                     /// average annual amount of nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed(kg N/km2)
-#define VAR_WSHD_RMP "wshd_rmp"                     /// average annual amount of phosphorus moving from fresh organic (residue) to labile and organic pools in watershed(kg P/km2)
-#define VAR_WSHD_RNO3 "wshd_rno3"                   /// average annual amount of NO3 added to soil by rainfall in watershed (kg/km2)
-#define VAR_WSHD_RWN "wshd_rwn"                     /// average annual amount of nitrogen moving from active organic to stable organic pool in watershed(kg N/km2)
-#define VAR_WSHD_VOLN "wshd_voln"                   /// average annual amount if nitrogen lost by ammonia volatilization in watershed
+#define VAR_WSHD_RMN "wshd_rmn"                     ///  nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed(kg N/ha)
+#define VAR_WSHD_RMP "wshd_rmp"                     ///  phosphorus moving from fresh organic (residue) to labile and organic pools in watershed(kg P/ha)
+#define VAR_WSHD_RNO3 "wshd_rno3"                   ///  NO3 added to soil by rainfall in watershed (kg/ha)
+#define VAR_WSHD_RWN "wshd_rwn"                     /// nitrogen moving from active organic to stable organic pool in watershed(kg N/ha)
+#define VAR_WSHD_VOLN "wshd_voln"                   /// nitrogen lost by ammonia volatilization in watershed
 #define VAR_WSYF "wsyf"
 #define VAR_AL_OUTLET "algae_outlet"
 #define VAR_ON_OUTLET "organicn_outlet"
@@ -910,6 +910,7 @@
 /// By LiangJun Zhu, HuiRan Gao ///
 /// Apr. , 2016  //////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
+
 #define UNIT_AREA_KM2 "km2"                         /// Square kilometer of area
 #define UNIT_AREA_RATIO "m2/m2"
 #define UNIT_CONDRATE_MSPA "m/s/kPa"                /// Rate of decline in stomatal conductance per unit increase in vapor pressure deficit
@@ -1213,8 +1214,6 @@
 #define DESC_PI_B "Interception Storage Capacity Exponent"
 #define DESC_PL_RSDCO "Plant residue decomposition coefficient"
 #define DESC_PLANT_N "amount of nitrogen in plant biomass (kg/ha), plantn in SWAT"
-#define DESC_PLANT_N "amount of nitrogen in plant biomass (kg/ha), plantn in SWAT"
-#define DESC_PLANT_P "amount of phosphorus in plant biomass (kg/ha), plantp in SWAT"
 #define DESC_PLANT_P "amount of phosphorus in plant biomass (kg/ha), plantp in SWAT"
 #define DESC_PLTET_TOT "actual ET simulated during life of plant"
 #define DESC_PLTPET_TOT "potential ET simulated during life of plant"
@@ -1400,17 +1399,17 @@
 #define DESC_WEIGHT_ITP "Weight used for interpolation"
 #define DESC_WILTPOINT "Plant wilting point moisture"
 #define DESC_WS "Wind speed (measured at 10 meters above surface)"
-#define DESC_WSHD_DNIT "average annual amount of nitrogen lost from nitrate pool due to denitrification in watershed"
-#define DESC_WSHD_HMN "average annual amount of nitrogen moving from active organic to nitrate pool in watershed"
-#define DESC_WSHD_HMP "average annual amount of phosphorus moving from organic to labile pool in watershed"
-#define DESC_WSHD_NITN "average annual amount of nitrogen moving from the NH3 to the NO3 pool by nitrification in the watershed"
-#define DESC_WSHD_PAL "average annual amount of phosphorus moving from labile mineral to active mineral pool in watershed"
-#define DESC_WSHD_PAS "average annual amount of phosphorus moving from active mineral to stable mineral pool in watershed"
-#define DESC_WSHD_PLCH "average annual amount of phosphorus leached into second soil layer"
-#define DESC_WSHD_RMN "average annual amount of nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed"
-#define DESC_WSHD_RMP "average annual amount of phosphorus moving from fresh organic (residue) to labile and organic pools in watershed"
-#define DESC_WSHD_RNO3 "average annual amount of NO3 added to soil by rainfall in watershed"
-#define DESC_WSHD_RWN "average annual amount of nitrogen moving from active organic to stable organic pool in watershed"
+#define DESC_WSHD_DNIT "nitrogen lost from nitrate pool due to denitrification in watershed"
+#define DESC_WSHD_HMN "nitrogen moving from active organic to nitrate pool in watershed"
+#define DESC_WSHD_HMP "phosphorus moving from organic to labile pool in watershed"
+#define DESC_WSHD_NITN "nitrogen moving from the NH3 to the NO3 pool by nitrification in the watershed"
+#define DESC_WSHD_PAL "phosphorus moving from labile mineral to active mineral pool in watershed"
+#define DESC_WSHD_PAS "phosphorus moving from active mineral to stable mineral pool in watershed"
+#define DESC_WSHD_PLCH "phosphorus leached into second soil layer"
+#define DESC_WSHD_RMN "nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed"
+#define DESC_WSHD_RMP "phosphorus moving from fresh organic (residue) to labile and organic pools in watershed"
+#define DESC_WSHD_RNO3 "NO3 added to soil by rainfall in watershed"
+#define DESC_WSHD_RWN "nitrogen moving from active organic to stable organic pool in watershed"
 #define DESC_WSHD_VOLN "average annual amount if nitrogen lost by ammonia volatilization in watershed"
 #define DESC_WSYF "Lower limit of harvest index ((kg/ha)/(kg/ha))"
 #define DESC_AL_OUTLET "algae concentration at the watershed outlet"
