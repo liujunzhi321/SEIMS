@@ -65,16 +65,16 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     /// set scenario data
     mdi.AddParameter(VAR_SCENARIO, UNIT_NON_DIM, DESC_SCENARIO, Source_ParameterDB, DT_Scenario);
 
+    mdi.AddParameter(VAR_SOL_ORGN, UNIT_CONT_KGHA, DESC_SOL_ORGN, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_ORGP, UNIT_CONT_KGHA, DESC_SOL_ORGP, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_NH3, UNIT_CONT_KGHA, DESC_SOL_NH3, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
     /// set input from other modules
     /// soil properties
     mdi.AddInput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_ParameterDB, DT_Raster2D);
     mdi.AddInput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_ParameterDB, DT_Raster2D);
     mdi.AddInput(VAR_SOL_FOP, UNIT_CONT_KGHA, DESC_SOL_FOP, Source_ParameterDB, DT_Raster2D);
-    mdi.AddInput(VAR_SOL_ORGN, UNIT_CONT_KGHA, DESC_SOL_ORGN, Source_ParameterDB, DT_Raster2D);
-    mdi.AddInput(VAR_SOL_ORGP, UNIT_CONT_KGHA, DESC_SOL_ORGP, Source_ParameterDB, DT_Raster2D);
-    mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
-    mdi.AddInput(VAR_SOL_NH3, UNIT_CONT_KGHA, DESC_SOL_NH3, Source_ParameterDB, DT_Raster2D);
-    mdi.AddInput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, Source_Module, DT_Raster2D);
@@ -112,8 +112,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_IRR_FLAG, UNIT_NON_DIM, DESC_IRR_FLAG, DT_Raster1D);
     mdi.AddOutput(VAR_IRR_WTR, UNIT_DEPTH_MM, DESC_IRR_WTR, DT_Raster1D);
     mdi.AddOutput(VAR_IRR_SURFQ, UNIT_DEPTH_MM, DESC_IRR_SURFQ, DT_Raster1D);
-    mdi.AddOutput(VAR_AWTR_STRS_ID, UNIT_NON_DIM, DESC_AWTR_STRS_ID,
-                  DT_Raster1D); /// defined in auto irrigation operation
+	/// defined in auto irrigation operation
+    mdi.AddOutput(VAR_AWTR_STRS_ID, UNIT_NON_DIM, DESC_AWTR_STRS_ID, DT_Raster1D); 
     mdi.AddOutput(VAR_AWTR_STRS_TRIG, UNIT_NON_DIM, DESC_AWTR_STRS_TRIG, DT_Raster1D);
     mdi.AddOutput(VAR_AIRR_SOURCE, UNIT_NON_DIM, DESC_AIRR_SOURCE, DT_Raster1D);
     mdi.AddOutput(VAR_AIRR_LOCATION, UNIT_NON_DIM, DESC_AIRR_LOCATION, DT_Raster1D);

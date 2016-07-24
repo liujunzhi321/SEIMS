@@ -34,6 +34,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddParameter(VAR_SOILDEPTH, UNIT_DEPTH_MM, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
 	mdi.AddParameter(VAR_SOILTHICK, UNIT_DEPTH_MM, DESC_SOILTHICK, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_AWC, UNIT_WAT_RATIO, DESC_SOL_AWC, Source_ParameterDB, DT_Raster2D);
+
+    mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
     /// set input from other modules
     mdi.AddInput(DataType_MeanTemperature, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_LAIDAY, UNIT_AREA_RATIO, DESC_LAIDAY, Source_Module, DT_Raster1D);
@@ -41,7 +43,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module, DT_Raster1D); /// in swat, sno_hru
     mdi.AddInput(VAR_SNSB, UNIT_DEPTH_MM, DESC_SNSB, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOMO, UNIT_WAT_RATIO, DESC_SOMO, Source_Module, DT_Raster2D);/// sol_st in SWAT
     /// set the output variables
 	mdi.AddOutput(VAR_SNSB, UNIT_DEPTH_MM, DESC_SNSB, DT_Raster1D); /// in swat, snoev
@@ -50,7 +51,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, DT_Raster1D);
     mdi.AddOutput(VAR_SNO3UP, UNIT_CONT_KGHA, DESC_SNO3UP, DT_Single);
     mdi.AddOutput(VAR_SOMO_TOT, UNIT_DEPTH_MM, DESC_SOMO_TOT, DT_Raster1D); /// mm, different from VAR_SOMO
-    mdi.AddOutput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, DT_Raster2D);
+    //mdi.AddOutput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, DT_Raster2D);
     /// write out the XML file.
     res = mdi.GetXMLDocument();
 

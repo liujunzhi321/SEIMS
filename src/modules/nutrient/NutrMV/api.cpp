@@ -57,6 +57,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_SOILDEPTH, UNIT_NON_DIM, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D);
 
+    mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_Module, DT_Raster2D);
     // set input from other modules
     mdi.AddInput(VAR_WSHD_PLCH, UNIT_CONT_KGHA, DESC_WSHD_PLCH, Source_Module, DT_Single);
 
@@ -69,8 +71,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.AddInput(VAR_SOL_OM, UNIT_PERCENT, DESC_SOL_OM, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOL_BD, UNIT_DENSITY, DESC_SOL_BD, Source_Module, DT_Raster2D);
-    mdi.AddInput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
-    mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_Module, DT_Raster2D);
 
     // set the output variables
     mdi.AddOutput(VAR_WSHD_PLCH, UNIT_CONT_KGHA, DESC_WSHD_PLCH, DT_Single);
@@ -82,8 +82,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_COD, UNIT_DENSITY_L, DESC_COD, DT_Raster1D);
     mdi.AddOutput(VAR_CHL_A, UNIT_DENSITY_L, DESC_CHL_A, DT_Raster1D);
 
-    mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);
-    mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, DT_Raster2D);
+    //mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);
+    //mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, DT_Raster2D);
 
     string res = mdi.GetXMLDocument();
     char *tmp = new char[res.size() + 1];

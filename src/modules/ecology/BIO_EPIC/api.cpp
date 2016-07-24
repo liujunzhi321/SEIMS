@@ -83,11 +83,11 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_LAIINIT, UNIT_CONT_RATIO, DESC_LAIINIT, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_BIOINIT, UNIT_CONT_KGHA, DESC_BIOINIT, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_PHUPLT, UNIT_HEAT_UNIT, DESC_PHUPLT, Source_ParameterDB, DT_Raster1D);
-    mdi.AddParameter(VAR_CHT, UNIT_LEN_M, DESC_CHT, Source_ParameterDB,DT_Raster1D);/// also as OUTPUT
-    mdi.AddParameter(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, Source_ParameterDB, DT_Raster1D);/// also as OUTPUT
+    mdi.AddParameter(VAR_CHT, UNIT_LEN_M, DESC_CHT, Source_ParameterDB,DT_Raster1D);
+    mdi.AddParameter(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, Source_ParameterDB, DT_Raster1D);
     /// nutrient
-    mdi.AddInput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
-    mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Array2D);
+    mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
     /// lookup table as 2D array, such as crop, management, landuse, tillage, etc.
 
     /// climate parameters INPUT
@@ -103,22 +103,23 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_PPT, UNIT_DEPTH_MM, DESC_PPT, Source_Module, DT_Raster1D);/// maximum plant et
     mdi.AddInput(VAR_SOET, UNIT_DEPTH_MM, DESC_SOET, Source_Module, DT_Raster1D);/// actual soil evaporation
     mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module, DT_Raster1D);
-	/// from nutrient module and as the output in the meantime
-	mdi.AddInput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, Source_Module, DT_Raster2D);
-	mdi.AddInput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, Source_Module, DT_Raster1D);
+	mdi.AddParameter(VAR_SOL_RSDIN, UNIT_CONT_KGHA, DESC_SOL_RSDIN, Source_ParameterDB, DT_Raster1D);
+	/// residue cover should be output of plant growth module.
+	mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Raster2D);
+	mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
     // set the output variables
-    mdi.AddOutput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, DT_Raster2D);
-    mdi.AddOutput(VAR_SOMO_TOT, UNIT_DEPTH_MM, DESC_SOMO_TOT, DT_Raster1D);
-    mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);
-    mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, DT_Raster2D);
-    mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
-    mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Array2D);
+    //mdi.AddOutput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, DT_Raster2D);
+    //mdi.AddOutput(VAR_SOMO_TOT, UNIT_DEPTH_MM, DESC_SOMO_TOT, DT_Raster1D);
+    //mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);
+    //mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, DT_Raster2D);
+    //mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
+    //mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Array2D);
 
-    mdi.AddOutput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, DT_Raster1D);
+    //mdi.AddOutput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, DT_Raster1D);
     mdi.AddOutput(VAR_HVSTI_ADJ, UNIT_CONT_RATIO, DESC_HVSTI_ADJ, DT_Raster1D);
-    mdi.AddOutput(VAR_CHT, UNIT_LEN_M, DESC_CHT, DT_Raster1D);
+    //mdi.AddOutput(VAR_CHT, UNIT_LEN_M, DESC_CHT, DT_Raster1D);
     mdi.AddOutput(VAR_ALBDAY, UNIT_NON_DIM, DESC_ALBDAY, DT_Raster1D);
-    mdi.AddOutput(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, DT_Raster1D);
+    //mdi.AddOutput(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, DT_Raster1D);
 
     mdi.AddOutput(VAR_LAST_SOILRD, UNIT_DEPTH_MM, DESC_LAST_SOILRD, DT_Raster1D);
     mdi.AddOutput(VAR_LAIYRMAX, UNIT_AREA_RATIO, DESC_LAIYRMAX, DT_Raster1D);

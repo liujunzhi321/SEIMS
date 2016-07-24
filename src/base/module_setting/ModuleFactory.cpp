@@ -368,11 +368,11 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
             ParamInfo &param = parameters[j];
             //if (param.Dimension != DT_Single)
             //	cout << "\t\t" << param.Name << endl;
-            //cout << "\t\t" << id << " : " << param.Name << endl;
-            //if (StringMatch(id,"ICLIM"))
-            //{
-            //	cout<<"error"<<endl;
-            //}
+   //         cout << "\t\t" << id << " : " << param.Name << endl;
+			//if (StringMatch(param.Name,"SOL_SOLP"))
+			//{
+			//	cout<<"error"<<endl;
+			//}
             SetData(dbName, subbasinID, m_settings[id], &param, templateRaster, settingsInput, modules[i],
                     verticalInterpolation);
         }
@@ -388,19 +388,18 @@ ParamInfo *ModuleFactory::FindDependentParam(ParamInfo &paramInfo)
     dimensionTypes paraType = paramInfo.Dimension;
 
     size_t n = m_moduleIDs.size();
-    for (size_t i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++) // module ID
     {
         string id = m_moduleIDs[i];
-        vector<ParamInfo> &outputs = m_outputs[id];
-        for (size_t j = 0; j < outputs.size(); j++)
+		vector<ParamInfo> &outputs = m_outputs[id];
+        for (size_t j = 0; j < outputs.size(); j++) // output ID
         {
-            ParamInfo &param = outputs[j];
+			ParamInfo &param = outputs[j];
             string compareName = GetComparableName(param.Name);
-
             if (StringMatch(paraName, compareName) && param.Dimension == paraType)
             {
-                param.OutputToOthers = true;
-                return &param;
+				param.OutputToOthers = true;
+				return &param;
             }
         }
     }

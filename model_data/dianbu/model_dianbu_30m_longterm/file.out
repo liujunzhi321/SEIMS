@@ -15,23 +15,60 @@ Climate	D_SR	Solar radiation	MJ/m2/d	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:5
 Climate	D_WS	Wind speed	m/s	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WS.tif	0
 Climate	D_RM	Relative humidity	%	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	RM.tif	0
 SoilTemperature	SOTE	Soil temperature	deg C	AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOTE.tif	0
-Interception	NEPR	Net Precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	NEPR.tif	0
+Interception	NEPR	Net Precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	NEPR.tif	1
 Interception	INET	Evaporation from the interception storage	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INET.tif	0
 Interception	INLO	Interception loss	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INLO.tif	0
-PET	PET	Potential Evapotranspiration	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PET.tif	0
-PET	PPT	Potential Plant Evapotranspiration	mm/d	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PPT.tif	1
+PET	PET	Potential Evapotranspiration	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PET.tif	1
+PET	PPT	Potential Plant Evapotranspiration	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PPT.tif	1
 PET	SOET	Actual Soil Evaporation	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOET.tif	1
 Snow melt	SNME	Snow melt	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SNME.tif	0
 Snow melt	SNAC	Snow accumulation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SNAC.tif	0
 Infiltration	INFIL	Infiltration	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INFIL.tif	0
 Surface Runoff	EXCP	Excess precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	EXCP.tif	0
 Surface Runoff	SOMO	Soil moisture	mm/mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOMO.tif	0
-Surface Runoff	SURU	Surface Runoff	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SURU.tif	0
+Surface Runoff	SURU	Surface Runoff	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SURU.tif	1
 Depression	DPST	Depression storage	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	DPST.tif	0
 Depression	DEET	Depression ET	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	DEET.tif	0
 Percolation	PERCO	Percolation	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PERCO.tif	0
 Erosion	SOER	soil loss caused by water erosion	kg	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOER.tif	1
-Erosion	USLE_LS	USLE LS factor	None	MAX	2014-01-01 00:00:00	2014-01-01 23:59:59	-9999	-9999	ALL	USLE_LS.tif	1
-Erosion	SEDTOCH_T	Sediment to reach	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDtoCH_T.txt	1
+Erosion	USLE_LS	USLE LS factor	None	MAX	2014-01-01 00:00:00	2014-01-01 23:59:59	-9999	-9999	ALL	USLE_LS.tif	0
+Erosion	SEDTOCH_T	Sediment to reach	kg	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDtoCH_T.txt	1
+Plant growth	SOL_COV	Residue on soil surface	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_COV.tif	1
+Plant growth	SOL_RSD	Organic matter in soil classified as residue	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_RSD.tif	1
+Plant growth	ALBDAY	Albedo of current day	None	AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	ALBDAY.tif	1
+Plant growth	LAIDAY	LAI of current day	m2/m2	AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	LAIDAY.tif	1
+Plant growth	AET_PLT	Actural plant transpiration	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	AET_PLT.tif	1
+Plant growth	PLANT_N	Nitrogen in plant biomass	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PLANT_N.tif	1
+Plant growth	PLANT_P	Phosphorus in plant biomass	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PLANT_P.tif	1
+Plant growth	BIOMASS	Land cover/crop biomass (dry weight)	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	BIOMASS.tif	1
+Nutrient	SOL_NO3	Nitrate concentration in soil layers	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_NO3.tif	1
+Nutrient	SOL_NH3	Nitrogen stored in ammonium	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_NH3.tif	1
+Nutrient	SOL_ORGN	organic nitrogen	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_ORGN.tif	1
+Nutrient	SOL_ORGP	organic phosphorus	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_ORGP.tif	1
+Nutrient	SOL_SOLP	Solution phosphorus	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_SOLP.tif	1
+Nutrient	SOL_ACTP	Active mineral phosphorus	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_ACTP.tif	1
+Nutrient	SOL_STAP	Stable mineral phosphorus 	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_STAP.tif	1
+Nutrient	SOL_AORGN	Active organic (humic) nitrogen	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_AORGN.tif	1
+Nutrient	SOL_FON	Fresh organic nitrogen	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_FON.tif	1
+Nutrient	SOL_FOP	Fresh organic phosphorus	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_FOP.tif	1
+Nutrient	HMNTL	nitrogen moving from active organic to nitrate pool in soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	HMNTL.tif	1
+Nutrient	HMPTL	phosphorus moving from the organic to labile pool in soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	HMPTL.tif	1
+Nutrient	RMN2TL	nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	RMN2TL.tif	1
+Nutrient	RMPTL	phosphorus moving from the fresh organic (residue) to the labile(80%) and organic(20%) pools in soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	RMPTL.tif	1
+Nutrient	RWNTL	nitrogen moving from active organic to stable organic pool in soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	RWNTL.tif	1
+Nutrient	WDNTL	nitrogen lost from nitrate pool by denitrification in soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WDNTL.tif	1
+Nutrient	RMP1TL	phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	RMP1TL.tif	1
+Nutrient	ROCTL	phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	ROCTL.tif	1
+Nutrient	WSHD_DNIT	nitrogen lost from nitrate pool due to denitrification in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_DNIT.txt	1
+Nutrient	WSHD_HMN	nitrogen moving from active organic to nitrate pool in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_HMN.txt	1
+Nutrient	WSHD_HMP	phosphorus moving from organic to labile pool in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_HMP.txt	1
+Nutrient	WSHD_RMN	nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RMN.txt	1
+Nutrient	WSHD_RMP	phosphorus moving from fresh organic (residue) to labile and organic pools in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RMP.txt	1
+Nutrient	WSHD_RWN	nitrogen moving from active organic to stable organic pool in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RWN.txt	1
+Nutrient	WSHD_NITN	nitrogen moving from the NH3 to the NO3 pool by nitrification in the watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_NITN.txt	1
+Nutrient	WSHD_VOLN	average annual amount if nitrogen lost by ammonia volatilization in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_VOLN.txt	1
+Nutrient	WSHD_PAL	phosphorus moving from labile mineral to active mineral pool in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_PAL.txt	1
+Nutrient	WSHD_PAS	phosphorus moving from active mineral to stable mineral pool in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_PAS.txt	1
+Atmosphere deposition	WSHD_RNO3	average annual amount of NO3 added to soil by rainfall in watershed	kg	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RNO3.txt	1
 Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	Q.txt	0
 Sediment	QSED	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	0
