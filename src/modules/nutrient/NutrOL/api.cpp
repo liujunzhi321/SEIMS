@@ -52,7 +52,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     // set input from other modules
     mdi.AddInput(VAR_LATNO3, UNIT_CONT_KGHA, DESC_LATNO3, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_SURQNO3, UNIT_CONT_KGHA, DESC_SURQNO3, Source_Module, DT_Raster1D);
-    //mdi.AddInput(VAR_AMMONIAN, UNIT_CONT_KGKM2, DESC_AMMONIAN, Source_Module, DT_Raster1D);
+    //mdi.AddInput(VAR_AMMONIAN, UNIT_CONT_KGha, DESC_AMMONIAN, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_SURQSOLP, UNIT_CONT_KGHA, DESC_SURQSOLP, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_NO3GW, UNIT_CONT_KGHA, DESC_NO3GW, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_MINPGW, UNIT_CONT_KGHA, DESC_MINPGW, Source_Module, DT_Raster1D);

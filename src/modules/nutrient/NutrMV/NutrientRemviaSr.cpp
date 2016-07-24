@@ -298,7 +298,7 @@ int NutrientRemviaSr::Execute()
 
 void NutrientRemviaSr::Nitrateloss()
             {
-                //percnlyr nitrate moved to next lower layer with percolation (kg/km2)
+                //percnlyr nitrate moved to next lower layer with percolation (kg/ha)
                 float percnlyr = 0.f;
                 float *tileno3;
 				#pragma omp parallel for
