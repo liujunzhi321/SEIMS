@@ -93,7 +93,7 @@ public:
 
     virtual void Set2DData(const char *key, int n, int col, float **data);
 
-    virtual void Get2DData(const char *key, int *n, int *col, float ***data);
+    //virtual void Get2DData(const char *key, int *n, int *col, float ***data);
 
     virtual void GetValue(const char *key, float *value);
 

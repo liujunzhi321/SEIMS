@@ -98,7 +98,8 @@ bool AET_PT_H::CheckInputData(void)
     if (this->m_snowAcc == NULL)
         throw ModelException(MID_AET_PTH, "CheckInputData",
                              "The snow accumulation can not be NULL.");
-    //if (this->m_snowSB == NULL)
+    /// if m_snowSB is not provided, it will be initialized in initialOutputs().
+	//if (this->m_snowSB == NULL)
     //    throw ModelException(MID_AET_PTH, "CheckInputData",
     //                         "The snow sublimation can not be NULL.");
     if (this->m_solCov == NULL)
@@ -288,15 +289,15 @@ void AET_PT_H::Get1DData(const char *key, int *n, float **data)
     *n = this->m_nCells;
 }
 
-void AET_PT_H::Get2DData(const char *key, int *n, int *col, float ***data)
-{
-	initialOutputs();
-    string sk(key);
-    if (StringMatch(sk, VAR_SOMO)) *data = this->m_somo;
-    else
-        throw ModelException(MID_AET_PTH, "Get2DData", "Result " + sk
-                                                       +
-                                                       " does not exist in current module. Please contact the module developer.");
-    *n = this->m_nCells;
-    *col = this->m_soilLayers;
-}
+//void AET_PT_H::Get2DData(const char *key, int *n, int *col, float ***data)
+//{
+//	initialOutputs();
+//    string sk(key);
+//    if (StringMatch(sk, VAR_SOMO)) *data = this->m_somo;
+//    else
+//        throw ModelException(MID_AET_PTH, "Get2DData", "Result " + sk
+//                                                       +
+//                                                       " does not exist in current module. Please contact the module developer.");
+//    *n = this->m_nCells;
+//    *col = this->m_soilLayers;
+//}

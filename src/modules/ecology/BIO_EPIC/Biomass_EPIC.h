@@ -1,5 +1,4 @@
 /*!
- * \file Biomass_EPIC.h
  * \brief Predicts daily potential growth of total plant biomass and roots and calculates leaf area index
  * incorporated a simplified version of the EPIC plant growth model as in SWAT rev. 637, plantmod.f
  * \author LiangJun Zhu
@@ -91,8 +90,7 @@ private:
     float **m_soilDepth;
 	/// soil thickness of all layers
 	float **m_soilThick;
-    /// amount of organic matter in the soil layer classified as residue,sol_rsd(:,:)|kg/ha
-    float **m_soilRsd;
+
     /// amount of water available to plants in soil layer at field capacity (fc - wp water), sol_fc in SWAT
     float **m_soilAWC;
     /// total m_soilAWC in soil profile, sol_sumfc in SWAT
@@ -103,10 +101,16 @@ private:
     float **m_somo;
     /// amount of water stored in soil profile on current day, sol_sw in SWAT
     float *m_totSOMO;
-    /// amount of residue on soil surface (10 mm surface)
-    float *m_soilCov;
+    
+    
     /**  crop or land cover related parameters  **/
 
+	///amount of residue on soil surface (kg/ha)
+	float *m_sol_rsdin;
+	/// amount of residue on soil surface (10 mm surface)
+	float *m_sol_cov;
+	/// amount of organic matter in the soil layer classified as residue, sol_rsd |kg/ha in SWAT
+	float **m_sol_rsd;
     /// land cover status code, 0 means no crop while 1 means land cover growing
     float *m_igro;
     /// land cover/crop  classification:1-7, i.e., IDC

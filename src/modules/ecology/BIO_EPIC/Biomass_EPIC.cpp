@@ -18,8 +18,8 @@ Biomass_EPIC::Biomass_EPIC(void) : m_nCells(-1), m_nClimDataYrs(-1), m_co2(NODAT
                                    m_soilLayers(-1), m_NUpDis(NODATA), m_PUpDis(NODATA), m_NFixCoef(NODATA),
                                    m_NFixMax(NODATA), m_soilRD(NODATA), m_tMeanAnn(NULL),
                                    m_nSoilLayers(NULL), m_soilZMX(NULL), m_soilALB(NULL), m_soilDepth(NULL),
-                                   m_soilRsd(NULL), m_soilAWC(NULL), m_totSoilAWC(NULL), m_totSoilSat(NULL),
-                                   m_somo(NULL), m_totSOMO(NULL), m_soilCov(NULL),
+                                   m_soilAWC(NULL), m_totSoilAWC(NULL), m_totSoilSat(NULL),
+                                   m_somo(NULL), m_totSOMO(NULL), m_sol_rsdin(NULL), m_sol_cov(NULL),m_sol_rsd(NULL),
                                    m_igro(NULL), m_landCoverCls(NULL), m_aLAIMin(NULL), m_BIOE(NULL), m_BIOEHI(NULL),
                                    m_frBioLeafDrop(NULL), m_maxLAI(NULL), m_maxBiomass(NULL),
                                    m_frPlantN1(NULL), m_frPlantN2(NULL), m_frPlantN3(NULL), m_frPlantP1(NULL),
@@ -38,7 +38,7 @@ Biomass_EPIC::Biomass_EPIC(void) : m_nCells(-1), m_nClimDataYrs(-1), m_co2(NODAT
                                    m_plantUpTkP(NULL), m_plantN(NULL), m_plantP(NULL), m_frPlantP(NULL),
                                    m_NO3Defic(NULL), m_frStrsAe(NULL), m_frStrsN(NULL), m_frStrsP(NULL),
                                    m_frStrsTmp(NULL), m_frStrsWa(NULL),
-                                   m_biomassDelta(NULL), m_biomass(NULL)
+                                   m_biomassDelta(NULL), m_biomass(NULL), m_albedo(NULL)
 {
     uobw = 0.f;
     ubw = 10.f; /// the uptake distribution for water is hardwired, users are not allowed to modify
@@ -47,6 +47,8 @@ Biomass_EPIC::Biomass_EPIC(void) : m_nCells(-1), m_nClimDataYrs(-1), m_co2(NODAT
 
 Biomass_EPIC::~Biomass_EPIC(void)
 {
+	if(m_sol_cov != NULL) Release1DArray(m_sol_cov);
+	if(m_sol_rsd != NULL) Release2DArray(m_nCells, m_sol_rsd);
     if (m_LAIDay != NULL) Release1DArray(m_LAIDay);
 	if (m_LAIYrMax != NULL) Release1DArray(m_LAIYrMax);
 	if (m_frPHUacc != NULL) Release1DArray(m_frPHUacc);
@@ -119,7 +121,7 @@ void Biomass_EPIC::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_TMEAN_ANN))m_tMeanAnn = data;
     else if (StringMatch(sk, VAR_DORMHR)) m_dormHr = data;
     else if (StringMatch(sk, VAR_DAYLEN)) m_dayLen = data;
-        //// soil properties and water related
+    //// soil properties and water related
     else if (StringMatch(sk, VAR_SOILLAYERS)) m_nSoilLayers = data;
     else if (StringMatch(sk, VAR_SOL_ZMX)) m_soilZMX = data;
     else if (StringMatch(sk, VAR_SOL_ALB)) m_soilALB = data;
@@ -130,9 +132,10 @@ void Biomass_EPIC::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_VPD)) m_VPD = data;
     else if (StringMatch(sk, VAR_PPT)) m_ppt = data;
     else if (StringMatch(sk, VAR_SOET)) m_soilESDay = data;
-    else if (StringMatch(sk, VAR_SOL_COV)) m_soilCov = data;
+    else if (StringMatch(sk, VAR_SOL_COV)) m_sol_cov = data;
     else if (StringMatch(sk, VAR_SNAC)) m_snowAcc = data;
     //// land cover
+	else if (StringMatch(sk, VAR_SOL_RSDIN)) m_sol_rsdin = data;
     else if (StringMatch(sk, VAR_IGRO)) m_igro = data;
     else if (StringMatch(sk, VAR_IDC)) m_landCoverCls = data;
     else if (StringMatch(sk, VAR_ALAIMIN)) m_aLAIMin = data;
@@ -196,7 +199,7 @@ void Biomass_EPIC::Set2DData(const char *key, int nRows, int nCols, float **data
     CheckInputSize2D(key, nRows, nCols);
     if (StringMatch(sk, VAR_SOILDEPTH)) m_soilDepth = data;
 	else if (StringMatch(sk, VAR_SOILTHICK)) m_soilThick = data;
-    else if (StringMatch(sk, VAR_SOL_RSD)) m_soilRsd = data;
+    //else if (StringMatch(sk, VAR_SOL_RSD)) m_soilRsd = data;
     else if (StringMatch(sk, VAR_SOL_AWC)) m_soilAWC = data;
     else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
     else if (StringMatch(sk, VAR_SOL_NO3)) m_soilNO3 = data;
@@ -259,7 +262,7 @@ bool Biomass_EPIC::CheckInputData(void)
     if (m_totSoilSat == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData",
                              "The amount of water held in soil profile at saturation can not be NULL.");
-    if (m_soilCov == NULL)
+    if (m_sol_cov == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The amount of residue in soil surface can not be NULL.");
     if (m_PET == NULL) throw ModelException(MID_BIO_EPIC, "CheckInputData", "The PET can not be NULL.");
     if (m_VPD == NULL)
@@ -267,7 +270,8 @@ bool Biomass_EPIC::CheckInputData(void)
     if (m_ppt == NULL) throw ModelException(MID_BIO_EPIC, "CheckInputData", "The potential plant et can not be NULL.");
     if (m_soilESDay == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The actual soil et can not be NULL.");
-
+	if (this->m_sol_rsdin == NULL)
+		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_rsdin can not be NULL.");
     if (m_igro == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The land cover status code can not be NULL.");
     if (m_landCoverCls == NULL)
@@ -362,9 +366,9 @@ bool Biomass_EPIC::CheckInputData(void)
 		throw ModelException(MID_BIO_EPIC, "CheckInputData", "The soil depth data can not be NULL.");
 	if (m_soilThick == NULL)
 		throw ModelException(MID_BIO_EPIC, "CheckInputData", "The soil thickness data can not be NULL.");
-    if (m_soilRsd == NULL)
-        throw ModelException(MID_BIO_EPIC, "CheckInputData",
-                             "The organic matter in the soil classified as residue can not be NULL.");
+    //if (m_soilRsd == NULL)
+    //    throw ModelException(MID_BIO_EPIC, "CheckInputData",
+    //                         "The organic matter in the soil classified as residue can not be NULL.");
     if (m_soilAWC == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData",
                              "The water available to plants in soil layer at field capacity can not be NULL.");
@@ -381,6 +385,15 @@ bool Biomass_EPIC::CheckInputData(void)
 
 void Biomass_EPIC::initialOutputs()
 {
+	if(m_albedo == NULL) Initialize1DArray(m_nCells, m_albedo, 0.f);
+	if(m_sol_cov == NULL || m_sol_rsd == NULL)
+	{
+		Initialize1DArray(m_nCells, m_sol_cov, m_sol_rsdin);
+		Initialize2DArray(m_nCells, m_soilLayers, m_sol_rsd, 0.f);
+#pragma omp parallel for
+		for (int i = 0; i < m_nCells; i++)
+			m_sol_rsd[i][0] = m_sol_cov[i];
+	}
     if (m_LAIDay == NULL && m_initLAI != NULL)
 		Initialize1DArray(m_nCells, m_LAIDay, m_initLAI);
 
@@ -848,12 +861,12 @@ int Biomass_EPIC::Execute()
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
-        float cej = -5.e-5, eaj = 0.f;
-        eaj = exp(cej * (m_soilCov[i] + 0.1));
-        if (m_snowAcc[i] < 0.5)
+        float cej = -5.e-5f, eaj = 0.f;
+        eaj = exp(cej * (m_sol_cov[i] + 0.1f));
+        if (m_snowAcc[i] < 0.5f)
         {
             m_albedo[i] = m_soilALB[i];
-            if (m_LAIDay[i] > 0.)  /// include the situation that m_LAIDay[i] == NODATA
+            if (m_LAIDay[i] > 0.f)  /// include the situation that m_LAIDay[i] == NODATA
                 m_albedo[i] = 0.23f * (1.f - eaj) + m_soilALB[i] * eaj;
         }
         else
@@ -863,8 +876,8 @@ int Biomass_EPIC::Execute()
     for (int i = 0; i < m_nCells; i++)
     {
         /// calculate residue on soil surface for current day
-        m_soilCov[i] = 0.8 * m_biomass[i] + m_soilRsd[i][0];
-        m_soilCov[i] = max(m_soilCov[i], 0.f);
+        m_sol_cov[i] = 0.8f * m_biomass[i] + m_sol_rsd[i][0];
+        m_sol_cov[i] = max(m_sol_cov[i], 0.f);
         if (FloatEqual(m_igro[i], 1.f))            /// land cover growing
         {
             DistributePlantET(i);                        /// swu.f
@@ -878,7 +891,6 @@ int Biomass_EPIC::Execute()
 
 void Biomass_EPIC::Get1DData(const char *key, int *n, float **data)
 {
-    CheckInputData();
     initialOutputs();
     string sk(key);
     *n = m_nCells;
@@ -895,7 +907,7 @@ void Biomass_EPIC::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_DORMI)) *data = m_dormFlag;
     else if (StringMatch(sk, VAR_ALBDAY)) *data = m_albedo;
     else if (StringMatch(sk, VAR_CHT)) *data = m_cht;
-    else if (StringMatch(sk, VAR_SOL_COV)) *data = m_soilCov;
+    else if (StringMatch(sk, VAR_SOL_COV)) *data = m_sol_cov;
     else if (StringMatch(sk, VAR_SOMO_TOT)) *data = m_totSOMO;
     else
         throw ModelException(MID_BIO_EPIC, "Get1DData", "Result " + sk +
@@ -904,16 +916,12 @@ void Biomass_EPIC::Get1DData(const char *key, int *n, float **data)
 
 void Biomass_EPIC::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 {
-    CheckInputData();
-    initialOutputs();
-    string sk(key);
-    *nRows = m_nCells;
-    *nCols = m_soilLayers;
-    if (StringMatch(sk, VAR_SOMO)) *data = m_somo;
-    else if (StringMatch(sk, VAR_SOL_NO3)) *data = m_soilNO3;
-    else if (StringMatch(sk, VAR_SOL_SOLP)) *data = m_soilPsol;
-    else if (StringMatch(sk, VAR_SOL_RSD)) *data = m_soilRsd;
-    else
-        throw ModelException(MID_BIO_EPIC, "Get2DData", "Result " + sk +
-                                                        " does not exist in current module. Please contact the module developer.");
+	initialOutputs();
+	string sk(key);
+	*nRows = m_nCells;
+	*nCols = m_soilLayers;
+	if (StringMatch(sk, VAR_SOL_RSD)) *data = m_sol_rsd;
+	else
+		throw ModelException(MID_BIO_EPIC, "Get2DData", "Result " + sk +
+		" does not exist in current module. Please contact the module developer.");
 }
