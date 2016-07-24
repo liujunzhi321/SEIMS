@@ -1,13 +1,10 @@
-/** \defgroup NutRemv
- * \ingroup Nutrient
- * \brief Simulates the loss of nitrate and phosphorus via surface runoff, lateral flow, tile flow, and percolation out of the profile.
- */
 /*!
  * \file NutrientRemviaSr.h
- * \ingroup NutRemv
+ * \brief Simulates the loss of nitrate and phosphorus via surface runoff, lateral flow, tile flow, and percolation out of the profile.
  * \author Huiran Gao
  * \date May 2016
  */
+
 
 #pragma once
 #ifndef SEIMS_NutRemv_PARAMS_INCLUDE
@@ -18,6 +15,11 @@
 #include "SimulationModule.h"
 
 using namespace std;
+
+/** \defgroup NutRemv
+ * \ingroup Nutrient
+ * \brief Simulates the loss of nitrate and phosphorus via surface runoff, lateral flow, tile flow, and percolation out of the profile.
+ */
 
 /*!
  * \class NutrientRemviaSr
@@ -62,7 +64,7 @@ private:
     /// input data
     /// drainage tile flow in soil profile
     float m_qtile;
-    //distribution of soil loss caused by water erosion
+    /// distribution of soil loss caused by water erosion
     float *m_sedimentYield;
     /// Phosphorus soil partitioning coefficient
     float m_phoskd;
@@ -91,8 +93,6 @@ private:
     float **m_sol_bd;
     /// depth to bottom of soil layer
     float **m_sol_z;
-    /// factor which converts kg/kg soil to kg/ha
-    float **m_sol_depth;
 
 
     ///percent organic matter in soil layer (%)

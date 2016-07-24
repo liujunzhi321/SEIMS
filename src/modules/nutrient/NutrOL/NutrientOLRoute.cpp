@@ -33,18 +33,21 @@ NutrientOLRoute::NutrientOLRoute(void) :
 
 NutrientOLRoute::~NutrientOLRoute(void)
 {
-    if (m_QV != NULL)
-    {
-        delete[] m_QV;
-    }
-    if (m_ChV != NULL)
-    {
-        delete[] m_ChV;
-    }
-    if (m_fract != NULL)
-    {
-        delete[] m_fract;
-    }
+	if (m_QV != NULL) Release1DArray(m_QV);
+	if (m_ChV != NULL) Release1DArray(m_ChV);
+	if (m_fract != NULL) Release1DArray(m_fract);
+	if (m_surqno3ToCh != NULL) Release1DArray(m_surqno3ToCh);
+	if (m_latno3ToCh != NULL) Release1DArray(m_latno3ToCh);
+	if (m_no3gwToCh != NULL) Release1DArray(m_no3gwToCh);
+	if (m_surqsolpToCh != NULL) Release1DArray(m_surqsolpToCh);
+	if (m_minpgwToCh != NULL) Release1DArray(m_minpgwToCh);
+	if (m_sedorgnToCh != NULL) Release1DArray(m_sedorgnToCh);
+	if (m_sedorgpToCh != NULL) Release1DArray(m_sedorgpToCh);
+	if (m_sedminpaToCh != NULL) Release1DArray(m_sedminpaToCh);
+	if (m_sedminpsToCh != NULL) Release1DArray(m_sedminpsToCh);
+	if (m_ammoToCh != NULL) Release1DArray(m_ammoToCh);
+	if (m_nitriteToCh != NULL) Release1DArray(m_nitriteToCh);
+	if (m_codToCh != NULL) Release1DArray(m_codToCh);
 }
 
 bool NutrientOLRoute::CheckInputSize(const char *key, int n)
@@ -66,7 +69,7 @@ bool NutrientOLRoute::CheckInputSize(const char *key, int n)
             ostringstream oss;
             oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
             m_nCells << ".\n";
-            throw ModelException("NutOLRout", "CheckInputSize", oss.str());
+            throw ModelException(MID_NutOLRout, "CheckInputSize", oss.str());
         }
     }
     return true;
@@ -74,115 +77,81 @@ bool NutrientOLRoute::CheckInputSize(const char *key, int n)
 
 bool NutrientOLRoute::CheckInputData()
 {
-    if (this->m_nCells < 0)
+    if (this->m_nCells <= 0)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be less than zero.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The cells number can not be less than zero.");
     }
-    if (this->m_cellWidth < 0)
+    if (this->m_cellWidth <= 0)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The cell width can not be less than zero.");
     }
-    if (this->m_nLayers < 0)
+    if (this->m_nLayers <= 0)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The layers of reaches data can not be less than zero.");
     }
     if (this->m_TimeStep == NODATA)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The time can not be zero.");
     }
     if (this->m_routingLayers == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "Routing layers can not be NULL.");
     }
     if (this->m_flowInIndex == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
-    }
-    if (this->m_fract == NULL)
-    {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
-    }
-    if (this->m_QV == NULL)
-    {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
-    }
-    if (this->m_ChV == NULL)
-    {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The 2d array of flow in cells data can not be NULL.");
     }
     if (this->m_sedminps == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The amount of stable mineral phosphorus absorbed to sediment in surface runoff can not be NULL.");
     }
     if (this->m_sedminpa == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The amount of active mineral phosphorus absorbed to sediment in surface runoff can not be NULL.");
     }
     if (this->m_sedorgp == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The amount of organic phosphorus in surface runoff can not be NULL.");
     }
     if (this->m_sedorgn == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The amount of organic nitrogen in surface runoff can not be NULL.");
     }
     if (this->m_minpgw == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The soluble P loading to reach in groundwater can not be NULL.");
     }
     if (this->m_no3gw == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The nitrate loading to reach in groundwater can not be NULL.");
     }
     if (this->m_surqsolp == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The amount of soluble phosphorus in surface runoff can not be NULL.");
     }
     if (this->m_surqno3 == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The amount of nitrate transported with surface runoff can not be NULL.");
     }
     if (this->m_latno3 == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The amount of nitrate transported with lateral flow can not be NULL.");
     }
     if (this->m_streamLink == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The stream link data can not be NULL.");
     }
     if (this->m_chWidth == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The channel width can not be NULL.");
     }
     if (this->m_FlowWidth == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The flow width of overland plane can not be NULL.");
     }
     if (this->m_cod == NULL)
     {
-        throw ModelException("NutOLRout", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutOLRout, "CheckInputData", "The carbonaceous oxygen demand of surface runoff can not be NULL.");
     }
     return true;
 }
@@ -199,7 +168,7 @@ void NutrientOLRoute::SetValue(const char *key, float value)
     else if (StringMatch(sk, Tag_HillSlopeTimeStep)) { this->m_TimeStep = value; }
     else
     {
-        throw ModelException("NutOLRout", "SetValue", "Parameter " + sk +
+        throw ModelException(MID_NutOLRout, "SetValue", "Parameter " + sk +
                                                       " does not exist in Nutrient method. Please contact the module developer.");
     }
 }
@@ -224,7 +193,7 @@ void NutrientOLRoute::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_COD)) { this->m_cod = data; }
     else
     {
-        throw ModelException("NutOLRout", "SetValue", "Parameter " + sk +
+        throw ModelException(MID_NutOLRout, "SetValue", "Parameter " + sk +
                                                       " does not exist in CLIMATE module. Please contact the module developer.");
     }
 }
@@ -243,7 +212,7 @@ void NutrientOLRoute::Set2DData(const char *key, int nrows, int ncols, float **d
         m_flowInIndex = data;
     } else
     {
-        throw ModelException("NutOLRout", "Set2DData",
+        throw ModelException(MID_NutOLRout, "Set2DData",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
     }
 }
@@ -252,7 +221,7 @@ void NutrientOLRoute::initialOutputs()
 {
     if (this->m_nCells <= 0)
     {
-        throw ModelException("NutrientOLRoute", "CheckInputData",
+        throw ModelException(MID_NutOLRout, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
     }
     // allocate the output variables
@@ -424,7 +393,7 @@ void NutrientOLRoute::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_COD_CH)) { *data = this->m_codToCh; }
     else
     {
-        throw ModelException("NutOLRout", "GetValue",
+        throw ModelException(MID_NutOLRout, "GetValue",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
     }
 }

@@ -22,7 +22,7 @@ NutrientRemviaSr::NutrientRemviaSr(void) :
         m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_sedimentYield(NULL), m_nperco(-1), m_phoskd(-1), m_pperco(-1),
         m_qtile(-1),
         m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(-1), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
-        m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_sol_depth(NULL),
+        m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL),
         m_sol_om(NULL), m_gw_q(NULL),
         //output
         m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(-1),
@@ -34,7 +34,12 @@ NutrientRemviaSr::NutrientRemviaSr(void) :
 
 NutrientRemviaSr::~NutrientRemviaSr(void)
 {
-    ///TODO
+	if (m_latno3 != NULL) Release1DArray(m_latno3);
+	if (m_percn != NULL) Release1DArray(m_percn);
+	if (m_surqno3 != NULL) Release1DArray(m_surqno3);
+	if (m_surqsolp != NULL) Release1DArray(m_surqsolp);
+	if (m_cod != NULL) Release1DArray(m_cod);
+	if (m_chl_a != NULL) Release1DArray(m_chl_a);
 }
 
 bool NutrientRemviaSr::CheckInputSize(const char *key, int n)
@@ -66,108 +71,83 @@ bool NutrientRemviaSr::CheckInputData()
 {
     if (this->m_nCells <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be less than zero.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The cells number can not be less than zero.");
     }
-    if (this->m_cellWidth < 0)
+    if (this->m_cellWidth <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The cell width can not be less than zero.");
     }
-    if (this->m_soiLayers < 0)
+    if (this->m_soiLayers <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The layer number of the input 2D raster data can not be less than zero.");
     }
     if (this->m_nSoilLayers == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "Soil layers number must not be NULL");
     }
     if (this->m_sedimentYield == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The distribution of soil loss caused by water erosion can not be NULL.");
     }
     if (this->m_sol_om == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The percent organic matter in soil layer can not be NULL.");
     }
     if (this->m_anion_excl == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The fraction of porosity from which anions are excluded can not be NULL.");
     }
     if (this->m_isep_opt <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The septic operational condition code can not be NULL.");
     }
     if (this->m_ldrain == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The soil layer where drainage tile is located can not be NULL.");
     }
     if (this->m_surfr == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The distribution of surface runoff generated data can not be NULL.");
     }
     if (this->m_nperco <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The nitrate percolation coefficient can not be less than zero.");
     }
     if (this->m_flat == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The lateral flow in soil layer data can not be NULL.");
     }
     if (this->m_sol_perco == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "percolation from soil layer can not be NULL.");
     }
     if (this->m_sol_wsatur == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The amount of water held in the soil layer at saturation data can not be NULL.");
     }
     if (this->m_phoskd <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "Phosphorus soil partitioning coefficient can not be less than zero.");
     }
     if (this->m_sol_crk == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The crack volume potential of soil data can not be NULL.");
     }
     if (this->m_pperco <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "Phosphorus percolation coefficient can not be less than zero.");
     }
     if (this->m_sol_bd == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The bulk density of the soil data can not be NULL.");
     }
     if (this->m_sol_z == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
-    }
-    if (this->m_sol_depth == NULL)
-    {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException(MID_NutRemv, "CheckInputData", "The depth to bottom of soil layer can not be NULL.");
     }
     if (this->m_gw_q == NULL)
     {
-        throw ModelException("NutGW", "CheckInputData", "The input data can not be NULL.");
-        return false;
+        throw ModelException("NutGW", "CheckInputData", "The groundwater contribution to stream flow data can not be NULL.");
     }
     return true;
 }
@@ -222,9 +202,8 @@ void NutrientRemviaSr::Set2DData(const char *key, int nRows, int nCols, float **
     if (StringMatch(sk, VAR_FLAT)) { this->m_flat = data; }
     else if (StringMatch(sk, VAR_SOL_NO3)) { this->m_sol_no3 = data; }
     else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
-    else if (StringMatch(sk, VAR_ROOTDEPTH)) { this->m_sol_z = data; }
     else if (StringMatch(sk, VAR_SOL_SOLP)) { this->m_sol_solp = data; }
-    else if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_depth = data; }
+    else if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
     else if (StringMatch(sk, VAR_SOL_PERCO)) { this->m_sol_perco = data; }
     else if (StringMatch(sk, VAR_SOL_OM)) { this->m_sol_om = data; }
     else
@@ -504,10 +483,10 @@ void NutrientRemviaSr::Nitrateloss()
                 {
                     // mg/kg => kg/ha
                     float *sol_thick = new float(m_nSoilLayers[i]);
-                    sol_thick[0] = m_sol_depth[i][0];
+                    sol_thick[0] = m_sol_z[i][0];
                     for (int k = 1; k < m_nSoilLayers[i]; k++)
                     {
-                        sol_thick[k] = m_sol_depth[k] - m_sol_depth[k - 1];
+                        sol_thick[k] = m_sol_z[k] - m_sol_z[k - 1];
                     }
                     float wt1 = m_sol_bd[i][0] * sol_thick[0] / 100.f;
                     float conv_wt = 1.e6 * wt1;

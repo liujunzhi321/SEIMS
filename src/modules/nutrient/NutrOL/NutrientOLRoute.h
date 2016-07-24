@@ -1,10 +1,7 @@
-/** \defgroup NutOLRout
- * \ingroup Nutrient
- * \brief Calculates nutrient transformations in overland flow.
- */
+
 /*!
  * \file NutrientOLRoute.h
- * \ingroup NutOLRout
+ * \brief Calculates the concentration of nutrient in overland flow.
  * \author Huiran Gao
  * \date Jun 2016
  */
@@ -20,6 +17,10 @@
 #include "SimulationModule.h"
 
 using namespace std;
+/** \defgroup NutOLRout
+ * \ingroup Nutrient
+ * \brief Calculates nutrient transformations in overland flow.
+ */
 
 /*!
  * \class NutrientOLRoute
