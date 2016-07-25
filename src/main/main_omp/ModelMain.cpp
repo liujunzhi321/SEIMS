@@ -307,6 +307,7 @@ void ModelMain::Execute()
 
 void ModelMain::Output()
 {
+	clock_t t1 = clock();
     vector<PrintInfo *>::iterator it;
     for (it = this->m_output->m_printInfos.begin(); it < m_output->m_printInfos.end(); it++)
     {
@@ -317,6 +318,8 @@ void ModelMain::Output()
             item->Flush(m_projectPath, m_templateRasterData, (*it)->getOutputTimeSeriesHeader());
         }
     }
+	clock_t t2 = clock();
+	cout << "[TIMESPAN][OUTPUTING]\tALL\t" << fixed << setprecision(3) << (t2 - t1) / (float) CLOCKS_PER_SEC << endl;
 }
 
 void ModelMain::CheckOutput(mongoc_gridfs_t *gfs)
