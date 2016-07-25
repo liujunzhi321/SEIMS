@@ -8,68 +8,53 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-	return new SoilTemperatureFINPL();
+    return new SoilTemperatureFINPL();
 }
 
 // function to return the XML Metadata document string
-extern "C" SEIMS_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 {
-	MetadataInfo mdi;
+    MetadataInfo mdi;
 
-	// set the information properties
-	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Soil Temperature", "Calculate the soil temperature.");
-	mdi.SetDescription("Finn Plauborg Method to compute soil temperature.");
-	mdi.SetEmail("");
-	mdi.SetID("STP_FP");
-	mdi.SetName("STP_FP");
-	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
-	mdi.SetHelpfile("STP_FP.html");
+    // set the information properties
+    mdi.SetAuthor("Junzhi Liu");
+    mdi.SetClass(MCLS_SOLT, MCLSDESC_SOLT);
+    mdi.SetDescription(MDESC_STP_FP);
+    mdi.SetEmail(SEIMS_EMAIL);
+    mdi.SetID(MID_STP_FP);
+    mdi.SetName(MID_STP_FP);
+    mdi.SetVersion("0.5");
+    mdi.SetWebsite(SEIMS_SITE);
+    mdi.SetHelpfile("STP_FP.html");
 
-	/// from parameter database
-	mdi.AddParameter("soil_ta0","","Coefficient a0 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_ta1","","Coefficient a1 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_ta2","","Coefficient a2 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_ta3","","Coefficient a3 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_tb1","","Coefficient b1 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_tb2","","Coefficient b2 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_td1","","Coefficient d1 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
-	mdi.AddParameter("soil_td2","","Coefficient d2 for Finn Plauborg Method",
-		"ParameterDB_WaterBalance", DT_Single);
+    /// from parameter database
+    mdi.AddParameter(VAR_SOL_TA0, UNIT_NON_DIM, DESC_SOL_TA0, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_SOL_TA1, UNIT_NON_DIM, DESC_SOL_TA1, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_SOL_TA2, UNIT_NON_DIM, DESC_SOL_TA2, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_SOL_TA3, UNIT_NON_DIM, DESC_SOL_TA3, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_SOL_TB1, UNIT_NON_DIM, DESC_SOL_TB1, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_SOL_TB2, UNIT_NON_DIM, DESC_SOL_TB2, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_SOL_TD1, UNIT_NON_DIM, DESC_SOL_TD1, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_SOL_TD2, UNIT_NON_DIM, DESC_SOL_TD2, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_K_SOIL10, UNIT_NON_DIM, DESC_K_SOIL10, Source_ParameterDB, DT_Single);
 
-	mdi.AddParameter("k_soil10","","Ratio between soil temperature at 10 cm and the mean",
-		"ParameterDB_WaterBalance", DT_Single);
+    mdi.AddParameter(VAR_SOIL_T10, UNIT_NON_DIM, DESC_SOIL_T10, Source_ParameterDB, DT_Raster1D);
+	/// mean air temperature
+    mdi.AddInput(DataType_MeanTemperature, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module, DT_Raster1D);
+	/// mean air temperature of the day(d-1)
+    mdi.AddInput(VAR_TMEAN1, UNIT_TEMP_DEG, DESC_TMEAN1, Source_Module, DT_Raster1D);  
+	/// mean air temperature of the day(d-2)
+    mdi.AddInput(VAR_TMEAN1, UNIT_TEMP_DEG, DESC_TMEAN1, Source_Module, DT_Raster1D);
+    /// output soil temperature
+    mdi.AddOutput(VAR_SOTE, UNIT_TEMP_DEG, DESC_SOTE, DT_Raster1D);
+    mdi.AddOutput(VAR_TMEAN1, UNIT_TEMP_DEG, DESC_TMEAN1, DT_Raster1D);
+    mdi.AddOutput(VAR_TMEAN2, UNIT_TEMP_DEG, DESC_TMEAN2, DT_Raster1D);
+    string res = mdi.GetXMLDocument();
 
-	mdi.AddParameter("soil_t10","","Factor of soil temperature relative to short grass (degree)",
-		"ParameterDB_WaterBalance", DT_Raster);
-	//mdi.AddParameter("Mask", "", "Array containing the row and column numbers for valid cells",
-	//	"ParameterDB_WaterBalance", DT_Raster);
-
-	/// from interpolation module
-	/// air temperature
-	mdi.AddInput("D_Tmin","oC","Minimum air temperature","Module", DT_Raster);
-	mdi.AddInput("D_Tmax","oC","Maximum air temperature","Module", DT_Raster);
-	//mdi.AddInput("Tmin1","oC","Minimum air temperature of the (d-1)th day","Module", DT_Raster);
-	//mdi.AddInput("Tmax1","oC","Maximum air temperature of the (d-1)th day","Module", DT_Raster);
-	//mdi.AddInput("Tmin2","oC","Minimum air temperature of the (d-2)th day","Module", DT_Raster);
-	//mdi.AddInput("Tmax2","oC","Maximum air temperature of the (d-2)th day","Module", DT_Raster);
-
-	/// output soil temperature
-	mdi.AddOutput("SOTE","oC", "Soil Temperature", DT_Raster);
-
-	string res = mdi.GetXMLDocument();
-
-	char* tmp = new char[res.size()+1];
-	strprintf(tmp, res.size()+1, "%s", res.c_str());
-	return tmp;
+    char *tmp = new char[res.size() + 1];
+    strprintf(tmp, res.size() + 1, "%s", res.c_str());
+    return tmp;
 }
+

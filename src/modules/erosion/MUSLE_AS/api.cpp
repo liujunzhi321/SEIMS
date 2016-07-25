@@ -8,52 +8,53 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-	return new MUSLE_AS();
+    return new MUSLE_AS();
 }
 
 // function to return the XML Metadata document string
-extern "C" SEIMS_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 {
-	MetadataInfo mdi;
+    MetadataInfo mdi;
 
-	// set the information properties
-	mdi.SetAuthor("Zhiqiang Yu");
-	mdi.SetClass("erosion", "Calculate the amount of sediment yield.");
-	mdi.SetDescription("use MUSLE method to calcualte sediment yield of each cell");
-	mdi.SetEmail("");
-	mdi.SetID("MUSLE_AS");
-	mdi.SetName("MUSLE_AS");
-	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
-	mdi.SetHelpfile("MUSLE_AS.chm");
+    // set the information properties
+    mdi.SetAuthor("Zhiqiang Yu");
+    mdi.SetClass(MCLS_OL_EROSION, MCLSDESC_OL_EROSION);
+    mdi.SetDescription(MDESC_MUSLE_AS);
+    mdi.SetEmail(SEIMS_EMAIL);
+    mdi.SetID(MID_MUSLE_AS);
+    mdi.SetName(MID_MUSLE_AS);
+    mdi.SetVersion("0.5");
+    mdi.SetWebsite(SEIMS_SITE);
+    mdi.SetHelpfile("MUSLE_AS.chm");
 
-	//3 grid parameter
-	mdi.AddParameter("CellWidth","m","the width (length) of cell","mask.asc",DT_Single);
-	mdi.AddParameter("USLE_C","","the cover management factor","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("USLE_P","","the erosion control practice factor ","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("acc","","the number of flow accumulation cells of each cell","ParameterDB_Sediment",DT_Raster);
-	mdi.AddParameter("slope","%","slope of the cell","ParameterDB_WaterBalance",DT_Raster);
-	mdi.AddParameter("subbasin","","subbasin grid","ParameterDB_Snow", DT_Raster);
-	mdi.AddParameter("STREAM_LINK", "", "Stream link (id of reaches)", "ParameterDB_Discharge", DT_Raster);
-	
-	//input from other module	
-	mdi.AddInput("D_SURU","mm","surface runoff","Module",DT_Raster);		//from depression module
-	mdi.AddInput("D_SNAC","mm","snow accumulation","Module",DT_Raster);	//from snow water balance module
+    mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_DEPRATIO, UNIT_NON_DIM, DESC_DEPRATIO, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_USLE_K, UNIT_NON_DIM, DESC_USLE_K, Source_ParameterDB, DT_Raster2D);
+    mdi.AddParameter(VAR_USLE_C, UNIT_NON_DIM, DESC_USLE_C, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_USLE_P, UNIT_NON_DIM, DESC_USLE_P, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_ACC, UNIT_NON_DIM, DESC_ACC, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_SLOPE, UNIT_PERCENT, DESC_SLOPE, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_SUBBSN, UNIT_NON_DIM, DESC_SUBBSN, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_STREAM_LINK, UNIT_NON_DIM, DESC_STREAM_LINK, Source_ParameterDB, DT_Raster1D);
 
-	// set the output variables
-	mdi.AddOutput("SOER","metric tons", "distribution of soil erosion", DT_Raster);
-	mdi.AddOutput("USLE_LS","USLE LS factor", "USLE LS factor", DT_Raster);
+    //input from other module
+    mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module, DT_Raster1D);        //from depression module
+    mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module, DT_Raster1D);    //from snow water balance module
 
-	mdi.AddOutput("SEDTOCH","metric tons", "sediment to channel", DT_Array1D);  // added by wu hui
-	mdi.AddOutput("SEDTOCH_T","kg", "Total sediment flowing to channel", DT_Single); // added by wu hui
-	// write out the XML file.
+    // set the output variables
+    mdi.AddOutput(VAR_SOER, UNIT_KG, DESC_SOER, DT_Raster1D);
+    mdi.AddOutput(VAR_USLE_LS, UNIT_NON_DIM, DESC_USLE_LS, DT_Raster1D);
 
-	string res = mdi.GetXMLDocument();
+    mdi.AddOutput(VAR_SED_TO_CH, UNIT_KG, DESC_SED_TO_CH, DT_Array1D);  // added by wu hui
+    mdi.AddOutput(VAR_SED_TO_CH_T, UNIT_KG, DESC_SED_TO_CH_T, DT_Single); // added by wu hui
+    // write out the XML file.
 
-	char* tmp = new char[res.size()+1];
-	strprintf(tmp, res.size()+1, "%s", res.c_str());
-	return tmp;
+    string res = mdi.GetXMLDocument();
+
+    char *tmp = new char[res.size() + 1];
+    strprintf(tmp, res.size() + 1, "%s", res.c_str());
+    return tmp;
 }

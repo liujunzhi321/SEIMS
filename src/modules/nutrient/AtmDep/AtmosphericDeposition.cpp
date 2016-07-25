@@ -1,3 +1,9 @@
+/*!
+ * \file AtmosphericDeposition.cpp
+ * \ingroup ATMDEP
+ * \author Huiran Gao
+ * \date April 2016
+ */
 #include "AtmosphericDeposition.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
@@ -8,185 +14,160 @@
 
 using namespace std;
 
-AtmosphericDeposition::AtmosphericDeposition(void):m_nLayers(3), m_size(-1),m_conRainNitra(-1.0f), m_conRainAmm(-1.0f), m_rootDepth(NULL), m_P(NULL), //input
-	 m_Nitrate(NULL), m_Ammon(NULL), m_addRainNitra(NULL), m_addRainAmm(NULL) //output
+/// In nutrient modules, m_nSoilLayers is 3, 0~10mm, 10~100mm, and 100~rootDepth. 
+/// In SEIMS, m_nSoilLayers is 2, 0~100mm, 100~rootDepth.
+AtmosphericDeposition::AtmosphericDeposition(void) :
+//input
+        m_nCells(-1), m_rcn(-1.f), m_rca(-1.f),m_soiLayers(-1),
+        m_preci(NULL), m_drydep_no3(-1.f), m_drydep_nh4(-1.f),
+		m_addrno3(-1.f), m_addrnh3(-1.f),
+        //output
+        m_sol_no3(NULL), m_sol_nh3(NULL),  m_wshd_rno3(-1.f)
 {
-	m_depth[0] = 10.f;
-	m_depth[1] = 100.f;
 }
 
 AtmosphericDeposition::~AtmosphericDeposition(void)
 {
-	if(m_Nitrate != NULL)
-	{
-		for (int i=0; i < m_size; ++i)
-			delete [] m_Nitrate[i];
-		delete [] m_Nitrate;
-	}
-	if(m_Ammon != NULL)
-	{
-		for (int i=0; i < m_size; ++i)
-			delete [] m_Ammon[i];
-		delete [] m_Ammon;
-	}
-	if(m_addRainNitra != NULL)
-		delete [] m_addRainNitra;
-	if(m_addRainAmm != NULL)
-		delete [] m_addRainAmm;
 }
 
 bool AtmosphericDeposition::CheckInputData(void)
 {
-	if(m_size <= 0)
-	{
-		throw ModelException("AtmosphericDeposition","CheckInputData","The cell number of the input can not be less than zero.");
-		return false;
-	}
-	if(m_conRainNitra <= 0)
-	{
-		m_conRainNitra = 1.f;
-	}
-	if(m_conRainAmm <= 0)
-	{
-		m_conRainAmm = 1.f;
-	}
-
-	if(m_P == NULL)
-		throw ModelException("AtmosphericDeposition","CheckInputData","You have not set the amount of precipitation in a given day.");
-	
-	return true;
+    if (m_nCells <= 0)
+        throw ModelException("AtmosphericDeposition", "CheckInputData",
+                             "The cell number of the input can not be less than zero.");
+    if (this->m_soiLayers < 0)
+        throw ModelException("AtmosphericDeposition", "CheckInputData", "The maximum soil layers number can not be less than 0.");
+    //if (this->m_cellWidth < 0)
+    //    throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_rca can not be less than 0.");
+    if (this->m_rcn < 0)
+        throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_rca can not be less than 0.");
+    if (this->m_rca < 0)
+        throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_rca can not be less than 0.");
+    if (this->m_preci == NULL)
+        throw ModelException("AtmosphericDeposition", "CheckInputData", "The precipitation can not be NULL.");
+    if (this->m_drydep_no3 <0)
+        throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_drydep_no3 can not be less than 0.");
+    if (this->m_drydep_nh4 <0)
+        throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_drydep_nh4 can not be less than 0.");
+	if (this->m_sol_no3 == NULL)
+		throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_sol_no3 can not be NULL.");
+	if (this->m_sol_nh3== NULL)
+		throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_sol_nh3 can not be NULL.");
+    return true;
 }
 
-void  AtmosphericDeposition::initalOutputs()
+bool AtmosphericDeposition::CheckInputSize(const char *key, int n)
 {
-	if(m_size <= 0) throw ModelException("AtmosphericDeposition","initalOutputs","The cell number of the input can not be less than zero.");
-
-	if(m_Nitrate == NULL)
-	{
-		m_Nitrate = new float*[m_size];
-        m_Ammon = new float*[m_size];
-		m_addRainNitra = new float[m_size];
-		m_addRainAmm = new float[m_size];
-
-		#pragma omp parallel for
-		for (int i = 0; i < m_size; ++i)
-		{
-			m_addRainNitra[i] = 0.0f;	
-			m_addRainAmm[i] = 0.f;
-
-			m_Nitrate[i] = new float[m_nLayers];
-			m_Ammon[i] = new float[m_nLayers];
-			
-			m_Nitrate[i][0] = 7 * exp ( -m_depth[0] / 2 / 1000);
-			m_Nitrate[i][1] = 7 * exp ( -(m_depth[0] + m_depth[1]) / 2 / 1000);
-			m_Nitrate[i][2] = 7 * exp ( -(m_depth[1] + m_rootDepth[i]) / 2 / 1000);
-
-			for (int j = 0; j < m_nLayers; ++j)
-				m_Ammon[i][j] = 0.f;
-		}
-
-	}
-
+    if (n <= 0)
+        throw ModelException(MID_ATMDEP, "CheckInputSize",
+                             "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
+    if (m_nCells != n)
+    {
+        if (m_nCells <= 0)
+            m_nCells = n;
+        else
+        {
+            //StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
+            ostringstream oss;
+            oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
+            m_nCells << ".\n";
+            throw ModelException("AtmosphericDeposition", "CheckInputSize", oss.str());
+        }
+    }
+    return true;
 }
 
-bool AtmosphericDeposition::CheckInputSize(const char* key, int n)
+void AtmosphericDeposition::Set1DData(const char *key, int n, float *data)
 {
-	if(n <= 0)
-	{
-		//StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
-		return false;
-	}
-	if(m_size != n)
-	{
-		if(m_size <=0) m_size = n;
-		else
-		{
-			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
-			ostringstream oss;
-			oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_size << ".\n";  
-			throw ModelException("AtmosphericDeposition","CheckInputSize",oss.str());
-		}
-	}
-
-	return true;
+    string sk(key);
+	CheckInputSize(key, n);
+    if (StringMatch(sk, VAR_PCP))m_preci = data;
+    else
+        throw ModelException("AtmosphericDeposition", "Set1DData",
+                             "Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
-void AtmosphericDeposition::SetValue(const char* key, float data)
+void AtmosphericDeposition::SetValue(const char *key, float value)
 {
-	string sk(key);
-	if (StringMatch(sk, "ConRainNitra"))
-		m_conRainNitra = data;
-	else if (StringMatch(sk, "ConRainAmm"))
-		m_conRainAmm = data;
-	else if (StringMatch(sk, "ThreadNum"))
-		omp_set_num_threads((int)data);
-	else
-		throw ModelException("AtmosphericDeposition", "SetSingleData", "Parameter " + sk 
-		+ " does not exist. Please contact the module developer.");
-	
+    string sk(key);
+    if (StringMatch(sk, VAR_OMP_THREADNUM)) omp_set_num_threads((int) value);
+    //else if (StringMatch(sk, Tag_CellSize)) { m_nCells = value; }
+    //else if (StringMatch(sk, Tag_CellWidth)) { m_cellWidth = value; }
+    else if (StringMatch(sk, VAR_RCN)) { m_rcn = value; }
+    else if (StringMatch(sk, VAR_RCA)) { m_rca = value; }
+    else if (StringMatch(sk, VAR_DRYDEP_NO3)) { m_drydep_no3 = value; }
+    else if (StringMatch(sk, VAR_DRYDEP_NH4)) { m_drydep_nh4 = value; }
+    else
+        throw ModelException("AtmosphericDeposition", "SetSingleData",
+                             "Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
-void AtmosphericDeposition::Set1DData(const char* key, int n, float* data)
+void AtmosphericDeposition::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
-	//check the input data
-	CheckInputSize(key,n);
-	string sk(key);
-	if(StringMatch(sk, "D_P"))
-		m_P = data;
-	else if(StringMatch(sk, "rootDepth"))
-		m_rootDepth = data;
-	else
-		throw ModelException("AtmosphericDeposition", "Set1DData", "Parameter " + sk 
-		+ " does not exist. Please contact the module developer.");
-	
+    if (!this->CheckInputSize(key, nRows)) return;
+    string sk(key);
+    m_soiLayers = nCols;
+    if (StringMatch(sk, VAR_SOL_NO3)) this->m_sol_no3 = data;
+    else if (StringMatch(sk, VAR_SOL_NH3)) this->m_sol_nh3 = data;
+    else
+        throw ModelException("AtmosphericDeposition", "Set2DData", "Parameter " + sk +
+                                                                  " does not exist in current module. Please contact the module developer.");
 }
 
-void AtmosphericDeposition::Get1DData(const char* key, int* n, float** data)
+void AtmosphericDeposition::initialOutputs()
 {
-	initalOutputs();
-
-	string sk(key);
-	*n = m_size;
-	if (StringMatch(sk, "AddRainNitra"))
-		*data = m_addRainNitra; 
-	else if (StringMatch(sk, "AddRainAmm"))
-		*data = m_addRainAmm;
-	else
-		throw ModelException("AtmosphericDeposition", "Get1DData", "Output " + sk 
-		+ " does not exist in the AtmosphericDeposition module. Please contact the module developer.");
-}
-
-void AtmosphericDeposition::Get2DData(const char* key, int *nRows, int *nCols, float*** data)
-{
-	string sk(key);
-	*nRows = m_size;
-	*nCols = m_nLayers;
-	if (StringMatch(sk, "Nitrate"))
-		*data = m_Nitrate;
-	else if (StringMatch(sk, "Ammon"))
-		*data = m_Ammon;
-	else
-		throw ModelException("AtmosphericDeposition", "Get2DData", "Output " + sk 
-		+ " does not exist in the Atmospheric Deposition module. Please contact the module developer.");
-
+    if (this->m_nCells <= 0)
+        throw ModelException("AtmosphericDeposition", "CheckInputData",
+                             "The dimension of the input data can not be less than zero.");
+    // allocate the output variables
+    if (m_addrnh3 < 0.f)
+    {
+        m_addrnh3 = 0.f;
+        m_addrno3 = 0.f;
+    }
+	/// initialize m_wshd_rno3 to 0.f at each time step
+    if (!FloatEqual(m_wshd_rno3, 0.f)) m_wshd_rno3 = 0.f;
 }
 
 int AtmosphericDeposition::Execute()
 {
-	//check the data
-	CheckInputData();	
-
-	initalOutputs();
-
+    //check the data
+    this->CheckInputData();
+    this->initialOutputs();
 	#pragma omp parallel for
-	for(int i=0; i < m_size; i++)
-    {
-		m_addRainNitra[i] = 0.01f * m_conRainNitra * m_P[i];
-		m_addRainAmm[i] = 0.01f * m_conRainAmm * m_P[i];
-
-		m_Nitrate[i][0] += m_addRainNitra[i];
-		m_Ammon[i][0] += m_addRainAmm[i];
+	for (int i = 0; i < m_nCells; i++)
+	{
+		if(m_preci[i] > 0.f)
+		{
+			/// Calculate the amount of nitrite and ammonia added to the soil in rainfall
+			/// unit conversion: mg/L * mm = 0.01 * kg/ha (CHECKED)
+			m_addrno3 = 0.01f * m_rcn * m_preci[i];
+			m_addrnh3 = 0.01f * m_rca * m_preci[i];
+			m_sol_no3[i][0] += (m_addrno3 + m_drydep_no3 / 365.f);
+			m_sol_nh3[i][0] += (m_addrnh3 + m_drydep_nh4 / 365.f);
+			m_wshd_rno3 += (m_addrno3 * (1.f / m_nCells));
+		}
 	}
-
-	return 0;
+    return 0;
 }
+
+void AtmosphericDeposition::GetValue(const char *key, float *value)
+{
+    string sk(key);
+    if (StringMatch(sk, VAR_WSHD_RNO3)) *value = m_wshd_rno3; 
+    else
+		throw ModelException("AtmosphericDeposition", "GetValue",
+                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+}
+
+//void AtmosphericDeposition::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
+//{
+//    string sk(key);
+//    *nRows = m_nCells;
+//    *nCols = m_soiLayers;
+//    if (StringMatch(sk, VAR_SOL_NO3)) *data = m_sol_no3;
+//	else if (StringMatch(sk, VAR_SOL_NH3)) *data = m_sol_nh3; 
+//    else
+//		throw ModelException("AtmosphericDeposition", "Get2DData", "Output " + sk +
+//                                                                   " does not exist in the Atmospheric Deposition module. Please contact the module developer.");
+//}

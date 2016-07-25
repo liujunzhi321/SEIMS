@@ -8,43 +8,49 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
+extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-	return new AtmosphericDeposition();
+    return new AtmosphericDeposition();
 }
 
 // function to return the XML Metadata document string
-extern "C" SEIMS_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 {
-	string res = "";
-	MetadataInfo mdi;
+    string res = "";
+    MetadataInfo mdi;
 
-	// set the information properties
-	mdi.SetAuthor("Wang Lin");
-	mdi.SetClass("AtmosphericDeposition", "Atmospheric Deposition.");
-	mdi.SetDescription("Atmospheric Deposition.");
-	mdi.SetEmail("");
-	mdi.SetHelpfile("AtmosphericDeposition.chm");
-	mdi.SetID("AtmosphericDeposition");
-	mdi.SetName("AtmosphericDeposition");
-	mdi.SetVersion("0.1");
-	mdi.SetWebsite("http://www.website.com");
+    // set the information properties
+    mdi.SetAuthor("Huiran Gao");
+    mdi.SetClass(MCLS_ATMDEP, MCLSDESC_ATMDEP);
+    mdi.SetDescription(MDESC_ATMDEP);
+    mdi.SetEmail(SEIMS_EMAIL);
+    mdi.SetID(MDESC_ATMDEP);
+    mdi.SetName(MDESC_ATMDEP);
+    mdi.SetVersion("0.1");
+    mdi.SetWebsite(SEIMS_SITE);
 
-	mdi.AddParameter("RootDepth", "mm", "depth from the soil surface", "file.in", DT_Raster); 
-	mdi.AddParameter("ConRainNitra", "mg N/L", "concentration of nitrate in the rain", "file.in", DT_Single); 
-	mdi.AddParameter("ConRainAmm", "mg N/L", "concentration of ammonia in the rain", "file.in", DT_Single);
+    //mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_RCN, UNIT_DENSITY, DESC_RCN, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_RCA, UNIT_DENSITY, DESC_RCA, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_DRYDEP_NO3, UNIT_CONT_KGHA, DESC_DRYDEP_NO3, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_DRYDEP_NH4, UNIT_CONT_KGHA, DESC_DRYDEP_NH4, Source_ParameterDB, DT_Single);
 
-	mdi.AddInput("D_P","mm","precipitation","Module",DT_Raster);
+	mdi.AddParameter(VAR_SOL_NH3, UNIT_CONT_KGHA, DESC_SOL_NH3, Source_ParameterDB, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
 
-	mdi.AddOutput("Nitrate", "kg N/ha", "amount of nitrate", DT_Array2D);
-	mdi.AddOutput("Ammon", "kg N/ha", "ammonium pool for soil nitrogen", DT_Array2D);
+    // set input from other modules
+    mdi.AddInput(VAR_PCP, UNIT_DEPTH_MM, DESC_PCP, Source_Module, DT_Raster1D);
+    //mdi.AddInput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, Source_Module, DT_Raster2D);
+    //mdi.AddInput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, Source_Module, DT_Raster2D);
 
-	mdi.AddOutput("AddRainNitra", "kg N/ha", "nitrate added by rainfall", DT_Raster);
-	mdi.AddOutput("AddRainAmm", "kg N/ha", "ammonium added by rainfall", DT_Raster); 
+    // set output
+    mdi.AddOutput(VAR_WSHD_RNO3, UNIT_CONT_KGHA, DESC_WSHD_RNO3, DT_Single);
+	//mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);
+	//mdi.AddOutput(VAR_SOL_NH3, UNIT_CONT_KGHA, DESC_SOL_NH3, DT_Raster2D);
 
-	res = mdi.GetXMLDocument();
+    res = mdi.GetXMLDocument();
 
-	char* tmp = new char[res.size()+1];
-	strprintf(tmp, res.size()+1, "%s", res.c_str());
-	return tmp;
+    char *tmp = new char[res.size() + 1];
+    strprintf(tmp, res.size() + 1, "%s", res.c_str());
+    return tmp;
 }

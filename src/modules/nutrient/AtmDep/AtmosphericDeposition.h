@@ -1,56 +1,101 @@
+/*!
+ * \brief Add nitrate from rainfall to the soil profile as in SWAT rev. 637, nrain.f
+ * \author Huiran Gao
+ * \date May 2016
+ *
+ * \revised Liang-Jun Zhu
+ * \date 2016-7-24
+ * \note: 1. Delete m_cellWidth, m_nSoilLayers, m_sol_z, which are useless
+ *        2. Change m_wshd_rno3 to store nitrate from rainfall of current day
+ *        3. Remove output of m_sol_no3, which is redundant and unnecessary
+ */
+/** \defgroup ATMDEP
+ * \ingroup Nutrient
+ * \brief Calculate the atmospheric deposition of nitrogen, include nitrate and ammonia.
+ */
+/*!
+ * \ingroup ATMDEP
+ * \author Huiran Gao
+ * \date May 2016
+ */
 #pragma once
+#ifndef SEIMS_ATMDEP_PARAMS_INCLUDE
+#define SEIMS_ATMDEP_PARAMS_INCLUDE
 
 #include <string>
 #include <ctime>
 #include <cmath>
 #include <map>
 #include "SimulationModule.h"
+
 using namespace std;
 
 class AtmosphericDeposition : public SimulationModule
 {
 public:
-	AtmosphericDeposition(void);
-	~AtmosphericDeposition(void);
+    AtmosphericDeposition(void);
 
-	virtual int Execute();
+    ~AtmosphericDeposition(void);
 
-	virtual void SetValue(const char* key, float data);
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	//virtual void Set2DData(const char* key, int nrows, int ncols, float** data);
-	virtual void Get2DData(const char* key, int *nRows, int *nCols, float*** data);
+    virtual int Execute();
 
-	bool CheckInputSize(const char* key, int n);
-	bool CheckInputData(void);
+    virtual void SetValue(const char *key, float data);
 
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
+
+    virtual void GetValue(const char *key, float *value);
+
+    //virtual void Get1DData(const char* key, int* n, float** data);
+    //virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
+
+    bool CheckInputSize(const char *key, int n);
+
+    bool CheckInputData(void);
+
+	void initialOutputs();
 private:
 
-	void initalOutputs();
+    /// size of array
+    int m_nCells;
+    ///// cell width of grid map (m)
+    //float m_cellWidth;
+    ///// soil layers
+    //float *m_nSoilLayers;
+    
+    /// maximum soil layers
+    int m_soiLayers;
 
-	int m_nLayers;
-	// depth of the layer (mm)
-	float m_depth[2];
-	float *m_rootDepth;
-	// input
-	// size of array 
-	int m_size;
-	// concentration of nitrate in the rain (mg N/L) 
-	float m_conRainNitra;
-	// concentration of ammonia in the rain (mg N/L)
-	float m_conRainAmm;
-	
-	// amount of precipitation in a given day (mm H2O) 
-	float* m_P;
-	
-	// output
-	// amount of nitrate in layer ly (kg N/ha)
-	float **m_Nitrate;
-	//amount of ammonium in layer ly (kg N/ha)
-	float **m_Ammon;
-	// nitrate added by rainfall (kg N/ha)
-	float* m_addRainNitra;
-    // ammonium added by rainfall (kg N/ha)
-	float* m_addRainAmm;
+    /// parameters
+    /// concentration of nitrate in the rain (mg N/L)
+    float m_rcn;
+    /// concentration of ammonia in the rain (mg N/L)
+    float m_rca;
+    ///atmospheric dry deposition of nitrates (kg/ha)
+    float m_drydep_no3;
+    ///atmospheric dry deposition of ammonia (kg/ha)
+    float m_drydep_nh4;
 
+    /// input
+    /// precipitation (mm H2O)
+    float *m_preci;
+    ///// root depth from the soil surface
+    //float **m_sol_z;
+    ///amount of ammonium in layer (kg/ha)
+    float **m_sol_nh3;
+
+    /// output
+    /// nitrate added by rainfall (kg/ha)
+    float m_addrnh3;
+    /// ammonium added by rainfall (kg/ha)
+    float m_addrno3;
+	/// amount of nitrate in layer (kg/ha)
+    float **m_sol_no3;
+    /// input & output
+    
+    /// amount of NO3 added to soil by rainfall in watershed on current day (kg/ha)
+    float m_wshd_rno3;
 };
+
+#endif

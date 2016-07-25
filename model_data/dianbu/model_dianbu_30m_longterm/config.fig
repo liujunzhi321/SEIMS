@@ -1,0 +1,14 @@
+0 | TimeSeries | | TSD_RD
+0 | Interpolation | Thiessen_0 | ITP
+0 | Soil temperature | Finn Plauborg | STP_FP
+0 | Interception | Maximum Storage | PI_MSM
+0 | Snow melt | Snowpeak Daily | SNO_SP
+0 | Infiltration | Modified rational | SUR_MR
+0 | Depression | Linsley | DEP_LINSLEY
+0 | Hillslope erosion | MUSLE | MUSLE_AS
+0 | Percolation | Darcy and Brooks-Corey | PER_PI
+0 | PET | PriestleyTaylor | PET_PT
+0 | AET | Hargreaves and PriestleyTaylor | AET_PTH
+0 | PG | Simplified EPIC | BIO_EPIC
+0 | MINRL | Mineralization of N, P | MINRL
+0 | ATMDEP | Atomosphere deposition | ATMDEP

@@ -20,58 +20,90 @@
 *		variables should be initial in the Get1DData function. This 
 *		initialization is realized by function initalOutputs. 
 *	4.	Delete input D_INFIL and add input D_EXCP.
+*	
+*	Revision:    LiangJunZhu
+*	Date    :    2016-7-14
+*	Description:
+*	1. 
 *---------------------------------------------------------------------*/
 
 #pragma once
+
 #include <string>
 #include <ctime>
 #include "api.h"
 
 using namespace std;
-#include "SimulationModule.h"
 
-class DepressionFSDaily:public SimulationModule
+#include "SimulationModule.h"
+/** \defgroup DEP_LINSLEY
+ * \ingroup Hydrology_longterm
+ * \brief A simple fill and spill method method to calculate depression storage
+ *
+ */
+/*!
+ * \class DepressionFSDaily
+ * \ingroup DEP_LINSLEY
+ * \brief A simple fill and spill method method to calculate depression storage
+ * 
+ */
+class DepressionFSDaily : public SimulationModule
 {
 public:
-	DepressionFSDaily(void);
-	~DepressionFSDaily(void);
+    //! Constructor
+    DepressionFSDaily(void);
 
-	virtual int Execute();
-	virtual void SetValue(const char* key, float data);
-	virtual void Set1DData(const char* key, int n, float* data);
-	virtual void Get1DData(const char* key, int* n, float** data);
-	
-	bool CheckInputSize(const char* key, int n);
-	bool CheckInputData(void);
+    //! Destructor
+    ~DepressionFSDaily(void);
 
+    virtual int Execute();
+
+    virtual void SetValue(const char *key, float data);
+
+    virtual void Set1DData(const char *key, int n, float *data);
+
+    virtual void Get1DData(const char *key, int *n, float **data);
+
+    bool CheckInputSize(const char *key, int n);
+
+    bool CheckInputData(void);
 
 private:
-	/// size
-	int m_size;
+    /// valid cells number
+    int m_nCells;
 
-	/// initial depression storage coefficient
-	float m_depCo;
-	/// depression storage capacity
-	float* m_depCap;
+    /// initial depression storage coefficient
+    float m_depCo;
+    /// depression storage capacity (mm)
+    float *m_depCap;
 
-	/// pet
-	float* m_pet;
-	/// evaporation from the interception storage
-	float* m_ei;
+    /// pet
+    float *m_pet;
+    /// evaporation from the interception storage
+    float *m_ei;
 
-	/// Infiltration
-	///float* m_infil;
-	float* m_pe;
+    /// excess precipitation calculated in the infiltration module
+    float *m_pe;
 
-	// state variables (output)
-	/// depression storage
-	float* m_sd;
-	/// evaporation from depression storage
-	float* m_ed;
-	/// surface runoff
-	float* m_sr;
+    // state variables (output)
+    /// depression storage
+    float *m_sd;
+    /// evaporation from depression storage
+    float *m_ed;
+    /// surface runoff
+    float *m_sr;
 
-
-	void initalOutputs();
+    /*!
+     * \brief Initialize output variables
+     * This module will be called by infiltration module to get the
+     *		depression storage. And this module will also use the outputs
+     *		of infiltration module. The sequence of this two modules is
+     *		infiltration->depression. When infiltration first calls the
+     *		depression module, the execute function of depression module
+     *		is not executed before getting the outputs. So, the output
+     *		variables should be initial in the Get1DData function. This
+     *		initialization is realized by function initalOutputs.
+     */
+    void initialOutputs();
 };
 

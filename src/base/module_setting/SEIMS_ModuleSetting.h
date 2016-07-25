@@ -1,42 +1,64 @@
+/*!
+ * \file SEIMS_ModuleSetting.h
+ * \brief
+ *
+ *
+ *
+ * \author [your name]
+ * \version 
+ * \date June 2015
+ *
+ * 
+ */
 #pragma once
+
 #include <string>
 #include <vector>
 
 using namespace std;
 
-class WetspaModuleSetting
+/*!
+ * \ingroup module_setting
+ * \class SEIMSModuleSetting
+ *
+ * \brief 
+ *
+ *
+ *
+ */
+class SEIMSModuleSetting
 {
 public:
-	WetspaModuleSetting(string moduleId,string setting);
-	~WetspaModuleSetting(void);
-	
-	//climate data type for TSD and ITP
-	float dataType();
-	string dataTypeString();
+    SEIMSModuleSetting(string moduleId, string setting);
 
-	//vertical interpolation information for ITP
-	bool needDoVerticalInterpolation();
+    ~SEIMSModuleSetting(void);
 
-	//get channel flow routing method
-	string channelFlowRoutingMethod();
+    float dataType();
 
-	//get channel sediment routing method
-	string channelSedimentRoutingMethod();
+    ///< climate data type for TSD and ITP
+    string dataTypeString();
 
-	//get channel nutrient routing method
-	string channelNutrientRoutingMethod();
+    ///< data type
+    bool needDoVerticalInterpolation();
+
+    ///< vertical interpolation information for ITP
+    string channelFlowRoutingMethod();
+
+    ///< get channel flow routing method
+    string channelSedimentRoutingMethod();
+
+    ///< get channel sediment routing method
+    string channelNutrientRoutingMethod();///< get channel nutrient routing method
 private:
-	string  m_moduleId;
-	string  m_settingString;
-	vector<string> m_settings;
-	
-	void	getSettings();
-	string  channelRoutingMethod(int);
+    string m_moduleId; ///< module's ID
+    string m_settingString; ///< module setting string
+    vector<string> m_settings; ///< module settings
 
-	static float dataTypeString2Float(string);
-	static string dataType2String(float);
+    void getSettings();
 
+    string channelRoutingMethod(int);
 
+    static float dataTypeString2Float(string);
 
+    static string dataType2String(float);
 };
-

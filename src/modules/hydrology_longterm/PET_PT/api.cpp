@@ -1,60 +1,70 @@
+/*!
+ * \file api.cpp
+ *
+ * \author Junzhi Liu
+ * \date Nov. 2010
+ * \revised LiangJun Zhu
+ * \date May. 2016
+ */
 #include <stdio.h>
 #include <string>
 #include "api.h"
 #include "util.h"
-#include "text.h"
 #include <iostream>
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 #include "PETPriestleyTaylor.h"
-
-extern "C" SEIMS_MODULE_API SimulationModule* GetInstance()
+/** \defgroup PET_PT
+ * \ingroup Hydrology_longterm
+ * \brief Calculate potential evapotranspiration using PriestleyTaylor method
+ *
+ */
+extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-	return new PETPriestleyTaylor();
+    return new PETPriestleyTaylor();
 }
 
 // function to return the XML Metadata document string
-extern "C" SEIMS_MODULE_API const char* MetadataInformation()
+extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 {
-	MetadataInfo mdi;
+    MetadataInfo mdi;
 
-	// set the information properties
-	mdi.SetAuthor("Junzhi Liu");
-	mdi.SetClass("Potential Evapotranspiration", "Calculate the potential evapotranspiration for an array of climate inputs.");
-	mdi.SetDescription("PriestleyTaylor method for calculating the potential evapotranspiration.");
-	mdi.SetEmail("");
-	mdi.SetID("PET_PT");
-	mdi.SetName("PET_PT");
-	mdi.SetVersion("0.5");
-	mdi.SetWebsite("");
-	mdi.SetHelpfile("PET_PT.html");
+    // set the information properties
+    mdi.SetAuthor("Junzhi Liu, LiangJun Zhu");
+    mdi.SetClass(MCLS_PET, MCLSDESC_PET);
+    mdi.SetDescription(MDESC_PET_PT);
+    mdi.SetEmail(SEIMS_EMAIL);
+    mdi.SetID(MID_PET_PT);
+    mdi.SetName(MID_PET_PT);
+    mdi.SetVersion("1.1");
+    mdi.SetWebsite(SEIMS_SITE);
+    mdi.SetHelpfile("PET_PT.html");
 
-	//This temperature is used to determine the value of variable m_snow
-	//if T_MEAN is larger than T_snow, then m_snow = 0;
-	//else m_snow = 1.
-	mdi.AddParameter("T_snow","mm","Amount of water in snow","ParameterDB_Snow", DT_Single); 
-	mdi.AddParameter("K_pet", "", "Correction Factor for PET", "ParameterDB", DT_Single);
-	//The elevation of station is read from HydroClimateDB. It would be consider as a paramter. And its name must be Elevation. 
-	//This will force the main program to read elevation from HydroClimateDB. See Line 1078 of main.cpp.
-	mdi.AddParameter(Tag_Elevation_Meteorology,"m","Elevation","HydroClimateDB", DT_Array1D);
+    //This temperature is used to determine the value of variable m_snow
+    //if T_MEAN is larger than T_snow, then m_snow = 0;
+    //else m_snow = 1.
+    mdi.AddParameter(VAR_T_SNOW, UNIT_DEPTH_MM, DESC_T_SNOW, Source_ParameterDB, DT_Single);
+    mdi.AddParameter(VAR_K_PET, UNIT_NON_DIM, DESC_PET_K, Source_ParameterDB, DT_Single);
 
-	//Latitude is used to calculate max solar radiation. It is read in the similiar format with elevation.
-	mdi.AddParameter(Tag_Latitude_Meteorology,"degree","Latitude","HydroClimateDB", DT_Array1D);
+    mdi.AddParameter(VAR_DEM, UNIT_LEN_M, CONS_IN_ELEV, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_CELL_LAT, UNIT_LONLAT_DEG, DESC_CELL_LAT, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_PHUTOT, UNIT_TIMESTEP_HOUR, DESC_PHUTOT, Source_ParameterDB, DT_Raster1D);
+    //These five inputs are read from ITP module
+    mdi.AddInput(DataType_MeanTemperature, UNIT_TEMP_DEG, DESC_MAXTEMP, Source_Module, DT_Raster1D);
+    mdi.AddInput(DataType_MinimumTemperature, UNIT_TEMP_DEG, DESC_MINTEMP, Source_Module, DT_Raster1D);
+    mdi.AddInput(DataType_MaximumTemperature, UNIT_TEMP_DEG, DESC_MAXTEMP, Source_Module, DT_Raster1D);
+    mdi.AddInput(DataType_RelativeAirMoisture, UNIT_PERCENT, DESC_RM, Source_Module, DT_Raster1D);
+    mdi.AddInput(DataType_SolarRadiation, UNIT_SR, DESC_SR, Source_Module, DT_Raster1D);
 
-	// set the input
-	//These five inputs are read from HydroClimateDB
-	mdi.AddInput("TMin","degree","Mean air temperature","Module", DT_Array1D); //use TMin and TMax to calculate TMean
-	mdi.AddInput("TMax","degree","Mean air temperature","Module", DT_Array1D);
-	mdi.AddInput("RM","","Relative humidity","Module", DT_Array1D);
-	mdi.AddInput("SR","MJ/m2/d","Solar radiation","Module", DT_Array1D);
+    // set the output variables
+    mdi.AddOutput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, DT_Raster1D);
+    mdi.AddOutput(VAR_PHUBASE, UNIT_NON_DIM, DESC_PHUBASE, DT_Raster1D);
+    mdi.AddOutput(VAR_VPD, UNIT_PRESSURE, DESC_VPD, DT_Raster1D);
+    mdi.AddOutput(VAR_PET, UNIT_WTRDLT_MMD, DESC_PET, DT_Raster1D);
+    string res = mdi.GetXMLDocument();
 
-	// set the output variables
-	mdi.AddOutput("T_PET","mm/d", "Potential Evapotranspiration", DT_Array1D);
-
-	string res = mdi.GetXMLDocument();
-
-	char* tmp = new char[res.size()+1];
-	strprintf(tmp, res.size()+1, "%s", res.c_str());
-	return tmp;
+    char *tmp = new char[res.size() + 1];
+    strprintf(tmp, res.size() + 1, "%s", res.c_str());
+    return tmp;
 }

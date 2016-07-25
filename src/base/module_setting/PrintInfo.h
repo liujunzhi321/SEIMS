@@ -1,4 +1,12 @@
-//! class to store and manage the PRINT information from the file.out file
+/*!
+ * \file PrintInfo.h
+ * \brief Class to store and manage the PRINT information from the file.out file
+ *
+ * \author Junzhi Liu, LiangJun Zhu
+ * \version 1.1
+ * \date June 2010
+ */
+
 #pragma once
 
 #include <string>
@@ -6,135 +14,228 @@
 #include <time.h>
 #include "ParamInfo.h"
 #include <map>
-#include "clsSpecificOutput.h"
-#include "mongo.h"
-#include "gridfs.h"
+//#include "clsSpecificOutput.h"
+#include "mongoc.h"
+#include "clsRasterData.h"
 
 using namespace std;
 
-//! Aggregation type enum 
+/*!
+ * \enum AggregationType
+ * \ingroup module_setting
+ * \brief Aggregation type for OUTPUT
+ *
+ */
 enum AggregationType
 {
-	AT_Unknown = 0,
-	AT_Sum = 1,
-	AT_Average = 2,
-	AT_Minimum = 3,
-	AT_Maximum = 4,
-	AT_SpecificCells = 5 //output values of specific cells
+    /// unknown
+            AT_Unknown = 0,
+    /// sum
+            AT_Sum = 1,
+    /// average
+            AT_Average = 2,
+    /// minimum
+            AT_Minimum = 3,
+    /// maximum
+            AT_Maximum = 4,
+    /// output values of specific cells
+            AT_SpecificCells = 5
 };
 
-//! Class stores the information 
+/*!
+ * \ingroup module_setting
+ * \class PrintInfoItem
+ *
+ * \brief Class stores a single output item of an OuputID 
+ *
+ */
 class PrintInfoItem
 {
 private:
-	int m_Counter;
+    //! Counter of time series data, i.e., how many data has been aggregated.
+    int m_Counter;
+private:
+//	//! values of specific cells, e.g., landuse, curvature, and slope
+//	clsSpecificOutput*	m_specificOutput;
+//public:
+//	void setSpecificCellRasterOutput(string projectPath,string databasePath,
+//		clsRasterData* templateRasterData,string outputID);
+
+public:
+    //! MongoDB client
+    mongoc_client_t *conn;
+    //! Database name
+    string dbName;
+    //! GridFS
+    mongoc_gridfs_t *gfs;
+
+    //! Constructor
+    PrintInfoItem(void);
+
+    //! Destructor
+    ~PrintInfoItem(void);
+
+    //! Aggregated data, the second dimension contains: row, col, value
+    float **m_1DDataWithRowCol;
+    //! rows number, i.e., number of valid cells
+    int m_nRows;
+    //! For 1D raster/array data
+    float *m_1DData;
+    //! number of layers of 2D raster data
+    int m_nLayers;
+    //! For 2D raster/array data
+    float **m_2DData;
+    
+    //! For time series data of a single subbasin, DT_Single
+    map<time_t, float> TimeSeriesData;
+    //! For time series data of a single subbasin, DT_Raster1D or DT_Array1D
+    map<time_t, float *> TimeSeriesDataForSubbasin;
+    //! Count of \sa TimeSeriesDataForSubbasin
+    int TimeSeriesDataForSubbasinCount;
+
+    //! Add 1D time series data result to \sa TimeSeriesDataForSubbasin
+    void add1DTimeSeriesResult(time_t, int n, float *data);
+
+    //! used only by PET_TS???
+	///< The site id
+    int SiteID;       
+	///< The site index in output array1D variable
+    int SiteIndex;    
+
+	///< The subbasin id
+    int SubbasinID;  
+	///< The subbasin index
+    int SubbasinIndex;   
+
+    //! Start time string
+    string StartTime;
+    //! Start time \a time_t
+    time_t m_startTime;
+
+    //! get start time \a time_t
+	time_t getStartTime(){return m_startTime;};
+
+    //! End time string
+    string EndTime;
+    //! End time  \a time_t
+    time_t m_endTime;
+
+    //! Get end time  \a time_t
+	time_t getEndTime(){return m_endTime;};
+
+    //! file suffix, e.g., txt, tif, asc, etc.
+    string Suffix;
+    //! output filename without suffix
+    string Filename;
+	//! Aggregation type string
+	string AggType;
+    //! create "output" folder to store all results
+    void Flush(string, clsRasterData *, string);
+
+    //! Determine if the given date is within the date range for this item
+    bool IsDateInRange(time_t dt);
+
+    //! Aggregate the 2D data from the given data parameter using the given method type.
+    //! However this **data restrict to 3 layers, i.e., Row, Col, Value
+    //! NO NEED TO USE?
+    void AggregateData(int numrows, float **data, AggregationType type, float NoDataValue);
+
+    //! Aggregate the 1D data from the given data parameter using the given method type
+    void AggregateData(time_t time, int numrows, float *data);
+
+    //! Aggregate the 2D raster data from the given data parameter using the given method type
+    void AggregateData2D(time_t time, int nRows, int nCols, float **data);
+
+    //! Set the Aggregation type
+	void setAggregationType(AggregationType type){m_AggregationType = type;};
+
+    //! Get the Aggregation type
+	AggregationType getAggregationType(void){return m_AggregationType;};
+
+    //! convert the given string into a matching Aggregation type
+    static AggregationType MatchAggregationType(string type);
 
 private:
-	clsSpecificOutput* m_specificOutput;		//values of specific cells
-public:
-	void setSpecificCellRasterOutput(string projectPath,string databasePath,
-		clsRasterData* templateRasterData,string outputID);
-
-public:
-
-	mongo* conn;
-	gridfs* gfs;
-	
-
-	PrintInfoItem(void);
-	~PrintInfoItem(void);
-
-	// aggregated data
-	float** Data;					
-	int Numrows;
-
-	float* RasterData;				//for asc file
-	float **m_2dData;	//for 2d array
-	int ValidCellCount;
-	int m_nCols;
-
-	map<time_t,float> TimeSeriesData; //for time series data file
-
-	map<time_t,float*> TimeSeriesDataForSubbasin; //for time series data for subbasin
-	int TimeSeriesDataForSubbasinCount;
-	void add1DTimeSeriesResult(time_t, int n, float* data);
-
-	// used only by PET_TS
-	int SiteID;		//The site id
-	int SiteIndex;	//The site index in output array1D variable
-
-	int SubbasinID; //The subbasin id
-	int SubbasinIndex;	//The subbasin index
-	
-	// used by all PrintItems
-	string StartTime;
-	time_t getStartTime();
-	string EndTime;
-	time_t getEndTime();
-	string Filename;
-
-	time_t m_startTime;
-	time_t m_endTime;
-
-	void Flush(string,clsRasterData*,string);
-	bool IsDateInRange(time_t dt);
-	void AggregateData(int numrows, float** data, AggregationType type, float NoDataValue);
-	void AggregateData(time_t time,int numrows, float* data);
-
-	void AggregateData2D(time_t time, int nRows, int nCols, float** data);
-	
-	void setAggregationType(AggregationType type);
-	AggregationType getAggregationType(void);
-	static AggregationType MatchAggregationType(string type);
-private:
-	AggregationType m_AggregationType;
-	
+	//! Aggregation type of current print item
+    AggregationType m_AggregationType;
 };
 
+/*!
+ * \ingroup module_setting
+ * \class PrintInfo
+ *
+ * \brief 
+ *
+ *
+ *
+ */
 class PrintInfo
 {
 public:
-	// used only for the PET_TS output
-	int m_Interval;
-	string m_IntervalUnits;
-	int m_moduleIndex;
+	//! Time interval of output
+    int m_Interval;
+	//! Unit of time interval, which can only be DAY, HR, SEC.
+    string m_IntervalUnits;
+	//! Module index of the OutputID
+    int m_moduleIndex;
 
-	// used by all outputs
-	string m_OutputID;
-	ParamInfo* m_param; // The output variable corresponding to the output id
-	vector<PrintInfoItem*> m_PrintItems;
+    //! Unique Output ID, which should be one of "VAR_" defined in text.h and Output of any modules.
+    string m_OutputID;
+	//! The calibration parameters corresponding to the output id, if stated.
+    ParamInfo *m_param;
+	//! For one OutputID, there may be several output items, e.g., different time period, different subbasin ID. etc.
+    vector<PrintInfoItem *> m_PrintItems;
 
-	
-	void setSpecificCellRasterOutput(string projectPath, string databasePath,
-	clsRasterData* templateRasterData);
+
+    //void setSpecificCellRasterOutput(string projectPath, string databasePath,clsRasterData* templateRasterData);
 private:
-	//for subbasin time series data
-	vector<int> m_subbasinSeleted;
-	float* m_subbasinSelectedArray;
+    //! Selected subbasin IDs for time series data, vector container
+    vector<int> m_subbasinSeleted;
+	//! Selected subbasin IDs for time series data, float array
+    float *m_subbasinSelectedArray;
 public:
-	PrintInfo(void);
-	~PrintInfo(void);
+	//! Constructor, initialize an empty instance
+    PrintInfo(void);
+	//! Destructor
+    ~PrintInfo(void);
 
-	/*
-	** Get all the subbasins selected for this output id
-	*/
-	void getSubbasinSelected(int* count, float** subbasins);
+    //! Get the number of output items
+	int		ItemCount(void){return m_PrintItems.size();};
 
-	void setOutputID(string id);
-	string getOutputID(void);
-	string getOutputTimeSeriesHeader(void);
+    //! Get all the subbasin IDs (in float array) selected for this outputID
+    void	getSubbasinSelected(int *count, float **subbasins);
 
-	void setInterval(int interval);
-	void setIntervalUnits(string units);
-	int getInterval(void);
-	string getIntervalUnits(void);
+    //! Set the OutputID for this object
+	void	setOutputID(string id){m_OutputID = id;};
 
-	void AddPrintItem(string start, string end, string file); // used for all non-PET_TS
-	void AddPrintItem(string type,string start, string end, string file, mongo* conn, gridfs* gfs); // used for all non-PET_TS
-	void AddPrintItem(string start, string end, string file, string sitename,bool isSubbasin);	// used for PET_TS
+    //! Get the OutputId for this object
+	string	getOutputID(void){return m_OutputID;};
 
-	PrintInfoItem* getPrintInfoItem(int index);
+	//! Get Header string (all field names) for current OutputID. TODO, how to make it more flexible? By LJ.
+    string	getOutputTimeSeriesHeader(void);
 
-	int ItemCount(void);
+    //! Set the interval
+	void	setInterval(int interval){m_Interval = interval;};
+
+    //! Get the interval
+	int		getInterval(void){return m_Interval;};
+
+    //! Set the interval units
+	void	setIntervalUnits(string units){m_IntervalUnits = units;};
+
+    //! Get the interval units
+	string	getIntervalUnits(void){return m_IntervalUnits;};
+
+    //! Add an output item with the given start time, end time and file name
+    void	AddPrintItem(string start, string end, string file, string sufi);
+
+    //! Add an output item with the given start time, end time and file name, for MongoDB
+    void	AddPrintItem(string type, string start, string end, string file, string sufi, mongoc_client_t *conn,
+                      mongoc_gridfs_t *gfs);
+
+    //! Add an output item with the given start time (string), end time (string) and file name, Overloaded method
+    void	AddPrintItem(string start, string end, string file, string sitename, string sufi, bool isSubbasin);
+
+    //! Get a reference to the output item located at the given index position
+    PrintInfoItem *getPrintInfoItem(int index);
 };
-

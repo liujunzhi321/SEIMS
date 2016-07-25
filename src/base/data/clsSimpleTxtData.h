@@ -1,3 +1,15 @@
+/*!
+ * \file clsSimpleTxtData.h
+ * \brief A simple text read class
+ *
+ *
+ *
+ * \author Junzhi Liu
+ * \version 1.0
+ * \date June 2010
+ *
+ * 
+ */
 #pragma once
 
 #include <string>
@@ -5,16 +17,34 @@
 
 using namespace std;
 
+/*!
+ * \ingroup data
+ * \class clsSimpleTxtData
+ *
+ * \brief read string line from text file
+ *
+ *
+ *
+ */
 class clsSimpleTxtData
 {
 public:
-	clsSimpleTxtData(string fileName);
-	~clsSimpleTxtData();
+    //! Constructor, from text file read lines data
+    clsSimpleTxtData(string fileName);
 
-	void getData(int *nRow, float **data);
-	void dump(ostream *fs);
+    //! Destructor
+    ~clsSimpleTxtData();
+
+    //! Get line number and data
+    void getData(int *nRow, float **data);
+
+    //! Output lines data to \a ostream
+    void dump(ostream *fs);
+
 private:
-	int		m_row;
-	float*	m_data;
+    //! line number
+    int m_row;
+    //! lines data
+    float *m_data;
 };
 

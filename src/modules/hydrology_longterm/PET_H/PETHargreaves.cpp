@@ -6,192 +6,171 @@
 #include <iostream>
 #include <fstream>
 #include "util.h"
-#include "text.h"
+#include "ClimateParams.h"
 #include "ModelException.h"
 #include <omp.h>
 
 using namespace std;
 
-PETHargreaves::PETHargreaves(void):m_size(-1), m_petFactor(1.f), m_tMin(NULL), m_tMax(NULL), m_pet(NULL)
+PETHargreaves::PETHargreaves(void) : m_nCells(-1), m_petFactor(1.f), m_HCoef_pet(0.0023f),
+                                     m_tMean(NULL), m_tMin(NULL), m_tMax(NULL), m_rhd(NULL), m_phutot(NULL),
+                                     m_dayLen(NULL), m_phuBase(NULL), m_pet(NULL), m_vpd(NULL)
 {
 }
 
 PETHargreaves::~PETHargreaves(void)
 {
-	if(this->m_pet != NULL)
-	{
-		delete [] this->m_pet;
-	}
+    if (this->m_dayLen != NULL) Release1DArray(this->m_dayLen);
+    if (this->m_phuBase != NULL) Release1DArray(this->m_phuBase);
+    if (this->m_pet != NULL) Release1DArray(this->m_pet);
+    if (this->m_vpd != NULL) Release1DArray(this->m_vpd);
 }
 
-void PETHargreaves::SetValue(const char* key, float value)
+void PETHargreaves::SetValue(const char *key, float value)
 {
-	string sk(key);
-	if (StringMatch(sk,"K_pet"))
-	{
-		m_petFactor = value;
-	}
-	else if (StringMatch(sk, "ThreadNum"))
-	{
-		omp_set_num_threads((int)value);
-	}
-	else
-	{
-		throw ModelException("PET_PM","SetValue","Parameter " + sk + " does not exist in PETPenmanMonteith method. Please contact the module developer.");
-	}
-
+    string sk(key);
+    if (StringMatch(sk, VAR_K_PET)) m_petFactor = value;
+    else if (StringMatch(sk, VAR_PET_HCOEF)) m_HCoef_pet = value;
+    else if (StringMatch(sk, VAR_OMP_THREADNUM)) omp_set_num_threads((int) value);
+    else
+        throw ModelException(MID_PET_H, "SetValue", "Parameter " + sk +
+                                                    " does not exist in current module. Please contact the module developer.");
 }
 
-void PETHargreaves::Set1DData(const char* key,int n, float *value)
+void PETHargreaves::Set1DData(const char *key, int n, float *value)
 {
-	if(!this->CheckInputSize(key,n)) return;
-
-	string sk(key);
-	if (StringMatch( sk,"TMAX"))
-	{
-		m_tMax = value;
-	}
-	else if (StringMatch( sk, "TMIN"))
-	{
-		m_tMin = value;
-	}
-	else if (StringMatch( sk, Tag_Latitude_Meteorology))
-	{
-		this->m_latitude = value;
-	}
-	else
-	{
-		throw ModelException("PET_H","SetValue","Parameter " + sk + " does not exist in PETHargreaves method. Please contact the module developer.");
-	}
-
+    if (!this->CheckInputSize(key, n)) return;
+    string sk(key);
+    if (StringMatch(sk, DataType_MeanTemperature))
+        this->m_tMean = value;
+    else if (StringMatch(sk, DataType_MaximumTemperature))
+        this->m_tMax = value;
+    else if (StringMatch(sk, DataType_MinimumTemperature))
+        this->m_tMin = value;
+    else if (StringMatch(sk, DataType_RelativeAirMoisture))
+        this->m_rhd = value;
+    else if (StringMatch(sk, VAR_CELL_LAT))
+        this->m_cellLat = value;
+    else if (StringMatch(sk, VAR_PHUTOT))
+        this->m_phutot = value;
+    else
+        throw ModelException(MID_PET_H, "Set1DValue", "Parameter " + sk +
+                                                      " does not exist in current module. Please contact the module developer.");
 }
 
-int PETHargreaves::JulianDay(time_t date)
+void PETHargreaves::initialOutputs()
 {
-	struct tm dateInfo;
-	LocalTime(date, &dateInfo);
-	return dateInfo.tm_yday + 1;
-}
-
-//The source code come from Junzhi's MaxRadiation project.
-float PETHargreaves::MaxSolarRadiation(int day,float lat)
-{
-	  lat = lat*3.1415926/180;
-	  //Calculate Daylength
-      //calculate solar declination: equation 2.1.2 in SWAT manual
-      float sd = asin(0.4f * sin((day - 82.0f) / 58.09f));  //365/2pi = 58.09
-
-      //calculate the relative distance of the earth from the sun
-      //the eccentricity of the orbit
-      //equation 2.1.1 in SWAT manual
-      float dd = 1.0f + 0.033f * cos(day / 58.09f);
-
-      //daylength = 2 * Acos(-Tan(sd) * Tan(lat)) / omega
-      //where the angular velocity of the earth's rotation, omega, is equal
-      //to 15 deg/hr or 0.2618 rad/hr and 2/0.2618 = 7.6374
-      //equation 2.1.6 in SWAT manual
-
-      float h = 0.0f;
-      float ch = -sin(lat) * tan(sd) / cos(lat);
-      if (ch > 1.f) //ch will be >= 1. if latitude exceeds +/- 66.5 deg in winter
-        h = 0.0f;
-      else if (ch >= -1.0f)
-        h = acos(ch);
-      else
-        h = 3.1416f; //latitude exceeds +/- 66.5 deg in summer
-      
-      float dayl = 7.6394f * h;
-          
-      //Calculate Potential (maximum) Radiation !!
-      //equation 2.2.7 in SWAT manual
-      float ys = sin(lat) * sin(sd);
-      float yc = cos(lat) * cos(sd);
-      
-	  return 30.f * dd * (h * ys + yc * sin(h));
+	if(this->m_pet == NULL) Initialize1DArray(m_nCells, m_pet, 0.f);
+	if(this->m_vpd == NULL) Initialize1DArray(m_nCells, m_vpd, 0.f);
+	if(this->m_dayLen == NULL) Initialize1DArray(m_nCells, m_dayLen, 0.f);
+	if(this->m_phuBase == NULL) Initialize1DArray(m_nCells, m_phuBase, 0.f);
+//	if (NULL == m_pet || NULL == m_vpd || NULL == m_dayLen || NULL == m_phuBase)
+//	{
+//		this->m_pet = new float[m_nCells];
+//		this->m_vpd = new float[m_nCells];
+//		this->m_dayLen = new float[m_nCells];
+//		this->m_phuBase = new float[m_nCells];
+//#pragma omp parallel for
+//		for (int i = 0; i < m_nCells; ++i)
+//		{
+//			m_pet[i] = 0.f;
+//			m_vpd[i] = 0.f;
+//			m_dayLen[i] = 0.f;
+//			m_phuBase[i] = 0.f;
+//		}
+//	}
 }
 
 int PETHargreaves::Execute()
 {
-	if(!this->CheckInputData()) return false;
-	if(this->m_pet == NULL)
-	{
-		this->m_pet = new float[this->m_size];
-	}
-
-	int d = JulianDay(this->m_date);
-	#pragma omp parallel for
-	for (int i = 0; i < m_size; ++i)
-	{	
-		float tMean = (m_tMax[i] + m_tMin[i])/2;
-		float srMax = this->MaxSolarRadiation(d, m_latitude[i]);
-
-		//calculate latent heat of vaporization(from swat)
-		float latentHeat = 2.501f - 0.002361f * tMean;
-		// extraterrestrial radiation(from swat)
-		// 37.59 is coefficient in equation 2.2.6 !!extraterrestrial
-		// 30.00 is coefficient in equation 2.2.7 !!max at surface
-		float h0 = srMax * 37.59f / 30.0f;
-		float petValue = 0.0023f * h0 * pow(m_tMax[i]-m_tMin[i], 0.5f)
-			* (tMean + 17.8f) / latentHeat;
-		m_pet[i] = m_petFactor * max(0.0f, petValue);
-
-		//if (FloatEqual(m_pet[i], 0.f))
-		//{
-		//	int a = 0.f;
-		//}
-	}
-	return 0;
+    if (!this->CheckInputData()) return false;
+    initialOutputs();
+    m_jday = JulianDay(this->m_date);
+    //cout<<m_tMean[0]<<","<<m_tMax[0]<<","<<m_tMin[0]<<endl;
+#pragma omp parallel for
+    for (int i = 0; i < m_nCells; ++i)
+    {
+        /// update phubase of the simulation year.
+        /* update base zero total heat units, src code from SWAT, subbasin.f
+        if (tmpav(j) > 0. .and. phutot(hru_sub(j)) > 0.01) then
+            phubase(j) = phubase(j) + tmpav(j) / phutot(hru_sub(j))
+        end if*/
+        if (m_jday == 1) m_phuBase[i] = 0.f;
+        if (m_tMean[i] > 0.f && m_phutot[i] > 0.01f)
+            m_phuBase[i] += m_tMean[i] / m_phutot[i];
+        MaxSolarRadiation(m_jday, m_cellLat[i], m_dayLen[i], m_srMax);
+        ///calculate latent heat of vaporization(from swat)
+        float latentHeat = 2.501f - 0.002361f * m_tMean[i];
+        /// extraterrestrial radiation
+        /// equation 1:1.1.6 in SWAT Theory 2009, p33
+        float h0 = m_srMax * 37.59f / 30.0f;
+        /// calculate potential evapotranspiration, equation 2:2.2.24 in SWAT Theory 2009, p133
+        /// Hargreaves et al., 1985. In SWAT Code, 0.0023 is replaced by harg_petco, which range from 0.0019 to 0.0032. by LJ
+        float petValue = m_HCoef_pet * h0 * pow(abs(m_tMax[i] - m_tMin[i]), 0.5f)
+                         * (m_tMean[i] + 17.8f) / latentHeat;
+        m_pet[i] = m_petFactor * max(0.0f, petValue);
+        /// calculate m_vpd
+        float satVaporPressure = SaturationVaporPressure(m_tMean[i]);
+        float actualVaporPressure = 0.f;
+        if (m_rhd[i] > 1)   /// IF percent unit.
+            actualVaporPressure = m_rhd[i] * satVaporPressure * 0.01f;
+        else
+            actualVaporPressure = m_rhd[i] * satVaporPressure;
+        m_vpd[i] = satVaporPressure - actualVaporPressure;
+    }
+    return 0;
 }
 
 
-void PETHargreaves::Get1DData(const char* key, int* n, float **data)
+void PETHargreaves::Get1DData(const char *key, int *n, float **data)
 {
-	if(this->m_pet == NULL) 
-		throw ModelException("PET_H","getPET","The result is NULL. Please first execute the module.");
-	*data = this->m_pet;
-	*n = this->m_size;
+    //CheckInputData(); // Plz avoid putting CheckInputData() in Get1DData, this may cause Set time error! By LJ
+    initialOutputs();
+    string sk(key);
+    *n = this->m_nCells;
+    if (this->m_pet == NULL)
+        throw ModelException(MID_PET_H, "Get1DData", "The result is NULL. Please first execute the module.");
+    if (StringMatch(sk, VAR_PET)) *data = this->m_pet;
+    else if (StringMatch(sk, VAR_VPD)) *data = this->m_vpd;
+    else if (StringMatch(sk, VAR_DAYLEN)) *data = this->m_dayLen;
+    else if (StringMatch(sk, VAR_PHUBASE)) *data = this->m_phuBase;
+    else
+        throw ModelException(MID_PET_H, "Get1DData",
+                             "Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
-bool PETHargreaves::CheckInputSize(const char* key, int n)
+bool PETHargreaves::CheckInputSize(const char *key, int n)
 {
-	if(n<=0)
-	{
-		throw ModelException("PET_H","CheckInputSize","Input data for "+string(key) +" is invalid. The size could not be less than zero.");
-	}
-	if(this->m_size != n)
-	{
-		if(this->m_size <=0) this->m_size = n;
-		else
-		{
-			throw ModelException("PET_H","CheckInputSize","Input data for "+string(key) +" is invalid. All the input data should have same size.");
-		}
-	}
-
-	return true;
+    if (n <= 0)
+        throw ModelException(MID_PET_H, "CheckInputSize",
+                             "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
+    if (this->m_nCells != n)
+    {
+        if (this->m_nCells <= 0) this->m_nCells = n;
+        else
+            throw ModelException(MID_PET_H, "CheckInputSize", "Input data for " + string(key) +
+                                                              " is invalid. All the input data should have same size.");
+    }
+    return true;
 }
 
 bool PETHargreaves::CheckInputData()
 {
-	if(this->m_date == -1)
-	{
-		throw ModelException("PET_H","CheckInputData","You have not set the time.");
-		return false;
-	}
-
-	if(m_size <= 0)
-	{
-		throw ModelException("PET_H","CheckInputData","The dimension of the input data can not be less than zero.");
-	}
-
-	if(this->m_tMax == NULL)
-	{
-		throw ModelException("PET_H","CheckInputData","The maximum temeprature can not be NULL.");
-	}
-
-	if(this->m_tMin == NULL)
-	{
-		throw ModelException("PET_H","CheckInputData","The minimum temeprature can not be NULL.");
-	}
-
-	return true;
+    if (this->m_date < 0)
+        throw ModelException(MID_PET_H, "CheckInputData", "You have not set the time.");
+    if (m_nCells <= 0)
+        throw ModelException(MID_PET_H, "CheckInputData", "The dimension of the input data can not be less than zero.");
+    if (this->m_tMax == NULL)
+        throw ModelException(MID_PET_H, "CheckInputData", "The maximum temperature can not be NULL.");
+    if (this->m_tMin == NULL)
+        throw ModelException(MID_PET_H, "CheckInputData", "The minimum temperature can not be NULL.");
+    if (this->m_tMean == NULL)
+        throw ModelException(MID_PET_H, "CheckInputData", "The mean temperature can not be NULL.");
+    if (this->m_rhd == NULL)
+        throw ModelException(MID_PET_H, "CheckInputData", "The relative humidity can not be NULL.");
+    if (this->m_cellLat == NULL)
+        throw ModelException(MID_PET_H, "CheckInputData", "The latitude can not be NULL.");
+    if (this->m_phutot == NULL)
+        throw ModelException(MID_PET_H, "CheckInputData", "The PHU0 can not be NULL.");
+    return true;
 }
