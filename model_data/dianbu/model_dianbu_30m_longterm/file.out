@@ -70,5 +70,8 @@ Nutrient	WSHD_VOLN	average annual amount if nitrogen lost by ammonia volatilizat
 Nutrient	WSHD_PAL	phosphorus moving from labile mineral to active mineral pool in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_PAL.txt	1
 Nutrient	WSHD_PAS	phosphorus moving from active mineral to stable mineral pool in watershed	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_PAS.txt	1
 Atmosphere deposition	WSHD_RNO3	average annual amount of NO3 added to soil by rainfall in watershed	kg	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RNO3.txt	1
+Subsurface runoff	SSRU	Subsurface runoff	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SSRU.tif	1
+Subsurface runoff	SSRUVOL	Subsurface runoff volume	m3	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SSRUVOL.tif	1
+Subsurface runoff	SBIF	Subsurface runoff discharge to streams from each subbasin	m2/s	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBIF.txt	1
 Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	Q.txt	0
 Sediment	QSED	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	0
