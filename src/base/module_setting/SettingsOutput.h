@@ -45,6 +45,10 @@ public:
      */
     bool LoadSettingsOutputFromMongoDB(int subBasinID);
 
+	/*
+	 * \brief Read subbasin numbers, outlet ID, etc. from MongoDB
+	 */
+	void SetSubbasinIDs();
     //! Write output information to log file
     void Dump(string);
 
@@ -71,6 +75,10 @@ private:
     //! Output GridFS
     mongoc_gridfs_t *m_outputGfs;
 
+	//! number of subbasins
+	int m_nSubbasins;
+	//! subbasin ID which outlet located
+	int m_outletID;
     //! Parse output settings for given subBasinID
     bool ParseOutputSettings(int);
 };

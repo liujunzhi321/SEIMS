@@ -693,6 +693,7 @@
 #define VAR_OMP_THREADNUM "ThreadNum"               /// Thread numbers for OMP
 #define VAR_ORGANICN "organicn"
 #define VAR_ORGANICP "organicp"
+#define VAR_OUTLETID "OUTLET_ID"
 #define VAR_P_MAX "P_max"
 #define VAR_P_N "p_n"
 #define VAR_P_RF "p_rf"
@@ -844,6 +845,7 @@
 #define VAR_STREAM_LINK "STREAM_LINK"
 #define VAR_SUB_SEDTOCH ""
 #define VAR_SUBBSN "subbasin"                       /// The subbasin grid
+#define VAR_SUBBSNID_NUM "SUBBASINID_NUM"                /// number of subbasins
 #define VAR_SURQNO3 "surqno3"
 #define VAR_SURQNO3_CH "surqno3ToCh"
 #define VAR_SURQSOLP "surqsolp"
@@ -1187,7 +1189,7 @@
 #define DESC_NITRITEN "nitrite concentration in reach"
 #define DESC_NO3GW "nitrate loading to reach in groundwater"
 #define DESC_NO3GW_CH "nitrate loading to reach in groundwater"
-#define DESC_NONE ""
+#define DESC_NONE "NO DESCRIPTION"
 #define DESC_NPERCO "nitrate percolation coefficient"
 #define DESC_NUPDIS "Nitrogen uptake distribution parameter"
 #define DESC_OL_DET "distribution of overland flow detachment"
@@ -1199,6 +1201,7 @@
 #define DESC_OMEGA "calibration coefficient of splash erosion"
 #define DESC_ORGANICN "organic nitrogen concentration in reach"
 #define DESC_ORGANICP "organic phosphorus concentration in reach"
+#define DESC_OUTLETID "subbasin ID which outlet located"
 #define DESC_P_MAX "Maximum P corresponding to runoffCo"
 #define DESC_P_N "algal preference factor for ammonia"
 #define DESC_P_RF "Peak rate adjustment factor"
@@ -1354,6 +1357,7 @@
 #define DESC_SUB_SEDTOCH "sediment to streams from each subbasin"
 #define DESC_SubbasinSelected "The subbasion IDs listed in file.out"
 #define DESC_SUBBSN "The subbasion grid"
+#define DESC_SUBBSNID_NUM "number of subbasins"
 #define DESC_SURQNO3 "amount of nitrate transported with surface runoff"
 #define DESC_SURQNO3_CH "amount of nitrate transported with surface runoff"
 #define DESC_SURQSOLP "amount of phosphorus stored in solution"

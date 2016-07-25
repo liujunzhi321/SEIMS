@@ -447,6 +447,7 @@ void ModuleFactory::ReadDLL(string &id, string &dllID)
         throw ModelException("ModuleFactory", "ReadDLL",
                              moduleFileName + " does not implement API function: MetadataInformation");
 
+	//cout<<"Read DLL: "<<moduleFileName<<endl;
 }
 
 SimulationModule *ModuleFactory::GetInstance(string &moduleID)

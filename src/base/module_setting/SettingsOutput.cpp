@@ -15,12 +15,14 @@ SettingsOutput::SettingsOutput(int subBasinID, string fileName, mongoc_client_t 
                                mongoc_gridfs_t *gfs)
         : m_conn(conn), m_dbName(dbName), m_outputGfs(gfs)
 {
+	SetSubbasinIDs();
     LoadSettingsFromFile(subBasinID, fileName);
 }
 
 SettingsOutput::SettingsOutput(int subBasinID, mongoc_client_t *conn, string dbName, mongoc_gridfs_t *gfs)
         : m_conn(conn), m_dbName(dbName), m_outputGfs(gfs)
 {
+	SetSubbasinIDs();
     LoadSettingsOutputFromMongoDB(subBasinID);
 }
 
@@ -110,8 +112,7 @@ bool SettingsOutput::LoadSettingsOutputFromMongoDB(int subBasinID)
 		{
 			pi->setInterval(interval);
 			pi->setIntervalUnits(intervalUnit);
-			string outletID = "0";
-			pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName,outletID, suffix, m_conn, m_outputGfs, true);
+			pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName, ValueToString(m_outletID), suffix, m_conn, m_outputGfs, true);
 			//pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName, suffix);
 		}
 		else if (StringMatch(subBsn, Tag_AllSubbsn)) /// Output of all subbasins
@@ -140,6 +141,57 @@ bool SettingsOutput::LoadSettingsOutputFromMongoDB(int subBasinID)
     return true;
 }
 
+void SettingsOutput::SetSubbasinIDs()
+{
+	bson_t *b = bson_new();
+	bson_t *child = bson_new();
+	bson_t *child2 = bson_new();
+	bson_t *child3 = bson_new();
+	BSON_APPEND_DOCUMENT_BEGIN(b, "$query", child);
+	BSON_APPEND_DOCUMENT_BEGIN(child, PARAM_FLD_NAME, child2);
+	BSON_APPEND_ARRAY_BEGIN(child2, "$in", child3);
+	BSON_APPEND_UTF8(child3,PARAM_FLD_NAME, VAR_OUTLETID);
+	BSON_APPEND_UTF8(child3,PARAM_FLD_NAME, VAR_SUBBSNID_NUM);
+	bson_append_array_end(child2, child3);
+	bson_append_document_end(child, child2);
+	bson_append_document_end(b, child);
+	//printf("%s\n",bson_as_json(b,NULL));
+
+	mongoc_cursor_t *cursor;
+	const bson_t *bsonTable;
+	mongoc_collection_t *collection;
+	bson_error_t *err = NULL;
+
+	collection = mongoc_client_get_collection(m_conn, m_dbName.c_str(), DB_TAB_PARAMETERS);
+	cursor = mongoc_collection_find(collection, MONGOC_QUERY_NONE, 0, 0, 0, b, NULL, NULL);
+
+	bson_iter_t iter;
+	while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &bsonTable))
+	{
+		string nameTmp = "";
+		int numTmp = -1;
+		if (bson_iter_init_find(&iter, bsonTable, PARAM_FLD_NAME))
+			nameTmp = GetStringFromBSONITER(&iter);
+		if (bson_iter_init_find(&iter, bsonTable, PARAM_FLD_VALUE))
+			numTmp = GetIntFromBSONITER(&iter);
+		if(!StringMatch(nameTmp, "") && numTmp != -1)
+		{
+			if(StringMatch(nameTmp, VAR_OUTLETID))
+				m_outletID = GetIntFromBSONITER(&iter);
+			else if (StringMatch(nameTmp, VAR_SUBBSNID_NUM))
+				m_nSubbasins = GetIntFromBSONITER(&iter);
+		}
+		else
+			throw ModelException("SettingOutput","SetSubbasinIDs","No valid values found in MongoDB!");
+	}
+	bson_destroy(child);
+	bson_destroy(child2);
+	bson_destroy(child3);
+	bson_destroy(b);
+	mongoc_collection_destroy(collection);
+	mongoc_cursor_destroy(cursor);
+	return;
+}
 bool SettingsOutput::LoadSettingsFromFile(int subBasinID, string fileName)
 {
     if (!Settings::LoadSettingsFromFile(fileName)) return false;
