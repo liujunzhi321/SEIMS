@@ -55,7 +55,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_FLAT, UNIT_DEPTH_MM, DESC_FLAT, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_PERCO, UNIT_DEPTH_MM, DESC_SOL_PERCO, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOILDEPTH, UNIT_NON_DIM, DESC_SOILDEPTH, Source_ParameterDB, DT_Raster2D);
-    mdi.AddParameter(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, Source_ParameterDB, DT_Raster2D);
 
     mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_Module, DT_Raster2D);

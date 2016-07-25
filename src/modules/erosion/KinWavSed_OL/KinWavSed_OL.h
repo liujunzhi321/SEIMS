@@ -141,9 +141,9 @@ private:
     //Parameters
     ///calibration coefficient of overland erosion (-)
     float m_Ccoe;
-    /// calibration coefficient
+    /// calibration coefficient 1
     float m_eco1;
-    /// calibration coefficient
+    /// calibration coefficient 2
     float m_eco2;
 
     /**
