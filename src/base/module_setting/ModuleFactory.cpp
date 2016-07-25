@@ -1076,7 +1076,7 @@ void ModuleFactory::SetValue(ParamInfo *param, clsRasterData *templateRaster, Se
     }
     else if (StringMatch(param->Name, Tag_TimeStep))
     {
-        param->Value = settingsInput->getDtDaily();
+        param->Value = settingsInput->getDtDaily(); // return 86400 secs
     }
     else if (StringMatch(param->Name, Tag_HillSlopeTimeStep))
     {

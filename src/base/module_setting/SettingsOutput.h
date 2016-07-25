@@ -61,7 +61,7 @@ public:
 	 * key: OutputID
 	 * value: \sa PrintInfo instance
 	 */
-	map<string, PrintInfo*> m_printInfos2;
+	map<string, PrintInfo*> m_printInfosMap;
 
 private:
     //! MongoDB client

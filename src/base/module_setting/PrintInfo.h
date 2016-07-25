@@ -234,7 +234,8 @@ public:
                       mongoc_gridfs_t *gfs);
 
     //! Add an output item with the given start time (string), end time (string) and file name, Overloaded method
-    void	AddPrintItem(string start, string end, string file, string sitename, string sufi, bool isSubbasin);
+	void	AddPrintItem(string start, string end, string file, string sitename, string sufi,mongoc_client_t *conn,
+		mongoc_gridfs_t *gfs, bool isSubbasin);
 
     //! Get a reference to the output item located at the given index position
     PrintInfoItem *getPrintInfoItem(int index);

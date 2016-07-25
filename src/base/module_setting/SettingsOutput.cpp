@@ -94,13 +94,13 @@ bool SettingsOutput::LoadSettingsOutputFromMongoDB(int subBasinID)
 		if(use <= 0)
 			continue;
 		/// First, if OutputID does not existed in m_printInfos, then create a new one.
-		if(m_printInfos2.find(outputID) == m_printInfos2.end())
+		if(m_printInfosMap.find(outputID) == m_printInfosMap.end())
 		{
-			m_printInfos2[outputID] = new PrintInfo();
-			m_printInfos2[outputID]->setOutputID(outputID);/// set the OUTPUTID for the new PrintInfo
+			m_printInfosMap[outputID] = new PrintInfo();
+			m_printInfosMap[outputID]->setOutputID(outputID);/// set the OUTPUTID for the new PrintInfo
 		}
 		PrintInfo *pi = NULL; /// reset the pointer
-		pi = m_printInfos2[outputID];
+		pi = m_printInfosMap[outputID];
 
 		ostringstream oss;
 		oss << subBasinID << "_";
@@ -110,7 +110,9 @@ bool SettingsOutput::LoadSettingsOutputFromMongoDB(int subBasinID)
 		{
 			pi->setInterval(interval);
 			pi->setIntervalUnits(intervalUnit);
-			pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName, suffix);
+			string outletID = "0";
+			pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName,outletID, suffix, m_conn, m_outputGfs, true);
+			//pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName, suffix);
 		}
 		else if (StringMatch(subBsn, Tag_AllSubbsn)) /// Output of all subbasins
 		{
@@ -124,13 +126,14 @@ bool SettingsOutput::LoadSettingsOutputFromMongoDB(int subBasinID)
 			pi->setIntervalUnits(intervalUnit);
 			vector<string> subBsns = utils::SplitString(subBsn, ',');
 			for(vector<string>::iterator it = subBsns.begin(); it != subBsns.end(); it++)
-				pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName,*it, suffix, true);
+				pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName,*it, suffix, m_conn, m_outputGfs, true);
 		}
     }
-	for (map<string, PrintInfo*>::iterator it = m_printInfos2.begin(); it != m_printInfos2.end(); it++)
+	for (map<string, PrintInfo*>::iterator it = m_printInfosMap.begin(); it != m_printInfosMap.end(); it++)
 	{
 		m_printInfos.push_back(it->second);
 	}
+	vector<PrintInfo*>(m_printInfos).swap(m_printInfos);
     bson_destroy(b);
     mongoc_collection_destroy(collection);
     mongoc_cursor_destroy(cursor);
@@ -298,7 +301,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
                 if (sitename.size() > 0)
                 {
                     // add the print item
-                    pi->AddPrintItem(starttm, endtm, fname, sitename, suffix, false);
+                    pi->AddPrintItem(starttm, endtm, fname, sitename, suffix, m_conn, m_outputGfs, false);
                 }
             }
         }
@@ -355,7 +358,7 @@ bool SettingsOutput::ParseOutputSettings(int subBasinID)
                 if (subbasinname.size() > 0)
                 {
                     // add the print item
-                    pi->AddPrintItem(starttm, endtm, fname, subbasinname, suffix, true);
+                    pi->AddPrintItem(starttm, endtm, fname, subbasinname, suffix, m_conn, m_outputGfs, true);
                 }
             }
         }

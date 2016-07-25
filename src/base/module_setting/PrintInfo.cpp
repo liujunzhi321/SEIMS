@@ -737,7 +737,7 @@ void PrintInfo::AddPrintItem(string type, string start, string end, string file,
 }
 
 
-void PrintInfo::AddPrintItem(string start, string end, string file, string sitename, string sufi, bool isSubbasin)
+void PrintInfo::AddPrintItem(string start, string end, string file, string sitename, string sufi,mongoc_client_t *m_conn,mongoc_gridfs_t *m_outputGfs, bool isSubbasin)
 {
     PrintInfoItem *itm = new PrintInfoItem();
 
@@ -750,6 +750,8 @@ void PrintInfo::AddPrintItem(string start, string end, string file, string siten
     }
     itm->StartTime = start;
     itm->EndTime = end;
+	itm->conn = m_conn;
+	itm->gfs = m_outputGfs;
     itm->Filename = file;
     itm->Suffix = sufi;
     itm->m_startTime = utils::ConvertToTime2(start, "%d-%d-%d %d:%d:%d", true);
