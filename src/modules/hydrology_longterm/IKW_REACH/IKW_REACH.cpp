@@ -111,6 +111,10 @@ bool IKW_REACH::CheckInputData(void)
     {
         throw ModelException("IKW_REACH", "CheckInputData", "The parameter: m_Vseep0 has not been set.");
     }
+	if (this->m_manningScalingFactor <= 0)
+	{
+		throw ModelException(MID_CH_DW, "CheckInputData", "You have not set the manning scaling factor variable.");
+	}
     if (m_subbasin == NULL)
     {
         throw ModelException("IKW_REACH", "CheckInputData", "The parameter: m_subbasin has not been set.");
@@ -311,6 +315,10 @@ void IKW_REACH::SetValue(const char *key, float value)
     {
         m_Kbank = value;
     }
+	else if (StringMatch(sk, VAR_CH_MANNING_FACTOR))
+	{
+		m_manningScalingFactor = value;
+	}
     else if (StringMatch(sk, VAR_EP_CH))
     {
         m_Epch = value;

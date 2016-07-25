@@ -95,8 +95,6 @@ private:
     float **m_sol_z;
 
 
-    ///percent organic matter in soil layer (%)
-    float **m_sol_om;
     /// amount of organic nitrogen in surface runoff
     float *m_sedorgn;
     /// amount of organic phosphorus in surface runoff
@@ -104,7 +102,11 @@ private:
     /// average air temperature
     float *m_tmean;
     /// groundwater contribution to stream flow
-    float *m_gw_q;
+	float *m_gw_q;
+	///percent organic matter in soil layer (%)
+	float **m_sol_om;
+	/// soil thick of each layer (mm)
+	float **m_sol_thick;
 
     /// output data
     /// amount of nitrate transported with lateral flow

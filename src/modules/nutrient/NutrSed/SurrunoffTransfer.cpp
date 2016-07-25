@@ -14,7 +14,7 @@ using namespace std;
 SurrunoffTransfer::SurrunoffTransfer(void) :
 //input
         m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_sedimentYield(NULL), m_surfr(NULL),
-        m_sol_bd(NULL), m_sol_z(NULL),
+        m_sol_bd(NULL), m_sol_z(NULL), m_enratio(NULL),
         m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL),
         m_sol_fop(NULL),
         //output
@@ -25,6 +25,7 @@ SurrunoffTransfer::SurrunoffTransfer(void) :
 
 SurrunoffTransfer::~SurrunoffTransfer(void)
 {
+	if (m_enratio != NULL) Release1DArray(m_enratio);
 	if (m_sedorgp != NULL) Release1DArray(m_sedorgp);
 	if (m_sedorgn != NULL) Release1DArray(m_sedorgn);
 	if (m_sedminpa != NULL) Release1DArray(m_sedminpa);
@@ -191,6 +192,34 @@ void SurrunoffTransfer::initialOutputs()
     {
         throw ModelException(MID_SurTra, "CheckInputData", "The dimension of the input data can not be less than zero.");
     }
+	// initial enrichment ratio
+	if (this->m_enratio == NULL)
+	{
+		Initialize1DArray(m_nCells, m_enratio, 0.f);
+		for (int i = 0; i < m_nCells; i++)
+		{
+			if (m_sedimentYield[i] < 1e-4f)
+			{
+				m_sedimentYield[i] = 0.f;
+			}
+			// CREAMS method for calculating enrichment ratio
+			float cy = 0.f;
+			// Calculate sediment calculations, equation 4:2.2.3 in SWAT Theory 2009, p272
+			cy = 0.1f * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * 0.0001f * m_surfr[i] + 1e-6f);
+			if (cy > 1e-6f)
+			{
+				m_enratio[i] = 0.78f * pow(cy, -0.2468f);
+			} else
+			{
+				m_enratio[i] = 0.f;
+			}
+			if (m_enratio[i] > 3.5f)
+			{
+				m_enratio[i] = 3.5f;
+			}
+		}
+	}
+
     // allocate the output variables
     if (m_sedorgn == NULL)
     {
@@ -212,50 +241,20 @@ int SurrunoffTransfer::Execute()
         return false;
     }
     this->initialOutputs();
-    //enrichment ratio (enratio)
-    float *enratio = CalculateEnrRatio();
-#pragma omp parallel for
+
+	#pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
         //Calculates the amount of organic nitrogen removed in surface runoff.
-        OrgnRemoveinSr(i, enratio[i]);
+        OrgnRemoveinSr(i);
         //Calculates the amount of organic and mineral phosphorus attached to sediment in surface runoff.
-        OrgpAttachedtoSed(i, enratio[i]);
+        OrgpAttachedtoSed(i);
     }
     //return ??
     return 0;
 }
 
-float *SurrunoffTransfer::CalculateEnrRatio()
-{
-    //enrichment ratio
-    float *enratio;
-    for (int i = 0; i < m_nCells; i++)
-    {
-        if (m_sedimentYield[i] < 1e-4f)
-        {
-            m_sedimentYield[i] = 0.f;
-        }
-        // CREAMS method for calculating enrichment ratio
-        float cy = 0.f;
-        // Calculate sediment calculations, equation 4:2.2.3 in SWAT Theory 2009, p272
-        cy = 0.1f * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * 0.0001f * m_surfr[i] + 1e-6f);
-        if (cy > 1e-6f)
-        {
-            enratio[i] = 0.78f * pow(cy, -0.2468f);
-        } else
-        {
-            enratio[i] = 0.f;
-        }
-        if (enratio[i] > 3.5f)
-        {
-            enratio[i] = 3.5f;
-        }
-    }
-    return enratio;
-}
-
-void SurrunoffTransfer::OrgnRemoveinSr(int i, float enratio)
+void SurrunoffTransfer::OrgnRemoveinSr(int i)
 {
     for (int k = 0; k < m_nSoilLayers[i]; k++)
     {
@@ -267,7 +266,7 @@ void SurrunoffTransfer::OrgnRemoveinSr(int i, float enratio)
         wt = m_sol_bd[i][0] * m_sol_z[i][0] / 100.f;
         //concentration of organic N in soil (concn)
         float concn = 0.f;
-        concn = orgninfl * enratio / wt;
+        concn = orgninfl * m_enratio[i] / wt;
         //Calculate the amount of organic nitrogen transported with sediment to the stream, equation 4:2.2.1 in SWAT Theory 2009, p271
         m_sedorgn[i] = 0.001f * concn * m_sedimentYield[i] / (m_cellWidth * m_cellWidth * m_nCells);
         //update soil nitrogen pools
@@ -296,7 +295,7 @@ void SurrunoffTransfer::OrgnRemoveinSr(int i, float enratio)
     }
 }
 
-void SurrunoffTransfer::OrgpAttachedtoSed(int i, float enratio)
+void SurrunoffTransfer::OrgpAttachedtoSed(int i)
 {
     for (int k = 0; k < m_nSoilLayers[i]; k++)
     {
@@ -318,7 +317,7 @@ void SurrunoffTransfer::OrgpAttachedtoSed(int i, float enratio)
         float wt = m_sol_bd[i][0] * m_sol_z[i][0] / 100.f;
         //concentration of organic P in soil (concp)
         float concp = 0.f;
-        concp = sol_attp * enratio / wt;
+        concp = sol_attp * m_enratio[i] / wt;
         //total amount of P removed in sediment erosion (sedp)
         float sedp = 0.001f * concp * m_sedimentYield[i] / (m_cellWidth * m_cellWidth);
         m_sedorgp[i] = sedp * sol_attp_o;

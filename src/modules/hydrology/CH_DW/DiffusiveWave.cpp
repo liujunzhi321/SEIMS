@@ -32,7 +32,7 @@ DiffusiveWave::DiffusiveWave(void) : m_nCells(-1), m_chNumber(-1), m_dt(-1.0f), 
                                      m_elevation(NULL),
                                      m_flowLen(NULL), m_qi(NULL), m_streamLink(NULL), m_reachId(NULL),
                                      m_sourceCellIds(NULL),
-                                     m_idUpReach(-1), m_idOutlet(-1), m_qUpReach(0.f), m_manningScalingFactor(1.0f)
+                                     m_idUpReach(-1), m_idOutlet(-1), m_qUpReach(0.f), m_manningScalingFactor(0.f)
 {
     m_diagonal[1] = 0;
     m_diagonal[2] = 1;
@@ -102,8 +102,11 @@ bool DiffusiveWave::CheckInputData(void)
     {
         throw ModelException(MID_CH_DW, "CheckInputData", "You have not set the CellWidth variable.");
         return false;
-    }
-
+	}
+	if (this->m_manningScalingFactor <= 0)
+	{
+		throw ModelException(MID_CH_DW, "CheckInputData", "You have not set the manning scaling factor variable.");
+	}
     if (m_s0 == NULL)
         throw ModelException(MID_CH_DW, "CheckInputData", "The parameter: slope has not been set.");
     if (m_direction == NULL)
@@ -433,7 +436,7 @@ void DiffusiveWave::SetValue(const char *key, float data)
     {
         omp_set_num_threads((int) data);
     }
-    else if (StringMatch(sk, "ManningScalingFactor"))  /// TODO: add to mongodb database
+    else if (StringMatch(sk, VAR_CH_MANNING_FACTOR))  /// TODO: add to mongodb database
         m_manningScalingFactor = data;
     else
         throw ModelException(MID_CH_DW, "SetSingleData", "Parameter " + sk

@@ -521,7 +521,7 @@ void ImplicitKinematicWave_CH::SetValue(const char *key, float data)
     {
         omp_set_num_threads((int) data);
     }
-    else if (StringMatch(sk, VAR_CH_MANNING_F))
+    else if (StringMatch(sk, VAR_CH_MANNING_FACTOR))
         m_manningScalingFactor = data;
     else
         throw ModelException(MID_IKW_CH, "SetValue", "Parameter " + sk

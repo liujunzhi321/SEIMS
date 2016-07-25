@@ -58,6 +58,9 @@ private:
     /// maximum soil layers
     int m_soiLayers;
 
+	/// enrichment ratio
+	float *m_enratio;
+
     ///input data
     //distribution of soil loss caused by water erosion
     float *m_sedimentYield;
@@ -114,25 +117,18 @@ private:
     bool CheckInputSize(const char *, int);
 
     /*!
-    * \brief Calculate enrichment ratio.
-     *
-     * \return void
-     */
-    float *CalculateEnrRatio();
-
-    /*!
     * \brief calculates the amount of organic nitrogen removed in surface runoff.
      *
      * \return void
      */
-    void OrgnRemoveinSr(int i, float enratio);
+    void OrgnRemoveinSr(int i);
 
     /*!
     * \brief Calculates the amount of organic and mineral phosphorus attached to sediment in surface runoff.
      *
      * \return void
      */
-    void OrgpAttachedtoSed(int i, float enratio);
+    void OrgpAttachedtoSed(int i);
 
     void initialOutputs();
 
