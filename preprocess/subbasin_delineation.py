@@ -241,11 +241,11 @@ def SubbasinDelineation():
     # f.write(proj4Str + "\n")
     # f.close()
 
-    ## Convert to WGS84 (EPSG:4326)
+    # Convert to WGS84 (EPSG:4326)
     GenerateCellLatRaster()
-    ## Calculate parameters dependent on latitude
+    # Calculate parameters dependent on latitude
     CalLatDependParas()
-
+    # Mask, export JSON, import subbasin IDs to MongoDB, etc.
     GenerateSubbasins()
 
 

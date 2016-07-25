@@ -5,7 +5,9 @@
 # Revised: Liang-Jun Zhu
 # Note: Improve calculation efficiency by numpy
 #
-from config import *
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
+
 from post_process_taudem import *
 
 
@@ -137,28 +139,105 @@ def GenerateSubbasins():
                     GEOJSON_OUTLET: WORKING_DIR + os.sep + DIR_NAME_TAUDEM + os.sep + modifiedOutlet}
     for jsonName in geoJson_dict.keys():
         convert2GeoJson(jsonName, proj_srs, wgs84_srs, geoJson_dict.get(jsonName))
-
-    # fileName = WORKING_DIR + os.sep + "river.json"
-    # if os.path.exists(fileName):
-    #     os.remove(fileName)
-    # s = 'ogr2ogr -f GeoJSON -s_srs "%s" -t_srs EPSG:4326 river.json reaches/reach.shp' % (proj_srs)
-    # print s
-    # os.system(s)
-    #
-    # fileName = WORKING_DIR + os.sep + "subbasin.json"
-    # if os.path.exists(fileName):
-    #     os.remove(fileName)
-    # s = 'ogr2ogr -f GeoJSON -s_srs "%s" -t_srs EPSG:4326 subbasin.json subbasins/subbasin.shp' % (proj4Str)
-    # os.system(s)
-    #
-    # fileName = WORKING_DIR + os.sep + "outlet.json"
-    # if os.path.exists(fileName):
-    #     os.remove(fileName)
-    # s = 'ogr2ogr -f GeoJSON -s_srs "%s" -t_srs EPSG:4326 outlet.json %s/outletM.shp' % (proj4Str, DIR_NAME_TAUDEM)
-    # os.system(s)
     fStatus.write("%d,%s\n" % (100, "Finished!"))
     fStatus.close()
 
 
+def importSubbasinStatistics():
+    '''
+    Import subbasin numbers, outlet ID, etc. to MongoDB.
+    :return:
+    '''
+    streamlinkR = WORKING_DIR + os.sep + streamLinkOut
+    flowdirR = WORKING_DIR + os.sep + flowDirOut
+    DIR_ITEMS = {}
+    if (isTauDEM):
+        DIR_ITEMS = {1: (0, 1),
+                     8: (1, 1),
+                     7: (1, 0),
+                     6: (1, -1),
+                     5: (0, -1),
+                     4: (-1, -1),
+                     3: (-1, 0),
+                     2: (-1, 1)}
+    else:
+        DIR_ITEMS = {1: (0, 1),
+                     2: (1, 1),
+                     4: (1, 0),
+                     8: (1, -1),
+                     16: (0, -1),
+                     32: (-1, -1),
+                     64: (-1, 0),
+                     128: (-1, 1)}
+    streamlinkD = ReadRaster(streamlinkR)
+    nodata = streamlinkD.noDataValue
+    nrows = streamlinkD.nRows
+    ncols = streamlinkD.nCols
+    streamlinkData = streamlinkD.data
+    maxSubbasinID = streamlinkD.GetMax()
+    minSubbasinID = streamlinkD.GetMin()
+    subbasinNum = numpy.unique(streamlinkData).size - 1
+    # print maxSubbasinID, minSubbasinID, subbasinNum
+    flowdirD = ReadRaster(flowdirR)
+    flowdirData = flowdirD.data
+    iRow = -1
+    iCol = -1
+    for row in range(nrows):
+        for col in range(ncols):
+            if streamlinkData[row][col] != nodata:
+                iRow = row
+                iCol = col
+                # print row, col
+                break
+        else:
+            continue
+        break
+    if iRow == -1 or iCol == -1:
+        raise ValueError("Stream link data invalid, please check and retry.")
+
+    def flow_down_stream_idx(dirValue, i, j):
+        drow, dcol = DIR_ITEMS[int(dirValue)]
+        return i + drow, j + dcol
+
+    def findOutletIndex(r, c):
+        flag = True
+        while flag:
+            fdir = flowdirData[r][c]
+            newr, newc = flow_down_stream_idx(fdir, r, c)
+            if newr < 0 or newc < 0 or newr >= nrows or newc >= ncols or streamlinkData[newr][newc] == nodata:
+                flag = False
+            else:
+                # print newr, newc, streamlinkData[newr][newc]
+                r = newr
+                c = newc
+        return r, c
+
+    oRow, oCol = findOutletIndex(iRow, iCol)
+    outletBsnID = streamlinkData[oRow][oCol]
+    # import parameters to MongoDB
+    try:
+        conn = MongoClient(HOSTNAME, PORT)
+    except ConnectionFailure, e:
+        sys.stderr.write("Could not connect to MongoDB: %s" % e)
+        sys.exit(1)
+    db = conn[SpatialDBName]
+    importStatsDict = {PARAM_NAME_OUTLETID: outletBsnID, PARAM_NAME_OUTLETROW: oRow, PARAM_NAME_OUTLETCOL: oCol,
+                       PARAM_NAME_SUBBSNMAX: maxSubbasinID, PARAM_NAME_SUBBSNMIN: minSubbasinID,
+                       PARAM_NAME_SUBBSNNUM: subbasinNum}
+    for stat in importStatsDict.keys():
+        dic = {PARAM_FLD_NAME.upper(): stat, PARAM_FLD_DESC.upper(): stat, PARAM_FLD_UNIT.upper(): "NONE",
+               PARAM_FLD_MODS.upper(): "ALL", PARAM_FLD_VALUE.upper(): importStatsDict[stat],
+               PARAM_FLD_IMPACT.upper():DEFAULT_NODATA , PARAM_FLD_CHANGE.upper():PARAM_CHANGE_NC ,
+               PARAM_FLD_MAX.upper(): DEFAULT_NODATA, PARAM_FLD_MIN.upper(): DEFAULT_NODATA,
+               PARAM_FLD_USE.upper(): PARAM_USE_Y, Tag_DT_Type.upper(): "WATERSHED"}
+        curfilter = {PARAM_FLD_NAME.upper(): dic[PARAM_FLD_NAME.upper()]}
+        db[DB_TAB_PARAMETERS.upper()].find_one_and_replace(curfilter, dic, upsert=True)
+    db[DB_TAB_PARAMETERS.upper()].create_index(PARAM_FLD_NAME.upper())
+
+    print "Subbasin statistics imported!"
+
+
 if __name__ == "__main__":
-    GenerateSubbasins()
+    LoadConfiguration(GetINIfile())
+    # GenerateSubbasins()
+    importSubbasinStatistics()

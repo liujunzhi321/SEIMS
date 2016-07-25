@@ -1,5 +1,11 @@
+/*
+ * 
+ * \review Liang-Jun Zhu
+ * \date 2016-7-24
+ * \note: 1. Add support of multi soil layers of each cells.
+ *        2. 
+ */
 #pragma once
-
 #include <string>
 #include <vector>
 #include <string>
@@ -24,31 +30,54 @@ using namespace std;
 class SSR_DA : public SimulationModule
 {
 private:
-    /// number of soil layers
+	/// valid cell numbers
+	int m_nCells;
+	/// width of cell (m)
+	float m_CellWidth;
+    /// max number of soil layers
     int m_nSoilLayers;
-    /// depth of the up soil layer
-    float m_upSoilDepth;
+	/// number of soil layers of each cell
+	float *m_soilLayers;
+	/// soil thickness
+	float **m_soilThick;
 
-    int m_nCells;
+    ///// depth of the up soil layer
+    //float m_upSoilDepth;
+	/// 
+    //float *m_rootDepth;
+
+	/// timestep
     int m_dt;
-    float m_CellWidth;
-
+	/// Interflow scale factor
     float m_ki;
+	/// soil freezing temperature threshold, deg C
     float m_frozenT;
-
-    float *m_rootDepth;
+	/// slope (tan)
     float *m_slope;
-
+	/// conductivity
     float **m_ks;
-    float **m_porosity;
-    float **m_poreIndex;
-    float **m_fc;
-    float **m_sm;
+	///// porosity (mm/mm)
+    //float **m_porosity;
 
+	/// amount of water held in the soil layer at saturation (sat - wp water), mm
+	float **m_sat;
+	/// porosity index
+    float **m_poreIndex;
+	/// field capacity (mm/mm)
+    //float **m_fc;
+
+	/// amount of water available to plants in soil layer at field capacity (AWC=FC-WP), mm
+	float **m_fc;
+	/// water content of soil at -1.5 MPa (wilting point) mm H2O
+	float **m_wp;
+	/// soil moisture (mm)
+    float **m_somo;
+	/// soil temperature, deg C
     float *m_soilT;
 
-    /// channel width
+    /// channel width, m
     float *m_chWidth;
+	/// stream link 
     float *m_streamLink;
 
     /**
@@ -59,9 +88,9 @@ private:
     float **m_flowInIndex;
 
     /**
-    *	@brief percentage of flow out to current cell from each upstream cells
+    *	@brief percentage of flow out to current cell from each upstream cells, this used for MFD flow direction algorithms
     *
-    *	It has the same data stucture as m_flowInIndex.
+    *	It has the same data structure as m_flowInIndex.
     */
     float **m_flowInPercentage;
 
@@ -72,21 +101,26 @@ private:
     *	The first element in each layer is the number of cells in the layer
     */
     float **m_routingLayers;
+	/// number of routing layers
     int m_nRoutingLayers;
-
+	/// number of subbasin
     int m_nSubbasin;
-    /// subbasin grid ( subwatersheds ID)
+    /// subbasin grid (ID of subbasin)
     float *m_subbasin;
 
+    // outputs
 
-    //result
+	/// subsurface runoff (mm)
     float **m_qi;
+	/// subsurface runoff volume (m3)
     float **m_qiVol;
+	/// subsurface to streams from each subbasin, the first element is the whole watershed
     float *m_qiSubbasin;
 
 public:
+	/// constructor
     SSR_DA(void);
-
+	/// destructor
     ~SSR_DA(void);
 
     virtual int Execute();
@@ -110,7 +144,7 @@ private:
     bool CheckInputData(void);
 
     /**
-    *	@brief checke the input size. Make sure all the input data have same dimension.
+    *	@brief check the input size. Make sure all the input data have same dimension.
     *
     *	@param key The key of the input data
     *	@param n The input data dimension

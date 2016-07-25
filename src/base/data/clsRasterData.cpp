@@ -589,7 +589,7 @@ void clsRasterData::outputToMongoDB(map<string, float> header, string &srs, int 
     mongoc_iovec_t ovec;
     ovec.iov_base = (char *) data;
     ovec.iov_len = rows * cols * sizeof(float);
-//    ssize_t r = mongoc_gridfs_file_writev(gfile, &ovec, 1, 0);
+	ssize_t r = mongoc_gridfs_file_writev(gfile, &ovec, 1, 0);
     mongoc_gridfs_file_save(gfile);
     mongoc_gridfs_file_destroy(gfile);
     bson_destroy(p);

@@ -50,10 +50,14 @@ private:
     float m_frozenT;
     /// saturated conductivity
     float **m_ks;
-    /// soil porosity
-    float **m_porosity;
+    ///// soil porosity
+    //float **m_porosity;
+
+	/// amount of water held in the soil layer at saturation (sat - wp water), mm
+	float **m_sat;
     ///// field capacity (mm H2O/ mm Soil)
     //float **m_fc;
+    
 	/// amount of water held in the soil layer at saturation (sat - wp water) mm H2O
 	float **m_fc;
 	///// wilting point (mm H2O/ mm Soil)
