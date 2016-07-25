@@ -7,7 +7,7 @@ SET(SRC_LIST ReadData.cpp main.cpp ManagementProcess.cpp CalculateProcess.cpp Co
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 ADD_EXECUTABLE(seims ${SRC_LIST})
 IF (WIN32)
-    TARGET_LINK_LIBRARIES(seims util data bmps module_setting main_mongodb gdal_i.lib mongoc-1.0.lib bson-1.0.lib bson-static-1.0.lib mongoc-static-1.0.lib)
+    TARGET_LINK_LIBRARIES(seims util data bmps module_setting main_mongodb gdal_i mongoc-1.0 bson-1.0 bson-static-1.0 mongoc-static-1.0)
     SET_PROPERTY(TARGET seims PROPERTY FOLDER "main")
 ELSE ()
     TARGET_LINK_LIBRARIES(seims libgdal.so libsqlite3.so libutil.so libdata.so libbmps.so libmodule_setting.so libmain_mongodb.so libmongoc-1.0 libbson-1.0)
