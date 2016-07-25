@@ -12,7 +12,7 @@
 #include <omp.h>
 
 PER_PI::PER_PI(void) : m_nSoilLayers(-1), m_dt(-1), m_nCells(-1), m_frozenT(NODATA),
-                       m_ks(NULL), m_porosity(NULL), m_poreIndex(NULL), m_fc(NULL), 
+                       m_ks(NULL), m_sat(NULL), m_poreIndex(NULL), m_fc(NULL), 
 					   m_wp(NULL), m_soilThick(NULL),
                        m_infil(NULL), m_soilT(NULL), m_somo(NULL),
                        m_perc(NULL)
@@ -55,7 +55,7 @@ int PER_PI::Execute()
                 continue;
             if (m_somo[i][j] > m_fc[i][j])
             {
-                maxSoilWater = m_soilThick[i][j] * m_porosity[i][j];
+                maxSoilWater = m_soilThick[i][j] * m_sat[i][j];
                 swater = m_somo[i][j];
                 fcSoilWater = m_fc[i][j];
 				wpSoilWater = m_wp[i][j];
@@ -70,16 +70,21 @@ int PER_PI::Execute()
                 }
 
                 m_perc[i][j] = k * m_dt / 3600.f;  /// mm
-
-                if (swater - m_perc[i][j] > maxSoilWater)
+				if (m_perc[i][j] < 0.f)
+					m_perc[i][j] = 0.f;
+                else if (swater - m_perc[i][j] > maxSoilWater)
                     m_perc[i][j] = swater - maxSoilWater;
-                else if (swater - m_perc[i][j] < fcSoilWater)
-                    m_perc[i][j] = swater - fcSoilWater;
-				else if (swater - m_perc[i][j] < wpSoilWater)
-					m_perc[i][j] = swater - wpSoilWater;
 				else if (swater - m_perc[i][j] < 0.f)  /// percolation is not allowed!
 					m_perc[i][j] = 0.f;
-
+                //else if (swater - m_perc[i][j] < fcSoilWater)
+                //    m_perc[i][j] = swater - fcSoilWater;
+				else if (swater - m_perc[i][j] < wpSoilWater)
+				{
+					if(swater > wpSoilWater)
+						m_perc[i][j] = swater - wpSoilWater;
+					else
+						m_perc[i][j] = 0.f;
+				}
                 //Adjust the moisture content in the current layer, and the layer immediately below it
                 m_somo[i][j] -= m_perc[i][j];// / m_soilThick[i][j];
                 if (j < m_soilLayers[i] - 1)
@@ -146,10 +151,11 @@ void PER_PI::Set2DData(const char *key, int nrows, int ncols, float **data)
 
     if (StringMatch(sk, VAR_CONDUCT)) m_ks = data;
 	else if (StringMatch(sk, VAR_SOILTHICK)) m_soilThick = data;
-    else if (StringMatch(sk, VAR_POROST)) m_porosity = data;
- //   else if (StringMatch(sk, VAR_FIELDCAP)) m_fc = data;
+    //else if (StringMatch(sk, VAR_POROST)) m_sat = data;
+    //else if (StringMatch(sk, VAR_FIELDCAP)) m_fc = data;
 	//else if (StringMatch(sk, VAR_WILTPOINT)) m_wp = data;
-	else if (StringMatch(sk, VAR_SOL_UL)) m_fc = data;
+	else if (StringMatch(sk, VAR_SOL_UL)) m_sat = data;
+	else if (StringMatch(sk, VAR_SOL_AWC)) m_fc = data;
 	else if (StringMatch(sk, VAR_SOL_WPMM)) m_wp = data;
     else if (StringMatch(sk, VAR_POREID)) m_poreIndex = data;
     else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
@@ -182,7 +188,7 @@ bool PER_PI::CheckInputData()
 
     if (m_ks == NULL)
         throw ModelException(MID_PER_PI, "CheckInputData", "The Conductivity can not be NULL.");
-    if (m_porosity == NULL)
+    if (m_sat == NULL)
         throw ModelException(MID_PER_PI, "CheckInputData", "The Porosity can not be NULL.");
     if (m_poreIndex == NULL)
         throw ModelException(MID_PER_PI, "CheckInputData", "The Pore index can not be NULL.");
