@@ -567,7 +567,7 @@ void NandPim::CalculateMinerandImmobi(int i)
 void NandPim::CalculateMinerandVolati(int i)
 {
     //soil layer (k)
-    int kk = 0;
+    float kk = 0.f;
     for (int k = 0; k < (int)m_nSoilLayers[i]; k++)
     {
         //nitrification/volatilization temperature factor (nvtf)
@@ -593,7 +593,7 @@ void NandPim::CalculateMinerandVolati(int i)
 
             if (k == 0)
             {
-                kk = 0;
+                kk = 0.f;
             } else
             {
                 kk = m_sol_z[k - 1][i];

@@ -76,7 +76,6 @@ private:
 
     float m_dt;///< time step (second)
 
-
     float *m_s0;
     ///< slope (percent)
     /// channel width (raster type to keep consistent with the one in IKW_CH, zero for overland cells)

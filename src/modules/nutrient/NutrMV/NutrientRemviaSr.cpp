@@ -22,7 +22,7 @@ NutrientRemviaSr::NutrientRemviaSr(void) :
         m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_sedimentYield(NULL), m_nperco(-1), m_phoskd(-1), m_pperco(-1),
         m_qtile(-1),
         m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(-1), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
-        m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL),
+        m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_sol_thick(NULL),
         m_sol_om(NULL), m_gw_q(NULL),
         //output
         m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(-1),
@@ -129,6 +129,10 @@ bool NutrientRemviaSr::CheckInputData()
     {
         throw ModelException(MID_NutRemv, "CheckInputData", "Phosphorus soil partitioning coefficient can not be less than zero.");
     }
+	if (this->m_sol_thick == NULL)
+	{
+		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_thick can not be NULL.");
+	}
     if (this->m_sol_crk == NULL)
     {
         throw ModelException(MID_NutRemv, "CheckInputData", "The crack volume potential of soil data can not be NULL.");
@@ -205,7 +209,8 @@ void NutrientRemviaSr::Set2DData(const char *key, int nRows, int nCols, float **
     else if (StringMatch(sk, VAR_SOL_SOLP)) { this->m_sol_solp = data; }
     else if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
     else if (StringMatch(sk, VAR_SOL_PERCO)) { this->m_sol_perco = data; }
-    else if (StringMatch(sk, VAR_SOL_OM)) { this->m_sol_om = data; }
+	else if (StringMatch(sk, VAR_SOL_OM)) { this->m_sol_om = data; }
+	else if (StringMatch(sk, VAR_SOILTHICK)) { this->m_sol_thick = data; }
     else
     {
         throw ModelException("NutRemv", "SetValue", "Parameter " + sk +
@@ -482,13 +487,13 @@ void NutrientRemviaSr::Nitrateloss()
                 for (int i = 0; i < m_nCells; i++)
                 {
                     // mg/kg => kg/ha
-                    float *sol_thick = new float(m_nSoilLayers[i]);
-                    sol_thick[0] = m_sol_z[i][0];
-                    for (int k = 1; k < m_nSoilLayers[i]; k++)
-                    {
-                        sol_thick[k] = m_sol_z[k] - m_sol_z[k - 1];
-                    }
-                    float wt1 = m_sol_bd[i][0] * sol_thick[0] / 100.f;
+//                     float *sol_thick = new float(m_nSoilLayers[i]);
+//                     sol_thick[0] = m_sol_z[i][0];
+//                     for (int k = 1; k < m_nSoilLayers[i]; k++)
+//                     {
+//                         sol_thick[k] = m_sol_z[k] - m_sol_z[k - 1];
+//                     }
+                    float wt1 = m_sol_bd[i][0] * m_sol_thick[i][0] / 100.f;
                     float conv_wt = 1.e6 * wt1;
 
                     // amount of P leached from soil layer (vap)
