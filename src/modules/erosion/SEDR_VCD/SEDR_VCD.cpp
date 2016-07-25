@@ -24,10 +24,10 @@ using namespace std;
 SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA), m_widthbottom(NULL),
                            m_Vdiv(NULL), m_Vpoint(NULL), m_widthcurrent(NULL), m_depthcurrent(NULL),
                            m_slopecurrent(NULL),
-                           m_chOrder(NULL), m_qchOut(NULL), m_sideslopeMain(1.0f), m_sideslopeFloodplain(1.0f),
-                           m_w_ratio(1.0f), m_bankfullQ(5.f),
-                           m_prf(NODATA), m_spcon(NODATA), m_spexp(NODATA), m_vcrit(NODATA), m_coverFactor(0.1),
-                           m_erodibilityFactor(0.2) //0.1 for Lyg
+                           m_chOrder(NULL), m_qchOut(NULL), m_sideslopeMain(1.f), m_sideslopeFloodplain(1.f),
+                           m_w_ratio(1.f), m_bankfullQ(5.f),
+                           m_prf(NODATA), m_spcon(NODATA), m_spexp(NODATA), m_vcrit(NODATA), m_coverFactor(0.1f),
+                           m_erodibilityFactor(0.2f) //0.1 for Lyg
 {
     //this->m_T_CHSB = NULL;
     m_SedOut = NULL;
@@ -643,7 +643,7 @@ void SEDR_VCD::SedChannelRouting(int i)
         }
 
         //get final sediment in water, cannot large than 0.848t/m3
-        float maxSedinWt = 0.848 * qOutV;
+        float maxSedinWt = 0.848f * qOutV;
         if (m_SedOut[i] > maxSedinWt)
         {
             m_sedDep[i] += m_SedOut[i] - maxSedinWt;

@@ -30,7 +30,7 @@ PlantOperation::PlantOperation(int mgtOp, float husc, int year, int month, int d
         PlantManagementOperation(mgtOp, husc, year, month, day, parameters)
 {
     m_plantID = int(parameters[0]);
-    m_curYrMat = int(parameters[2]);
+    m_curYrMat = parameters[2];
     m_heatUnits = (parameters[3] < 700.f) ? 1700.f : parameters[3];
     m_laiInit = parameters[4];
     m_bioInit = parameters[5];

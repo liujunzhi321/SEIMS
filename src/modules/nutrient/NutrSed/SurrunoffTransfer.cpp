@@ -131,7 +131,7 @@ void SurrunoffTransfer::SetValue(const char *key, float value)
     }
     else if (StringMatch(sk, Tag_CellSize))
     {
-        this->m_nCells = value;
+        this->m_nCells = (int)value;
     }
     else if (StringMatch(sk, Tag_CellWidth))
     {

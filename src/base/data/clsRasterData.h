@@ -82,7 +82,7 @@ public:
     int getRows() { return (int) m_headers[HEADER_RS_NROWS]; }
 
     //! Get cell size of raster data
-    int getCellWidth() { return (int) m_headers[HEADER_RS_CELLSIZE]; }
+    float getCellWidth() { return m_headers[HEADER_RS_CELLSIZE]; }
 
     //! Get cell numbers ignore NoData
     int getCellNumber() { return m_nCells; }
@@ -90,7 +90,7 @@ public:
     int getLayers() { return m_nLyrs; }
 
     //! Get NoDATA value of raster data
-    float getNoDataValue() { return (int) m_headers[HEADER_RS_NODATA]; }
+    float getNoDataValue() { return m_headers[HEADER_RS_NODATA]; }
 
     //! Get position index in 1D raster data for specific row and column, return -1 is error occurs.
     int getPosition(int row, int col);

@@ -7,7 +7,7 @@
 using namespace std;
 
 subbasin::subbasin(int id, bool isOutput) : m_id(id), m_isOutput(isOutput),
-                                            m_isRevapChanged(true), m_EG(-1.0f), m_Area(0.f),
+                                            m_isRevapChanged(true), m_EG(-1.f), m_Area(0.f),
                                             m_cells(NULL), m_QG(0.f), m_RG(0.f), m_GW(0.f),
                                             m_PERDE(0.f), m_PERCO(0.f)
 {
@@ -31,7 +31,7 @@ int subbasin::getId()
     return m_id;
 }
 
-void subbasin::setParameter(float rv_co, float GW0, float GWMAX, float kg, float base_ex, int cellWidth, int timeStep)
+void subbasin::setParameter(float rv_co, float GW0, float GWMAX, float kg, float base_ex, float cellWidth, int timeStep)
 {
     m_dp_co = rv_co;
     m_GW = GW0;
@@ -39,7 +39,7 @@ void subbasin::setParameter(float rv_co, float GW0, float GWMAX, float kg, float
     m_kg = kg;
     m_base_ex = base_ex;
     m_cellArea = cellWidth * cellWidth;
-    m_QGCoefficient = 1.0f * cellWidth * cellWidth / (timeStep) / 1000.0f;
+    m_QGCoefficient = 1.f * cellWidth * cellWidth / (timeStep) / 1000.f;
 }
 
 void subbasin::setSlope(float *slope)
@@ -207,7 +207,7 @@ float subbasin::subbasin2basin(string key, vector<subbasin *> *subbasins)
     int totalCount = 0;
     int nCount;
     subbasin *sub = NULL;
-    for (int i = 0; i < subbasins->size(); i++)
+    for (size_t i = 0; i < subbasins->size(); i++)
     {
         sub = subbasins->at(i);
         nCount = sub->getCellCount();

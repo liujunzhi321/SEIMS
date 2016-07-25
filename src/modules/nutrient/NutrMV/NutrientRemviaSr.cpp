@@ -163,7 +163,7 @@ void NutrientRemviaSr::SetValue(const char *key, float value)
     {
         omp_set_num_threads((int) value);
     }
-    else if (StringMatch(sk, Tag_CellSize)) { this->m_nCells = value; }
+    //else if (StringMatch(sk, Tag_CellSize)) { this->m_nCells = value; }
     else if (StringMatch(sk, Tag_CellWidth)) { this->m_cellWidth = value; }
     else if (StringMatch(sk, VAR_QTILE)) { this->m_qtile = value; }
     else if (StringMatch(sk, VAR_NPERCO)) { this->m_nperco = value; }
@@ -439,7 +439,7 @@ void NutrientRemviaSr::Nitrateloss()
 
                         // calculate organic carbon loading to main channel
                         float org_c = 0.f;
-                        org_c = (m_sol_om[i][0] * 0.58f / 100.) * enratio * m_sedimentYield[i] * 1000.f;
+                        org_c = (m_sol_om[i][0] * 0.58f / 100.f) * enratio * m_sedimentYield[i] * 1000.f;
                         // calculate carbonaceous biological oxygen demand (CBOD) and COD(transform from CBOD)
                         float cbod = 0.f;
                         cbod = 2.7f * org_c / (qdr * m_cellWidth * m_cellWidth);

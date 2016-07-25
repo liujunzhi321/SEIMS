@@ -81,7 +81,7 @@ namespace MainBMP
 
             int PlantID() { return m_plantID; }
 
-            int CurYearMaturity() { return m_curYrMat; }
+            float CurYearMaturity() { return m_curYrMat; }
 
             float HeatUnits() { return m_heatUnits; }
 
@@ -100,7 +100,7 @@ namespace MainBMP
 
         private:
             int m_plantID;
-            int m_curYrMat;
+            float m_curYrMat;
             float m_heatUnits;
             float m_laiInit;
             float m_bioInit;

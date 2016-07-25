@@ -699,11 +699,11 @@ float KinWavSed_CH::complexSedCalc(float Qj1i1, float Qj1i, float Qji1, float Sj
 void KinWavSed_CH::ChannelflowSedRouting(int iReach, int iCell, int id)
 {
     //sum the sediment of the upstream overland flow
-    float Sin = 0.0f;
-    float Qin = 0.0f;
+    float Sin = 0.f;
+    float Qin = 0.f;
     if (iCell == 0)// inflow of this cell is the last cell of the upstream reach
     {
-        for (int i = 0; i < m_reachUpStream[iReach].size(); ++i)
+        for (size_t i = 0; i < m_reachUpStream[iReach].size(); ++i)
         {
             int upReachId = m_reachUpStream[iReach][i];
             if (upReachId >= 0)

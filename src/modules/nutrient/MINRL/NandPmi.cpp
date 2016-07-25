@@ -489,7 +489,7 @@ void NandPim::CalculateMinerandImmobi(int i)
                         cpr = 5000.f;
                     }
                     cprf = 0.f;
-                    cprf = exp(-0.693 * (cpr - 200.f) / 200.f);
+                    cprf = exp(-0.693f * (cpr - 200.f) / 200.f);
                 } else
                 {
                     cprf = 1.f;
@@ -511,7 +511,7 @@ void NandPim::CalculateMinerandImmobi(int i)
 					decr = 0.05f;
 				else
 					decr = m_rsdco_pl[i] * ca * csf;
-                decr = min(decr, 1.0f);
+                decr = min(decr, 1.f);
                 m_sol_rsd[i][k] = max(1.e-6f, m_sol_rsd[i][k]);
                 rdc = decr * m_sol_rsd[i][k];
                 m_sol_rsd[i][k] = m_sol_rsd[i][k] - rdc;
@@ -571,10 +571,10 @@ void NandPim::CalculateMinerandVolati(int i)
     for (int k = 0; k < (int)m_nSoilLayers[i]; k++)
     {
         //nitrification/volatilization temperature factor (nvtf)
-        float nvtf = 0;
+        float nvtf = 0.f;
         //Calculate nvtf, equation 3:1.3.1 in SWAT Theory 2009, p192
         nvtf = 0.41f * (m_sote[i] - 5.f) / 10.f;
-        if (m_sol_nh3[i][k] > 0 && nvtf >= 0.001)
+        if (m_sol_nh3[i][k] > 0.f && nvtf >= 0.001f)
         {
             float sw25 = 0.f;
             float swwp = 0.f;
