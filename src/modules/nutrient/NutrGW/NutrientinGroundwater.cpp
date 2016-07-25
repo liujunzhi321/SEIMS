@@ -90,7 +90,7 @@ void NutrientinGroundwater::SetValue(const char *key, float value)
     }
     else if (StringMatch(sk, Tag_CellSize))
     {
-        this->m_nCells = value;
+        this->m_nCells = (int)value;
     }
     else if (StringMatch(sk, Tag_CellWidth))
     {
@@ -99,7 +99,7 @@ void NutrientinGroundwater::SetValue(const char *key, float value)
     else
     {
         throw ModelException(MID_NutGW, "SetValue", "Parameter " + sk +
-                                                  " does not exist in CLIMATE method. Please contact the module developer.");
+                                                  " does not exist in current method. Please contact the module developer.");
     }
 }
 
@@ -122,8 +122,8 @@ void NutrientinGroundwater::Set1DData(const char *key, int n, float *data)
     }
     else
     {
-        throw ModelException(MID_NutGW, "SetValue", "Parameter " + sk +
-                                                  " does not exist in CLIMATE module. Please contact the module developer.");
+        throw ModelException(MID_NutGW, "Set1DData", "Parameter " + sk +
+                                                  " does not exist in current module. Please contact the module developer.");
     }
 }
 
@@ -148,18 +148,13 @@ void NutrientinGroundwater::initialOutputs()
 
 int NutrientinGroundwater::Execute()
 {
-    if (!this->CheckInputData())
-    {
-        return false;
-    }
+    if (!this->CheckInputData())return -1;
     this->initialOutputs();
     for (int i = 0; i < m_nCells; i++)
     {
         m_no3gw[i] = m_gwno3[i] * m_gw_q[i] / 100.f;
         m_minpgw[i] = m_gwminp[i] * m_gw_q[i] / 100.f;
-
     }
-    //return ??
     return 0;
 }
 

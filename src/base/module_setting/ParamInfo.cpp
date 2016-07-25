@@ -78,7 +78,7 @@ void ParamInfo::Adjust2DArray(int n, float **data)
 {
     for (int i = 0; i < n; i++)
     {
-        int curCols = data[i][0];
+        int curCols = (int)data[i][0];
         Adjust1DArray(curCols, data[i] + 1);
     }
 }

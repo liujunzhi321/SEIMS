@@ -163,7 +163,7 @@ void NutrientOLRoute::SetValue(const char *key, float value)
     {
         omp_set_num_threads((int) value);
     }
-    else if (StringMatch(sk, Tag_CellSize)) { this->m_nCells = value; }
+    else if (StringMatch(sk, Tag_CellSize)) { this->m_nCells = (int)value; }
     else if (StringMatch(sk, Tag_CellWidth)) { this->m_cellWidth = value; }
     else if (StringMatch(sk, Tag_HillSlopeTimeStep)) { this->m_TimeStep = value; }
     else
@@ -360,7 +360,7 @@ void NutrientOLRoute::NutrientinOverland(int i)
     m_codToCh[i] = NutToChannel(i, m_codToCh[i]);
     m_ammoToCh[i] = 0.f;
     m_nitriteToCh[i] = 0.f;
-    m_codToCh[i] = m_codToCh[i] / 1.e6; //mg to kg
+    m_codToCh[i] = m_codToCh[i] / 1.e6f; //mg to kg
 }
 
 float NutrientOLRoute::NutToChannel(int id, float nut)

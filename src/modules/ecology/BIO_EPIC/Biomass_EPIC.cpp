@@ -475,7 +475,7 @@ void Biomass_EPIC::DistributePlantET(int i)
     float *wuse = new float[(int) m_nSoilLayers[i]];
     /// water uptake by plants from all layers
     float xx;
-    int j, k, ir;
+    int ir;
     int idc = int(m_landCoverCls[i]);
     if (idc == 1 || idc == 2 || idc == 4 || idc == 5)
     {
@@ -524,7 +524,7 @@ void Biomass_EPIC::DistributePlantET(int i)
             sum = m_ppt[i] / uobw;
         else
             sum = m_ppt[i] * (1.f - exp(-ubw * gx / m_soilRD)) / uobw;
-        wuse[j] = sum - sump + 1. * m_epco[i];
+        wuse[j] = sum - sump + 1.f * m_epco[i];
         wuse[j] = sum - sump + (sump - xx) * m_epco[i];
         sump = sum;
         /// adjust uptake if sw is less than 25% of plant available water

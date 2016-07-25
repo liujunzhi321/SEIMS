@@ -123,7 +123,7 @@ NotRegularMeasurement::~NotRegularMeasurement(void)
 //! Get site data by time
 float *NotRegularMeasurement::GetSiteDataByTime(time_t t)
 {
-    for (int iSite = 0; iSite < m_siteIDList.size(); iSite++)
+    for (size_t iSite = 0; iSite < m_siteIDList.size(); iSite++)
     {
         vector<time_t> &tlist = m_timeList[iSite];
         vector<float> &vlist = m_valueList[iSite];

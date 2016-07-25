@@ -179,7 +179,7 @@ void SplashEro_Park::initial()
         m_DETSplash = new float[m_nCells];
         for (int i = 0; i < m_nCells; i++)
         {
-            m_DETSplash[i] = 0.0f;
+            m_DETSplash[i] = 0.f;
         }
     }
 }
@@ -197,28 +197,28 @@ int SplashEro_Park::Execute()
     for (int i = 0; i < m_nCells; i++)
     {
         //intensity in mm/h
-        float RainInten = m_Rain[i] * 3600 / m_TimeStep;
+        float RainInten = m_Rain[i] * 3600.f / m_TimeStep;
 
         //rainfall between plants in mm  //Rainc->Drc = Rain->Drc * _dx/DX->Drc;
         // correction for slope dx/DX, water spreads out over larger area
         float s = max(0.001f, m_Slope[i]);
         float S0 = sin(atan(s));
         float Dm = 0.00124f * pow(RainInten, 0.182f);
-        float waterdepth = (m_sr[i] + m_depression[i]) / 1000;   // mm convert to m
+        float waterdepth = (m_sr[i] + m_depression[i]) / 1000.f;   // mm convert to m
         float Fw, Dr;
         if (waterdepth > Dm)
         {
-            Fw = exp(1 - waterdepth / Dm);
+            Fw = exp(1.f - waterdepth / Dm);
         }
         else
         {
-            Fw = 1;
+            Fw = 1.f;
         }
         // kg/(m2*min)
         Dr = m_Omega * Fw * m_USLE_C[i] * m_USLE_K[i] * pow(RainInten, 2.f) * (2.96f * pow(S0, 0.79f) + 0.56f);
         // convert kg/(m2*min) to kg/cell
         float cellareas = (m_CellWith / cos(atan(s))) * m_CellWith;
-        m_DETSplash[i] = Dr * (m_TimeStep / 60) * cellareas;
+        m_DETSplash[i] = Dr * (m_TimeStep / 60.f) * cellareas;
         // // Deal with all exceptions:
         //if (m_SnowCover[i]>0)
         //{

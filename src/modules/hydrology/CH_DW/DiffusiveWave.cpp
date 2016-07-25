@@ -209,7 +209,7 @@ void  DiffusiveWave::initialOutputs()
 
                 id = m_reachs[i][j];
                 s0 = m_s0[id];
-                if (FloatEqual(s0, 0.0f))
+                if (FloatEqual(s0, 0.f))
                     s0 = MINI_SLOPE;
 
                 // slope length needs to be corrected by slope angle
@@ -422,7 +422,7 @@ void DiffusiveWave::SetValue(const char *key, float data)
     if (StringMatch(sk, Tag_HillSlopeTimeStep))
         m_dt = data;
     else if (StringMatch(sk, Tag_CellSize))
-        m_nCells = data;
+        m_nCells = (int)data;
     else if (StringMatch(sk, Tag_CellWidth))
         m_CellWidth = data;
         //else if (StringMatch(sk, "ID_UPREACH"))

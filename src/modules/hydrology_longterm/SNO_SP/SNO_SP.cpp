@@ -85,7 +85,7 @@ int SNO_SP::Execute()
 	/// determine the shape parameters for the equation which describes area of
 	/// snow cover as a function of amount of snow
 	if(m_snowCoverCoef1 == NODATA_VALUE || m_snowCoverCoef2 == NODATA_VALUE)
-		PGCommon::getScurveShapeParameter(0.5f, 0.95f, m_snowCover50, 0.95, &m_snowCoverCoef1, &m_snowCoverCoef2);
+		PGCommon::getScurveShapeParameter(0.5f, 0.95f, m_snowCover50, 0.95f, &m_snowCoverCoef1, &m_snowCoverCoef2);
   //  if (this->m_lastSWE == NODATA_VALUE) /// moved to initialOutputs()
 		//this->m_lastSWE = this->m_swe;
 	//If all cells have no snow, snow melt is set to zero.
