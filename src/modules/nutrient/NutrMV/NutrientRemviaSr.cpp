@@ -147,7 +147,7 @@ bool NutrientRemviaSr::CheckInputData()
     }
     if (this->m_gw_q == NULL)
     {
-        throw ModelException("NutGW", "CheckInputData", "The groundwater contribution to stream flow data can not be NULL.");
+        throw ModelException(MID_NutRemv, "CheckInputData", "The groundwater contribution to stream flow data can not be NULL.");
     }
     return true;
 }
@@ -168,7 +168,7 @@ void NutrientRemviaSr::SetValue(const char *key, float value)
     else if (StringMatch(sk, VAR_ISEP_OPT)) { this->m_isep_opt = value; }
     else
     {
-        throw ModelException("NutRemv", "SetValue", "Parameter " + sk +
+        throw ModelException(MID_NutRemv, "SetValue", "Parameter " + sk +
                                                     " does not exist in CLIMATE method. Please contact the module developer.");
     }
 }
@@ -217,7 +217,7 @@ void NutrientRemviaSr::initialOutputs()
 {
     if (this->m_nCells <= 0)
     {
-        throw ModelException("NutRemv", "CheckInputData", "The dimension of the input data can not be less than zero.");
+        throw ModelException(MID_NutRemv, "CheckInputData", "The dimension of the input data can not be less than zero.");
     }
     // allocate the output variables
     if (m_latno3 == NULL)
