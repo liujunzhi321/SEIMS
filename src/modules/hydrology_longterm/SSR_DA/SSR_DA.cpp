@@ -110,7 +110,8 @@ void SSR_DA::FlowInSoil(int id)
 		//m_qi[id][j] = 0.f; //reset to default value for current cell
 		//m_qiVol[id][j] = 0.f;
         // if soil moisture is below the field capacity, no interflow will be generated
-        if (m_somo[id][j] > m_fc[id][j])
+
+        if (m_somo[id][j] > m_fc[id][j] + m_wp[id][j])
         {
             // for the upper two layers, soil may be frozen
             // also check if there are upstream inflow
@@ -118,21 +119,20 @@ void SSR_DA::FlowInSoil(int id)
                 continue;
 
             float k= 0.f, maxSoilWater= 0.f, soilWater= 0.f, fcSoilWater= 0.f, wpSoilWater= 0.f;
+			soilWater = m_somo[id][j];
+			maxSoilWater = m_sat[id][j] + m_wp[id][j];
+			fcSoilWater = m_fc[id][j] + m_wp[id][j];
+			wpSoilWater = m_wp[id][j];
             //the moisture content can exceed the porosity in the way the algorithm is implemented
-            if (m_somo[id][j] > m_sat[id][j])
+            if (m_somo[id][j] > maxSoilWater)
                 k = m_ks[id][j];
             else
             {
                 float dcIndex = 2.f / m_poreIndex[id][j] + 3.f; // pore disconnectedness index
-                k = m_ks[id][j] * pow(m_somo[id][j] / m_sat[id][j], dcIndex);
+                k = m_ks[id][j] * pow(m_somo[id][j] / maxSoilWater, dcIndex);
 				if(k<UTIL_ZERO) k = 0.f;
             }
             m_qi[id][j] = m_ki * s0 * k * m_dt / 3600.f * m_soilThick[id][j] / 1000.f / flowWidth; // the unit is mm
-
-			soilWater = m_somo[id][j];
-            maxSoilWater = m_sat[id][j];
-            fcSoilWater = m_fc[id][j];
-			wpSoilWater = m_wp[id][j];
 
 			if (m_qi[id][j] < UTIL_ZERO)
 				m_qi[id][j] = 0.f;
@@ -232,8 +232,10 @@ int SSR_DA::Execute()
                 m_qiSubbasin[1] += qiAllLayers;
         }
     }
-	//for (int i = 0; i <= m_nSubbasin; i++)
-	//	cout<<m_qiSubbasin[i]<<",";
+	//for (int i = 0; i <= m_nSubbasin; i++){
+	//	if(m_qiSubbasin[i] > 0.)
+	//		cout<<m_qiSubbasin[i]<<",";
+	//}
 
     for (int i = 1; i <= m_nSubbasin; i++)
 	{
@@ -255,6 +257,8 @@ void SSR_DA::SetValue(const char *key, float data)
         m_ki = data;
     //else if (StringMatch(s, Tag_CellSize))
     //    m_nCells = int(data);
+	else if (StringMatch(s, VAR_SUBBSNID_NUM))
+		m_nSubbasin = (int)data;
     else if (StringMatch(s, Tag_CellWidth))
         m_CellWidth = data;
     else if (StringMatch(s, Tag_TimeStep))
@@ -401,6 +405,8 @@ bool SSR_DA::CheckInputData()
         throw ModelException(MID_SSR_DA, "CheckInputData", "You have not set time step.");
     if (m_CellWidth <= 0)
         throw ModelException(MID_SSR_DA, "CheckInputData", "You have not set cell width.");
+	if (m_nSubbasin < 0)
+		throw ModelException(MID_SSR_DA, "CheckInputData", "The number of subbasins can not be less than 0.");
     if (m_subbasin == NULL)
         throw ModelException(MID_SSR_DA, "CheckInputData", "The parameter: subbasin can not be NULL.");
 	if (m_soilLayers == NULL)
@@ -441,15 +447,16 @@ bool SSR_DA::CheckInputData()
 
 void SSR_DA::initialOutputs()
 {
-    if (m_nSubbasin <= 0)
-    {
-        map<int, int> subs;
-        for (int i = 0; i < m_nCells; i++)
-        {
-            subs[int(m_subbasin[i])] = 1;
-        }
-        m_nSubbasin = subs.size();
-    }
+	// Read from MongoDB.
+    //if (m_nSubbasin <= 0)
+    //{
+    //    map<int, int> subs;
+    //    for (int i = 0; i < m_nCells; i++)
+    //    {
+    //        subs[int(m_subbasin[i])] = 1;
+    //    }
+    //    m_nSubbasin = subs.size();
+    //}
 
     if (m_qiSubbasin == NULL) Initialize1DArray(m_nSubbasin + 1, m_qiSubbasin, 0.f);
     //{

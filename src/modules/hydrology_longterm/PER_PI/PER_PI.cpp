@@ -53,11 +53,11 @@ int PER_PI::Execute()
             // No movement if soil moisture is below field capacity
             if (j == 0 && m_soilT[i] <= m_frozenT) 
                 continue;
-            if (m_somo[i][j] > m_fc[i][j])
+            if (m_somo[i][j] > m_fc[i][j] + m_wp[i][j])
             {
-                maxSoilWater = m_soilThick[i][j] * m_sat[i][j];
                 swater = m_somo[i][j];
-                fcSoilWater = m_fc[i][j];
+                maxSoilWater = m_sat[i][j] + m_wp[i][j];
+                fcSoilWater = m_fc[i][j] + m_wp[i][j];
 				wpSoilWater = m_wp[i][j];
                 //the moisture content can exceed the porosity in the way the algorithm is implemented
                 if (swater > maxSoilWater) //(m_somo[i][j] > m_porosity[i][j])
