@@ -70,7 +70,7 @@ private:
     //Parameters
 
     /// cell width of grid map (m)
-    int m_CellWith;
+    float m_CellWith;
     /// number of cells
     int m_nCells;
     /// length of time step (s)

@@ -29,8 +29,8 @@ private:
     //float m_ED;
     //float m_ES;
     float m_PERCO;
-    int m_cellArea;    //area of one cell
-    int m_Area;        //area of this subbasin
+    float m_cellArea;    //area of one cell
+    float m_Area;        //area of this subbasin
 
     //parameters
     //float m_GW0;
@@ -56,7 +56,7 @@ public:
 
     void setCellList(int, int *);
 
-    void setParameter(float rv_co, float GW0, float GWMAX, float kg, float base_ex, int cellWidth, int timeStep);
+    void setParameter(float rv_co, float GW0, float GWMAX, float kg, float base_ex, float cellWidth, int timeStep);
 
     void setSlope(float *slope);
 

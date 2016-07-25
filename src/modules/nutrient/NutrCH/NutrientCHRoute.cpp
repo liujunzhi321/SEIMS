@@ -330,7 +330,7 @@ void NutrientCHRoute::SetValue(const char *key, float value)
     else if (StringMatch(sk, VAR_A_BNK)) { this->m_aBank = value; }
     else if (StringMatch(sk, VAR_QUPREACH)) { this->m_qUpReach = value; }
     else if (StringMatch(sk, VAR_RNUM1)) { this->m_rnum1 = value; }
-    else if (StringMatch(sk, VAR_IGROPT)) { this->igropt = value; }
+    else if (StringMatch(sk, VAR_IGROPT)) { this->igropt = (int)value; }
     else if (StringMatch(sk, VAR_AI0)) { this->m_ai0 = value; }
     else if (StringMatch(sk, VAR_AI1)) { this->m_ai1 = value; }
     else if (StringMatch(sk, VAR_AI2)) { this->m_ai2 = value; }

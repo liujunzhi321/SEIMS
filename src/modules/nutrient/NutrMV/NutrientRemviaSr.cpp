@@ -159,7 +159,7 @@ void NutrientRemviaSr::SetValue(const char *key, float value)
     {
         omp_set_num_threads((int) value);
     }
-    else if (StringMatch(sk, Tag_CellSize)) { this->m_nCells = value; }
+    //else if (StringMatch(sk, Tag_CellSize)) { this->m_nCells = value; }
     else if (StringMatch(sk, Tag_CellWidth)) { this->m_cellWidth = value; }
     else if (StringMatch(sk, VAR_QTILE)) { this->m_qtile = value; }
     else if (StringMatch(sk, VAR_NPERCO)) { this->m_nperco = value; }
@@ -434,7 +434,7 @@ void NutrientRemviaSr::Nitrateloss()
 
                         // calculate organic carbon loading to main channel
                         float org_c = 0.f;
-                        org_c = (m_sol_om[i][0] * 0.58f / 100.) * enratio * m_sedimentYield[i] * 1000.f;
+                        org_c = (m_sol_om[i][0] * 0.58f / 100.f) * enratio * m_sedimentYield[i] * 1000.f;
                         // calculate carbonaceous biological oxygen demand (CBOD) and COD(transform from CBOD)
                         float cbod = 0.f;
                         cbod = 2.7f * org_c / (qdr * m_cellWidth * m_cellWidth);
@@ -489,7 +489,7 @@ void NutrientRemviaSr::Nitrateloss()
                         sol_thick[k] = m_sol_z[k] - m_sol_z[k - 1];
                     }
                     float wt1 = m_sol_bd[i][0] * sol_thick[0] / 100.f;
-                    float conv_wt = 1.e6 * wt1;
+                    float conv_wt = 1.e6f * wt1;
 
                     // amount of P leached from soil layer (vap)
                     float vap = 0.f;

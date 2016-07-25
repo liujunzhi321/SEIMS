@@ -508,7 +508,7 @@ void MGTOpt_SWAT::ExecutePlantOperation(int i, int &factoryID, int nOp)
     m_curYearMat[i] = curOperation->CurYearMaturity();
     m_landCover[i] = curOperation->PlantID();
     m_phuPlant[i] = curOperation->HeatUnits();
-    m_dormFlag[i] = 0;
+    m_dormFlag[i] = 0.f;
     m_phuAcc[i] = 0.f;
     m_plantN[i] = 0.f;
     m_plantP[i] = 0.f;
@@ -520,7 +520,7 @@ void MGTOpt_SWAT::ExecutePlantOperation(int i, int &factoryID, int nOp)
     m_frRoot[i] = 0.f;
 
     /// initialize transplant variables
-    if (curOperation->LAIInit() > 0.)
+    if (curOperation->LAIInit() > 0.f)
     {
         m_LAIDay[i] = curOperation->LAIInit();
         m_biomass[i] = curOperation->BIOInit();
@@ -532,7 +532,7 @@ void MGTOpt_SWAT::ExecutePlantOperation(int i, int &factoryID, int nOp)
     m_soilZMX[i] = min(m_soilZMX[i], pltRootDepth);
 
     /// reset curve number if necessary
-    if (curOperation->CNOP() > 0.)   /// curno.f
+    if (curOperation->CNOP() > 0.f)   /// curno.f
     {
         float cnn = curOperation->CNOP();
         m_CN2[i] = cnn;
@@ -572,7 +572,7 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
         if (m_nCellsSubbsn.find(m_irrNo) == m_nCellsSubbsn.end())
             m_irrNo = int(m_subBsnID[i]);
 
-        cnv = m_nAreaSubbsn[m_irrNo] * 10.; /// area of current subbasin
+        cnv = m_nAreaSubbsn[m_irrNo] * 10.f; /// area of current subbasin
         switch (m_irrSource)
         {
             /// in SEIMS, we hypothesis that shallow aquifer and deep aquifer is consistent within subbasin.
@@ -597,25 +597,25 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
         /// if water available from source, proceed with irrigation
         if (vmm > 0.f)
         {
-            cnv = m_cellArea * 10.;
+            cnv = m_cellArea * 10.f;
             vmxi = (m_irrApplyDepth < UTIL_ZERO) ? m_soilSumFC[i] : m_irrApplyDepth;
             if (vmm > vmxi) vmm = vmxi;
             vol = vmm * cnv;
             /// pot_fr(:)      |km2/km2       |fraction of cell area that drains into pothole
-            float pot_fr = 0.001; /// TODO
+            float pot_fr = 0.001f; /// TODO
             /// m_impoundArea should be input from pothole.f
             /// currently, set a default value as half of cell's area. TODO
-            m_impoundArea = m_cellArea / 10000. * 0.5;
-            m_impoundVolume = 0.;  /// TODO, should be DT_Raster1D
+            m_impoundArea = m_cellArea / 10000.f * 0.5f;
+            m_impoundVolume = 0.f;  /// TODO, should be DT_Raster1D
             if (pot_fr > UTIL_ZERO)
             {
-                m_impoundVolume += vol / (10. * m_impoundArea);
+                m_impoundVolume += vol / (10.f * m_impoundArea);
                 m_appliedWater[i] = vmm;  ///added rice irrigation 11/10/11
             }
             else
             {
                 /// Call irrigate(i, vmm) /// irrigate.f
-                m_appliedWater[i] = vmm * (1. - curOperation->IRRSQfrac());
+                m_appliedWater[i] = vmm * (1.f - curOperation->IRRSQfrac());
                 m_irrSurfQWater[i] = vmm * curOperation->IRRSQfrac();
             }
             /// subtract irrigation from shallow or deep aquifer
@@ -624,13 +624,13 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
             switch (m_irrSource)
             {
                 case IRR_SRC_SHALLOW:
-                    cnv = m_nAreaSubbsn[m_irrNo] * 10.;
-                    vmma = 0.;
-                    if (vmms > -0.01)
+                    cnv = m_nAreaSubbsn[m_irrNo] * 10.f;
+                    vmma = 0.f;
+                    if (vmms > -0.01f)
                         vmma = vol * m_shallowWaterDepth[i] * cnv / vmms;
                     vmma /= cnv;
                     m_shallowWaterDepth[i] -= vmma;
-                    if (m_shallowWaterDepth[i] < 0.)
+                    if (m_shallowWaterDepth[i] < 0.f)
                     {
                         vmma += m_shallowWaterDepth[i];
                         m_shallowWaterDepth[i] = 0.f;
@@ -638,16 +638,16 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
                     m_shallowIrrWater[i] += vmma;
                     break;
                 case IRR_SRC_DEEP:
-                    cnv = m_nAreaSubbsn[m_irrNo] * 10.;
-                    vmma = 0.;
-                    if (vmmd > 0.01)
+                    cnv = m_nAreaSubbsn[m_irrNo] * 10.f;
+                    vmma = 0.f;
+                    if (vmmd > 0.01f)
                         vmma = vol * (m_deepWaterDepth[i] * cnv / vmmd);
                     vmma /= cnv;
                     m_deepWaterDepth[i] -= vmma;
-                    if (m_deepWaterDepth[i] < 0.)
+                    if (m_deepWaterDepth[i] < 0.f)
                     {
                         vmma += m_deepWaterDepth[i];
-                        m_deepWaterDepth[i] = 0.;
+                        m_deepWaterDepth[i] = 0.f;
                     }
                     m_deepIrrWater[i] += vmma;
                     break;
@@ -701,21 +701,21 @@ void MGTOpt_SWAT::ExecuteFertilizerOperation(int i, int &factoryID, int nOp)
     float cFertP = 0.f;
     /// weighting factor used to partition the  organic N & P content of the fertilizer
     /// between the fresh organic and the active organic pools
-    float rtof = 0.5;
+    float rtof = 0.5f;
     float xx; /// fraction of fertilizer applied to layer
     float gc = 0.f, gc1 = 0.f, swf = 0.f, frt_t = 0.f;
 
     for (int l = 0; l < 2; l++) /// top surface and first layer
     {
         if (l == 0) xx = fertilizerSurfFrac;
-        if (l == 1) xx = 1. - fertilizerSurfFrac;
-        m_soilNO3[i][l] += xx * fertilizerKg * (1. - fertNH3N) * fertMinN;
+        if (l == 1) xx = 1.f - fertilizerSurfFrac;
+        m_soilNO3[i][l] += xx * fertilizerKg * (1.f - fertNH3N) * fertMinN;
         if (m_cswat == 0)
         {
             m_soilFreshOrgN[i][l] += rtof * xx * fertilizerKg * fertOrgN;
-            m_soilActiveOrgN[i][l] += (1. - rtof) * xx * fertilizerKg * fertOrgN;
+            m_soilActiveOrgN[i][l] += (1.f - rtof) * xx * fertilizerKg * fertOrgN;
             m_soilFreshOrgP[i][l] += rtof * xx * fertilizerKg * fertOrgP;
-            m_soilActiveOrgN[i][l] += (1. - rtof) * xx * fertilizerKg * fertOrgP;
+            m_soilActiveOrgN[i][l] += (1.f - rtof) * xx * fertilizerKg * fertOrgP;
         }
         else if (m_cswat == 1) /// C-FARM one carbon pool model /// TODO
         {
@@ -730,9 +730,9 @@ void MGTOpt_SWAT::ExecuteFertilizerOperation(int i, int &factoryID, int nOp)
     }
     /// add bacteria - #cfu/g * t(manure)/ha * 1.e6g/t * ha/10,000m^2 = 100.
     /// calculate ground cover
-    gc = (1.99532 - Erfc(1.333 * m_LAIDay[i] - 2.)) / 2.1;
-    if (gc < 0.) gc = 0.;
-    gc1 = 1. - gc;
+    gc = (1.99532f - Erfc(1.333f * m_LAIDay[i] - 2.f)) / 2.1f;
+    if (gc < 0.f) gc = 0.f;
+    gc1 = 1.f - gc;
     /// bact_swf    |none          |fraction of manure containing active colony forming units (cfu)
     //frt_t = m_bactSwf * fertilizerKg / 1000.;
     //m_bactPersistPlt[i] += gc * bactPDB * frt_t * 100.;
@@ -751,7 +751,7 @@ void MGTOpt_SWAT::ExecuteFertilizerOperation(int i, int &factoryID, int nOp)
     //m_bactLessPersistParticle[i] *= (1. - bactKDDB);
 
     /// summary calculations, currently not used for output. TODO in the future.
-    fertNO3 = fertilizerKg * fertMinN * (1. - fertNH3N);
+    fertNO3 = fertilizerKg * fertMinN * (1.f - fertNH3N);
     fertNH3 = fertilizerKg * (fertMinN * fertNH3N);
     fertOrgN = fertilizerKg * fertOrgN;
     fertOrgP = fertilizerKg * fertOrgP;
@@ -783,15 +783,15 @@ void MGTOpt_SWAT::ExecuteHarvestKillOperation(int i, int &factoryID, int nOp)
     float bio_leaf = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_BIO_LEAF];
     float cnyld = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_CNYLD];
     float cpyld = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_CPYLD];
-    if (m_HarvestIdxTarg[i] > 0.)
+    if (m_HarvestIdxTarg[i] > 0.f)
         hiad1 = m_HarvestIdxTarg[i];
     else
     {
-        if (m_pltPET[i] < 10.)
-            wur = 100.;
+        if (m_pltPET[i] < 10.f)
+            wur = 100.f;
         else
-            wur = 100. * m_pltET[i] / m_pltPET[i];
-        hiad1 = (m_havstIdxAdj[i] - wsyf) * (wur / (wur + exp(6.13 - 0.0883 * wur))) + wsyf;
+            wur = 100.f * m_pltET[i] / m_pltPET[i];
+        hiad1 = (m_havstIdxAdj[i] - wsyf) * (wur / (wur + exp(6.13f - 0.0883f * wur))) + wsyf;
         if (hiad1 > hvsti) hiad1 = hvsti;
     }
     /// check if yield is from above or below ground
@@ -811,30 +811,30 @@ void MGTOpt_SWAT::ExecuteHarvestKillOperation(int i, int &factoryID, int nOp)
     {
         if (idc == CROP_IDC_TREES)
         {
-            yield = m_biomass[i] * (1. - bio_leaf);
+            yield = m_biomass[i] * (1.f - bio_leaf);
             resnew = m_biomass[i] - yield;
         }
         else
         {
-            if (hvsti > 1.001)
+            if (hvsti > 1.001f)
             {
-                yield = m_biomass[i] * (1. - 1. / (1. + hiad1));
-                resnew = m_biomass[i] / (1. + hiad1);
-                resnew *= (1. - xx);
+                yield = m_biomass[i] * (1.f - 1.f / (1.f + hiad1));
+                resnew = m_biomass[i] / (1.f + hiad1);
+                resnew *= (1.f - xx);
             }
             else
             {
-                yield = (1. - m_frRoot[i]) * m_biomass[i] * hiad1;
-                resnew = (1. - m_frRoot[i]) * (1. - hiad1) * m_biomass[i];
+                yield = (1.f - m_frRoot[i]) * m_biomass[i] * hiad1;
+                resnew = (1.f - m_frRoot[i]) * (1.f - hiad1) * m_biomass[i];
                 /// remove stover during harvestKill operation
-                resnew *= (1. - xx);
+                resnew *= (1.f - xx);
                 rtresnew = m_frRoot[i] * m_biomass[i];
             }
         }
     }
-    if (yield < 0.) yield = 0.f;
-    if (resnew < 0.) resnew = 0.f;
-    if (rtresnew < 0.) rtresnew = 0.f;
+    if (yield < 0.f) yield = 0.f;
+    if (resnew < 0.f) resnew = 0.f;
+    if (rtresnew < 0.f) rtresnew = 0.f;
     if (m_cswat == 2)
     {/// TODO
     }
@@ -851,8 +851,8 @@ void MGTOpt_SWAT::ExecuteHarvestKillOperation(int i, int &factoryID, int nOp)
     rootFraction(i, rtfr);
 
     /// fraction of N, P in residue (ff1) or roots (ff2)
-    float ff1 = (1. - hiad1) / (1. - hiad1 + m_frRoot[i]);
-    float ff2 = 1. - ff1;
+    float ff1 = (1.f - hiad1) / (1.f - hiad1 + m_frRoot[i]);
+    float ff2 = 1.f - ff1;
     /// update residue, N, P on soil surface
     m_soilRsd[i][0] += resnew;
     m_soilFreshOrgN[i][0] += ff1 * (m_plantN[i] - yieldn);
@@ -868,18 +868,18 @@ void MGTOpt_SWAT::ExecuteHarvestKillOperation(int i, int &factoryID, int nOp)
         m_soilFreshOrgN[i][l] += rtfr[l] * ff2 * (m_plantN[i] - yieldn);
         m_soilFreshOrgP[i][l] += rtfr[l] * ff2 * (m_plantP[i] - yieldp);
     }
-    if (cnop > 0.)
+    if (cnop > 0.f)
         m_CN2[i] = cnop; /// TODO: Is necessary to isolate the curno.f function for SUR_CN?
     /// reset variables
-    m_igro[i] = 0;
-    m_dormFlag[i] = 0;
-    m_biomass[i] = 0.;
-    m_frRoot[i] = 0.;
-    m_plantN[i] = 0.;
-    m_plantP[i] = 0.;
-    m_frStrsWa[i] = 1.;
-    m_LAIDay[i] = 0.;
-    m_havstIdxAdj[i] = 0.;
+    m_igro[i] = 0.f;
+    m_dormFlag[i] = 0.f;
+    m_biomass[i] = 0.f;
+    m_frRoot[i] = 0.f;
+    m_plantN[i] = 0.f;
+    m_plantP[i] = 0.f;
+    m_frStrsWa[i] = 1.f;
+    m_LAIDay[i] = 0.f;
+    m_havstIdxAdj[i] = 0.f;
     delete[] rtfr;
     //m_phuBase[i] = 0.f;/// TODO, need to figure it out if this is CORRECT???
     m_phuAcc[i] = 0.f;
@@ -890,13 +890,13 @@ void MGTOpt_SWAT::rootFraction(int i, float *&root_fr)
     float cum_rd = 0.f, cum_d = 0.f, cum_rf = 0.f, x1 = 0.f, x2 = 0.f;
     if (m_lastSoilRootDepth[i] < UTIL_ZERO)
     {
-        root_fr[0] = 1.;
+        root_fr[0] = 1.f;
         return;
     }
     /// Normalized Root Density = 1.15*exp[-11.7*NRD] + 0.022, where NRD = normalized rooting depth
     /// Parameters of Normalized Root Density Function from Dwyer et al 19xx
-    float a = 1.15, b = 11.7, c = 0.022, d = 0.12029; /// Integral of Normalized Root Distribution Function  from 0 to 1 (normalized depth) = 0.12029
-    int k;/// used as layer indentifier
+    float a = 1.15f, b = 11.7f, c = 0.022f, d = 0.12029f; /// Integral of Normalized Root Distribution Function  from 0 to 1 (normalized depth) = 0.12029
+    int k;/// used as layer identifier
     for (int l = 0; l < (int) m_nSoilLayers[i]; l++)
     {
         cum_d += m_soilThick[i][l];
@@ -905,16 +905,16 @@ void MGTOpt_SWAT::rootFraction(int i, float *&root_fr)
         x1 = (cum_rd - m_soilThick[i][l]) / m_lastSoilRootDepth[i];
         x2 = cum_rd / m_lastSoilRootDepth[i];
         float xx1 = -b * x1;
-        if (xx1 > 20.) xx1 = 20.;
+        if (xx1 > 20.f) xx1 = 20.f;
         float xx2 = -b * x2;
-        if (xx2 > 20.) xx2 = 20.;
+        if (xx2 > 20.f) xx2 = 20.f;
         root_fr[l] = (a / b * (exp(xx1) - exp(xx2)) + c * (x2 - x1)) / d;
         float xx = cum_rf;
         cum_rf += root_fr[l];
-        if (cum_rf > 1.)
+        if (cum_rf > 1.f)
         {
-            root_fr[l] = 1. - xx;
-            cum_rf = 1.;
+            root_fr[l] = 1.f - xx;
+            cum_rf = 1.f;
         }
         k = l;
         if (cum_rd >= m_lastSoilRootDepth[i])
@@ -940,7 +940,7 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
     float cnop = curOperation->CNOP();
     float deptil = m_tillageLookupMap[tillID][TILLAGE_PARAM_DEPTIL_IDX];
     float effmix = m_tillageLookupMap[tillID][TILLAGE_PARAM_EFFMIX_IDX];
-    float bmix = 0.;
+    float bmix = 0.f;
     float emix = 0.f, dtil = 0.f, XX = 0.f, WW1 = 0.f, WW2 = 0.f;
     float WW3 = 0.f, WW4 = 0.f, maxmix = 0.f;
     float *soilMass = new float[(int) m_nSoilLayers[i]];
@@ -975,7 +975,7 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
     for (int k = 0; k < 22 + npmx + 12; k++)
         smix[k] = 0.f;
     /// incorporate bacteria, no mixing, and bost from transport
-    if (dtil > 10.)
+    if (dtil > 10.f)
     {
         //m_bactPersistSol[i] *= (1. - emix);
         //m_bactPersistParticle[i] *= (1. - emix);
@@ -985,22 +985,22 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
     /// calculate max mixing to preserve target surface residue
     /// Assume residue in all other layers is negligible to simplify calculation and remove depth dependency
     /// TODO, m_minResidue is defined in OPS which should be implemented later. By LJ
-    float m_minResidue = 0.;
-    if (m_minResidue > 1. && bmix < 0.001)
+    float m_minResidue = 0.f;
+    if (m_minResidue > 1.f && bmix < 0.001f)
     {
-        maxmix = 1. - m_minResidue / m_soilRsd[i][0];
-        if (maxmix < 0.05) maxmix = 0.05;
+        maxmix = 1.f - m_minResidue / m_soilRsd[i][0];
+        if (maxmix < 0.05f) maxmix = 0.05f;
         if (emix > maxmix) emix = maxmix;
     }
     for (int l = 0; l < (int) m_nSoilLayers[i]; l++)
     {
-        soilMass[l] = (m_soilThick[i][l] / 1000.) * 10000. * m_soilBD[i][l] * 1000. * (1 - m_soilRock[i][l] / 100.);
+        soilMass[l] = (m_soilThick[i][l] / 1000.f) * 10000.f * m_soilBD[i][l] * 1000.f * (1 - m_soilRock[i][l] / 100.f);
         soilMixedMass[l] = 0.f;
         soilNotMixedMass[l] = 0.f;
     }
-    if (dtil > 0.)
+    if (dtil > 0.f)
     {
-        if (dtil < 10.) dtil = 11.;
+        if (dtil < 10.f) dtil = 11.;
         for (int l = 0; l < (int) m_nSoilLayers[i]; l++)
         {
             if (m_soilDepth[i][l] <= dtil)
@@ -1015,7 +1015,7 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
             }
             else
             {
-                soilMixedMass[l] = 0.;
+                soilMixedMass[l] = 0.f;
                 soilNotMixedMass[l] = soilMass[l];
             }
             /// calculate the mass or concentration of each mixed element
@@ -1066,7 +1066,7 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
             m_soilFreshOrgP[i][l] = m_soilFreshOrgP[i][l] * WW3 + smix[8] * WW4;
             m_soilStableMinP[i][l] = m_soilStableMinP[i][l] * WW3 + smix[9] * WW4;
             m_soilRsd[i][l] = m_soilRsd[i][l] * WW3 + smix[10] * WW4;
-            if (m_soilRsd[i][l] < 1.e-10) m_soilRsd[i][l] = 1.e-10;
+            if (m_soilRsd[i][l] < 1.e-10f) m_soilRsd[i][l] = 1.e-10f;
 
             m_soilCarbon[i][l] = (m_soilCarbon[i][l] * soilNotMixedMass[l] + smix[14] * soilMixedMass[l]) / soilMass[l];
             m_soilN[i][l] = (m_soilN[i][l] * soilNotMixedMass[l] + smix[15] * soilMixedMass[l]) / soilMass[l];
@@ -1083,7 +1083,7 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
             }
         }
     }
-    if (cnop > 1.e-4) m_CN2[i] = cnop;
+    if (cnop > 1.e-4f) m_CN2[i] = cnop;
     delete[] soilMass;
     delete[] soilMixedMass;
     delete[] soilNotMixedMass;
@@ -1110,27 +1110,27 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
     float yieldTbr = 0.f, yieldNtbr = 0.f, yieldPtbr = 0.f;
     float clipTbr = 0.f, clipNtbr = 0.f, clipPtbr = 0.f;
     float ssb = m_biomass[i];
-    float ssabg = m_biomass[i] * (1. - m_frRoot[i]);
+    float ssabg = m_biomass[i] * (1.f - m_frRoot[i]);
     float ssr = ssb * m_frRoot[i];
     float ssn = m_plantN[i];
     float ssp = m_plantP[i];
     /// calculate modifier for auto fertilization target nitrogen content
-    m_targNYld[i] = (1. - m_frRoot[i] * m_biomass[i] * m_frPlantN[i] * m_autoFertEfficiency[i]);
+    m_targNYld[i] = (1.f - m_frRoot[i] * m_biomass[i] * m_frPlantN[i] * m_autoFertEfficiency[i]);
     /// compute grain yield
-    float hiad1 = 0.; /// hiad1       |none           |actual harvest index (adj for water/growth)
-    float wur = 0.; /// wur         |none           |water deficiency factor
-    if (m_pltPET[i] < 10.)
-        wur = 100.;
+    float hiad1 = 0.f; /// hiad1       |none           |actual harvest index (adj for water/growth)
+    float wur = 0.f; /// wur         |none           |water deficiency factor
+    if (m_pltPET[i] < 10.f)
+        wur = 100.f;
     else
-        wur = 100. * m_pltET[i] / m_pltPET[i];
-    hiad1 = (m_havstIdxAdj[i] - wsyf) * (wur / (wur + exp(6.13 - 0.0883 * wur))) + wsyf;
+        wur = 100.f * m_pltET[i] / m_pltPET[i];
+    hiad1 = (m_havstIdxAdj[i] - wsyf) * (wur / (wur + exp(6.13f - 0.0883f * wur))) + wsyf;
     if (hiad1 > hvsti) hiad1 = hvsti;
     /// check if yield is from above or below ground
-    if (hvsti > 1.001)
+    if (hvsti > 1.001f)
     {
         /// determine clippings (biomass left behind) and update yield
-        yieldTbr = m_biomass[i] * (1. - 1. / (1. + hiad1)) * harveff;
-        clipTbr = m_biomass[i] * (1. - 1. / (1. + hiad1)) * (1. - harveff);
+        yieldTbr = m_biomass[i] * (1.f - 1.f / (1.f + hiad1)) * harveff;
+        clipTbr = m_biomass[i] * (1.f - 1.f / (1.f + hiad1)) * (1.f - harveff);
         m_biomass[i] -= (yieldTbr + clipTbr);
         /// calculate nutrients removed with yield
         yieldNtbr = min(yieldTbr * cnyld, 0.80f * m_plantN[i]);
@@ -1146,11 +1146,11 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
     float yieldGrn = 0.f, yieldNgrn = 0.f, yieldPgrn = 0.f;
     float clipGrn = 0.f, clipNgrn = 0.f, clipPgrn = 0.f;
 
-    if (hi_bms > 0.)
+    if (hi_bms > 0.f)
     {
         /// compute biomass yield
-        yieldBms = hi_bms * (1. - m_frRoot[i]) * m_biomass[i] * harveff;
-        clipBms = hi_bms * (1. - m_frRoot[i]) * m_biomass[i] * (1. - harveff);
+        yieldBms = hi_bms * (1.f - m_frRoot[i]) * m_biomass[i] * harveff;
+        clipBms = hi_bms * (1.f - m_frRoot[i]) * m_biomass[i] * (1.f - harveff);
         m_biomass[i] -= (yieldBms + clipBms);
         /// compute nutrients removed with yield
         yieldNbms = min(yieldBms * cnyld, 0.80f * m_plantN[i]);
@@ -1164,9 +1164,9 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
     else
     {
         /// compute grain yields
-        yieldGrn = (1. - m_frRoot[i]) * m_biomass[i] * hiad1 * harveff;
+        yieldGrn = (1.f - m_frRoot[i]) * m_biomass[i] * hiad1 * harveff;
         /// determine clippings (biomass left behind) and update yield
-        clipGrn = (1. - m_frRoot[i]) * m_biomass[i] * hiad1 * (1. - harveff);
+        clipGrn = (1.f - m_frRoot[i]) * m_biomass[i] * hiad1 * (1.f - harveff);
         m_biomass[i] -= (yieldGrn + clipGrn);
         /// calculate nutrients removed with yield
         yieldNgrn = min(yieldGrn * cnyld, 0.80f * m_plantN[i]);
@@ -1206,22 +1206,22 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
     if (ssabg > UTIL_ZERO)
         ff3 = (yield + clip) / ssabg;
     else
-        ff3 = 1.;
-    if (ff3 > 1.) ff3 = 1.;
+        ff3 = 1.f;
+    if (ff3 > 1.f) ff3 = 1.f;
     /// reset leaf area index and fraction of growing season
-    if (ssb > 0.001)
+    if (ssb > 0.001f)
     {
-        m_LAIDay[i] *= (1. - ff3);
+        m_LAIDay[i] *= (1.f - ff3);
         if (m_LAIDay[i] < alai_min)
             m_LAIDay[i] = alai_min;
-        m_phuAcc[i] *= (1. - ff3);
-        m_frRoot[i] = 0.4 - 0.2 * m_phuAcc[i];
+        m_phuAcc[i] *= (1.f - ff3);
+        m_frRoot[i] = 0.4f - 0.2f * m_phuAcc[i];
     }
     else
     {
-        m_biomass[i] = 0.;
-        m_LAIDay[i] = 0.;
-        m_phuAcc[i] = 0.;
+        m_biomass[i] = 0.f;
+        m_LAIDay[i] = 0.f;
+        m_phuAcc[i] = 0.f;
     }
     /// allocate roots, N, and P to soil pools
     for (int l = 0; l < (int) m_nSoilLayers[i]; l++)
@@ -1235,7 +1235,7 @@ void MGTOpt_SWAT::ExecuteKillOperation(int i, int &factoryID, int nOp)
     /// killop.f
     KillOperation *curOperation = (KillOperation *) m_mgtFactory[factoryID]->GetOperations()[nOp];
     float resnew = 0.f, rtresnew = 0.f;
-    resnew = m_biomass[i] * (1. - m_frRoot[i]);
+    resnew = m_biomass[i] * (1.f - m_frRoot[i]);
     rtresnew = m_biomass[i] * m_frRoot[i];
     /// call rootfr.f to distributes dead root mass through the soil profile
     /// i.e., derive fraction of roots in each layer
@@ -1312,7 +1312,7 @@ void MGTOpt_SWAT::ExecuteAutoFertilizerOperation(int i, int &factoryID, int nOp)
     float bio_e = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_BIO_E];
     /// calculate modifier for auto fertilization target nitrogen content'
     if (m_targNYld[i] < UTIL_ZERO)
-        m_targNYld[i] = 150. * cnyld * bio_e;
+        m_targNYld[i] = 150.f * cnyld * bio_e;
     /// call anfert.f
     /// TODO, this will be implemented as an isolated module in the near future.
 }
@@ -1462,7 +1462,7 @@ void MGTOpt_SWAT::Get2DData(const char *key, int *n, int *col, float ***data)
 
 void MGTOpt_SWAT::initialOutputs()
 {
-    m_cellArea = m_cellWidth * m_cellWidth / 10000.;
+    m_cellArea = m_cellWidth * m_cellWidth / 10000.f;
     if (m_nSub <= 0)
     {
 #pragma omp parallel for
@@ -1500,12 +1500,12 @@ void MGTOpt_SWAT::initialOutputs()
 
 float MGTOpt_SWAT::Erfc(float xx)
 {
-    float c1 = .19684, c2 = .115194;
-    float c3 = .00034, c4 = .019527;
+    float c1 = .19684f, c2 = .115194f;
+    float c3 = .00034f, c4 = .019527f;
     float x = 0.f, erf = 0.f, erfc = 0.f;
-    x = abs(sqrt(2.) * xx);
-    erf = 1. - pow(float(1. + c1 * x + c2 * x * x + c3 * pow(x, 3.f) + c4 * pow(x, 4.f)), -4.f);
-    if (xx < 0.) erf = -erf;
-    erfc = 1. - erf;
+    x = abs(sqrt(2.f) * xx);
+    erf = 1.f - pow(float(1.f + c1 * x + c2 * x * x + c3 * pow(x, 3.f) + c4 * pow(x, 4.f)), -4.f);
+    if (xx < 0.f) erf = -erf;
+    erfc = 1.f - erf;
     return erfc;
 }

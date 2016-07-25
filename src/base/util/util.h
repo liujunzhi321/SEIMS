@@ -26,6 +26,7 @@ using namespace std;
  * \brief NODATA value
  */
 #define NODATA_VALUE    -9999.0f
+// TODO, replace NODATA by NODATA_VALUE thoroughly
 #define NODATA          -99.0f
 
 /**
@@ -42,7 +43,7 @@ using namespace std;
  * \def MINI_SLOPE
  * \brief Minimum slope gradient
  */
-#define MINI_SLOPE            0.0001
+#define MINI_SLOPE            0.0001f
 
 /*!
  * \ingroup util

@@ -142,14 +142,14 @@ int clsRasterData::getPosition(float x, float y)
     float yllCenter = this->getYllCenter();
     float dx = this->getCellWidth();
     float dy = this->getCellWidth();
-    float nRows = this->getRows();
-    float nCols = this->getCols();
+    int nRows = this->getRows();
+    int nCols = this->getCols();
 
-    float xmin = xllCenter - dx / 2;
+    float xmin = xllCenter - dx / 2.f;
     float xMax = xmin + dx * nCols;
     if (x > xMax || x < xllCenter) throw ModelException("Raster", "At", "The x coordinate is beyond the scale!");
 
-    float ymin = yllCenter - dy / 2;
+    float ymin = yllCenter - dy / 2.f;
     float yMax = ymin + dy * nRows;
     if (y > yMax || y < yllCenter) throw ModelException("Raster", "At", "The y coordinate is beyond the scale!");
 
@@ -886,9 +886,9 @@ void clsRasterData::ReadFromGDAL(string filename)
             for (int j = 0; j < nCols; ++j)
             {
                 int index = i * nCols + j;
-                if (FloatEqual(pData[index], m_headers[HEADER_RS_NODATA]))
+                if (FloatEqual((float)pData[index], m_headers[HEADER_RS_NODATA]))
                     continue;
-                values.push_back(pData[index]);
+                values.push_back((float)pData[index]);
                 positionRows.push_back(i);
                 positionCols.push_back(j);
             }
@@ -980,7 +980,7 @@ void clsRasterData::ReadFromGDAL(string fileName, clsRasterData *mask)
                 int i = (int) validPosition[index][0];
                 int j = (int) validPosition[index][1];
                 int rasterIndex = i * ascCols + j;
-                m_rasterData[index] = pData[rasterIndex];
+                m_rasterData[index] = (float)pData[rasterIndex];
             }
             CPLFree(pData);
         }
@@ -1146,7 +1146,7 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char *remoteFilen
         /// Get value of given keys
         bson_iter_t iter;
         if (bson_iter_init(&iter, bmeta) && bson_iter_find(&iter, HEADER_RS_LAYERS)) 
-            m_nLyrs = GetFloatFromBSONITER(&iter);
+            m_nLyrs = GetIntFromBSONITER(&iter);
         else
             throw ModelException("clsRasterData", "ReadRasterFromMongoDB", "Failed in get FLOAT value: LAYERS.\n");
         size_t length = (size_t) mongoc_gridfs_file_get_length(gfile);

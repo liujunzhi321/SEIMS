@@ -278,11 +278,11 @@ void ReadLongTermMutltiReachInfo(mongoc_client_t *conn, string &dbName, int &nr,
     while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &bsonTable))
     {
         if (bson_iter_init_find(&itertor, bsonTable, REACH_SUBBASIN))
-            tmpData[i][0] = GetIntFromBSONITER(&itertor);
+            tmpData[i][0] = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_DOWNSTREAM))
-            tmpData[i][1] = GetIntFromBSONITER(&itertor);
+            tmpData[i][1] = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_UPDOWN_ORDER))
-            tmpData[i][2] = GetIntFromBSONITER(&itertor);
+            tmpData[i][2] = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_WIDTH))
             tmpData[i][3] = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_LENGTH))
@@ -357,11 +357,11 @@ void ReadLongTermReachInfo(mongoc_client_t *conn, string &dbName, int subbasinID
     if (mongoc_cursor_next(cursor, &bsonTable))
     {
         if (bson_iter_init_find(&itertor, bsonTable, REACH_SUBBASIN))
-            tmpData[i][0] = GetIntFromBSONITER(&itertor);
+            tmpData[i][0] = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_DOWNSTREAM))
-            tmpData[i][1] = GetIntFromBSONITER(&itertor);
+            tmpData[i][1] = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_UPDOWN_ORDER))
-            tmpData[i][2] = GetIntFromBSONITER(&itertor);
+            tmpData[i][2] = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_WIDTH))
             tmpData[i][3] = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_LENGTH))
@@ -436,7 +436,7 @@ void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client
     while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &bsonTable))
     {
         if (bson_iter_init_find(&itertor, bsonTable, REACH_SUBBASIN))
-            id = GetIntFromBSONITER(&itertor);
+            id = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_DOWNUP_ORDER))
             downUpOrder = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_UPDOWN_ORDER))
@@ -518,7 +518,7 @@ void ReadReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *co
     if (mongoc_cursor_next(cursor, &bsonTable))
     {
         if (bson_iter_init_find(&itertor, bsonTable, REACH_SUBBASIN))
-            id = GetIntFromBSONITER(&itertor);
+            id = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_DOWNUP_ORDER))
             downUpOrder = GetFloatFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, REACH_UPDOWN_ORDER))
