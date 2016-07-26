@@ -13,5 +13,13 @@
 0 | PG | Simplified EPIC | BIO_EPIC
 0 | MINRL | Mineralization of N, P | MINRL
 0 | ATMDEP | Atomosphere deposition | ATMDEP
+#xx | Movement | Nutrient Movement | NUTRMV
 0 | Subsurface | Darcy and Kinematic | SSR_DA
 #0 | Groundwater | Linear reservoir | GWA_RE
+#10 | Routing
+#10 | Overland routing | IUH | IUH_OL
+#10 | Overland routing | Kinematic wave | IKW_OL
+#9 | Channel erosion | TODO | 
+#10 | Channel routing | MUSK | MUSK_CH
+#10 | Channel routing | Kinematic wave | IKW_CH
+#10 | Channel routing | Diffusive wave | CH_DW
