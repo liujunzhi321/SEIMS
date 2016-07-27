@@ -60,7 +60,7 @@ public:
     string ModuleID;
     //! Data dimension type
     dimensionTypes Dimension;
-    //! Source
+    //! Source, to identify which the parameters can be derived
     string Source;
     //! Value
     float Value;

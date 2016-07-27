@@ -32,28 +32,28 @@ BMPPointSrcFactory::~BMPPointSrcFactory(void)
     if (!m_pointSrcLocsMap.empty())
     {
         for (map<int, PointBMPLocations *>::iterator it = m_pointSrcLocsMap.begin();
-             it != m_pointSrcLocsMap.end(); it++)
+             it != m_pointSrcLocsMap.end();)
         {
             if (it->second != NULL)
             {
                 delete it->second;
                 it->second = NULL;
             }
-            m_pointSrcLocsMap.erase(it);
+            it = m_pointSrcLocsMap.erase(it);
         }
         m_pointSrcLocsMap.clear();
     }
     if (!m_pointSrcMgtMap.empty())
     {
         for (map<int, PointSourceMgtParams *>::iterator it = m_pointSrcMgtMap.begin();
-             it != m_pointSrcMgtMap.end(); it++)
+             it != m_pointSrcMgtMap.end();)
         {
             if (it->second != NULL)
             {
                 delete it->second;
                 it->second = NULL;
             }
-            m_pointSrcMgtMap.erase(it);
+            it = m_pointSrcMgtMap.erase(it);
         }
         m_pointSrcMgtMap.clear();
     }
