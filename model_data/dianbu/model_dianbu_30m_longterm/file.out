@@ -75,3 +75,8 @@ Subsurface runoff	SSRUVOL	Subsurface runoff volume	m3	SUM	2014-01-01 00:00:00	20
 Subsurface runoff	SBIF	Subsurface runoff discharge to streams from each subbasin	m2/s	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBIF.txt	1
 Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	Q.txt	0
 Sediment	QSED	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	0
+Groundwater	REVAP	revaporization from groundwater	mm	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	REVAP.tif	1
+Groundwater	RG	total revaporization from groundwater of subbasin	mm	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	RG.txt	1
+Groundwater	SBQG	groundwater flow out of the subbasin	mm	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBQG.txt	1
+Groundwater	SBPET	potential evapotranspiration rate of the subbasin	mm	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBPET.txt	1
+Groundwater	SBGS	Groundwater storage of the subbasin	mm	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBGS.txt	1
