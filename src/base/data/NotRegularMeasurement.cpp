@@ -84,7 +84,7 @@ NotRegularMeasurement::NotRegularMeasurement(mongoc_client_t *conn, string hydro
 
             if (bson_iter_init(&iter, doc) && bson_iter_find(&iter, MONG_HYDRO_DATA_UTC))
             {
-                dt = GetDateTimeFromBSONITER(&iter) / 1000.;
+                dt = GetDateTimeFromBSONITER(&iter) / 1000.f;
             }
             else
                 throw ModelException("NotRegularMeasurement", "NotRegularMeasurement",
@@ -113,9 +113,9 @@ NotRegularMeasurement::NotRegularMeasurement(mongoc_client_t *conn, string hydro
 NotRegularMeasurement::~NotRegularMeasurement(void)
 {
     if (pData != NULL) Release1DArray(pData);
-    for (vector<vector<float> >::iterator it = m_valueList.begin(); it != m_valueList.end(); it++)
+    for (vector<vector<float> >::iterator it = m_valueList.begin(); it != m_valueList.end();)
     {
-        m_valueList.erase(it);
+        it = m_valueList.erase(it);
     }
     m_valueList.clear();
 }

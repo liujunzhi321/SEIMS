@@ -135,14 +135,16 @@ ModelMain::~ModelMain(void)
     try
     {
         if (this->m_templateRasterData != NULL) delete this->m_templateRasterData;
-        for (map<string, ParamInfo *>::iterator it = m_parameters.begin(); it != m_parameters.end(); ++it)
+        for (map<string, ParamInfo *>::iterator it = m_parameters.begin(); it != m_parameters.end();)
         {
-            delete it->second;
+			if(it->second != NULL)
+				delete it->second;
             it->second = NULL;
-            m_parameters.erase(it);
+            it = m_parameters.erase(it);
         }
         m_parameters.clear();
-        if (this->m_input != NULL) delete this->m_input;
+        if (this->m_input != NULL)
+			delete this->m_input;
         if (this->m_output != NULL)
             delete this->m_output;
         if (m_outputGfs != NULL)
@@ -288,7 +290,7 @@ void ModelMain::Execute()
 
     for (time_t t = startTime; t < endTime; t += m_dtCh)
     {
-        //cout << util.ConvertToString2(&t) << endl;
+        cout << util.ConvertToString2(&t) << endl;
         /// Calculate index of current year of the entire simulation
         int curYear = GetYear(t);
         int yearIdx = curYear - startYear;

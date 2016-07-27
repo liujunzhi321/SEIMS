@@ -22,10 +22,10 @@ namespace MainBMP
     Scenario::~Scenario(void)
     {
         map<int, BMPFactory *>::iterator it;
-        for (it = this->m_bmpFactories.begin(); it != this->m_bmpFactories.end(); it++)
+        for (it = this->m_bmpFactories.begin(); it != this->m_bmpFactories.end();)
         {
             if (it->second != NULL) delete (it->second);
-            m_bmpFactories.erase(it);              /// added by Liangjun
+            it = m_bmpFactories.erase(it);              /// added by Liangjun
         }
         m_bmpFactories.clear();                     /// added by Liangjun
     }

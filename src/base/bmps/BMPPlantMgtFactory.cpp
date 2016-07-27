@@ -19,10 +19,11 @@ BMPPlantMgtFactory::BMPPlantMgtFactory(int scenarioId, int bmpId, int subScenari
 BMPPlantMgtFactory::~BMPPlantMgtFactory()
 {
     map<int, PlantManagementOperation *>::iterator it;
-    for (it = m_bmpPlantOps.begin(); it != m_bmpPlantOps.end(); it++)
+    for (it = m_bmpPlantOps.begin(); it != m_bmpPlantOps.end();)
     {
-        if (it->second != NULL) delete it->second;
-        m_bmpPlantOps.erase(it);
+        if (it->second != NULL)
+			delete it->second;
+        it = m_bmpPlantOps.erase(it);
     }
     m_bmpPlantOps.clear();
 }

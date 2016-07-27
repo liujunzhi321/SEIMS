@@ -15,7 +15,7 @@
 0 | ATMDEP | Atomosphere deposition | ATMDEP
 #xx | Movement | Nutrient Movement | NUTRMV
 0 | Subsurface | Darcy and Kinematic | SSR_DA
-#0 | Groundwater | Linear reservoir | GWA_RE
+0 | Groundwater | Linear reservoir | GWA_RE
 #10 | Routing
 #10 | Overland routing | IUH | IUH_OL
 #10 | Overland routing | Kinematic wave | IKW_OL
