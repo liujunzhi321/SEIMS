@@ -187,6 +187,7 @@
 #define Source_HydroClimateDB                    "HydroClimateDB"
 #define Source_ParameterDB                            "ParameterDB"
 #define Source_Module                                    "Module"
+#define Source_Module_Optional							"Module_Optional"
 
 ///////// Table Names required in MongoDB /////////
 #define DB_TAB_PARAMETERS        "PARAMETERS"
@@ -380,7 +381,9 @@
 #define MCLS_GW                                        "Groundwater"
 #define MCLSDESC_GW                            "Calculate groundwater balance and baseflow."
 #define MID_GW_RSVR                                "GW_RSVR"
-#define MDESC_GW_RSVR                        "Calculate groundwater using reservoir method"
+#define MDESC_GW_RSVR                        "Calculate groundwater using reservoir method for storm model"
+#define MID_GWA_RE									"GWA_RE"
+#define MDESC_GWA_RE						"Reservoir Method to calculate groundwater balance and baseflow for longterm model"
 /// Erosion related modules
 #define MCLS_OL_EROSION                        "Overland erosion"
 #define MCLS_CH_EROSION                    "Channel erosion"
@@ -598,7 +601,7 @@
 #define VAR_GRZ_FLAG "grz_flag"
 #define VAR_GSI "gsi"
 #define VAR_GW_KG "kg"
-#define VAR_GW_Q "gw_q"
+#define VAR_GW_Q "GW"
 #define VAR_GW0 "GW0"                               /// initial ground water storage
 #define VAR_GWMAX "GWMAX"                           /// maximum ground water storage
 #define VAR_GWMINP "gwminp"
@@ -699,6 +702,7 @@
 #define VAR_P_RF "p_rf"
 #define VAR_PERCN "percn"
 #define VAR_PERCO "Perco"                     /// the amount of water percolated from the soil water reservoir
+#define VAR_PERDE "perde"
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
 #define VAR_PET_HCOEF "HCoef_pet"                   /// Coefficient related to radiation used in Hargreaves method
@@ -752,7 +756,6 @@
 #define VAR_RWNTL "rwntl"                           /// amount of nitrogen moving from active organic to stable organic pool in soil profile on current day in cell(kg N/ha)
 #define VAR_S_FROZEN "s_frozen"
 #define VAR_SAND "sand"
-#define VAR_SBGS "SBGS"
 #define VAR_SBGS "SBGS"                             /// Groundwater storage of the subbasin
 #define VAR_SBIF "SBIF"                             /// interflow to streams from each subbasin
 #define VAR_SBOF "SBOF"                             /// overland flow to streams from each subbasin
@@ -1248,7 +1251,7 @@
 #define DESC_RCN "concentration of nitrate in the rain"
 #define DESC_Reinfiltration "TODO: meaning?"
 #define DESC_RETURNFLOW "water depth of return flow"
-#define DESC_REVAP "Revap"
+#define DESC_REVAP "revaporization from groundwater"
 #define DESC_RHOQ "algal respiration rate at 20 deg C"
 #define DESC_RM "Relative humidity"
 #define DESC_RMN2TL "amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell"
@@ -1286,7 +1289,7 @@
 #define DESC_SEEPAGE "seepage"
 #define DESC_SHALLST "depth of water in shallow aquifer"
 #define DESC_SILT "Percent of silt content"
-#define DESC_SLOPE "Slope gradient (tan)"
+#define DESC_SLOPE "Slope gradient (drop/distance, i.e., tan, or percent)"
 #define DESC_SNAC "snow accumulation"
 #define DESC_SNME "snow melt"
 #define DESC_SNO3UP "amount of nitrate moving upward in the soil profile in watershed"
