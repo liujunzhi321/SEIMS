@@ -319,7 +319,7 @@ void SurrunoffTransfer::OrgpAttachedtoSed(int i)
         float concp = 0.f;
         concp = sol_attp * m_enratio[i] / wt;
         //total amount of P removed in sediment erosion (sedp)
-        float sedp = 0.001f * concp * m_sedimentYield[i] / (m_cellWidth * m_cellWidth);
+        float sedp = 0.001f * concp * m_sedimentYield[i] / (m_cellWidth * m_cellWidth) / 10000.f;
         m_sedorgp[i] = sedp * sol_attp_o;
         m_sedminpa[i] = sedp * sol_attp_a;
         m_sedminps[i] = sedp * sol_attp_s;

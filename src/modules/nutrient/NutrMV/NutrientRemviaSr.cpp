@@ -381,15 +381,13 @@ void NutrientRemviaSr::Nitrateloss()
                         m_sol_no3[i][k] = m_sol_no3[i][k] - percnlyr;
                     }
 
-
                     // calculate nitrate leaching from soil profile
                     m_percn[i] = percnlyr;
                     float nloss = 0.f;
                     // average distance to the stream(m), default is 35m.
                     float dis_stream = 35.f;
                     nloss = (2.18f * dis_stream - 8.63f) / 100.f;
-                    nloss = max(0.f, nloss);
-                    nloss = min(1.f, nloss);
+                    nloss = min(1.f, max(0.f, nloss));
                     m_latno3[i] = (1.f - nloss) * m_latno3[i];
 
                     // calculate CBOD, COD, Chl_a, doxq and soxy

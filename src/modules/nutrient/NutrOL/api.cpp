@@ -76,19 +76,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_NITRITE_CH, UNIT_KG, DESC_NITRITE_CH, DT_Raster1D);
     mdi.AddOutput(VAR_COD_CH, UNIT_KG, DESC_COD_CH, DT_Raster1D);
 
-    // set the output variables
-    mdi.AddOutput(VAR_SURQNO3_CH, UNIT_KG, DESC_SURQNO3_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_LATNO3_CH, UNIT_KG, DESC_LATNO3_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_NO3GW_CH, UNIT_KG, DESC_NO3GW_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_SURQSOLP_CH, UNIT_KG, DESC_SURQSOLP_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_MINPGW_CH, UNIT_KG, DESC_MINPGW_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_SEDORGN_CH, UNIT_KG, DESC_SEDORGN_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_SEDORGP_CH, UNIT_KG, DESC_SEDORGP_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_SEDMINPA_CH, UNIT_KG, DESC_SEDMINPA_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_SEDMINPS_CH, UNIT_KG, DESC_SEDMINPS_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_AMMO_CH, UNIT_KG, DESC_AMMO_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_NITRITE_CH, UNIT_KG, DESC_NITRITE_CH, DT_Raster1D);
-
     string res = mdi.GetXMLDocument();
     char *tmp = new char[res.size() + 1];
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
