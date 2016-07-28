@@ -93,6 +93,8 @@ bool ImplicitKinematicWave_OL::CheckInputData(void)
     if (m_CellWidth <= 0)
         throw ModelException(MID_IKW_OL, "CheckInputData", "You have not set the CellWidth variable.");
 
+	if (m_accumuDepth == NULL)
+		throw ModelException(MID_IKW_OL, "CheckInputData", "The m_accumuDepth has not been set.");
     if (m_s0 == NULL)
         throw ModelException(MID_IKW_OL, "CheckInputData", "The parameter: slope has not been set.");
     if (m_n == NULL)
@@ -181,7 +183,7 @@ float ImplicitKinematicWave_OL::GetNewQ(float qIn, float qLast, float surplus, f
     const float beta = 0.6f;
 
     /* if no input then output = 0 */
-    if ((qIn + qLast) <= -surplus * dx)//0)
+    if ((qIn + qLast) <= -surplus * dx) //0)
     {
         //itercount = -1;
         return (0);
@@ -251,7 +253,7 @@ void ImplicitKinematicWave_OL::OverlandFlow(int id)
 
     m_vel[id] = pow(r, _23) * sSin / m_n[id];
 
-    float flowWidth = m_flowWidth[id];
+    float flowWidth = m_flowWidth[id]; //(little question: why not use m_flowWidth[[id]? by Gao)
     float flowLen = m_flowLen[id];
 
     //sum the upstream overland flow

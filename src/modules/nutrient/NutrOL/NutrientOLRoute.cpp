@@ -283,12 +283,20 @@ void NutrientOLRoute::initial()
         }
     }
 }
-
+float NutrientOLRoute::CalculateSedinFlowFraction(int id)
+{
+	//TODO
+}
 void NutrientOLRoute::NutrientinOverland(int i)
 {
+	// Calculate the ratio between sediment in flow and soil loss caused by water erosion
+	float fractionSed = 0.f;
+	fractionSed = CalculateSedinFlowFraction(i);
+	//TODO
+
     //sum the nutrients of the upstream overland flow
     float flowwidth = m_FlowWidth[i];
-    float cellArea = m_cellWidth * m_cellWidth;
+    float cellArea = m_cellWidth * m_cellWidth / 10000.f; // /10000.f m2 -> ha
     float surqno3 = 0.f;    // sum of surqno3 flow in
     float latno3 = 0.f;    // sum of latno3 flow in
     float ammo = 0.f;    // sum of ammonium flow in
@@ -316,8 +324,8 @@ void NutrientOLRoute::NutrientinOverland(int i)
         m_sedminps[flowInID] = max(1.e-12f, m_sedminps[flowInID]);
         m_cod[flowInID] = max(1.e-12f, m_cod[flowInID]);
         //Sum
-		// if the upstream cell is not a channel cell
-		 if (m_streamLink[flowInID] <= 0) 
+		// if the upstream cell is not a channel cell (kg/ha)
+		 if (m_streamLink[flowInID] < 0) 
 		 {
 			surqno3 = surqno3 + m_surqno3[flowInID];
 			latno3 = latno3 + m_latno3[flowInID];

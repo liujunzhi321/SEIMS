@@ -49,12 +49,10 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_ACC_INFIL, UNIT_DEPTH_MM, DESC_ACC_INFIL, Source_Module, DT_Raster1D);
 
     mdi.AddOutput(VAR_QOVERLAND, UNIT_FLOW_CMS, DESC_QOVERLAND, DT_Raster1D);
-
     mdi.AddOutput(VAR_Reinfiltration, UNIT_DEPTH_MM, DESC_Reinfiltration, DT_Raster1D);
     mdi.AddOutput(VAR_FLOWWIDTH, UNIT_LEN_M, DESC_FLOWWIDTH, DT_Raster1D);
     mdi.AddOutput("ChWidth", "m", "Flow length of overland plane",
                   DT_Raster1D);  //Flowlen add by Wu hui  /// TODO Figure out what's meaning? LJ
-
     mdi.AddOutput(VAR_RadianSlope, UNIT_NON_DIM, DESC_RadianSlope, DT_Raster1D);
 
     mdi.AddOutput(VAR_ID_OUTLET, UNIT_NON_DIM, DESC_ID_OUTLET, DT_Single);

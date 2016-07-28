@@ -91,10 +91,18 @@ void KinWavSed_OL::Get1DData(const char *key, int *n, float **data)
     {
         *data = m_SedDep;
     }
-    else if (StringMatch(s, VAR_SED_TO_CH))
+    else if (StringMatch(s, VAR_SED_FLOW))
     {
-        *data = m_SedToChannel;
-    }
+        *data = m_Sed_kg;
+	}
+	else if (StringMatch(s, VAR_SED_FLUX))
+	{
+		*data = m_Qsn;
+	}
+	else if (StringMatch(s, VAR_SED_TO_CH))
+	{
+		*data = m_SedToChannel;
+	}
         //else if(StringMatch(s,"TestV"))
         //{
         //	*data = m_ChV; //m_ChV; //m_V;//m_tsetv;

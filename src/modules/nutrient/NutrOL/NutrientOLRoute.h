@@ -93,6 +93,15 @@ private:
     /// carbonaceous oxygen demand of surface runoff
     float *m_cod;
 
+	/// sediment in flow (kg)
+	float *m_Sed_kg;
+	/// outgoing sediment flux (kg/s)
+	float *m_Qsn;
+	/// the distribution of overland flow detachment (kg)
+	float *m_SedDet;
+	/// sediment deposition (kg)
+	float *m_SedDep;
+
     //test
     float *m_ChV;
     float *m_QV;
@@ -159,6 +168,14 @@ private:
     *	\return the nutrient of flowing to channel for each channel cell, kg
     */
     float NutToChannel(int i, float nut);
+
+	  /*!
+    *	\brief Calculate the ratio between sediment in flow and soil loss caused by water erosion.
+    *
+    *	\param ID The id of cell in grid map
+    *	\return the ratio between sediment in flow and soil loss caused by water erosion
+    */
+	float CalculateSedinFlowFraction(int id);
 	
 };
 
