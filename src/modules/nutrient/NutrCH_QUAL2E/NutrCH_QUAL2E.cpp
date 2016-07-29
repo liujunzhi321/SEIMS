@@ -6,11 +6,7 @@
  */
 
 #include <iostream>
-<<<<<<< HEAD:src/modules/nutrient/NutrCH_QUAL2E/NutrCH_QUAL2E.cpp
 #include "NutrCH_QUAL2E.h"
-=======
-#include "NutrCH_IUH.h"
->>>>>>> upstream/master:src/modules/nutrient/NutrCH_IUH/NutrCH_IUH.cpp
 #include "MetadataInfo.h"
 #include <cmath>
 #include <fstream>
@@ -20,11 +16,7 @@
 
 using namespace std;
 
-<<<<<<< HEAD:src/modules/nutrient/NutrCH_QUAL2E/NutrCH_QUAL2E.cpp
 NutrCH_QUAL2E::NutrCH_QUAL2E(void) :
-=======
-NutrientCH_IUH::NutrientCH_IUH(void) :
->>>>>>> upstream/master:src/modules/nutrient/NutrCH_IUH/NutrCH_IUH.cpp
 //input
         m_dt(-1), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1), igropt(-1),
         m_ai0(-1), m_ai1(-1), m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1),
@@ -42,11 +34,7 @@ NutrientCH_IUH::NutrientCH_IUH(void) :
 
 }
 
-<<<<<<< HEAD:src/modules/nutrient/NutrCH_QUAL2E/NutrCH_QUAL2E.cpp
 NutrCH_QUAL2E::~NutrCH_QUAL2E(void)
-=======
-NutrientCH_IUH::~NutrientCH_IUH(void)
->>>>>>> upstream/master:src/modules/nutrient/NutrCH_IUH/NutrCH_IUH.cpp
 {
 
     if (m_algae != NULL) Release1DArray(m_algae);
@@ -457,6 +445,7 @@ int NutrCH_QUAL2E::Execute()
 
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     map<int, vector<int> > ::iterator it;
     for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
     {
