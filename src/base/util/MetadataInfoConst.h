@@ -91,6 +91,8 @@ enum dimensionTypes
             DT_Scenario = 7,
     /// Reach parameters
             DT_Reach = 8,
+	/// Subbasin instances
+			DT_Subbasin = 9
     ///// Lookup tables, TODO LJ
     //        DT_LookupTable = 9,
     ///// Lapse rate array, TODO need more detail description

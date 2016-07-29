@@ -107,6 +107,10 @@ bool SettingsOutput::LoadSettingsOutputFromMongoDB(int subBasinID)
 		ostringstream oss;
 		oss << subBasinID << "_";
 		string strSubbasinID = oss.str();
+		bool isRaster = false;
+		string gtiff(GTiffExtension);
+		if (gtiff.find(suffix) != gtiff.npos)
+			isRaster = true;
 		/// Check Tag_OutputSubbsn first
 		if (StringMatch(subBsn, Tag_Outlet)) /// Output of outlet, such as Qoutlet, SEDoutlet, etc.
 		{
@@ -115,19 +119,28 @@ bool SettingsOutput::LoadSettingsOutputFromMongoDB(int subBasinID)
 			pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName, ValueToString(m_outletID), suffix, m_conn, m_outputGfs, true);
 			//pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName, suffix);
 		}
-		else if (StringMatch(subBsn, Tag_AllSubbsn)) /// Output of all subbasins
+		else if (StringMatch(subBsn, Tag_AllSubbsn) && isRaster) 
 		{
+			/// Output of all subbasins of DT_Raster1D or DT_Raster2D
 			vector<string> aggTypes = utils::SplitString(aggType, ',');
 			for(vector<string>::iterator it = aggTypes.begin(); it != aggTypes.end(); it++)
 				pi->AddPrintItem(*it, sTimeStr, eTimeStr, strSubbasinID + coreFileName, suffix, m_conn, m_outputGfs);
 		}
-		else
+		else // subbasin IDs is provided
 		{
 			pi->setInterval(interval);
 			pi->setIntervalUnits(intervalUnit);
-			vector<string> subBsns = utils::SplitString(subBsn, ',');
+			vector<string> subBsns;
+			if (StringMatch(subBsn, Tag_AllSubbsn))
+			{
+				for(int i = 0; i <= m_nSubbasins; i++)
+					subBsns.push_back(ValueToString(i));
+				vector<string>(subBsns).swap(subBsns);
+			}
+			else
+				subBsns = utils::SplitString(subBsn, ',');
 			for(vector<string>::iterator it = subBsns.begin(); it != subBsns.end(); it++)
-				pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName,*it, suffix, m_conn, m_outputGfs, true);
+				pi->AddPrintItem(sTimeStr, eTimeStr, strSubbasinID + coreFileName, *it, suffix, m_conn, m_outputGfs, true);
 		}
     }
 	for (map<string, PrintInfo*>::iterator it = m_printInfosMap.begin(); it != m_printInfosMap.end(); it++)

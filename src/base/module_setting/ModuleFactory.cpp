@@ -1,54 +1,16 @@
-/*!
- * \file ModuleFactory.cpp
- * \brief Constructor of ModuleFactory from config file
- *
- *
- *
- * \author Junzhi Liu, LiangJun Zhu
- * \version 1.1
- * \date June 2015
- *
- * 
- */
-
-//#ifndef linux
-//
-//#include <WinSock2.h>
-//#include <Windows.h>
-//
-//#else
-//#include <unistd.h>
-//#include <sys/types.h>
-//#include <stdio.h>
-//#include <dlfcn.h>
-//#include <stdlib.h>
-//#include <sys/stat.h>
-//#include <fcntl.h>
-//#endif
-//
-//
-//#include <time.h>
-//#include <string>
-//#include <fstream>
-////#include "bson.h"
-//#include "text.h"
-//#include "util.h"
-//#include "utils.h"
-//#include "ModelException.h"
-//#include "MetadataInfoConst.h"
-//#include "MetadataInfo.h"
-//#include "MongoUtil.h"
 #include "ModuleFactory.h"
 
 ModuleFactory::ModuleFactory(const string &configFileName, const string &modelPath, mongoc_client_t *conn,
-                             const string &dbName, LayeringMethod layingMethod, int scenarioID)
-        : m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod),
-          m_scenarioID(scenarioID), m_reaches(NULL), m_scenario(NULL)
+                             const string &dbName, int subBasinID, LayeringMethod layingMethod, int scenarioID)
+        : m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_subBasinID(subBasinID), 
+          m_layingMethod(layingMethod), m_scenarioID(scenarioID),
+		  m_reaches(NULL), m_scenario(NULL), m_subbasins(NULL)
 {
     Init(configFileName);
 #ifdef USE_MONGODB
     bson_error_t *err = NULL;
     m_spatialData = mongoc_client_get_gridfs(m_conn, m_dbName.c_str(), DB_TAB_SPATIAL, err);
+	m_rsMap.clear();
     if (err != NULL)
         throw ModelException("ModuleFactory", "Constructor", "Failed to connect to " + string(DB_TAB_SPATIAL) + " GridFS!\n");
 
@@ -61,19 +23,7 @@ ModuleFactory::ModuleFactory(const string &configFileName, const string &modelPa
 #endif
 }
 
-//ModuleFactory::ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario)
-//	:m_modulePath(modelPath), m_conn(conn), m_dbName(dbName), m_layingMethod(layingMethod), m_scenario(scenario), m_reaches(NULL)
-//{
-//	Init(configFileName);
-//#ifdef USE_MONGODB
-//	bson_error_t *err = NULL;
-//	m_spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
-//	if (err != NULL)
-//	{
-//		throw ModelException("ModuleFactory","Constructor","Failed to connect to GridFS!\n");
-//	}
-//#endif
-//}
+
 ModuleFactory::~ModuleFactory(void)
 {
 #ifdef USE_MONGODB
@@ -127,7 +77,7 @@ ModuleFactory::~ModuleFactory(void)
     }
     m_weightDataMap.clear();
 
-    for (map<string, clsRasterData *>::iterator it = m_rsMap.begin(); it != m_rsMap.end(); it)
+    for (map<string, clsRasterData *>::iterator it = m_rsMap.begin(); it != m_rsMap.end();)
     {
         if (it->second != NULL)
         {
@@ -164,7 +114,11 @@ ModuleFactory::~ModuleFactory(void)
         delete m_reaches;
         m_reaches = NULL;
     }
-
+	if (m_subbasins != NULL)
+	{
+		delete m_subbasins;
+		m_subbasins = NULL;
+	}
     for (size_t i = 0; i < m_dllHandles.size(); i++)
     {
 #ifndef linux
@@ -469,6 +423,7 @@ dimensionTypes ModuleFactory::MatchType(string strType)
     if (StringMatch(strType, Type_Raster2D)) typ = DT_Raster2D;
     if (StringMatch(strType, Type_Scenario)) typ = DT_Scenario;
     if (StringMatch(strType, Type_Reach)) typ = DT_Reach;
+	if (StringMatch(strType, Type_Subbasin)) typ = DT_Subbasin;
     //if (StringMatch(strType, Type_SiteInformation)) typ = DT_SiteInformation;
     //if (StringMatch(strType, Type_LapseRateArray)) typ = DT_LapseRateArray;
     //if (StringMatch(strType, Type_LookupTable)) typ = DT_LookupTable;
@@ -999,7 +954,7 @@ void ModuleFactory::SetData(string &dbName, int nSubbasin, SEIMSModuleSetting *s
     }
     //cout << "set " + name + " for module " + m_ModuleID << endl;
     //clock_t start = clock();
-    const char *paramName = name.c_str();
+    //const char *paramName = name.c_str(); // not used variable. LJ
     ostringstream oss;
     oss << nSubbasin << "_" << name;
     if (StringMatch(name, Tag_Weight))
@@ -1043,6 +998,9 @@ void ModuleFactory::SetData(string &dbName, int nSubbasin, SEIMSModuleSetting *s
 			break;
 		case DT_Reach:
 			SetReaches(pModule);
+			break;
+		case DT_Subbasin:
+			SetSubbasins(pModule);
 			break;
         //case DT_SiteInformation:
         //    break;
@@ -1404,6 +1362,18 @@ void ModuleFactory::SetReaches(SimulationModule *pModule)
     if (NULL == m_reaches)
         m_reaches = new clsReaches(m_conn, m_dbName, DB_TAB_REACH);
     pModule->SetReaches(m_reaches);
+}
+void ModuleFactory::AddMaskRaster(string maskName, clsRasterData *maskData)
+{
+	if (m_rsMap.find(maskName) == m_rsMap.end()) // not loaded yet
+		m_rsMap[maskName] = maskData;
+}
+/// Added by Liang-Jun Zhu, 2016-7-28
+void ModuleFactory::SetSubbasins(SimulationModule *pModule)
+{
+	if(NULL == m_subbasins)
+		m_subbasins = new clsSubbasins(m_spatialData, m_rsMap, m_subBasinID);
+	pModule->SetSubbasins(m_subbasins);
 }
 
 void ModuleFactory::UpdateInput(vector<SimulationModule *> &modules, SettingsInput *inputSetting, time_t t)

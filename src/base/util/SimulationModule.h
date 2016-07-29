@@ -16,6 +16,7 @@
 #include <omp.h>
 #include "Scenario.h"  /// added by LJ. 2016-6-14
 #include "clsReach.h"
+#include "clsSubbasin.h"
 
 using namespace std;
 /*!
@@ -124,18 +125,23 @@ public:
         throw ModelException("SimulationModule", "Get2DArrayData", "This function is not implemented.");
     };
 
-    //! Set pointer of scenario class which contains all BMP information. Added by LJ, 2016-6-14
+    //! Set pointer of Scenario class which contains all BMP information. Added by LJ, 2016-6-14
     virtual void SetScenario(MainBMP::Scenario *)
     {
         throw ModelException("SimulationModule", "SetScenario", "This function is not implemented.");
     }
 
-    //! Set pointer of reaches class which contains all reaches information. Added by LJ, 2016-7-2
+    //! Set pointer of clsReaches class which contains all reaches information. Added by LJ, 2016-7-2
     virtual void SetReaches(clsReaches *)
     {
         throw ModelException("SimulationModule", "SetReaches", "This function is not implemented.");
     }
 
+	//! Set pointer of clsSubbasins class which contains all subbasins information. Added by LJ, 2016-7-28
+	virtual void SetSubbasins(clsSubbasins *)
+	{
+		throw ModelException("SimulationModule", "SetSubbasins", "This function is not implemented.");
+	}
     //! Get time step type
     virtual TimeStepType GetTimeStepType()
     {
