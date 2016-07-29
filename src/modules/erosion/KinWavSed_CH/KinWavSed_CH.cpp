@@ -20,14 +20,14 @@
 
 using namespace std;
 
-KinWavSed_CH::KinWavSed_CH(void) : m_CellWith(-1), m_nCells(-1), m_TimeStep(NODATA), m_chNumber(-1), m_Slope(NULL),
+KinWavSed_CH::KinWavSed_CH(void) : m_CellWith(-1), m_nCells(-1), m_TimeStep(NODATA_VALUE), m_chNumber(-1), m_Slope(NULL),
                                    m_chWidth(NULL), m_ChannelWH(NULL), m_flowInIndex(NULL), m_flowOutIndex(NULL),
                                    m_reachId(NULL), m_streamOrder(NULL),
                                    m_sourceCellIds(NULL), m_streamLink(NULL), m_ChQkin(NULL), m_ChVol(NULL),
                                    m_Qsn(NULL), m_CHDETFlow(NULL), m_CHSedDep(NULL),
-                                   m_CHSed_kg(NULL), m_ChDetCo(NODATA), m_USLE_K(NULL), m_SedToChannel(NULL),
+                                   m_CHSed_kg(NULL), m_ChDetCo(NODATA_VALUE), m_USLE_K(NULL), m_SedToChannel(NULL),
                                    m_ChV(NULL),
-                                   m_ChManningN(NULL), m_ChTcCo(NODATA), m_CHSedConc(NULL), m_depCh(NULL)
+                                   m_ChManningN(NULL), m_ChTcCo(NODATA_VALUE), m_CHSedConc(NULL), m_depCh(NULL)
 {//m_SedSubbasin(NULL), deprecated by LJ
 }
 

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-IUH_IF::IUH_IF(void) : m_TimeStep(-1), m_nCells(-1), m_CellWidth(NODATA), m_nsub(-1), m_subbasin(NULL),
+IUH_IF::IUH_IF(void) : m_TimeStep(-1), m_nCells(-1), m_CellWidth(NODATA_VALUE), m_nsub(-1), m_subbasin(NULL),
                        m_iuhCell(NULL), m_ssru(NULL), m_iuhCols(-1), m_cellFlowCols(-1)
 {
     m_Q_SBIF = NULL;
@@ -36,7 +36,7 @@ bool IUH_IF::CheckInputData(void)
         throw ModelException("IUH_IF", "CheckInputData", "The parameter: m_nCells has not been set.");
         return false;
     }
-    if (FloatEqual(m_CellWidth, NODATA))
+    if (FloatEqual(m_CellWidth, NODATA_VALUE))
     {
         throw ModelException("IUH_IF", "CheckInputData", "The parameter: m_CellWidth has not been set.");
         return false;

@@ -6,12 +6,12 @@
 
 #include <omp.h>
 
-SUR_GA::SUR_GA(void) : m_TimeStep(NODATA), m_Conductivity(NULL), m_porosity(NULL), m_clay(NULL), m_sand(NULL),
+SUR_GA::SUR_GA(void) : m_TimeStep(NODATA_VALUE), m_Conductivity(NULL), m_porosity(NULL), m_clay(NULL), m_sand(NULL),
                        m_rootDepth(NULL),
                        m_CN2(NULL), m_P_NET(NULL), m_cellSize(-1), m_fieldCap(NULL), m_wiltingPoint(NULL),
                        m_soilMoisture(NULL), m_INFRate(NULL),
-                       m_SD(NULL), m_tMin(NULL), m_tMax(NULL), m_Tsnow(NODATA), m_Tsoil(NODATA), m_Sfrozen(NODATA),
-                       m_T0(NODATA), m_SM(NULL),
+                       m_SD(NULL), m_tMin(NULL), m_tMax(NULL), m_Tsnow(NODATA_VALUE), m_Tsoil(NODATA_VALUE), m_Sfrozen(NODATA_VALUE),
+                       m_T0(NODATA_VALUE), m_SM(NULL),
                        m_SA(NULL), m_TS(NULL), m_mask(NULL), m_INFIL(NULL), m_PE(NULL), m_date(-1), m_w1(NULL),
                        m_w2(NULL), m_sMax(NULL), m_wfmp(NULL)
 {
@@ -122,7 +122,7 @@ bool SUR_GA::CheckInputData(void)
     //	return false;
     //}
 
-    if (FloatEqual(this->m_Sfrozen, NODATA))
+    if (FloatEqual(this->m_Sfrozen, NODATA_VALUE))
     {
         throw ModelException("SUR_GA", "CheckInputData", "The frozen soil moisture of the input data can not be NULL.");
         return false;
@@ -147,20 +147,20 @@ bool SUR_GA::CheckInputData(void)
         return false;
     }
 
-    if (FloatEqual(this->m_Tsnow, NODATA))
+    if (FloatEqual(this->m_Tsnow, NODATA_VALUE))
     {
         throw ModelException("SUR_GA", "CheckInputData", "The snowfall temperature of the input data can not be NULL.");
         return false;
     }
 
-    if (FloatEqual(this->m_Tsoil, NODATA))
+    if (FloatEqual(this->m_Tsoil, NODATA_VALUE))
     {
         throw ModelException("SUR_GA", "CheckInputData",
                              "The soil freezing temperature of the input data can not be NULL.");
         return false;
     }
 
-    if (FloatEqual(this->m_T0, NODATA))
+    if (FloatEqual(this->m_T0, NODATA_VALUE))
     {
         throw ModelException("SUR_GA", "CheckInputData",
                              "The snowmelt threshold temperature of the input data can not be NULL.");

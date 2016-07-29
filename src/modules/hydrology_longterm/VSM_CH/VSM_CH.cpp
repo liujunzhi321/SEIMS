@@ -25,8 +25,8 @@
 #define NODATA_VALUE -99
 using namespace std;
 
-VSM_CH::VSM_CH(void): m_dt(-1), m_nreach(-1), m_Kchb(NODATA), 
-	m_Kbank(NODATA), m_Epch(NODATA),m_Bnk0(NODATA), m_Chs0(NODATA), m_aBank(NODATA), m_bBank(NODATA), m_subbasin(NULL), m_qsSub(NULL),  
+VSM_CH::VSM_CH(void): m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE), 
+	m_Kbank(NODATA_VALUE), m_Epch(NODATA_VALUE),m_Bnk0(NODATA_VALUE), m_Chs0(NODATA_VALUE), m_aBank(NODATA_VALUE), m_bBank(NODATA_VALUE), m_subbasin(NULL), m_qsSub(NULL),  
 	m_qiSub(NULL), m_qgSub(NULL),m_PETch(NULL),m_gwStorage(NULL), m_area(NULL), m_Vseep0(0.f),
 	m_Vdiv(NULL), m_Vpoint(NULL), m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL), m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL),
 	m_widthcurrent(NULL), m_depthcurrent(NULL), m_slopecurrent(NULL),m_widthbottom(NULL),m_sideslopeMain(1.0f),
@@ -92,35 +92,35 @@ bool VSM_CH::CheckInputData(void)
 		throw ModelException("VSM_CH","CheckInputData","The parameter: m_nreach has not been set.");
 	}
 
-	if (FloatEqual(m_Kchb,NODATA))
+	if (FloatEqual(m_Kchb,NODATA_VALUE))
 	{
 		throw ModelException("VSM_CH","CheckInputData","The parameter: K_chb has not been set.");
 	}
-	if (FloatEqual(m_Kbank,NODATA))
+	if (FloatEqual(m_Kbank,NODATA_VALUE))
 	{
 		throw ModelException("VSM_CH","CheckInputData","The parameter: K_bank has not been set.");
 	}
-	if (FloatEqual(m_Epch,NODATA))
+	if (FloatEqual(m_Epch,NODATA_VALUE))
 	{
 		throw ModelException("VSM_CH","CheckInputData","The parameter: Ep_ch has not been set.");
 	}
-	if (FloatEqual(m_Bnk0,NODATA))
+	if (FloatEqual(m_Bnk0,NODATA_VALUE))
 	{
 		throw ModelException("VSM_CH","CheckInputData","The parameter: Bnk0 has not been set.");
 	}
-	if (FloatEqual(m_Chs0,NODATA))
+	if (FloatEqual(m_Chs0,NODATA_VALUE))
 	{
 		throw ModelException("VSM_CH","CheckInputData","The parameter: Chs0 has not been set.");
 	}
-	if (FloatEqual(m_aBank,NODATA))
+	if (FloatEqual(m_aBank,NODATA_VALUE))
 	{
 		throw ModelException("VSM_CH","CheckInputData","The parameter: A_bnk has not been set.");
 	}
-	if (FloatEqual(m_bBank,NODATA))
+	if (FloatEqual(m_bBank,NODATA_VALUE))
 	{
 		throw ModelException("VSM_CH","CheckInputData","The parameter: B_bnk has not been set.");
 	}
-	if (FloatEqual(m_Vseep0,NODATA))
+	if (FloatEqual(m_Vseep0,NODATA_VALUE))
 	{
 		throw ModelException("VSM_CH","CheckInputData","The parameter: m_Vseep0 has not been set.");
 	}

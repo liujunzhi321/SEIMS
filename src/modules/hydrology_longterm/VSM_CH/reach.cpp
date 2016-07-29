@@ -4,11 +4,11 @@
 
 reach::reach(void)
 {
-	m_Vseep = NODATA;
-	m_VBank1 = NODATA;
+	m_Vseep = NODATA_VALUE;
+	m_VBank1 = NODATA_VALUE;
 	m_RchParam = NULL;
-	m_Qin = NODATA;
-	m_TlOutflow = NODATA;
+	m_Qin = NODATA_VALUE;
+	m_TlOutflow = NODATA_VALUE;
 	clear();
 }
 
@@ -107,9 +107,9 @@ void reach::update_QS_QI_QG(float Kchb, float Kbank, float Epch, float Bnk0,
 	float PETch, float GWSsub, float Vseep0)
 {
 	// initial value
-	if (m_Vseep == NODATA) 
+	if (m_Vseep == NODATA_VALUE) 
 		m_Vseep = Vseep0;
-	if (m_VBank1 == NODATA) 
+	if (m_VBank1 == NODATA_VALUE) 
 		m_VBank1 = Bnk0;
 
 	//calculate transmission losses to deep aquifer

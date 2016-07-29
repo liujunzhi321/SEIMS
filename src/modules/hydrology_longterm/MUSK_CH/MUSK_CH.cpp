@@ -1,16 +1,3 @@
-/*!
- * \file MUSK_CH.cpp
- * \brief Overland routing using 4-point implicit finite difference method
- *
- *
- *
- * \author Junzhi Liu
- * \version 1.0
- * \date 23-Febrary-2011
- *
- * 
- */
-
 #include "MUSK_CH.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
@@ -23,23 +10,18 @@
 #include <algorithm> 
 #include <omp.h>
 
-//#define MINI_SLOPE 0.0001f
-//#define NODATA_VALUE -99
 using namespace std;
 
 //! Constructor
-MUSK_CH::MUSK_CH(void) : m_dt(-1), m_nreach(-1), m_Kchb(NODATA),
-                         m_Kbank(NODATA), m_Epch(NODATA), m_Bnk0(NODATA), m_Chs0(NODATA), m_aBank(NODATA),
-                         m_bBank(NODATA), m_subbasin(NULL), m_qsSub(NULL),
+MUSK_CH::MUSK_CH(void) : m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE),
+                         m_Kbank(NODATA_VALUE), m_Epch(NODATA_VALUE), m_Bnk0(NODATA_VALUE), m_Chs0(NODATA_VALUE), m_aBank(NODATA_VALUE),
+                         m_bBank(NODATA_VALUE), m_subbasin(NULL), m_qsSub(NULL),
                          m_qiSub(NULL), m_qgSub(NULL), m_petCh(NULL), m_gwStorage(NULL), m_area(NULL), m_Vseep0(0.f),
                          m_Vdiv(NULL), m_Vpoint(NULL), m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL),
                          m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL),
-                         m_x(0.2f), m_co1(0.7f), m_qIn(NULL), m_chStorage(NULL), m_vScalingFactor(1.0f),
-                         m_qUpReach(0.f), m_deepGroudwater(0.5f)  //90.f for fenkeng; 0 for Lyg;  0.5 for Dianbu
+                         m_x(NODATA_VALUE), m_co1(NODATA_VALUE), m_qIn(NULL), m_chStorage(NULL), m_vScalingFactor(1.0f),
+                         m_qUpReach(0.f), m_deepGroundwater(0.f),m_chWTdepth(NULL)
 {
-    m_chWTdepth = NULL;
-
-    //m_vScalingFactor(2.5f)
 }
 
 //! Destructor
@@ -68,87 +50,57 @@ MUSK_CH::~MUSK_CH(void)
 bool MUSK_CH::CheckInputData(void)
 {
     if (m_dt < 0)
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: m_dt has not been set.");
-    }
-
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: m_dt has not been set.");
     if (m_nreach < 0)
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: m_nreach has not been set.");
-    }
-
-    if (FloatEqual(m_Kchb, NODATA))
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: K_chb has not been set.");
-    }
-    if (FloatEqual(m_Kbank, NODATA))
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: K_bank has not been set.");
-    }
-    if (FloatEqual(m_Epch, NODATA))
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: Ep_ch has not been set.");
-    }
-    if (FloatEqual(m_Bnk0, NODATA))
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: Bnk0 has not been set.");
-    }
-    if (FloatEqual(m_Chs0, NODATA))
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: Chs0 has not been set.");
-    }
-    if (FloatEqual(m_aBank, NODATA))
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: A_bnk has not been set.");
-    }
-    if (FloatEqual(m_bBank, NODATA))
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: B_bnk has not been set.");
-    }
-    if (FloatEqual(m_Vseep0, NODATA))
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: m_Vseep0 has not been set.");
-    }
+		throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: m_nreach has not been set.");
+	if (FloatEqual(m_x, NODATA_VALUE))
+		throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: m_x has not been set.");
+	if (FloatEqual(m_co1, NODATA_VALUE))
+		throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: m_co1 has not been set.");
+    if (FloatEqual(m_Kchb, NODATA_VALUE))
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: K_chb has not been set.");
+    if (FloatEqual(m_Kbank, NODATA_VALUE))
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: K_bank has not been set.");
+    if (FloatEqual(m_Epch, NODATA_VALUE))
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: Ep_ch has not been set.");
+    if (FloatEqual(m_Bnk0, NODATA_VALUE))
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: Bnk0 has not been set.");
+    if (FloatEqual(m_Chs0, NODATA_VALUE))
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: Chs0 has not been set.");
+    if (FloatEqual(m_aBank, NODATA_VALUE))
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: A_bnk has not been set.");
+    if (FloatEqual(m_bBank, NODATA_VALUE))
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: B_bnk has not been set.");
+    if (FloatEqual(m_Vseep0, NODATA_VALUE))
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: m_Vseep0 has not been set.");
     if (m_subbasin == NULL)
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: m_subbasin has not been set.");
-    }
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: m_subbasin has not been set.");
     if (m_qsSub == NULL)
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: Q_SBOF has not been set.");
-    }
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: Q_SBOF has not been set.");
     //if (m_qiSub == NULL)
-    //{
-    //	throw ModelException("MUSK_CH","CheckInputData","The parameter: Q_SBIF has not been set.");
-    //}
+    //	throw ModelException(MID_MUSK_CH,"CheckInputData","The parameter: Q_SBIF has not been set.");
     //if (m_qgSub == NULL)
-    //{
-    //	throw ModelException("MUSK_CH","CheckInputData","The parameter: QG_sub has not been set.");
-    //}
-/*	if (m_petCh == NULL)
-	{
-		throw ModelException("MUSK_CH","CheckInputData","The parameter: SBPET has not been set.");
-	}*/
+    //	throw ModelException(MID_MUSK_CH,"CheckInputData","The parameter: QG_sub has not been set.");
+	//if (m_petCh == NULL)
+	//	throw ModelException(MID_MUSK_CH,"CheckInputData","The parameter: SBPET has not been set.");
     //if (m_gwStorage == NULL)
     //{
-    //	throw ModelException("MUSK_CH","CheckInputData","The parameter: GW_sub has not been set.");
+    //	throw ModelException(MID_MUSK_CH,"CheckInputData","The parameter: GW_sub has not been set.");
     //}
     if (m_chWidth == NULL)
-    {
-        throw ModelException("MUSK_CH", "CheckInputData", "The parameter: RchParam has not been set.");
-    }
+        throw ModelException(MID_MUSK_CH, "CheckInputData", "The parameter: RchParam has not been set.");
     return true;
 }
 
-//! Initial ouputs
+//! Initial outputs
 void  MUSK_CH::initialOutputs()
 {
     if (m_nreach <= 0)
-        throw ModelException("MUSK_CH", "initialOutputs", "The cell number of the input can not be less than zero.");
+        throw ModelException(MID_MUSK_CH, "initialOutputs", "The reach number can not be less than zero.");
 
     if (m_reachLayers.empty())
     {
-        CheckInputData();
+        //CheckInputData();
         for (int i = 1; i <= m_nreach; i++)
         {
             int order = (int) m_chOrder[i];
@@ -187,7 +139,6 @@ void  MUSK_CH::initialOutputs()
             m_qiCh[i] = qiSub;
             m_qgCh[i] = qgSub;
             m_chWTdepth[i] = 0.f;
-
         }
     }
 }
@@ -195,6 +146,7 @@ void  MUSK_CH::initialOutputs()
 //! Execute function
 int MUSK_CH::Execute()
 {
+	CheckInputData();
     initialOutputs();
 
     map<int, vector<int> >::iterator it;
@@ -221,10 +173,8 @@ int MUSK_CH::Execute()
 bool MUSK_CH::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
-    {
-        //StatusMsg("Input data for "+string(key) +" is invalid. The size could not be less than zero.");
-        return false;
-    }
+		throw ModelException(MID_MUSK_CH, "CheckInputSize",
+		"Input data for " + string(key) + " is invalid. The size could not be less than zero.");
 #ifdef STORM_MODEL
     if(m_nreach != n-1)
     {
@@ -235,7 +185,7 @@ bool MUSK_CH::CheckInputSize(const char *key, int n)
             //StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
             ostringstream oss;
             oss << "Input data for "+string(key) << " is invalid with size: " << n << ". The origin size is " << m_nreach << ".\n";
-            throw ModelException("MUSK_CH","CheckInputSize",oss.str());
+            throw ModelException(MID_MUSK_CH,"CheckInputSize",oss.str());
         }
     }
 #else
@@ -249,7 +199,7 @@ bool MUSK_CH::CheckInputSize(const char *key, int n)
             ostringstream oss;
             oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
             m_nreach << ".\n";
-            throw ModelException("MUSK_CH", "CheckInputSize", oss.str());
+            throw ModelException(MID_MUSK_CH, "CheckInputSize", oss.str());
         }
     }
 #endif
@@ -296,62 +246,23 @@ void MUSK_CH::SetValue(const char *key, float value)
 {
     string sk(key);
 
-    if (StringMatch(sk, VAR_QUPREACH))
-        m_qUpReach = value;
-    else if (StringMatch(sk, VAR_VSF))
-        m_vScalingFactor = value;
-    else if (StringMatch(sk, Tag_ChannelTimeStep))
-    {
-        m_dt = (int) value;
-    }
-    else if (StringMatch(sk, VAR_OMP_THREADNUM))
-    {
-        omp_set_num_threads((int) value);
-    }
-    else if (StringMatch(sk, VAR_K_CHB))
-    {
-        m_Kchb = value;
-    }
-    else if (StringMatch(sk, VAR_K_BANK))
-    {
-        m_Kbank = value;
-    }
-    else if (StringMatch(sk, VAR_EP_CH))
-    {
-        m_Epch = value;
-    }
-    else if (StringMatch(sk, VAR_BNK0))
-    {
-        m_Bnk0 = value;
-    }
-    else if (StringMatch(sk, VAR_CHS0))
-    {
-        m_Chs0 = value;
-    }
-    else if (StringMatch(sk, VAR_VSEEP0))
-    {
-        m_Vseep0 = value;
-    }
-    else if (StringMatch(sk, VAR_A_BNK))
-    {
-        m_aBank = value;
-    }
-    else if (StringMatch(sk, VAR_B_BNK))
-    {
-        m_bBank = value;
-    }
-    else if (StringMatch(sk, VAR_MSK_X))
-    {
-        m_x = value;
-    }
-    else if (StringMatch(sk, VAR_MSK_CO1))
-    {
-        m_co1 = value;
-    }
+    if (StringMatch(sk, VAR_QUPREACH)) m_qUpReach = value;
+    else if (StringMatch(sk, VAR_VSF)) m_vScalingFactor = value;
+    else if (StringMatch(sk, Tag_ChannelTimeStep)) m_dt = (int) value;
+    else if (StringMatch(sk, VAR_OMP_THREADNUM))omp_set_num_threads((int) value);
+    else if (StringMatch(sk, VAR_K_CHB))m_Kchb = value;
+    else if (StringMatch(sk, VAR_K_BANK))m_Kbank = value;
+    else if (StringMatch(sk, VAR_EP_CH))m_Epch = value;
+    else if (StringMatch(sk, VAR_BNK0))m_Bnk0 = value;
+    else if (StringMatch(sk, VAR_CHS0))m_Chs0 = value;
+    else if (StringMatch(sk, VAR_VSEEP0))m_Vseep0 = value;
+    else if (StringMatch(sk, VAR_A_BNK))m_aBank = value;
+    else if (StringMatch(sk, VAR_B_BNK))m_bBank = value;
+    else if (StringMatch(sk, VAR_MSK_X))m_x = value;
+	else if (StringMatch(sk, VAR_MSK_CO1))m_co1 = value;
+	else if (StringMatch(sk, VAR_GWRQ))m_deepGroundwater = value;
     else
-        throw ModelException("MUSK_CH", "SetSingleData", "Parameter " + sk
-                                                         + " does not exist. Please contact the module developer.");
-
+        throw ModelException(MID_MUSK_CH, "SetValue", "Parameter " + sk + " does not exist in current module.");
 }
 
 //! Set 1D data
@@ -359,10 +270,7 @@ void MUSK_CH::Set1DData(const char *key, int n, float *value)
 {
     string sk(key);
     //check the input data
-    if (StringMatch(sk, VAR_SUBBSN))
-    {
-        m_subbasin = value;   //m_subbasin
-    }
+    if (StringMatch(sk, VAR_SUBBSN))m_subbasin = value;
     else if (StringMatch(sk, VAR_SBOF))
     {
         CheckInputSize(key, n);
@@ -390,9 +298,7 @@ void MUSK_CH::Set1DData(const char *key, int n, float *value)
         m_Vpoint = value;
     }
     else
-        throw ModelException("MUSK_CH", "Set1DData", "Parameter " + sk
-                                                     + " does not exist. Please contact the module developer.");
-
+        throw ModelException(MID_MUSK_CH, "Set1DData", "Parameter " + sk + " does not exist in current module.");
 }
 
 //! Get value
@@ -403,14 +309,13 @@ void MUSK_CH::GetValue(const char *key, float *value)
     if (StringMatch(sk, VAR_QOUTLET))
     {
         //*value = m_qsCh[iOutlet];
-        m_qOut[0] = m_qOut[iOutlet] + m_deepGroudwater;
+        m_qOut[0] = m_qOut[iOutlet] + m_deepGroundwater;
         *value = m_qOut[0];
     }
     else if (StringMatch(sk, VAR_QSOUTLET))
     {
         *value = m_qsCh[iOutlet];
     }
-
 }
 
 //! Get 1D data
@@ -421,7 +326,7 @@ void MUSK_CH::Get1DData(const char *key, int *n, float **data)
     int iOutlet = m_reachLayers.rbegin()->second[0];
     if (StringMatch(sk, VAR_QRECH))
     {
-        m_qOut[0] = m_qOut[iOutlet] + m_deepGroudwater;
+        m_qOut[0] = m_qOut[iOutlet] + m_deepGroundwater;
         *data = m_qOut;
     }
     else if (StringMatch(sk, VAR_QS))
@@ -460,9 +365,7 @@ void MUSK_CH::Get1DData(const char *key, int *n, float **data)
         *data = m_chWTdepth;
     }
     else
-        throw ModelException("MUSK_CH", "Get1DData", "Output " + sk
-                                                     +
-                                                     " does not exist in the MUSK_CH module. Please contact the module developer.");
+        throw ModelException(MID_MUSK_CH, "Get1DData", "Output " + sk+" does not exist in the current module.");
 
 }
 
@@ -470,7 +373,7 @@ void MUSK_CH::Get1DData(const char *key, int *n, float **data)
 void MUSK_CH::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 {
     string sk(key);
-    throw ModelException("MUSK_CH", "Get2DData", "Output " + sk
+    throw ModelException(MID_MUSK_CH, "Get2DData", "Output " + sk
                                                  +
                                                  " does not exist in the MUSK_CH module. Please contact the module developer.");
 
@@ -507,8 +410,7 @@ void MUSK_CH::Set2DData(const char *key, int nrows, int ncols, float **data)
         }
     }
     else
-        throw ModelException("MUSK_CH", "Set2DData", "Parameter " + sk
-                                                     + " does not exist. Please contact the module developer.");
+        throw ModelException(MID_MUSK_CH, "Set2DData", "Parameter " + sk + " does not exist.");
 
 }
 
@@ -530,30 +432,6 @@ void MUSK_CH::GetDt(float timeStep, float fmin, float fmax, float &dt, int &n)
         n++;
         dt = timeStep / n;
     }
-
-    //if (timeStep > fmax)
-    //{
-    //	if (timeStep/2. <= fmax)
-    //	{
-    //		dt = 12*3600.f;
-    //		n = 2;
-    //	}
-    //	else if (timeStep/4. <= fmax)
-    //	{
-    //		dt = 6*3600.f;
-    //		n = 4;
-    //	}
-    //	else
-    //	{
-    //		dt = 3600.f;
-    //		n = 24;
-    //	}
-    //}
-    //else
-    //{
-    //	dt = timeStep;
-    //	n = 1;
-    //}
 }
 
 //! Get coefficients
@@ -562,8 +440,8 @@ void MUSK_CH::GetCoefficients(float reachLength, float v0, MuskWeights &weights)
     v0 = m_vScalingFactor * v0;
     float K = (4.64f - 3.64f * m_co1) * reachLength / (5.f * v0 / 3.f);
 
-    float min = 2.0f * K * m_x;
-    float max = 2.0f * K * (1 - m_x);
+    float min = 2.f * K * m_x;
+    float max = 2.f * K * (1.f - m_x);
     float dt;
     int n;
     GetDt((float) m_dt, min, max, dt, n);
@@ -581,12 +459,12 @@ void MUSK_CH::GetCoefficients(float reachLength, float v0, MuskWeights &weights)
     if (weights.c1 < 0)
     {
         weights.c2 += weights.c1;
-        weights.c1 = 0.0f;
+        weights.c1 = 0.f;
     }
     if (weights.c3 < 0)
     {
         weights.c2 += weights.c1;
-        weights.c3 = 0.0f;
+        weights.c3 = 0.f;
     }
 }
 
@@ -621,7 +499,7 @@ void MUSK_CH::ChannelFlow(int i)
     qIn += m_qUpReach; // m_qUpReach is zero for not-parallel program and qsUp, qiUp and qgUp are zero for parallel computing
 
     // 3. water from bank storage
-    float bankOut = m_bankStorage[i] * (1 - exp(-m_aBank));
+    float bankOut = m_bankStorage[i] * (1.f - exp(-m_aBank));
 
     m_bankStorage[i] -= bankOut;
     qIn += bankOut / m_dt;
@@ -659,7 +537,7 @@ void MUSK_CH::ChannelFlow(int i)
 
     // 2. calculate transmission losses to bank storage
     float dch = m_chStorage[i] / (m_chWidth[i] * m_chLen[i]);
-    float bankInLoss = 2 * m_Kbank / 1000.f / 3600.f * dch * m_chLen[i] * m_dt;   // m3/s
+    float bankInLoss = 2.f * m_Kbank / 1000.f / 3600.f * dch * m_chLen[i] * m_dt;   // m3/s
     bankInLoss = 0.f;
     if (m_chStorage[i] > bankInLoss)
     {
@@ -672,7 +550,7 @@ void MUSK_CH::ChannelFlow(int i)
     }
     // water balance of the bank storage
     // loss the water from bank storage to the adjacent unsaturated zone and groundwater storage
-    float bankOutGw = m_bankStorage[i] * (1 - exp(-m_bBank));
+    float bankOutGw = m_bankStorage[i] * (1.f - exp(-m_bBank));
     bankOutGw = 0.f;
     m_bankStorage[i] = m_bankStorage[i] + bankInLoss - bankOutGw;
     if (m_gwStorage != NULL)
@@ -724,12 +602,8 @@ void MUSK_CH::ChannelFlow(int i)
         for (int j = 0; j < n; j++)
         {
             m_qOut[i] = wt.c1 * qIn + wt.c2 * m_qIn[i] + wt.c3 * m_qOut[i];
-
-
             m_qIn[i] = qIn;
-
             float tmp = m_chStorage[i] + (qIn - m_qOut[i]) * wt.dt;
-
             if (tmp < 0.f)
             {
                 m_qOut[i] = m_chStorage[i] / wt.dt + qIn;
@@ -757,6 +631,5 @@ void MUSK_CH::ChannelFlow(int i)
 
     // set variables for next time step
     m_qIn[i] = qIn;
-
     m_chWTdepth[i] = dch;
 }

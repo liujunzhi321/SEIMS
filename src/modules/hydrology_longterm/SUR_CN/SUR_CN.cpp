@@ -7,7 +7,7 @@
 
 #include <omp.h>
 
-SUR_CN::SUR_CN(void) : m_nCells(-1), m_Tsnow(NODATA), m_Tsoil(NODATA), m_T0(NODATA), m_Sfrozen(NODATA),
+SUR_CN::SUR_CN(void) : m_nCells(-1), m_Tsnow(NODATA_VALUE), m_Tsoil(NODATA_VALUE), m_T0(NODATA_VALUE), m_Sfrozen(NODATA_VALUE),
                        m_CN2(NULL), m_initSoilMoisture(NULL), m_rootDepth(NULL),
                        m_soilDepth(NULL), m_porosity(NULL), m_fieldCap(NULL), m_wiltingPoint(NULL),
                        m_P_NET(NULL), m_SD(NULL), m_tMean(NULL), m_TS(NULL), m_SM(NULL), m_SA(NULL),
@@ -49,25 +49,25 @@ bool SUR_CN::CheckInputData(void)
         throw ModelException(MID_SUR_CN, "CheckInputData", "The cell number of the input can not be less than zero.");
         return false;
     }
-    if (FloatEqual(m_Sfrozen, NODATA))
+    if (FloatEqual(m_Sfrozen, NODATA_VALUE))
     {
         throw ModelException(MID_SUR_CN, "CheckInputData",
                              "The frozen soil moisture of the input data can not be NULL.");
         return false;
     }
-    if (FloatEqual(m_Tsnow, NODATA))
+    if (FloatEqual(m_Tsnow, NODATA_VALUE))
     {
         throw ModelException(MID_SUR_CN, "CheckInputData",
                              "The snowfall temperature of the input data can not be NULL.");
         return false;
     }
-    if (FloatEqual(m_Tsoil, NODATA))
+    if (FloatEqual(m_Tsoil, NODATA_VALUE))
     {
         throw ModelException(MID_SUR_CN, "CheckInputData",
                              "The soil freezing temperature of the input data can not be NULL.");
         return false;
     }
-    if (FloatEqual(m_T0, NODATA))
+    if (FloatEqual(m_T0, NODATA_VALUE))
     {
         throw ModelException(MID_SUR_CN, "CheckInputData",
                              "The snowmelt threshold temperature of the input data can not be NULL.");

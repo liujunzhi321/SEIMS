@@ -146,7 +146,7 @@ void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename
     gfile = mongoc_gridfs_find_one(spatialData, b, err);
     if (err != NULL)
         throw ModelException("ModuleParamter", "Read1DArrayFromMongoDB",
-                             "Failed in  gridfs_find_query filename: " + remoteFilename + "\n");
+                             "Failed in gridfs_find_query filename: " + remoteFilename + "\n");
     size_t length = (size_t) mongoc_gridfs_file_get_length(gfile);
     mongoc_stream_t *stream = mongoc_stream_gridfs_new(gfile);
     num = length / 4;

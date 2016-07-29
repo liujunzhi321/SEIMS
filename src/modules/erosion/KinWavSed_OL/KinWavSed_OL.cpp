@@ -18,13 +18,13 @@
 
 using namespace std;
 
-KinWavSed_OL::KinWavSed_OL(void) : m_CellWidth(-1), m_nCells(-1), m_TimeStep(NODATA), m_nLayers(-1),
+KinWavSed_OL::KinWavSed_OL(void) : m_CellWidth(-1), m_nCells(-1), m_TimeStep(NODATA_VALUE), m_nLayers(-1),
                                    m_routingLayers(NULL),
                                    m_Slope(NULL), m_DETOverland(NULL), m_USLE_K(NULL), m_Ctrans(NULL), m_Qkin(NULL),
                                    m_FlowWidth(NULL), m_DETSplash(NULL),
-                                   m_eco1(NODATA), m_eco2(NODATA), m_V(NULL), m_Qsn(NULL), m_Vol(NULL), m_SedDep(NULL),
+                                   m_eco1(NODATA_VALUE), m_eco2(NODATA_VALUE), m_V(NULL), m_Qsn(NULL), m_Vol(NULL), m_SedDep(NULL),
                                    m_Sed_kg(NULL), m_SedToChannel(NULL),
-                                   m_ManningN(NULL), m_whtoCh(NULL), m_USLE_C(NULL), m_Ccoe(NODATA), m_WH(NULL),
+                                   m_ManningN(NULL), m_whtoCh(NULL), m_USLE_C(NULL), m_Ccoe(NODATA_VALUE), m_WH(NULL),
                                    m_streamLink(NULL)
 {
 

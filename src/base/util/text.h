@@ -428,9 +428,11 @@
 #define MID_CH_DW                                    "CH_DW"
 #define MDESC_CH_DW                            "Channel routing using diffusive wave equation."
 #define MID_CH_MSK                                    "CH_MSK"
-#define MDESC_CH_MSK                            "Channel routing using Muskingum-Cunge method."
+#define MDESC_CH_MSK                            "Channel routing using Muskingum-Cunge method of storm model."
 #define MID_IKW_CH                                    "IKW_CH"
 #define MDESC_IKW_CH                            "Channel routing using 4-point implicit finite difference method for kinematic wave."
+#define MID_MUSK_CH								"MUSK_CH"
+#define MDESC_MUSK_CH							"Channel routing using Muskingum-Cunge method of longterm model."
 /// Sediment routing related modules
 #define MCLS_SED_ROUTING                    "Sediment routing"
 #define MCLSDESC_SED_ROUTING        "Sediment channel routing modules."
@@ -618,6 +620,7 @@
 #define VAR_GWNEW "GWNEW"                           /// The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage
 #define VAR_GWNO3 "gwno3"
 #define VAR_GWWB "GWWB"        // groundwater water balance
+#define VAR_GWRQ "GWRQ"
 #define VAR_HCH "HCH"
 #define VAR_HITARG "hi_targ"
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/ha)
@@ -1126,6 +1129,7 @@
 #define DESC_GWNEW "The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage"
 #define DESC_GWNO3 "nitrate N concentration in groundwater loading to reach"
 #define DESC_GWWB "groundwater water balance"
+#define DESC_GWRQ "groundwater recharge to channel"
 #define DESC_HCH "Water depth in the downslope boundary of cells"
 #define DESC_HITARG "Harvest index target "
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"

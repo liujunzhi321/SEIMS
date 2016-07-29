@@ -18,7 +18,7 @@ using namespace std;
 
 NutrientOL_IKW::NutrientOL_IKW(void):
 //input
-        m_nCells(-1), m_cellWidth(-1), m_nLayers(-1), m_TimeStep(NODATA),
+        m_nCells(-1), m_cellWidth(-1), m_nLayers(-1), m_TimeStep(NODATA_VALUE),
         m_routingLayers(NULL), m_flowInIndex(NULL), m_FlowWidth(NULL), m_chWidth(NULL), m_streamLink(NULL),
         m_latno3(NULL), m_surqno3(NULL), m_surqsolp(NULL), m_no3gw(NULL),
         m_minpgw(NULL), m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL),
@@ -89,7 +89,7 @@ bool NutrientOL_IKW::CheckInputData()
     {
         throw ModelException(MID_NutOLRout, "CheckInputData", "The layers of reaches data can not be less than zero.");
     }
-    if (this->m_TimeStep == NODATA)
+    if (this->m_TimeStep == NODATA_VALUE)
     {
         throw ModelException(MID_NutOLRout, "CheckInputData", "The time can not be zero.");
     }

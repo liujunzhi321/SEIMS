@@ -11,10 +11,10 @@ SNO_WB::SNO_WB(void)
     // set default values for member variables
     //this->m_Date = -1;
     this->m_nCells = -1;
-    this->m_t0 = NODATA;
-    this->m_tsnow = NODATA;
-    this->m_kblow = NODATA;
-    this->m_swe0 = NODATA;
+    this->m_t0 = NODATA_VALUE;
+    this->m_tsnow = NODATA_VALUE;
+    this->m_kblow = NODATA_VALUE;
+    this->m_swe0 = NODATA_VALUE;
     this->m_SA = NULL;
     this->m_Pnet = NULL;
     this->m_tMax = NULL;
@@ -70,14 +70,14 @@ bool SNO_WB::CheckInputData(void)
         throw ModelException(MID_SNO_WB, "CheckInputData", "The max temperature data can not be NULL.");
     if (this->m_WindSpeed == NULL)
         throw ModelException(MID_SNO_WB, "CheckInputData", "The wind speed data can not be NULL.");
-    if (this->m_kblow == NODATA)
+    if (this->m_kblow == NODATA_VALUE)
         throw ModelException(MID_SNO_WB, "CheckInputData",
                              "The fraction coefficient of snow blowing into or out of the watershed can not be NULL.");
-    if (this->m_t0 == NODATA)
+    if (this->m_t0 == NODATA_VALUE)
         throw ModelException(MID_SNO_WB, "CheckInputData", "The snowmelt threshold temperature can not be NULL.");
-    if (this->m_tsnow == NODATA)
+    if (this->m_tsnow == NODATA_VALUE)
         throw ModelException(MID_SNO_WB, "CheckInputData", "The snowfall threshold temperature can not be NULL.");
-    if (this->m_swe0 == NODATA)
+    if (this->m_swe0 == NODATA_VALUE)
         throw ModelException(MID_SNO_WB, "CheckInputData", "The Initial snow water equivalent can not be NULL.");
     //if(this->m_subbasinSelected == NULL)	throw ModelException(MID_SNO_WB,"CheckInputData","The subbasin selected can not be NULL.");
     //if(this->m_subbasinSelectedCount < 0)	throw ModelException(MID_SNO_WB,"CheckInputData","The number of subbasin selected can not be lower than 0.");
@@ -108,7 +108,7 @@ void SNO_WB::initialOutputs()
             //	this->m_SA[i] = 0.0f;			// other seasons
         }
     }
-    if (m_SWE == NODATA)
+    if (m_SWE == NODATA_VALUE)
         m_SWE = 0.f;
 }
 
