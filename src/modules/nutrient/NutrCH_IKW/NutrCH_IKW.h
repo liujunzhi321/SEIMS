@@ -40,12 +40,12 @@ struct MuskWeights
     int n;  ///< number of division of the origin time step
 };
 
-class NutrientCHRoute : public SimulationModule
+class NutrientCH_IKW : public SimulationModule
 {
 public:
-    NutrientCHRoute(void);
+    NutrientCH_IKW(void);
 
-    ~NutrientCHRoute(void);
+    ~NutrientCH_IKW(void);
 
     virtual void SetValue(const char *key, float value);
 
