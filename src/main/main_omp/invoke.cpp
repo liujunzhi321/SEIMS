@@ -92,6 +92,8 @@ void checkProject(string projectPath)
     if (!util.FileExists(checkFilePath))
         throw ModelException("ModelMain", "checkProject", checkFilePath +
                                                           " does not exist or has not the read permission!");
+	// create OUTPUT folder and empty it
+	
 }
 
 bool isIPAddress(const char *ip)
@@ -158,8 +160,10 @@ void MainMongoDB(string modelPath, char *host, int port, int scenarioID, int num
         string projectPath = modelPath + SEP;
         string modulePath = exePath + SEP;
         checkProject(projectPath);
+
         size_t nameIdx = modelPath.rfind(SEP);
         string dbName = modelPath.substr(nameIdx + 1);
+		string configFile = projectPath + File_Config;
         mongoc_client_t *conn;
         if (!isIPAddress(host))
             throw ModelException("MainMongoDB", "Connect to MongoDB",
@@ -199,8 +203,7 @@ void MainMongoDB(string modelPath, char *host, int port, int scenarioID, int num
 		/// Load Setting Input from file.in, which is deprecated now! By LJ
         /// SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, nSubbasin);
         SettingsInput *input = new SettingsInput(conn, dbName, nSubbasin);
-        ModuleFactory *factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName, layingMethod,
-                                                   scenarioID);
+        ModuleFactory *factory = new ModuleFactory(configFile, modulePath, conn, dbName, nSubbasin, layingMethod, scenarioID);
 		/// Setting Output is loaded in ModelMain. 
         ModelMain main(conn, dbName, projectPath, input, factory, nSubbasin, scenarioID, numThread, layingMethod);
         main.Execute();
@@ -218,59 +221,3 @@ void MainMongoDB(string modelPath, char *host, int port, int scenarioID, int num
         cout << e.what() << endl;
     }
 }
-
-
-//void testMainSQLite(string moduleName,int scenarioID, int numThread, LayeringMethod layingMethod)
-//{
-//	try
-//	{
-//		string exePath = _GetApplicationPath();
-//		string projectPath = exePath + moduleName + SEP;
-//		string modulePath = exePath  + SEP;
-//		//checkProject(projectPath);
-//		//string dbName = "model_xiajiang";
-//		string dbName = moduleName;
-//		mongo conn[1];
-//		//const char* host = "127.0.0.1";
-//		//const char* host = "192.168.5.195";
-//		//int port = 27017;
-//		//int status = mongo_connect(conn, host, port); 
-//		//if( MONGO_OK != status ) 
-//		//{ 
-//		//	cout << "can not connect to mongodb.\n";
-//		//	exit(-1);
-//		//}
-//		//checkDatabase(conn, dbName);
-//		dbName = exePath + "database" + SEP;
-//		SettingsInput *input = new SettingsInput(projectPath + File_Input, conn, dbName, -1);
-//
-//		dbName = exePath + "database" + SEP + "Parameter.db3";
-//		ModuleFactory *factory = new ModuleFactory(projectPath + File_Config, modulePath, conn, dbName);
-//
-//		int nSubbasin = 1;
-//		int scenarioID = 0;
-//		ModelMain main(conn, projectPath, projectPath, input, factory, nSubbasin, scenarioID, numThread, layingMethod);
-//		main.Execute();	
-//		main.Output();
-//
-//		delete input;
-//		delete factory;
-//	}
-//	catch(ModelException e)
-//	{
-//		cout << e.toString() << endl;
-//		//if(main != NULL) delete main;
-//	}
-//	catch(exception e)
-//	{
-//		cout << e.what() << endl;
-//		//if(main != NULL) delete main;
-//	}
-//
-//}
-
-
-
-
-
-

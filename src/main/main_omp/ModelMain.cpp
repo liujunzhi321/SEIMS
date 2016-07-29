@@ -70,65 +70,6 @@ ModelMain::ModelMain(mongoc_client_t *conn, string dbName, string projectPath, S
     mongoc_gridfs_destroy(spatialData);
 }
 
-//ModelMain::ModelMain(mongoc_client_t* conn, string dbName, string projectPath,  
-//	ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod)
-//	:m_conn(conn), m_dbName(dbName), m_projectPath(projectPath),  m_factory(factory),
-//	m_subBasinID(subBasinID), m_scenarioID(scenarioID), m_layeringMethod(layeringMethod),
-//	m_templateRasterData(NULL), m_readFileTime(0), m_initialized(false),
-//	m_firstRunChannel(true), m_firstRunOverland(true)
-//{
-//}
-//
-//void ModelMain::Init(SettingsInput* input, int numThread)
-//{
-//	m_input = input;
-//	m_dtDaily = m_input->getDtDaily();
-//	m_dtHs = m_input->getDtHillslope();
-//	m_dtCh = m_input->getDtChannel();
-//
-//	m_output = new SettingsOutput(m_subBasinID, m_projectPath + File_Output, m_conn, m_outputGfs);
-//
-//	mongoc_gridfs_t	*spatialData;
-//	bson_error_t	*err = NULL;
-//	spatialData = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_SPATIAL,err);
-//	if(err != NULL)
-//		throw ModelException("MainMongoDB","ModelMain","Failed to get GridFS: " + string(DB_TAB_SPATIAL) + ".\n");
-//	m_outputGfs = mongoc_client_get_gridfs(m_conn,m_dbName.c_str(),DB_TAB_OUT_SPATIAL,err);
-//	if(err != NULL)
-//		throw ModelException("MainMongoDB","ModelMain","Failed to create output GridFS: " + string(DB_TAB_OUT_SPATIAL) + ".\n");
-//
-//	CheckOutput(spatialData);
-//    
-//	m_readFileTime = m_factory->CreateModuleList(m_dbName, m_subBasinID, numThread, m_layeringMethod, m_templateRasterData, m_input, m_simulationModules);
-//	//cout << "Read file time: " << m_readFileTime << endl;
-//	size_t n = m_simulationModules.size();
-//	m_executeTime.resize(n, 0);
-//	for (size_t i = 0; i < n; i++)
-//	{
-//		SimulationModule *pModule = m_simulationModules[i];
-//
-//		switch(pModule->GetTimeStepType())
-//		{
-//		case TIMESTEP_HILLSLOPE:
-//			m_hillslopeModules.push_back(i);
-//			break;
-//		case TIMESTEP_CHANNEL:
-//			m_channelModules.push_back(i);
-//			//cout << "channel module: " << i << endl; 
-//			break;
-//		case TIMESTEP_ECOLOGY:
-//			m_ecoModules.push_back(i);
-//
-//		}
-//	}
-//
-//	CheckOutput();
-//    m_initialized = true;
-//	mongoc_gridfs_destroy(spatialData);
-//}
-//
-//
-
 ModelMain::~ModelMain(void)
 {
     StatusMessage("Start to release ModelMain ...");
@@ -310,6 +251,33 @@ void ModelMain::Execute()
 void ModelMain::Output()
 {
 	clock_t t1 = clock();
+	string outputPath = m_projectPath + DB_TAB_OUT_SPATIAL;
+#ifndef linux
+	if (::GetFileAttributes(m_projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
+	{
+		LPSECURITY_ATTRIBUTES att = NULL;
+		::CreateDirectory(outputPath.c_str(), att);
+	}
+	else
+	{
+		vector<string> existedFiles;
+		FindFiles(outputPath.c_str(),"*.*",existedFiles);
+		for(vector<string>::iterator it = existedFiles.begin(); it != existedFiles.end(); it++)
+			remove((*it).c_str());
+	}
+#else
+	if(access(projectPath.c_str(), F_OK) != 0)
+	{
+		mkdir(projectPath.c_str(), 0777);
+	}
+	else
+	{
+		vector<string> existedFiles;
+		FindFiles(outputPath.c_str(),".*",existedFiles);
+		for(vector<string>::iterator it = existedFiles.begin(); it != existedFiles.end(); it++)
+			remove((*it).c_str());
+	}
+#endif
     vector<PrintInfo *>::iterator it;
     for (it = this->m_output->m_printInfos.begin(); it < m_output->m_printInfos.end(); it++)
     {
@@ -333,8 +301,10 @@ void ModelMain::CheckOutput(mongoc_gridfs_t *gfs)
 
     ostringstream oss;
 #ifdef USE_MONGODB
+	// Read Mask raster data and add to m_rsMap in m_factory, by LJ.
     oss << m_subBasinID << "_" << GetUpper(NAME_MASK);
     m_templateRasterData = new clsRasterData(gfs, oss.str().c_str());
+	m_factory->AddMaskRaster(oss.str(), m_templateRasterData);
 #endif
 }
 
@@ -446,8 +416,8 @@ void ModelMain::Output(time_t time)
                     module->GetValue(keyName, &value);
                     item->TimeSeriesData[time] = value;
                 }
-                else if (param->Dimension ==
-                         DT_Array1D)  //time series data for sites or some time series data for subbasins, such as T_SBOF,T_SBIF
+				//time series data for sites or some time series data for subbasins, such as T_SBOF,T_SBIF
+                else if (param->Dimension == DT_Array1D)  
                 {
                     int index = -1;
                     if (index < 0)
@@ -462,9 +432,6 @@ void ModelMain::Output(time_t time)
                 }
                 else if (param->Dimension == DT_Array2D)  //time series data for subbasins
                 {
-                    /// reviewed by LJ, Is there any necessary to list the DT_Array2D directly?
-                    /// Since the following code are similar.
-
                     //some modules will calculate result for all subbasins or all reaches,
                     //regardless of whether they are output to file or not. In this case,
                     //the 2-D array will contain all the results and the subbasinid or reachid
@@ -473,8 +440,10 @@ void ModelMain::Output(time_t time)
                         StringMatch(param->BasicName, "WABA") ||    //channel water balance
                         StringMatch(param->BasicName, "RSWB") ||    //reservoir water balance
                         StringMatch(param->BasicName, "RESB") ||  //reservoir sediment balance
-                        StringMatch(param->BasicName, "CHSB"))
-                        // TODO: more conditions will be added in the future.
+                        StringMatch(param->BasicName, "CHSB") ||
+						StringMatch(param->BasicName, VAR_GWWB) ||  // groundwater water balance
+						StringMatch(param->BasicName, VAR_SOWB)  // soil water balance
+                        )// TODO: more conditions will be added in the future.
                     {
                         //for modules in which only the results of output subbasins are calculated.
                         //In this case, the 2-D array just contain the results of selected subbasins in file.out.
@@ -494,7 +463,7 @@ void ModelMain::Output(time_t time)
                         float **data;
                         int nRows, nCols;
                         module->Get2DData(param->BasicName.c_str(), &nRows, &nCols, &data);
-                        item->add1DTimeSeriesResult(time, nCols, data[0]);
+                        item->add1DTimeSeriesResult(time, nCols, data[subbasinIndex]);
                     }
                     else
                     {

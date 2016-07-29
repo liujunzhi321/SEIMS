@@ -9,13 +9,13 @@
  */
 #pragma once
 
+#include <string>
+#include <set>
+#include <map>
 #include "SettingsInput.h"
 #include "SettingsOutput.h"
 #include "clsRasterData.h"
 #include "mongoc.h"
-#include <string>
-#include <set>
-#include <map>
 #include "ModuleFactory.h"
 
 using namespace std;
@@ -46,19 +46,6 @@ public:
     ModelMain(mongoc_client_t *conn, string dbName, string projectPath, SettingsInput *input,
               ModuleFactory *factory, int subBasinID = 1, int scenarioID = 0, int numThread = 1,
               LayeringMethod layeringMethod = UP_DOWN);
-    /*!
-     * \brief Constructor
-     *
-     * \param[in] conn \a mongoc_client_t, MongoDB client
-     * \param[in] dbName model name, e.g., model_dianbu30m_longterm
-     * \param[in] projectPath Path of the project, contains cofig.fig, file.in and file.out
-     * \param[in] factory \sa ModuleFactory, module factory instance
-     * \param[in] subBasinID subBasinID
-     * \param[in] scenarioID Scenario ID
-     * \param[in] layeringMethod Layering method, default is UP_DOWN
-     */
-    //ModelMain(mongoc_client_t* conn, string dbName, string projectPath,
-    //             ModuleFactory *factory, int subBasinID, int scenarioID, LayeringMethod layeringMethod = UP_DOWN);
     //! Destructor
     ~ModelMain(void);
 
@@ -95,6 +82,7 @@ public:
     //! Get time consuming of read files
     int GetReadDataTime() { return m_readFileTime; }
 
+	//! 
     float GetQOutlet();
 
     //! Include channel processes or not?
@@ -185,7 +173,7 @@ private:
      * \param[in] gfs \a mongoc_gridfs_t
      */
     void CheckOutput();
-
+	
     //! Check module input data, date and execute module
     void Step(time_t t, int yearIdx, vector<int> &moduleIndex, bool firstRun);
 
