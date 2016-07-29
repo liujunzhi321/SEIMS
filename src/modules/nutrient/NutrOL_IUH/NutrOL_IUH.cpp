@@ -309,7 +309,7 @@ int NutrOL_IUH::Execute()
 		m_cellsedminps = GetnewNutrient(i, m_sedminps, m_cellsedminps, sedFract);
 		//m_cellammo = GetnewNutrient(i, m_ammo, m_cellammo, 1.f);
 		//m_cellnitrite = GetnewNutrient(i, m_nitrite, m_cellnitrite, 1.f);
-		m_cellcod = GetnewNutrient(i, m_cod, m_cellcod, 1.f);
+		m_cellcod = GetnewNutrient(i, m_cod, m_cellcod, flowFract);
 
  	}
 
@@ -353,7 +353,7 @@ int NutrOL_IUH::Execute()
 	m_ammoToCh[0] = 0.f;  // No calculation before
 	m_nitriteToCh[0] = 0.f;  //No calculation before
 	m_codToCh[0] = GettotalNutr(m_codToCh);
-
+	
 	return 0;
 }
 
@@ -387,7 +387,7 @@ float NutrOL_IUH::GettotalNutr(float *NutrToCh)
 
 float** NutrOL_IUH::GetnewNutrient(int id, float *nutr, float **cellNutr, float ratio)
 {
-	float area = m_cellWidth * m_cellWidth;
+	float cellArea = m_cellWidth * m_cellWidth;
 	//forward one time step
 	for (int j = 0; j < m_cellNutrCols; j++)
 	{
@@ -403,7 +403,7 @@ float** NutrOL_IUH::GetnewNutrient(int id, float *nutr, float **cellNutr, float 
 		int col = 2;
 		for (int k = min; k <= max; k++)
 		{
-			cellNutr[id][k] += nutr[id] / 1000.0f * m_iuhCell[id][col] * area / m_TimeStep * ratio;
+			cellNutr[id][k] += nutr[id] * m_iuhCell[id][col] * cellArea / 10000.f * ratio;	// unit: kg
 			col++;
 		}
 	}
@@ -412,8 +412,9 @@ float** NutrOL_IUH::GetnewNutrient(int id, float *nutr, float **cellNutr, float 
 
 void NutrOL_IUH::Get1DData(const char *key, int *n, float **data)
 {
+	initialOutputs();
     string sk(key);
-    *n = m_nCells;
+    *n = m_nsub + 1;
     if (StringMatch(sk, VAR_SURQNO3_CH)) { *data = this->m_surqno3ToCh; }
     else if (StringMatch(sk, VAR_LATNO3_CH)) { *data = this->m_latno3ToCh; }
     else if (StringMatch(sk, VAR_NO3GW_CH)) { *data = this->m_no3gwToCh; }
@@ -428,7 +429,7 @@ void NutrOL_IUH::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_COD_CH)) { *data = this->m_codToCh; }
     else
     {
-        throw ModelException(MID_NutOLRout, "GetValue",
+        throw ModelException(MID_NutOLRout, "Get1DData",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
     }
 }

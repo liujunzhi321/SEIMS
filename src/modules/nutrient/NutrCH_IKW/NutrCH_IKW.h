@@ -1,6 +1,6 @@
 
 /*!
- * \file NutrientCHRoute.h
+ * \file NutrCH_IKW.h
  * \brief Calculates in-stream nutrient transformations.
  * \author Huiran Gao
  * \date Jun 2016
@@ -23,7 +23,7 @@ using namespace std;
  */
 
 /*!
- * \class NutrientCHRoute
+ * \class NutrCH_IKW
  * \ingroup NutCHRout
  *
  * \brief Calculates the concentration of nutrient in reach.
@@ -46,7 +46,6 @@ public:
     NutrientCH_IKW(void);
 
     ~NutrientCH_IKW(void);
-
     virtual void SetValue(const char *key, float value);
 
     virtual void Set1DData(const char *key, int n, float *data);

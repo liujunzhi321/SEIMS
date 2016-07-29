@@ -20,14 +20,12 @@ using namespace std;
 NutrientRemviaSr::NutrientRemviaSr(void) :
 //input
         m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_sedimentYield(NULL), m_nperco(-1), m_phoskd(-1), m_pperco(-1),
-        m_qtile(-1),
-        m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(-1), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
+        m_qtile(-1), m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(-1), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
         m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_sol_thick(NULL),
         m_sol_om(NULL), m_gw_q(NULL),
         //output
         m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(-1),
-        m_sol_solp(NULL),
-        m_cod(NULL), m_chl_a(NULL) //,m_doxq(), m_soxy()
+        m_sol_solp(NULL), m_cod(NULL), m_chl_a(NULL) //,m_doxq(), m_soxy()
 {
 
 }
@@ -445,6 +443,7 @@ void NutrientRemviaSr::Nitrateloss()
                         float n = 3.f; // Conversion factor 1~6.5
                         float k = 0.15f; // Reaction coefficient 0.1~0.2
                         m_cod[i] = n * (cbod * (1.f - exp(-5.f * k)));
+						m_cod[i] = m_cod[i] * m_surfr[i] * 100.f;	// mg/L converted to kg/ha
 
                         /*
                         // calculate dissolved oxygen saturation concentration (soxy)

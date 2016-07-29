@@ -1,7 +1,10 @@
-
+/** \defgroup NutCHRout
+ * \ingroup Nutrient
+ * \brief Calculates in-stream nutrient transformations with QUAL2E method.
+ */
 /*!
- * \file NutrientCHRoute.h
- * \brief Calculates in-stream nutrient transformations.
+ * \file NutrCH_QUAL2E.h
+ * \ingroup NutrCH_QUAL2E
  * \author Huiran Gao
  * \date Jun 2016
  */
@@ -17,19 +20,20 @@
 #include "SimulationModule.h"
 
 using namespace std;
-/** \defgroup NutCHRout
- * \ingroup Nutrient
- * \brief Calculates in-stream nutrient transformations.
- */
-
 /*!
- * \class NutrientCHRoute
- * \ingroup NutCHRout
+ * \class NutrCH_QUAL2E
+ * \ingroup NutrCH_QUAL2E
  *
  * \brief Calculates the concentration of nutrient in reach.
  *
  */
 
+/*!
+ * \class NutrCH_QUAL2E
+ * \ingroup NutrCH_QUAL2E
+ * \brief Overland routing using QUAL2E method
+ * 
+ */
 struct MuskWeights
 {
     float c1;
@@ -40,12 +44,12 @@ struct MuskWeights
     int n;  ///< number of division of the origin time step
 };
 
-class NutrientCH_IUH : public SimulationModule
+class NutrCH_QUAL2E : public SimulationModule
 {
 public:
-    NutrientCH_IUH(void);
+    NutrCH_QUAL2E(void);
 
-    ~NutrientCH_IUH(void);
+    ~NutrCH_QUAL2E(void);
 
     virtual void SetValue(const char *key, float value);
 
@@ -57,31 +61,16 @@ public:
 
     virtual void GetValue(const char *key, float *value);
 
-    //virtual void Get1DData(const char *key, int *n, float **data);
-    virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
+    virtual void Get1DData(const char *key, int *n, float **data);
+    //virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
 private:
-
-	/// cell width of grid map (m)
-	float m_CellWith;
-	/// number of valid cells
-	int m_nCells;
 
     /// time step (hr)
     int m_dt;
-	/// stream order
-	float *m_streamOrder;
     /// downstream id (The value is 0 if there if no downstream reach)
-	float *m_reachDownStream;
-	/// stream link
-	float *m_streamLink;
+    float *m_reachDownStream;
     /// upstream id (The value is -1 if there if no upstream reach)
     vector<vector<int> > m_reachUpStream;
-	/**
-    *	@brief reach links
-    *	key: index of the reach
-    *	value: vector of cell index
-    */
-    map<int, vector<int> > m_reachs;
     /// id the reaches
     float *m_reachId;
     /// reaches number
@@ -89,19 +78,6 @@ private:
     map<int, vector<int> > m_reachLayers;
     /// Reach information
     clsReaches *m_reaches;
-	/// id of source cells of reaches
-	int *m_sourceCellIds;
-	/// channel number
-	int m_chNumber;
-	/**
-    *	\brief 2d array of flow in cells
-    *	The first element in each sub-array is the number of flow in cells in this sub-array
-    */
-    float **m_flowInIndex;
-    /// flow out index
-	float *m_flowOutIndex;
-	/// map from subbasin id to index of the array
-	map<int, int> m_idToIndex;
 
     /// input data
     /// bank flow recession constant
@@ -121,7 +97,7 @@ private:
     float m_lambda2;     /// nonlinear algal self-shading coefficient
 
     float m_k_l;        /// half saturation coefficient for light (MJ/(m2*hr))
-    float m_k_n;        /// half saturation constant for nitrogen (mg N/L)
+    float m_k_n;        /// half-saturation constant for nitrogen (mg N/L)
     float m_k_p;        /// half saturation constant for phosphorus (mg P/L)
     /// algal preference factor for ammonia
     float m_p_n;
@@ -214,29 +190,27 @@ private:
 
     /// output data
     /// algal biomass concentration in reach (mg/L)
-    float **m_algae;
+    float *m_algae;
     /// organic nitrogen concentration in reach (mg/L)
-    float **m_organicn;
+    float *m_organicn;
     /// organic phosphorus concentration in reach (mg/L)
-    float **m_organicp;
+    float *m_organicp;
     /// ammonia concentration in reach (mg/L)
-    float **m_ammonian;
+    float *m_ammonian;
     /// nitrite concentration in reach (mg/L)
-    float **m_nitriten;
+    float *m_nitriten;
     /// nitrate concentration in reach (mg/L)
-    float **m_nitraten;
+    float *m_nitraten;
     /// dissolved phosphorus concentration in reach (mg/L)
-    float **m_disolvp;
+    float *m_disolvp;
     /// carbonaceous oxygen demand in reach (mg/L)
-    float **m_rch_cod;
+    float *m_rch_cod;
     /// dissolved oxygen concentration in reach (mg/L)
-    float **m_rch_dox;
+    float *m_rch_dox;
     /// chlorophyll-a concentration in reach (mg chl-a/L)
-    float **m_chlora;
+    float *m_chlora;
     // saturation concentration of dissolved oxygen (mg/L)
     float m_soxy;
-
-	// Outlet
 
 private:
 
@@ -257,14 +231,10 @@ private:
 
     /*!
     * \brief In-stream nutrient transformations and water quality calculations.
-	*
-	* \param iReach The index in the array of m_reaches
-	* \param iCell The index of cell array in each reach
-	* \param ID The id of cell in grid map
-	*
-    * \return void
-    */
-    void NutrientinChannel(int iReach, int iCell, int id);
+     *
+     * \return void
+     */
+    void NutrientinChannel(int);
 
     /*!
     * \brief Corrects rate constants for temperature.
@@ -278,8 +248,6 @@ private:
     float corTempc(float r20, float thk, float tmp);
 
     void initialOutputs();
-
-	float GetNutrInFlow(int iReach, int iCell, int id, float* Nutr, float** CHNutr);
 
     //void GetCoefficients(float reachLength, float v0, MuskWeights& weights);
 };

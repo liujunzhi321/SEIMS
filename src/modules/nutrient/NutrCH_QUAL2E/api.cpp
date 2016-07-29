@@ -3,7 +3,7 @@
  * \brief Define MetadataInfo of NutCHRout module.
 /*!
  * \file api.cpp
- * \ingroup NutCHRout
+ * \ingroup NutrCH_QUAL2E
  * \author Huiran Gao
  * \date Jun 2016
  */
@@ -13,7 +13,7 @@
 #include <string>
 #include "api.h"
 #include "util.h"
-#include "NutrCH_IUH.h"
+#include "NutrCH_QUAL2E.h"
 #include <iostream>
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
@@ -21,7 +21,7 @@
 
 extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-    return new NutrientCH_IUH();
+    return new NutrCH_QUAL2E();
 }
 
 //! function to return the XML Metadata document string
@@ -36,11 +36,9 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetName(MDESC_NutCHRout);
     mdi.SetVersion("1.0");
     mdi.SetWebsite(SEIMS_SITE);
-    mdi.SetHelpfile("NutCHRout.html");
+    mdi.SetHelpfile("NutrCH_QUAL2E.html");
 
-	// set the parameters
-	mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
-	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
+    // set the parameters
     mdi.AddParameter(VAR_RNUM1, UNIT_NON_DIM, DESC_RNUM1, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_IGROPT, UNIT_NON_DIM, DESC_IGROPT, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_AI0, UNIT_NUT_RATIO, DESC_AI0, Source_ParameterDB, DT_Single);
@@ -68,23 +66,13 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 
-    mdi.AddParameter(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);
+    mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);
 
     // set the input variables
     mdi.AddInput(VAR_SRA, UNIT_SR, DESC_SRA, Source_Module, DT_Array1D);
 
 
     // set the output variables
-	mdi.AddOutput(VAR_AL_OUTLET, UNIT_DENSITY_L, DESC_AL_OUTLET, DT_Single);
-	mdi.AddOutput(VAR_ON_OUTLET, UNIT_DENSITY_L, DESC_ON_OUTLET, DT_Single);
-	mdi.AddOutput(VAR_OP_OUTLET, UNIT_DENSITY_L, DESC_OP_OUTLET, DT_Single);
-	mdi.AddOutput(VAR_AN_OUTLET, UNIT_DENSITY_L, DESC_AN_OUTLET, DT_Single);
-	mdi.AddOutput(VAR_NIN_OUTLET, UNIT_DENSITY_L, DESC_NIN_OUTLET, DT_Single);
-	mdi.AddOutput(VAR_NAN_OUTLET, UNIT_DENSITY_L, DESC_NAN_OUTLET, DT_Single);
-	mdi.AddOutput(VAR_DP_OUTLET, UNIT_DENSITY_L, DESC_DP_OUTLET, DT_Single);
-	mdi.AddOutput(VAR_COD_OUTLET, UNIT_DENSITY_L, DESC_COD_OUTLET, DT_Single);
-	mdi.AddOutput(VAR_CHL_OUTLET, UNIT_DENSITY_L, DESC_CHL_OUTLET, DT_Single);
-
     mdi.AddOutput(VAR_SOXY, UNIT_DENSITY_L, DESC_SOXY, DT_Array1D);
     mdi.AddOutput(VAR_ALGAE, UNIT_DENSITY_L, DESC_ALGAE, DT_Array1D);
     mdi.AddOutput(VAR_ORGANICN, UNIT_DENSITY_L, DESC_ORGANICN, DT_Array1D);
@@ -97,6 +85,19 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddOutput(VAR_RCH_DOX, UNIT_DENSITY_L, DESC_RCH_DOX, DT_Array1D);
     mdi.AddOutput(VAR_CHLORA, UNIT_DENSITY_L, DESC_CHLORA, DT_Array1D);
 
+
+    // set the output variables
+    mdi.AddOutput(VAR_SOXY, UNIT_DENSITY_L, DESC_SOXY, DT_Array1D);
+    mdi.AddOutput(VAR_ALGAE, UNIT_DENSITY_L, DESC_ALGAE, DT_Array1D);
+    mdi.AddOutput(VAR_ORGANICN, UNIT_DENSITY_L, DESC_ORGANICN, DT_Array1D);
+    mdi.AddOutput(VAR_ORGANICP, UNIT_DENSITY_L, DESC_ORGANICP, DT_Array1D);
+    mdi.AddOutput(VAR_AMMONIAN, UNIT_DENSITY_L, DESC_AMMONIAN, DT_Array1D);
+    mdi.AddOutput(VAR_NITRITEN, UNIT_DENSITY_L, DESC_NITRITEN, DT_Array1D);
+    mdi.AddOutput(VAR_NITRATEN, UNIT_DENSITY_L, DESC_NITRATEN, DT_Array1D);
+    mdi.AddOutput(VAR_DISOLVP, UNIT_DENSITY_L, DESC_DISOLVP, DT_Array1D);
+    mdi.AddOutput(VAR_RCH_COD, UNIT_DENSITY_L, DESC_RCH_COD, DT_Array1D);
+    mdi.AddOutput(VAR_RCH_DOX, UNIT_DENSITY_L, DESC_RCH_DOX, DT_Array1D);
+    mdi.AddOutput(VAR_CHLORA, UNIT_DENSITY_L, DESC_CHLORA, DT_Array1D);
 
     string res = mdi.GetXMLDocument();
     char *tmp = new char[res.size() + 1];
