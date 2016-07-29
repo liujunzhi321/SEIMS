@@ -13,7 +13,7 @@
 #include <string>
 #include "api.h"
 #include "util.h"
-#include "NutrientOLRoute.h"
+#include "NutrOL_IKW.h"
 #include <iostream>
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
@@ -21,7 +21,7 @@
 
 extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-    return new NutrientOLRoute();
+    return new NutrientOL_IKW();
 }
 
 //! function to return the XML Metadata document string
