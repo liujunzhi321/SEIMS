@@ -1,12 +1,12 @@
 /*//
- * \file NutrientCHRoute.cpp
+ * \file NutrCH_QUAL2E.cpp
  * \ingroup NutCHRout
  * \author Huiran Gao
  * \date Jun 2016
  */
 
 #include <iostream>
-#include "NutrientCHRoute.h"
+#include "NutrCH_QUAL2E.h"
 #include "MetadataInfo.h"
 #include <cmath>
 #include <fstream>
@@ -16,11 +16,11 @@
 
 using namespace std;
 
-NutrientCHRoute::NutrientCHRoute(void) :
+NutrCH_QUAL2E::NutrCH_QUAL2E(void) :
 //input
-        m_CellWith(-1), m_nCells(-1), m_chNumber(-1),  m_dt(-1), m_flowInIndex(NULL), m_flowOutIndex(NULL), m_sourceCellIds(NULL),
-		m_streamOrder(NULL),  m_streamLink(NULL), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1), igropt(-1),
-        m_ai0(-1), m_ai1(-1), m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1), m_lambda2(-1),
+        m_dt(-1), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1), igropt(-1),
+        m_ai0(-1), m_ai1(-1), m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1),
+        m_lambda2(-1),
         m_k_l(-1), m_k_n(-1), m_k_p(-1), m_p_n(-1), tfact(-1), m_mumax(-1), m_rhoq(-1),
         m_daylen(NULL), m_sra(NULL), m_bankStorage(NULL), m_qsSub(NULL), m_qiSub(NULL), m_qgSub(NULL),
         m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL), m_chStorage(NULL), m_chWTdepth(NULL), m_wattemp(NULL),
@@ -34,51 +34,22 @@ NutrientCHRoute::NutrientCHRoute(void) :
 
 }
 
-NutrientCHRoute::~NutrientCHRoute(void)
+NutrCH_QUAL2E::~NutrCH_QUAL2E(void)
 {
-    if (m_algae != NULL)
-    {
-		delete[] m_algae;
-	}
-    if (m_organicn != NULL)
-    {
-        delete[] m_organicn;
-    }
-    if (m_organicp != NULL)
-    {
-        delete[] m_organicp;
-    }
-    if (m_ammonian != NULL)
-    {
-        delete[] m_ammonian;
-    }
-    if (m_nitriten != NULL)
-    {
-        delete[] m_nitriten;
-    }
-    if (m_nitraten != NULL)
-    {
-        delete[] m_nitraten;
-    }
-    if (m_disolvp != NULL)
-    {
-        delete[] m_disolvp;
-    }
-    if (m_rch_cod != NULL)
-    {
-        delete[] m_rch_cod;
-    }
-    if (m_rch_dox != NULL)
-    {
-        delete[] m_rch_dox;
-    }
-    if (m_chlora != NULL)
-    {
-        delete[] m_chlora;
-    }
+
+    if (m_algae != NULL) Release1DArray(m_algae);
+    if (m_organicn != NULL) Release1DArray(m_organicn);
+    if (m_organicp != NULL) Release1DArray(m_organicp);
+    if (m_ammonian != NULL) Release1DArray(m_ammonian);
+    if (m_nitriten != NULL) Release1DArray(m_nitriten);
+    if (m_nitraten != NULL) Release1DArray(m_nitraten);
+    if (m_disolvp != NULL) Release1DArray(m_disolvp);
+    if (m_rch_cod != NULL) Release1DArray(m_rch_cod);
+    if (m_rch_dox != NULL) Release1DArray(m_rch_dox);
+    if (m_chlora != NULL) Release1DArray(m_chlora);
 }
 
-bool NutrientCHRoute::CheckInputSize(const char *key, int n)
+bool NutrCH_QUAL2E::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
     {
@@ -97,240 +68,259 @@ bool NutrientCHRoute::CheckInputSize(const char *key, int n)
             ostringstream oss;
             oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
             m_nReaches << ".\n";
-            throw ModelException(MID_NutCHRout, "CheckInputSize", oss.str());
+            throw ModelException("NutCHRout", "CheckInputSize", oss.str());
         }
     }
     return true;
 }
 
-bool NutrientCHRoute::CheckInputData()
+bool NutrCH_QUAL2E::CheckInputData()
 {
-
-	if (m_CellWith <= 0)
-	{
-		throw ModelException(MID_NutCHRout, "CheckInputData", "The cell width can not be less than zero.");
-	}
-	if (m_nCells <= 0)
-	{
-		throw ModelException(MID_NutCHRout, "CheckInputData", "The cell number can not be less than zero.");
-	}
-	if (m_chNumber <= 0)
-	{
-		throw ModelException(MID_NutCHRout, "CheckInputData", "The channel reach number can not be less than zero.");
-	}
-	if (m_flowOutIndex == NULL)
-	{
-		throw ModelException(MID_NutCHRout, "CheckInputData", "The flow out index can not be NULL.");
-	}
-	if (m_streamOrder == NULL)
-	{
-		throw ModelException(MID_NutCHRout, "CheckInputData", "The stream order of reach parameter can not be NULL.");
-	}
-	if (m_streamLink == NULL)
-	{
-		throw ModelException(MID_NutCHRout, "CheckInputData", "The stream link can not be NULL.");
-	}
     if (this->m_dt < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The parameter: m_dt has not been set.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_dt has not been set.");
+        return false;
     }
     if (this->m_nReaches < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The parameter: m_nReaches has not been set.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_nReaches has not been set.");
+        return false;
     }
     if (this->m_aBank < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The bank flow recession constant can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_qUpReach < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data qUpReach can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_rnum1 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The fraction of overland flow can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->igropt < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The option for calculating the local specific growth rate of algae can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_ai0 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The ratio of chlorophyll-a to algal biomass can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_ai1 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The fraction of algal biomass that is nitrogen can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_ai2 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The fraction of algal biomass that is phosphorus can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_ai3 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The the rate of oxygen production per unit of algal photosynthesis can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_ai4 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The the rate of oxygen uptake per unit of algae respiration can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_ai5 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The the rate of oxygen uptake per unit of NH3 nitrogen oxidation can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_ai6 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The the rate of oxygen uptake per unit of NO2 nitrogen oxidation can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_lambda0 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The non-algal portion of the light extinction coefficient can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_lambda1 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The linear algal self-shading coefficient can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_lambda2 < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The nonlinear algal self-shading coefficient can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_k_l < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The half saturation coefficient for light can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_k_n < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The half saturation constant for nitrogen can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_k_p < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The half saturation constant for phosphorus can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_p_n < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The algal preference factor for ammonia can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->tfact < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The fraction of solar radiation computed can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_mumax < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The maximum specific algal growth rate at 20 deg C can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_rhoq < 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The algal respiration rate at 20 deg C can not be less than zero.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_daylen == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The day length for current day can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_sra == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The solar radiation for the day data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_bankStorage == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The bank storage can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_qsSub == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The overland flow to streams from each subbasin can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_qiSub == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The inter-flow to streams from each subbasin can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_qgSub == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The groundwater flow out of the subbasin can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_qsCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input qsCh can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_qiCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input qiCh can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_qgCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input qgCh can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_chStorage == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The  reach storage data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_chWTdepth == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The channel water depth data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_wattemp == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The temperature of water in reach data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_latno3ToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of nitrate transported with lateral flow can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_surqno3ToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of nitrate transported with surface runoff can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_surqsolpToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of soluble phosphorus in surface runoff can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_no3gwToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The nitrate loading to reach in groundwater can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_minpgwToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The soluble P loading to reach in groundwater can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_sedorgnToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of organic nitrogen in surface runoff can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_sedorgpToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of organic phosphorus in surface runoff can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_sedminpaToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of active mineral phosphorus absorbed to sediment in surface runoff can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_sedminpsToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of stable mineral phosphorus absorbed to sediment in surface runoff can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_ammoToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of ammonium transported with lateral flow can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     if (this->m_nitriteToCh == NULL)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The amount of nitrite transported with lateral flow can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        return false;
     }
     return true;
 }
 
-void NutrientCHRoute::SetValue(const char *key, float value)
+void NutrCH_QUAL2E::SetValue(const char *key, float value)
 {
     string sk(key);
     if (StringMatch(sk, VAR_OMP_THREADNUM))
     {
         omp_set_num_threads((int) value);
-	}
-	else if (StringMatch(sk, Tag_CellWidth))  { this->m_CellWith = value;}
-	else if (StringMatch(sk, Tag_CellSize))  { this->m_nCells = (int) value;}
+    }
     else if (StringMatch(sk, Tag_ChannelTimeStep)) { this->m_dt = (int) value; }
     else if (StringMatch(sk, VAR_A_BNK)) { this->m_aBank = value; }
     else if (StringMatch(sk, VAR_QUPREACH)) { this->m_qUpReach = value; }
     else if (StringMatch(sk, VAR_RNUM1)) { this->m_rnum1 = value; }
-    else if (StringMatch(sk, VAR_IGROPT)) { this->igropt = (int)value; }
+    else if (StringMatch(sk, VAR_IGROPT)) { this->igropt = value; }
     else if (StringMatch(sk, VAR_AI0)) { this->m_ai0 = value; }
     else if (StringMatch(sk, VAR_AI1)) { this->m_ai1 = value; }
     else if (StringMatch(sk, VAR_AI2)) { this->m_ai2 = value; }
@@ -353,21 +343,19 @@ void NutrientCHRoute::SetValue(const char *key, float value)
         //else if (StringMatch(sk, VAR_MSK_CO1)) {m_co1 = value;}
     else
     {
-        throw ModelException(MID_NutCHRout, "SetValue", "Parameter " + sk +
+        throw ModelException("NutCHRout", "SetValue", "Parameter " + sk +
                                                       " does not exist in CLIMATE method. Please contact the module developer.");
     }
 }
 
-void NutrientCHRoute::Set1DData(const char *key, int n, float *data)
+void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
 {
     if (!this->CheckInputSize(key, n))
     {
         return;
     }
     string sk(key);
-	if (StringMatch(sk, VAR_DAYLEN)) { this->m_daylen = data; }
-	else if (StringMatch(sk, Tag_FLOWOUT_INDEX_D8)) { this->m_flowOutIndex = data;}
-	else if (StringMatch(sk, VAR_STREAM_LINK)) { this->m_streamLink = data;}
+    if (StringMatch(sk, VAR_DAYLEN)) { this->m_daylen = data; }
     else if (StringMatch(sk, VAR_SRA)) { this->m_sra = data; }
     else if (StringMatch(sk, VAR_BKST)) { this->m_bankStorage = data; }
     else if (StringMatch(sk, VAR_SBOF)) { this->m_qsSub = data; }
@@ -392,40 +380,43 @@ void NutrientCHRoute::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_NITRITE_CH)) { this->m_nitriteToCh = data; }
     else
     {
-        throw ModelException(MID_NutCHRout, "SetValue", "Parameter " + sk +
+        throw ModelException("NutCHRout", "SetValue", "Parameter " + sk +
                                                       " does not exist in Nutrient module. Please contact the module developer.");
     }
 }
 
-void NutrientCHRoute::Set2DData(const char *key, int nrows, int ncols, float **data)
+void NutrCH_QUAL2E::Set2DData(const char *key, int nrows, int ncols, float **data)
 {
     string sk(key);
     if (StringMatch(sk, VAR_REACH_PARAM))
     {
-		m_chNumber = ncols; // overland is nrows;
-		m_reachId = data[0];
-		m_streamOrder = data[1];
-		m_reachDownStream = data[2];
+        m_nReaches = ncols - 1;
+        m_reachId = data[0];
+        m_reachDownStream = data[1];
+        m_chOrder = data[2];
+        //m_chWidth = data[3];
+        //m_chLen = data[4];
+        //m_chDepth = data[5];
+        //m_chVel = data[6];
+        //m_area = data[7];
         m_reachUpStream.resize(m_nReaches + 1);
-		for (int i = 0; i < m_chNumber; i++)
-			m_idToIndex[(int) m_reachId[i]] = i;
-
-		m_reachUpStream.resize(m_chNumber);
-		for (int i = 0; i < m_chNumber; i++)
-		{
-			int downStreamId = int(m_reachDownStream[i]);
-			if (downStreamId == 0)
-				continue;
-			int downStreamIndex = m_idToIndex[downStreamId];
-			m_reachUpStream[downStreamIndex].push_back(i);
-		}
+        if (m_nReaches > 1)
+        {
+            for (int i = 1; i <= m_nReaches; i++)// index of the reach is the equal to stream link ID(1 to nReaches)
+            {
+                int downStreamId = int(m_reachDownStream[i]);
+                if (downStreamId <= 0)
+                    continue;
+                m_reachUpStream[downStreamId].push_back(i);
+            }
+        }
     }
     else
         throw ModelException("NutCHPout", "Set2DData",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
-void  NutrientCHRoute::initialOutputs()
+void  NutrCH_QUAL2E::initialOutputs()
 {
     if (m_nReaches <= 0)
         throw ModelException("NutCHPout", "initialOutputs", "The cell number of the input can not be less than zero.");
@@ -439,111 +430,47 @@ void  NutrientCHRoute::initialOutputs()
             m_reachLayers[order].push_back(i);
         }
     }
-
-	if (m_organicn == NULL)
-	{
-		// find source cells the reaches
-		m_sourceCellIds = new int[m_chNumber];
-		for (int i = 0; i < m_chNumber; ++i)
-			m_sourceCellIds[i] = -1;
-		for (int i = 0; i < m_nCells; i++)
-		{
-			if (FloatEqual(m_streamLink[i], NODATA_VALUE))
-				continue;
-			int reachId = (int) m_streamLink[i];
-			bool isSource = true;
-			for (int k = 1; k <= (int) m_flowInIndex[i][0]; ++k)
-			{
-				int flowInId = (int) m_flowInIndex[i][k];
-				int flowInReachId = (int) m_streamLink[flowInId];
-				if (flowInReachId == reachId)
-				{
-					isSource = false;
-					break;
-				}
-			}
-			if ((int) m_flowInIndex[i][0] == 0)
-				isSource = true;
-
-			if (isSource)
-			{
-				int reachIndex = m_idToIndex[reachId];
-				m_sourceCellIds[reachIndex] = i;
-			}
-		}
-		// get the cells in reaches according to flow direction
-		for (int iCh = 0; iCh < m_chNumber; iCh++)
-		{
-			int iCell = m_sourceCellIds[iCh];
-			int reachId = (int) m_streamLink[iCell];
-			while ((int) m_streamLink[iCell] == reachId)
-			{
-				m_reachs[iCh].push_back(iCell);
-				iCell = (int) m_flowOutIndex[iCell];
-			}
-		}
-
-		if (m_reachLayers.empty())
-		{
-			for (int i = 0; i < m_chNumber; i++)
-			{
-				int order = (int) m_streamOrder[i];
-				m_reachLayers[order].push_back(i);
-			}
-		}
-		m_algae = new float *[m_chNumber];
-		m_organicn = new float *[m_chNumber];
-		m_organicp = new float *[m_chNumber];
-		m_ammonian = new float *[m_chNumber];
-		m_nitriten = new float *[m_chNumber];
-		m_nitraten = new float *[m_chNumber];
-		m_disolvp = new float *[m_chNumber];
-		m_rch_cod = new float *[m_chNumber];
-		m_rch_dox = new float *[m_chNumber];
-		m_chlora = new float *[m_chNumber];
-		m_soxy = 0.f;
-		for (int i = 0; i < m_chNumber; ++i)
-		{
-			int n = m_reachs[i].size();
-			m_algae[i] = new float [n];
-			m_organicn[i] = new float [n];
-			m_organicp[i] = new float [n];
-			m_ammonian[i] = new float [n];
-			m_nitriten[i] = new float [n];
-			m_nitraten[i] = new float [n];
-			m_disolvp[i] = new float [n];
-			m_rch_cod[i] = new float [n];
-			m_rch_dox[i] = new float [n];
-			m_chlora[i] = new float [n];
-			for (int j = 0; j < n; ++j)
-			{
-				m_algae[i][j]  = 0.f;
-				m_organicn[i][j]  = 0.f;
-				m_organicp[i][j]  = 0.f;
-				m_ammonian[i][j]  = 0.f;
-				m_nitriten[i][j]  = 0.f;
-				m_nitraten[i][j]  = 0.f;
-				m_disolvp[i][j]  = 0.f;
-				m_rch_cod[i][j]  = 0.f;
-				m_rch_dox[i][j]  = 0.f;
-				m_chlora[i][j]  = 0.f;
-
-			}
-		}
-	}
+    if (m_organicn == NULL)
+    {
+        m_algae = new float[m_nReaches + 1];
+        m_organicn = new float[m_nReaches + 1];
+        m_organicp = new float[m_nReaches + 1];
+        m_ammonian = new float[m_nReaches + 1];
+        m_nitriten = new float[m_nReaches + 1];
+        m_nitraten = new float[m_nReaches + 1];
+        m_disolvp = new float[m_nReaches + 1];
+        m_rch_cod = new float[m_nReaches + 1];
+        m_rch_dox = new float[m_nReaches + 1];
+        m_chlora = new float[m_nReaches + 1];
+        m_soxy = 0.f;
+#pragma omp parallel for
+        for (int i = 1; i <= m_nReaches; i++)
+        {
+            m_algae[i] = 0.f;
+            m_organicn[i] = 0.f;
+            m_organicp[i] = 0.f;
+            m_ammonian[i] = 0.f;
+            m_nitriten[i] = 0.f;
+            m_nitraten[i] = 0.f;
+            m_disolvp[i] = 0.f;
+            m_rch_cod[i] = 0.f;
+            m_rch_dox[i] = 0.f;
+            m_chlora[i] = 0.f;
+        }
+    }
 }
 
-int NutrientCHRoute::Execute()
+int NutrCH_QUAL2E::Execute()
 {
     if (!this->CheckInputData())
     {
         return false;
     }
     this->initialOutputs();
-    // Get reach information
+    ///////////////////////////////////////Get reach information/////////////////////////////////////
     int nReaches = m_reaches->GetReachNumber();
     vector<int> reachIDs = m_reaches->GetReachIDs();
-    // Get reach information by subbasin ID
+    /// Get reach information by subbasin ID
     for (vector<int>::iterator it = reachIDs.begin(); it != reachIDs.end(); it++)
     {
         clsReach *reach = m_reaches->GetReachByID(*it);
@@ -563,32 +490,64 @@ int NutrientCHRoute::Execute()
         m_rs5[*it] = reach->GetRs5();
 
     }
-
-	map<int, vector<int> >::iterator it;
-	for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
-	{
-		// There are not any flow relationship within each routing layer.
-		int nReaches = it->second.size();
-		// the size of m_reachLayers (map) is equal to the maximum stream order
-		// #pragma omp parallel for
-		for (int i = 0; i < nReaches; ++i)
-		{
-			int reachIndex = it->second[i]; // index in the array
-			vector<int> & vecCells = m_reachs[reachIndex];
-			int n = vecCells.size();
-			for (int iCell = 0; iCell < n; ++iCell)
-			{
-				NutrientinChannel(reachIndex, iCell, vecCells[iCell]);
-			}
-			//m_SedSubbasin[reachIndex] = m_Qsn[reachIndex][n-1]/1000;   //kg/s -> ton/s
-		}
-	}
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    map<int, vector<int> > ::iterator it;
+    for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
+    {
+        // There are not any flow relationship within each routing layer.
+        // So parallelization can be done here.
+        m_nReaches = it->second.size();
+        // the size of m_reachLayers (map) is equal to the maximum stream order
+		#pragma omp parallel for
+        for (int i = 1; i <= m_nReaches; ++i)
+        {
+            // index in the array
+            int reachIndex = it->second[i];
+            NutrientinChannel(reachIndex);
+        }
+    }
     //return ??
     return 0;
 }
 
-void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
+/*
+//! Get coefficients
+void NutrCH_QUAL2E::GetCoefficients(float reachLength, float v0, MuskWeights& weights)
 {
+	v0 = m_vScalingFactor * v0;
+	float K = (4.64f - 3.64f * m_co1) * reachLength / (5.f * v0 / 3.f);
+
+	float min = 2.0f * K * m_x;
+	float max = 2.0f * K * (1 - m_x);
+	float dt;
+	int n;
+	weights.dt = dt;
+
+	//get coefficient
+	float temp = max + dt;
+	weights.c1 = (dt - min)/temp;
+	weights.c2 = (dt + min)/temp;
+	weights.c3 = (max - dt)/temp;
+	weights.c4 = 2*dt/temp;
+	weights.n = n;
+
+	//make sure any coefficient is positive
+	if(weights.c1 < 0) 
+	{
+		weights.c2 += weights.c1;
+		weights.c1 = 0.0f;
+	}
+	if(weights.c3 < 0)
+	{
+		weights.c2 += weights.c1;
+		weights.c3 = 0.0f;
+	}
+}
+*/
+
+void NutrCH_QUAL2E::NutrientinChannel(int i)
+{
+
     float thbc1 = 1.083f;    ///temperature adjustment factor for local biological oxidation of NH3 to NO2
     float thbc2 = 1.047f;    ///temperature adjustment factor for local biological oxidation of NO2 to NO3
     float thbc3 = 1.04f;    ///temperature adjustment factor for local hydrolysis of organic N to ammonia N
@@ -698,15 +657,15 @@ void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
         float o2con = 0.f;
         wtrTotal = wtrIn + m_chStorage[i];
 
-        algcon = m_algae[i][iCell];
-        orgncon = m_organicn[i][iCell];
-        nh3con = m_ammonian[i][iCell];
-        no2con = m_nitriten[i][iCell];
-        no3con = m_nitraten[i][iCell];
-        orgpcon = m_organicp[i][iCell];
-        solpcon = m_disolvp[i][iCell];
-        cbodcon = m_rch_cod[i][iCell];
-        o2con = m_rch_dox[i][iCell];
+        algcon = m_algae[i];
+        orgncon = m_organicn[i];
+        nh3con = m_ammonian[i];
+        no2con = m_nitriten[i];
+        no3con = m_nitraten[i];
+        orgpcon = m_organicp[i];
+        solpcon = m_disolvp[i];
+        cbodcon = m_rch_cod[i];
+        o2con = m_rch_dox[i];
         // temperature of water in reach (wtmp deg C)
         float wtmp = 0.f;
         wtmp = m_wattemp[i];
@@ -851,7 +810,7 @@ void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
                  (corTempc(gra, thgra, wtmp) * algcon - corTempc(m_rhoq, thrho, wtmp) * algcon - setl * algcon) * tday;
         if (dalgae < 0.00001f)
         {
-            m_algae[i][iCell] = 0.00001f;
+            m_algae[i] = 0.00001f;
         }
         // calculate chlorophyll-a concentration at end of day
         dchla = 0.f;
@@ -1022,19 +981,19 @@ void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
         }
 
         m_wattemp[i] = (heatin * wtrIn + wtmp * m_chStorage[i]) / wtrTotal;
-        m_algae[i][iCell] = (algin * wtrIn + dalgae * m_chStorage[i]) / wtrTotal;
-        m_organicn[i][iCell] = (orgnin * wtrIn + dorgn * m_chStorage[i]) / wtrTotal;
-        m_ammonian[i][iCell] = (ammoin * wtrIn + dnh4 * m_chStorage[i]) / wtrTotal;
-        m_nitriten[i][iCell] = (nitritin * wtrIn + dno2 * m_chStorage[i]) / wtrTotal;
-        m_nitraten[i][iCell] = (nitratin * wtrIn + dno3 * m_chStorage[i]) / wtrTotal;
-        m_organicp[i][iCell] = (orgpin * wtrIn + dorgp * m_chStorage[i]) / wtrTotal;
-        m_disolvp[i][iCell] = (dispin * wtrIn + dsolp * m_chStorage[i]) / wtrTotal;
-        m_rch_cod[i][iCell] = (codin * wtrIn + dbod * m_chStorage[i]) / wtrTotal;
+        m_algae[i] = (algin * wtrIn + dalgae * m_chStorage[i]) / wtrTotal;
+        m_organicn[i] = (orgnin * wtrIn + dorgn * m_chStorage[i]) / wtrTotal;
+        m_ammonian[i] = (ammoin * wtrIn + dnh4 * m_chStorage[i]) / wtrTotal;
+        m_nitriten[i] = (nitritin * wtrIn + dno2 * m_chStorage[i]) / wtrTotal;
+        m_nitraten[i] = (nitratin * wtrIn + dno3 * m_chStorage[i]) / wtrTotal;
+        m_organicp[i] = (orgpin * wtrIn + dorgp * m_chStorage[i]) / wtrTotal;
+        m_disolvp[i] = (dispin * wtrIn + dsolp * m_chStorage[i]) / wtrTotal;
+        m_rch_cod[i] = (codin * wtrIn + dbod * m_chStorage[i]) / wtrTotal;
         //m_rch_dox[i] = (disoxin * wtrIn +  ddisox * m_chStorage[i]) / wtrTotal;
 
         // calculate chlorophyll-a concentration at end of day
-        m_chlora[i][iCell] = 0.f;
-        m_chlora[i][iCell] = m_algae[i][iCell] * m_ai0 / 1000.f;
+        m_chlora[i] = 0.f;
+        m_chlora[i] = m_algae[i] * m_ai0 / 1000.f;
     } else
     {
         // all water quality variables set to zero when no flow
@@ -1048,16 +1007,16 @@ void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
         dispin = 0.f;
         codin = 0.f;
         disoxin = 0.f;
-        m_algae[i][iCell] = 0.f;
-        m_chlora[i][iCell] = 0.f;
-        m_organicn[i][iCell] = 0.f;
-        m_ammonian[i][iCell] = 0.f;
-        m_nitriten[i][iCell] = 0.f;
-        m_nitraten[i][iCell] = 0.f;
-        m_organicp[i][iCell] = 0.f;
-        m_disolvp[i][iCell] = 0.f;
-        m_rch_cod[i][iCell] = 0.f;
-        m_rch_dox[i][iCell] = 0.f;
+        m_algae[i] = 0.f;
+        m_chlora[i] = 0.f;
+        m_organicn[i] = 0.f;
+        m_ammonian[i] = 0.f;
+        m_nitriten[i] = 0.f;
+        m_nitraten[i] = 0.f;
+        m_organicp[i] = 0.f;
+        m_disolvp[i] = 0.f;
+        m_rch_cod[i] = 0.f;
+        m_rch_dox[i] = 0.f;
         dalgae = 0.f;
         dchla = 0.f;
         dorgn = 0.f;
@@ -1072,83 +1031,40 @@ void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
     }
 }
 
-float NutrientCHRoute::corTempc(float r20, float thk, float tmp)
+float NutrCH_QUAL2E::corTempc(float r20, float thk, float tmp)
 {
     float theta = 0.f;
     theta = r20 * pow(thk, (tmp - 20.f));
     return theta;
 }
 
-void NutrientCHRoute::GetValue(const char *key, float *value)
+void NutrCH_QUAL2E::GetValue(const char *key, float *value)
 {
-	string sk(key);
-	map<int, vector<int> >::iterator it = m_reachLayers.end();
-	it--;
-	int reachId = it->second[0];
-	int iLastCell = m_reachs[reachId].size() - 1;
+    string sk(key);
     if (StringMatch(sk, VAR_SOXY))
     {
         *value = m_soxy;
     }
-	else if (StringMatch(sk, VAR_AL_OUTLET))
-    {
-        *value = m_algae[reachId][iLastCell];	//mg/L
-	}
-	else if (StringMatch(sk, VAR_ON_OUTLET))
-	{
-		*value = m_organicn[reachId][iLastCell];	//mg/L
-	}
-	else if (StringMatch(sk, VAR_AN_OUTLET))
-	{
-		*value = m_ammonian[reachId][iLastCell];	//mg/L
-	}
-	else if (StringMatch(sk, VAR_NIN_OUTLET))
-	{
-		*value = m_nitriten[reachId][iLastCell];	//mg/L
-	}
-	else if (StringMatch(sk, VAR_NAN_OUTLET))
-	{
-		*value = m_nitraten[reachId][iLastCell];	//mg/L
-	}
-	else if (StringMatch(sk, VAR_OP_OUTLET))
-	{
-		*value = m_organicp[reachId][iLastCell];	//mg/L
-	}
-	else if (StringMatch(sk, VAR_DP_OUTLET))
-	{
-		*value = m_disolvp[reachId][iLastCell];	//mg/L
-	}
-	else if (StringMatch(sk, VAR_COD_OUTLET))
-	{
-		*value = m_rch_cod[reachId][iLastCell];	//mg/L
-	}
-	else if (StringMatch(sk, VAR_CHL_OUTLET))
-	{
-		*value = m_chlora[reachId][iLastCell];	//mg/L
-	}
-	else
-		throw ModelException(MID_NutCHRout, "GetValue", "Output " + sk
-		+
-		" does not exist in the current module. Please contact the module developer.");
+
 }
 
-void NutrientCHRoute::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
+void NutrCH_QUAL2E::Get1DData(const char *key, int *n, float **data)
 {
-	string sk(key);
-    *nRows = m_nReaches;
-	if (StringMatch(sk, VAR_ALGAE)) { *data = this->m_algae; }
-	else if (StringMatch(sk, VAR_ORGANICN)) { *data = this->m_organicn; }
-	else if (StringMatch(sk, VAR_ORGANICP)) { *data = this->m_organicp; }
-	else if (StringMatch(sk, VAR_AMMONIAN)) { *data = this->m_ammonian; }
-	else if (StringMatch(sk, VAR_NITRITEN)) { *data = this->m_nitriten; }
-	else if (StringMatch(sk, VAR_NITRATEN)) { *data = this->m_nitraten; }
-	else if (StringMatch(sk, VAR_DISOLVP)) { *data = this->m_disolvp; }
-	else if (StringMatch(sk, VAR_RCH_COD)) { *data = this->m_rch_cod; }
-	//else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
-	else if (StringMatch(sk, VAR_CHLORA)) { *data = this->m_chlora; }
-	else
-	{
-		throw ModelException(MID_NutCHRout, "GetValue",
-			"Parameter " + sk + " does not exist. Please contact the module developer.");
-	}
+    string sk(key);
+    *n = m_nReaches + 1;
+    if (StringMatch(sk, VAR_ALGAE)) { *data = this->m_algae; }
+    else if (StringMatch(sk, VAR_ORGANICN)) { *data = this->m_organicn; }
+    else if (StringMatch(sk, VAR_ORGANICP)) { *data = this->m_organicp; }
+    else if (StringMatch(sk, VAR_AMMONIAN)) { *data = this->m_ammonian; }
+    else if (StringMatch(sk, VAR_NITRITEN)) { *data = this->m_nitriten; }
+    else if (StringMatch(sk, VAR_NITRATEN)) { *data = this->m_nitraten; }
+    else if (StringMatch(sk, VAR_DISOLVP)) { *data = this->m_disolvp; }
+    else if (StringMatch(sk, VAR_RCH_COD)) { *data = this->m_rch_cod; }
+    //else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
+    else if (StringMatch(sk, VAR_CHLORA)) { *data = this->m_chlora; }
+    else
+    {
+        throw ModelException("NutCHRout", "GetValue",
+                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+    }
 }

@@ -78,7 +78,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_PERCN, UNIT_CONT_KGHA, DESC_PERCN, DT_Raster1D);
     mdi.AddOutput(VAR_SURQNO3, UNIT_CONT_KGHA, DESC_SURQNO3, DT_Raster1D);
     mdi.AddOutput(VAR_SURQSOLP, UNIT_CONT_KGHA, DESC_SURQSOLP, DT_Raster1D);
-    mdi.AddOutput(VAR_COD, UNIT_DENSITY_L, DESC_COD, DT_Raster1D);
+    mdi.AddOutput(VAR_COD, UNIT_CONT_KGHA, DESC_COD, DT_Raster1D);
     mdi.AddOutput(VAR_CHL_A, UNIT_DENSITY_L, DESC_CHL_A, DT_Raster1D);
 
     //mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);

@@ -1,6 +1,6 @@
 
 /*!
- * \file NutrientCHRoute.h
+ * \file NutrCH_IKW.h
  * \brief Calculates in-stream nutrient transformations.
  * \author Huiran Gao
  * \date Jun 2016
@@ -23,7 +23,7 @@ using namespace std;
  */
 
 /*!
- * \class NutrientCHRoute
+ * \class NutrCH_IKW
  * \ingroup NutCHRout
  *
  * \brief Calculates the concentration of nutrient in reach.
@@ -40,12 +40,12 @@ struct MuskWeights
     int n;  ///< number of division of the origin time step
 };
 
-class NutrientCHRoute : public SimulationModule
+class NutrCH_IKW : public SimulationModule
 {
 public:
-    NutrientCHRoute(void);
+    NutrCH_IKW(void);
 
-    ~NutrientCHRoute(void);
+    ~NutrCH_IKW(void);
 
     virtual void SetValue(const char *key, float value);
 
