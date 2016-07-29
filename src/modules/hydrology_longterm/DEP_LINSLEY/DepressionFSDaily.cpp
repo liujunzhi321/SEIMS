@@ -15,7 +15,7 @@
 #include <cmath>
 #include <omp.h>
 
-DepressionFSDaily::DepressionFSDaily(void) : m_nCells(-1),m_depCo(NODATA),
+DepressionFSDaily::DepressionFSDaily(void) : m_nCells(-1),m_depCo(NODATA_VALUE),
                                              m_depCap(NULL), 
 											 m_pet(NULL), m_ei(NULL), m_pe(NULL),
                                              m_sd(NULL), m_ed(NULL), m_sr(NULL)
@@ -36,7 +36,7 @@ bool DepressionFSDaily::CheckInputData(void)
     if (this->m_nCells <= 0)
         throw ModelException(MID_DEP_LINSLEY, "CheckInputData",
                              "The cell number of the input can not be less than zero.");
-    if (m_depCo == NODATA)
+    if (m_depCo == NODATA_VALUE)
         throw ModelException(MID_DEP_LINSLEY, "CheckInputData",
                              "The parameter: initial depression storage coefficient has not been set.");
     if (m_depCap == NULL)

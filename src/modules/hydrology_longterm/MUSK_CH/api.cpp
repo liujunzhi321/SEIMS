@@ -1,15 +1,3 @@
-/*!
- * \file api.cpp
- * \brief Define MetadataInfo of MUSK_CH module.
- *
- * 
- *
- * \author Junzhi Liu
- * \version 1.0
- * \date 23-Febrary-2011
- *
- * 
- */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -43,12 +31,12 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     // set the information properties
     mdi.SetAuthor("Liu Junzhi");
-    mdi.SetClass("Channelflow", "channel flow routing using variable storage method.");
-    mdi.SetDescription("channel flow routing using variable storage method.");
+    mdi.SetClass(MCLS_CH_ROUTING, MCLSDESC_CH_ROUTING);
+    mdi.SetDescription(MDESC_MUSK_CH);
     mdi.SetEmail(SEIMS_EMAIL);
     mdi.SetHelpfile("MUSK_CH.chm");
-    mdi.SetID("MUSK_CH");
-    mdi.SetName("MUSK_CH");
+    mdi.SetID(MID_MUSK_CH);
+    mdi.SetName(MID_MUSK_CH);
     mdi.SetVersion("0.1");
     mdi.SetWebsite(SEIMS_SITE);
 
@@ -64,9 +52,11 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_MSK_X, UNIT_NON_DIM, DESC_MSK_X, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_MSK_CO1, UNIT_NON_DIM, DESC_MSK_CO1, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_VSF, UNIT_NON_DIM, DESC_VSF, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_GWRQ, UNIT_FLOW_CMS, DESC_GWRQ, Source_ParameterDB, DT_Single);
     mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
     //mdi.AddParameter(VAR_VDIV, UNIT_VOL_M3, DESC_VDIV, DT_Array1D);
-    mdi.AddParameter(VAR_VPOINT, UNIT_VOL_M3, DESC_VPOINT, "diversionloss.txt", DT_Array1D);
+	/// point source discharge 
+    //mdi.AddParameter(VAR_VPOINT, UNIT_VOL_M3, DESC_VPOINT, Source_ParameterDB, DT_Array1D);
     mdi.AddParameter(VAR_SUBBSN, UNIT_NON_DIM, DESC_SUBBSN, Source_ParameterDB, DT_Raster1D);
 
     mdi.AddInput(VAR_SBOF, UNIT_FLOW_CMS, DESC_SBOF, Source_Module, DT_Array1D);

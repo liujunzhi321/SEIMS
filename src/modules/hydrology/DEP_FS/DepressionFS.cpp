@@ -15,7 +15,7 @@
 #include <cmath>
 
 DepressionFS::DepressionFS(void) : m_nCells(-1),
-                                   m_depCo(NODATA), m_depCap(NULL), m_pet(NULL), m_ei(NULL),
+                                   m_depCo(NODATA_VALUE), m_depCap(NULL), m_pet(NULL), m_ei(NULL),
                                    m_sd(NULL), m_sr(NULL), m_checkInput(true)
 {
 }
@@ -36,7 +36,7 @@ bool DepressionFS::CheckInputData(void)
         throw ModelException(MID_DEP_FS, "CheckInputData", "You have not set the time.");
     if (m_nCells <= 0)
         throw ModelException(MID_DEP_FS, "CheckInputData", "The cell number of the input can not be less than zero.");
-    if (m_depCo == NODATA)
+    if (m_depCo == NODATA_VALUE)
         throw ModelException(MID_DEP_FS, "CheckInputData",
                              "The parameter: initial depression storage coefficient has not been set.");
     if (m_depCap == NULL)

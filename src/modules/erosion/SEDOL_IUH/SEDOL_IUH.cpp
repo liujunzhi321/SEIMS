@@ -9,12 +9,12 @@
 
 using namespace std;
 
-SEDOL_IUH::SEDOL_IUH(void): m_TimeStep(-1), m_cellSize(-1), m_CellWidth(NODATA), m_nsub(-1), m_subbasin(NULL),
+SEDOL_IUH::SEDOL_IUH(void): m_TimeStep(-1), m_cellSize(-1), m_CellWidth(NODATA_VALUE), m_nsub(-1), m_subbasin(NULL),
 	m_iuhCell(NULL), m_DETSplash(NULL), m_iuhCols(-1),m_cellSedKgCols(-1), m_sedimentch(NULL), m_DETOverland(NULL),
-	m_ManningN(NULL), m_Slope(NULL), m_Sed_Flow(NULL), m_cellSedKg(NULL), m_eco1(NODATA), m_eco2(NODATA), 
+	m_ManningN(NULL), m_Slope(NULL), m_Sed_Flow(NULL), m_cellSedKg(NULL), m_eco1(NODATA_VALUE), m_eco2(NODATA_VALUE), 
 	m_V(NULL), m_Vol(NULL), m_Ctrans(NULL), m_SedDep(NULL)
 {
-	m_sedtoCh_T = NODATA;
+	m_sedtoCh_T = NODATA_VALUE;
 }
 
 SEDOL_IUH::~SEDOL_IUH(void)
@@ -68,7 +68,7 @@ bool SEDOL_IUH::CheckInputData(void)
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_cellSize has not been set.");
 		return false;
 	}
-	if (FloatEqual(m_CellWidth, NODATA))
+	if (FloatEqual(m_CellWidth, NODATA_VALUE))
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_CellWidth has not been set.");
 		return false;

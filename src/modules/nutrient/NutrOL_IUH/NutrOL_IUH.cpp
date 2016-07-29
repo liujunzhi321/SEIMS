@@ -18,7 +18,7 @@ using namespace std;
 
 NutrOL_IUH::NutrOL_IUH(void) :
 //input
-        m_nCells(-1), m_cellWidth(-1), m_TimeStep(NODATA), 
+        m_nCells(-1), m_cellWidth(-1), m_TimeStep(NODATA_VALUE), 
         m_latno3(NULL), m_surqno3(NULL), m_surqsolp(NULL), m_no3gw(NULL), m_minpgw(NULL), 
 		m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL), m_cod(NULL),
 		m_Soer(NULL), m_Sed_kg(NULL), m_Suru(NULL), m_Q_Flow(NULL),
@@ -94,7 +94,7 @@ bool NutrOL_IUH::CheckInputData()
     {
         throw ModelException(MID_NutOLRout, "CheckInputData", "The cell width can not be less than zero.");
     }
-    if (this->m_TimeStep == NODATA)
+    if (this->m_TimeStep == NODATA_VALUE)
     {
         throw ModelException(MID_NutOLRout, "CheckInputData", "The time can not be zero.");
 	}
