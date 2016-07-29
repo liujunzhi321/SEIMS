@@ -99,6 +99,8 @@ private:
     //output
     /// overland flow to streams for each subbasin (m3/s)
     float *m_Q_SBOF;
+	// overland flow in each cell (mm) //added by Gao, as intermediate variable, 29 Jul 2016
+	 float *m_Q_Flow;
 
     void initialOutputs();
 };

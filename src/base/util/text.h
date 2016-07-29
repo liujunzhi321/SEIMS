@@ -723,6 +723,7 @@
 #define VAR_PSP "psp"                               /// Phosphorus availability index
 #define VAR_PUPDIS "p_updis"
 #define VAR_QCH "QCH"
+#define VAR_Q_FLOW "Q_Flow"
 #define VAR_QG "QG"                                 /// Groundwater discharge at each reach outlet and at each time step
 #define VAR_QI "QI"                                 /// Interflow at each reach outlet and at each time step
 #define VAR_QOUTLET "QOUTLET"                       /// discharge at the watershed outlet
@@ -1234,6 +1235,7 @@
 #define DESC_PSP "Phosphorus availability index"
 #define DESC_PUPDIS "Phosphorus uptake distribution parameter"
 #define DESC_QCH "Flux in the downslope boundary of cells"
+#define DESC_Q_FLOW "overland flow in each cell"
 #define DESC_QG "Groundwater discharge at each reach outlet and at each time step"
 #define DESC_QI "Interflow at each reach outlet and at each time step"
 #define DESC_QOUTLET "discharge at the watershed outlet"

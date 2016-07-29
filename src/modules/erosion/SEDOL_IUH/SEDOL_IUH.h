@@ -22,6 +22,16 @@
 *		column of Ol_iuh add 1.
 *	6.  Add function initial to initailize some variables.
 *	7.	Modify function Execute.
+*
+*	Revision:	Huiran Gao
+*	Date:		28 Jul 2016
+*	Description:
+*		1. Add calculation of sediment deposition in overland flow, 
+*			function is GetSedimentInFlow(int ID).
+*		2. Add some variables to calculate the sediment deposition(m_SedDep) and 
+*			sediment transport capacity(m_Ctrans).
+*		3. Add some output of variables.
+*	
 */
 #pragma once
 #include <string>
@@ -70,10 +80,18 @@ private:
 	float* m_ManningN;
 	/// water depth mm
 	float* m_WH;
-	/// sediment splash detachment from splash erosion module (kg)
-	float* m_DETSplash; 
+	/// flow volum in cell
+	float *m_Vol;
+	/// flow velocity
+	float *m_V;
+	
 	/// calibration coefficient
 	float m_Ccoe;
+	/// calibration coefficient 1
+	float m_eco1;
+	/// calibration coefficient 2
+	float m_eco2;
+
 	/// slope
 	float* m_Slope;
 	/// crop management factor
@@ -81,12 +99,22 @@ private:
 	/// soil erodibility factor 
 	float* m_USLE_K;
 
+	/// sediment splash detachment from splash erosion module (kg)
+	float* m_DETSplash; 
+	/// Soil transport capacity of overland flow (kg) at each time step
+	float *m_Ctrans;
+	/// sediment content in flow [kg]
+	float *m_Sed_kg;
+	/// sediment deposition[kg]
+	float *m_SedDep;
+
 	//temparory
 	float** m_cellSedKg;	
 	int	    m_cellSedKgCols;
 
 	//output
-	float* m_Sed_SOER;
+	/// sediment in overland flow
+	float* m_Sed_Flow;
 	/// sediment in overland flow to streams for each subbasin (kg)
 	float* m_sedimentch;
 	float* m_DETOverland;
@@ -98,6 +126,8 @@ private:
 	void OverlandSedDetachment(int id);   //not used
 
 	void CalcuFlowDetachment(int id);
+
+	void GetSedimentInFlow(int ID);
 
 };
 

@@ -32,6 +32,8 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 
 	mdi.AddParameter("TimeStep","hr","time step of the simulation","file.in",DT_Single); 
 	mdi.AddParameter("CellWidth","m","","file.in",DT_Single); 
+	mdi.AddParameter(VAR_OL_SED_ECO1, UNIT_NON_DIM, DESC_OL_SED_ECO1, Source_ParameterDB, DT_Single);
+	mdi.AddParameter(VAR_OL_SED_ECO2, UNIT_NON_DIM, DESC_OL_SED_ECO2, Source_ParameterDB, DT_Single);
 	mdi.AddParameter("ccoe","","calibration coefficient of overland erosion","ParameterDB_Sediment",DT_Single);
 	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster1D);
 	mdi.AddParameter("USLE_C","","the cover management factor","ParameterDB_Sediment",DT_Raster1D);
@@ -43,12 +45,13 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.AddInput("D_DETSplash","kg", "distribution of splash detachment","Module",DT_Raster1D);
 	mdi.AddInput("D_SURU","mm","Distribution of surface runoff","Module",DT_Raster1D);
 	
-
 	// set the output variables
 	mdi.AddOutput("SOER","kg", "distribution of soil erosion", DT_Raster1D);
 	mdi.AddOutput("DETOverland","kg", "distribution of overland flow detachment", DT_Raster1D);
 	mdi.AddOutput("SEDTOCH","kg", "sediment flowing to channel", DT_Array1D);
 	mdi.AddOutput("SEDTOCH_T","kg", "Total sediment flowing to channel", DT_Single); // added by wu hui
+	mdi.AddOutput(VAR_SED_DEP, UNIT_KG, DESC_SED_DEP, DT_Raster1D); // added by Gao, 2016-07-28
+	mdi.AddOutput(VAR_SED_FLOW, UNIT_KG, DESC_SED_FLOW, DT_Raster1D); // added by Gao, 2016-07-28
 
 	// set the dependencies
 	mdi.AddDependency("DEP_FS","Depression Storage module"); 

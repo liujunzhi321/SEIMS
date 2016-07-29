@@ -513,7 +513,7 @@ void KinWavSed_OL::CalcuFlowDetachment(int i)  //i is the id of the cell in the 
     // correction for slope dx/DX, water spreads out over larger area
     float s = max(0.001f, m_Slope[i]);
     float S0 = sin(atan(s));
-    float waterdepth = m_WH[i] / 1000;   // mm convert to m
+    float waterdepth = m_WH[i] / 1000.f;   // mm convert to m
     //float waterdepth = m_Runoff[i] / 1000;   // mm convert to m
 
     //using Foster equation to calculate overland flow detachment
