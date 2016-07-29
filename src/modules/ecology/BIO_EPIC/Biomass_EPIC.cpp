@@ -13,10 +13,10 @@
 
 using namespace std;
 
-Biomass_EPIC::Biomass_EPIC(void) : m_nCells(-1), m_nClimDataYrs(-1), m_co2(NODATA), m_tMean(NULL), m_tMin(NULL),
+Biomass_EPIC::Biomass_EPIC(void) : m_nCells(-1), m_nClimDataYrs(-1), m_co2(NODATA_VALUE), m_tMean(NULL), m_tMin(NULL),
                                    m_SR(NULL), m_dayLenMin(NULL), m_dormHr(NULL),
-                                   m_soilLayers(-1), m_NUpDis(NODATA), m_PUpDis(NODATA), m_NFixCoef(NODATA),
-                                   m_NFixMax(NODATA), m_soilRD(NODATA), m_tMeanAnn(NULL),
+                                   m_soilLayers(-1), m_NUpDis(NODATA_VALUE), m_PUpDis(NODATA_VALUE), m_NFixCoef(NODATA_VALUE),
+                                   m_NFixMax(NODATA_VALUE), m_soilRD(NODATA_VALUE), m_tMeanAnn(NULL),
                                    m_nSoilLayers(NULL), m_soilZMX(NULL), m_soilALB(NULL), m_soilDepth(NULL),
                                    m_soilAWC(NULL), m_totSoilAWC(NULL), m_totSoilSat(NULL),
                                    m_somo(NULL), m_totSOMO(NULL), m_sol_rsdin(NULL), m_sol_cov(NULL),m_sol_rsd(NULL),
@@ -219,18 +219,18 @@ bool Biomass_EPIC::CheckInputData(void)
     if (m_soilLayers <= 0)
         throw ModelException(MID_BIO_EPIC, "CheckInputData",
                              "The layer number of the input 2D raster data can not be less than zero.");
-    if (FloatEqual(m_co2, NODATA))
+    if (FloatEqual(m_co2, NODATA_VALUE))
         throw ModelException(MID_BIO_EPIC, "CheckInputData",
                              "The ambient atmospheric CO2 concentration must be provided.");
-    if (FloatEqual(m_NUpDis, NODATA))
+    if (FloatEqual(m_NUpDis, NODATA_VALUE))
         throw ModelException(MID_BIO_EPIC, "CheckInputData",
                              "The nitrogen uptake distribution parameter must be provided.");
-    if (FloatEqual(m_PUpDis, NODATA))
+    if (FloatEqual(m_PUpDis, NODATA_VALUE))
         throw ModelException(MID_BIO_EPIC, "CheckInputData",
                              "The phosphorus uptake distribution parameter must be provided.");
-    if (FloatEqual(m_NFixCoef, NODATA))
+    if (FloatEqual(m_NFixCoef, NODATA_VALUE))
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The nitrogen fixation coefficient must be provided.");
-    if (FloatEqual(m_NFixMax, NODATA))
+    if (FloatEqual(m_NFixMax, NODATA_VALUE))
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The maximum daily-N fixation must be provided.");
     if (m_tMeanAnn == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The annual mean air temperature can not be NULL.");

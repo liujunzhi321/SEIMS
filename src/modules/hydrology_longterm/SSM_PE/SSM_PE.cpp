@@ -10,13 +10,13 @@ SSM_PE::SSM_PE(void)
     // set default values for member variables
     this->m_nCells = -1;
 
-    this->m_t0 = NODATA;
-    this->m_ksubli = NODATA;
-    this->m_kblow = NODATA;
-    this->m_swe = NODATA;
-    this->m_swe0 = NODATA;
-    this->m_lastSWE = NODATA;
-    this->m_tsnow = NODATA;
+    this->m_t0 = NODATA_VALUE;
+    this->m_ksubli = NODATA_VALUE;
+    this->m_kblow = NODATA_VALUE;
+    this->m_swe = NODATA_VALUE;
+    this->m_swe0 = NODATA_VALUE;
+    this->m_lastSWE = NODATA_VALUE;
+    this->m_tsnow = NODATA_VALUE;
 
     this->m_PET = NULL;
     this->m_Pnet = NULL;
@@ -38,7 +38,7 @@ bool SSM_PE::CheckInputData(void)
     if (m_nCells <= 0)
         throw ModelException(MID_SSM_PE, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
-    if (this->m_kblow == NODATA)
+    if (this->m_kblow == NODATA_VALUE)
         throw ModelException(MID_SSM_PE, "CheckInputData",
                              "The fraction coefficient of snow blowing into or out of the watershed can not be NULL.");
     if (this->m_Pnet == NULL)
@@ -48,14 +48,14 @@ bool SSM_PE::CheckInputData(void)
         throw ModelException(MID_SSM_PE, "CheckInputData", "The snow accumulation data can not be NULL.");
     // Currently, no module's outputs have SNRD, this should be on TODO LIST. LJ
     //if(this->m_SR == NULL)			throw ModelException(MID_SSM_PE,"CheckInputData","The snow redistribution data can not be NULL.");
-    if (this->m_swe == NODATA) throw ModelException(MID_SSM_PE, "CheckInputData", "The swe can not be NODATA.");
-    if (this->m_swe0 == NODATA) throw ModelException(MID_SSM_PE, "CheckInputData", "The swe0 can not be NODATA.");
-    if (this->m_ksubli == NODATA) throw ModelException(MID_SSM_PE, "CheckInputData", "The k_subli can not be NODATA.");
+    if (this->m_swe == NODATA_VALUE) throw ModelException(MID_SSM_PE, "CheckInputData", "The swe can not be NODATA.");
+    if (this->m_swe0 == NODATA_VALUE) throw ModelException(MID_SSM_PE, "CheckInputData", "The swe0 can not be NODATA.");
+    if (this->m_ksubli == NODATA_VALUE) throw ModelException(MID_SSM_PE, "CheckInputData", "The k_subli can not be NODATA.");
     if (this->m_tMean == NULL)
         throw ModelException(MID_SSM_PE, "CheckInputData", "The mean air temperature data can not be NULL.");
-    if (this->m_t0 == NODATA)
+    if (this->m_t0 == NODATA_VALUE)
         throw ModelException(MID_SSM_PE, "CheckInputData", "The Snowmelt temperature can not be NODATA.");
-    if (this->m_tsnow == NODATA)
+    if (this->m_tsnow == NODATA_VALUE)
         throw ModelException(MID_SSM_PE, "CheckInputData", "The snow fall temperature can not be NODATA.");
     return true;
 }
@@ -101,7 +101,7 @@ int SSM_PE::Execute()
         m_isInitial = false;
     }
 
-    if (this->m_lastSWE == NODATA) this->m_lastSWE = this->m_swe;
+    if (this->m_lastSWE == NODATA_VALUE) this->m_lastSWE = this->m_swe;
     if (m_swe < 0.01)    //all cells have not snow, so snow sublimation is 0.
     {
         if (this->m_lastSWE >= 0.01)

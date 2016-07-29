@@ -1,14 +1,8 @@
 /*!
- * \file MUSK_CH.h
  * \brief channel flow routing using Muskingum method
- *
- *
- *
  * \author Junzhi Liu
  * \version 1.0
  * \date 26-Jule-2012
- *
- * 
  */
 #pragma once
 
@@ -26,12 +20,7 @@ using namespace std;
  * \brief channel flow routing using Muskingum method
  *
  */
-
-/*!
- * \class MUSK_CH
- * \ingroup MUSK_CH
- * \brief Overland routing using 4-point implicit finite difference method
- * 
+/* MuskWeights coefficients
  */
 struct MuskWeights
 {
@@ -44,12 +33,9 @@ struct MuskWeights
 };
 
 /*!
- * \ingroup MUSKINGUM_CH
  * \class MUSK_CH
- *
+ * \ingroup MUSK_CH
  * \brief channel flow routing using Muskingum method
- *
- *
  *
  */
 class MUSK_CH : public SimulationModule
@@ -79,15 +65,13 @@ public:
 
     bool CheckInputData(void);
 
-    virtual TimeStepType GetTimeStepType()
-    {
-        return TIMESTEP_CHANNEL;
-    };
+    virtual TimeStepType GetTimeStepType() {return TIMESTEP_CHANNEL;};
 
 private:
+	//! 
     float m_vScalingFactor;
 
-    /// time step (hr)
+    /// time step (sec)
     int m_dt;
     /// reach number (= subbasin number)
     int m_nreach;
@@ -108,13 +92,13 @@ private:
     /// initial channel storage per meter of reach length (m3/m)
     float m_Chs0;
     /// the initial volume of transmission loss to the deep aquifer over the time interval (m3/s)
-    float m_Vseep0;   //added
+    float m_Vseep0;
     /// bank flow recession constant
     float m_aBank;
     /// bank storage loss coefficient
     float m_bBank;
-
-    float *m_subbasin;                //subbasin grid
+	///subbasin grid
+    float *m_subbasin;                
     /// the subbasin area (m2)  //add to the reach parameters file
     float *m_area;
 
@@ -143,7 +127,7 @@ private:
 
     float *m_bankStorage;
 
-    float m_deepGroudwater;
+    float m_deepGroundwater;
 
     /// seepage to deep aquifer
     float *m_seepage;
@@ -174,7 +158,11 @@ private:
     float *m_qIn;
     /// channel water depth m
     float *m_chWTdepth;
-
+	/*
+	 * reach layers
+	 * key: stream order
+	 * value: reach ID
+	 */
     map<int, vector<int> > m_reachLayers;
 
     void initialOutputs();

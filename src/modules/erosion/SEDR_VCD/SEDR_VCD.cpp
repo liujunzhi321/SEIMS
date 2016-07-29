@@ -21,12 +21,12 @@
 
 using namespace std;
 
-SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA), m_widthbottom(NULL),
+SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA_VALUE), m_widthbottom(NULL),
                            m_Vdiv(NULL), m_Vpoint(NULL), m_widthcurrent(NULL), m_depthcurrent(NULL),
                            m_slopecurrent(NULL),
                            m_chOrder(NULL), m_qchOut(NULL), m_sideslopeMain(1.f), m_sideslopeFloodplain(1.f),
                            m_w_ratio(1.f), m_bankfullQ(5.f),
-                           m_prf(NODATA), m_spcon(NODATA), m_spexp(NODATA), m_vcrit(NODATA), m_coverFactor(0.1f),
+                           m_prf(NODATA_VALUE), m_spcon(NODATA_VALUE), m_spexp(NODATA_VALUE), m_vcrit(NODATA_VALUE), m_coverFactor(0.1f),
                            m_erodibilityFactor(0.2f) //0.1 for Lyg
 {
     //this->m_T_CHSB = NULL;
@@ -83,23 +83,23 @@ bool SEDR_VCD::CheckInputData(void)
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_nreach has not been set.");
     }
 
-    if (FloatEqual(m_Chs0, NODATA))
+    if (FloatEqual(m_Chs0, NODATA_VALUE))
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: Chs0 has not been set.");
     }
-    if (FloatEqual(m_prf, NODATA))
+    if (FloatEqual(m_prf, NODATA_VALUE))
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_prf has not been set.");
     }
-    if (FloatEqual(m_spcon, NODATA))
+    if (FloatEqual(m_spcon, NODATA_VALUE))
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_spcon has not been set.");
     }
-    if (FloatEqual(m_spexp, NODATA))
+    if (FloatEqual(m_spexp, NODATA_VALUE))
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_spexp has not been set.");
     }
-    if (FloatEqual(m_vcrit, NODATA))
+    if (FloatEqual(m_vcrit, NODATA_VALUE))
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_vcrit has not been set.");
     }

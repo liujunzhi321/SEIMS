@@ -21,7 +21,7 @@
 
 extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-    return new NutrCH_IKW();
+    return new NutrientCH_IKW();
 }
 
 //! function to return the XML Metadata document string

@@ -9,9 +9,9 @@
 
 using namespace std;
 
-SoilTemperatureFINPL::SoilTemperatureFINPL(void) : m_a0(NODATA), m_a1(NODATA), m_a2(NODATA), m_a3(NODATA),
-                                                   m_b1(NODATA), m_b2(NODATA), m_d1(NODATA), m_d2(NODATA),
-                                                   m_kSoil10(NODATA), m_julianDay(-1), m_nCells(-1),
+SoilTemperatureFINPL::SoilTemperatureFINPL(void) : m_a0(NODATA_VALUE), m_a1(NODATA_VALUE), m_a2(NODATA_VALUE), m_a3(NODATA_VALUE),
+                                                   m_b1(NODATA_VALUE), m_b2(NODATA_VALUE), m_d1(NODATA_VALUE), m_d2(NODATA_VALUE),
+                                                   m_kSoil10(NODATA_VALUE), m_julianDay(-1), m_nCells(-1),
                                                    m_relativeFactor(NULL), m_soilTemp(NULL), m_tMean(NULL), m_t1(NULL),
                                                    m_t2(NULL)
 {
@@ -60,23 +60,23 @@ int SoilTemperatureFINPL::Execute()
 
 bool SoilTemperatureFINPL::CheckInputData(void)
 {
-    if (FloatEqual(m_a0, NODATA))
+    if (FloatEqual(m_a0, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: SoilTa0 has not been set.");
-    if (FloatEqual(m_a1, NODATA))
+    if (FloatEqual(m_a1, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: SoilTa1 has not been set.");
-    if (FloatEqual(m_a2, NODATA))
+    if (FloatEqual(m_a2, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: SoilTa2 has not been set.");
-    if (FloatEqual(m_a3, NODATA))
+    if (FloatEqual(m_a3, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: SoilTa3 has not been set.");
-    if (FloatEqual(m_b1, NODATA))
+    if (FloatEqual(m_b1, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: SoilTb1 has not been set.");
-    if (FloatEqual(m_b2, NODATA))
+    if (FloatEqual(m_b2, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: SoilTb2 has not been set.");
-    if (FloatEqual(m_d1, NODATA))
+    if (FloatEqual(m_d1, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: SoilTd1 has not been set.");
-    if (FloatEqual(m_d2, NODATA))
+    if (FloatEqual(m_d2, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: SoilTd2 has not been set.");
-    if (FloatEqual(m_kSoil10, NODATA))
+    if (FloatEqual(m_kSoil10, NODATA_VALUE))
         throw ModelException(MID_STP_FP, "CheckInputData", "The parameter: KSoil10 has not been set.");
     if (m_date < 0)
         throw ModelException(MID_STP_FP, "CheckInputData", "The date has not been set.");

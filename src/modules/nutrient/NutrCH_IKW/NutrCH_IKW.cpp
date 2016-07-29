@@ -6,7 +6,7 @@
  */
 
 #include <iostream>
-#include "NutrientCHRoute.h"
+#include "NutrCH_IKW.h"
 #include "MetadataInfo.h"
 #include <cmath>
 #include <fstream>
@@ -16,7 +16,7 @@
 
 using namespace std;
 
-NutrientCHRoute::NutrientCHRoute(void) :
+NutrientCH_IKW::NutrientCH_IKW(void):
 //input
         m_CellWith(-1), m_nCells(-1), m_chNumber(-1),  m_dt(-1), m_flowInIndex(NULL), m_flowOutIndex(NULL), m_sourceCellIds(NULL),
 		m_streamOrder(NULL),  m_streamLink(NULL), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1), igropt(-1),
@@ -34,7 +34,7 @@ NutrientCHRoute::NutrientCHRoute(void) :
 
 }
 
-NutrientCHRoute::~NutrientCHRoute(void)
+NutrientCH_IKW::~NutrientCH_IKW(void)
 {
     if (m_algae != NULL)
     {
@@ -78,7 +78,7 @@ NutrientCHRoute::~NutrientCHRoute(void)
     }
 }
 
-bool NutrientCHRoute::CheckInputSize(const char *key, int n)
+bool NutrientCH_IKW::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
     {
@@ -103,7 +103,7 @@ bool NutrientCHRoute::CheckInputSize(const char *key, int n)
     return true;
 }
 
-bool NutrientCHRoute::CheckInputData()
+bool NutrientCH_IKW::CheckInputData()
 {
 
 	if (m_CellWith <= 0)
@@ -317,7 +317,7 @@ bool NutrientCHRoute::CheckInputData()
     return true;
 }
 
-void NutrientCHRoute::SetValue(const char *key, float value)
+void NutrientCH_IKW::SetValue(const char *key, float value)
 {
     string sk(key);
     if (StringMatch(sk, VAR_OMP_THREADNUM))
@@ -358,7 +358,7 @@ void NutrientCHRoute::SetValue(const char *key, float value)
     }
 }
 
-void NutrientCHRoute::Set1DData(const char *key, int n, float *data)
+void NutrientCH_IKW::Set1DData(const char *key, int n, float *data)
 {
     if (!this->CheckInputSize(key, n))
     {
@@ -397,7 +397,7 @@ void NutrientCHRoute::Set1DData(const char *key, int n, float *data)
     }
 }
 
-void NutrientCHRoute::Set2DData(const char *key, int nrows, int ncols, float **data)
+void NutrientCH_IKW::Set2DData(const char *key, int nrows, int ncols, float **data)
 {
     string sk(key);
     if (StringMatch(sk, VAR_REACH_PARAM))
@@ -425,7 +425,7 @@ void NutrientCHRoute::Set2DData(const char *key, int nrows, int ncols, float **d
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
-void  NutrientCHRoute::initialOutputs()
+void  NutrientCH_IKW::initialOutputs()
 {
     if (m_nReaches <= 0)
         throw ModelException("NutCHPout", "initialOutputs", "The cell number of the input can not be less than zero.");
@@ -533,7 +533,7 @@ void  NutrientCHRoute::initialOutputs()
 	}
 }
 
-int NutrientCHRoute::Execute()
+int NutrientCH_IKW::Execute()
 {
     if (!this->CheckInputData())
     {
@@ -587,7 +587,7 @@ int NutrientCHRoute::Execute()
     return 0;
 }
 
-void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
+void NutrientCH_IKW::NutrientinChannel(int i, int iCell, int id)
 {
     float thbc1 = 1.083f;    ///temperature adjustment factor for local biological oxidation of NH3 to NO2
     float thbc2 = 1.047f;    ///temperature adjustment factor for local biological oxidation of NO2 to NO3
@@ -1072,14 +1072,14 @@ void NutrientCHRoute::NutrientinChannel(int i, int iCell, int id)
     }
 }
 
-float NutrientCHRoute::corTempc(float r20, float thk, float tmp)
+float NutrientCH_IKW::corTempc(float r20, float thk, float tmp)
 {
     float theta = 0.f;
     theta = r20 * pow(thk, (tmp - 20.f));
     return theta;
 }
 
-void NutrientCHRoute::GetValue(const char *key, float *value)
+void NutrientCH_IKW::GetValue(const char *key, float *value)
 {
 	string sk(key);
 	map<int, vector<int> >::iterator it = m_reachLayers.end();
@@ -1132,7 +1132,7 @@ void NutrientCHRoute::GetValue(const char *key, float *value)
 		" does not exist in the current module. Please contact the module developer.");
 }
 
-void NutrientCHRoute::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
+void NutrientCH_IKW::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 {
 	string sk(key);
     *nRows = m_nReaches;

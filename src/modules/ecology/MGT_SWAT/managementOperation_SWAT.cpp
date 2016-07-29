@@ -8,7 +8,7 @@
 
 using namespace std;
 
-MGTOpt_SWAT::MGTOpt_SWAT(void) : m_scenario(NULL), m_nCells(-1), m_nSub(-1), m_cellWidth(NODATA), m_cellArea(NODATA),
+MGTOpt_SWAT::MGTOpt_SWAT(void) : m_scenario(NULL), m_nCells(-1), m_nSub(-1), m_cellWidth(NODATA_VALUE), m_cellArea(NODATA_VALUE),
         /// add parameters from MongoDB
                                  m_subBsnID(NULL), m_landUse(NULL), m_landCover(NULL), m_mgtFields(NULL),
         /// Soil related parameters from MongoDB
@@ -34,8 +34,8 @@ MGTOpt_SWAT::MGTOpt_SWAT(void) : m_scenario(NULL), m_nCells(-1), m_nSub(-1), m_c
                                  m_fertilizerLookup(NULL), m_fertilizerNum(-1), m_cswat(0),
         /// Irrigation
                                  m_irrFlag(NULL), m_appliedWater(NULL), m_irrSurfQWater(NULL), m_deepWaterDepth(NULL),
-                                 m_shallowWaterDepth(NULL), m_impoundVolume(NODATA),
-                                 m_impoundArea(NODATA), m_deepIrrWater(NULL), m_shallowIrrWater(NULL),
+                                 m_shallowWaterDepth(NULL), m_impoundVolume(NODATA_VALUE),
+                                 m_impoundArea(NODATA_VALUE), m_deepIrrWater(NULL), m_shallowIrrWater(NULL),
         /// auto irrigation operation
                                  m_wtrStrsID(NULL), m_autoWtrStres(NULL), m_autoIrrSource(NULL), m_autoIrrNo(NULL),
                                  m_autoIrrEfficiency(NULL),
@@ -414,7 +414,7 @@ bool MGTOpt_SWAT::GetOperationCode(int i, int &factoryID, vector<int> &nOps)
             else
                 aphu = m_phuAcc[i];
             if (m_dormFlag[i] == 1)
-                aphu = NODATA;
+                aphu = NODATA_VALUE;
             if (aphu >= tmpOperations[*seqIter]->GetHUFraction())
                 huscDepent = true;
         }

@@ -30,12 +30,12 @@ using namespace std;
  *
  */
 
-class NutrientOLRoute : public SimulationModule
+class NutrientOL_IKW : public SimulationModule
 {
 public:
-    NutrientOLRoute(void);
+    NutrientOL_IKW(void);
 
-    ~NutrientOLRoute(void);
+    ~NutrientOL_IKW(void);
 
     virtual void SetValue(const char *key, float value);
 

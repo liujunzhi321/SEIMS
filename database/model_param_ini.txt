@@ -227,6 +227,7 @@ PlantGrowth	cswat	carbon modeling method	None	MGT_SWAT	0	0	AC	2	0	Y
 Bacteria	bact_swf	fraction of manure containing active colony forming units (cfu)	None	MGT_SWAT	0.15	1	RC	1	0	Y
 Snow	SNOCOVMX	Minimum snow water content that corresponds to 100% snow cover.	mm	SNO_SP	1	0	AC	500	0	Y
 Snow	SNO50COV	Fraction of snow water equivalent that corresponds to 50% snow cover.	None	SNO_SP	0.5	1	RC	1	0	Y
+Groundwater	GW_recharge	Groundwater recharge	m3/s	MUSK_CH	0	0	AC	100	0	Y
 
 
 

@@ -420,15 +420,19 @@
 #define MCLSDESC_OL_ROUTING            "Overland routing module"
 #define MID_IKW_OL                                    "IKW_OL"
 #define MDESC_IKW_OL                            "Overland routing using 4-point implicit finite difference method."
+#define MID_IUH_OL								"IUH_OL"
+#define MDESC_IUH_OL							"IUH overland method to calculate overland flow routing."
 /// Channel routing related modules
 #define MCLS_CH_ROUTING                        "Channel routing"
 #define MCLSDESC_CH_ROUTING            "Channel routing modules"
 #define MID_CH_DW                                    "CH_DW"
 #define MDESC_CH_DW                            "Channel routing using diffusive wave equation."
 #define MID_CH_MSK                                    "CH_MSK"
-#define MDESC_CH_MSK                            "Channel routing using Muskingum-Cunge method."
+#define MDESC_CH_MSK                            "Channel routing using Muskingum-Cunge method of storm model."
 #define MID_IKW_CH                                    "IKW_CH"
 #define MDESC_IKW_CH                            "Channel routing using 4-point implicit finite difference method for kinematic wave."
+#define MID_MUSK_CH								"MUSK_CH"
+#define MDESC_MUSK_CH							"Channel routing using Muskingum-Cunge method of longterm model."
 /// Sediment routing related modules
 #define MCLS_SED_ROUTING                    "Sediment routing"
 #define MCLSDESC_SED_ROUTING        "Sediment channel routing modules."
@@ -616,6 +620,7 @@
 #define VAR_GWNEW "GWNEW"                           /// The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage
 #define VAR_GWNO3 "gwno3"
 #define VAR_GWWB "GWWB"        // groundwater water balance
+#define VAR_GWRQ "GWRQ"
 #define VAR_HCH "HCH"
 #define VAR_HITARG "hi_targ"
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/ha)
@@ -731,7 +736,7 @@
 #define VAR_PSP "psp"                               /// Phosphorus availability index
 #define VAR_PUPDIS "p_updis"
 #define VAR_QCH "QCH"
-#define VAR_Q_FLOW "Q_Flow"
+#define VAR_OLFLOW "OL_Flow"						/// overland flow in each cell calculated during overland routing
 #define VAR_QG "QG"                                 /// Groundwater discharge at each reach outlet and at each time step
 #define VAR_QI "QI"                                 /// Interflow at each reach outlet and at each time step
 #define VAR_QOUTLET "QOUTLET"                       /// discharge at the watershed outlet
@@ -1124,6 +1129,7 @@
 #define DESC_GWNEW "The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage"
 #define DESC_GWNO3 "nitrate N concentration in groundwater loading to reach"
 #define DESC_GWWB "groundwater water balance"
+#define DESC_GWRQ "groundwater recharge to channel"
 #define DESC_HCH "Water depth in the downslope boundary of cells"
 #define DESC_HITARG "Harvest index target "
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"
@@ -1244,7 +1250,7 @@
 #define DESC_PSP "Phosphorus availability index"
 #define DESC_PUPDIS "Phosphorus uptake distribution parameter"
 #define DESC_QCH "Flux in the downslope boundary of cells"
-#define DESC_Q_FLOW "overland flow in each cell"
+#define DESC_OLFLOW "overland flow in each cell calculated during overland routing"
 #define DESC_QG "Groundwater discharge at each reach outlet and at each time step"
 #define DESC_QI "Interflow at each reach outlet and at each time step"
 #define DESC_QOUTLET "discharge at the watershed outlet"

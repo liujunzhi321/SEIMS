@@ -11,7 +11,7 @@
 #include <string>
 #include <omp.h>
 
-PER_PI::PER_PI(void) : m_nSoilLayers(-1), m_dt(-1), m_nCells(-1), m_frozenT(NODATA),
+PER_PI::PER_PI(void) : m_nSoilLayers(-1), m_dt(-1), m_nCells(-1), m_frozenT(NODATA_VALUE),
                        m_ks(NULL), m_sat(NULL), m_poreIndex(NULL), m_fc(NULL), 
 					   m_wp(NULL), m_soilThick(NULL),
                        m_infil(NULL), m_soilT(NULL), m_somo(NULL),
@@ -202,7 +202,7 @@ bool PER_PI::CheckInputData()
         throw ModelException(MID_PER_PI, "CheckInputData", "The soil temperature can not be NULL.");
     if (m_infil == NULL)
         throw ModelException(MID_PER_PI, "CheckInputData", "The infiltration can not be NULL.");
-    if (FloatEqual(m_frozenT, NODATA))
+    if (FloatEqual(m_frozenT, NODATA_VALUE))
         throw ModelException(MID_PER_PI, "CheckInputData", "The threshold soil freezing temperature can not be NULL.");
     if (m_somo == NULL)
         throw ModelException(MID_PER_PI, "CheckInputData", "The Moisture can not be NULL.");

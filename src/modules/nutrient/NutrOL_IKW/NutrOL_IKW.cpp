@@ -6,7 +6,7 @@
  */
 
 #include <iostream>
-#include "NutrientOLRoute.h"
+#include "NutrOL_IKW.h"
 #include "MetadataInfo.h"
 #include <cmath>
 #include <fstream>
@@ -16,9 +16,9 @@
 
 using namespace std;
 
-NutrientOLRoute::NutrientOLRoute(void) :
+NutrientOL_IKW::NutrientOL_IKW(void):
 //input
-        m_nCells(-1), m_cellWidth(-1), m_nLayers(-1), m_TimeStep(NODATA),
+        m_nCells(-1), m_cellWidth(-1), m_nLayers(-1), m_TimeStep(NODATA_VALUE),
         m_routingLayers(NULL), m_flowInIndex(NULL), m_FlowWidth(NULL), m_chWidth(NULL), m_streamLink(NULL),
         m_latno3(NULL), m_surqno3(NULL), m_surqsolp(NULL), m_no3gw(NULL),
         m_minpgw(NULL), m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL),
@@ -31,7 +31,7 @@ NutrientOLRoute::NutrientOLRoute(void) :
 
 }
 
-NutrientOLRoute::~NutrientOLRoute(void)
+NutrientOL_IKW::~NutrientOL_IKW(void)
 {
 	if (m_QV != NULL) Release1DArray(m_QV);
 	if (m_ChV != NULL) Release1DArray(m_ChV);
@@ -50,7 +50,7 @@ NutrientOLRoute::~NutrientOLRoute(void)
 	if (m_codToCh != NULL) Release1DArray(m_codToCh);
 }
 
-bool NutrientOLRoute::CheckInputSize(const char *key, int n)
+bool NutrientOL_IKW::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
     {
@@ -75,7 +75,7 @@ bool NutrientOLRoute::CheckInputSize(const char *key, int n)
     return true;
 }
 
-bool NutrientOLRoute::CheckInputData()
+bool NutrientOL_IKW::CheckInputData()
 {
     if (this->m_nCells <= 0)
     {
@@ -89,7 +89,7 @@ bool NutrientOLRoute::CheckInputData()
     {
         throw ModelException(MID_NutOLRout, "CheckInputData", "The layers of reaches data can not be less than zero.");
     }
-    if (this->m_TimeStep == NODATA)
+    if (this->m_TimeStep == NODATA_VALUE)
     {
         throw ModelException(MID_NutOLRout, "CheckInputData", "The time can not be zero.");
     }
@@ -156,7 +156,7 @@ bool NutrientOLRoute::CheckInputData()
     return true;
 }
 
-void NutrientOLRoute::SetValue(const char *key, float value)
+void NutrientOL_IKW::SetValue(const char *key, float value)
 {
     string sk(key);
     if (StringMatch(sk, VAR_OMP_THREADNUM))
@@ -173,7 +173,7 @@ void NutrientOLRoute::SetValue(const char *key, float value)
     }
 }
 
-void NutrientOLRoute::Set1DData(const char *key, int n, float *data)
+void NutrientOL_IKW::Set1DData(const char *key, int n, float *data)
 {
     if (!this->CheckInputSize(key, n)) return;
     string sk(key);
@@ -198,7 +198,7 @@ void NutrientOLRoute::Set1DData(const char *key, int n, float *data)
     }
 }
 
-void NutrientOLRoute::Set2DData(const char *key, int nrows, int ncols, float **data)
+void NutrientOL_IKW::Set2DData(const char *key, int nrows, int ncols, float **data)
 {
 	if (!this->CheckInputSize(key, nrows)) return;
     string sk(key);
@@ -217,7 +217,7 @@ void NutrientOLRoute::Set2DData(const char *key, int nrows, int ncols, float **d
     }
 }
 
-void NutrientOLRoute::initialOutputs()
+void NutrientOL_IKW::initialOutputs()
 {
     if (this->m_nCells <= 0)
     {
@@ -245,7 +245,7 @@ void NutrientOLRoute::initialOutputs()
     }
 }
 
-int NutrientOLRoute::Execute()
+int NutrientOL_IKW::Execute()
 {
     if (!this->CheckInputData())
     {
@@ -268,7 +268,7 @@ int NutrientOLRoute::Execute()
     return 0;
 }
 
-void NutrientOLRoute::initial()
+void NutrientOL_IKW::initial()
 {
     if (m_QV == NULL)
     {
@@ -283,11 +283,12 @@ void NutrientOLRoute::initial()
         }
     }
 }
-float NutrientOLRoute::CalculateSedinFlowFraction(int id)
+float NutrientOL_IKW::CalculateSedinFlowFraction(int id)
 {
 	//TODO
+	return 0.f;
 }
-void NutrientOLRoute::NutrientinOverland(int i)
+void NutrientOL_IKW::NutrientinOverland(int i)
 {
 	// Calculate the ratio between sediment in flow and soil loss caused by water erosion
 	float fractionSed = 0.f;
@@ -371,7 +372,7 @@ void NutrientOLRoute::NutrientinOverland(int i)
     m_codToCh[i] = m_codToCh[i] / 1.e6f; //mg to kg
 }
 
-float NutrientOLRoute::NutToChannel(int id, float nut)
+float NutrientOL_IKW::NutToChannel(int id, float nut)
 {
         float fractiontochannel = 0.f;
         if (m_chWidth[id] > 0)
@@ -383,7 +384,7 @@ float NutrientOLRoute::NutToChannel(int id, float nut)
         float nuttoch = fractiontochannel * nut;
         return nuttoch;
 }
-void NutrientOLRoute::Get1DData(const char *key, int *n, float **data)
+void NutrientOL_IKW::Get1DData(const char *key, int *n, float **data)
 {
     string sk(key);
     *n = m_nCells;

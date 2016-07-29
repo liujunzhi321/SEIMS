@@ -234,6 +234,10 @@ bool ReservoirMethod::CheckInputData()
 		throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: soil layers has not been set.");
 	if (m_soilThick == NULL)
 		throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: soil thickness has not been set.");
+
+	if (m_nSubbasins <= 0) throw ModelException(MID_GWA_RE, "CheckInputData", "The subbasins number must be greater than 0.");
+	if (m_subbasinIDs.empty()) throw ModelException(MID_GWA_RE, "CheckInputData", "The subbasin IDs can not be EMPTY.");
+	if (m_subbasinsInfo == NULL) throw ModelException(MID_GWA_RE, "CheckInputData", "The subbasins information can not be NULL.");
     return true;
 }
 
