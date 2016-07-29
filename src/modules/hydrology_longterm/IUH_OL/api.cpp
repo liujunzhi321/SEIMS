@@ -39,10 +39,11 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddParameter("uhminCell","","start time of IUH for each grid cell","ParameterDB_Discharge",DT_Array1D);
     //mdi.AddParameter("uhmaxCell","","end time of IUH for each grid cell","ParameterDB_Discharge",DT_Array1D);
 
-    mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module,
-                 DT_Raster1D);                    //from depression module
+	mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module, DT_Raster1D);  //from depression module
+	mdi.AddOutput(VAR_Q_FLOW, UNIT_DEPTH_MM, DESC_Q_FLOW, DT_Raster1D);
 
-    mdi.AddOutput(VAR_SBOF, UNIT_DEPTH_MM, DESC_SBOF, DT_Array1D);
+    mdi.AddOutput(VAR_SBOF, UNIT_FLOW_CMS, DESC_SBOF, DT_Array1D);
+
 
     // set the dependencies
     mdi.AddDependency("DEP_FS", "Depression Storage module");

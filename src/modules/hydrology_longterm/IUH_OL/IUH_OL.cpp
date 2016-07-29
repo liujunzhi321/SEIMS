@@ -8,7 +8,8 @@
 using namespace std;
 
 IUH_OL::IUH_OL(void) : m_TimeStep(-1), m_nCells(-1), m_CellWidth(NODATA), m_nsub(-1), m_subbasin(NULL),
-                       m_iuhCell(NULL), m_rs(NULL), m_iuhCols(-1), m_cellFlowCols(-1), m_Q_SBOF(NULL), m_cellFlow(NULL)
+                       m_iuhCell(NULL), m_rs(NULL), m_iuhCols(-1), m_cellFlowCols(-1), m_Q_SBOF(NULL), m_cellFlow(NULL),
+					   m_Q_Flow(NULL)
 {
 }
 
@@ -25,6 +26,7 @@ IUH_OL::~IUH_OL(void)
         }
         delete[] this->m_cellFlow;
     }
+	if (m_Q_Flow != NULL) Release1DArray(m_Q_Flow);
 }
 
 bool IUH_OL::CheckInputData(void)
@@ -117,6 +119,14 @@ void IUH_OL::initialOutputs()
                 m_cellFlow[i][j] = 0.0f;
         }
     }
+	if(m_Q_Flow == NULL)
+	{
+		m_Q_Flow = new float [m_nCells];
+		for (int i = 0; i < m_nCells; i++)
+		{
+			m_Q_Flow[i] = 0.f;
+		}
+	}
 }
 
 int IUH_OL::Execute()
@@ -159,7 +169,6 @@ int IUH_OL::Execute()
                 m_cellFlow[i][k] += v_rs / 1000.0f * m_iuhCell[i][col] * area / m_TimeStep;
                 col++;
             }
-
         }
     }
 
@@ -178,10 +187,13 @@ int IUH_OL::Execute()
             throw ModelException("IUH_OL", "Execute", "The subbasin " + oss.str() + " is invalid.");
         }
         m_Q_SBOF[subi] += m_cellFlow[i][0];    //get new value
+
+		m_Q_Flow[i] = m_cellFlow[i][0];
+		m_Q_Flow[i] = m_Q_Flow[i] * m_TimeStep * 1000.f / area;	 // m3/s -> mm
     }
 
     float tmp = 0.f;
-#pragma omp parallel for reduction(+:tmp)
+	#pragma omp parallel for reduction(+:tmp)
     for (int n = 1; n < m_nsub + 1; n++)
     {
         tmp += m_Q_SBOF[n];        //get overland flow routing for entire watershed.
@@ -292,6 +304,10 @@ void IUH_OL::Get1DData(const char *key, int *n, float **data)
     {
         *data = this->m_Q_SBOF;
     }
+	else if (StringMatch(sk, VAR_Q_FLOW))
+	{
+		*data = this->m_Q_Flow;
+	}
     else
         throw ModelException("IUH_OL", "getResult", "Result " + sk +
                                                     " does not exist in IUH_OL method. Please contact the module developer.");
