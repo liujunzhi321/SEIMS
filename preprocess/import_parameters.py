@@ -18,8 +18,8 @@ def ImportParameters(sqlite_file, db):
     cList = db.collection_names()
     if not StringInList(DB_TAB_PARAMETERS.upper(), cList):
         db.create_collection(DB_TAB_PARAMETERS.upper())
-    else:
-        db.drop_collection(DB_TAB_PARAMETERS.upper())
+    #else:
+    #    db.drop_collection(DB_TAB_PARAMETERS.upper())
     # read sqlite database
     conn = sqlite3.connect(sqlite_file)
     c = conn.cursor()
