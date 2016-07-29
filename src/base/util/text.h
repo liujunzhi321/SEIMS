@@ -420,6 +420,8 @@
 #define MCLSDESC_OL_ROUTING            "Overland routing module"
 #define MID_IKW_OL                                    "IKW_OL"
 #define MDESC_IKW_OL                            "Overland routing using 4-point implicit finite difference method."
+#define MID_IUH_OL								"IUH_OL"
+#define MDESC_IUH_OL							"IUH overland method to calculate overland flow routing."
 /// Channel routing related modules
 #define MCLS_CH_ROUTING                        "Channel routing"
 #define MCLSDESC_CH_ROUTING            "Channel routing modules"
@@ -731,7 +733,7 @@
 #define VAR_PSP "psp"                               /// Phosphorus availability index
 #define VAR_PUPDIS "p_updis"
 #define VAR_QCH "QCH"
-#define VAR_Q_FLOW "Q_Flow"
+#define VAR_OLFLOW "OL_Flow"						/// overland flow in each cell calculated during overland routing
 #define VAR_QG "QG"                                 /// Groundwater discharge at each reach outlet and at each time step
 #define VAR_QI "QI"                                 /// Interflow at each reach outlet and at each time step
 #define VAR_QOUTLET "QOUTLET"                       /// discharge at the watershed outlet
@@ -1244,7 +1246,7 @@
 #define DESC_PSP "Phosphorus availability index"
 #define DESC_PUPDIS "Phosphorus uptake distribution parameter"
 #define DESC_QCH "Flux in the downslope boundary of cells"
-#define DESC_Q_FLOW "overland flow in each cell"
+#define DESC_OLFLOW "overland flow in each cell calculated during overland routing"
 #define DESC_QG "Groundwater discharge at each reach outlet and at each time step"
 #define DESC_QI "Interflow at each reach outlet and at each time step"
 #define DESC_QOUTLET "discharge at the watershed outlet"
