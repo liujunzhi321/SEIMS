@@ -179,6 +179,7 @@ dimensionTypes ModulesIOList::MatchType(string strType)
 	if (StringMatch(strType, Type_Raster2D)) typ = DT_Raster2D;
 	if (StringMatch(strType, Type_Scenario)) typ = DT_Scenario;
 	if (StringMatch(strType, Type_Reach)) typ = DT_Reach;
+	if (StringMatch(strType, Type_Subbasin)) typ = DT_Subbasin;
 	//if (StringMatch(strType, Type_SiteInformation)) typ = DT_SiteInformation;
 	//if (StringMatch(strType, Type_LapseRateArray)) typ = DT_LapseRateArray;
 	//if (StringMatch(strType, Type_LookupTable)) typ = DT_LookupTable;
@@ -1037,6 +1038,9 @@ string DimentionType2String(dimensionTypes dimType)
 			break;
 		case DT_Reach:
 			strTmp = Type_Reach;
+			break;
+		case DT_Subbasin:
+			strTmp = Type_Subbasin;
 			break;
 		//case DT_LapseRateArray:
 		//	strTmp = Type_LapseRateArray;

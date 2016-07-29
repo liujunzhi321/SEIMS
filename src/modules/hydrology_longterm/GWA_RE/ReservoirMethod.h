@@ -73,6 +73,8 @@ public:
 
     virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
 
+	virtual void SetSubbasins(clsSubbasins *);
+
     virtual int Execute(void);
 
     virtual void Get1DData(const char *key, int *nRows, float **data);
@@ -126,7 +128,7 @@ private:
 	//! soil thickness of each layer
 	float **m_soilThick;
 
-    float m_upSoilDepth;
+    //float m_upSoilDepth;
 
 	//! groundwater Revap coefficient
 	float m_dp_co;
@@ -165,31 +167,43 @@ private:
 
     
     //output
-	
+	//!
+	float *m_T_Perco;
+	//!
+	float *m_T_PerDep;
 	//! 
     float *m_T_RG;
 	//! 
     float *m_T_QG;
 	//! 
     float *m_D_Revap;
-	//! 
+	//!
+	float *m_T_Revap;
+	//! groundwater water balance statistics
     float **m_T_GWWB;
 
-	//! subbasin grid
-    float *m_subbasin;
+	////! subbasin grid
+ //   float *m_subbasin;
 	//! subbasin number
     int m_nSubbasins;
-	//! selected count of output subbasin
-    int m_subbasinSelectedCount;
-	//! subbasin selected to output
-    float *m_subbasinSelected;
-	//! vector of all Subbasin instances \sa Subbasin
-    vector<Subbasin *> m_subbasinList;
+	//! subbasin IDs
+	vector<int> m_subbasinIDs;
+	////! selected count of output subbasin
+ //   int m_subbasinSelectedCount;
+	////! subbasin selected to output
+ //   float *m_subbasinSelected;
+	bool m_firstRun;
+	//! All subbasins information,\sa clsSubbasins, \sa Subbasin
+	clsSubbasins *m_subbasinsInfo;
+	////! vector of all Subbasin instances 
+	// vector<Subbasin *> m_subbasinList;
+	
 	/*
-	 * \brief Get subbasin instances
+	 * \brief Set groundwater related subbasin parameters
 	 * \sa Subbasin
+	 * \sa clsSubbasins
 	 */
-    void getSubbasinList();
+    void setSubbasinInfos();
 };
 
 #endif

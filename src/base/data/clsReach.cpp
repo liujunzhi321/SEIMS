@@ -154,10 +154,12 @@ clsReaches::~clsReaches()
 {
     if (!m_reachesInfo.empty())
     {
-        for (map<int, clsReach *>::iterator iter = m_reachesInfo.begin(); iter != m_reachesInfo.end(); iter++)
+        for (map<int, clsReach *>::iterator iter = m_reachesInfo.begin(); iter != m_reachesInfo.end();)
         {
             if (iter->second != NULL)
                 delete iter->second;
+			iter = m_reachesInfo.erase(iter);
         }
+		m_reachesInfo.clear();
     }
 }

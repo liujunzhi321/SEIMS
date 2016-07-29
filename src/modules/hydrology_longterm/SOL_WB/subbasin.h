@@ -35,7 +35,6 @@ private:
     double m_S_MOI;
     double m_moistureDepth;
     double m_interceptionET;
-
     double m_pNet;
     double m_T;
     double m_Soil_T;

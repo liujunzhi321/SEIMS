@@ -172,9 +172,11 @@
 #define Tag_ReachParameter                            "ReachParameter"
 #define Tag_RchParam                                    "RchParam"
 /// Replaced Tag_ReachParameter and Tag_RchParam by VAR_REACH_PARAM
-#define VAR_REACH_PARAM                        "REACH"
+#define VAR_REACH_PARAM                        "ReachParam"
 #define DESC_REACH_PARAM                        "Reach parameters such as stream order, manning's n and downstream subbasin id"
-
+/// Add Subbasins as AddParameters for modules
+#define VAR_SUBBASIN_PARAM						"SubbasinParam"
+#define DESC_SUBBASIN_PARAM						"Statistics of subbasin related parameters"
 /// Files or database constant strings
 #define ASCIIExtension                                    ".asc"
 #define GTiffExtension                                    ".tif"
@@ -248,6 +250,7 @@
 
 #define Type_Scenario            "SCENARIO"
 #define Type_Reach                "REACH"
+#define Type_Subbasin			"SUBBASIN"
 //#define Type_LookupTable    "LOOKUPTABLE"
 //#define Type_LapseRateArray        "LAPSERATEARRAY"
 //#define Type_SiteInformation    "SITEINFORMATION"
@@ -372,6 +375,11 @@
 #define MCLSDESC_SUBSURFACE		"Subsurface Runoff"
 #define MID_SSR_DA				"SSR_DA"
 #define MDESC_SSR_DA			"Darcy's law and the kinematic approximation; Water is routed cell-to-cell according to D8 flow direction"
+/// Soil water balance
+#define MCLS_WTRBALANCE			"Water banlance"
+#define MCLSDESC_WTRBALANCE		"Water balance calculation"
+#define MID_SOL_WB				"SOL_WB"
+#define MDESC_SOL_WB			"Soil water balance calculation"
 /// Hillslope hydrology
 #define MCLS_HS_HYDRO                            "Hillslope water balance"
 #define MCLSDESC_HS_HYDRO                "Water balance calculation in hillslope."
@@ -607,7 +615,7 @@
 #define VAR_GWMINP "gwminp"
 #define VAR_GWNEW "GWNEW"                           /// The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage
 #define VAR_GWNO3 "gwno3"
-#define VAR_GWWB "GWWB"
+#define VAR_GWWB "GWWB"        // groundwater water balance
 #define VAR_HCH "HCH"
 #define VAR_HITARG "hi_targ"
 #define VAR_HMNTL "hmntl"                           /// amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell(kg N/ha)
@@ -1068,7 +1076,7 @@
 #define DESC_DAYLEN "day length"
 #define DESC_DAYLEN_MIN  "minimum day length"
 #define DESC_DEEPST "depth of water in deep aquifer"
-#define DESC_DEET "Distribution of evaporation from depression storage"
+#define DESC_DEET "evaporation from depression storage"
 #define DESC_DEM "Digital Elevation Model"
 #define DESC_DEPRATIO "Deposition ratio of sediment"
 #define DESC_DEPREIN "initial depression storage coefficient"
@@ -1115,6 +1123,7 @@
 #define DESC_GWMINP "soluble P concentration in groundwater loading to reach"
 #define DESC_GWNEW "The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage"
 #define DESC_GWNO3 "nitrate N concentration in groundwater loading to reach"
+#define DESC_GWWB "groundwater water balance"
 #define DESC_HCH "Water depth in the downslope boundary of cells"
 #define DESC_HITARG "Harvest index target "
 #define DESC_HMNTL "amount of nitrogen moving from active organic to nitrate pool in soil profile on current day in cell"
@@ -1255,7 +1264,8 @@
 #define DESC_RCN "concentration of nitrate in the rain"
 #define DESC_Reinfiltration "TODO: meaning?"
 #define DESC_RETURNFLOW "water depth of return flow"
-#define DESC_REVAP "revaporization from groundwater"
+#define DESC_REVAP "revaporization from groundwater to the last soil layer"
+#define DESC_RG "groundwater runoff"
 #define DESC_RHOQ "algal respiration rate at 20 deg C"
 #define DESC_RM "Relative humidity"
 #define DESC_RMN2TL "amount of nitrogen moving from the fresh organic (residue) to the nitrate(80%) and active organic(20%) pools in soil profile on current day in cell"
@@ -1303,7 +1313,7 @@
 #define DESC_SNO50COV "Fraction of SNOCOVMX that corresponds to 50% snow cover"
 #define DESC_SNRD "snow blowing in or out the cell"
 #define DESC_SNRD "snow blowing in or out the cell"
-#define DESC_SNSB "snow sublimation (water equivalent) for a user defined period"
+#define DESC_SNSB "snow sublimation (water equivalent)"
 #define DESC_SNWB "snow water balance for selected subbasins"
 #define DESC_SOER "soil loss caused by water erosion"
 #define DESC_SOET "evaporation from the soil water storage"

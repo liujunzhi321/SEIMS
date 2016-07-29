@@ -96,25 +96,26 @@ void PrintInfoItem::add1DTimeSeriesResult(time_t t, int n, float *data)
 
 void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, string header)
 {
-#ifndef linux
-    projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
-    if (::GetFileAttributes(projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
-    {
-        LPSECURITY_ATTRIBUTES att = NULL;
-        ::CreateDirectory(projectPath.c_str(), att);
-    }
-#else
-    projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
-    if(access(projectPath.c_str(), F_OK) != 0)
-    {
-        mkdir(projectPath.c_str(), 0777);
-    }
-#endif
-
+//#ifndef linux
+//    projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
+//    if (::GetFileAttributes(projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
+//    {
+//        LPSECURITY_ATTRIBUTES att = NULL;
+//        ::CreateDirectory(projectPath.c_str(), att);
+//    }
+//#else
+//    projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
+//    if(access(projectPath.c_str(), F_OK) != 0)
+//    {
+//        mkdir(projectPath.c_str(), 0777);
+//    }
+//#endif
+	projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
     /// Get filenames existed in GridFS, i.e., "OUTPUT.files"
     vector<string> outputExisted = GetGridFsFileNames(gfs);
 	/// Filename should appended by AggregateType to avoiding the same names. By LJ, 2016-7-12
-	Filename = Filename + "_" + AggType;
+	if(!StringMatch(AggType,""))
+		Filename = Filename + "_" + AggType;
     StatusMessage(("Creating output file " + Filename + "...").c_str());
     // Don't forget add appropriate suffix to Filename... ZhuLJ, 2015/6/16
     if (m_AggregationType == AT_SpecificCells)
@@ -132,9 +133,15 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
         ofstream fs;
         utils util;
         string filename = projectPath + Filename + TextExtension;
-        fs.open(filename.c_str(), ios::out);
+        fs.open(filename.c_str(), ios::out|ios::app); /// append if more than one print item. By LJ
         if (fs.is_open())
         {
+			if(SubbasinID == 0)
+				fs << "Watershed: "<< endl;
+			else
+				fs << "Subbasin: "<<SubbasinID<<endl;
+			// Write header
+			fs << header << endl;
             map<time_t, float>::iterator it;
             for (it = TimeSeriesData.begin(); it != TimeSeriesData.end(); it++)
             {
@@ -151,9 +158,13 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
         ofstream fs;
         utils util;
         string filename = projectPath + Filename + TextExtension;
-        fs.open(filename.c_str(), ios::out);
+        fs.open(filename.c_str(), ios::out|ios::app);
         if (fs.is_open())
         {
+			if(SubbasinID == 0)
+				fs << "Watershed: "<< endl;
+			else
+				fs << "Subbasin: "<<SubbasinID<<endl;
             fs << header << endl;
             map<time_t, float *>::iterator it;
             for (it = TimeSeriesDataForSubbasin.begin(); it != TimeSeriesDataForSubbasin.end(); it++)
@@ -219,7 +230,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
         ofstream fs;
         utils util;
         string filename = projectPath + Filename + TextExtension;
-        fs.open(filename.c_str(), ios::out);
+        fs.open(filename.c_str(), ios::out|ios::app);
         if (fs.is_open())
         {
             map<time_t, float>::iterator it;
@@ -573,7 +584,7 @@ PrintInfo::~PrintInfo(void)
 string PrintInfo::getOutputTimeSeriesHeader()
 {
     vector<string> headers;
-    if (StringMatch(m_OutputID, "T_SNWB"))
+    if (StringMatch(m_OutputID, VAR_SNWB))
     {
         headers.push_back("Time");
         headers.push_back("P");
@@ -586,36 +597,36 @@ string PrintInfo::getOutputTimeSeriesHeader()
         headers.push_back("SM");
         headers.push_back("SA");
     }
-    else if (StringMatch(m_OutputID, "SOWB"))
+    else if (StringMatch(m_OutputID, VAR_SOWB))
     {
         headers.push_back("Time");
-        headers.push_back("P");
-        headers.push_back("T");
-        headers.push_back("Soil_T");
-        headers.push_back("pNet");
-        headers.push_back("InterceptionET");
-        headers.push_back("DepressionET");
-        headers.push_back("Infiltration");
-        headers.push_back("Total_ET");
-        headers.push_back("Soil_ET");
-        headers.push_back("Net_Percolation");
-        headers.push_back("Revap");
-        headers.push_back("RS");
-        headers.push_back("RI");
-        headers.push_back("RG");
-        headers.push_back("R");
-        headers.push_back("Moisture");
-        headers.push_back("MoistureDepth");
+        headers.push_back("PCP (mm)");
+        headers.push_back("meanTmp (deg C)");
+        headers.push_back("soilTmp (deg C)");
+        headers.push_back("netPcp (mm)");
+        headers.push_back("InterceptionET (mm)");
+        headers.push_back("DepressionET (mm)");
+        headers.push_back("Infiltration (mm)");
+        headers.push_back("Total_ET (mm)");
+        headers.push_back("Soil_ET (mm)");
+        headers.push_back("NetPercolation (mm)");
+        headers.push_back("Revaporization (mm)");
+        headers.push_back("SurfaceRunoff (mm)");
+        headers.push_back("SubsurfaceRunoff (mm)");
+        headers.push_back("Baseflow (mm)");
+        headers.push_back("AllRunoff (mm)");
+        headers.push_back("SoilMoisture (mm)");
+        //headers.push_back("MoistureDepth");
     }
-    else if (StringMatch(m_OutputID, "T_GWWB"))
+    else if (StringMatch(m_OutputID, VAR_GWWB))
     {
         headers.push_back("Time");
-        headers.push_back("PERCO");
-        headers.push_back("REVAP");
-        headers.push_back("PERDE");
-        headers.push_back("Baseflow(mm)");
-        headers.push_back("GW");
-        headers.push_back("Baseflow(m3/s)");
+        headers.push_back("Percolation (mm)");
+        headers.push_back("Revaporization (mm)");
+        headers.push_back("Deep Percolation (mm)");
+        headers.push_back("Baseflow (mm)");
+        headers.push_back("Groundwater storage (mm)");
+        headers.push_back("Baseflow discharge (m3/s)");
     }
     else if (StringMatch(m_OutputID, "T_RECH"))
     {

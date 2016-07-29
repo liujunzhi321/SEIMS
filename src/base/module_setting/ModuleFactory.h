@@ -2,20 +2,16 @@
  * \file ModuleFactory.h
  * \brief Constructor of ModuleFactory from config file
  *
- *
- *
  * \author Junzhi Liu, LiangJun Zhu
- * \version 1.1
+ * \version 1.2
  * \date June 2010
  *
  * 
  */
 #pragma once
 #ifndef linux
-
 #include <WinSock2.h>
 #include <Windows.h>
-
 #else
 #include <unistd.h>
 #include <sys/types.h>
@@ -41,6 +37,7 @@
 #include "ParamInfo.h"
 #include "Scenario.h"
 #include "clsReach.h"
+#include "clsSubbasin.h"
 #include "clsInterpolationWeightData.h"
 #include "clsRasterData.h"
 #include "SettingsInput.h"
@@ -61,21 +58,12 @@ public:
      * \param[in] modelPath the path of your model
      * \param[in] conn \a mongoc_client_t
      * \param[in] dbName name of your model
+     * \param[in] subBasinID subBasinID
      * \param[in] scenarioID
      */
     ModuleFactory(const string &configFileName, const string &modelPath, mongoc_client_t *conn, const string &dbName,
-                  LayeringMethod layingMethod, int scenarioID);
+                  int subBasinID, LayeringMethod layingMethod, int scenarioID);
 
-    ///*!
-    // * \brief Constructor of ModuleFactory from config file and BMP database
-    // * By default, the layering method is UP_DOWN
-    // * \param[in] configFileName config.fig file which contains modules list for Simulation
-    // * \param[in] modelPath the path of your model
-    // * \param[in] conn \a mongoc_client_t
-    // * \param[in] dbName name of your model
-    // * \param[in] scenario BMPs scenario data
-    // */
-    //ModuleFactory(const string& configFileName, const string& modelPath, mongoc_client_t* conn, const string& dbName,LayeringMethod layingMethod, Scenario* scenario);
     //! Destructor
     ~ModuleFactory(void);
 
@@ -96,6 +84,8 @@ public:
     //! Get Module ID by index
     string GetModuleID(int i) { return m_moduleIDs[i]; }
 
+	//! Add mask raster to m_rsMap
+	void AddMaskRaster(string, clsRasterData *);
 private:
     typedef SimulationModule *(*InstanceFunction)(void);
 
@@ -107,6 +97,8 @@ private:
     map<string, MetadataFunction> m_metadataFuncs;
     //! Module path
     string m_modulePath;
+	//! SubBasin ID
+	int m_subBasinID;
     //! Layering method, can be UP_DOWN or DOWN_UP
     LayeringMethod m_layingMethod;
     //! Module IDs
@@ -115,7 +107,7 @@ private:
     //! .DLL (or .so) handles
     vector<HINSTANCE> m_dllHandles;
 #else
-    vector<void*>										m_dllHandles;
+    vector<void*> m_dllHandles;
 #endif
     //! Module settings, \a map<string, SEIMSModuleSetting*>
     map<string, SEIMSModuleSetting *> m_settings;
@@ -165,6 +157,8 @@ private:
     Scenario *m_scenario;
     //! Reaches information
     clsReaches *m_reaches;
+	//! Subbasins information
+	clsSubbasins *m_subbasins;
 
 private:
     //! Initialization, read the config.fig file and initialize
@@ -235,6 +229,10 @@ private:
 
     //! Set Reaches information
     void SetReaches(SimulationModule *pModule);
+
+	//! Set Subbasins information
+	void SetSubbasins(SimulationModule *pModule);
+
     //! Read multiply reach information from file
     //void ReadMultiReachInfo(const string &filename, LayeringMethod layeringMethod, int& nRows, int& nCols, float**& data);
     //! Read single reach information

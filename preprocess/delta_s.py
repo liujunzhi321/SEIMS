@@ -34,9 +34,9 @@ else:
 
 def flowlen_cell(i, j, ysize, xsize, fdir, cellsize, weight, length):
     # print i,j, weight[i][j]
-    if (i < ysize and j < xsize):
-        if (length[i][j] == 0):
-            if (weight[i][j] > 0):
+    if i < ysize and j < xsize:
+        if length[i][j] == 0:
+            if weight[i][j] > 0:
                 prei = i
                 prej = j
                 wt = weight[i][j]
@@ -51,10 +51,10 @@ def flowlen_cell(i, j, ysize, xsize, fdir, cellsize, weight, length):
                 return length[prei][prej]
             else:
                 return 0
-        if (length[i][j] > 0):
+        if length[i][j] > 0:
             return length[i][j]
 
-        if (length[i][j] < 0):
+        if length[i][j] < 0:
             print "Error in calculating flowlen_cell function! i,j:"
             print i, j
             return -1
@@ -77,7 +77,7 @@ def cal_flowlen(filepath, weight):
 
     for i in range(0, ysize):
         for j in range(0, xsize):
-            if (abs(fdir_data[i][j] - noDataValue) < UTIL_ZERO):
+            if abs(fdir_data[i][j] - noDataValue) < UTIL_ZERO:
                 length[i][j] = noDataValue
                 continue
 
@@ -129,14 +129,14 @@ def GenerateDelta_s(filepath):
     delta_s = numpy.zeros((ysize, xsize))
 
     def initialVariables(vel, strlk, slp, rad):
-        if (abs(vel - noDataValue) < UTIL_ZERO):
+        if abs(vel - noDataValue) < UTIL_ZERO:
             return DEFAULT_NODATA
-        if (strlk <= 0):
+        if strlk <= 0:
             weight = 1
         else:
             weight = 0
         # 0 is river
-        if (slp < 0.0005):
+        if slp < 0.0005:
             slp = 0.0005
         # dampGrid = vel * rad / (slp / 100. * 2.) # No need to divide 100 in my view. By LJ
         dampGrid = vel * rad / (slp * 2.)
@@ -166,7 +166,7 @@ def GenerateDelta_s(filepath):
     delta_s_sqr = cal_flowlen(filepath, weight)
 
     def cal_delta_s(vel, sqr):
-        if (abs(vel - noDataValue) < UTIL_ZERO):
+        if abs(vel - noDataValue) < UTIL_ZERO:
             return noDataValue
         else:
             return math.sqrt(sqr) / 3600.

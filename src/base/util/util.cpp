@@ -57,39 +57,53 @@ float Expo(float xx)
 int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFiles)
 {
 #ifndef linux
-    char szFind[MAX_PATH];
-#ifdef MSVC
-    strcpy_s(szFind, lpPath);
-    strcat_s(szFind, "\\");
-    strcat_s(szFind, expression);
-#else
+	char szFind[MAX_PATH];
 	strcpy(szFind, lpPath);
 	strcat(szFind, "\\");
 	strcat(szFind, expression);
-#endif
 
-    WIN32_FIND_DATA findFileData;
-    HANDLE hFind = ::FindFirstFile(szFind, &findFileData);
-    if (INVALID_HANDLE_VALUE == hFind)
-        return -1;
-    do
-    {
-        if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            continue;
+	WIN32_FIND_DATA findFileData;
+	HANDLE hFind = ::FindFirstFile(szFind, &findFileData);
+	if (INVALID_HANDLE_VALUE == hFind)
+		return -1;
+	do
+	{
+		if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			continue;
 
-        char fullpath[MAX_PATH];
-		#ifdef MSVC
-        strcpy_s(fullpath, lpPath);
-        strcat_s(fullpath, "\\");
-        strcat_s(fullpath, findFileData.cFileName);
-#else
+		char fullpath[MAX_PATH];
 		strcpy(fullpath, lpPath);
 		strcat(fullpath, "\\");
 		strcat(fullpath, findFileData.cFileName);
-#endif
-        vecFiles.push_back(fullpath);
 
-    } while (::FindNextFile(hFind, &findFileData));
+		vecFiles.push_back(fullpath);
+
+	} while (::FindNextFile(hFind, &findFileData));
+#else
+	char ch,infile[1024],outfile[1024];
+	struct dirent *ptr;
+	DIR *dir;
+	dir = opendir(lpPath);
+	while((ptr=readdir(dir)) != NULL)
+	{
+		if(ptr->d_name[0] == '.')
+			continue;
+
+		string filename(ptr->d_name);
+		//cout << filename<<endl;
+		int n = filename.length();
+		string ext = filename.substr(n-4, 4);
+		//cout << ext << "\t" << expression << endl;
+		if(StringMatch(ext, expression))
+		{
+			ostringstream oss;
+			oss << lpPath << "/" <<  filename;
+			//cout<<oss.str()<<endl;
+			vecFiles.push_back(oss.str());
+		}
+	}
+	closedir(dir);
+
 #endif
 
     return 0;
