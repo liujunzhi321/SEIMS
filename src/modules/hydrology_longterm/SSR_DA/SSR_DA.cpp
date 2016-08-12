@@ -222,8 +222,8 @@ int SSR_DA::Execute()
         {
             qiAllLayers = 0.f;
             for (int j = 0; j < (int)m_soilLayers[i]; j++){
-				if (m_qiVol[j][i] > UTIL_ZERO)
-					qiAllLayers += m_qiVol[j][i];
+				if (m_qiVol[i][j] > UTIL_ZERO)
+					qiAllLayers += m_qiVol[i][j];
 			}
             //cout << m_nSubbasin << "\tsubbasin:" << m_subbasin[i] << "\t" << qiAllLayers << endl;
             if (m_nSubbasin > 1)
