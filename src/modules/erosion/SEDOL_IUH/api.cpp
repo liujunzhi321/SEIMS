@@ -30,20 +30,20 @@ extern "C" SEIMS_MODULE_API const char* MetadataInformation()
 	mdi.SetWebsite("http://www.website.com");
 
 
-	mdi.AddParameter("TimeStep","hr","time step of the simulation","file.in",DT_Single); 
-	mdi.AddParameter("CellWidth","m","","file.in",DT_Single); 
+	mdi.AddParameter(Tag_TimeStep, UNIT_SECOND, DESC_TIMESTEP,Source_ParameterDB,DT_Single); 
+	mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth,Source_ParameterDB,DT_Single); 
 	mdi.AddParameter(VAR_OL_SED_ECO1, UNIT_NON_DIM, DESC_OL_SED_ECO1, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_OL_SED_ECO2, UNIT_NON_DIM, DESC_OL_SED_ECO2, Source_ParameterDB, DT_Single);
-	mdi.AddParameter("ccoe","","calibration coefficient of overland erosion","ParameterDB_Sediment",DT_Single);
-	mdi.AddParameter("USLE_K","","the soil erodibility factor","ParameterDB_Sediment",DT_Raster1D);
-	mdi.AddParameter("USLE_C","","the cover management factor","ParameterDB_Sediment",DT_Raster1D);
-	mdi.AddParameter("subbasin","","The subbasion grid","ParameterDB_Snow",DT_Raster1D); 
-	mdi.AddParameter("Ol_iuh","","IUH of each grid cell","ParameterDB_Discharge",DT_Array2D);
-	mdi.AddParameter("Manning","","Manning's roughness","ParameterDB_Discharge",DT_Raster1D);
-	mdi.AddParameter("Slope", "%", "Slope", "ParameterDB_WaterBalance", DT_Raster1D); 
+	mdi.AddParameter("ccoe","","calibration coefficient of overland erosion",Source_ParameterDB,DT_Single);
+	mdi.AddParameter("USLE_K","","the soil erodibility factor",Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter("USLE_C","","the cover management factor",Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter("subbasin","","The subbasion grid",Source_ParameterDB,DT_Raster1D); 
+	mdi.AddParameter("Ol_iuh","","IUH of each grid cell",Source_ParameterDB,DT_Array2D);
+	mdi.AddParameter("Manning","","Manning's roughness",Source_ParameterDB,DT_Raster1D);
+	mdi.AddParameter("Slope", "%", "Slope", Source_ParameterDB, DT_Raster1D); 
 
-	mdi.AddInput("D_DETSplash","kg", "distribution of splash detachment","Module",DT_Raster1D);
-	mdi.AddInput("D_SURU","mm","Distribution of surface runoff","Module",DT_Raster1D);
+	mdi.AddInput("D_DETSplash","kg", "distribution of splash detachment",Source_Module_Optional,DT_Raster1D);
+	mdi.AddInput("D_SURU","mm","Distribution of surface runoff",Source_Module_Optional,DT_Raster1D);
 	
 	// set the output variables
 	mdi.AddOutput("SOER","kg", "distribution of soil erosion", DT_Raster1D);

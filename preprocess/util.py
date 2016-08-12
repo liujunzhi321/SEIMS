@@ -27,7 +27,6 @@ shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx']
 class C(object):
     pass
 
-
 def GetINIfile():
     # Get model configuration file name
     c = C()

@@ -22,7 +22,6 @@
 #include <omp.h>
 
 #define MINI_SLOPE 0.0001f
-#define NODATA_VALUE -99
 using namespace std;
 
 VSM_CH::VSM_CH(void): m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE), 
@@ -30,7 +29,7 @@ VSM_CH::VSM_CH(void): m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE),
 	m_qiSub(NULL), m_qgSub(NULL),m_PETch(NULL),m_gwStorage(NULL), m_area(NULL), m_Vseep0(0.f),
 	m_Vdiv(NULL), m_Vpoint(NULL), m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL), m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL),
 	m_widthcurrent(NULL), m_depthcurrent(NULL), m_slopecurrent(NULL),m_widthbottom(NULL),m_sideslopeMain(1.0f),
-	m_sideslopeFloodplain(0.25),m_w_ratio(1.0f),m_bankfullQ(5.f),m_CrAreaCh(NULL), m_erodibilityFactor(0.3)
+	m_sideslopeFloodplain(0.25f),m_w_ratio(1.0f),m_bankfullQ(5.f),m_CrAreaCh(NULL), m_erodibilityFactor(0.3f)
 {
 	this->m_Q_RECH = NULL;
 	this->m_C_WABA = NULL;
@@ -166,7 +165,7 @@ void  VSM_CH::initalOutputs()
 		for (int i = 0; i < m_nreach; i++)
 		{
 			int order = (int)m_chOrder[i];
-			m_reachLayers[order].push_back(m_reachId[i]);
+			m_reachLayers[order].push_back((int)m_reachId[i]);
 		}
 	}
 
@@ -533,7 +532,7 @@ void VSM_CH::Set2DData(const char* key, int nrows, int ncols, float** data)
 			if (m_idToIndex.find(downStreamId) != m_idToIndex.end())
 			{
 				int downStreamIndex = m_idToIndex.at(downStreamId);
-				m_reachUpStream[downStreamIndex].push_back(m_reachId[i]);
+				m_reachUpStream[downStreamIndex].push_back((int)m_reachId[i]);
 			}
 		}
 	}
