@@ -16,24 +16,24 @@
 using namespace std;
 
 #include "SimulationModule.h"
-/** \defgroup IUH_SED_OL
+/** \defgroup IUH_NUTR_OL
  * \ingroup Hydrology_longterm
  * \brief IUH overland method to calculate overland flow routing
  *
  */
 
 /*!
- * \class IUH_SED_OL
- * \ingroup IUH_SED_OL
+ * \class IUH_NUTR_OL
+ * \ingroup IUH_NUTR_OL
  * \brief IUH overland method to calculate overland flow routing
  * 
  */
-class IUH_SED_OL : public SimulationModule
+class IUH_NUTR_OL : public SimulationModule
 {
 public:
-    IUH_SED_OL(void);
+    IUH_NUTR_OL(void);
 
-    ~IUH_SED_OL(void);
+    ~IUH_NUTR_OL(void);
 
     virtual int Execute();
 

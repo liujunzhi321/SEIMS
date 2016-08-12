@@ -230,7 +230,8 @@ void IUH_OL::Set1DData(const char *key, int n, float *data)
         //{
         //	m_uhmaxCell = data;
         //}
-    else if (StringMatch(sk, VAR_SURU))m_rs = data;
+    else if (StringMatch(sk, VAR_SURU))
+		m_rs = data;
     else
         throw ModelException(MID_IUH_OL, "Set1DData", "Parameter " + sk + " does not exist in current method.");
 }

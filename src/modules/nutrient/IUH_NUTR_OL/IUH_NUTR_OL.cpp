@@ -1,4 +1,4 @@
-#include "IUH_SED_OL.h"
+#include "IUH_NUTR_OL.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
 #include "util.h"
@@ -7,14 +7,14 @@
 
 using namespace std;
 
-IUH_SED_OL::IUH_SED_OL(void) : m_TimeStep(-1), m_nCells(-1), m_CellWidth(NODATA_VALUE), m_cellArea(NODATA_VALUE),
+IUH_NUTR_OL::IUH_NUTR_OL(void) : m_TimeStep(-1), m_nCells(-1), m_CellWidth(NODATA_VALUE), m_cellArea(NODATA_VALUE),
 	                   m_nSubbasins(-1),  m_subbasin(NULL),m_subbasinsInfo(NULL),
                        m_iuhCell(NULL),  m_iuhCols(-1), m_cellFlowCols(-1),
 					   m_sedYield(NULL), m_cellSed(NULL), m_sedtoCh(NULL), m_sedOL(NULL)
 {
 }
 
-IUH_SED_OL::~IUH_SED_OL(void)
+IUH_NUTR_OL::~IUH_NUTR_OL(void)
 {
     //// cleanup
 	if(m_sedtoCh != NULL) 
@@ -25,44 +25,44 @@ IUH_SED_OL::~IUH_SED_OL(void)
 
 }
 
-bool IUH_SED_OL::CheckInputData(void)
+bool IUH_NUTR_OL::CheckInputData(void)
 {
     if (m_nCells < 0)
-        throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_nCells has not been set.");
+        throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The parameter: m_nCells has not been set.");
     if (FloatEqual(m_CellWidth, NODATA_VALUE))
-        throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_CellWidth has not been set.");
+        throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The parameter: m_CellWidth has not been set.");
     if (m_TimeStep <= 0)
-        throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_TimeStep has not been set.");
+        throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The parameter: m_TimeStep has not been set.");
     if (m_subbasin == NULL)
-        throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_subbasin has not been set.");
+        throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The parameter: m_subbasin has not been set.");
 
-	if (m_nSubbasins <= 0) throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The subbasins number must be greater than 0.");
-	if (m_subbasinIDs.empty()) throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The subbasin IDs can not be EMPTY.");
+	if (m_nSubbasins <= 0) throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The subbasins number must be greater than 0.");
+	if (m_subbasinIDs.empty()) throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The subbasin IDs can not be EMPTY.");
 	if (m_subbasinsInfo == NULL)
-		throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_subbasinsInfo has not been set.");
+		throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The parameter: m_subbasinsInfo has not been set.");
 
     //if (m_uhmaxCell == NULL)
     //{
-    //	throw ModelException(MID_IUH_SED_OL,"CheckInputData","The parameter: m_uhmax has not been set.");
+    //	throw ModelException(MID_IUH_NUTR_OL,"CheckInputData","The parameter: m_uhmax has not been set.");
     //	return false;
     //}
     //if (m_uhminCell == NULL)
     //{
-    //	throw ModelException(MID_IUH_SED_OL,"CheckInputData","The parameter: m_uhmin has not been set.");
+    //	throw ModelException(MID_IUH_NUTR_OL,"CheckInputData","The parameter: m_uhmin has not been set.");
     //	return false;
     //}
     if (m_iuhCell == NULL)
-        throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_iuhCell has not been set.");
+        throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The parameter: m_iuhCell has not been set.");
     if (m_date < 0)
-        throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_date has not been set.");
+        throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The parameter: m_date has not been set.");
     return true;
 }
 
-void IUH_SED_OL::initialOutputs()
+void IUH_NUTR_OL::initialOutputs()
 {
 	// This has been checked in CheckInputData, so deprecated!
     //if (this->m_nCells <= 0 || this->m_subbasin == NULL)
-    //    throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The dimension of the input data can not be less than zero.");
+    //    throw ModelException(MID_IUH_NUTR_OL, "CheckInputData", "The dimension of the input data can not be less than zero.");
     // allocate the output variables
 
     //if (m_nSubbasins <= 0)
@@ -96,7 +96,7 @@ void IUH_SED_OL::initialOutputs()
 	}
 }
 
-int IUH_SED_OL::Execute()
+int IUH_NUTR_OL::Execute()
 {
     CheckInputData();
 
@@ -151,7 +151,7 @@ int IUH_SED_OL::Execute()
         {
             ostringstream oss;
             oss << subi;
-            throw ModelException(MID_IUH_SED_OL, "Execute", "The subbasin " + oss.str() + " is invalid.");
+            throw ModelException(MID_IUH_NUTR_OL, "Execute", "The subbasin " + oss.str() + " is invalid.");
         }
         m_sedtoCh[subi] += m_cellSed[i][0];
 
@@ -169,22 +169,22 @@ int IUH_SED_OL::Execute()
     return 0;
 }
 
-bool IUH_SED_OL::CheckInputSize(const char *key, int n)
+bool IUH_NUTR_OL::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
-        throw ModelException(MID_IUH_SED_OL, "CheckInputSize",
+        throw ModelException(MID_IUH_NUTR_OL, "CheckInputSize",
                              "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
     if (this->m_nCells != n)
     {
         if (this->m_nCells <= 0) this->m_nCells = n;
         else
-            throw ModelException(MID_IUH_SED_OL, "CheckInputSize", "Input data for " + string(key) +
+            throw ModelException(MID_IUH_NUTR_OL, "CheckInputSize", "Input data for " + string(key) +
                                                              " is invalid. All the input data should have same size.");
     }
     return true;
 }
 
-void IUH_SED_OL::SetValue(const char *key, float value)
+void IUH_NUTR_OL::SetValue(const char *key, float value)
 {
     string sk(key);
 
@@ -193,10 +193,10 @@ void IUH_SED_OL::SetValue(const char *key, float value)
     else if (StringMatch(sk, Tag_CellWidth))m_CellWidth = value;
     else if (StringMatch(sk, VAR_OMP_THREADNUM))omp_set_num_threads((int) value);
     else
-        throw ModelException(MID_IUH_SED_OL, "SetValue", "Parameter " + sk + " does not exist in current method.");
+        throw ModelException(MID_IUH_NUTR_OL, "SetValue", "Parameter " + sk + " does not exist in current method.");
 }
 
-void IUH_SED_OL::Set1DData(const char *key, int n, float *data)
+void IUH_NUTR_OL::Set1DData(const char *key, int n, float *data)
 {
 
     this->CheckInputSize(key, n);
@@ -208,10 +208,10 @@ void IUH_SED_OL::Set1DData(const char *key, int n, float *data)
 	else if (StringMatch(sk, VAR_SOER)) 
 		m_sedYield = data;
     else
-        throw ModelException(MID_IUH_SED_OL, "Set1DData", "Parameter " + sk + " does not exist in current method.");
+        throw ModelException(MID_IUH_NUTR_OL, "Set1DData", "Parameter " + sk + " does not exist in current method.");
 }
 
-void IUH_SED_OL::Set2DData(const char *key, int nRows, int nCols, float **data)
+void IUH_NUTR_OL::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
 
     string sk(key);
@@ -222,9 +222,9 @@ void IUH_SED_OL::Set2DData(const char *key, int nRows, int nCols, float **data)
         m_iuhCols = nCols;
     }
     else
-        throw ModelException(MID_IUH_SED_OL, "Set2DData", "Parameter " + sk + " does not exist in current method.");
+        throw ModelException(MID_IUH_NUTR_OL, "Set2DData", "Parameter " + sk + " does not exist in current method.");
 }
-void IUH_SED_OL::SetSubbasins(clsSubbasins *subbasins)
+void IUH_NUTR_OL::SetSubbasins(clsSubbasins *subbasins)
 {
 	if(m_subbasinsInfo == NULL){
 		m_subbasinsInfo = subbasins;
@@ -233,7 +233,7 @@ void IUH_SED_OL::SetSubbasins(clsSubbasins *subbasins)
 	}
 }
 
-void IUH_SED_OL::Get1DData(const char *key, int *n, float **data)
+void IUH_NUTR_OL::Get1DData(const char *key, int *n, float **data)
 {
 	initialOutputs();
     string sk(key);
@@ -250,7 +250,7 @@ void IUH_SED_OL::Get1DData(const char *key, int *n, float **data)
 	}
 
     else
-        throw ModelException(MID_IUH_SED_OL, "Get1DData", "Result " + sk + " does not exist in current method.");
+        throw ModelException(MID_IUH_NUTR_OL, "Get1DData", "Result " + sk + " does not exist in current method.");
 }
 
 

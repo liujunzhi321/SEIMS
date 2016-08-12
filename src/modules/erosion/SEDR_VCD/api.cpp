@@ -43,7 +43,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 
     mdi.AddInput(VAR_SED_TO_CH, UNIT_TONS, DESC_SED_TO_CH, Source_Module, DT_Array1D);  // for longterm model
-    mdi.AddInput(VAR_SUB_SEDTOCH, UNIT_KG, DESC_SUB_SEDTOCH, Source_Module, DT_Array1D);   // for storm model
+    //mdi.AddInput(VAR_SUB_SEDTOCH, UNIT_KG, DESC_SUB_SEDTOCH, Source_Module, DT_Array1D);   // for storm model
     mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_QS, UNIT_FLOW_CMS, DESC_QS, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_QI, UNIT_FLOW_CMS, DESC_QI, Source_Module, DT_Array1D);

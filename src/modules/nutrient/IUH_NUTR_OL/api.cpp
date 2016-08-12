@@ -2,7 +2,7 @@
 #include <string>
 #include "api.h"
 #include "util.h"
-#include "IUH_SED_OL.h"
+#include "IUH_NUTR_OL.h"
 #include <iostream>
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
@@ -10,7 +10,7 @@
 
 extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-    return new IUH_SED_OL();
+    return new IUH_NUTR_OL();
 }
 
 // function to return the XML Metadata document string
@@ -21,11 +21,11 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     // set the information properties
     mdi.SetAuthor("Wu Hui; Zhiqiang Yu");
     mdi.SetClass(MCLS_OL_ROUTING, MCLSDESC_OL_ROUTING);
-    mdi.SetDescription(MDESC_IUH_SED_OL);
+    mdi.SetDescription(MDESC_IUH_NUTR_OL);
     mdi.SetEmail(SEIMS_EMAIL);
-    mdi.SetHelpfile("IUH_SED_OL.chm");
-    mdi.SetID(MID_IUH_SED_OL);
-    mdi.SetName(MID_IUH_SED_OL);
+    mdi.SetHelpfile("IUH_NUTR_OL.chm");
+    mdi.SetID(MID_IUH_NUTR_OL);
+    mdi.SetName(MID_IUH_NUTR_OL);
     mdi.SetVersion("1.1");
     mdi.SetWebsite(SEIMS_SITE);
 
