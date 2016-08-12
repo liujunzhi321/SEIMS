@@ -491,7 +491,7 @@ void NutrientRemviaSr::Nitrateloss()
 //                         sol_thick[k] = m_sol_z[k] - m_sol_z[k - 1];
 //                     }
                     float wt1 = m_sol_bd[i][0] * m_sol_thick[i][0] / 100.f;
-                    float conv_wt = 1.e6 * wt1;
+                    float conv_wt = 1.e6f * wt1;
 
                     // amount of P leached from soil layer (vap)
                     float vap = 0.f;

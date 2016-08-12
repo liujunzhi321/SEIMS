@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # coding=utf-8
-## @Configuration of Preprocessing for SEIMS
+# @Configuration of Preprocessing for SEIMS
 #
 
 import ConfigParser
@@ -24,7 +24,7 @@ if 'PATH' in cf.sections():
 else:
     raise ValueError("[PATH] section MUST be existed in *.ini file.")
 if not (isPathExists(BASE_DATA_DIR) and isPathExists(MODEL_DIR) and isPathExists(TXT_DB_DIR)
-        and isPathExists(PREPROC_SCRIPT_DIR) and isPathExists(CPP_PROGRAM_DIR) and isPathExists(METIS_DIR)):
+        and isPathExists(PREPROC_SCRIPT_DIR) and isPathExists(CPP_PROGRAM_DIR)):
     raise IOError("Please Check Directories defined in [PATH]")
 if not isPathExists(MPIEXEC_DIR):
     MPIEXEC_DIR = None
@@ -80,6 +80,8 @@ genIUH = True
 simuMode = Tag_Mode_Daily
 if forCluster and Tag_Cluster not in SpatialDBName.lower():
     SpatialDBName = Tag_Cluster + "_" + SpatialDBName
+if forCluster and  not isPathExists(METIS_DIR):
+    raise IOError("Please Check METIS executable Directories defined in [PATH]")
 if stormMode:
     simuMode = Tag_Mode_Storm
     if not Tag_Mode_Storm.lower() in SpatialDBName.lower():

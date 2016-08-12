@@ -253,7 +253,7 @@ void ModelMain::Output()
 	clock_t t1 = clock();
 	string outputPath = m_projectPath + DB_TAB_OUT_SPATIAL;
 #ifndef linux
-	if (::GetFileAttributes(m_projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
+	if (::GetFileAttributes(outputPath.c_str()) == INVALID_FILE_ATTRIBUTES)
 	{
 		LPSECURITY_ATTRIBUTES att = NULL;
 		::CreateDirectory(outputPath.c_str(), att);
