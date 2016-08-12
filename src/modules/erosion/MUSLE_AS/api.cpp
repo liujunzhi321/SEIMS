@@ -48,10 +48,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_SOER, UNIT_KG, DESC_SOER, DT_Raster1D);
     mdi.AddOutput(VAR_USLE_LS, UNIT_NON_DIM, DESC_USLE_LS, DT_Raster1D);
 
-    mdi.AddOutput(VAR_SED_TO_CH, UNIT_KG, DESC_SED_TO_CH, DT_Array1D);  // added by wu hui
-    mdi.AddOutput(VAR_SED_TO_CH_T, UNIT_KG, DESC_SED_TO_CH_T, DT_Single); // added by wu hui
-    // write out the XML file.
-
+    // write out the XML file
     string res = mdi.GetXMLDocument();
 
     char *tmp = new char[res.size() + 1];

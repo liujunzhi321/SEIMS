@@ -11,14 +11,14 @@ MUSLE_AS::MUSLE_AS(void) : m_nCells(-1), m_cellWidth(-1.f), m_nsub(-1), m_nSoilL
 	                       m_usle_c(NULL), m_usle_p(NULL), m_usle_k(NULL), m_usle_ls(NULL),
                            m_flowacc(NULL), m_slope(NULL), m_streamLink(NULL), m_slopeForPq(NULL),
                            m_snowAccumulation(NULL), m_surfaceRunoff(NULL),
-                           m_sedimentYield(NULL), m_sedtoCh(NULL), m_sedtoCh_T(0.f), m_depRatio(NODATA_VALUE)
+                           m_sedimentYield(NULL)
 {
 }
 
 MUSLE_AS::~MUSLE_AS(void)
 {
     if (m_sedimentYield != NULL) Release1DArray(m_sedimentYield);
-    if (m_sedtoCh != NULL) Release1DArray(m_sedtoCh);
+    
     if (m_usle_ls != NULL) Release1DArray(m_usle_ls);
     if (m_slopeForPq != NULL) Release1DArray(m_slopeForPq);
 }
@@ -62,8 +62,6 @@ void MUSLE_AS::initialOutputs()
         }
         m_nsub = subs.size();
     }
-    if (m_sedtoCh == NULL) // i=0 not used for index coincident
-		Initialize1DArray(m_nsub+1, m_sedtoCh, 0.f);
    
     if (m_sedimentYield == NULL)
 		Initialize1DArray(m_nCells, m_sedimentYield, 0.f);
@@ -95,12 +93,6 @@ void MUSLE_AS::initialOutputs()
     m_cellAreaKM = pow(m_cellWidth / 1000.f, 2.0f);
     m_cellAreaKM1 = 3.79f * pow(m_cellAreaKM, 0.7f);
     m_cellAreaKM2 = 0.903f * pow(m_cellAreaKM, 0.017f);
-
-    m_sedtoCh_T = 0.f;  // for every time step
-    for (int i = 0; i <= m_nsub; i++)
-    {
-        m_sedtoCh[i] = 0.f;
-    }
 }
 
 float MUSLE_AS::getPeakRunoffRate(int cell)
@@ -130,17 +122,6 @@ int MUSLE_AS::Execute()
                 Y /= exp(3.0f * m_snowAccumulation[i] / 25.4f);  //equation 4 in memo, the snow pack effect
             m_sedimentYield[i] = Y * 1000.f; /// kg
         }
-    }
-
-    for (int i = 0; i < m_nCells; i++)
-    {
-        // add each subbasin's sediment yield to channel
-        if (m_nsub > 1)
-            m_sedtoCh[int(m_subbasin[i])] += m_sedimentYield[i] * (1 - m_depRatio);
-        else
-            m_sedtoCh[1] += m_sedimentYield[i] * (1 - m_depRatio);
-
-        m_sedtoCh_T += m_sedimentYield[i];
     }
 
     return 0;
@@ -217,13 +198,8 @@ void MUSLE_AS::Set2DData(const char *key, int nRows, int nCols, float **data)
 }
 void MUSLE_AS::GetValue(const char *key, float *value)
 {
-    string s(key);
-    if (StringMatch(s, VAR_SED_TO_CH_T))
-    {
-        *value = m_sedtoCh_T;
-    }
-    else
-        throw ModelException(MID_MUSLE_AS, "GetValue",
+	string s(key);
+    throw ModelException(MID_MUSLE_AS, "GetValue",
                              "Result " + s + " does not exist in current module. Please contact the module developer.");
 }
 
@@ -232,12 +208,6 @@ void MUSLE_AS::Get1DData(const char *key, int *n, float **data)
     string sk(key);
     if (StringMatch(sk, VAR_SOER)) *data = m_sedimentYield;
     else if (StringMatch(sk, VAR_USLE_LS)) *data = m_usle_ls;
-    else if (StringMatch(sk, VAR_SED_TO_CH))
-    {
-        *data = m_sedtoCh;   // from each subbasin to channel
-        *n = m_nsub + 1;
-		return;
-    }
     else
         throw ModelException(MID_MUSLE_AS, "Get1DData", "Result " + sk +
                                                         " does not exist in current module. Please contact the module developer.");
