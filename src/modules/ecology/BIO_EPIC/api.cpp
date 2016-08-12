@@ -115,17 +115,18 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
     //mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Array2D);
 
-    //mdi.AddOutput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, DT_Raster1D);
+    mdi.AddOutput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, DT_Raster1D);
     mdi.AddOutput(VAR_HVSTI_ADJ, UNIT_CONT_RATIO, DESC_HVSTI_ADJ, DT_Raster1D);
-    //mdi.AddOutput(VAR_CHT, UNIT_LEN_M, DESC_CHT, DT_Raster1D);
+    mdi.AddOutput(VAR_CHT, UNIT_LEN_M, DESC_CHT, DT_Raster1D);
     mdi.AddOutput(VAR_ALBDAY, UNIT_NON_DIM, DESC_ALBDAY, DT_Raster1D);
-    //mdi.AddOutput(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, DT_Raster1D);
+    mdi.AddOutput(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, DT_Raster1D);
 
     mdi.AddOutput(VAR_LAST_SOILRD, UNIT_DEPTH_MM, DESC_LAST_SOILRD, DT_Raster1D);
     mdi.AddOutput(VAR_LAIYRMAX, UNIT_AREA_RATIO, DESC_LAIYRMAX, DT_Raster1D);
     mdi.AddOutput(VAR_LAIDAY, UNIT_AREA_RATIO, DESC_LAIDAY, DT_Raster1D);
 
-    ///mdi.AddOutput(VAR_LAIPRE, UNIT_AREA_RATIO, DESC_LAIPRE,DT_Raster1D);
+	mdi.AddOutput(VAR_LAIMAXFR, UNIT_NON_DIM, DESC_LAIMAXFR , DT_Raster1D);
+	mdi.AddOutput(VAR_OLAI, UNIT_AREA_RATIO, DESC_OLAI, DT_Raster1D);
     mdi.AddOutput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC, DT_Raster1D);
     mdi.AddOutput(VAR_PLTET_TOT, UNIT_DEPTH_MM, DESC_PLTET_TOT, DT_Raster1D);
     mdi.AddOutput(VAR_PLTPET_TOT, UNIT_DEPTH_MM, DESC_PLTPET_TOT, DT_Raster1D);
@@ -134,6 +135,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_PLANT_P, UNIT_CONT_KGHA, DESC_PLANT_P, DT_Raster1D);
     mdi.AddOutput(VAR_FR_PLANT_N, UNIT_NON_DIM, DESC_FR_PLANT_N, DT_Raster1D);
     mdi.AddOutput(VAR_FR_PLANT_P, UNIT_NON_DIM, DESC_FR_PLANT_P, DT_Raster1D);
+	mdi.AddOutput(VAR_FR_ROOT, UNIT_NON_DIM, DESC_FR_ROOT, DT_Raster1D);
+	mdi.AddOutput(VAR_FR_STRSWTR, UNIT_NON_DIM, DESC_FR_STRSWTR, DT_Raster1D);
     mdi.AddOutput(VAR_BIOMASS, UNIT_CONT_KGHA, DESC_BIOMASS, DT_Raster1D);
 
     // write out the XML file.
@@ -144,6 +147,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 }
 
 
+    ///mdi.AddOutput(VAR_LAIPRE, UNIT_AREA_RATIO, DESC_LAIPRE,DT_Raster1D);
 /// variables need to be initialized in this module, and also as OUTPUT
 /*mdi.AddInput(VAR_LAIDAY,UNIT_AREA_RATIO, DESC_LAIDAY,Source_Module,DT_Raster1D);  /// initialized by LAI_INIT in the first run
 mdi.AddInput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC,Source_Module,DT_Raster1D);

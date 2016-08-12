@@ -903,10 +903,15 @@ void Biomass_EPIC::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_PLTET_TOT)) *data = m_pltET;
     else if (StringMatch(sk, VAR_FR_PHU_ACC)) *data = m_frPHUacc;
     else if (StringMatch(sk, VAR_LAIDAY)) *data = m_LAIDay;
-    else if (StringMatch(sk, VAR_LAIYRMAX)) *data = m_LAIYrMax;
+	else if (StringMatch(sk, VAR_LAIYRMAX)) *data = m_LAIYrMax;
+	else if (StringMatch(sk, VAR_LAIMAXFR)) *data = m_LAIMaxFr;
+	else if (StringMatch(sk, VAR_OLAI)) *data = m_oLAI;
     else if (StringMatch(sk, VAR_DORMI)) *data = m_dormFlag;
     else if (StringMatch(sk, VAR_ALBDAY)) *data = m_albedo;
+	else if (StringMatch(sk, VAR_IGRO)) *data = m_igro;
     else if (StringMatch(sk, VAR_CHT)) *data = m_cht;
+	else if(StringMatch(sk, VAR_FR_ROOT)) *data = m_frRoot;
+	else if (StringMatch(sk, VAR_FR_STRSWTR)) *data = m_frStrsWa;
     else if (StringMatch(sk, VAR_SOL_COV)) *data = m_sol_cov;
     else if (StringMatch(sk, VAR_SOMO_TOT)) *data = m_totSOMO;
     else
