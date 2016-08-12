@@ -51,10 +51,11 @@ int Interpolate::Execute()
     //for (int j = 0; j < m_nStatioins; ++j)
     //	cout<<m_stationData[j]<<",";
     //cout<<endl;
-    int index = 0;
+    
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; ++i)
     {
+		int index = 0;
         float value = 0.f;
 		//for (int j = 0; j < m_nStatioins; ++j){
 		//	index = i * m_nStatioins + j;
@@ -67,7 +68,8 @@ int Interpolate::Execute()
 			//cout<<m_stationData[j]<<",";
 			//cout<<endl;
             value += m_stationData[j] * m_weights[index];
-            // cout<<"CELL:"<<i<<", Site: "<<j<<", Weight: "<<m_weights[index]<<", Value:"<<value<<";"<<endl;
+			//if(m_stationData[j] > 1.0)
+			//	cout<<"CELL:"<<i<<", Site: "<<j<<", Weight: "<<m_weights[index]<<", Value:"<<value<<";"<<endl;
 
             if (m_vertical)
             {
