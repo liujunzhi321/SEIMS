@@ -132,7 +132,7 @@ void Biomass_EPIC::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_VPD)) m_VPD = data;
     else if (StringMatch(sk, VAR_PPT)) m_ppt = data;
     else if (StringMatch(sk, VAR_SOET)) m_soilESDay = data;
-    else if (StringMatch(sk, VAR_SOL_COV)) m_sol_cov = data;
+    //else if (StringMatch(sk, VAR_SOL_COV)) m_sol_cov = data;
     else if (StringMatch(sk, VAR_SNAC)) m_snowAcc = data;
     //// land cover
 	else if (StringMatch(sk, VAR_SOL_RSDIN)) m_sol_rsdin = data;
@@ -199,7 +199,7 @@ void Biomass_EPIC::Set2DData(const char *key, int nRows, int nCols, float **data
     CheckInputSize2D(key, nRows, nCols);
     if (StringMatch(sk, VAR_SOILDEPTH)) m_soilDepth = data;
 	else if (StringMatch(sk, VAR_SOILTHICK)) m_soilThick = data;
-    //else if (StringMatch(sk, VAR_SOL_RSD)) m_soilRsd = data;
+    else if (StringMatch(sk, VAR_SOL_RSD)) m_sol_rsd = data;
     else if (StringMatch(sk, VAR_SOL_AWC)) m_soilAWC = data;
     else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
     else if (StringMatch(sk, VAR_SOL_NO3)) m_soilNO3 = data;
@@ -262,16 +262,16 @@ bool Biomass_EPIC::CheckInputData(void)
     if (m_totSoilSat == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData",
                              "The amount of water held in soil profile at saturation can not be NULL.");
-    if (m_sol_cov == NULL)
-        throw ModelException(MID_BIO_EPIC, "CheckInputData", "The amount of residue in soil surface can not be NULL.");
+    //if (m_sol_cov == NULL)
+    //    throw ModelException(MID_BIO_EPIC, "CheckInputData", "The amount of residue in soil surface can not be NULL.");
     if (m_PET == NULL) throw ModelException(MID_BIO_EPIC, "CheckInputData", "The PET can not be NULL.");
     if (m_VPD == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The Vapor pressure deficit can not be NULL.");
     if (m_ppt == NULL) throw ModelException(MID_BIO_EPIC, "CheckInputData", "The potential plant et can not be NULL.");
     if (m_soilESDay == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The actual soil et can not be NULL.");
-	if (this->m_sol_rsdin == NULL)
-		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_rsdin can not be NULL.");
+	//if (this->m_sol_rsdin == NULL)
+	//	throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_rsdin can not be NULL.");
     if (m_igro == NULL)
         throw ModelException(MID_BIO_EPIC, "CheckInputData", "The land cover status code can not be NULL.");
     if (m_landCoverCls == NULL)
@@ -898,6 +898,8 @@ void Biomass_EPIC::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_LAST_SOILRD)) *data = m_lastSoilRootDepth;
     else if (StringMatch(sk, VAR_PLANT_P)) *data = m_plantP;
     else if (StringMatch(sk, VAR_PLANT_N)) *data = m_plantN;
+	else if (StringMatch(sk, VAR_FR_PLANT_N)) *data = m_frPlantN;
+	else if (StringMatch(sk, VAR_FR_PLANT_P)) *data = m_frPlantP;
     else if (StringMatch(sk, VAR_AET_PLT)) *data = m_plantEPDay;
     else if (StringMatch(sk, VAR_PLTPET_TOT)) *data = m_pltPET;
     else if (StringMatch(sk, VAR_PLTET_TOT)) *data = m_pltET;
@@ -906,9 +908,10 @@ void Biomass_EPIC::Get1DData(const char *key, int *n, float **data)
 	else if (StringMatch(sk, VAR_LAIYRMAX)) *data = m_LAIYrMax;
 	else if (StringMatch(sk, VAR_LAIMAXFR)) *data = m_LAIMaxFr;
 	else if (StringMatch(sk, VAR_OLAI)) *data = m_oLAI;
-    else if (StringMatch(sk, VAR_DORMI)) *data = m_dormFlag;
     else if (StringMatch(sk, VAR_ALBDAY)) *data = m_albedo;
+    else if (StringMatch(sk, VAR_DORMI)) *data = m_dormFlag;
 	else if (StringMatch(sk, VAR_IGRO)) *data = m_igro;
+	else if(StringMatch(sk,VAR_HVSTI_ADJ)) *data = m_hvstIdxAdj;
     else if (StringMatch(sk, VAR_CHT)) *data = m_cht;
 	else if(StringMatch(sk, VAR_FR_ROOT)) *data = m_frRoot;
 	else if (StringMatch(sk, VAR_FR_STRSWTR)) *data = m_frStrsWa;
