@@ -631,7 +631,7 @@ void Biomass_EPIC::AdjustPlantGrowth(int i)
         reg = min(m_frStrsWa[i], min(m_frStrsTmp[i], min(m_frStrsN[i], m_frStrsP[i])));
         if (reg < 0.f) reg = 0.f;
         if (reg > 1.f) reg = 1.f;
-        //// TODO bio_targ in SWAT is not corporated in SEIMS.
+        //// TODO bio_targ in SWAT is not incorporated in SEIMS.
         m_biomass[i] += m_biomassDelta[i] * reg;
         float rto = 1.f;
         if (idc == CROP_IDC_TREES)
@@ -744,15 +744,15 @@ void Biomass_EPIC::PlantNitrogenUptake(int i)
         }
         if (m_plantUpTkN[i] < 0.f) m_plantUpTkN[i] = 0.f;
         /// If crop is a legume, call nitrogen fixation routine
-        if (FloatEqual(m_landCoverCls[i], 1) || FloatEqual(m_landCoverCls[i], 2) ||
-            FloatEqual(m_landCoverCls[i], 3))
+        if (FloatEqual(m_landCoverCls[i], 1.f) || FloatEqual(m_landCoverCls[i], 2.f) ||
+            FloatEqual(m_landCoverCls[i], 3.f))
             PlantNitrogenFixed(i);
         m_plantUpTkN[i] += m_fixN[i];
         m_plantN[i] += m_plantUpTkN[i];
 
         /// compute nitrogen stress
-        if (FloatEqual(m_landCoverCls[i], 1) || FloatEqual(m_landCoverCls[i], 2) ||
-            FloatEqual(m_landCoverCls[i], 3))
+        if (FloatEqual(m_landCoverCls[i], 1.f) || FloatEqual(m_landCoverCls[i], 2.f) ||
+            FloatEqual(m_landCoverCls[i], 3.f))
             m_frStrsN[i] = 1.f;
         else
         {
@@ -788,21 +788,21 @@ void Biomass_EPIC::PlantNitrogenFixed(int i)
     float fxn = 0.f;
     for (int l = 0; l < m_nSoilLayers[i]; l++)
         sumn += m_soilNO3[i][l];
-    if (sumn > 300.) fxn = 0.f;
-    if (sumn > 100. && sumn <= 300.) fxn = 1.5f - 0.0005f * sumn;
-    if (sumn <= 100.) fxn = 1.f;
+    if (sumn > 300.f) fxn = 0.f;
+    if (sumn > 100.f && sumn <= 300.f) fxn = 1.5f - 0.0005f * sumn;
+    if (sumn <= 100.f) fxn = 1.f;
     //// 3. compute growth stage factor
     float fxg = 0.f;
-    if (m_frPHUacc[i] > 0.15 && m_frPHUacc[i] <= 0.30)
+    if (m_frPHUacc[i] > 0.15f && m_frPHUacc[i] <= 0.30f)
         fxg = 6.67f * m_frPHUacc[i] - 1.f;
-    if (m_frPHUacc[i] > 0.30 && m_frPHUacc[i] <= 0.55)
+    if (m_frPHUacc[i] > 0.30f && m_frPHUacc[i] <= 0.55f)
         fxg = 1.f;
-    if (m_frPHUacc[i] > 0.55 && m_frPHUacc[i] <= 0.75)
+    if (m_frPHUacc[i] > 0.55f && m_frPHUacc[i] <= 0.75f)
         fxg = 3.75f - 5.f * m_frPHUacc[i];
     float fxr = min(1.f, min(fxw, fxn)) * fxg;
     fxr = max(0.f, fxr);
-    if (m_NFixCoef <= 0.) m_NFixCoef = 0.5f;
-    if (m_NFixMax <= 0.) m_NFixMax = 20.f;
+    if (m_NFixCoef <= 0.f) m_NFixCoef = 0.5f;
+    if (m_NFixMax <= 0.f) m_NFixMax = 20.f;
     m_fixN[i] = min(6.f, fxr * m_NO3Defic[i]);
     m_fixN[i] = m_NFixCoef * m_fixN[i] + (1.f - m_NFixCoef) * uno3l;
     m_fixN[i] = min(m_fixN[i], uno3l);
@@ -849,7 +849,8 @@ void Biomass_EPIC::PlantPhosphorusUptake(int i)
 
 void Biomass_EPIC::CheckDormantStatus(int i)
 {
-
+	/// TODO
+	return;
 }
 
 int Biomass_EPIC::Execute()

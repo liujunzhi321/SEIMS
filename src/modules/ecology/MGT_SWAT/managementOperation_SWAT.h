@@ -109,6 +109,7 @@ private:
     float **m_soilSolP;
 
     /** Temporary parameters**/
+
     /// Sequence number of management operations done in the previous time step run
     int *m_doneOpSequence;
 
