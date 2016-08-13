@@ -405,6 +405,8 @@
 #define MDESC_KINWAVSED_CH            "Srinivasan & Galvao function to calculate sediment yield routing of each channel cell"
 #define MID_MUSLE_AS                                "MUSLE_AS"
 #define MDESC_MUSLE_AS                        "use MUSLE method to calculate sediment yield of each cell"
+#define MID_IUH_SED_OL                "IUH_SED_OL"
+#define MDESC_IUH_SED_OL              "Overland routing of sediment using IUH"
 /// Management
 #define MCLS_MGT                                        "Mangement practices"
 #define MCLSDESC_MGT                            "BMP related modules"
@@ -460,6 +462,11 @@
 #define MCLSDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
 #define MID_NutRemv "NutRemv"
 #define MDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
+/// Nutrient routing
+#define MID_SSR_NUTR				"SSR_NUTR"
+#define MDESC_SSR_NUTR			    "nutrient routing through soil flow"
+#define MID_IUH_NUTR_OL             "IUH_NUTR_OL"
+#define MDESC_IUH_NUTR_OL           "overland nutrient routing"
 /// Nutrient loading contributed by groundwater flow
 #define MCLS_NutGW "Nutrient in groundwater"
 #define MCLSDESC_NutGW "Simulates the tutrient loading contributed by groundwater flow"
@@ -783,6 +790,7 @@
 #define VAR_SED_OUTLET "SEDOUTLET"
 #define VAR_SED_RECH "SEDRECH"
 #define VAR_SED_TO_CH "SEDTOCH"
+#define VAR_SED_OL "SED_OL"
 #define VAR_SED_TO_CH_T "SEDTOCH_T"
 #define VAR_SEDMINPA "sedminpa"                     /// amount of active mineral phosphorus adsorbed to sediment in surface runoff
 #define VAR_SEDMINPA_CH "sedminpaToCh"
@@ -826,8 +834,8 @@
 #define VAR_SOL_NH3 "sol_nh3"                       /// amount of nitrogen stored in the ammonium pool in soil layer
 #define VAR_SOL_NO3 "sol_no3"                       /// amount of nitrogen stored in the nitrate pool in soil layer(kg N/ha)
 #define VAR_SOL_OM "om"
-#define VAR_SOL_ORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
-#define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/ha)
+#define VAR_SOL_SORGN "sol_sorgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
+#define VAR_SOL_HORGP "sol_horgp"                     /// amount of phosphorus stored in the humic organic P pool in soil layer(kg P/ha)
 #define VAR_SOL_PERCO "sol_perco"
 #define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_RSDIN "rsdin"                       /// amount of organic matter in the soil classified as residue(kg/ha)
@@ -1297,8 +1305,9 @@
 #define DESC_SED_FLOW "sediment in flow"
 #define DESC_SED_FLUX "outgoing sediment flux"
 #define DESC_SED_OUTLET "Sediment concentration at the watershed outlet"
-#define DESC_SED_RECH "Sediment in a text format at each reach outlet and at each time step"
+#define DESC_SED_RECH "Sediment at each reach outlet at each time step"
 #define DESC_SED_TO_CH "sediment flowing to channel"
+#define DESC_SED_OL "sediment transported to channel at each cell"
 #define DESC_SED_TO_CH_T  "Total sediment flowing to channel"
 #define DESC_SEDMINPA " amount of active mineral phosphorus sorbed to sediment in surface runoff"
 #define DESC_SEDMINPA_CH "amount of active mineral phosphorus absorbed to sediment in surface runoff"
@@ -1342,8 +1351,8 @@
 #define DESC_SOL_NH3 "amount of nitrogen stored in the ammonium pool in soil layer"
 #define DESC_SOL_NO3 "amount of nitrogen stored in the nitrate pool in soil layer"
 #define DESC_SOL_OM "percent of organic matter in soil"
-#define DESC_SOL_ORGN "amount of nitrogen stored in the stable organic N pool"
-#define DESC_SOL_ORGP "amount of phosphorus stored in the organic P pool in soil layer"
+#define DESC_SOL_SORGN "amount of nitrogen stored in the stable organic N pool"
+#define DESC_SOL_HORGP "amount of phosphorus stored in the humic organic P pool in soil layer"
 #define DESC_SOL_PERCO "percolation from soil layer"
 #define DESC_SOL_RSD "amount of organic matter in the soil classified as residue"
 #define DESC_SOL_RSDIN "amount of organic matter in the soil classified as residue"

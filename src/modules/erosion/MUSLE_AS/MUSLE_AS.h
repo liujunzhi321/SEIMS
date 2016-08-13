@@ -98,10 +98,7 @@ private:
 
 	//! sediment yield on each cell
     float *m_sedimentYield;
-	//! sediment transported to reach, kg
-    float *m_sedtoCh;
-	//! total sediment transported to reach, kg
-    float m_sedtoCh_T;
+
 	//! initialize outputs
     void initialOutputs();
 	//! 

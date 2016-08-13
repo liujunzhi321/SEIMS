@@ -172,8 +172,8 @@ void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
     else if (StringMatch(sk, VAR_SOL_AWC)) { this->m_sol_awc = data; }
 	else if (StringMatch(sk, VAR_SOL_NO3)) { this->m_sol_no3 = data; }
 	else if (StringMatch(sk, VAR_SOL_NH3)) { this->m_sol_nh3 = data; }
-    else if (StringMatch(sk, VAR_SOL_ORGN)) { this->m_sol_orgn = data; }
-    else if (StringMatch(sk, VAR_SOL_ORGP)) { this->m_sol_orgp = data; }
+    else if (StringMatch(sk, VAR_SOL_SORGN)) { this->m_sol_orgn = data; }
+    else if (StringMatch(sk, VAR_SOL_HORGP)) { this->m_sol_orgp = data; }
     else if (StringMatch(sk, VAR_SOL_SOLP)) { this->m_sol_solp = data; }
     else if (StringMatch(sk, VAR_SOL_WPMM)) { this->m_sol_wpmm = data; }
 	else if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
@@ -752,8 +752,8 @@ void NandPim::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
     else if (StringMatch(sk, VAR_SOL_FOP)) { *data = this->m_sol_fop; }
     else if (StringMatch(sk, VAR_SOL_NO3)) { *data = this->m_sol_no3; }
     else if (StringMatch(sk, VAR_SOL_NH3)) { *data = this->m_sol_nh3; }
-    else if (StringMatch(sk, VAR_SOL_ORGN)) { *data = this->m_sol_orgn; }
-    else if (StringMatch(sk, VAR_SOL_ORGP)) { *data = this->m_sol_orgp; }
+    else if (StringMatch(sk, VAR_SOL_SORGN)) { *data = this->m_sol_orgn; }
+    else if (StringMatch(sk, VAR_SOL_HORGP)) { *data = this->m_sol_orgp; }
     else if (StringMatch(sk, VAR_SOL_SOLP)) { *data = this->m_sol_solp; }
     else if (StringMatch(sk, VAR_SOL_ACTP)) { *data = this->m_sol_actp; }
     else if (StringMatch(sk, VAR_SOL_STAP)) { *data = this->m_sol_stap; }
