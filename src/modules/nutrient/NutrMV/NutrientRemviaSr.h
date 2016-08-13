@@ -83,7 +83,7 @@ private:
     /// crack volume potential of soil
     float *m_sol_crk;
     /// amount of water held in the soil layer at saturation
-    float *m_sol_wsatur;
+    float **m_sol_wsatur;
 
     /// lateral flow in soil layer
     float **m_flat;
@@ -94,11 +94,11 @@ private:
     /// depth to bottom of soil layer
     float **m_sol_z;
 
+	/// flow out index
+	float *m_flowOutIndex;
 
     /// amount of organic nitrogen in surface runoff
     float *m_sedorgn;
-    /// amount of organic phosphorus in surface runoff
-    float *m_sedorgp;
     /// average air temperature
     float *m_tmean;
     /// groundwater contribution to stream flow
@@ -112,7 +112,9 @@ private:
     /// amount of nitrate transported with lateral flow
     float *m_latno3;
     /// amount of nitrate percolating past bottom of soil profile
-    float *m_percn;
+    float *m_perco_n;
+	/// amount of solute P percolating past bottom of soil profile
+	float *m_perco_p;
     /// amount of nitrate transported with surface runoff
     float *m_surqno3;
     /// amount of soluble phosphorus in surface runoff
@@ -157,7 +159,7 @@ private:
     *
     * \return void
     */
-    void Nitrateloss();
+    void NitrateLoss();
 
     /*!
     * \brief Calculates the amount of phosphorus lost from the soil
@@ -166,7 +168,7 @@ private:
     *
     * \return void
     */
-    void Phosphorusloss();
+    void PhosphorusLoss();
 
     /*!
     * \brief Calculate enrichment ratio.

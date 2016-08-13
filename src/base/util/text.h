@@ -720,7 +720,8 @@
 #define VAR_P_MAX "P_max"
 #define VAR_P_N "p_n"
 #define VAR_P_RF "p_rf"
-#define VAR_PERCN "percn"
+#define VAR_PERCO_N "perco_n"
+#define VAR_PERCO_P "perco_p"
 #define VAR_PERCO "Perco"                     /// the amount of water percolated from the soil water reservoir
 #define VAR_PERDE "perde"
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
@@ -743,7 +744,7 @@
 #define VAR_PSP "psp"                               /// Phosphorus availability index
 #define VAR_PUPDIS "p_updis"
 #define VAR_QCH "QCH"
-#define VAR_OLFLOW "OL_Flow"						/// overland flow in each cell calculated during overland routing
+#define VAR_FLOW_OL "OL_Flow"						/// overland flow in each cell calculated during overland routing
 #define VAR_QG "QG"                                 /// Groundwater discharge at each reach outlet and at each time step
 #define VAR_QI "QI"                                 /// Interflow at each reach outlet and at each time step
 #define VAR_QOUTLET "QOUTLET"                       /// discharge at the watershed outlet
@@ -834,8 +835,8 @@
 #define VAR_SOL_NH3 "sol_nh3"                       /// amount of nitrogen stored in the ammonium pool in soil layer
 #define VAR_SOL_NO3 "sol_no3"                       /// amount of nitrogen stored in the nitrate pool in soil layer(kg N/ha)
 #define VAR_SOL_OM "om"
-#define VAR_SOL_SORGN "sol_sorgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
-#define VAR_SOL_HORGP "sol_horgp"                     /// amount of phosphorus stored in the humic organic P pool in soil layer(kg P/ha)
+#define VAR_SOL_SORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
+#define VAR_SOL_HORGP "sol_orgp"                     /// amount of phosphorus stored in the humic organic P pool in soil layer(kg P/ha)
 #define VAR_SOL_PERCO "sol_perco"
 #define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_RSDIN "rsdin"                       /// amount of organic matter in the soil classified as residue(kg/ha)
@@ -1234,7 +1235,8 @@
 #define DESC_P_MAX "Maximum P corresponding to runoffCo"
 #define DESC_P_N "algal preference factor for ammonia"
 #define DESC_P_RF "Peak rate adjustment factor"
-#define DESC_PERCN "amount of nitrate percolating past bottom of soil profile"
+#define DESC_PERCO_N "amount of nitrate percolating past bottom of soil profile"
+#define DESC_PERCO_P "amount of soluble P percolating past bottom of soil profile"
 #define DESC_PERCO "the amount of water percolated from the soil water reservoir, i.e., groundwater recharge"
 #define DESC_PET "Potential Evapotranspiration of day"
 #define DESC_PET "Potential Evapotranspiration of day"
