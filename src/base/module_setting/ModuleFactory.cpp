@@ -956,7 +956,11 @@ void ModuleFactory::SetData(string &dbName, int nSubbasin, SEIMSModuleSetting *s
     //clock_t start = clock();
     //const char *paramName = name.c_str(); // not used variable. LJ
     ostringstream oss;
-    oss << nSubbasin << "_" << name;
+	int tmp = name.find("LOOKUP");
+	if(tmp < 0)
+		oss << nSubbasin << "_" << name;
+	else
+		oss << name;
     if (StringMatch(name, Tag_Weight))
     {
         if (setting->dataTypeString() == DataType_Precipitation)
@@ -1213,7 +1217,7 @@ void ModuleFactory::Set2DData(string &dbName, string &paraName, int nSubbasin, s
                 remoteFileName = oss.str();
             }
 #ifdef USE_MONGODB
-            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
+            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, nCols, data);
 #endif
         }
         else if (StringMatch(paraName, Tag_FLOWIN_INDEX_D8) || StringMatch(paraName, Tag_FLOWIN_INDEX_DINF)
@@ -1221,7 +1225,7 @@ void ModuleFactory::Set2DData(string &dbName, string &paraName, int nSubbasin, s
                  || StringMatch(paraName, Tag_ROUTING_LAYERS_DINF))
         {
 #ifdef USE_MONGODB
-            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
+            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, nCols, data);
 #endif
         }
         else if (StringMatch(paraName, TAG_OUT_OL_IUH))
@@ -1266,7 +1270,7 @@ void ModuleFactory::Set2DData(string &dbName, string &paraName, int nSubbasin, s
         else
         {
 #ifdef USE_MONGODB
-            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
+            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, nCols, data);
 #endif
             //throw ModelException("ModuleFactory", "Set2DData", "Failed reading file " + remoteFileName);
         }

@@ -99,6 +99,7 @@ extern void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteF
 /*!
  * \brief Read 2D array data from MongoDB database
  * The matrix format is as follows:
+ *                                     5                 (Row number)
  *          RowIdx\ColIdx	0	1 2	3	4
 					0					1	9.
 					1					2	8.	1.
@@ -109,10 +110,11 @@ extern void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteF
             
  * \param[in] spatialData \a mongoc_gridfs_t
  * \param[in] remoteFilename \string data file name
- * \param[out] n \int&, first dimension of the 2D Array, i.e., Rows
+ * \param[out] rows \int&, first dimension of the 2D Array, i.e., Rows
+ * \param[out] cols \int&, second dimension of the 2D Array, i.e., Cols. If each col are different, set cols to 1.
  * \param[out] data \float**&, returned data
  */
-extern void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &n, float **&data);
+extern void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &rows, int& cols, float **&data);
 ///*!
 // * \brief Read 2D raster data from MongoDB database
 // *

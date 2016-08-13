@@ -96,6 +96,7 @@ void PrintInfoItem::add1DTimeSeriesResult(time_t t, int n, float *data)
 
 void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, string header)
 {
+/// removed by lj
 //#ifndef linux
 //    projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
 //    if (::GetFileAttributes(projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
@@ -161,6 +162,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
         fs.open(filename.c_str(), ios::out|ios::app);
         if (fs.is_open())
         {
+			fs << endl;
 			if(SubbasinID == 0)
 				fs << "Watershed: "<< endl;
 			else
