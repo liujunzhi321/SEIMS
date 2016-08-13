@@ -22,9 +22,10 @@ NutrientRemviaSr::NutrientRemviaSr(void) :
         m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_sedimentYield(NULL), m_nperco(-1), m_phoskd(-1), m_pperco(-1),
         m_qtile(-1), m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(-1), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
         m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_sol_thick(NULL),
-        m_sol_om(NULL), m_gw_q(NULL), m_flowOutIndex(NULL), 
+        m_sol_om(NULL), m_gw_q(NULL), m_flowOutIndex(NULL), m_nSubbasins(-1), m_subbasin(NULL), m_subbasinsInfo(NULL), m_streamLink(NULL),
         //output
         m_latno3(NULL), m_perco_n(NULL),m_perco_p(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(-1),
+		m_latno3ToCh(NULL), m_surqno3ToCh(NULL), m_surqsolpToCh(NULL),
         m_sol_solp(NULL), m_cod(NULL), m_chl_a(NULL) //,m_doxq(), m_soxy()
 {
 
@@ -39,6 +40,44 @@ NutrientRemviaSr::~NutrientRemviaSr(void)
 	if (m_surqsolp != NULL) Release1DArray(m_surqsolp);
 	if (m_cod != NULL) Release1DArray(m_cod);
 	if (m_chl_a != NULL) Release1DArray(m_chl_a);
+
+	if(m_latno3ToCh != NULL) Release1DArray(m_latno3ToCh);
+	if(m_surqno3ToCh != NULL) Release1DArray(m_surqno3ToCh);
+	if(m_surqsolpToCh != NULL) Release1DArray(m_surqsolpToCh);
+}
+
+void NutrientRemviaSr::SumBySubbasin()
+{
+	// sum by subbasin
+	for (int i = 0; i < m_nCells; i++)
+	{
+		//add today's flow
+		int subi = (int) m_subbasin[i];
+		if (m_nSubbasins == 1)
+		{
+			subi = 1;
+		}
+		else if (subi >= m_nSubbasins + 1)
+		{
+			ostringstream oss;
+			oss << subi;
+			throw ModelException(MID_SurTra, "Execute", "The subbasin " + oss.str() + " is invalid.");
+		}
+		m_surqno3ToCh[subi] += m_surqno3[i];
+		m_surqsolpToCh[subi] += m_surqsolp[i];
+
+		if(m_streamLink[i] > 0)
+			m_latno3ToCh[subi] += m_latno3[i];
+	}
+
+
+	// sum all the subbasins and put the sum value in the zero-index of the array
+	for (int i = 1; i < m_nSubbasins + 1; i++)
+	{
+		m_surqno3ToCh[0] += m_surqno3ToCh[i];
+		m_surqsolpToCh[0] += m_surqsolpToCh[i];
+		m_latno3ToCh[0] = m_latno3ToCh[i];
+	}
 }
 
 bool NutrientRemviaSr::CheckInputSize(const char *key, int n)
@@ -154,7 +193,24 @@ bool NutrientRemviaSr::CheckInputData()
     //{
     //    throw ModelException(MID_NutRemv, "CheckInputData", "The groundwater contribution to stream flow data can not be NULL.");
     //}
+
+	if (m_nSubbasins <= 0) 
+		throw ModelException(MID_NutRemv, "CheckInputData", "The subbasins number must be greater than 0.");
+	if (m_subbasinIDs.empty()) 
+		throw ModelException(MID_NutRemv, "CheckInputData", "The subbasin IDs can not be EMPTY.");
+	if (m_subbasinsInfo == NULL)
+		throw ModelException(MID_NutRemv, "CheckInputData", "The parameter: m_subbasinsInfo has not been set.");
+
     return true;
+}
+
+void NutrientRemviaSr::SetSubbasins(clsSubbasins *subbasins)
+{
+	if(m_subbasinsInfo == NULL){
+		m_subbasinsInfo = subbasins;
+		m_nSubbasins = m_subbasinsInfo->GetSubbasinNumber();
+		m_subbasinIDs = m_subbasinsInfo->GetSubbasinIDs();
+	}
 }
 
 void NutrientRemviaSr::SetValue(const char *key, float value)
@@ -185,6 +241,10 @@ void NutrientRemviaSr::Set1DData(const char *key, int n, float *data)
     string sk(key);
     if (StringMatch(sk, VAR_FLOW_OL)) 
 		m_surfr = data; 
+	else if (StringMatch(sk, VAR_SUBBSN))
+		m_subbasin = data;
+	else if(StringMatch(sk, VAR_STREAM_LINK))
+		m_streamLink = data;
     else if (StringMatch(sk, VAR_ANION_EXCL)) 
 		m_anion_excl = data; 
     else if (StringMatch(sk, VAR_LDRAIN)) 
@@ -219,15 +279,15 @@ void NutrientRemviaSr::Set2DData(const char *key, int nRows, int nCols, float **
     string sk(key);
 
 	m_soiLayers = nCols;
-    if (StringMatch(sk, VAR_SSRU)) { this->m_flat = data; }
-    else if (StringMatch(sk, VAR_SOL_NO3)) { this->m_sol_no3 = data; }
-    else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
-    else if (StringMatch(sk, VAR_SOL_SOLP)) { this->m_sol_solp = data; }
-    else if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
-    else if (StringMatch(sk, VAR_PERCO)) { this->m_sol_perco = data; }
-	else if (StringMatch(sk, VAR_SOL_OM)) { this->m_sol_om = data; }
-	else if (StringMatch(sk, VAR_SOILTHICK)) { this->m_sol_thick = data; }
-	else if (StringMatch(sk, VAR_SOL_UL)) { this->m_sol_wsatur = data; }
+    if (StringMatch(sk, VAR_SSRU)) { m_flat = data; }
+    else if (StringMatch(sk, VAR_SOL_NO3)) { m_sol_no3 = data; }
+    else if (StringMatch(sk, VAR_SOL_BD)) { m_sol_bd = data; }
+    else if (StringMatch(sk, VAR_SOL_SOLP)) { m_sol_solp = data; }
+    else if (StringMatch(sk, VAR_SOILDEPTH)) { m_sol_z = data; }
+    else if (StringMatch(sk, VAR_PERCO)) { m_sol_perco = data; }
+	else if (StringMatch(sk, VAR_SOL_OM)) { m_sol_om = data; }
+	else if (StringMatch(sk, VAR_SOILTHICK)) { m_sol_thick = data; }
+	else if (StringMatch(sk, VAR_SOL_UL)) { m_sol_wsatur = data; }
     else
     {
         throw ModelException("NutRemv", "SetValue", "Parameter " + sk +
@@ -249,6 +309,11 @@ void NutrientRemviaSr::initialOutputs()
 		Initialize1DArray(m_nCells, m_perco_p, 0.f);
 		Initialize1DArray(m_nCells, m_surqno3, 0.f);
 		Initialize1DArray(m_nCells, m_surqsolp, 0.f);
+
+		Initialize1DArray(m_nSubbasins+1, m_latno3ToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_surqno3ToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_surqsolpToCh, 0.f);
+
     }
     if (m_cod == NULL)
     {
@@ -286,6 +351,9 @@ int NutrientRemviaSr::Execute()
     NitrateLoss();
     // Calculates the amount of phosphorus lost from the soil.
     PhosphorusLoss();
+
+	SumBySubbasin();
+
     //return ??
     return 0;
 }
@@ -558,19 +626,61 @@ void NutrientRemviaSr::NitrateLoss()
             void NutrientRemviaSr::Get1DData(const char *key, int *n, float **data)
             {
                 string sk(key);
-                *n = m_nCells;
-                if (StringMatch(sk, VAR_LATNO3)) { *data = this->m_latno3; }
-                else if (StringMatch(sk, VAR_PERCO_N)) { *data = this->m_perco_n; }
-				else if (StringMatch(sk, VAR_PERCO_P)) { *data = this->m_perco_p; }
-                else if (StringMatch(sk, VAR_SURQNO3)) { *data = this->m_surqno3; }
-                else if (StringMatch(sk, VAR_SURQSOLP)) { *data = this->m_surqsolp; }
-                else if (StringMatch(sk, VAR_COD)) { *data = this->m_cod; }
-                else if (StringMatch(sk, VAR_CHL_A)) { *data = this->m_chl_a; }
+                
+                if (StringMatch(sk, VAR_LATNO3)) 
+				{
+					*data = this->m_latno3;
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_PERCO_N)) 
+				{
+					*data = this->m_perco_n; 
+					*n = m_nCells;
+				}
+				else if (StringMatch(sk, VAR_PERCO_P)) 
+				{
+					*data = this->m_perco_p; 
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_SURQNO3)) 
+				{
+					*data = this->m_surqno3; 
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_SURQSOLP)) 
+				{
+					*data = this->m_surqsolp; 
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_COD)) 
+				{
+					*data = this->m_cod; 
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_CHL_A)) 
+				{
+					*data = this->m_chl_a; 
+					*n = m_nCells;
+				}
+				else if(StringMatch(sk, VAR_LATNO3_CH))
+				{
+					*data = m_latno3ToCh;
+					*n = m_nSubbasins + 1;
+				}
+				else if(StringMatch(sk, VAR_SURQNO3_CH))
+				{
+					*data = m_surqno3ToCh;
+					*n = m_nSubbasins + 1;
+				}
+				else if(StringMatch(sk, VAR_SURQSOLP_CH))
+				{
+					*data = m_surqsolpToCh;
+					*n = m_nSubbasins + 1;
+				}
                 else
-                {
                     throw ModelException("NutRemv", "GetValue",
                                          "Parameter " + sk + " does not exist. Please contact the module developer.");
-                }
+                
             }
             void NutrientRemviaSr::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
             {

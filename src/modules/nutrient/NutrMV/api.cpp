@@ -84,9 +84,19 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_SURQNO3, UNIT_CONT_KGHA, DESC_SURQNO3, DT_Raster1D);
     mdi.AddOutput(VAR_SURQSOLP, UNIT_CONT_KGHA, DESC_SURQSOLP, DT_Raster1D);
 	//soil related
-	//mdi.AddOutput(VAR_LATNO3, UNIT_CONT_KGHA, DESC_LATNO3, DT_Raster1D);
+	mdi.AddOutput(VAR_LATNO3, UNIT_CONT_KGHA, DESC_LATNO3, DT_Raster1D);
 	mdi.AddOutput(VAR_PERCO_N, UNIT_CONT_KGHA, DESC_PERCO_N, DT_Raster1D);
     mdi.AddOutput(VAR_PERCO_P, UNIT_CONT_KGHA, DESC_PERCO_P, DT_Raster1D);
+
+	//to channel
+	mdi.AddOutput(VAR_LATNO3_CH, UNIT_CONT_KGHA, DESC_LATNO3_CH, DT_Array1D);
+	mdi.AddOutput(VAR_SURQNO3_CH, UNIT_CONT_KGHA, DESC_SURQNO3_CH, DT_Array1D);
+	mdi.AddOutput(VAR_SURQSOLP_CH, UNIT_CONT_KGHA, DESC_SURQSOLP_CH, DT_Array1D);
+
+	// parameters for subbasin sum
+	mdi.AddParameter(VAR_SUBBSN, UNIT_NON_DIM, DESC_SUBBSN, Source_ParameterDB, DT_Raster1D);
+	mdi.AddParameter(VAR_SUBBASIN_PARAM, UNIT_NON_DIM, DESC_SUBBASIN_PARAM, Source_ParameterDB, DT_Subbasin);
+	mdi.AddParameter(VAR_STREAM_LINK, UNIT_NON_DIM, DESC_STREAM_LINK, Source_ParameterDB, DT_Raster1D);
 
 	// currently not used
 	mdi.AddOutput(VAR_COD, UNIT_CONT_KGHA, DESC_COD, DT_Raster1D);

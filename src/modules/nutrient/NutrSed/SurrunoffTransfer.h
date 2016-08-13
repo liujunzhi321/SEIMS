@@ -73,6 +73,7 @@ private:
     float **m_sol_z;
     //??
     float **m_sol_mp;
+
 	/// subbasin related
 	/// the total number of subbasins
 	int m_nSubbasins;
@@ -80,7 +81,6 @@ private:
 	vector<int> m_subbasinIDs;
 	/// subbasin grid (subbasins ID)
 	float *m_subbasin;
-
 	/// subbasins information
 	clsSubbasins *m_subbasinsInfo;
 

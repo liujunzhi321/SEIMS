@@ -47,7 +47,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_GWMINP, UNIT_KGM3, DESC_GWMINP, Source_ParameterDB, DT_Raster1D);
 
     // set the input from other modules
-    mdi.AddInput(VAR_GW_Q, UNIT_DEPTH_MM, DESC_GW_Q, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_RG, UNIT_DEPTH_MM, DESC_RG, Source_Module, DT_Array1D);
 
     // set the output variables
     mdi.AddOutput(VAR_NO3GW, UNIT_CONT_KGHA, DESC_NO3GW, DT_Raster1D);

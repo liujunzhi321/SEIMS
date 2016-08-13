@@ -116,7 +116,7 @@ void NutrientinGroundwater::Set1DData(const char *key, int n, float *data)
     {
         this->m_gwminp = data;
     }
-    else if (StringMatch(sk, VAR_GW_Q))
+    else if (StringMatch(sk, VAR_RG))
     {
         this->m_gw_q = data;
     }
