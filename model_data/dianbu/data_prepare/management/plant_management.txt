@@ -16,18 +16,24 @@
 ##14	ContinuousFertilizerOperation	year	month	day	husc	14	FERT_DAYS	CFRT_ID	IFRT_FREQ	CFRT_KG	NONE	NONE	NONE	NONE	NONE	NONE
 ##15	ContinuousPesticideOperation	year	month	day	husc	15	IPST_ID	PEST_DAYS	IPST_FREQ	CPST_KG	NONE	NONE	NONE	NONE	NONE	NONE
 ##16	BurningOperation	year	month	day	husc	16	NONE	NONE	NONE	BURN_FRLB	NONE	NONE	NONE	NONE	NONE	NONE
-SUBSCENARIO	Name	year	month	day	husc	mgt_op	mgt1	mgt2	mgt3	mgt4	mgt5	mgt6	mgt7	mgt8	mgt9	mgt10
-0	generalAGRL	1	-9999	-9999	0.23	6	1	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1	-9999	-9999	0.23	13	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1	-9999	-9999	0.23	3	1	0	0	97.5	1	0	0	0	0	0
-0	generalAGRL	1	-9999	-9999	0.23	3	2	0	0	97.5	1	0	0	0	0	0
-0	generalAGRL	1	-9999	-9999	0.23	10	1	1	0	0.5	0.5	50	0	0	0	0
-0	generalAGRL	1	-9999	-9999	0.24	1	33	0	0	2370	0	20	0	0	0	0
-0	generalAGRL	1	-9999	-9999	0.25	10	2	1	0	0.6	0.5	100	0.5	0	0	0
-0	generalAGRL	1	-9999	-9999	1.28	13	1	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1	-9999	-9999	1.29	5	0	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1	-9999	-9999	0.84	6	1	0	0	0	0	0	0	0	0	0
-0	generalAGRL	1	-9999	-9999	0.85	1	28	0	0	1700	0	0	0	0	0	0
-0	generalAGRL	2	-9999	-9999	0.35	10	1	1	0	0.5	0.5	50	0	0	0	0
-0	generalAGRL	2	-9999	-9999	0.6	10	1	1	0	0.5	0.5	50	0	0	0	0
-0	generalAGRL	2	-9999	-9999	1.36	5	0	0	0	0	0	0	0	0	0	0
+SUBSCENARIO	NAME	LANDUSE_ID	SEQUENCE	YEAR	MONTH	DAY	HUSC	MGT_OP	MGT1	MGT2	MGT3	MGT4	MGT5	MGT6	MGT7	MGT8	MGT9	MGT10
+0	generalAGRL	33	1	1	0	0	0.3	6	1	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	2	1	0	0	0.3	2	0	1	0	80	0	0.5	0.5	0	0	0
+0	generalAGRL	33	3	1	0	0	0.3	3	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	4	1	0	0	0.3	3	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	5	1	0	0	0.3	10	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	6	1	0	0	0.31	1	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	7	1	0	0	0.15	3	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	8	1	0	0	0.25	10	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	9	1	0	0	0.4	3	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	10	1	0	0	1.1	5	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	11	1	0	0	0.85	6	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	12	1	0	0	0.85	3	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	13	1	0	0	0.85	3	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	14	1	0	0	0.86	1	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	15	1	0	0	0.3	3	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	16	2	0	0	0.35	10	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	17	2	0	0	0.45	3	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	18	2	0	0	0.6	10	0	0	0	0	0	0	0	0	0	0
+0	generalAGRL	33	19	2	0	0	1.1	5	0	0	0	0	0	0	0	0	0	0
+
