@@ -40,6 +40,7 @@ public:
     virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
 
     virtual void SetValue(const char *key, float value);
+	virtual void SetSubbasins(clsSubbasins *);
 
     virtual int Execute();
 
@@ -72,6 +73,16 @@ private:
     float **m_sol_z;
     //??
     float **m_sol_mp;
+	/// subbasin related
+	/// the total number of subbasins
+	int m_nSubbasins;
+	//! subbasin IDs
+	vector<int> m_subbasinIDs;
+	/// subbasin grid (subbasins ID)
+	float *m_subbasin;
+
+	/// subbasins information
+	clsSubbasins *m_subbasinsInfo;
 
     ///output data
     //amount of organic nitrogen in surface runoff
@@ -82,6 +93,12 @@ private:
     float *m_sedminpa;
     //amount of stable mineral phosphorus sorbed to sediment in surface runoff
     float *m_sedminps;
+
+	/// output to channel
+	float *m_sedorgnToCh;
+	float *m_sedorgpToCh;
+	float *m_sedminpaToCh;
+	float *m_sedminpsToCh;
 
     ///input & output
     //amount of nitrogen stored in the active organic (humic) nitrogen pool

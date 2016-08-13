@@ -720,7 +720,8 @@
 #define VAR_P_MAX "P_max"
 #define VAR_P_N "p_n"
 #define VAR_P_RF "p_rf"
-#define VAR_PERCN "percn"
+#define VAR_PERCO_N "perco_n"
+#define VAR_PERCO_P "perco_p"
 #define VAR_PERCO "Perco"                     /// the amount of water percolated from the soil water reservoir
 #define VAR_PERDE "perde"
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
@@ -1234,7 +1235,8 @@
 #define DESC_P_MAX "Maximum P corresponding to runoffCo"
 #define DESC_P_N "algal preference factor for ammonia"
 #define DESC_P_RF "Peak rate adjustment factor"
-#define DESC_PERCN "amount of nitrate percolating past bottom of soil profile"
+#define DESC_PERCO_N "amount of nitrate percolating past bottom of soil profile"
+#define DESC_PERCO_P "amount of soluble P percolating past bottom of soil profile"
 #define DESC_PERCO "the amount of water percolated from the soil water reservoir, i.e., groundwater recharge"
 #define DESC_PET "Potential Evapotranspiration of day"
 #define DESC_PET "Potential Evapotranspiration of day"
