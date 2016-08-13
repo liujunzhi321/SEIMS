@@ -50,7 +50,7 @@ private:
     int m_nSub;
     /// valid cell numbers in each subbasin
     map<int, int> m_nCellsSubbsn;
-    /// subbasin area, key is subbasinID, value is area
+    /// subbasin area, key is subbasinID, value is area (ha)
     map<int, float> m_nAreaSubbsn;
 
     /**Parameters from MongoDB**/

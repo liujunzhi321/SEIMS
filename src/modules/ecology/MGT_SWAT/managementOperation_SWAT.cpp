@@ -309,9 +309,10 @@ void MGTOpt_SWAT::SetScenario(Scenario *sce)
         m_mgtFactory.clear();
     for (map<int, BMPFactory *>::iterator it = tmpBMPFactories.begin(); it != tmpBMPFactories.end(); it++)
     {
-        /// Key is uniqueBMPID, which is calculated by Landuse_ID * 100 + subScenario;
+        /// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
         if (it->first / 100000 == BMP_TYPE_PLANT_MGT)
         {
+			/// calculate unique index for the key of m_mgtFactory, using Landuse_ID * 100 + subScenario
             int uniqueIdx = ((BMPPlantMgtFactory *) it->second)->GetLUCCID() * 100 + it->second->GetSubScenarioId();
             m_mgtFactory[uniqueIdx] = (BMPPlantMgtFactory *) it->second;
         }
@@ -424,7 +425,7 @@ bool MGTOpt_SWAT::GetOperationCode(int i, int &factoryID, vector<int> &nOps)
     /// 1. Is there any plant management operations are suitable to current cell.
     for (map<int, BMPPlantMgtFactory *>::iterator it = m_mgtFactory.begin(); it != m_mgtFactory.end(); it++)
     {
-        /// Key is uniqueBMPID, which is calculated by Landuse_ID * 100 + subScenario;
+        /// Key is unique plant management Index, which is calculated by Landuse_ID * 100 + subScenario;
         if (curLanduseID == (it->first) / 100)
         {
             /// 2. If current cell located in the locations of this BMPPlantMgtFactory
@@ -433,14 +434,6 @@ bool MGTOpt_SWAT::GetOperationCode(int i, int &factoryID, vector<int> &nOps)
                 factoryID = it->first;
                 break;
             }
-            // replaced by LJ, 2016-7-5
-            //vector<int> tmpLocations = it->second->GetLocations();
-            //vector<int>::iterator findIter = find(tmpLocations.begin(), tmpLocations.end(), curMgtField);
-            //if(findIter != tmpLocations.end())
-            //{
-            //	factoryID = it->first;
-            //	break;
-            //}
         }
     }
     if (factoryID < 0) return false;
@@ -449,7 +442,7 @@ bool MGTOpt_SWAT::GetOperationCode(int i, int &factoryID, vector<int> &nOps)
     map<int, PlantManagementOperation *> tmpOperations = m_mgtFactory[factoryID]->GetOperations();
     for (vector<int>::iterator seqIter = tmpOpSeqences.begin(); seqIter != tmpOpSeqences.end(); seqIter++)
     {
-        /// *seqIter is calculated by: index * 1000 + operationCode
+        /// *seqIter is calculated by: seqNo. * 1000 + operationCode
         bool dateDepent = false, huscDepent = false;
         /// If operation applied date (month and day) are defined
         if (tmpOperations[*seqIter]->GetMonth() != 0 && tmpOperations[*seqIter]->GetDay() != 0)
@@ -464,11 +457,11 @@ bool MGTOpt_SWAT::GetOperationCode(int i, int &factoryID, vector<int> &nOps)
         if (tmpOperations[*seqIter]->GetHUFraction() >= 0.f)
         {
             float aphu; /// fraction of total heat units accumulated
-            if (FloatEqual(m_igro[i], 0.))
+            if (FloatEqual(m_igro[i], 0.f))
                 aphu = m_phuBase[i];
             else
                 aphu = m_phuAcc[i];
-            if (m_dormFlag[i] == 1)
+            if (FloatEqual(m_dormFlag[i], 1.f))
                 aphu = NODATA_VALUE;
             if (aphu >= tmpOperations[*seqIter]->GetHUFraction())
                 huscDepent = true;
@@ -549,7 +542,7 @@ void MGTOpt_SWAT::ExecutePlantOperation(int i, int &factoryID, int nOp)
     //initializeLanduseLookup();
     PlantOperation *curOperation = (PlantOperation *) m_mgtFactory[factoryID]->GetOperations()[nOp];
     /// initialize parameters
-    m_igro[i] = 1;
+    m_igro[i] = 1.f;
     m_HarvestIdxTarg[i] = curOperation->HITarg();
     m_BiomassTarg[i] = curOperation->BIOTarg(); /// kg/ha
     m_curYearMat[i] = curOperation->CurYearMaturity();
@@ -1384,7 +1377,7 @@ void MGTOpt_SWAT::ExecuteReleaseImpoundOperation(int i, int &factoryID, int nOp)
     /// No more executable code here.
     ReleaseImpoundOperation *curOperation = (ReleaseImpoundOperation *) m_mgtFactory[factoryID]->GetOperations()[nOp];
     m_impoundTriger[i] = curOperation->ImpoundTriger();
-    /// pothole.f and potholehr.f for sub-daily timestep simulation
+    /// pothole.f and potholehr.f for sub-daily timestep simulation, TODO
 }
 
 void MGTOpt_SWAT::ExecuteContinuousFertilizerOperation(int i, int &factoryID, int nOp)
@@ -1408,7 +1401,7 @@ void MGTOpt_SWAT::ExecuteBurningOperation(int i, int &factoryID, int nOp)
 
 void MGTOpt_SWAT::ScheduledManagement(int cellIdx, int &factoryID, int nOp)
 {
-    /// nOp is index * 1000 + operationCode
+    /// nOp is seqNo. * 1000 + operationCode
     int mgtCode = nOp % 1000;
     switch (mgtCode)
     {
@@ -1526,7 +1519,7 @@ void MGTOpt_SWAT::Get2DData(const char *key, int *n, int *col, float ***data)
 
 void MGTOpt_SWAT::initialOutputs()
 {
-    m_cellArea = m_cellWidth * m_cellWidth / 10000.f;
+    m_cellArea = m_cellWidth * m_cellWidth / 10000.f; // unit: ha
     if (m_nSub <= 0)
     {
 #pragma omp parallel for
