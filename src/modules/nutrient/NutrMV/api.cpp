@@ -61,12 +61,13 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     // set input from other modules
     mdi.AddInput(VAR_WSHD_PLCH, UNIT_CONT_KGHA, DESC_WSHD_PLCH, Source_Module, DT_Single);
 
-    mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_SOER, UNIT_TONS, DESC_SOER, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_FLOW_OL, UNIT_DEPTH_MM, DESC_OLFLOW, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_SED_OL, UNIT_KG, DESC_SED_OL, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_GW_Q, UNIT_DEPTH_MM, DESC_GW_Q, Source_Module, DT_Raster1D);
+
     mdi.AddInput(VAR_SEDORGN, UNIT_CONT_KGHA, DESC_SEDORGN, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_SEDORGP, UNIT_CONT_KGHA, DESC_SEDORGP, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_TMEAN, UNIT_TEMP_DEG, DESC_TMEAN, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_GW_Q, UNIT_DEPTH_MM, DESC_GW_Q, Source_Module, DT_Raster1D);
 
     mdi.AddInput(VAR_SOL_OM, UNIT_PERCENT, DESC_SOL_OM, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOL_BD, UNIT_DENSITY, DESC_SOL_BD, Source_Module, DT_Raster2D);

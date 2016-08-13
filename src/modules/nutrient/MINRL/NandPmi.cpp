@@ -97,10 +97,10 @@ bool NandPim::CheckInputData()
         throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_z can not be NULL.");
 	if (this->m_sol_rsdin == NULL)
 		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_rsdin can not be NULL.");
-	if (m_sol_cov == NULL)
-		throw ModelException(MID_BIO_EPIC, "CheckInputData", "The residue on soil surface can not be NULL.");
-	if (m_sol_rsd == NULL)
-		throw ModelException(MID_BIO_EPIC, "CheckInputData", "The organic matter in soil classified as residue can not be NULL.");
+	//if (m_sol_cov == NULL)
+	//	throw ModelException(MID_MINRL, "CheckInputData", "The residue on soil surface can not be NULL.");
+	//if (m_sol_rsd == NULL)
+	//	throw ModelException(MID_MINRL, "CheckInputData", "The organic matter in soil classified as residue can not be NULL.");
 	if (this->m_sol_thick == NULL)
 		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_thick can not be NULL.");
 	if (this->m_sol_bd == NULL)

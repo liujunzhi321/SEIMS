@@ -149,18 +149,25 @@ void SurrunoffTransfer::Set1DData(const char *key, int n, float *data)
     if (!this->CheckInputSize(key, n)) return;
 
     string sk(key);
-    if (StringMatch(sk, VAR_SOER))
+    if (StringMatch(sk, VAR_SED_OL))
     {
         this->m_sedimentYield = data;
+		// convert kg to ton
+		for (int i = 0; i < n; i++)
+			m_sedimentYield[i] /= 1000.f;
     }
-    else if (StringMatch(sk, VAR_SURU))
+	else if (StringMatch(sk, VAR_SOILLAYERS))
+	{
+		m_nSoilLayers = data;
+	}
+    else if (StringMatch(sk, VAR_FLOW_OL))
     {
         this->m_surfr = data;
     }
     else
     {
-        throw ModelException(MID_SurTra, "SetValue", "Parameter " + sk +
-                                                   " does not exist in CLIMATE module. Please contact the module developer.");
+        throw ModelException(MID_SurTra, "Set1DData", "Parameter " + sk +
+                                                   " does not exist in NUTRSED module. Please contact the module developer.");
     }
 }
 
@@ -169,7 +176,7 @@ void SurrunoffTransfer::Set2DData(const char *key, int nRows, int nCols, float *
     if (!this->CheckInputSize(key, nRows)) return;
     string sk(key);
     m_soiLayers = nCols;
-    if (StringMatch(sk, VAR_ROOTDEPTH)) { this->m_sol_z = data; }
+    if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
     else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
     else if (StringMatch(sk, VAR_SOL_AORGN)) { this->m_sol_aorgn = data; }
     else if (StringMatch(sk, VAR_SOL_SORGN)) { this->m_sol_orgn = data; }
@@ -181,8 +188,8 @@ void SurrunoffTransfer::Set2DData(const char *key, int nRows, int nCols, float *
         //else if (StringMatch(sk, VAR_SOL_MP)) {this -> m_sol_mp = data;}
     else
     {
-        throw ModelException(MID_SurTra, "SetValue", "Parameter " + sk +
-                                                   " does not exist in CLIMATE module. Please contact the module developer.");
+        throw ModelException(MID_SurTra, "Set2DData", "Parameter " + sk +
+                                                   " does not exist in NUTRSED module. Please contact the module developer.");
     }
 }
 
@@ -223,13 +230,10 @@ void SurrunoffTransfer::initialOutputs()
     // allocate the output variables
     if (m_sedorgn == NULL)
     {
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_sedorgn[i] = 0.f;
-            m_sedorgp[i] = 0.f;
-            m_sedminpa[i] = 0.f;
-            m_sedminps[i] = 0.f;
-        }
+		Initialize1DArray(m_nCells, m_sedorgn, 0.f);
+		Initialize1DArray(m_nCells, m_sedorgp, 0.f);
+		Initialize1DArray(m_nCells, m_sedminpa, 0.f);
+		Initialize1DArray(m_nCells, m_sedminps, 0.f);
     }
     //if(m_sol_mp == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_mp, 0.f);}
 }

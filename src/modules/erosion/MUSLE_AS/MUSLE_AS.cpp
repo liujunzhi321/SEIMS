@@ -175,7 +175,7 @@ void MUSLE_AS::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(s, VAR_ACC)) m_flowacc = data;
     else if (StringMatch(s, VAR_SLOPE)) m_slope = data;
     else if (StringMatch(s, VAR_SUBBSN)) m_subbasin = data;
-    else if (StringMatch(s, VAR_OLFLOW)) m_surfaceRunoff = data;
+    else if (StringMatch(s, VAR_FLOW_OL)) m_surfaceRunoff = data;
     else if (StringMatch(s, VAR_SNAC)) m_snowAccumulation = data;
     else if (StringMatch(s, VAR_STREAM_LINK))
         m_streamLink = data;
