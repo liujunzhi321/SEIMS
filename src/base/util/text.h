@@ -834,8 +834,8 @@
 #define VAR_SOL_NH3 "sol_nh3"                       /// amount of nitrogen stored in the ammonium pool in soil layer
 #define VAR_SOL_NO3 "sol_no3"                       /// amount of nitrogen stored in the nitrate pool in soil layer(kg N/ha)
 #define VAR_SOL_OM "om"
-#define VAR_SOL_ORGN "sol_orgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
-#define VAR_SOL_ORGP "sol_orgp"                     /// amount of phosphorus stored in the organic P pool in soil layer(kg P/ha)
+#define VAR_SOL_SORGN "sol_sorgn"                     /// amount of nitrogen stored in the stable organic N pool(kg N/ha)
+#define VAR_SOL_HORGP "sol_horgp"                     /// amount of phosphorus stored in the humic organic P pool in soil layer(kg P/ha)
 #define VAR_SOL_PERCO "sol_perco"
 #define VAR_SOL_RSD "sol_rsd"                       /// amount of organic matter in the soil classified as residue(kg/ha)
 #define VAR_SOL_RSDIN "rsdin"                       /// amount of organic matter in the soil classified as residue(kg/ha)
@@ -1351,8 +1351,8 @@
 #define DESC_SOL_NH3 "amount of nitrogen stored in the ammonium pool in soil layer"
 #define DESC_SOL_NO3 "amount of nitrogen stored in the nitrate pool in soil layer"
 #define DESC_SOL_OM "percent of organic matter in soil"
-#define DESC_SOL_ORGN "amount of nitrogen stored in the stable organic N pool"
-#define DESC_SOL_ORGP "amount of phosphorus stored in the organic P pool in soil layer"
+#define DESC_SOL_SORGN "amount of nitrogen stored in the stable organic N pool"
+#define DESC_SOL_HORGP "amount of phosphorus stored in the humic organic P pool in soil layer"
 #define DESC_SOL_PERCO "percolation from soil layer"
 #define DESC_SOL_RSD "amount of organic matter in the soil classified as residue"
 #define DESC_SOL_RSDIN "amount of organic matter in the soil classified as residue"

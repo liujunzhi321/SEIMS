@@ -54,6 +54,7 @@ private:
     map<int, float> m_nAreaSubbsn;
 
     /**Parameters from MongoDB**/
+
     /// subbasin ID of each cell
     float *m_subBsnID;
     /// land use
@@ -212,6 +213,8 @@ private:
     float *m_appliedWater;
     /// qird(:)        |mm H2O        |amount of water from irrigation to become surface runoff
     float *m_irrSurfQWater;
+	/// Currently, deep and shallow aquifer are not distinguished in SEIMS.
+	/// So, m_deepWaterDepth and m_shallowWaterDepth are all set to m_SBGS
     ///  deepst(:)      |mm H2O        |depth of water in deep aquifer
     float *m_deepWaterDepth;
     ///shallst | mm H2O        |depth of water in shallow aquifer

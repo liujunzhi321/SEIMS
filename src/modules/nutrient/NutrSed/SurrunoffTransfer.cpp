@@ -172,8 +172,8 @@ void SurrunoffTransfer::Set2DData(const char *key, int nRows, int nCols, float *
     if (StringMatch(sk, VAR_ROOTDEPTH)) { this->m_sol_z = data; }
     else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
     else if (StringMatch(sk, VAR_SOL_AORGN)) { this->m_sol_aorgn = data; }
-    else if (StringMatch(sk, VAR_SOL_ORGN)) { this->m_sol_orgn = data; }
-    else if (StringMatch(sk, VAR_SOL_ORGP)) { this->m_sol_orgp = data; }
+    else if (StringMatch(sk, VAR_SOL_SORGN)) { this->m_sol_orgn = data; }
+    else if (StringMatch(sk, VAR_SOL_HORGP)) { this->m_sol_orgp = data; }
     else if (StringMatch(sk, VAR_SOL_FOP)) { this->m_sol_fop = data; }
     else if (StringMatch(sk, VAR_SOL_FON)) { this->m_sol_fon = data; }
     else if (StringMatch(sk, VAR_SOL_ACTP)) { this->m_sol_actp = data; }
@@ -383,8 +383,8 @@ void SurrunoffTransfer::Get2DData(const char *key, int *nRows, int *nCols, float
     *nCols = m_soiLayers;
     if (StringMatch(sk, VAR_SOL_AORGN)) { *data = this->m_sol_aorgn; }
     if (StringMatch(sk, VAR_SOL_FON)) { *data = this->m_sol_fon; }
-    if (StringMatch(sk, VAR_SOL_ORGN)) { *data = this->m_sol_orgn; }
-    if (StringMatch(sk, VAR_SOL_ORGP)) { *data = this->m_sol_orgp; }
+    if (StringMatch(sk, VAR_SOL_SORGN)) { *data = this->m_sol_orgn; }
+    if (StringMatch(sk, VAR_SOL_HORGP)) { *data = this->m_sol_orgp; }
     if (StringMatch(sk, VAR_SOL_FOP)) { *data = this->m_sol_fop; }
     if (StringMatch(sk, VAR_SOL_STAP)) { *data = this->m_sol_stap; }
     if (StringMatch(sk, VAR_SOL_ACTP)) { *data = this->m_sol_actp; }

@@ -52,7 +52,6 @@ public:
     bool CheckInputData(void);
 
 private:
-
     /// time step (sec)
     int m_TimeStep;
     /// validate cells number
@@ -81,6 +80,37 @@ private:
     int m_iuhCols;
 	/// sediment yield in each cell
 	float *m_sedYield;
+
+	/// nutrient variables
+
+	/// amount of nitrate transported with surface runoff
+	float *m_surqno3ToCh;
+	// amount of organic nitrogen in surface runoff
+	float *m_sedorgnToCh;
+
+	/// amount of soluble phosphorus in surface runoff
+	float *m_surqsolpToCh;
+	// amount of active mineral phosphorus absorbed to sediment in surface runoff
+	float *m_sedminpaToCh;
+	// amount of stable mineral phosphorus absorbed to sediment in surface runoff
+	float *m_sedminpsToCh;
+	// amount of organic phosphorus in surface runoff
+	float *m_sedorgpToCh;
+
+	/// cod to reach in surface runoff (kg)
+	float *m_codToCh;
+
+	/// amount of nitrate transported with lateral flow
+	float *m_latno3ToCh;
+	/// amount of ammonium transported with lateral flow
+	float *m_ammoToCh;
+	/// amount of nitrite transported with lateral flow
+	float *m_nitriteToCh;
+
+	/// nitrate loading to reach in groundwater
+	float *m_no3gwToCh;
+	/// soluble P loading to reach in groundwater
+	float *m_minpgwToCh;
 
     /*/// length of rainfall series
     int m_nr;*/

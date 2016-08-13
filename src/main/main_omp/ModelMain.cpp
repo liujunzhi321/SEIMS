@@ -161,9 +161,7 @@ void ModelMain::StepHillSlope(time_t t, int yearIdx, int subIndex)
     {
         int index = m_hillslopeModules[i];
         SimulationModule *pModule = m_simulationModules[index];
-
         clock_t sub_t1 = clock();
-
         if (m_firstRunOverland)
             m_factory->GetValueFromDependencyModule(index, m_simulationModules);
         if (subIndex == 0)

@@ -207,7 +207,7 @@ void MainMongoDB(string modelPath, char *host, int port, int scenarioID, int num
 		/// Setting Output is loaded in ModelMain. 
         ModelMain main(conn, dbName, projectPath, input, factory, nSubbasin, scenarioID, numThread, layingMethod);
         main.Execute();
-        main.Output();
+		main.Output();
 
         mongoc_uri_destroy(uri);
         mongoc_cleanup();
