@@ -6,7 +6,7 @@
 0 | Infiltration | Modified rational | SUR_MR
 0 | Depression | Linsley | DEP_LINSLEY
 0 | Hillslope erosion | MUSLE | MUSLE_AS
-#0 | Management Operation | SWAT | MGT_SWAT
+0 | Management Operation | SWAT | MGT_SWAT
 0 | Percolation | Darcy and Brooks-Corey | PER_PI
 0 | PET | PriestleyTaylor | PET_PT
 0 | AET | Hargreaves and PriestleyTaylor | AET_PTH

@@ -6,7 +6,7 @@
  *
  * \revised Liang-Jun Zhu
  * \date 2016-7-24
- * \note: 1. Change m_sol_cov and m_sol_rsd as AddInput from BIO_EPIC module
+ * \note: 1. 
  *        2. Change m_wshd_dnit etc. variables to store the statistics values of the current day
  *        3. m_hmntl etc. variables should be DT_Raster1D rather than DT_Single since they are soil profile values in cell!
  */
@@ -67,7 +67,7 @@ private:
     /// soil layers
     float *m_nSoilLayers;
     /// maximum soil layers
-    int m_soiLayers;
+    int m_soilLayers;
 
     ///input data
     
@@ -88,8 +88,8 @@ private:
 	float *m_rsdco_pl;
 	///amount of residue on soil surface (kg/ha)
 	float *m_sol_cov;
-	/////amount of residue on soil surface (kg/ha)
-	//float *m_sol_rsdin;
+	///amount of residue on soil surface (kg/ha)
+	float *m_sol_rsdin;
 	
 	///daily average temperature of soil layer(deg C)
 	float *m_sote;

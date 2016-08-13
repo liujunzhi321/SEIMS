@@ -82,8 +82,7 @@ void MGTOpt_SWAT::SetValue(const char *key, float data)
     else if (StringMatch(sk, Tag_CellWidth)) m_cellWidth = data;
     else
         throw ModelException(MID_MGT_SWAT, "SetValue", "Parameter " + sk
-                                                       +
-                                                       " does not exist in current module. Please contact the module developer.");
+                                                       +" does not exist in current module. Please contact the module developer.");
 }
 
 bool MGTOpt_SWAT::CheckInputSize(const char *key, int n)
@@ -108,12 +107,16 @@ bool MGTOpt_SWAT::CheckInputSize(const char *key, int n)
 void MGTOpt_SWAT::Set1DData(const char *key, int n, float *data)
 {
     string sk(key);
+	if (StringMatch(sk, VAR_SBGS)||StringMatch(sk, VAR_SBGS)){
+		m_deepWaterDepth = data;
+		m_shallowWaterDepth = data;
+		return;
+	}
     CheckInputSize(key, n);
-    //// /// add parameters from MongoDB
-    if (StringMatch(sk, VAR_SUBBSN)) m_subBsnID = data;
+	if (StringMatch(sk, VAR_SUBBSN)) m_subBsnID = data;
+	else if (StringMatch(sk, VAR_MGT_FIELD)) m_mgtFields = data;
     else if (StringMatch(sk, VAR_LANDUSE)) m_landUse = data;
     else if (StringMatch(sk, VAR_LANDCOVER)) m_landCover = data;
-    else if (StringMatch(sk, VAR_MGT_FIELD)) m_mgtFields = data;
         /// Soil related parameters from MongoDB
     else if (StringMatch(sk, VAR_SOILLAYERS)) m_nSoilLayers = data;
     else if (StringMatch(sk, VAR_SOL_ZMX)) m_soilZMX = data;
@@ -123,6 +126,7 @@ void MGTOpt_SWAT::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_HVSTI)) m_havstIdx = data;
     else if (StringMatch(sk, VAR_WSYF)) m_wtrStrsYF = data;
     else if (StringMatch(sk, VAR_PHUPLT)) m_phuPlant = data;
+    else if (StringMatch(sk, VAR_PHUBASE)) m_phuBase = data;
     else if (StringMatch(sk, VAR_IGRO)) m_igro = data;
     else if (StringMatch(sk, VAR_FR_PHU_ACC)) m_phuAcc = data;
     else if (StringMatch(sk, VAR_TREEYRS)) m_curYearMat = data;
@@ -143,10 +147,8 @@ void MGTOpt_SWAT::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_LAST_SOILRD)) m_lastSoilRootDepth = data;
         /// Irrigation operation
     else if (StringMatch(sk, VAR_FR_STRSWTR)) m_frStrsWa = data;
-    else if (StringMatch(sk, VAR_DEEPST)) m_deepWaterDepth = data;
-    else if (StringMatch(sk, VAR_SHALLST)) m_shallowWaterDepth = data;
-        /// inputs from other modules
-    else if (StringMatch(sk, VAR_PHUBASE)) m_phuBase = data;
+    //else if (StringMatch(sk, VAR_DEEPST)) m_deepWaterDepth = data;
+    //else if (StringMatch(sk, VAR_SHALLST)) m_shallowWaterDepth = data;
     else
         throw ModelException(MID_MGT_SWAT, "Set1DData", "Parameter " + sk +
                                                         " does not exist in current module. Please contact the module developer.");
@@ -165,7 +167,8 @@ bool MGTOpt_SWAT::CheckInputSize2D(const char *key, int n, int col)
         else
         {
             throw ModelException(MID_MGT_SWAT, "CheckInputSize2D", "Input data for " + string(key) +
-                                                                   " is invalid. All the layers of input 2D raster data should have same size.");
+                                                                   " is invalid. All the layers of input 2D raster data should have same size of " + 
+																   ValueToString(m_soilLayers)+" instead of " + ValueToString(col)  +".");
             return false;
         }
     }
@@ -229,14 +232,14 @@ void MGTOpt_SWAT::Set2DData(const char *key, int n, int col, float **data)
     else if (StringMatch(sk, VAR_SAND)) m_soilSand = data;
     else if (StringMatch(sk, VAR_ROCK)) m_soilRock = data;
         /// Soil related parameters --  inputs from other modules
-    else if (StringMatch(sk, VAR_SOL_AORGN)) m_soilActiveOrgN = data;
-    else if (StringMatch(sk, VAR_SOL_FON)) m_soilFreshOrgN = data;
-    else if (StringMatch(sk, VAR_SOL_FOP)) m_soilFreshOrgP = data;
     else if (StringMatch(sk, VAR_SOL_ORGN)) m_soilStableOrgN = data;
     else if (StringMatch(sk, VAR_SOL_ORGP)) m_soilOrgP = data;
     else if (StringMatch(sk, VAR_SOL_SOLP)) m_soilSolP = data;
     else if (StringMatch(sk, VAR_SOL_NH3)) m_soilNH3 = data;
     else if (StringMatch(sk, VAR_SOL_NO3)) m_soilNO3 = data;
+    else if (StringMatch(sk, VAR_SOL_AORGN)) m_soilActiveOrgN = data;
+    else if (StringMatch(sk, VAR_SOL_FON)) m_soilFreshOrgN = data;
+    else if (StringMatch(sk, VAR_SOL_FOP)) m_soilFreshOrgP = data;
     else if (StringMatch(sk, VAR_SOL_ACTP)) m_soilActiveMinP = data;
     else if (StringMatch(sk, VAR_SOL_STAP)) m_soilStableMinP = data;
     else if (StringMatch(sk, VAR_SOL_RSD)) m_soilRsd = data;
@@ -255,7 +258,7 @@ void MGTOpt_SWAT::SetScenario(Scenario *sce)
     for (map<int, BMPFactory *>::iterator it = tmpBMPFactories.begin(); it != tmpBMPFactories.end(); it++)
     {
         /// Key is uniqueBMPID, which is calculated by Landuse_ID * 100 + subScenario;
-        if (it->first / 100 == BMP_TYPE_PLANT_MGT)
+        if (it->first / 100000 == BMP_TYPE_PLANT_MGT)
         {
             int uniqueIdx = ((BMPPlantMgtFactory *) it->second)->GetLUCCID() * 100 + it->second->GetSubScenarioId();
             m_mgtFactory[uniqueIdx] = (BMPPlantMgtFactory *) it->second;
@@ -443,7 +446,7 @@ void MGTOpt_SWAT::initializeLanduseLookup()
         if (!m_landuseLookupMap.empty())
             m_landuseLookupMap.clear();
         for (int i = 0; i < m_landuseNum; i++)
-            m_landuseLookupMap[(int) m_landuseLookup[i][0]] = m_landuseLookup[i];
+            m_landuseLookupMap[(int) m_landuseLookup[i][1]] = m_landuseLookup[i];
     }
 }
 
@@ -459,7 +462,7 @@ void MGTOpt_SWAT::initializeCropLookup()
         if (!m_cropLookupMap.empty())
             m_cropLookupMap.clear();
         for (int i = 0; i < m_cropNum; i++)
-            m_cropLookupMap[(int) m_cropLookup[i][0]] = m_cropLookup[i];
+            m_cropLookupMap[(int) m_cropLookup[i][1]] = m_cropLookup[i];
     }
 }
 
@@ -476,7 +479,7 @@ void MGTOpt_SWAT::initializeFertilizerLookup()
         if (!m_fertilizerLookupMap.empty())
             m_fertilizerLookupMap.clear();
         for (int i = 0; i < m_fertilizerNum; i++)
-            m_fertilizerLookupMap[(int) m_fertilizerLookup[i][0]] = m_fertilizerLookup[i];
+            m_fertilizerLookupMap[(int) m_fertilizerLookup[i][1]] = m_fertilizerLookup[i];
     }
 }
 
@@ -493,7 +496,7 @@ void MGTOpt_SWAT::initializeTillageLookup()
         if (!m_tillageLookupMap.empty())
             m_tillageLookupMap.clear();
         for (int i = 0; i < m_tillageNum; i++)
-            m_tillageLookupMap[(int) m_tillageLookup[i][0]] = m_tillageLookup[i];
+            m_tillageLookupMap[(int) m_tillageLookup[i][1]] = m_tillageLookup[i];
     }
 }
 
@@ -557,6 +560,7 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
     m_irrApplyDepth = curOperation->IRRApplyDepth();
     m_irrEfficiency = curOperation->IRREfficiency();
     m_irrFlag[i] = 1;
+	int tmpSubbsnID = m_subBsnID[i];
     if (m_irrSource > IRR_SRC_RES) /// irrigation from reach and reservoir are irr_rch.f and irr_res.f, respectively
     {
         /// call irrsub.f
@@ -577,15 +581,15 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
         {
             /// in SEIMS, we hypothesis that shallow aquifer and deep aquifer is consistent within subbasin.
             case IRR_SRC_SHALLOW:
-                if (m_shallowWaterDepth[i] < UTIL_ZERO)
-                    m_shallowWaterDepth[i] = 0.f;
-                vmma += m_shallowWaterDepth[i] * cnv * m_irrEfficiency;
+                if (m_shallowWaterDepth[tmpSubbsnID] < UTIL_ZERO)
+                    m_shallowWaterDepth[tmpSubbsnID] = 0.f;
+                vmma += m_shallowWaterDepth[tmpSubbsnID] * cnv * m_irrEfficiency;
                 vmms = vmma;
                 vmma /= m_nCellsSubbsn[m_irrNo];
                 vmm = min(m_soilSumFC[i], vmma);
                 break;
             case IRR_SRC_DEEP:
-                vmma += m_deepWaterDepth[i] * cnv * m_irrEfficiency;
+                vmma += m_deepWaterDepth[tmpSubbsnID] * cnv * m_irrEfficiency;
                 vmmd = vmma;
                 vmma /= m_nCellsSubbsn[m_irrNo];
                 vmm = min(m_soilSumFC[i], vmma);
@@ -627,13 +631,13 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
                     cnv = m_nAreaSubbsn[m_irrNo] * 10.f;
                     vmma = 0.f;
                     if (vmms > -0.01f)
-                        vmma = vol * m_shallowWaterDepth[i] * cnv / vmms;
+                        vmma = vol * m_shallowWaterDepth[tmpSubbsnID] * cnv / vmms;
                     vmma /= cnv;
-                    m_shallowWaterDepth[i] -= vmma;
-                    if (m_shallowWaterDepth[i] < 0.f)
+                    m_shallowWaterDepth[tmpSubbsnID] -= vmma;
+                    if (m_shallowWaterDepth[tmpSubbsnID] < 0.f)
                     {
-                        vmma += m_shallowWaterDepth[i];
-                        m_shallowWaterDepth[i] = 0.f;
+                        vmma += m_shallowWaterDepth[tmpSubbsnID];
+                        m_shallowWaterDepth[tmpSubbsnID] = 0.f;
                     }
                     m_shallowIrrWater[i] += vmma;
                     break;
@@ -641,13 +645,13 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
                     cnv = m_nAreaSubbsn[m_irrNo] * 10.f;
                     vmma = 0.f;
                     if (vmmd > 0.01f)
-                        vmma = vol * (m_deepWaterDepth[i] * cnv / vmmd);
+                        vmma = vol * (m_deepWaterDepth[tmpSubbsnID] * cnv / vmmd);
                     vmma /= cnv;
-                    m_deepWaterDepth[i] -= vmma;
-                    if (m_deepWaterDepth[i] < 0.f)
+                    m_deepWaterDepth[tmpSubbsnID] -= vmma;
+                    if (m_deepWaterDepth[tmpSubbsnID] < 0.f)
                     {
-                        vmma += m_deepWaterDepth[i];
-                        m_deepWaterDepth[i] = 0.f;
+                        vmma += m_deepWaterDepth[tmpSubbsnID];
+                        m_deepWaterDepth[tmpSubbsnID] = 0.f;
                     }
                     m_deepIrrWater[i] += vmma;
                     break;
@@ -1405,15 +1409,17 @@ int MGTOpt_SWAT::Execute()
 {
     CheckInputData();  /// essential input data, other inputs for specific management operation will be check separately.
     initialOutputs(); /// all possible outputs will be initialized to avoid NULL pointer problems.
-#pragma omp parallel for
+//#pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
         int curFactoryID;
         vector<int> curOps;
         if (GetOperationCode(i, curFactoryID, curOps))
         {
-            for (vector<int>::iterator it = curOps.begin(); it != curOps.end(); it++)
+            for (vector<int>::iterator it = curOps.begin(); it != curOps.end(); it++){
+				//cout<<curFactoryID<<","<<*it<<endl;
                 ScheduledManagement(i, curFactoryID, *it);
+			}
         }
     }
     return true;

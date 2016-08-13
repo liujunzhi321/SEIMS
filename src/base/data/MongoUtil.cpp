@@ -160,7 +160,7 @@ void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename
     bson_destroy(b);
 }
 
-void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &n, float **&data)
+void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &rows, int &cols, float **&data)
 {
     mongoc_gridfs_file_t *gfile;
     bson_t *b;
@@ -178,21 +178,31 @@ void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename
     iov.iov_base = (char *) floatValues;
     iov.iov_len = length;
     ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+
     int nRows = (int) floatValues[0];
-    n = nRows;
-    data = new float *[n];
-
+	int nCols = -1;
+    rows = nRows;
+    data = new float *[rows];
+	//cout<<n<<endl;
     int index = 1;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < rows; i++)
     {
-        int nSub = int(floatValues[index]) + 1;
+		int col = int(floatValues[index]); // real column
+		if (nCols < 0)
+			nCols = col;
+		else if(nCols != col)
+			nCols = 1;
+        int nSub = col + 1;
         data[i] = new float[nSub];
-
-        data[i][0] = floatValues[index];
+        data[i][0] = col;
         for (int j = 1; j < nSub; j++)
-            data[i][j] = floatValues[index + j];
+			data[i][j] = floatValues[index + j];
+		//for (int j = 0; j < nSub; j++)
+		//	cout<<data[i][j]<<",";
+		//cout<<endl;
         index = index + nSub;
     }
+	cols = nCols;
     mongoc_stream_destroy(stream);
     mongoc_gridfs_file_destroy(gfile);
     bson_destroy(b);
