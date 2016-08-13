@@ -402,9 +402,7 @@ void ImplicitKinematicWave_OL::Set1DData(const char *key, int n, float *data)
     if (StringMatch(sk, VAR_SLOPE))
         m_s0 = data;
     else if (StringMatch(sk, VAR_MANNING))
-    {
         m_n = data;
-    }
     else if (StringMatch(sk, VAR_FLOWDIR))
         m_direction = data;
     else if (StringMatch(sk, VAR_SURU))

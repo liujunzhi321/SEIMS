@@ -16,7 +16,7 @@ SurrunoffTransfer::SurrunoffTransfer(void) :
         m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_nSoilLayers(NULL), m_sedimentYield(NULL), m_surfr(NULL),
         m_sol_bd(NULL), m_sol_z(NULL), m_enratio(NULL),
         m_sol_actp(NULL), m_sol_orgn(NULL), m_sol_orgp(NULL), m_sol_stap(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL),
-        m_sol_fop(NULL),
+        m_sol_fop(NULL), m_nSubbasins(-1), m_subbasin(NULL), m_subbasinsInfo(NULL),
         //output
         m_sedorgn(NULL), m_sedorgp(NULL), m_sedminpa(NULL), m_sedminps(NULL)
 {
@@ -119,6 +119,15 @@ bool SurrunoffTransfer::CheckInputData()
     {
         throw ModelException(MID_SurTra, "CheckInputData", "The amount of phosphorus stored in the fresh organic pool can not be NULL.");
     }
+
+	if (m_subbasin == NULL)
+		throw ModelException(MID_IUH_OL, "CheckInputData", "The parameter: m_subbasin has not been set.");
+
+	if (m_nSubbasins <= 0) throw ModelException(MID_IUH_OL, "CheckInputData", "The subbasins number must be greater than 0.");
+	if (m_subbasinIDs.empty()) throw ModelException(MID_IUH_OL, "CheckInputData", "The subbasin IDs can not be EMPTY.");
+	if (m_subbasinsInfo == NULL)
+		throw ModelException(MID_IUH_OL, "CheckInputData", "The parameter: m_subbasinsInfo has not been set.");
+
     return true;
 }
 
@@ -149,18 +158,27 @@ void SurrunoffTransfer::Set1DData(const char *key, int n, float *data)
     if (!this->CheckInputSize(key, n)) return;
 
     string sk(key);
-    if (StringMatch(sk, VAR_SOER))
+	if (StringMatch(sk, VAR_SUBBSN))
+		m_subbasin = data;
+    else if (StringMatch(sk, VAR_SED_OL))
     {
         this->m_sedimentYield = data;
+		// convert kg to ton
+		for (int i = 0; i < n; i++)
+			m_sedimentYield[i] /= 1000.f;
     }
-    else if (StringMatch(sk, VAR_SURU))
+	else if (StringMatch(sk, VAR_SOILLAYERS))
+	{
+		m_nSoilLayers = data;
+	}
+    else if (StringMatch(sk, VAR_FLOW_OL))
     {
         this->m_surfr = data;
     }
     else
     {
-        throw ModelException(MID_SurTra, "SetValue", "Parameter " + sk +
-                                                   " does not exist in CLIMATE module. Please contact the module developer.");
+        throw ModelException(MID_SurTra, "Set1DData", "Parameter " + sk +
+                                                   " does not exist in NUTRSED module. Please contact the module developer.");
     }
 }
 
@@ -169,7 +187,7 @@ void SurrunoffTransfer::Set2DData(const char *key, int nRows, int nCols, float *
     if (!this->CheckInputSize(key, nRows)) return;
     string sk(key);
     m_soiLayers = nCols;
-    if (StringMatch(sk, VAR_ROOTDEPTH)) { this->m_sol_z = data; }
+    if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
     else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
     else if (StringMatch(sk, VAR_SOL_AORGN)) { this->m_sol_aorgn = data; }
     else if (StringMatch(sk, VAR_SOL_SORGN)) { this->m_sol_orgn = data; }
@@ -181,8 +199,8 @@ void SurrunoffTransfer::Set2DData(const char *key, int nRows, int nCols, float *
         //else if (StringMatch(sk, VAR_SOL_MP)) {this -> m_sol_mp = data;}
     else
     {
-        throw ModelException(MID_SurTra, "SetValue", "Parameter " + sk +
-                                                   " does not exist in CLIMATE module. Please contact the module developer.");
+        throw ModelException(MID_SurTra, "Set2DData", "Parameter " + sk +
+                                                   " does not exist in NUTRSED module. Please contact the module developer.");
     }
 }
 
@@ -223,15 +241,26 @@ void SurrunoffTransfer::initialOutputs()
     // allocate the output variables
     if (m_sedorgn == NULL)
     {
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_sedorgn[i] = 0.f;
-            m_sedorgp[i] = 0.f;
-            m_sedminpa[i] = 0.f;
-            m_sedminps[i] = 0.f;
-        }
+		Initialize1DArray(m_nCells, m_sedorgn, 0.f);
+		Initialize1DArray(m_nCells, m_sedorgp, 0.f);
+		Initialize1DArray(m_nCells, m_sedminpa, 0.f);
+		Initialize1DArray(m_nCells, m_sedminps, 0.f);
+
+		Initialize1DArray(m_nSubbasins+1, m_sedorgnToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_sedorgpToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_sedminpaToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_sedminpsToCh, 0.f);
     }
     //if(m_sol_mp == NULL) {Initialize2DArray(m_nCells, m_soiLayers, m_sol_mp, 0.f);}
+}
+
+void SurrunoffTransfer::SetSubbasins(clsSubbasins *subbasins)
+{
+	if(m_subbasinsInfo == NULL){
+		m_subbasinsInfo = subbasins;
+		m_nSubbasins = m_subbasinsInfo->GetSubbasinNumber();
+		m_subbasinIDs = m_subbasinsInfo->GetSubbasinIDs();
+	}
 }
 
 int SurrunoffTransfer::Execute()
@@ -250,7 +279,36 @@ int SurrunoffTransfer::Execute()
         //Calculates the amount of organic and mineral phosphorus attached to sediment in surface runoff.
         OrgpAttachedtoSed(i);
     }
-    //return ??
+    
+	// sum by subbasin
+	for (int i = 0; i < m_nCells; i++)
+	{
+		//add today's flow
+		int subi = (int) m_subbasin[i];
+		if (m_nSubbasins == 1)
+		{
+			subi = 1;
+		}
+		else if (subi >= m_nSubbasins + 1)
+		{
+			ostringstream oss;
+			oss << subi;
+			throw ModelException(MID_SurTra, "Execute", "The subbasin " + oss.str() + " is invalid.");
+		}
+		m_sedorgnToCh[subi] += m_sedorgn[i];
+		m_sedorgpToCh[subi] += m_sedorgp[i];
+		m_sedminpaToCh[subi] = m_sedminpa[i];
+		m_sedminpsToCh[subi] = m_sedminps[i];
+	}
+	// sum all the subbasins and put the sum value in the zero-index of the array
+	for (int i = 1; i < m_nSubbasins + 1; i++)
+	{
+		m_sedorgnToCh[0] += m_sedorgnToCh[i];
+		m_sedorgpToCh[0] += m_sedorgpToCh[i];
+		m_sedminpaToCh[0] = m_sedminpaToCh[i];
+		m_sedminpsToCh[0] = m_sedminpsToCh[i];
+	}
+
     return 0;
 }
 
@@ -366,12 +424,12 @@ void SurrunoffTransfer::Get1DData(const char *key, int *n, float **data)
     string sk(key);
     *n = m_nCells;
     if (StringMatch(sk, VAR_SEDORGN)) { *data = this->m_sedorgn; }
-    if (StringMatch(sk, VAR_SEDORGP)) { *data = this->m_sedorgp; }
-    if (StringMatch(sk, VAR_SEDMINPA)) { *data = this->m_sedminpa; }
-    if (StringMatch(sk, VAR_SEDMINPS)) { *data = this->m_sedminps; }
+    else if (StringMatch(sk, VAR_SEDORGP)) { *data = this->m_sedorgp; }
+    else if (StringMatch(sk, VAR_SEDMINPA)) { *data = this->m_sedminpa; }
+    else if (StringMatch(sk, VAR_SEDMINPS)) { *data = this->m_sedminps; }
     else
     {
-        throw ModelException(MID_SurTra, "GetValue",
+        throw ModelException(MID_SurTra, "Get1DData",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
     }
 }
@@ -382,12 +440,12 @@ void SurrunoffTransfer::Get2DData(const char *key, int *nRows, int *nCols, float
     *nRows = m_nCells;
     *nCols = m_soiLayers;
     if (StringMatch(sk, VAR_SOL_AORGN)) { *data = this->m_sol_aorgn; }
-    if (StringMatch(sk, VAR_SOL_FON)) { *data = this->m_sol_fon; }
-    if (StringMatch(sk, VAR_SOL_SORGN)) { *data = this->m_sol_orgn; }
-    if (StringMatch(sk, VAR_SOL_HORGP)) { *data = this->m_sol_orgp; }
-    if (StringMatch(sk, VAR_SOL_FOP)) { *data = this->m_sol_fop; }
-    if (StringMatch(sk, VAR_SOL_STAP)) { *data = this->m_sol_stap; }
-    if (StringMatch(sk, VAR_SOL_ACTP)) { *data = this->m_sol_actp; }
+    else if (StringMatch(sk, VAR_SOL_FON)) { *data = this->m_sol_fon; }
+    else if (StringMatch(sk, VAR_SOL_SORGN)) { *data = this->m_sol_orgn; }
+    else if (StringMatch(sk, VAR_SOL_HORGP)) { *data = this->m_sol_orgp; }
+    else if (StringMatch(sk, VAR_SOL_FOP)) { *data = this->m_sol_fop; }
+    else if (StringMatch(sk, VAR_SOL_STAP)) { *data = this->m_sol_stap; }
+    else if (StringMatch(sk, VAR_SOL_ACTP)) { *data = this->m_sol_actp; }
     else
         throw ModelException(MID_SurTra, "Get2DData", "Output " + sk +
                                                     " does not exist in the SurTra module. Please contact the module developer.");

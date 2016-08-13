@@ -138,17 +138,8 @@ void SSR_DA::FlowInSoil(int id)
 				m_qi[id][j] = 0.f;
 			else if (soilWater - m_qi[id][j]> maxSoilWater)
 				m_qi[id][j] = soilWater - maxSoilWater;
-			else if (soilWater - m_qi[id][j] < UTIL_ZERO)
-				m_qi[id][j] = 0.f;
-            //else if (soilWater - m_qi[id][j] < fcSoilWater)
-            //    m_qi[id][j] = soilWater - fcSoilWater;
-			else if (soilWater - m_qi[id][j] < wpSoilWater)
-			{
-				if(soilWater > wpSoilWater)
-					m_qi[id][j] = soilWater - wpSoilWater;
-				else
-					m_qi[id][j] = 0.f;
-			}
+			else if (soilWater - m_qi[id][j] < fcSoilWater)
+				m_qi[id][j] = soilWater - fcSoilWater;
 
             //soilWater -= m_qi[id][j];
             //if (soilWater > maxSoilWater)

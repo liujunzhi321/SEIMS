@@ -70,27 +70,19 @@ int PER_PI::Execute()
                 }
 
                 m_perc[i][j] = k * m_dt / 3600.f;  /// mm
-				if (m_perc[i][j] < 0.f)
-					m_perc[i][j] = 0.f;
-                else if (swater - m_perc[i][j] > maxSoilWater)
+				//if (m_perc[i][j] < 0.f)
+				//	m_perc[i][j] = 0.f;
+                if (swater - m_perc[i][j] > maxSoilWater)
                     m_perc[i][j] = swater - maxSoilWater;
-				else if (swater - m_perc[i][j] < 0.f)  /// percolation is not allowed!
-					m_perc[i][j] = 0.f;
-                //else if (swater - m_perc[i][j] < fcSoilWater)
-                //    m_perc[i][j] = swater - fcSoilWater;
-				else if (swater - m_perc[i][j] < wpSoilWater)
-				{
-					if(swater > wpSoilWater)
-						m_perc[i][j] = swater - wpSoilWater;
-					else
-						m_perc[i][j] = 0.f;
-				}
+                else if (swater - m_perc[i][j] < fcSoilWater)
+                    m_perc[i][j] = swater - fcSoilWater;
+
                 //Adjust the moisture content in the current layer, and the layer immediately below it
                 m_somo[i][j] -= m_perc[i][j];// / m_soilThick[i][j];
                 if (j < m_soilLayers[i] - 1)
                     m_somo[i][j + 1] += m_perc[i][j];// / m_soilThick[i][j + 1];
 
-				/// TODO: Where is the water percolated from the last soil layers??? By LJ
+				
                 //if (m_somo[i][j] != m_somo[i][j] || m_somo[i][j] < 0.f)
                 //{
                 //    cout << MID_PER_PI << " CELL:" << i << ", Layer: " << j << "\tPerco:" << swater << "\t" <<
