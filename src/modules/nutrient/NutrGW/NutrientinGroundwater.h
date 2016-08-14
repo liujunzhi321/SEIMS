@@ -38,6 +38,7 @@ public:
     virtual void SetValue(const char *key, float value);
 
     virtual void Set1DData(const char *key, int n, float *data);
+	virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
 
     //virtual void Set2DData(const char* key, int nRows, int nCols, float** data);
     virtual int Execute();
@@ -69,6 +70,15 @@ private:
 	float *m_perco_no3_gw;
 	/// amount of solute P percolating past bottom of soil profile
 	float *m_perco_solp_gw;
+
+	// soil related
+	/// amount of nitrogen stored in the nitrate pool in soil layer
+	float **m_sol_no3;
+	/// max number of soil layers
+	int m_nSoilLayers;
+	/// number of soil layers of each cell
+	float *m_soilLayers;
+
 
     /// output data
     /// nitrate loading to reach in groundwater

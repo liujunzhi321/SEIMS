@@ -198,7 +198,6 @@ bool NutrientRemviaSr::CheckInputData()
     }
 	if (m_flowOutIndex == NULL)
 		throw ModelException(MID_NutRemv, "CheckInputData", "The parameter: flow out index has not been set.");
-
 	if (m_nSubbasins <= 0) 
 		throw ModelException(MID_NutRemv, "CheckInputData", "The subbasins number must be greater than 0.");
 	if (m_subbasinIDs.empty()) 
@@ -292,10 +291,8 @@ void NutrientRemviaSr::Set2DData(const char *key, int nRows, int nCols, float **
 	else if (StringMatch(sk, VAR_SOILTHICK)) { m_sol_thick = data; }
 	else if (StringMatch(sk, VAR_SOL_UL)) { m_sol_wsatur = data; }
     else
-    {
         throw ModelException("NutRemv", "SetValue", "Parameter " + sk +
                                                     " does not exist. Please contact the module developer.");
-    }
 }
 
 void NutrientRemviaSr::initialOutputs()
@@ -359,7 +356,7 @@ void NutrientRemviaSr::NitrateLoss()
                 //percnlyr nitrate moved to next lower layer with percolation (kg/ha)
                 float percnlyr = 0.f;
 				float ssfnlyr = 0.f;
-                float *tileno3;
+                //float *tileno3;
 				//#pragma omp parallel for
 				//did not use parallel computing to avoid several cells flow into the same downstream cell
 

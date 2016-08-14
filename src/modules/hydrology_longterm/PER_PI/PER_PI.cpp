@@ -39,7 +39,7 @@ int PER_PI::Execute()
     CheckInputData();
 	initialOutputs();
     
-#pragma omp parallel for
+//#pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
         float k = 0.f, maxSoilWater = 0.f, fcSoilWater = 0.f;

@@ -20,7 +20,7 @@ NutrientinGroundwater::NutrientinGroundwater(void) :
 //input
         m_TimeStep(-1), m_nCells(-1), m_cellWidth(-1), m_gwno3Con(NULL), m_gwminpCon(NULL), m_gw_q(NULL),
 		m_nSubbasins(-1), m_subbasin(NULL), m_subbasinsInfo(NULL), m_gwStor(NULL), 
-		m_perco_no3_gw(NULL), m_perco_solp_gw(NULL),
+		m_perco_no3_gw(NULL), m_perco_solp_gw(NULL), m_soilLayers(NULL), m_nSoilLayers(-1), m_sol_no3(NULL),
         //output
         m_minpgwToCh(NULL), m_no3gwToCh(NULL)
 {
@@ -75,30 +75,20 @@ bool NutrientinGroundwater::CheckInputData()
         throw ModelException(MID_NutGW, "CheckInputData", "The cells number can not be less than zero.");
 	if (m_TimeStep <= 0)
 		throw ModelException(MID_NutGW, "CheckInputData", "The parameter: m_TimeStep has not been set.");
-    if (this->m_cellWidth < 0)
-    {
+    if (m_cellWidth < 0)
         throw ModelException(MID_NutGW, "CheckInputData", "The cell width can not be less than zero.");
-    }
-    //if (this->m_gwno3 == NULL)
-    //{
-    //    throw ModelException(MID_NutGW, "CheckInputData", "Nitrate N concentration in groundwater loading to reach can not be NULL.");
-    //}
-    //if (this->m_gwminp == NULL)
-    //{
-    //    throw ModelException(MID_NutGW, "CheckInputData", "Soluble P concentration in groundwater loading to reach can not be NULL.");
-    //}
     if (m_gw_q == NULL)
         throw ModelException(MID_NutGW, "CheckInputData", "The groundwater contribution to stream flow data can not be NULL.");
-    
 	if (m_gwStor == NULL)
 		throw ModelException(MID_NutGW, "CheckInputData", "The groundwater storage can not be NULL.");
-
 	if (m_perco_no3_gw == NULL)
 		throw ModelException(MID_NutGW, "CheckInputData", "The NO3 percolation to groundwater can not be NULL.");
-
 	if (m_perco_solp_gw == NULL)
 		throw ModelException(MID_NutGW, "CheckInputData", "The solute P percolation to groundwater can not be NULL.");
-
+	if (m_soilLayers == NULL)
+		throw ModelException(MID_NutGW, "CheckInputData", "The soil layers number can not be NULL.");
+	if(m_sol_no3 == NULL)
+		throw ModelException(MID_NutGW, "CheckInputData", "m_sol_no3 can not be NULL.");
     return true;
 }
 
@@ -138,7 +128,7 @@ void NutrientinGroundwater::Set1DData(const char *key, int n, float *data)
         m_gwno3Con = data;
 	else if (StringMatch(sk, VAR_GWMINP_CON))
         m_gwminpCon = data;
-    else if (StringMatch(sk, VAR_RG))
+    else if (StringMatch(sk, VAR_SBQG))
         m_gw_q = data;
 	else if (StringMatch(sk, VAR_SBGS))
 		m_gwStor = data;
@@ -146,10 +136,26 @@ void NutrientinGroundwater::Set1DData(const char *key, int n, float *data)
 		m_perco_no3_gw = data;
 	else if (StringMatch(sk, VAR_PERCO_P_GW))
 		m_perco_solp_gw = data;
+	else if (StringMatch(sk, VAR_SOILLAYERS))
+		m_soilLayers = data;
     else
         throw ModelException(MID_NutGW, "Set1DData", "Parameter " + sk +
                                                   " does not exist in current module. Please contact the module developer.");
 }
+
+void NutrientinGroundwater::Set2DData(const char *key, int nRows, int nCols, float **data)
+{
+	if (!this->CheckInputSize(key, nRows)) return;
+	string sk(key);
+
+	m_nSoilLayers = nCols;
+	if (StringMatch(sk, VAR_SOL_NO3)) 
+		m_sol_no3 = data; 
+	else
+		throw ModelException(MID_NutGW, "Set2DData", "Parameter " + sk +
+		    " does not exist. Please contact the module developer.");
+}
+
 
 void NutrientinGroundwater::initialOutputs()
 {
@@ -192,15 +198,14 @@ int NutrientinGroundwater::Execute()
 		float revap = subbasin->getEG();
 		float no3ToSoil = revap/1000.f * subArea * m_gwno3Con[id];
 		float solpToSoil = revap/1000.f * subArea * m_gwminpCon[id];//kg
-		// update the bottom soil layer
-		// update soil moisture
+		// update no3 in the bottom soil layer due to revap
 		int *cells = subbasin->getCells();
 		int nCells = subbasin->getCellCount();
 		int index = 0;
 		for (int i = 0; i < nCells; i++)
 		{
 			index = cells[i];
-			m_soilMoisture[index][(int)m_soilLayers[index] - 1] += sub->getEG();
+			m_sol_no3[index][(int)m_soilLayers[index] - 1] += no3ToSoil/nCells;
 		}
 
 		// update concentration
