@@ -466,16 +466,16 @@ void Biomass_EPIC::initialOutputs()
 }
 
 void Biomass_EPIC::DistributePlantET(int i)
-{
-    float sum, sump, gx;
+{/// swu.f of SWAT
+    float sum = 0.f, sump = 0.f, gx = 0.f;
     /// fraction of water uptake by plants achieved
     /// where the reduction is caused by low water content
-    float reduc;
+    float reduc = 0.f;
     /// water uptake by plants in each soil layer
     float *wuse = new float[(int) m_nSoilLayers[i]];
     /// water uptake by plants from all layers
-    float xx;
-    int ir;
+    float xx = 0.f;
+    int ir = -1;
     int idc = int(m_landCoverCls[i]);
     if (idc == 1 || idc == 2 || idc == 4 || idc == 5)
     {
@@ -856,26 +856,21 @@ void Biomass_EPIC::CheckDormantStatus(int i)
 int Biomass_EPIC::Execute()
 {
     CheckInputData();
-    /// Initialization
     initialOutputs();
-    /// calculate albedo in current day, albedo.f of SWAT
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
-        float cej = -5.e-5f, eaj = 0.f;
-        eaj = exp(cej * (m_sol_cov[i] + 0.1f));
-        if (m_snowAcc[i] < 0.5f)
-        {
-            m_albedo[i] = m_soilALB[i];
-            if (m_LAIDay[i] > 0.f)  /// include the situation that m_LAIDay[i] == NODATA
-                m_albedo[i] = 0.23f * (1.f - eaj) + m_soilALB[i] * eaj;
-        }
-        else
-            m_albedo[i] = 0.8f;
-    }
-#pragma omp parallel for
-    for (int i = 0; i < m_nCells; i++)
-    {
+		/// calculate albedo in current day, albedo.f of SWAT
+		float cej = -5.e-5f, eaj = 0.f;
+		eaj = exp(cej * (m_sol_cov[i] + 0.1f));
+		if (m_snowAcc[i] < 0.5f)
+		{
+			m_albedo[i] = m_soilALB[i];
+			if (m_LAIDay[i] > 0.f)
+				m_albedo[i] = 0.23f * (1.f - eaj) + m_soilALB[i] * eaj;
+		}
+		else
+			m_albedo[i] = 0.8f;
         /// calculate residue on soil surface for current day
         m_sol_cov[i] = 0.8f * m_biomass[i] + m_sol_rsd[i][0];
         m_sol_cov[i] = max(m_sol_cov[i], 0.f);

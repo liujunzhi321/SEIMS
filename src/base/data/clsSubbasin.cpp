@@ -221,7 +221,7 @@ m_nSubbasins(-1)
 	// read subbasin data
 	int nCells = -1;
 	float *subbasinData = NULL;
-
+	float cellWidth = NODATA_VALUE;
 	ostringstream oss;
 	oss << prefixID << "_" << NAME_MASK;
 	string maskFileName = GetUpper(oss.str());
@@ -233,7 +233,6 @@ m_nSubbasins(-1)
 	if (rsMap.find(maskFileName) == rsMap.end()) // if mask not loaded yet
 		throw ModelException("clsSubbasins", "Constructor", "MASK data has not been loaded yet!");
 
-	
 	if (rsMap.find(subbasinFileName) == rsMap.end()) // if subbasin not loaded yet
 	{
 		clsRasterData *subbasinRaster = NULL;
@@ -248,16 +247,17 @@ m_nSubbasins(-1)
 			return;
 		}
 		rsMap[subbasinFileName] = subbasinRaster;
+		cellWidth = subbasinRaster->getCellWidth();
 	}
 	else
 		rsMap[subbasinFileName]->getRasterData(&nCells, &subbasinData);
-
 
 	m_nSubbasins = 0;
 	// valid cell indexes of each subbasin, key is subbasin ID, value is vector of cell's index
 	map<int, vector<int> *> cellListMap;
 	map<int, vector<int> *>::iterator it;
 	int subID = 0;
+#pragma omp parallel for
 	for (int i = 0; i < nCells; i++)
 	{
 		subID = int(subbasinData[i]);
@@ -279,6 +279,7 @@ m_nSubbasins(-1)
 		for (int j = 0; j < nCellsTmp; j++)
 			tmp[j] = it->second->at(j);
 		newSub->setCellList(nCellsTmp, tmp);
+		newSub->setArea(cellWidth*cellWidth*nCellsTmp);
 		m_subbasinsInfo[subID] = newSub;
 	}
 	vector<int>(m_subbasinIDs).swap(m_subbasinIDs);

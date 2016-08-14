@@ -362,7 +362,7 @@ ParamInfo *ModuleFactory::FindDependentParam(ParamInfo &paramInfo)
     //      this throw sentence should be uncommented by then. By LJ.
     if(!StringMatch(paramInfo.Source, Source_Module_Optional))
 		throw ModelException("ModuleFactory", "FindDependentParam",
-                         "Can not find input for " + paraName + " from other Modules.\n");
+                         "Can not find input for " + paraName + " of " + paramInfo.ModuleID +  " from other Modules.\n");
     return NULL;
 }
 

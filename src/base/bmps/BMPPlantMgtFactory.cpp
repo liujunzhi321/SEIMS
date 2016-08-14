@@ -13,7 +13,12 @@ BMPPlantMgtFactory::BMPPlantMgtFactory(int scenarioId, int bmpId, int subScenari
                                        string distribution, string collection, string location)
         : BMPFactory(scenarioId, bmpId, subScenario, bmpType, bmpPriority, distribution, collection, location)
 {
-    m_location = utils::SplitStringForInt(location, ',');
+	if (StringMatch(location, "ALL"))
+	{
+		m_location.clear();
+	}
+	else
+		m_location = utils::SplitStringForInt(location, ',');
 }
 
 BMPPlantMgtFactory::~BMPPlantMgtFactory()

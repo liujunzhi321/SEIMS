@@ -25,9 +25,9 @@ namespace MainBMP
         for (it = this->m_bmpFactories.begin(); it != this->m_bmpFactories.end();)
         {
             if (it->second != NULL) delete (it->second);
-            it = m_bmpFactories.erase(it);              /// added by Liangjun
+            it = m_bmpFactories.erase(it);
         }
-        m_bmpFactories.clear();                     /// added by Liangjun
+        m_bmpFactories.clear();
     }
 
     void Scenario::loadScenario()
