@@ -193,8 +193,15 @@ int NutrientinGroundwater::Execute()
 		float no3ToSoil = revap/1000.f * subArea * m_gwno3Con[id];
 		float solpToSoil = revap/1000.f * subArea * m_gwminpCon[id];//kg
 		// update the bottom soil layer
-
-
+		// update soil moisture
+		int *cells = subbasin->getCells();
+		int nCells = subbasin->getCellCount();
+		int index = 0;
+		for (int i = 0; i < nCells; i++)
+		{
+			index = cells[i];
+			m_soilMoisture[index][(int)m_soilLayers[index] - 1] += sub->getEG();
+		}
 
 		// update concentration
 		float gwVol = subArea * m_gwStor[id]/1000.f;//m3

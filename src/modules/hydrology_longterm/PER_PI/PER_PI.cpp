@@ -98,10 +98,7 @@ int PER_PI::Execute()
 			}
 			for (int j = (int)m_soilLayers[i]; j < m_nSoilLayers; j++)
 				m_perc[i][j] = NODATA_VALUE;
-			if(m_perc[i][(int)m_soilLayers[i]-1] > 0.f) /// If there have water percolated down to groundwater
-			{
-				/// update groundwater variables
-			}
+
         }
     }
     return 0;
