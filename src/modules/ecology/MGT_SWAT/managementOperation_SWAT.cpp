@@ -303,10 +303,10 @@ void MGTOpt_SWAT::SetScenario(Scenario *sce)
 {
     if (NULL != sce)
         m_scenario = sce;
-    map <int, BMPFactory* > tmpBMPFactories = m_scenario->GetBMPFactories();
+    map <int, BMPFactory* > *tmpBMPFactories = m_scenario->GetBMPFactories();
     if (!m_mgtFactory.empty())
         m_mgtFactory.clear();
-    for (map<int, BMPFactory *>::iterator it = tmpBMPFactories.begin(); it != tmpBMPFactories.end(); it++)
+    for (map<int, BMPFactory *>::iterator it = tmpBMPFactories->begin(); it != tmpBMPFactories->end(); it++)
     {
         /// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
         if (it->first / 100000 == BMP_TYPE_PLANT_MGT)

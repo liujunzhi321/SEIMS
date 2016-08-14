@@ -8,22 +8,10 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 
-//! Get instance of SimulationModule class
 extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
     return new MUSK_CH();
 }
-
-/*!
- * \ingroup MUSKINGUM_CH
- * \brief function to return the XML Metadata document string
- *
- * 
- *
- * \param[in] 
- * \param[out] 
- * \return
- */
 extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 {
     string res = "";
@@ -54,10 +42,11 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_VSF, UNIT_NON_DIM, DESC_VSF, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_GWRQ, UNIT_FLOW_CMS, DESC_GWRQ, Source_ParameterDB, DT_Single);
     mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
-    //mdi.AddParameter(VAR_VDIV, UNIT_VOL_M3, DESC_VDIV, DT_Array1D);
-	/// point source discharge 
-    //mdi.AddParameter(VAR_VPOINT, UNIT_VOL_M3, DESC_VPOINT, Source_ParameterDB, DT_Array1D);
     mdi.AddParameter(VAR_SUBBSN, UNIT_NON_DIM, DESC_SUBBSN, Source_ParameterDB, DT_Raster1D);
+	// add basic subbasins information
+	//mdi.AddParameter(VAR_SUBBASIN_PARAM, UNIT_NON_DIM, DESC_SUBBASIN_PARAM, Source_ParameterDB, DT_Subbasin);
+	// add BMPs management operations, such as point source discharge
+	mdi.AddParameter(VAR_SCENARIO, UNIT_NON_DIM, DESC_SCENARIO, Source_ParameterDB, DT_Scenario);
 
     mdi.AddInput(VAR_SBOF, UNIT_FLOW_CMS, DESC_SBOF, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_SBIF, UNIT_FLOW_CMS, DESC_SBIF, Source_Module, DT_Array1D);
@@ -75,7 +64,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_BKST, UNIT_VOL_M3, DESC_BKST, DT_Array1D);
     mdi.AddOutput(VAR_SEEPAGE, UNIT_VOL_M3, DESC_SEEPAGE, DT_Array1D);
     mdi.AddOutput(VAR_CHWTDEPTH, UNIT_LEN_M, DESC_CHWTDEPTH, DT_Array1D);
-    //mdi.AddOutput(VAR_C_WABA, UNIT_NON_DIM, DESC_C_WABA, DT_Array2D);
 
     res = mdi.GetXMLDocument();
 
@@ -83,3 +71,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
     return tmp;
 }
+    //mdi.AddOutput(VAR_C_WABA, UNIT_NON_DIM, DESC_C_WABA, DT_Array2D);
+    //mdi.AddParameter(VAR_VDIV, UNIT_VOL_M3, DESC_VDIV, DT_Array1D);
+	/// point source discharge 
+    //mdi.AddParameter(VAR_VPOINT, UNIT_VOL_M3, DESC_VPOINT, Source_ParameterDB, DT_Array1D);
