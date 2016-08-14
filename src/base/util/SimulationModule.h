@@ -19,6 +19,7 @@
 #include "clsSubbasin.h"
 
 using namespace std;
+using namespace MainBMP;
 /*!
  * \enum TimeStepType
  */
@@ -126,7 +127,7 @@ public:
     };
 
     //! Set pointer of Scenario class which contains all BMP information. Added by LJ, 2016-6-14
-    virtual void SetScenario(MainBMP::Scenario *)
+    virtual void SetScenario(Scenario *)
     {
         throw ModelException("SimulationModule", "SetScenario", "This function is not implemented.");
     }
