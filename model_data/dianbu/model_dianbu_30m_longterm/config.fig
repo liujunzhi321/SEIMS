@@ -20,7 +20,7 @@
 0 | Overland sediment routing | IUH_SED_OL | IUH_SED_OL
 0 | Nutrient | Attached nutrient loss | NUTRSED
 0 | Nutrient | Soluble nutrient loss | NUTRMV
-#0 | Nutrient | Overland routing | NUTROL
+0 | Nutrient | groundwater nutrient transport | NUTRGW
 0 | Water channel routing | MUSK | MUSK_CH
 0 | Sediment channel routing | VCD | SEDR_VCD
-#0 | Nutrient | Channel routing | NUTRCH
+#0 | Nutrient | Channel routing | NutrCH_QUAL2E

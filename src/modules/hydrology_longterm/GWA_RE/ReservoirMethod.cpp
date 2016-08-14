@@ -13,7 +13,7 @@ ReservoirMethod::ReservoirMethod(void) : m_TimeStep(-1), m_nCells(-1), m_nSubbas
 	m_soilDepth(NULL), m_soilLayers(NULL), m_soilThick(NULL), m_Slope(NULL),  
 	m_VgroundwaterFromBankStorage(NULL),m_subbasinsInfo(NULL),
 	m_dp_co(NODATA_VALUE), m_Kg(NODATA_VALUE), m_Base_ex(NODATA_VALUE), 
-	m_perc(NULL), m_D_EI(NULL), m_D_ED(NULL), m_D_ES(NULL), m_D_PET(NULL), m_soilMoisture(NULL),
+	m_perc(NULL), m_D_EI(NULL), m_D_ED(NULL), m_D_ES(NULL), m_D_PET(NULL), m_plantEP(NULL), m_soilMoisture(NULL),
 	/// intermediate
 	m_petSubbasin(NULL), m_gwStore(NULL),
 	/// outputs
@@ -48,7 +48,7 @@ void ReservoirMethod::initialOutputs()
 	if (m_T_RG == NULL) Initialize1DArray(nLen, m_T_RG, 0.f);
 	if (m_T_QG == NULL) Initialize1DArray(nLen, m_T_QG, 0.f);
 	if (m_petSubbasin == NULL) Initialize1DArray(nLen, m_petSubbasin, 0.f);
-	if (m_gwStore == NULL) Initialize1DArray(nLen, m_gwStore, 0.f);
+	if (m_gwStore == NULL) Initialize1DArray(nLen, m_gwStore, m_GW0);
     if (m_D_Revap == NULL) Initialize1DArray(m_nCells, m_D_Revap, 0.f);
 	if(m_T_GWWB == NULL) Initialize2DArray(nLen, 6, m_T_GWWB, 0.f);
 }
@@ -59,11 +59,10 @@ int ReservoirMethod::Execute()
     float QGConvert = 1.f * m_CellWidth * m_CellWidth / (m_TimeStep) / 1000.f; // mm ==> m3/s
 	for (vector<int>::iterator it = m_subbasinIDs.begin(); it!=m_subbasinIDs.end();it++)
     {
-		Subbasin *curSub = m_subbasinsInfo->GetSubbasinByID(*it);
-        float gwBank = 0.f;
-		// at the first time step m_VgroundwaterFromBankStorage is NULL
-        if (m_VgroundwaterFromBankStorage != NULL)
-            gwBank = m_VgroundwaterFromBankStorage[*it];
+		int subID = *it;
+		Subbasin *curSub = m_subbasinsInfo->GetSubbasinByID(subID);
+
+		// get percolation from the bottom soil layer at the subbasin scale
 		int curCellsNum = curSub->getCellCount();
 		int *curCells = curSub->getCells();
 		float perco = 0.f;
@@ -75,16 +74,19 @@ int ReservoirMethod::Execute()
 		}
 		perco /= curCellsNum;
 		curSub->setPerco(perco);
+
+		if (perco > 0.f)
+		{
+			cout << perco << endl;
+		}
+
 		//calculate EG, i.e. Revap
-		//if percolation < 0.01, EG will be 0.
-		//if percolation >= 0.01, EG will be calculated by equation
-		//because the soil temperature has been considered when percolation is calculated,
-		//it do not need to be reconsidered here.
 		float revap = 0.0f;
 		float fPET = 0.0f;
 		float fEI = 0.0f;
 		float fED = 0.0f;
 		float fES = 0.0f;
+		float plantEP = 0.f;
 		for (int i = 0; i < curCellsNum; i++)
 		{
 			index = curCells[i];
@@ -92,47 +94,58 @@ int ReservoirMethod::Execute()
 			fEI += m_D_EI[index];
 			fED += m_D_ED[index];
 			fES += m_D_ES[index];
+			plantEP += m_plantEP[index];
 		}
 		fPET /= curCellsNum;
 		fEI /= curCellsNum;
 		fED /= curCellsNum;
 		fES /= curCellsNum;
+		plantEP /= curCellsNum;
 
 		curSub->setPET(fPET);
 
-		if (perco >= 0.01f)
-		{
-			revap = (fPET - fEI - fED - fES) * m_GW0 / m_GWMAX;    //revap
+		//if percolation < 0.01, EG will be 0. if percolation >= 0.01, EG will be calculated by equation (why? this is not used currently. Junzhi Liu 2016-08-14).
+		//if (perco >= 0.01f)
+		//{
+			revap = (fPET - fEI - fED - fES - plantEP) * m_gwStore[subID] / m_GWMAX;
 			revap = max(revap, 0.f);
 			revap = min(revap, perco);
-		}
-
-		float prevRevap = curSub->getEG();
-		if (prevRevap != revap)
-		{
-			curSub->setEG(revap);
-			curSub->setIsRevapChanged(true);
-		}
-		else
-			curSub->setIsRevapChanged(false);
-
-		float percoDeep = perco * m_dp_co; //deep percolation
+		//}
+		//float prevRevap = curSub->getEG();
+		//if (prevRevap != revap)
+		//{
+		//	curSub->setEG(revap);
+		//	curSub->setIsRevapChanged(true);
+		//}
+		//else
+		//	curSub->setIsRevapChanged(false);		
+		curSub->setEG(revap);
+		
+		//deep percolation
+		float percoDeep = perco * m_dp_co; 
 		curSub->setPerde(percoDeep);
+
+		// groundwater runoff (mm)
 		float slopeCoef = curSub->getSlopeCoef();
 		float kg = m_Kg * slopeCoef;
-		float groundRunoff = kg * pow(m_GW0, m_Base_ex); // groundwater runoff (mm)
+		float groundRunoff = kg * pow(m_gwStore[subID], m_Base_ex); //mm
 		float groundQ = groundRunoff * curCellsNum * QGConvert; // groundwater discharge (m3/s)
 
-		float gwOld = curSub->getGW();
-		float groundStorage = 0.f;
+		float groundStorage = m_gwStore[subID];
 		groundStorage += (perco - revap - percoDeep - groundRunoff);
+
 		//add the ground water from bank storage, 2011-3-14
+		float gwBank = 0.f;
+		// at the first time step m_VgroundwaterFromBankStorage is NULL
+		if (m_VgroundwaterFromBankStorage != NULL)
+			gwBank = m_VgroundwaterFromBankStorage[subID];
 		groundStorage += gwBank / curSub->getArea() * 1000.f;
+
 		groundStorage = max(groundStorage, 0.f);
 		if (groundStorage > m_GWMAX)
 		{
-			groundQ += (groundStorage - m_GWMAX);
-			groundRunoff = groundQ / (curCellsNum * QGConvert);
+			groundRunoff += (groundStorage - m_GWMAX);
+			groundQ = groundRunoff * curCellsNum * QGConvert; // groundwater discharge (m3/s)
 			groundStorage = m_GWMAX;
 		}
 		curSub->setRG(groundRunoff);
@@ -141,17 +154,17 @@ int ReservoirMethod::Execute()
 		if (groundStorage != groundStorage)
 		{
 			ostringstream oss;
-			oss << perco << "\t" << revap << "\t" << percoDeep << "\t" << groundRunoff << "\t" << gwOld << "\t" << m_Kg << "\t" <<
+			oss << perco << "\t" << revap << "\t" << percoDeep << "\t" << groundRunoff << "\t" << m_gwStore[subID] << "\t" << m_Kg << "\t" <<
 				m_Base_ex << "\t" << slopeCoef << endl;
 			throw ModelException("Subbasin", "setInputs", oss.str());
 		}
-		m_T_Perco[*it] = curSub->getPerco();
-		m_T_Revap[*it] = curSub->getEG();
-		m_T_PerDep[*it] = curSub->getPerde();
-        m_T_RG[*it] = curSub->getRG();                //get rg of specific subbasin
-        m_T_QG[*it] = curSub->getQG();                //get qg of specific subbasin
-        m_petSubbasin[*it] = curSub->getPET();
-        m_gwStore[*it] = curSub->getGW();
+		m_T_Perco[subID] = curSub->getPerco();
+		m_T_Revap[subID] = curSub->getEG();
+		m_T_PerDep[subID] = curSub->getPerde();
+        m_T_RG[subID] = curSub->getRG();                //get rg of specific subbasin
+        m_T_QG[subID] = curSub->getQG();                //get qg of specific subbasin
+        m_petSubbasin[subID] = curSub->getPET();
+        m_gwStore[subID] = curSub->getGW();
     }
 
 	m_T_Perco[0] = m_subbasinsInfo->subbasin2basin(VAR_PERCO);
@@ -160,6 +173,7 @@ int ReservoirMethod::Execute()
 	m_T_RG[0] = m_subbasinsInfo->subbasin2basin(VAR_RG);  // get rg of entire watershed
 	m_gwStore[0] = m_subbasinsInfo->subbasin2basin(VAR_GW_Q);
 	m_T_QG[0] = m_subbasinsInfo->subbasin2basin(VAR_QG);  // get qg of entire watershed
+
 	// output to GWWB
 	for (int i = 0; i <= m_nSubbasins; i++)
 	{
@@ -170,13 +184,11 @@ int ReservoirMethod::Execute()
 		m_T_GWWB[i][4] = m_gwStore[i];
 		m_T_GWWB[i][5] = m_T_QG[i];
 	}
+
 	// update soil moisture
 	for (vector<int>::iterator it = m_subbasinIDs.begin(); it!=m_subbasinIDs.end();it++)
 	{
 		Subbasin *sub = m_subbasinsInfo->GetSubbasinByID(*it);
-		//if the revap is the same with last time step, do not set its value to m_D_Revap.
-        if (!(sub->getIsRevapChanged())) 
-            continue;
         int *cells = sub->getCells();
         int nCells = sub->getCellCount();
         int index = 0;
@@ -224,6 +236,8 @@ bool ReservoirMethod::CheckInputData()
         throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: m_D_ED has not been set.");
     if (m_D_ES == NULL)
         throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: m_D_ES has not been set.");
+	if (m_plantEP == NULL)
+		throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: Plant EP has not been set.");
     if (m_D_PET == NULL)
         throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: m_D_PET has not been set.");
     if (m_Slope == NULL)
@@ -300,6 +314,8 @@ void ReservoirMethod::Set1DData(const char *key, int n, float *data)
         m_D_ED = data;
     else if (StringMatch(sk, VAR_SOET))
         m_D_ES = data;
+	else if (StringMatch(sk, VAR_AET_PLT))
+		m_plantEP = data;
     else if (StringMatch(sk, VAR_PET))
         m_D_PET = data;
     else if (StringMatch(sk, VAR_SLOPE))

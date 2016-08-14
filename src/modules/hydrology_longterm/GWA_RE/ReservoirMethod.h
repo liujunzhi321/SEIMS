@@ -144,6 +144,8 @@ private:
     float *m_D_ED;
     //! evaporation from the soil water storage (mm) from the soil ET module
     float *m_D_ES;
+	//! actual amount of transpiration (mm H2O)
+	float *m_plantEP;
     //! PET(mm) from the PET modules
     float *m_D_PET;
     //! initial ground water storage (or at time t-1)

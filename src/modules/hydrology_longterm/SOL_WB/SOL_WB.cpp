@@ -80,7 +80,7 @@ void SOL_WB::setValueToSubbasins()
 			float pcp = 0.f, netPcp = 0.f, depET = 0.f, infil = 0.f;
 			float itpET = 0.f, netPerc = 0.f, r = 0.f, revap = 0.f, ms = 0.f;
 			float rs = 0.f, meanT = 0.f, soilT = 0.f, es = 0.f, totalET = 0.f;
-			float rg = 0.f;
+			
 			for(int i = 0; i < cellsNum; i++) // loop cells of current subbasin
             {
 				int cell = cells[i];
@@ -103,9 +103,12 @@ void SOL_WB::setValueToSubbasins()
 				netPerc += (m_Perco[cell][(int)m_soilLayers[cell] - 1] - m_Revap[cell])/ float(cellsNum);
 				revap += m_Revap[cell]/ float(cellsNum);
 				rs += m_RS[cell]/ float(cellsNum);
-				rg += m_RG[cell]/ float(cellsNum);
-				r += (m_RS[cell] + ri + m_RG[cell])/ float(cellsNum);
+				
+				r += (m_RS[cell] + ri)/ float(cellsNum);
             }
+			float rg = m_RG[*it];
+			r += rg;
+
 			m_soilWaterBalance[*it][0] = pcp;
 			m_soilWaterBalance[*it][1] = meanT;
 			m_soilWaterBalance[*it][2] = soilT;

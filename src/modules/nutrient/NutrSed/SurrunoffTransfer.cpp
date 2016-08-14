@@ -121,12 +121,12 @@ bool SurrunoffTransfer::CheckInputData()
     }
 
 	if (m_subbasin == NULL)
-		throw ModelException(MID_IUH_OL, "CheckInputData", "The parameter: m_subbasin has not been set.");
+		throw ModelException(MID_SurTra, "CheckInputData", "The parameter: m_subbasin has not been set.");
 
-	if (m_nSubbasins <= 0) throw ModelException(MID_IUH_OL, "CheckInputData", "The subbasins number must be greater than 0.");
-	if (m_subbasinIDs.empty()) throw ModelException(MID_IUH_OL, "CheckInputData", "The subbasin IDs can not be EMPTY.");
+	if (m_nSubbasins <= 0) throw ModelException(MID_SurTra, "CheckInputData", "The subbasins number must be greater than 0.");
+	if (m_subbasinIDs.empty()) throw ModelException(MID_SurTra, "CheckInputData", "The subbasin IDs can not be EMPTY.");
 	if (m_subbasinsInfo == NULL)
-		throw ModelException(MID_IUH_OL, "CheckInputData", "The parameter: m_subbasinsInfo has not been set.");
+		throw ModelException(MID_SurTra, "CheckInputData", "The parameter: m_subbasinsInfo has not been set.");
 
     return true;
 }
@@ -265,7 +265,7 @@ void SurrunoffTransfer::SetSubbasins(clsSubbasins *subbasins)
 
 int SurrunoffTransfer::Execute()
 {
-    if (!this->CheckInputData())
+    if (!CheckInputData())
     {
         return false;
     }
@@ -301,12 +301,13 @@ int SurrunoffTransfer::Execute()
 		m_sedminpsToCh[subi] = m_sedminps[i];
 	}
 	// sum all the subbasins and put the sum value in the zero-index of the array
+	float cellArea = m_cellWidth * m_cellWidth * 0.0001f; //ha
 	for (int i = 1; i < m_nSubbasins + 1; i++)
 	{
-		m_sedorgnToCh[0] += m_sedorgnToCh[i];
-		m_sedorgpToCh[0] += m_sedorgpToCh[i];
-		m_sedminpaToCh[0] = m_sedminpaToCh[i];
-		m_sedminpsToCh[0] = m_sedminpsToCh[i];
+		m_sedorgnToCh[0] += m_sedorgnToCh[i] * cellArea;
+		m_sedorgpToCh[0] += m_sedorgpToCh[i] * cellArea;
+		m_sedminpaToCh[0] = m_sedminpaToCh[i] * cellArea;
+		m_sedminpsToCh[0] = m_sedminpsToCh[i] * cellArea;
 	}
 
     return 0;
@@ -422,11 +423,47 @@ void SurrunoffTransfer::OrgpAttachedtoSed(int i)
 void SurrunoffTransfer::Get1DData(const char *key, int *n, float **data)
 {
     string sk(key);
-    *n = m_nCells;
-    if (StringMatch(sk, VAR_SEDORGN)) { *data = this->m_sedorgn; }
-    else if (StringMatch(sk, VAR_SEDORGP)) { *data = this->m_sedorgp; }
-    else if (StringMatch(sk, VAR_SEDMINPA)) { *data = this->m_sedminpa; }
-    else if (StringMatch(sk, VAR_SEDMINPS)) { *data = this->m_sedminps; }
+    
+    if (StringMatch(sk, VAR_SEDORGN)) 
+	{ 
+		*data = this->m_sedorgn; 
+		*n = m_nCells;
+	}
+    else if (StringMatch(sk, VAR_SEDORGP)) 
+	{ 
+		*data = this->m_sedorgp; 
+		*n = m_nCells;
+	}
+    else if (StringMatch(sk, VAR_SEDMINPA)) 
+	{ 
+		*data = this->m_sedminpa; 
+		*n = m_nCells;
+	}
+    else if (StringMatch(sk, VAR_SEDMINPS)) 
+	{ 
+		*data = this->m_sedminps; 
+		*n = m_nCells;
+	}
+	else if(StringMatch(sk, VAR_SEDORGN_CH))
+	{
+		*data = m_sedorgnToCh; 
+		*n = m_nSubbasins + 1;
+	}
+	else if(StringMatch(sk, VAR_SEDORGP_CH))
+	{
+		*data = m_sedorgpToCh; 
+		*n = m_nSubbasins + 1;
+	}
+	else if(StringMatch(sk, VAR_SEDMINPA_CH))
+	{
+		*data = m_sedminpaToCh; 
+		*n = m_nSubbasins + 1;
+	}
+	else if(StringMatch(sk, VAR_SEDMINPS_CH))
+	{
+		*data = m_sedminpsToCh; 
+		*n = m_nSubbasins + 1;
+	}
     else
     {
         throw ModelException(MID_SurTra, "Get1DData",

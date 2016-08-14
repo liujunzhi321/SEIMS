@@ -623,9 +623,9 @@
 #define VAR_GW_Q "GW"
 #define VAR_GW0 "GW0"                               /// initial ground water storage
 #define VAR_GWMAX "GWMAX"                           /// maximum ground water storage
-#define VAR_GWMINP "gwminp"
+#define VAR_GWMINP_CON "gwminp"
 #define VAR_GWNEW "GWNEW"                           /// The volume of water from the bank storage to the adjacent unsaturated zone and groundwater storage
-#define VAR_GWNO3 "gwno3"
+#define VAR_GWNO3_CON "gwno3"
 #define VAR_GWWB "GWWB"        // groundwater water balance
 #define VAR_GWRQ "GWRQ"
 #define VAR_HCH "HCH"
@@ -720,8 +720,8 @@
 #define VAR_P_MAX "P_max"
 #define VAR_P_N "p_n"
 #define VAR_P_RF "p_rf"
-#define VAR_PERCO_N "perco_n"
-#define VAR_PERCO_P "perco_p"
+#define VAR_PERCO_N_GW "perco_n_gw"
+#define VAR_PERCO_P_GW "perco_p"
 #define VAR_PERCO "Perco"                     /// the amount of water percolated from the soil water reservoir
 #define VAR_PERDE "perde"
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
@@ -874,10 +874,10 @@
 #define VAR_SUB_SEDTOCH ""
 #define VAR_SUBBSN "subbasin"                       /// The subbasin grid
 #define VAR_SUBBSNID_NUM "SUBBASINID_NUM"                /// number of subbasins
-#define VAR_SURQNO3 "surqno3"
-#define VAR_SURQNO3_CH "surqno3ToCh"
-#define VAR_SURQSOLP "surqsolp"
-#define VAR_SURQSOLP_CH "surqsolToCh"
+#define VAR_SUR_NO3 "sur_no3"
+#define VAR_SUR_NO3_CH "sur_no_ToCh"
+#define VAR_SUR_SOLP "sur_solp"
+#define VAR_SUR_SOLP_CH "sur_sol_ToCh"
 #define VAR_SURU "SURU"                             /// surface runoff generated
 #define VAR_SWE "SWE"
 #define VAR_SWE0 "swe0"

@@ -22,12 +22,6 @@ PER_PI::PER_PI(void) : m_nSoilLayers(-1), m_dt(-1), m_nCells(-1), m_frozenT(NODA
 PER_PI::~PER_PI(void)
 {
     if (m_perc == NULL) Release2DArray(m_nCells, m_perc);
-    //{
-    //    for (int i = 0; i < m_nCells; i++)
-    //        delete[] m_perc[i];
-    //    delete[] m_perc;
-    //    m_perc = NULL;
-    //}
 }
 void PER_PI::initialOutputs()
 {
@@ -39,7 +33,7 @@ int PER_PI::Execute()
     CheckInputData();
 	initialOutputs();
     
-#pragma omp parallel for
+//#pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
         float k = 0.f, maxSoilWater = 0.f, fcSoilWater = 0.f;
@@ -53,12 +47,13 @@ int PER_PI::Execute()
             // No movement if soil moisture is below field capacity
             if (j == 0 && m_soilT[i] <= m_frozenT) 
                 continue;
-            if (m_somo[i][j] > m_fc[i][j] + m_wp[i][j])
+			swater = m_somo[i][j];
+			maxSoilWater = m_sat[i][j] + m_wp[i][j];
+			fcSoilWater = m_fc[i][j] + m_wp[i][j];
+			wpSoilWater = m_wp[i][j];
+
+            if (m_somo[i][j] > fcSoilWater)
             {
-                swater = m_somo[i][j];
-                maxSoilWater = m_sat[i][j] + m_wp[i][j];
-                fcSoilWater = m_fc[i][j] + m_wp[i][j];
-				wpSoilWater = m_wp[i][j];
                 //the moisture content can exceed the porosity in the way the algorithm is implemented
                 if (swater > maxSoilWater) //(m_somo[i][j] > m_porosity[i][j])
                     k = m_ks[i][j];
@@ -70,8 +65,7 @@ int PER_PI::Execute()
                 }
 
                 m_perc[i][j] = k * m_dt / 3600.f;  /// mm
-				//if (m_perc[i][j] < 0.f)
-				//	m_perc[i][j] = 0.f;
+				
                 if (swater - m_perc[i][j] > maxSoilWater)
                     m_perc[i][j] = swater - maxSoilWater;
                 else if (swater - m_perc[i][j] < fcSoilWater)
@@ -98,10 +92,7 @@ int PER_PI::Execute()
 			}
 			for (int j = (int)m_soilLayers[i]; j < m_nSoilLayers; j++)
 				m_perc[i][j] = NODATA_VALUE;
-			if(m_perc[i][(int)m_soilLayers[i]-1] > 0.f) /// If there have water percolated down to groundwater
-			{
-				/// update groundwater variables
-			}
+
         }
     }
     return 0;

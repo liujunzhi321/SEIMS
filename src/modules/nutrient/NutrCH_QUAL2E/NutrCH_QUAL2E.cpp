@@ -322,8 +322,8 @@ void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_CHWTDEPTH)) { this->m_chWTdepth = data; }
     else if (StringMatch(sk, VAR_WATTEMP)) { this->m_wattemp = data; }
     else if (StringMatch(sk, VAR_LATNO3_CH)) { this->m_latno3ToCh = data; }
-    else if (StringMatch(sk, VAR_SURQNO3_CH)) { this->m_surqno3ToCh = data; }
-    else if (StringMatch(sk, VAR_SURQSOLP_CH)) { this->m_surqsolpToCh = data; }
+    else if (StringMatch(sk, VAR_SUR_NO3_CH)) { this->m_surqno3ToCh = data; }
+    else if (StringMatch(sk, VAR_SUR_SOLP_CH)) { this->m_surqsolpToCh = data; }
     else if (StringMatch(sk, VAR_NO3GW_CH)) { this->m_no3gwToCh = data; }
     else if (StringMatch(sk, VAR_MINPGW_CH)) { this->m_minpgwToCh = data; }
     else if (StringMatch(sk, VAR_SEDORGN_CH)) { this->m_sedorgnToCh = data; }
