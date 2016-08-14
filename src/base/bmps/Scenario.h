@@ -32,8 +32,8 @@ namespace MainBMP
      * Scenario contains a collection of BMPFactory.
      * Each \sa BMPFactory is corresponding to one type of BMP.
      *
-     * Usage:		(1) instantiate the class
-     * 					(2) load time series data using function loadTimeSeriesData for reach related BMP
+     * Usage:		    (1) instantiate the class
+     * 					(2) 
      * Revised:
      *                  (1) Replaced SQLite by MongoDB, 2016-6-16
      */
@@ -56,7 +56,7 @@ namespace MainBMP
         string Name();
 
         //! Get BMPs Factories
-        map<int, BMPFactory *> GetBMPFactories() { return m_bmpFactories; }
+        map<int, BMPFactory *> *GetBMPFactories() { return &m_bmpFactories; }
 
         //! Write all BMPs information of this scenario to a text file
         void Dump(string fileName);

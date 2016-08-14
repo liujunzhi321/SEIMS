@@ -92,9 +92,8 @@ void BMPPointSrcFactory::ReadPointSourceManagements(mongoc_client_t *conn, strin
     int count = 1; /// Use count to counting sequence number, in case of discontinuous or repeat of SEQUENCE in database.
     while (mongoc_cursor_next(cursor, &bsonTable))
     {
-        PointSourceMgtParams *curPtSrcMgt = new PointSourceMgtParams(bsonTable, iter);
         m_pointSrcMgtSeqs.push_back(count);
-        m_pointSrcMgtMap[count] = curPtSrcMgt;
+        m_pointSrcMgtMap[count] = new PointSourceMgtParams(bsonTable, iter);
         count++;
     }
     bson_destroy(b);

@@ -20,7 +20,7 @@ MUSK_CH::MUSK_CH(void) : m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE),
                          m_Vdiv(NULL), m_Vpoint(NULL), m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL),
                          m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL),
                          m_x(NODATA_VALUE), m_co1(NODATA_VALUE), m_qIn(NULL), m_chStorage(NULL), m_vScalingFactor(1.0f),
-                         m_qUpReach(0.f), m_deepGroundwater(0.f),m_chWTdepth(NULL)
+                         m_qUpReach(0.f), m_deepGroundwater(0.f),m_chWTdepth(NULL), m_scenario(NULL)
 {
 }
 
@@ -411,7 +411,29 @@ void MUSK_CH::Set2DData(const char *key, int nrows, int ncols, float **data)
     }
     else
         throw ModelException(MID_MUSK_CH, "Set2DData", "Parameter " + sk + " does not exist.");
-
+}
+void MUSK_CH::SetScenario(Scenario * sce)
+{
+	if (NULL != sce)
+		m_scenario = sce;
+	map <int, BMPFactory* > *tmpBMPFactories = m_scenario->GetBMPFactories();
+	for (map<int, BMPFactory *>::iterator it = tmpBMPFactories->begin(); it != tmpBMPFactories->end(); it++)
+	{
+		/// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
+		if (it->first / 100000 == BMP_TYPE_POINTSOURCE)
+		{
+			m_ptSrcFactory[it->first] = (BMPPointSrcFactory*)it->second;
+		}
+	}
+	/// test data in m_ptSrcFactory
+	for (map<int, BMPPointSrcFactory*>::iterator it = m_ptSrcFactory.begin(); it != m_ptSrcFactory.end(); it++)
+	{
+		cout<<"unique Point Source Factory ID: "<<it->first<<endl;
+		vector<int> m_ptSrcMgtSeqs = it->second->GetPointSrcMgtSeqs();
+		map<int, PointSourceMgtParams *>  m_pointSrcMgtMap = it->second->GetPointSrcMgtMap();
+		vector<int> m_ptSrcIDs = it->second->GetPointSrcIDs();
+		map<int, PointBMPLocations *> m_pointSrcLocsMap = it->second->GetPointSrcLocsMap();
+	}
 }
 
 //! Get date time
