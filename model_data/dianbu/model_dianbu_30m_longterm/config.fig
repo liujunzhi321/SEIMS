@@ -6,7 +6,7 @@
 0 | Snow melt | Snowpeak Daily | SNO_SP
 0 | Infiltration | Modified rational | SUR_MR
 0 | Depression | Linsley | DEP_LINSLEY
-#0 | Management Operation | SWAT | MGT_SWAT
+0 | Management Operation | SWAT | MGT_SWAT
 0 | Percolation | Darcy and Brooks-Corey | PER_PI
 0 | AET | Hargreaves and PriestleyTaylor | AET_PTH
 0 | PG | Simplified EPIC | BIO_EPIC
@@ -23,4 +23,4 @@
 0 | Nutrient | groundwater nutrient transport | NUTRGW
 0 | Water channel routing | MUSK | MUSK_CH
 0 | Sediment channel routing | VCD | SEDR_VCD
-#0 | Nutrient | Channel routing | NUTRCH
+#0 | Nutrient | Channel routing | NutrCH_QUAL2E

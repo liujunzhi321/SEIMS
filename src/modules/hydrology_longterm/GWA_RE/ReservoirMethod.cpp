@@ -75,6 +75,11 @@ int ReservoirMethod::Execute()
 		perco /= curCellsNum;
 		curSub->setPerco(perco);
 
+		if (perco > 0.f)
+		{
+			cout << perco << endl;
+		}
+
 		//calculate EG, i.e. Revap
 		float revap = 0.0f;
 		float fPET = 0.0f;
