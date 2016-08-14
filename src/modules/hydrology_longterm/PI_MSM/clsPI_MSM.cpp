@@ -89,23 +89,6 @@ int clsPI_MSM::Execute()
     CheckInputData();
 	/// initialize outputs
 	initialOutputs();
-//    //initial the state variable
-//    if (this->m_st == NULL)
-//    {
-//        m_st = new float[this->m_nCells];
-//        this->m_evaporation = new float[this->m_nCells];
-//        this->m_interceptionLoss = new float[this->m_nCells];
-//        this->m_netPrecipitation = new float[this->m_nCells];
-//
-//#pragma omp parallel for
-//        for (int i = 0; i < this->m_nCells; i++)
-//        {
-//            m_st[i] = this->m_Init_IS;
-//            m_evaporation[i] = 0.f;
-//            m_interceptionLoss[i] = 0.f;
-//            m_netPrecipitation[i] = 0.f;
-//        }
-//    }
 
     int julian = JulianDay(m_date);
 #pragma omp parallel for
@@ -151,7 +134,7 @@ int clsPI_MSM::Execute()
 
 bool clsPI_MSM::CheckInputData()
 {
-    if (this->m_date == -1)
+    if (this->m_date < 0)
         throw ModelException(MID_PI_MSM, "CheckInputData", "You have not set the time.");
 
     if (m_nCells <= 0)
@@ -197,6 +180,3 @@ bool clsPI_MSM::CheckInputSize(const char *key, int n)
     }
     return true;
 }
-
-
-

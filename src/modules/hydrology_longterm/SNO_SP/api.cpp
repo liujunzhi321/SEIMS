@@ -39,7 +39,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_C_SNOW12, UNIT_MELT_FACTOR, DESC_C_SNOW12, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_SNOCOVMX, UNIT_DEPTH_MM, DESC_SNOCOVMX, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_SNO50COV, UNIT_NON_DIM, DESC_SNO50COV, Source_ParameterDB, DT_Single);
-
+	// Net precipitation is updated after snow accumulation.
     mdi.AddInput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, Source_Module, DT_Raster1D); // from interception module
     //TODO: SNAC is used as unknown variable in the execute() funtion, so why it here as Input, otherwise in Output? By LJ
     //mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module,DT_Raster1D);	 // from snow water balance module
@@ -55,8 +55,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     // set the output variables
     mdi.AddOutput(VAR_SNME, UNIT_DEPTH_MM, DESC_SNME, DT_Raster1D);
     mdi.AddOutput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, DT_Raster1D);
-	// Net precipitation is updated after snow accumulation.
-	mdi.AddOutput(VAR_NEPR, UNIT_DEPTH_MM, DESC_NEPR, DT_Raster1D);
+	
     // write out the XML file.
 
     string res = mdi.GetXMLDocument();

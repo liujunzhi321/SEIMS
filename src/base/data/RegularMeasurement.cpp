@@ -134,7 +134,10 @@ RegularMeasurement::RegularMeasurement(mongoc_client_t *conn, string hydroDBName
 RegularMeasurement::~RegularMeasurement(void)
 {
     for (int i = 0; i < m_siteData.size(); i++)
-        delete m_siteData[i];
+	for (vector<float *>::iterator it = m_siteData.begin(); it != m_siteData.end(); it++){
+        delete[] *it;
+		*it = NULL;
+	}
     m_siteData.clear();
     if(pData != NULL)    Release1DArray(pData);
 }

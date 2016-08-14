@@ -98,10 +98,9 @@ private:
     /// amount of water held in soil profile at saturation, sol_sumul in SWAT
     float *m_totSoilSat;
     /// amount of water stored in soil layers on current day, sol_st in SWAT
-    float **m_somo;
+    float **m_soilStorage;
     /// amount of water stored in soil profile on current day, sol_sw in SWAT
-    float *m_totSOMO;
-    
+    float *m_soilStorageProfile;
     
     /**  crop or land cover related parameters  **/
 

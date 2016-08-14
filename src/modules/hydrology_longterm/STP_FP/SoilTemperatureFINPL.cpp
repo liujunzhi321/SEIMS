@@ -161,23 +161,11 @@ void SoilTemperatureFINPL::initialOutputs()
 {
     if (this->m_nCells <= 0)
         throw ModelException(MID_STP_FP, "initialOutputs", "The cell number of the input can not be less than zero.");
-
+	// initialize m_t1 and m_t2 as m_tMean
     if (m_t1 == NULL && m_tMean != NULL)
-    {
 		Initialize1DArray(m_nCells, m_t1, m_tMean);
-        /*m_t1 = new float[m_nCells];
-#pragma omp parallel for
-        for (int i = 0; i < m_nCells; ++i)
-            m_t1[i] = m_tMean[i];*/
-    }
     if (m_t2 == NULL && m_tMean != NULL)
-    {
 		Initialize1DArray(m_nCells, m_t2, m_tMean);
-//        m_t2 = new float[m_nCells];
-//#pragma omp parallel for
-//        for (int i = 0; i < m_nCells; ++i)
-//            m_t2[i] = m_tMean[i];
-    }
 	if (this->m_soilTemp == NULL)
 		Initialize1DArray(m_nCells, m_soilTemp, 0.f);
 }

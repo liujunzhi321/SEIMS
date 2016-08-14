@@ -26,11 +26,7 @@ int main(int argc, const char *argv[])
     int numThread = 1;
     LayeringMethod layeringMethod = UP_DOWN;
     char mongodbIP[16];
-#ifndef MSVC
-    strcpy(mongodbIP, "127.0.0.1");
-#else
-    strcpy_s(mongodbIP,"127.0.0.1");
-#endif
+    stringcpy(mongodbIP,"127.0.0.1");
     int port = 27017;
     if (argc < 2)
     {
@@ -77,11 +73,7 @@ int main(int argc, const char *argv[])
         {
             if (isIPAddress(argv[i]))
             {
-#ifndef MSVC
-                strcpy(mongodbIP, argv[i]);
-#else
-                strcpy_s(mongodbIP,argv[i]);
-#endif
+                stringcpy(mongodbIP,argv[i]);
                 i++;
                 if (argc > i && atoi(argv[i]) > 0)
                 {

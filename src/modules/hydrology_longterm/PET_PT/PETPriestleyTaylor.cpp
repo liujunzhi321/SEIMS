@@ -13,7 +13,7 @@ using namespace std;
 PETPriestleyTaylor::PETPriestleyTaylor(void) : m_tMin(NULL), m_tMax(NULL), m_sr(NULL), m_rhd(NULL), m_elev(NULL),
                                                m_phutot(NULL), 
 											   m_dayLen(NULL), m_phuBase(NULL), m_pet(NULL), m_vpd(NULL),
-                                               m_petFactor(1.0f), m_nCells(-1)
+                                               m_petFactor(1.f), m_nCells(-1)
 {
 }
 
@@ -87,26 +87,11 @@ void PETPriestleyTaylor::initialOutputs()
 	if(this->m_vpd == NULL) Initialize1DArray(m_nCells, m_vpd, 0.f);
 	if(this->m_dayLen == NULL) Initialize1DArray(m_nCells, m_dayLen, 0.f);
 	if(this->m_phuBase == NULL) Initialize1DArray(m_nCells, m_phuBase, 0.f);
-//	if (this->m_pet == NULL)
-//	{
-//		this->m_pet = new float[this->m_nCells];
-//		this->m_vpd = new float[m_nCells];
-//		this->m_dayLen = new float[m_nCells];
-//		this->m_phuBase = new float[m_nCells];
-//#pragma omp parallel for
-//		for (int i = 0; i < m_nCells; ++i)
-//		{
-//			this->m_pet[i] = 0.f;
-//			this->m_vpd[i] = 0.f;
-//			this->m_dayLen[i] = 0.f;
-//			this->m_phuBase[i] = 0.f;
-//		}
-//	}
 }
 
 int PETPriestleyTaylor::Execute()
 {
-    if (!this->CheckInputData()) return false;
+    CheckInputData();
     initialOutputs();
     int d = JulianDay(this->m_date);
 #pragma omp parallel for

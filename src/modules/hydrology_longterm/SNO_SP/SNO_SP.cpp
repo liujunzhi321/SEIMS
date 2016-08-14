@@ -58,16 +58,6 @@ void SNO_SP::initialOutputs()
 	if(m_SM == NULL) Initialize1DArray(m_nCells, m_SM, 0.f);
 	if(m_SA == NULL) Initialize1DArray(m_nCells, m_SA, 0.f);
 	if(m_packT == NULL) Initialize1DArray(m_nCells, m_packT, 0.f);
-    //if (m_SM == NULL || m_SA == NULL)
-    //{
-    //    m_SM = new float[this->m_nCells];
-    //    m_SA = new float[this->m_nCells];
-    //    for (int rw = 0; rw < this->m_nCells; rw++)
-    //    {
-    //        m_SM[rw] = 0.0f;
-    //        m_SA[rw] = 0.0f;
-    //    }
-    //}
 	//if (this->m_swe == NODATA_VALUE) 
 	//	this->m_swe = this->m_swe0;
 	//if (this->m_lastSWE == NODATA_VALUE) 
@@ -208,11 +198,9 @@ void SNO_SP::Get1DData(const char *key, int *n, float **data)
     string s(key);
     if (StringMatch(s, VAR_SNME)) *data = this->m_SM;
     else if (StringMatch(s, VAR_SNAC)) *data = this->m_SR;
-	else if (StringMatch(s, VAR_NEPR)) *data = this->m_Pnet;
     else
         throw ModelException(MID_SNO_SP, "Get1DData", "Result " + s
                                                       +
                                                       " does not exist in current module. Please contact the module developer.");
     *n = this->m_nCells;
 }
-

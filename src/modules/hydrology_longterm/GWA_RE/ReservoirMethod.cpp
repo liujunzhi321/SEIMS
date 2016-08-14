@@ -335,7 +335,7 @@ void ReservoirMethod::Set2DData(const char *key, int nrows, int ncols, float **d
 
     if (StringMatch(sk, VAR_PERCO))
         m_perc = data;
-    else if (StringMatch(sk, VAR_SOMO))
+    else if (StringMatch(sk, VAR_SOL_ST))
         m_soilMoisture = data;
 	else if (StringMatch(sk, VAR_SOILDEPTH))
 		m_soilDepth = data;
