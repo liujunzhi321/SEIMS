@@ -50,7 +50,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.AddParameter(VAR_KI, UNIT_NON_DIM, DESC_KI, Source_ParameterDB, DT_Single);
 
-    mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);
+    mdi.AddInput(VAR_SOL_ST, UNIT_DEPTH_MM, DESC_SOL_ST, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module, DT_Raster1D);
 
     mdi.AddOutput(VAR_QSOIL, UNIT_FLOW_CMS, DESC_QSOIL, DT_Raster1D);

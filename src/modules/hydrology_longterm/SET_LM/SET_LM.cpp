@@ -146,7 +146,7 @@ void SET_LM::Set2DData(const char *key, int nrows, int ncols, float **data)
         m_fc = data;
     else if (StringMatch(sk, VAR_WILTPOINT))
         m_wp = data;
-    else if (StringMatch(sk, VAR_SOMO))
+    else if (StringMatch(sk, VAR_SOL_ST))
         m_sm = data;
     else
         throw ModelException("PER_PI", "Set1DData",

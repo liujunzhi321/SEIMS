@@ -57,7 +57,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_GWNEW, UNIT_DEPTH_MM, DESC_GWNEW, Source_Module_Optional, DT_Array1D); 
 	// VAR_PERCO is from percolation modules
     mdi.AddInput(VAR_PERCO, UNIT_DEPTH_MM, DESC_PERCO, Source_Module, DT_Raster2D);
-    mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);
+    mdi.AddInput(VAR_SOL_ST, UNIT_DEPTH_MM, DESC_SOL_ST, Source_Module, DT_Raster2D);
 
     mdi.AddOutput(VAR_GWWB, UNIT_NON_DIM, DESC_NONE, DT_Array2D);
     mdi.AddOutput(VAR_REVAP, UNIT_DEPTH_MM, DESC_REVAP, DT_Raster1D); //used by soil water balance module

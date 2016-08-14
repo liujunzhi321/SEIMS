@@ -185,7 +185,7 @@ void SOL_WB::Set2DData(const char *key, int nrows, int ncols, float **data)
         m_Perco = data;
     else if (StringMatch(s, VAR_SSRU))
         m_RI = data;
-    else if (StringMatch(s, VAR_SOMO))
+    else if (StringMatch(s, VAR_SOL_ST))
 		m_somo = data;
 	else if (StringMatch(s, VAR_SOILTHICK))
 		m_soilThick = data;

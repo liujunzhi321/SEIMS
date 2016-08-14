@@ -173,7 +173,7 @@ void PER_STR::Set2DData(const char *key, int nrows, int ncols, float **data)
     else if (StringMatch(sk, VAR_POROST)) m_porosity = data;
     else if (StringMatch(sk, VAR_FIELDCAP)) m_fc = data;
 	else if (StringMatch(sk, VAR_WILTPOINT)) m_wp = data;
-    else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
+    else if (StringMatch(sk, VAR_SOL_ST)) m_somo = data;
     else
         throw ModelException(MID_PER_STR, "Set2DData",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");

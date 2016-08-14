@@ -57,7 +57,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.AddOutput(VAR_EXCP, UNIT_DEPTH_MM, DESC_EXCP, DT_Raster1D);// just for depression module.
     mdi.AddOutput(VAR_INFIL, UNIT_DEPTH_MM, DESC_INFIL, DT_Raster1D);
-    mdi.AddOutput(VAR_SOMO, UNIT_VOL_FRA_M3M3, DESC_SOMO, DT_Raster2D);
+    mdi.AddOutput(VAR_SOL_ST, UNIT_VOL_FRA_M3M3, DESC_SOL_ST, DT_Raster2D);
 
     // write out the XML file.
 

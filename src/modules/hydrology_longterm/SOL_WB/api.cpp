@@ -41,7 +41,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_REVAP, UNIT_DEPTH_MM, DESC_REVAP, Source_Module, DT_Raster1D);//m_Revap
     mdi.AddInput(VAR_SSRU, UNIT_DEPTH_MM, DESC_SSRU, Source_Module, DT_Raster2D);//m_RI
     mdi.AddInput(VAR_PERCO, UNIT_DEPTH_MM, DESC_PERCO, Source_Module, DT_Raster2D);//m_Perco
-    mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);//m_somo
+    mdi.AddInput(VAR_SOL_ST, UNIT_DEPTH_MM, DESC_SOL_ST, Source_Module, DT_Raster2D);//m_somo
 	//variables used to output
 	//mdi.AddParameter(VAR_SUBBSN, UNIT_NON_DIM, DESC_SUBBSN, Source_ParameterDB, DT_Raster1D); //m_subbasin
 	mdi.AddInput(VAR_PCP, UNIT_DEPTH_MM, DESC_PCP, Source_Module, DT_Raster1D); //m_PCP

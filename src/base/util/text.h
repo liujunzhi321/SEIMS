@@ -855,11 +855,12 @@
 #define VAR_SOL_TD2 "soil_td2"
 #define VAR_SOL_TMP "sol_tmp"                       /// daily average temperature of soil layer(deg C)
 #define VAR_SOL_UL "sol_ul"                       /// mm H2O
-#define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)
-#define VAR_SOL_WST "sol_st"                        /// amount of water stored in the soil layer on current day(mm H2O)
+#define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)                      
 #define VAR_SOL_ZMX "SOL_ZMX"          /// Maximum rooting depth of soil profile (mm)
-#define VAR_SOMO "SOMO"                             /// soil moisture
-#define VAR_SOMO_TOT  "somo_total"          /// Total soil water content in soil profile
+//#define VAR_SOMO "SOMO"                     /// soil moisture, deprecated and replaced by VAR_SOL_ST
+//#define VAR_SOMO_TOT  "somo_total"          /// Total soil water content in soil profile, deprecated and replaced by VAR_SOL_SW
+#define VAR_SOL_ST "solst"                     /// amount of water stored in the soil layer on current day(mm H2O)
+#define VAR_SOL_SW  "solsw"          /// amount of water stored in soil profile on current day (mm H2O)
 #define VAR_SOTE "SOTE"                             /// Soil Temperature
 #define VAR_SOWB "SOWB"
 #define VAR_SOXY "soxy"
@@ -1374,10 +1375,11 @@
 #define DESC_SOL_UL "amount of water held in the soil layer at saturation (sat - wp water)"
 #define DESC_SOL_WFC "Water content of soil profile at field capacity"
 #define DESC_SOL_WPMM "water content of soil at -1.5 MPa (wilting point)"
-#define DESC_SOL_WST "amount of water stored in the soil layer on current day"
 #define DESC_SOL_ZMX "Maximum rooting depth of soil profile (mm)"
-#define DESC_SOMO "soil moisture in soil layers"
-#define DESC_SOMO_TOT "amount of water stored in the soil profile"
+//#define DESC_SOMO "soil moisture in soil layers"
+//#define DESC_SOMO_TOT "amount of water stored in the soil profile"
+#define DESC_SOL_ST "amount of water stored in the soil layer on current day(mm H2O)"
+#define DESC_SOL_SW "amount of water stored in soil profile on current day (mm H2O)"
 #define DESC_SOTE "soil Temperature"
 #define DESC_SOWB "soil water balance"
 #define DESC_SOXY "saturation concentration of dissolved oxygen"

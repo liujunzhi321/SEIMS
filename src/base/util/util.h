@@ -352,6 +352,15 @@ extern double Sum(double *a, int n);
  */
 extern string &trim(string &s);
 
+// define some macro for string related built-in functions, by Liangjun
+#ifdef MSVC
+#define stringcat strcat_s
+#define stringcpy strcpy_s
+#else
+#define stringcat strcat
+#define stringcpy strcpy
+#endif
+
 #ifndef linux
 #define strprintf sprintf_s
 #define StringTok strtok_s

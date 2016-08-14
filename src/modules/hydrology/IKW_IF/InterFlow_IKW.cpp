@@ -264,7 +264,7 @@ void InterFlow_IKW::Set1DData(const char *key, int n, float *data)
         this->m_porosity = data;
     else if (StringMatch(s, VAR_POREID))
         this->m_poreIndex = data;
-    else if (StringMatch(s, VAR_SOMO))
+    else if (StringMatch(s, VAR_SOL_ST))
         this->m_soilMoistrue = data;
     else if (StringMatch(s, VAR_CHWIDTH))
         m_chWidth = data;

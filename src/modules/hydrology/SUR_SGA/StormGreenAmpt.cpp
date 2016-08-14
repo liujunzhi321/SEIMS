@@ -84,7 +84,7 @@ void StormGreenAmpt::Get1DData(const char *key, int *n, float **data)
     {
         *data = m_accumuDepth;
     }
-    else if (StringMatch(sk, VAR_SOMO)) // soil moisture
+    else if (StringMatch(sk, VAR_SOL_ST)) // soil moisture
     {
         *data = m_soilMoisture;
     }
