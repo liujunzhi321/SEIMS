@@ -208,6 +208,10 @@ namespace MainBMP
          */
         void ReadPointBMPLocations(mongoc_client_t *conn, string &bmpDBName);
 
+		vector<int>& GetPointSrcMgtSeqs(){return m_pointSrcMgtSeqs;}
+		map<int, PointSourceMgtParams *>& GetPointSrcMgtMap(){return m_pointSrcMgtMap;}
+		vector<int>& GetPointSrcIDs(){return m_pointSrcIDs;}
+		map<int, PointBMPLocations *>& GetPointSrcLocsMap(){return m_pointSrcLocsMap;}
     private:
         /// Code of point source
         int m_pointSrc;
