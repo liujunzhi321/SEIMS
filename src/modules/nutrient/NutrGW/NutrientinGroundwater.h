@@ -45,25 +45,46 @@ public:
     //virtual void GetValue(const char* key, float* value);
     virtual void Get1DData(const char *key, int *n, float **data);
     //virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
+
+	virtual void SetSubbasins(clsSubbasins *subbasins);
+
 private:
     /// cell width of grid map (m)
     float m_cellWidth;
     /// number of cells
     int m_nCells;
+	/// time step (s)
+	int m_TimeStep;
 
     /// input data
-    /// nitrate N concentration in groundwater loading to reach (mg/L)
-    float *m_gwno3;
-    /// soluble P concentration in groundwater loading to reach (mg/L)
-    float *m_gwminp;
-    /// groundwater contribution to stream flow
-    float *m_gw_q;
+    /// nitrate N concentration in groundwater loading to reach (g/L, i.e. kg/m3)
+    float *m_gwno3Con;
+    /// soluble P concentration in groundwater loading to reach (g/L, i.e. kg/m3)
+    float *m_gwminpCon;
+    /// groundwater contribution to stream flow (m3/s)
+    float *m_gw_q; 
+	/// groundwater storage
+	float *m_gwStor;
+	/// amount of nitrate percolating past bottom of soil profile
+	float *m_perco_no3_gw;
+	/// amount of solute P percolating past bottom of soil profile
+	float *m_perco_solp_gw;
 
     /// output data
     /// nitrate loading to reach in groundwater
-    float *m_no3gw;
+    float *m_no3gwToCh;
     /// soluble P loading to reach in groundwater
-    float *m_minpgw;
+    float *m_minpgwToCh;
+
+	/// subbasin related
+	/// the total number of subbasins
+	int m_nSubbasins;
+	//! subbasin IDs
+	vector<int> m_subbasinIDs;
+	/// subbasin grid (subbasins ID)
+	float *m_subbasin;
+	/// subbasins information
+	clsSubbasins *m_subbasinsInfo;
 
 private:
 

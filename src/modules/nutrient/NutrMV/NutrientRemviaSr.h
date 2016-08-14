@@ -97,8 +97,6 @@ private:
     float *m_sedorgn;
     /// average air temperature
     float *m_tmean;
-    /// groundwater contribution to stream flow
-	float *m_gw_q;
 	///percent organic matter in soil layer (%)
 	float **m_sol_om;
 	/// soil thick of each layer (mm)
@@ -128,6 +126,8 @@ private:
 	float *m_latno3ToCh;  // amount of nitrate transported with lateral flow to channel
 	float *m_surqno3ToCh; // amount of nitrate transported with surface runoff to channel
 	float *m_surqsolpToCh;// amount of soluble phosphorus in surface runoff to channel
+	float *m_perco_n_gw;  // amount of nitrate percolating past bottom of soil profile sum by sub-basin
+	float *m_perco_p_gw;  // amount of solute P percolating past bottom of soil profile sum by sub-basin
 
 	/// subbasin related
 	/// the total number of subbasins

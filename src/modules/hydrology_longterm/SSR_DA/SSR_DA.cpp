@@ -223,10 +223,6 @@ int SSR_DA::Execute()
                 m_qiSubbasin[1] += qiAllLayers;
         }
     }
-	//for (int i = 0; i <= m_nSubbasin; i++){
-	//	if(m_qiSubbasin[i] > 0.)
-	//		cout<<m_qiSubbasin[i]<<",";
-	//}
 
     for (int i = 1; i <= m_nSubbasin; i++)
 	{

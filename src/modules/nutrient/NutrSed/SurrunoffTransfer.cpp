@@ -265,7 +265,7 @@ void SurrunoffTransfer::SetSubbasins(clsSubbasins *subbasins)
 
 int SurrunoffTransfer::Execute()
 {
-    if (!this->CheckInputData())
+    if (!CheckInputData())
     {
         return false;
     }
@@ -301,12 +301,13 @@ int SurrunoffTransfer::Execute()
 		m_sedminpsToCh[subi] = m_sedminps[i];
 	}
 	// sum all the subbasins and put the sum value in the zero-index of the array
+	float cellArea = m_cellWidth * m_cellWidth * 0.0001f; //ha
 	for (int i = 1; i < m_nSubbasins + 1; i++)
 	{
-		m_sedorgnToCh[0] += m_sedorgnToCh[i];
-		m_sedorgpToCh[0] += m_sedorgpToCh[i];
-		m_sedminpaToCh[0] = m_sedminpaToCh[i];
-		m_sedminpsToCh[0] = m_sedminpsToCh[i];
+		m_sedorgnToCh[0] += m_sedorgnToCh[i] * cellArea;
+		m_sedorgpToCh[0] += m_sedorgpToCh[i] * cellArea;
+		m_sedminpaToCh[0] = m_sedminpaToCh[i] * cellArea;
+		m_sedminpsToCh[0] = m_sedminpsToCh[i] * cellArea;
 	}
 
     return 0;
