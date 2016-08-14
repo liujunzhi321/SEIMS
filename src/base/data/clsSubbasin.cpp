@@ -255,23 +255,19 @@ m_nSubbasins(-1)
 	m_nSubbasins = 0;
 	// valid cell indexes of each subbasin, key is subbasin ID, value is vector of cell's index
 	map<int, vector<int> *> cellListMap;
-	map<int, vector<int> *>::iterator it;
-	int subID = 0;
-#pragma omp parallel for
 	for (int i = 0; i < nCells; i++)
 	{
-		subID = int(subbasinData[i]);
-		it = cellListMap.find(subID);
-		if (it == cellListMap.end())
+		int subID = int(subbasinData[i]);
+		if (cellListMap.find(subID) == cellListMap.end())
 			cellListMap[subID] = new vector<int>;
 		cellListMap[subID]->push_back(i);
 	}
 	m_nSubbasins = cellListMap.size();
-	for (it = cellListMap.begin(); it != cellListMap.end(); it++)
+	for (map<int, vector<int>*>::iterator it = cellListMap.begin(); it != cellListMap.end(); it++)
 	{
 		// swap for saving memory
 		vector<int>(*it->second).swap(*it->second);
-		subID = it->first;
+		int subID = it->first;
 		m_subbasinIDs.push_back(subID);
 		Subbasin *newSub = new Subbasin(subID);
 		int nCellsTmp = it->second->size();
@@ -285,7 +281,7 @@ m_nSubbasins(-1)
 	vector<int>(m_subbasinIDs).swap(m_subbasinIDs);
 
 	// release cellListMap to save memory
-	for (it = cellListMap.begin(); it != cellListMap.end();)
+	for (map<int, vector<int>*>::iterator it = cellListMap.begin(); it != cellListMap.end();)
 	{
 		if (it->second != NULL)
 			delete it->second;
