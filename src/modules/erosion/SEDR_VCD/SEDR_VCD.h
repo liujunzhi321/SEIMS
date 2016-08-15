@@ -167,12 +167,6 @@ private:
     /// map from subbasin id to index of the array
     map<int, int> m_idToIndex;
 
-    /// overland flow to streams from each subbasin (m3/s)
-    float *m_qsSub;
-    /// interflow to streams from each subbasin (m3/s)
-    float *m_qiSub;
-    /// groundwater flow out of the subbasin (m3/s)
-    float *m_qgSub;
     /// reach storage (m3) at time t
     float *m_chStorage;
     /// channel water depth m
@@ -185,10 +179,6 @@ private:
     //float** m_T_CHSB;
     /// channel sediment storage (ton)
     float *m_sedStorage;
-    /// total sediment from upstream
-    float *m_sedUps;
-    /// sediment from current subbasin
-    float *m_sedSub;
     /// sediment of deposition
     float *m_sedDep;
     /// sediment of degradation
@@ -199,8 +189,6 @@ private:
     void initialOutputs();
 
     void SedChannelRouting(int i);
-
-    void reset(int id);
 
     float Q(float watDepth, int id);
 

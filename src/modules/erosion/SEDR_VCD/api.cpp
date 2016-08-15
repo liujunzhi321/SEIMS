@@ -20,7 +20,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     MetadataInfo mdi;
 
     // set the information properties
-    mdi.SetAuthor("Wu Hui");
+    mdi.SetAuthor("Wu Hui; Junzhi Liu");
     mdi.SetClass(MCLS_SED_ROUTING, MCLSDESC_SED_ROUTING);
     mdi.SetDescription(MDESC_SEDR_VCD);
     mdi.SetEmail(SEIMS_EMAIL);
@@ -45,9 +45,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_SED_TO_CH, UNIT_TONS, DESC_SED_TO_CH, Source_Module, DT_Array1D);  // for longterm model
     //mdi.AddInput(VAR_SUB_SEDTOCH, UNIT_KG, DESC_SUB_SEDTOCH, Source_Module, DT_Array1D);   // for storm model
     mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_QS, UNIT_FLOW_CMS, DESC_QS, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_QI, UNIT_FLOW_CMS, DESC_QI, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_QG, UNIT_FLOW_CMS, DESC_QG, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_CHST, UNIT_VOL_M3, DESC_CHST, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_CHWTDEPTH, UNIT_LEN_M, DESC_CHWTDEPTH, Source_Module, DT_Array1D);
 

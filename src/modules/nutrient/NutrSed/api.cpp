@@ -71,16 +71,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_SEDORGP, UNIT_CONT_KGHA, DESC_SEDORGP, DT_Raster1D);
     mdi.AddOutput(VAR_SEDMINPA, UNIT_CONT_KGHA, DESC_SEDMINPA, DT_Raster1D);
     mdi.AddOutput(VAR_SEDMINPS, UNIT_CONT_KGHA, DESC_SEDMINPS, DT_Raster1D);
-
-	// change the status variables of each soil layer
-    mdi.AddOutput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, DT_Raster2D);
-	mdi.AddOutput(VAR_SOL_SORGN, UNIT_CONT_KGHA, DESC_SOL_SORGN, DT_Raster2D);    
-	mdi.AddOutput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, DT_Raster2D);    
-    mdi.AddOutput(VAR_SOL_FOP, UNIT_CONT_KGHA, DESC_SOL_FOP, DT_Raster2D);
-    mdi.AddOutput(VAR_SOL_HORGP, UNIT_CONT_KGHA, DESC_SOL_HORGP, DT_Raster2D);
-    mdi.AddOutput(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, DT_Raster2D);
-    mdi.AddOutput(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, DT_Raster2D);
-
 	// to channel 
 	mdi.AddOutput(VAR_SEDORGN_CH, UNIT_KG, DESC_SEDORGN_CH, DT_Array1D);
 	mdi.AddOutput(VAR_SEDORGP_CH, UNIT_KG, DESC_SEDORGP_CH, DT_Array1D);
