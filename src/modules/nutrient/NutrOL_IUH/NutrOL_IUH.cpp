@@ -415,10 +415,10 @@ void NutrOL_IUH::Get1DData(const char *key, int *n, float **data)
 	initialOutputs();
     string sk(key);
     *n = m_nsub + 1;
-    if (StringMatch(sk, VAR_SURQNO3_CH)) { *data = this->m_surqno3ToCh; }
+    if (StringMatch(sk, VAR_SUR_NO3_CH)) { *data = this->m_surqno3ToCh; }
     else if (StringMatch(sk, VAR_LATNO3_CH)) { *data = this->m_latno3ToCh; }
     else if (StringMatch(sk, VAR_NO3GW_CH)) { *data = this->m_no3gwToCh; }
-    else if (StringMatch(sk, VAR_SURQSOLP_CH)) { *data = this->m_surqsolpToCh; }
+    else if (StringMatch(sk, VAR_SUR_SOLP_CH)) { *data = this->m_surqsolpToCh; }
     else if (StringMatch(sk, VAR_MINPGW_CH)) { *data = this->m_minpgwToCh; }
     else if (StringMatch(sk, VAR_SEDORGN_CH)) { *data = this->m_sedorgnToCh; }
     else if (StringMatch(sk, VAR_SEDORGP_CH)) { *data = this->m_sedorgpToCh; }

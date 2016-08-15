@@ -132,7 +132,7 @@ void Biomass_EPIC::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_VPD)) m_VPD = data;
     else if (StringMatch(sk, VAR_PPT)) m_ppt = data;
     else if (StringMatch(sk, VAR_SOET)) m_soilESDay = data;
-    //else if (StringMatch(sk, VAR_SOL_COV)) m_sol_cov = data;
+    else if (StringMatch(sk, VAR_SOL_COV)) m_sol_cov = data;
     else if (StringMatch(sk, VAR_SNAC)) m_snowAcc = data;
     //// land cover
 	else if (StringMatch(sk, VAR_SOL_RSDIN)) m_sol_rsdin = data;

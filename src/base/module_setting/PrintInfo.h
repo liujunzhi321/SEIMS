@@ -17,7 +17,7 @@
 //#include "clsSpecificOutput.h"
 #include "mongoc.h"
 #include "clsRasterData.h"
-
+#include "util.h"
 using namespace std;
 
 /*!

@@ -122,7 +122,7 @@ private:
     float *m_Q_SBOF;
 	// overland flow in each cell (mm) //added by Gao, as intermediate variable, 29 Jul 2016
 	float *m_OL_Flow;
-	//! intial outputs
+	//! initial outputs
     void initialOutputs();
 };
 

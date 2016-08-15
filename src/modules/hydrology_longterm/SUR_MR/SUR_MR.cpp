@@ -54,6 +54,8 @@ void SUR_MR::CheckInputData(void)
     if (FloatEqual(m_sFrozen, NODATA_VALUE))
         throw ModelException(MID_SUR_MR, "CheckInputData",
                              "The frozen soil moisture of the input data can not be NODATA.");
+	if (m_sol_awc == NULL)
+		throw ModelException(MID_SUR_MR, "CheckInputData", "The available water amount can not be NULL.");
  //   if (m_fieldCap == NULL)
  //       throw ModelException(MID_SUR_MR, "CheckInputData",
 	//	"The water content of soil at field capacity of the input data can not be NULL.");
@@ -94,14 +96,20 @@ void SUR_MR::initialOutputs()
 #pragma omp parallel for
         for (int i = 0; i < m_nCells; i++)
         {
-			Initialize1DArray(m_nSoilLayers, m_soilStorage[i], NODATA_VALUE);
+			Initialize1DArray(m_nSoilLayers, m_soilStorage[i], 0.f);
             m_pe[i] = 0.f;
             m_infil[i] = 0.f;
 			m_soilStorageProfile[i] = 0.f;
             for (int j = 0; j < (int)m_soilLayers[i]; j++){
 				/// mm
                 //m_soilStorage[i][j] = m_initSoilStorage[i] * (m_fieldCap[i][j] - m_wiltingPoint[i][j]) * m_soilThick[i][j]; 
-				m_soilStorage[i][j] = m_initSoilStorage[i] * m_sol_awc[i][j];
+				if(m_initSoilStorage[i] >= 0.f && m_initSoilStorage[i] <= 1.f && m_sol_awc[i][j] >= 0.f){
+					m_soilStorage[i][j] = m_initSoilStorage[i] * m_sol_awc[i][j];
+				}
+				else
+				{
+					m_soilStorage[i][j] = 0.f;
+				}
 				m_soilStorageProfile[i] += m_soilStorage[i][j];
 			}
         }
