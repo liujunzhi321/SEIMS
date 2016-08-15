@@ -1297,7 +1297,7 @@
 #define DESC_S_FROZEN "Frozen moisture relative to porosity with no infiltration"
 #define DESC_SAND "Percent of sand content"
 #define DESC_SBGS "Groundwater storage of the subbasin"
-#define DESC_SBIF "Subsurface to streams from each subbasin"
+#define DESC_SBIF "Subsurface volume (m3) to streams from each subbasin"
 #define DESC_SBOF "overland flow to streams from each subbasin"
 #define DESC_SBPET "the potential evapotranspiration rate of the subbasin"
 #define DESC_SBQG "groundwater flow out of the subbasin"

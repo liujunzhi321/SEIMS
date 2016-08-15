@@ -60,7 +60,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     // set the output variables
     mdi.AddOutput(VAR_SSRU, UNIT_DEPTH_MM, DESC_SSRU, DT_Raster2D);
     mdi.AddOutput(VAR_SSRUVOL, UNIT_VOL_M3, DESC_SSRUVOL, DT_Raster2D);
-    mdi.AddOutput(VAR_SBIF, UNIT_FLOW_CMS, DESC_SBIF, DT_Array1D);
+    mdi.AddOutput(VAR_SBIF, UNIT_VOL_M3, DESC_SBIF, DT_Array1D);
 
     string res = mdi.GetXMLDocument();
 

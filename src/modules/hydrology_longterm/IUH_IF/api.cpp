@@ -41,7 +41,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddParameter("uhmaxCell","","end time of IUH for each grid cell","ParameterDB_Discharge",DT_Array1D);
     mdi.AddInput(VAR_SSRU, UNIT_DEPTH_MM, DESC_SSRU, Source_Module, DT_Raster1D);
 
-    mdi.AddOutput(VAR_SBIF, UNIT_DEPTH_MM, DESC_SBIF, DT_Array1D);
+    mdi.AddOutput(VAR_SBIF, UNIT_VOL_M3, DESC_SBIF, DT_Array1D);
 
     // set the dependencies
     mdi.AddDependency("SSR_DA", "Subsurface Runoff module");
