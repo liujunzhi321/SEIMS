@@ -1,15 +1,14 @@
 /*!
- * \file SEDR_VCD.h
+ * \file NUTR_CH.h
  * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
  * \author Hui Wu
  * \date Jul. 2012
  * \revised LiangJun Zhu
  * \date May/ 2016
  */
+
 #pragma once
 #define DEPTH_INTERVAL 0.001f
-
-
 
 #include <string>
 #include <ctime>
@@ -19,25 +18,25 @@
 #include "SimulationModule.h"
 
 using namespace std;
-/** \defgroup SEDR_VCD
+/** \defgroup NUTR_CH
  * \ingroup Erosion
  * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
  */
 /*!
- * \class SEDR_VCD
- * \ingroup SEDR_VCD
+ * \class NUTR_CH
+ * \ingroup NUTR_CH
  *
  * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
  *
  */
-class SEDR_VCD : public SimulationModule
+class NUTR_CH : public SimulationModule
 {
 public:
     //! Constructor
-    SEDR_VCD(void);
+    NUTR_CH(void);
 
     //! Destructor
-    ~SEDR_VCD(void);
+    ~NUTR_CH(void);
 
     virtual int Execute();
 

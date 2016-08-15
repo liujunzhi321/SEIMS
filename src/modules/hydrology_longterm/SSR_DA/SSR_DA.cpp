@@ -181,7 +181,7 @@ int SSR_DA::Execute()
             qiAllLayers = 0.f;
             for (int j = 0; j < (int)m_soilLayers[i]; j++){
 				if (m_qiVol[i][j] > UTIL_ZERO)
-					qiAllLayers += m_qiVol[i][j];
+					qiAllLayers += m_qiVol[i][j]/m_dt;
 			}
             //cout << m_nSubbasin << "\tsubbasin:" << m_subbasin[i] << "\t" << qiAllLayers << endl;
             if (m_nSubbasin > 1)
@@ -192,10 +192,7 @@ int SSR_DA::Execute()
     }
 
     for (int i = 1; i <= m_nSubbasin; i++)
-	{
-		m_qiSubbasin[i] /= float(m_dt);//86400 secs, m3/s
         m_qiSubbasin[0] += m_qiSubbasin[i];
-	}
 
     return 0;
 }
