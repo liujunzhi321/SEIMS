@@ -405,7 +405,7 @@ void SUR_CN::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
     string sk(key);
     *nRows = m_nCells;
     *nCols = m_nSoilLayers;
-    if (StringMatch(sk, VAR_SOMO)) *data = m_soilMoisture;
+    if (StringMatch(sk, VAR_SOL_ST)) *data = m_soilMoisture;
     else
         throw ModelException(MID_SUR_CN, "Get2DData", "Output " + sk
                                                       + " does not exist. Please contact the module developer.");

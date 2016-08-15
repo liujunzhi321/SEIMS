@@ -50,7 +50,7 @@ private:
     int m_nSub;
     /// valid cell numbers in each subbasin
     map<int, int> m_nCellsSubbsn;
-    /// subbasin area, key is subbasinID, value is area
+    /// subbasin area, key is subbasinID, value is area (ha)
     map<int, float> m_nAreaSubbsn;
 
     /**Parameters from MongoDB**/
@@ -109,6 +109,7 @@ private:
     float **m_soilSolP;
 
     /** Temporary parameters**/
+
     /// Sequence number of management operations done in the previous time step run
     int *m_doneOpSequence;
 

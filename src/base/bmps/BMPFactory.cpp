@@ -12,4 +12,5 @@ BMPFactory::BMPFactory(int scenarioId, int bmpId, int subScenario, int bmpType, 
 
 BMPFactory::~BMPFactory(void)
 {
+	/// Nothing to be released
 }

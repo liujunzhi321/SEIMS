@@ -66,17 +66,18 @@ private:
     float *m_snowAcc;
     /// snow sublimation on current day
     float *m_snowSB;
-    /// soil moisture
-    float **m_somo;
+    /// soil storage of each soil layer, mm H2O
+    float **m_soilStorage;
+	/// soil water storage in soil profile (mm)
+	float *m_soilStorageProfile;
     /// add output variables
+
     /// maximum amount of transpiration (plant et)  that can occur on current day in HRU, ep_max in SWAT
     float *m_ppt;
     /// actual amount of evaporation (soil et) that occurs on day, es_day in SWAT
     float *m_soilESDay;
     /// amount of nitrate moving upward in the soil profile in watershed
     float m_no3Up;
-    /// total soil water content in soil profile
-    float *m_totSOMO;
 
 public:
     //! Constructor
@@ -92,8 +93,6 @@ public:
     virtual void Get1DData(const char *key, int *n, float **data);
 
     virtual void Set2DData(const char *key, int n, int col, float **data);
-
-    //virtual void Get2DData(const char *key, int *n, int *col, float ***data);
 
     virtual void GetValue(const char *key, float *value);
 

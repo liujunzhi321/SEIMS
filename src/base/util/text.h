@@ -448,10 +448,10 @@
 #define MID_MINRL "MINRL"
 #define MDESC_MINRL "Daily nitrogen and phosphorus mineralization and immobilization considering fresh organic material (plant residue) and active and stable humus material."
 /// Nutrient removed and loss in surface runoff
-#define MCLS_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
-#define MCLSDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
-#define MID_SurTra "SurTra"
-#define MDESC_SurTra "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MCLS_NUTRSED "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MCLSDESC_NUTRSED "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
+#define MID_NUTRSED "NUTRSED"
+#define MDESC_NUTRSED "Nutrient removed and loss in surface runoff, lateral flow, tile flow, and percolation out of the profile."
 /// Atmospheric Deposition
 #define MCLS_ATMDEP "AtmosphericDeposition"
 #define MCLSDESC_ATMDEP "AtmosphericDeposition"
@@ -460,18 +460,18 @@
 /// Nutrient remove
 #define MCLS_NutRemv "Nutrient remove"
 #define MCLSDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
-#define MID_NutRemv "NutRemv"
-#define MDESC_NutRemv "Simulates the loss of nitrate and phosphorus via surface runoff"
+#define MID_NUTRMV "NutRemv"
+#define MDESC_NUTRMV "Simulates the loss of nitrate and phosphorus via surface runoff"
 /// Nutrient routing
 #define MID_SSR_NUTR				"SSR_NUTR"
 #define MDESC_SSR_NUTR			    "nutrient routing through soil flow"
 #define MID_IUH_NUTR_OL             "IUH_NUTR_OL"
 #define MDESC_IUH_NUTR_OL           "overland nutrient routing"
 /// Nutrient loading contributed by groundwater flow
-#define MCLS_NutGW "Nutrient in groundwater"
-#define MCLSDESC_NutGW "Simulates the tutrient loading contributed by groundwater flow"
-#define MID_NutGW "NutGW"
-#define MDESC_NutGW "Simulates the tutrient loading contributed by groundwater flow"
+#define MCLS_NUTRGW "Nutrient in groundwater"
+#define MCLSDESC_NUTRGW "Simulates the tutrient loading contributed by groundwater flow"
+#define MID_NUTRGW "NutrGW"
+#define MDESC_NUTRGW "Simulates the tutrient loading contributed by groundwater flow"
 /// In-stream nutrient transformations
 #define MCLS_NutCHRout "Nutrient in reach"
 #define MCLSDESC_NutCHRout "In-stream nutrient transformations"
@@ -721,7 +721,7 @@
 #define VAR_P_N "p_n"
 #define VAR_P_RF "p_rf"
 #define VAR_PERCO_N_GW "perco_n_gw"
-#define VAR_PERCO_P_GW "perco_p"
+#define VAR_PERCO_P_GW "perco_p_gw"
 #define VAR_PERCO "Perco"                     /// the amount of water percolated from the soil water reservoir
 #define VAR_PERDE "perde"
 #define VAR_PET "PET"                           /// Potential Evapotranspiration of day
@@ -792,7 +792,6 @@
 #define VAR_SED_RECH "SEDRECH"
 #define VAR_SED_TO_CH "SEDTOCH"
 #define VAR_SED_OL "SED_OL"
-#define VAR_SED_TO_CH_T "SEDTOCH_T"
 #define VAR_SEDMINPA "sedminpa"                     /// amount of active mineral phosphorus adsorbed to sediment in surface runoff
 #define VAR_SEDMINPA_CH "sedminpaToCh"
 #define VAR_SEDMINPS "sedminps"                     /// amount of stable mineral phosphorus adsorbed to sediment in surface runoff
@@ -855,11 +854,12 @@
 #define VAR_SOL_TD2 "soil_td2"
 #define VAR_SOL_TMP "sol_tmp"                       /// daily average temperature of soil layer(deg C)
 #define VAR_SOL_UL "sol_ul"                       /// mm H2O
-#define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)
-#define VAR_SOL_WST "sol_st"                        /// amount of water stored in the soil layer on current day(mm H2O)
+#define VAR_SOL_WPMM "sol_wpmm"                     /// water content of soil at -1.5 MPa (wilting point)                      
 #define VAR_SOL_ZMX "SOL_ZMX"          /// Maximum rooting depth of soil profile (mm)
-#define VAR_SOMO "SOMO"                             /// soil moisture
-#define VAR_SOMO_TOT  "somo_total"          /// Total soil water content in soil profile
+//#define VAR_SOMO "SOMO"                     /// soil moisture, deprecated and replaced by VAR_SOL_ST
+//#define VAR_SOMO_TOT  "somo_total"          /// Total soil water content in soil profile, deprecated and replaced by VAR_SOL_SW
+#define VAR_SOL_ST "solst"                     /// amount of water stored in the soil layer on current day(mm H2O)
+#define VAR_SOL_SW  "solsw"          /// amount of water stored in soil profile on current day (mm H2O)
 #define VAR_SOTE "SOTE"                             /// Soil Temperature
 #define VAR_SOWB "SOWB"
 #define VAR_SOXY "soxy"
@@ -875,9 +875,9 @@
 #define VAR_SUBBSN "subbasin"                       /// The subbasin grid
 #define VAR_SUBBSNID_NUM "SUBBASINID_NUM"                /// number of subbasins
 #define VAR_SUR_NO3 "sur_no3"
-#define VAR_SUR_NO3_CH "sur_no_ToCh"
+#define VAR_SUR_NO3_CH "sur_no3_ToCh"
 #define VAR_SUR_SOLP "sur_solp"
-#define VAR_SUR_SOLP_CH "sur_sol_ToCh"
+#define VAR_SUR_SOLP_CH "sur_solp_ToCh"
 #define VAR_SURU "SURU"                             /// surface runoff generated
 #define VAR_SWE "SWE"
 #define VAR_SWE0 "swe0"
@@ -1068,7 +1068,7 @@
 #define DESC_CHLORA "chlorophyll-a concentration in reach"
 #define DESC_CHL_A "chlorophyll-a concentration in water yield"
 #define DESC_CHS0 "initial channel storage per meter of reach length"
-#define DESC_CHSB "Channel sediment balance in a text format for each reach and at each time step (unit?)"
+#define DESC_CHSB "Channel sediment balance for each reach and at each time step"
 #define DESC_CHST "channel storage"
 #define DESC_CHT "canopy height for the day (m)"
 #define DESC_CHTMX "maximum canopy height (m)"
@@ -1191,7 +1191,7 @@
 #define DESC_LAP_RATE "Lapse Rate"
 #define DESC_LAST_SOILRD "storing last soil root depth for use in harvestkillop/killop"
 #define DESC_LATNO3 "amount of nitrate transported with lateral flow"
-#define DESC_LATNO3_CH "amount of nitrate transported with lateral flow"
+#define DESC_LATNO3_CH "amount of nitrate transported with lateral flow to channel"
 #define DESC_LCC "land cover code"
 #define DESC_LDRAIN "soil layer where drainage tile is located"
 #define DESC_MANNING "Manning's roughness"
@@ -1310,15 +1310,14 @@
 #define DESC_SED_RECH "Sediment at each reach outlet at each time step"
 #define DESC_SED_TO_CH "sediment flowing to channel"
 #define DESC_SED_OL "sediment transported to channel at each cell"
-#define DESC_SED_TO_CH_T  "Total sediment flowing to channel"
 #define DESC_SEDMINPA " amount of active mineral phosphorus sorbed to sediment in surface runoff"
-#define DESC_SEDMINPA_CH "amount of active mineral phosphorus absorbed to sediment in surface runoff"
+#define DESC_SEDMINPA_CH "amount of active mineral phosphorus absorbed to sediment in surface runoff moved to channel"
 #define DESC_SEDMINPS "amount of stable mineral phosphorus sorbed to sediment in surface runoff"
-#define DESC_SEDMINPS_CH "amount of stable mineral phosphorus absorbed to sediment in surface runoff"
+#define DESC_SEDMINPS_CH "amount of stable mineral phosphorus absorbed to sediment in surface runoff moved to channel"
 #define DESC_SEDORGN "amount of organic nitrogen in surface runoff"
-#define DESC_SEDORGN_CH "amount of organic nitrogen in surface runoff"
+#define DESC_SEDORGN_CH "amount of organic nitrogen in surface runoff moved to channel"
 #define DESC_SEDORGP "amount of organic phosphorus in surface runoff"
-#define DESC_SEDORGP_CH "amount of organic phosphorus in surface runoff"
+#define DESC_SEDORGP_CH "amount of organic phosphorus in surface runoff moved to channel"
 #define DESC_SEEPAGE "seepage"
 #define DESC_SHALLST "depth of water in shallow aquifer"
 #define DESC_SILT "Percent of silt content"
@@ -1374,10 +1373,11 @@
 #define DESC_SOL_UL "amount of water held in the soil layer at saturation (sat - wp water)"
 #define DESC_SOL_WFC "Water content of soil profile at field capacity"
 #define DESC_SOL_WPMM "water content of soil at -1.5 MPa (wilting point)"
-#define DESC_SOL_WST "amount of water stored in the soil layer on current day"
 #define DESC_SOL_ZMX "Maximum rooting depth of soil profile (mm)"
-#define DESC_SOMO "soil moisture in soil layers"
-#define DESC_SOMO_TOT "amount of water stored in the soil profile"
+//#define DESC_SOMO "soil moisture in soil layers"
+//#define DESC_SOMO_TOT "amount of water stored in the soil profile"
+#define DESC_SOL_ST "amount of water stored in the soil layer on current day(mm H2O)"
+#define DESC_SOL_SW "amount of water stored in soil profile on current day (mm H2O)"
 #define DESC_SOTE "soil Temperature"
 #define DESC_SOWB "soil water balance"
 #define DESC_SOXY "saturation concentration of dissolved oxygen"
@@ -1394,10 +1394,10 @@
 #define DESC_SubbasinSelected "The subbasion IDs listed in file.out"
 #define DESC_SUBBSN "The subbasion grid"
 #define DESC_SUBBSNID_NUM "number of subbasins"
-#define DESC_SURQNO3 "amount of nitrate transported with surface runoff"
-#define DESC_SURQNO3_CH "amount of nitrate transported with surface runoff"
-#define DESC_SURQSOLP "amount of phosphorus stored in solution"
-#define DESC_SURQSOLP_CH "amount of soluble phosphorus in surface runoff"
+#define DESC_SUR_NO3 "amount of nitrate transported with surface runoff"
+#define DESC_SUR_NO3_CH "amount of nitrate transported with surface runoff to channel"
+#define DESC_SUR_SOLP "amount of solution phosphorus in surface runoff"
+#define DESC_SUR_SOLP_CH "amount of soluble phosphorus from surface runoff to channel"
 #define DESC_SURU "surface runoff generated"
 #define DESC_SWE "average snow accumulation of the watershed"
 #define DESC_SWE0 "Initial snow water equivalent"

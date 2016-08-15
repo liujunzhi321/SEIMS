@@ -121,7 +121,7 @@ void Percolation_DARCY::Set1DData(const char *key, int nRows, float *data)
     if (StringMatch(s, VAR_CONDUCT)) this->m_Conductivity = data;
     else if (StringMatch(s, VAR_POROST)) this->m_Porosity = data;
     else if (StringMatch(s, VAR_POREID)) this->m_Poreindex = data;
-    else if (StringMatch(s, VAR_SOMO)) this->m_Moisture = data;
+    else if (StringMatch(s, VAR_SOL_ST)) this->m_Moisture = data;
     else if (StringMatch(s, VAR_FIELDCAP)) this->m_FieldCapacity = data;
     else if (StringMatch(s, VAR_SOILDEPTH)) this->m_rootDepth = data;
         //else if(StringMatch(s,"D_ES"))			this->m_ES = data;

@@ -334,7 +334,7 @@ void SSR_NUTR::Set2DData(const char *key, int nrows, int ncols, float **data)
         m_nSoilLayers = ncols;
         m_poreIndex = data;
     }
-    else if (StringMatch(sk, VAR_SOMO))
+    else if (StringMatch(sk, VAR_SOL_ST))
     {
         CheckInputSize(key, nrows);
         m_nSoilLayers = ncols;

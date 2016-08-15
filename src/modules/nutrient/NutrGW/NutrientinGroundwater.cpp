@@ -47,7 +47,7 @@ bool NutrientinGroundwater::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
     {
-        throw ModelException(MID_NutGW, "CheckInputSize",
+        throw ModelException(MID_NUTRGW, "CheckInputSize",
                              "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
         return false;
     }
@@ -63,7 +63,7 @@ bool NutrientinGroundwater::CheckInputSize(const char *key, int n)
             ostringstream oss;
             oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
             m_nCells << ".\n";
-            throw ModelException(MID_NutGW, "CheckInputSize", oss.str());
+            throw ModelException(MID_NUTRGW, "CheckInputSize", oss.str());
         }
     }
     return true;
@@ -72,23 +72,23 @@ bool NutrientinGroundwater::CheckInputSize(const char *key, int n)
 bool NutrientinGroundwater::CheckInputData()
 {
     if (m_nCells <= 0)
-        throw ModelException(MID_NutGW, "CheckInputData", "The cells number can not be less than zero.");
+        throw ModelException(MID_NUTRGW, "CheckInputData", "The cells number can not be less than zero.");
 	if (m_TimeStep <= 0)
-		throw ModelException(MID_NutGW, "CheckInputData", "The parameter: m_TimeStep has not been set.");
+		throw ModelException(MID_NUTRGW, "CheckInputData", "The parameter: m_TimeStep has not been set.");
     if (m_cellWidth < 0)
-        throw ModelException(MID_NutGW, "CheckInputData", "The cell width can not be less than zero.");
+        throw ModelException(MID_NUTRGW, "CheckInputData", "The cell width can not be less than zero.");
     if (m_gw_q == NULL)
-        throw ModelException(MID_NutGW, "CheckInputData", "The groundwater contribution to stream flow data can not be NULL.");
+        throw ModelException(MID_NUTRGW, "CheckInputData", "The groundwater contribution to stream flow data can not be NULL.");
 	if (m_gwStor == NULL)
-		throw ModelException(MID_NutGW, "CheckInputData", "The groundwater storage can not be NULL.");
+		throw ModelException(MID_NUTRGW, "CheckInputData", "The groundwater storage can not be NULL.");
 	if (m_perco_no3_gw == NULL)
-		throw ModelException(MID_NutGW, "CheckInputData", "The NO3 percolation to groundwater can not be NULL.");
+		throw ModelException(MID_NUTRGW, "CheckInputData", "The NO3 percolation to groundwater can not be NULL.");
 	if (m_perco_solp_gw == NULL)
-		throw ModelException(MID_NutGW, "CheckInputData", "The solute P percolation to groundwater can not be NULL.");
+		throw ModelException(MID_NUTRGW, "CheckInputData", "The solute P percolation to groundwater can not be NULL.");
 	if (m_soilLayers == NULL)
-		throw ModelException(MID_NutGW, "CheckInputData", "The soil layers number can not be NULL.");
+		throw ModelException(MID_NUTRGW, "CheckInputData", "The soil layers number can not be NULL.");
 	if(m_sol_no3 == NULL)
-		throw ModelException(MID_NutGW, "CheckInputData", "m_sol_no3 can not be NULL.");
+		throw ModelException(MID_NUTRGW, "CheckInputData", "m_sol_no3 can not be NULL.");
     return true;
 }
 
@@ -101,17 +101,17 @@ void NutrientinGroundwater::SetValue(const char *key, float value)
     {
         omp_set_num_threads((int) value);
     }
-    else if (StringMatch(sk, Tag_CellSize))
-    {
-        m_nCells = (int)value;
-    }
+    //else if (StringMatch(sk, Tag_CellSize))
+    //{
+    //    m_nCells = (int)value;
+    //}
     else if (StringMatch(sk, Tag_CellWidth))
     {
         m_cellWidth = value;
     }
     else
     {
-        throw ModelException(MID_NutGW, "SetValue", "Parameter " + sk +
+        throw ModelException(MID_NUTRGW, "SetValue", "Parameter " + sk +
                                                   " does not exist in current method. Please contact the module developer.");
     }
 }
@@ -139,7 +139,7 @@ void NutrientinGroundwater::Set1DData(const char *key, int n, float *data)
 	else if (StringMatch(sk, VAR_SOILLAYERS))
 		m_soilLayers = data;
     else
-        throw ModelException(MID_NutGW, "Set1DData", "Parameter " + sk +
+        throw ModelException(MID_NUTRGW, "Set1DData", "Parameter " + sk +
                                                   " does not exist in current module. Please contact the module developer.");
 }
 
@@ -152,7 +152,7 @@ void NutrientinGroundwater::Set2DData(const char *key, int nRows, int nCols, flo
 	if (StringMatch(sk, VAR_SOL_NO3)) 
 		m_sol_no3 = data; 
 	else
-		throw ModelException(MID_NutGW, "Set2DData", "Parameter " + sk +
+		throw ModelException(MID_NUTRGW, "Set2DData", "Parameter " + sk +
 		    " does not exist. Please contact the module developer.");
 }
 
@@ -160,7 +160,7 @@ void NutrientinGroundwater::Set2DData(const char *key, int nRows, int nCols, flo
 void NutrientinGroundwater::initialOutputs()
 {
     if (this->m_nCells <= 0)
-        throw ModelException(MID_NutGW, "CheckInputData",
+        throw ModelException(MID_NUTRGW, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
 
 	if (m_gwno3Con == NULL)
@@ -231,7 +231,6 @@ void NutrientinGroundwater::Get1DData(const char *key, int *n, float **data)
     }
     else
     {
-        throw ModelException(MID_NutGW, "GetValue",
-                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+        throw ModelException(MID_NUTRGW, "Get1DData", "Parameter " + sk + " does not exist.");
     }
 }

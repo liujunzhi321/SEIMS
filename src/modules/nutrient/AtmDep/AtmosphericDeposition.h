@@ -19,9 +19,6 @@
  * \date May 2016
  */
 #pragma once
-#ifndef SEIMS_ATMDEP_PARAMS_INCLUDE
-#define SEIMS_ATMDEP_PARAMS_INCLUDE
-
 #include <string>
 #include <ctime>
 #include <cmath>
@@ -68,6 +65,7 @@ private:
     int m_soiLayers;
 
     /// parameters
+
     /// concentration of nitrate in the rain (mg N/L)
     float m_rcn;
     /// concentration of ammonia in the rain (mg N/L)
@@ -77,25 +75,27 @@ private:
     ///atmospheric dry deposition of ammonia (kg/ha)
     float m_drydep_nh4;
 
-    /// input
+    /// inputs
+
     /// precipitation (mm H2O)
     float *m_preci;
     ///// root depth from the soil surface
     //float **m_sol_z;
+
     ///amount of ammonium in layer (kg/ha)
     float **m_sol_nh3;
+	/// amount of nitrate in layer (kg/ha)
+    float **m_sol_no3;
 
-    /// output
+    /// temporaries
+
     /// nitrate added by rainfall (kg/ha)
     float m_addrnh3;
     /// ammonium added by rainfall (kg/ha)
     float m_addrno3;
-	/// amount of nitrate in layer (kg/ha)
-    float **m_sol_no3;
-    /// input & output
     
+	/// outputs
+
     /// amount of NO3 added to soil by rainfall in watershed on current day (kg/ha)
     float m_wshd_rno3;
 };
-
-#endif

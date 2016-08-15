@@ -28,7 +28,8 @@ using namespace std;
 #define NODATA_VALUE    -9999.0f
 // TODO, replace NODATA by NODATA_VALUE thoroughly
 #define NODATA          -99.0f
-
+const float MISSINGFLOAT = -1 * FLT_MAX;
+const float MAXFLOAT  = FLT_MAX;
 /**
  * \def ZERO
  * \brief zero value used in numeric calculation
@@ -351,6 +352,15 @@ extern double Sum(double *a, int n);
  * \return Trimmed string
  */
 extern string &trim(string &s);
+
+// define some macro for string related built-in functions, by Liangjun
+#ifdef MSVC
+#define stringcat strcat_s
+#define stringcpy strcpy_s
+#else
+#define stringcat strcat
+#define stringcpy strcpy
+#endif
 
 #ifndef linux
 #define strprintf sprintf_s

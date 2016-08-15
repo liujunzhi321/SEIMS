@@ -58,9 +58,9 @@ int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFil
 {
 #ifndef linux
 	char szFind[MAX_PATH];
-	strcpy(szFind, lpPath);
-	strcat(szFind, "\\");
-	strcat(szFind, expression);
+	stringcpy(szFind, lpPath);
+	stringcat(szFind, "\\");
+	stringcat(szFind, expression);
 
 	WIN32_FIND_DATA findFileData;
 	HANDLE hFind = ::FindFirstFile(szFind, &findFileData);
@@ -72,9 +72,9 @@ int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFil
 			continue;
 
 		char fullpath[MAX_PATH];
-		strcpy(fullpath, lpPath);
-		strcat(fullpath, "\\");
-		strcat(fullpath, findFileData.cFileName);
+		stringcpy(fullpath, lpPath);
+		stringcat(fullpath, "\\");
+		stringcat(fullpath, findFileData.cFileName);
 
 		vecFiles.push_back(fullpath);
 

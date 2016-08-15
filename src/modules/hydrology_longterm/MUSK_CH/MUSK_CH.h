@@ -3,6 +3,9 @@
  * \author Junzhi Liu
  * \version 1.0
  * \date 26-Jule-2012
+ * 
+ * \revision Liangjun Zhu
+ * \description: 1. Add point source loadings from Scenario.
  */
 #pragma once
 
@@ -12,15 +15,17 @@
 #include <map>
 #include <vector>
 #include "SimulationModule.h"
-
+#include "Scenario.h"
 using namespace std;
-
+using namespace MainBMP;
 /** \defgroup MUSK_CH
  * \ingroup Hydrology_longterm
  * \brief channel flow routing using Muskingum method
  *
  */
-/* MuskWeights coefficients
+
+/* 
+ * \struct MuskWeights coefficients
  */
 struct MuskWeights
 {
@@ -58,6 +63,8 @@ public:
     virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
 
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
+
+	virtual void SetScenario(Scenario *);
 
     bool CheckInputSize(const char *key, int n);
 
@@ -137,7 +144,7 @@ private:
     /// upstream id (The value is -1 if there if no upstream reach)
     vector<vector<int> > m_reachUpStream;
 
-    // id the reaches
+    // the reaches id 
     float *m_reachId;
     /// map from subbasin id to index of the array
     map<int, int> m_idToIndex;
@@ -147,7 +154,13 @@ private:
     float m_co1;
 
     float m_qUpReach;
-
+	/// scenario data
+	Scenario* m_scenario;
+	/* point source operations
+	 * key: unique index, BMPID * 100000 + subScenarioID
+	 * value: point source management factory instance
+	 */
+	map<int, BMPPointSrcFactory*> m_ptSrcFactory;
     //temporary at routing time
     /// reach storage (m3) at time t
     float *m_chStorage;

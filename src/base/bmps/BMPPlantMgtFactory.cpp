@@ -13,7 +13,12 @@ BMPPlantMgtFactory::BMPPlantMgtFactory(int scenarioId, int bmpId, int subScenari
                                        string distribution, string collection, string location)
         : BMPFactory(scenarioId, bmpId, subScenario, bmpType, bmpPriority, distribution, collection, location)
 {
-    m_location = utils::SplitStringForInt(location, ',');
+	if (StringMatch(location, "ALL"))
+	{
+		m_location.clear();
+	}
+	else
+		m_location = utils::SplitStringForInt(location, ',');
 }
 
 BMPPlantMgtFactory::~BMPPlantMgtFactory()
@@ -63,6 +68,7 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t *conn, string &bmpDBName)
             m_name = GetStringFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, BMP_PLTOP_FLD_LUCC))
             m_luccID = GetIntFromBSONITER(&itertor);
+		if(m_luccID < 0) m_luccID = 1; // AGRL	Agricultural Land-Generic
         if (bson_iter_init_find(&itertor, bsonTable, BMP_PLTOP_FLD_MGTOP))
             mgtCode = GetIntFromBSONITER(&itertor);
         //if (bson_iter_init_find(&itertor,bsonTable,BMP_FLD_SEQUENCE))

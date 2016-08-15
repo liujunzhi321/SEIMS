@@ -14,10 +14,8 @@
 
 using namespace std;
 
-/// In nutrient modules, m_nSoilLayers is 3, 0~10mm, 10~100mm, and 100~rootDepth. 
-/// In SEIMS, m_nSoilLayers is 2, 0~100mm, 100~rootDepth.
 AtmosphericDeposition::AtmosphericDeposition(void) :
-//input
+		//input
         m_nCells(-1), m_rcn(-1.f), m_rca(-1.f),m_soiLayers(-1),
         m_preci(NULL), m_drydep_no3(-1.f), m_drydep_nh4(-1.f),
 		m_addrno3(-1.f), m_addrnh3(-1.f),
@@ -33,26 +31,26 @@ AtmosphericDeposition::~AtmosphericDeposition(void)
 bool AtmosphericDeposition::CheckInputData(void)
 {
     if (m_nCells <= 0)
-        throw ModelException("AtmosphericDeposition", "CheckInputData",
+        throw ModelException(MID_ATMDEP, "CheckInputData",
                              "The cell number of the input can not be less than zero.");
     if (this->m_soiLayers < 0)
-        throw ModelException("AtmosphericDeposition", "CheckInputData", "The maximum soil layers number can not be less than 0.");
+        throw ModelException(MID_ATMDEP, "CheckInputData", "The maximum soil layers number can not be less than 0.");
     //if (this->m_cellWidth < 0)
-    //    throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_rca can not be less than 0.");
+    //    throw ModelException(MID_ATMDEP, "CheckInputData", "The m_rca can not be less than 0.");
     if (this->m_rcn < 0)
-        throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_rca can not be less than 0.");
+        throw ModelException(MID_ATMDEP, "CheckInputData", "The m_rca can not be less than 0.");
     if (this->m_rca < 0)
-        throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_rca can not be less than 0.");
+        throw ModelException(MID_ATMDEP, "CheckInputData", "The m_rca can not be less than 0.");
     if (this->m_preci == NULL)
-        throw ModelException("AtmosphericDeposition", "CheckInputData", "The precipitation can not be NULL.");
+        throw ModelException(MID_ATMDEP, "CheckInputData", "The precipitation can not be NULL.");
     if (this->m_drydep_no3 <0)
-        throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_drydep_no3 can not be less than 0.");
+        throw ModelException(MID_ATMDEP, "CheckInputData", "The m_drydep_no3 can not be less than 0.");
     if (this->m_drydep_nh4 <0)
-        throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_drydep_nh4 can not be less than 0.");
+        throw ModelException(MID_ATMDEP, "CheckInputData", "The m_drydep_nh4 can not be less than 0.");
 	if (this->m_sol_no3 == NULL)
-		throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_sol_no3 can not be NULL.");
+		throw ModelException(MID_ATMDEP, "CheckInputData", "The m_sol_no3 can not be NULL.");
 	if (this->m_sol_nh3== NULL)
-		throw ModelException("AtmosphericDeposition", "CheckInputData", "The m_sol_nh3 can not be NULL.");
+		throw ModelException(MID_ATMDEP, "CheckInputData", "The m_sol_nh3 can not be NULL.");
     return true;
 }
 
@@ -67,11 +65,8 @@ bool AtmosphericDeposition::CheckInputSize(const char *key, int n)
             m_nCells = n;
         else
         {
-            //StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
-            ostringstream oss;
-            oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
-            m_nCells << ".\n";
-            throw ModelException("AtmosphericDeposition", "CheckInputSize", oss.str());
+			throw ModelException(MID_ATMDEP, "CheckInputSize", "Input data for " + string(key) + " is invalid with size: " +ValueToString(n)+". The origin size is "
+				+ValueToString(m_nCells)+".\n");
         }
     }
     return true;
@@ -83,7 +78,7 @@ void AtmosphericDeposition::Set1DData(const char *key, int n, float *data)
 	CheckInputSize(key, n);
     if (StringMatch(sk, VAR_PCP))m_preci = data;
     else
-        throw ModelException("AtmosphericDeposition", "Set1DData",
+        throw ModelException(MID_ATMDEP, "Set1DData",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
@@ -98,7 +93,7 @@ void AtmosphericDeposition::SetValue(const char *key, float value)
     else if (StringMatch(sk, VAR_DRYDEP_NO3)) { m_drydep_no3 = value; }
     else if (StringMatch(sk, VAR_DRYDEP_NH4)) { m_drydep_nh4 = value; }
     else
-        throw ModelException("AtmosphericDeposition", "SetSingleData",
+        throw ModelException(MID_ATMDEP, "SetValue",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
@@ -110,14 +105,14 @@ void AtmosphericDeposition::Set2DData(const char *key, int nRows, int nCols, flo
     if (StringMatch(sk, VAR_SOL_NO3)) this->m_sol_no3 = data;
     else if (StringMatch(sk, VAR_SOL_NH3)) this->m_sol_nh3 = data;
     else
-        throw ModelException("AtmosphericDeposition", "Set2DData", "Parameter " + sk +
+        throw ModelException(MID_ATMDEP, "Set2DData", "Parameter " + sk +
                                                                   " does not exist in current module. Please contact the module developer.");
 }
 
 void AtmosphericDeposition::initialOutputs()
 {
     if (this->m_nCells <= 0)
-        throw ModelException("AtmosphericDeposition", "CheckInputData",
+        throw ModelException(MID_ATMDEP, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
     // allocate the output variables
     if (m_addrnh3 < 0.f)
@@ -156,7 +151,7 @@ void AtmosphericDeposition::GetValue(const char *key, float *value)
     string sk(key);
     if (StringMatch(sk, VAR_WSHD_RNO3)) *value = m_wshd_rno3; 
     else
-		throw ModelException("AtmosphericDeposition", "GetValue",
+		throw ModelException(MID_ATMDEP, "GetValue",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
 }
 
@@ -168,6 +163,6 @@ void AtmosphericDeposition::GetValue(const char *key, float *value)
 //    if (StringMatch(sk, VAR_SOL_NO3)) *data = m_sol_no3;
 //	else if (StringMatch(sk, VAR_SOL_NH3)) *data = m_sol_nh3; 
 //    else
-//		throw ModelException("AtmosphericDeposition", "Get2DData", "Output " + sk +
+//		throw ModelException(MID_ATMDEP, "Get2DData", "Output " + sk +
 //                                                                   " does not exist in the Atmospheric Deposition module. Please contact the module developer.");
 //}

@@ -9,11 +9,11 @@
 SUR_MR::SUR_MR(void) : m_nCells(-1), m_dt(-1), m_nSoilLayers(-1), m_tFrozen(NODATA_VALUE), 
 					   m_kRunoff(NODATA_VALUE),m_pMax(NODATA_VALUE),
                        //m_tSnow(NODATA_VALUE), m_t0(NODATA_VALUE), m_snowAccu(NULL), m_snowMelt(NULL),
-                       m_sFrozen(NULL), m_runoffCo(NULL), m_initSoilMoisture(NULL), m_tMean(NULL), 
-					   //m_soilDepth(NULL), 
-					   m_soilThick(NULL) , m_fieldCap(NULL), m_porosity(NULL), m_soilLayers(NULL),
+                       m_sFrozen(NULL), m_runoffCo(NULL), m_initSoilStorage(NULL), m_tMean(NULL), 
+					   // m_soilThick(NULL) ,m_fieldCap(NULL),m_wiltingPoint(NULL), m_porosity(NULL), 
+					   m_sol_awc(NULL), m_sol_sumsat(NULL), m_soilLayers(NULL),
                        m_pNet(NULL), m_sd(NULL), m_soilTemp(NULL), 
-                       m_pe(NULL), m_infil(NULL), m_soilMoisture(NULL)          
+                       m_pe(NULL), m_infil(NULL), m_soilStorage(NULL), m_soilStorageProfile(NULL)       
 {
 }
 
@@ -21,13 +21,8 @@ SUR_MR::~SUR_MR(void)
 {
     if (m_pe != NULL) Release1DArray(m_pe);
     if (m_infil != NULL) Release1DArray(m_infil);
-    if (m_soilMoisture != NULL) Release2DArray(m_nCells, m_soilMoisture);
-    //{
-    //    for (int i = 0; i < m_nCells; i++)
-    //        delete[] m_soilMoisture[i];
-    //    delete[] m_soilMoisture;
-    //    m_soilMoisture = NULL;
-    //}
+    if (m_soilStorage != NULL) Release2DArray(m_nCells, m_soilStorage);
+	if (m_soilStorageProfile != NULL) Release1DArray(m_soilStorageProfile);
 }
 
 void SUR_MR::CheckInputData(void)
@@ -38,7 +33,7 @@ void SUR_MR::CheckInputData(void)
         throw ModelException(MID_SUR_MR, "CheckInputData", "You have not set the time step.");
     if (m_nCells <= 0)
         throw ModelException(MID_SUR_MR, "CheckInputData", "The cell number of the input can not be less than zero.");
-    if (m_initSoilMoisture == NULL)
+    if (m_initSoilStorage == NULL)
         throw ModelException(MID_SUR_MR, "CheckInputData", "The initial soil moisture can not be NULL.");
     if (m_runoffCo == NULL)
         throw ModelException(MID_SUR_MR, "CheckInputData", "The potential runoff coefficient can not be NULL.");
@@ -59,15 +54,18 @@ void SUR_MR::CheckInputData(void)
     if (FloatEqual(m_sFrozen, NODATA_VALUE))
         throw ModelException(MID_SUR_MR, "CheckInputData",
                              "The frozen soil moisture of the input data can not be NODATA.");
-    if (m_fieldCap == NULL)
-        throw ModelException(MID_SUR_MR, "CheckInputData",
-                             "The water content of soil at field capacity of the input data can not be NULL.");
-    //if (m_soilDepth == NULL)
-    //    throw ModelException(MID_SUR_MR, "CheckInputData", "the input data: Soil depth can not be NULL.");
-	if (m_soilThick == NULL)
-		throw ModelException(MID_SUR_MR, "CheckInputData", "the input data: Soil thickness can not be NULL.");
-    if (m_porosity == NULL)
-        throw ModelException(MID_SUR_MR, "CheckInputData", "The soil porosity of the input data can not be NULL.");
+	if (m_sol_awc == NULL)
+		throw ModelException(MID_SUR_MR, "CheckInputData", "The available water amount can not be NULL.");
+ //   if (m_fieldCap == NULL)
+ //       throw ModelException(MID_SUR_MR, "CheckInputData",
+	//	"The water content of soil at field capacity of the input data can not be NULL.");
+	//if (m_wiltingPoint == NULL)
+	//	throw ModelException(MID_SUR_MR, "CheckInputData",
+	//	"The water content of soil at wilting point of the input data can not be NULL.");
+	//if (m_soilThick == NULL)
+	//	throw ModelException(MID_SUR_MR, "CheckInputData", "the input data: Soil thickness can not be NULL.");
+ //   if (m_porosity == NULL)
+ //       throw ModelException(MID_SUR_MR, "CheckInputData", "The soil porosity of the input data can not be NULL.");
 	if (m_tMean == NULL)
         throw ModelException(MID_SUR_MR, "CheckInputData",
                              "The mean air temperature of the input data can not be NULL.");
@@ -93,17 +91,27 @@ void SUR_MR::initialOutputs()
 	{
         m_pe = new float[m_nCells];
         m_infil = new float[m_nCells];
-        m_soilMoisture = new float *[m_nCells];      
+        m_soilStorage = new float *[m_nCells];
+		m_soilStorageProfile = new float [m_nCells];
 #pragma omp parallel for
         for (int i = 0; i < m_nCells; i++)
         {
-			m_soilMoisture[i] = new float[m_nSoilLayers];
+			Initialize1DArray(m_nSoilLayers, m_soilStorage[i], 0.f);
             m_pe[i] = 0.f;
             m_infil[i] = 0.f;
-            for (int j = 0; j < (int)m_soilLayers[i]; j++)
-                m_soilMoisture[i][j] = m_initSoilMoisture[i] * m_fieldCap[i][j] * m_soilThick[i][j]; /// mm
-			for(int k = (int)m_soilLayers[i]; k < m_nSoilLayers; k++)
-				m_soilMoisture[i][k] = NODATA_VALUE;
+			m_soilStorageProfile[i] = 0.f;
+            for (int j = 0; j < (int)m_soilLayers[i]; j++){
+				/// mm
+                //m_soilStorage[i][j] = m_initSoilStorage[i] * (m_fieldCap[i][j] - m_wiltingPoint[i][j]) * m_soilThick[i][j]; 
+				if(m_initSoilStorage[i] >= 0.f && m_initSoilStorage[i] <= 1.f && m_sol_awc[i][j] >= 0.f){
+					m_soilStorage[i][j] = m_initSoilStorage[i] * m_sol_awc[i][j];
+				}
+				else
+				{
+					m_soilStorage[i][j] = 0.f;
+				}
+				m_soilStorageProfile[i] += m_soilStorage[i][j];
+			}
         }
     }
 }
@@ -136,15 +144,16 @@ int SUR_MR::Execute()
 		hWater = m_pNet[i] + m_sd[i];
         if (hWater > 0.f)
         {
-            float sm = 0.f, por = 0.f;
-            for (int j = 0; j < (int)m_soilLayers[i]; j++)
-            {
-                sm += m_soilMoisture[i][j]; ///  mm H2O
-                por += m_porosity[i][j] * m_soilThick[i][j]; /// unit can be seen as mm H2O 
-            }
-
-            float smFraction = min(sm / por, 1.f);
-
+			/// in the new version, sm is replaced by m_soilStorageProfile. By lj
+			/// por is replaced by m_sol_sumsat which is calculated by (sat - wp)
+            //float sm = 0.f, por = 0.f;
+            //for (int j = 0; j < (int)m_soilLayers[i]; j++)
+            //{
+            //    sm += m_soilStorage[i][j]; ///  mm H2O
+            //    por += m_porosity[i][j] * m_soilThick[i][j]; /// unit can be seen as mm H2O 
+            //}
+            // float smFraction = min(sm / por, 1.f);
+			float smFraction = min(m_soilStorageProfile[i]/m_sol_sumsat[i], 1.f);
             // for frozen soil, no infiltration will occur
             if (m_soilTemp[i] <= m_tFrozen && smFraction >= m_sFrozen)
             {
@@ -193,7 +202,7 @@ int SUR_MR::Execute()
             m_pe[i] = 0.f;
             m_infil[i] = 0.f;
         }
-		/// if m_infil > 0., m_soilMoisture need to be updated here. 
+		/// if m_infil > 0., m_soilStorage need to be updated here. 
 		/// But currently, this is implemented in percolation modules. 		
     }
     return 0;
@@ -242,10 +251,11 @@ void SUR_MR::Set1DData(const char *key, int n, float *data)
     if (StringMatch(sk, VAR_RUNOFF_CO))m_runoffCo = data;
     else if (StringMatch(sk, VAR_NEPR))m_pNet = data;
     else if (StringMatch(sk, VAR_TMEAN))m_tMean = data;
-    else if (StringMatch(sk, VAR_MOIST_IN))m_initSoilMoisture = data;
+    else if (StringMatch(sk, VAR_MOIST_IN))m_initSoilStorage = data;
     else if (StringMatch(sk, VAR_DPST))m_sd = data;
     else if (StringMatch(sk, VAR_SOTE))m_soilTemp = data;
 	else if (StringMatch(sk, VAR_SOILLAYERS))m_soilLayers = data;
+	else if (StringMatch(sk, VAR_SOL_SUMSAT))m_sol_sumsat = data;
     //else if (StringMatch(sk, VAR_SNAC))m_snowAccu = data;
     //else if (StringMatch(sk, VAR_SNME))m_snowMelt = data;
     else
@@ -258,10 +268,10 @@ void SUR_MR::Set2DData(const char *key, int nrows, int ncols, float **data)
     string sk(key);
     CheckInputSize(key, nrows);
     m_nSoilLayers = ncols;
-    if (StringMatch(sk, VAR_POROST))m_porosity = data;
-    else if (StringMatch(sk, VAR_FIELDCAP))m_fieldCap = data;
-    //else if (StringMatch(sk, VAR_SOILDEPTH))m_soilDepth = data;
-	else if (StringMatch(sk, VAR_SOILTHICK))m_soilThick = data;
+    if (StringMatch(sk, VAR_SOL_AWC))m_sol_awc = data;
+	//else if (StringMatch(sk, VAR_FIELDCAP))m_fieldCap = data;
+	//else if (StringMatch(sk, VAR_SOILTHICK))m_soilThick = data;
+    //else if (StringMatch(sk, VAR_POROST))m_porosity = data;
     else
         throw ModelException(MID_SUR_MR, "Set2DData", "Parameter " + sk
                                                       + " does not exist. Please contact the module developer.");
@@ -273,6 +283,7 @@ void SUR_MR::Get1DData(const char *key, int *n, float **data)
     string sk(key);
     if (StringMatch(sk, VAR_INFIL)) *data = m_infil;     //infiltration
     else if (StringMatch(sk, VAR_EXCP)) *data = m_pe; // excess precipitation
+	else if (StringMatch(sk, VAR_SOL_SW)) *data = m_soilStorageProfile;
     else
         throw ModelException(MID_SUR_MR, "Get1DData", "Result " + sk +
                                                       " does not exist in current module. Please contact the module developer.");
@@ -285,11 +296,9 @@ void SUR_MR::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
     string sk(key);
     *nRows = m_nCells;
     *nCols = m_nSoilLayers;
-
-    if (StringMatch(sk, VAR_SOMO))
-        *data = m_soilMoisture;
+    if (StringMatch(sk, VAR_SOL_ST))
+        *data = m_soilStorage;
     else
         throw ModelException(MID_SUR_MR, "Get2DData", "Output " + sk
                                                       + " does not exist. Please contact the module developer.");
 }
-

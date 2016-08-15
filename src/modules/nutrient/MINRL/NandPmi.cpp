@@ -18,21 +18,21 @@ using namespace std;
 
 NandPim::NandPim(void) :
 		//input
-        m_nCells(-1), m_cellWidth(-1), m_soilLayers(-1), m_cmn(-1), m_cdn(-1), m_sdnco(-1),m_nactfr(-1), m_psp(-1),
+        m_nCells(-1), m_cellWidth(-1.f), m_soilLayers(-1), m_cmn(-1.f), m_cdn(-1.f), m_sdnco(-1.f),m_nactfr(-1.f), m_psp(-1.f),
         m_nSoilLayers(NULL), m_sol_z(NULL), m_sol_thick(NULL), m_sol_clay(NULL), m_sol_bd(NULL),
         m_landcover(NULL), m_rsdco_pl(NULL), m_sol_cbn(NULL), 
         m_sol_wpmm(NULL),  m_sol_awc(NULL),
         m_sol_solp(NULL), m_sol_orgp(NULL),m_sol_actp(NULL), m_sol_stap(NULL),  m_sol_fop(NULL), 
         m_sol_no3(NULL),m_sol_nh3(NULL),m_sol_orgn(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL),
+		m_sol_cov(NULL),m_sol_rsd(NULL), 
 		/// from other modules
-		m_sol_cov(NULL),m_sol_rsd(NULL), m_somo(NULL),m_sote(NULL),
+		m_soilStorage(NULL),m_sote(NULL),
 		/// cell scale output
 		m_hmntl(NULL), m_hmptl(NULL), m_rmn2tl(NULL),
 		m_rmptl(NULL), m_rwntl(NULL), m_wdntl(NULL), m_rmp1tl(NULL), m_roctl(NULL),
 		/// watershed scale statistics
-		m_wshd_dnit(-1), m_wshd_hmn(-1), m_wshd_hmp(-1), m_wshd_rmn(-1), m_wshd_rmp(-1), m_wshd_rwn(-1),
-        m_wshd_nitn(-1), m_wshd_voln(-1), m_wshd_pal(-1), m_wshd_pas(-1)
-		
+		m_wshd_dnit(-1.f), m_wshd_hmn(-1.f), m_wshd_hmp(-1.f), m_wshd_rmn(-1.f), m_wshd_rmp(-1.f), 
+        m_wshd_rwn(-1.f), m_wshd_nitn(-1.f), m_wshd_voln(-1.f), m_wshd_pal(-1.f), m_wshd_pas(-1.f)	
 {
 }
 
@@ -59,11 +59,8 @@ bool NandPim::CheckInputSize(const char *key, int n)
             m_nCells = n;
         else
         {
-            //StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
-            ostringstream oss;
-            oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
-            m_nCells << ".\n";
-            throw ModelException(MID_MINRL, "CheckInputSize", oss.str());
+			throw ModelException(MID_MINRL, "CheckInputSize", "Input data for " + string(key) + " is invalid with size: "+ ValueToString(n) +
+				". The origin size is " + ValueToString(m_nCells) + ".\n");
         }
     }
     return true;
@@ -123,8 +120,8 @@ bool NandPim::CheckInputData()
         throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_orgp can not be NULL.");
     if (this->m_sol_solp == NULL)
         throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_solp can not be NULL.");
-    if (this->m_somo == NULL)
-        throw ModelException(MID_MINRL, "CheckInputData", "The m_somo can not be NULL.");
+    if (this->m_soilStorage == NULL)
+        throw ModelException(MID_MINRL, "CheckInputData", "The m_soilStorage can not be NULL.");
     if (this->m_sote == NULL)
         throw ModelException(MID_MINRL, "CheckInputData", "The m_sote can not be NULL.");
     return true;
@@ -142,7 +139,7 @@ void NandPim::SetValue(const char *key, float value)
     else if (StringMatch(sk, VAR_PSP)) { this->m_psp = value; }
     else
         throw ModelException(MID_MINRL, "SetValue", "Parameter " + sk +
-                                                    " does not exist in CLIMATE method. Please contact the module developer.");
+                                                    " does not exist. Please contact the module developer.");
 }
 
 void NandPim::Set1DData(const char *key, int n, float *data)
@@ -152,12 +149,12 @@ void NandPim::Set1DData(const char *key, int n, float *data)
     if (StringMatch(sk, VAR_LCC)) { this->m_landcover = data; }
 	else if (StringMatch(sk, VAR_PL_RSDCO)) { this->m_rsdco_pl = data; }
 	else if (StringMatch(sk, VAR_SOL_RSDIN)) { this->m_sol_rsdin = data; }
-	//else if (StringMatch(sk, VAR_SOL_COV)) { this->m_sol_cov = data; }
+	else if (StringMatch(sk, VAR_SOL_COV)) { this->m_sol_cov = data; }
 	else if (StringMatch(sk, VAR_SOILLAYERS)) { this->m_nSoilLayers = data; }
 	else if (StringMatch(sk, VAR_SOTE)) { this->m_sote = data; }
     else
         throw ModelException(MID_MINRL, "Set1DData", "Parameter " + sk +
-                                                    " does not exist in current module. Please contact the module developer.");
+                                                    " does not exist. Please contact the module developer.");
 }
 
 void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
@@ -168,7 +165,7 @@ void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
 	if (StringMatch(sk, VAR_SOL_CBN)) { this->m_sol_cbn = data; }
 	else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
 	else if (StringMatch(sk, VAR_CLAY)) { this->m_sol_clay = data; }
-    else if (StringMatch(sk, VAR_SOMO)) { this->m_somo = data; }
+    else if (StringMatch(sk, VAR_SOL_ST)) { this->m_soilStorage = data; }
     else if (StringMatch(sk, VAR_SOL_AWC)) { this->m_sol_awc = data; }
 	else if (StringMatch(sk, VAR_SOL_NO3)) { this->m_sol_no3 = data; }
 	else if (StringMatch(sk, VAR_SOL_NH3)) { this->m_sol_nh3 = data; }
@@ -178,10 +175,10 @@ void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
     else if (StringMatch(sk, VAR_SOL_WPMM)) { this->m_sol_wpmm = data; }
 	else if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
 	else if (StringMatch(sk, VAR_SOILTHICK)) { this->m_sol_thick = data; }
-	//else if (StringMatch(sk, VAR_SOL_RSD)) this->m_sol_rsd = data;
+	else if (StringMatch(sk, VAR_SOL_RSD)) this->m_sol_rsd = data;
     else
         throw ModelException(MID_MINRL, "Set2DData", "Parameter " + sk +
-                                                    " does not exist in current module. Please contact the module developer.");
+                                                    " does not exist. Please contact the module developer.");
 }
 
 void NandPim::initialOutputs()
@@ -212,18 +209,9 @@ void NandPim::initialOutputs()
 		Initialize2DArray(m_nCells, m_soilLayers, m_sol_actp, 0.f);
 		Initialize2DArray(m_nCells, m_soilLayers, m_sol_stap, 0.f);
 				
-//#pragma omp parallel for
-	// calculate sol_cbn for lower layers if only have upper layer's data
+#pragma omp parallel for
 	 for (int i = 0; i < m_nCells; i++)
 	 {
-		 /// NO NEED. this is already done in preprocess code. By LJ
-		 // calculate sol_cbn for lower layers if only have upper layer's data
-		 //if(m_nSoilLayers[i] >= 3 && (m_sol_cbn[i][2]) <= 0)
-		 //{
-			// for (int k = 2; k < (int)m_nSoilLayers[i]; k++)
-			//	 m_sol_cbn[i][k] = m_sol_cbn[i - 1][k] * exp(-.001f * m_sol_thick[i][k]);
-		 //}
-		 
 		 // fresh organic P / N
 		 m_sol_fop[i][0] = m_sol_cov[i] * .0010f;
 		 m_sol_fon[i][0] = m_sol_cov[i] * .0055f;
@@ -260,10 +248,6 @@ void NandPim::initialOutputs()
 
 			// currently not used
 			//sumorgn = sumorgn + m_sol_aorgn[i][k] + m_sol_orgn[i][k] + m_sol_fon[i][k];
-
-			// NO NEED. this is already done in preprocess code. By LJ
-			//m_sol_orgp[i][k] = m_sol_orgp[i][k] * wt1;
-			//m_sol_solp[i][k] = m_sol_solp[i][k] * wt1;
 
 			if (m_sol_orgp[i][k] <= 0.f)
 			{
@@ -322,9 +306,6 @@ void NandPim::initialOutputs()
 			//m_sol_hum[i][k] = m_sol_cbn[i][k] * wt1 * 17200.f;
 			//summinp = summinp + m_sol_solp[i][k] + m_sol_actp[i][k] + m_sol_stap[i][k];
 			//sumorgp = sumorgp + m_sol_orgp[i][k] + m_sol_fop[i][k];
-
-			/// NO NEED since m_sol_rsd is initialized as 0.f
-			//if(k > 0) m_sol_rsd[i][k] = 0.f;
 		 }
 	 }
 	}
@@ -341,14 +322,6 @@ void NandPim::initialOutputs()
         m_wshd_voln = 0.f;
         m_wshd_pal = 0.f;
         m_wshd_pas = 0.f;
-        //m_hmntl = 0.f;
-        //m_hmptl = 0.f;
-        //m_rmn2tl = 0.f;
-        //m_rmptl = 0.f;
-        //m_rwntl = 0.f;
-        //m_wdntl = 0.f;
-        //m_rmp1tl = 0.f;
-        //m_roctl = 0.f;
     }
 }
 
@@ -389,11 +362,11 @@ void NandPim::CalculateMinerandImmobi(int i)
         {
             // compute soil water factor (sut)
             sut = 0.f;
-            if (m_somo[i][kk] < 0)
+            if (m_soilStorage[i][kk] < 0)
             {
-                m_somo[i][kk] = 0.0000001f;
+                m_soilStorage[i][kk] = 0.0000001f;
             }
-            sut = 0.1f + 0.9f * sqrt(m_somo[i][kk] / m_sol_awc[i][kk]);
+            sut = 0.1f + 0.9f * sqrt(m_soilStorage[i][kk] / m_sol_awc[i][kk]);
             sut = max(0.05f, sut);
 
             //compute soil temperature factor
@@ -589,7 +562,7 @@ void NandPim::CalculateMinerandVolati(int i)
             float swf = 0.f;
             //Calculate nvtf, equation 3:1.3.2 and 3:1.3.3 in SWAT Theory 2009, p192
             sw25 = m_sol_wpmm[i][k] + 0.25f * m_sol_awc[i][k];
-            swwp = m_sol_wpmm[i][k] + m_somo[i][k];
+            swwp = m_sol_wpmm[i][k] + m_soilStorage[i][k];
             if (swwp < sw25)
             {
                 swf = (swwp - m_sol_wpmm[i][k]) / (sw25 - m_sol_wpmm[i][k]);

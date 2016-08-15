@@ -8,7 +8,8 @@
 
 using namespace std;
 
-MGTOpt_SWAT::MGTOpt_SWAT(void) : m_scenario(NULL), m_nCells(-1), m_nSub(-1), m_cellWidth(NODATA_VALUE), m_cellArea(NODATA_VALUE),
+MGTOpt_SWAT::MGTOpt_SWAT(void) : m_scenario(NULL), m_nCells(-1), m_nSub(-1), m_soilLayers(-1),
+                                 m_cellWidth(NODATA_VALUE), m_cellArea(NODATA_VALUE),
         /// add parameters from MongoDB
                                  m_subBsnID(NULL), m_landUse(NULL), m_landCover(NULL), m_mgtFields(NULL),
         /// Soil related parameters from MongoDB
@@ -65,10 +66,57 @@ MGTOpt_SWAT::~MGTOpt_SWAT(void)
     if (m_scenario != NULL) delete m_scenario;
     if (!m_mgtFactory.empty())
     {
-        for (map<int, BMPPlantMgtFactory *>::iterator it = m_mgtFactory.begin(); it != m_mgtFactory.end(); it++)
+        for (map<int, BMPPlantMgtFactory *>::iterator it = m_mgtFactory.begin(); it != m_mgtFactory.end();)
         {
-            if (it->second != NULL) delete it->second;
+            if (it->second != NULL)
+                delete it->second;
+            it = m_mgtFactory.erase(it);
         }
+        m_mgtFactory.clear();
+    }
+    if (!m_landuseLookupMap.empty())
+    {
+        for (map<int, float *>::iterator it = m_landuseLookupMap.begin(); it != m_landuseLookupMap.end();)
+        {
+            if (it->second != NULL)
+                delete[] it->second;
+            it->second = NULL;
+            it = m_landuseLookupMap.erase(it);
+        }
+        m_landuseLookupMap.clear();
+    }
+    if (!m_cropLookupMap.empty())
+    {
+        for (map<int, float *>::iterator it = m_cropLookupMap.begin(); it != m_cropLookupMap.end();)
+        {
+            if (it->second != NULL)
+                delete[] it->second;
+            it->second = NULL;
+            it = m_cropLookupMap.erase(it);
+        }
+        m_cropLookupMap.clear();
+    }
+    if (!m_fertilizerLookupMap.empty())
+    {
+        for (map<int, float *>::iterator it = m_fertilizerLookupMap.begin(); it != m_fertilizerLookupMap.end();)
+        {
+            if (it->second != NULL)
+                delete[] it->second;
+            it->second = NULL;
+            it = m_fertilizerLookupMap.erase(it);
+        }
+        m_fertilizerLookupMap.clear();
+    }
+    if (!m_tillageLookupMap.empty())
+    {
+        for (map<int, float *>::iterator it = m_tillageLookupMap.begin(); it != m_tillageLookupMap.end();)
+        {
+            if (it->second != NULL)
+                delete[] it->second;
+            it->second = NULL;
+            it = m_tillageLookupMap.erase(it);
+        }
+        m_tillageLookupMap.clear();
     }
     /// release output parameters
 
@@ -81,8 +129,8 @@ void MGTOpt_SWAT::SetValue(const char *key, float data)
     else if (StringMatch(sk, VAR_CSWAT)) m_cswat = (int) data;
     else if (StringMatch(sk, Tag_CellWidth)) m_cellWidth = data;
     else
-        throw ModelException(MID_MGT_SWAT, "SetValue", "Parameter " + sk
-                                                       +" does not exist in current module. Please contact the module developer.");
+        throw ModelException(MID_MGT_SWAT, "SetValue", "Parameter " + sk +
+                " does not exist in current module. Please contact the module developer.");
 }
 
 bool MGTOpt_SWAT::CheckInputSize(const char *key, int n)
@@ -107,14 +155,15 @@ bool MGTOpt_SWAT::CheckInputSize(const char *key, int n)
 void MGTOpt_SWAT::Set1DData(const char *key, int n, float *data)
 {
     string sk(key);
-	if (StringMatch(sk, VAR_SBGS)||StringMatch(sk, VAR_SBGS)){
-		m_deepWaterDepth = data;
-		m_shallowWaterDepth = data;
-		return;
-	}
+    if (StringMatch(sk, VAR_SBGS))
+    {
+        m_deepWaterDepth = data;
+        m_shallowWaterDepth = data;
+        return;
+    }
     CheckInputSize(key, n);
-	if (StringMatch(sk, VAR_SUBBSN)) m_subBsnID = data;
-	else if (StringMatch(sk, VAR_MGT_FIELD)) m_mgtFields = data;
+    if (StringMatch(sk, VAR_SUBBSN)) m_subBsnID = data;
+    else if (StringMatch(sk, VAR_MGT_FIELD)) m_mgtFields = data;
     else if (StringMatch(sk, VAR_LANDUSE)) m_landUse = data;
     else if (StringMatch(sk, VAR_LANDCOVER)) m_landCover = data;
         /// Soil related parameters from MongoDB
@@ -147,11 +196,11 @@ void MGTOpt_SWAT::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_LAST_SOILRD)) m_lastSoilRootDepth = data;
         /// Irrigation operation
     else if (StringMatch(sk, VAR_FR_STRSWTR)) m_frStrsWa = data;
-    //else if (StringMatch(sk, VAR_DEEPST)) m_deepWaterDepth = data;
-    //else if (StringMatch(sk, VAR_SHALLST)) m_shallowWaterDepth = data;
+        //else if (StringMatch(sk, VAR_DEEPST)) m_deepWaterDepth = data;
+        //else if (StringMatch(sk, VAR_SHALLST)) m_shallowWaterDepth = data;
     else
         throw ModelException(MID_MGT_SWAT, "Set1DData", "Parameter " + sk +
-                                                        " does not exist in current module. Please contact the module developer.");
+                                                        " does not exist. Please contact the module developer.");
 }
 
 bool MGTOpt_SWAT::CheckInputSize2D(const char *key, int n, int col)
@@ -167,8 +216,9 @@ bool MGTOpt_SWAT::CheckInputSize2D(const char *key, int n, int col)
         else
         {
             throw ModelException(MID_MGT_SWAT, "CheckInputSize2D", "Input data for " + string(key) +
-                                                                   " is invalid. All the layers of input 2D raster data should have same size of " + 
-																   ValueToString(m_soilLayers)+" instead of " + ValueToString(col)  +".");
+                                                                   " is invalid. All the layers of input 2D raster data should have same size of " +
+                                                                   ValueToString(m_soilLayers) + " instead of " +
+                                                                   ValueToString(col) + ".");
             return false;
         }
     }
@@ -183,36 +233,37 @@ void MGTOpt_SWAT::Set2DData(const char *key, int n, int col, float **data)
     {
         m_landuseLookup = data;
         m_landuseNum = n;
+        initializeLanduseLookup();
         if (col != (int) LANDUSE_PARAM_COUNT)
             throw ModelException(MID_MGT_SWAT, "ReadLanduseLookup", "The field number " + ValueToString(col) +
                                                                     "is not coincident with LANDUSE_PARAM_COUNT: " +
                                                                     ValueToString((int) LANDUSE_PARAM_COUNT));
         return;
-    }
-    else if (StringMatch(sk, VAR_CROP_LOOKUP))
+    } else if (StringMatch(sk, VAR_CROP_LOOKUP))
     {
         m_cropLookup = data;
         m_cropNum = n;
+        initializeCropLookup();
         if (col != (int) CROP_PARAM_COUNT)
             throw ModelException(MID_MGT_SWAT, "ReadCropLookup", "The field number " + ValueToString(col) +
                                                                  "is not coincident with CROP_PARAM_COUNT: " +
                                                                  ValueToString((int) CROP_PARAM_COUNT));
         return;
-    }
-    else if (StringMatch(sk, VAR_FERTILIZER_LOOKUP))
+    } else if (StringMatch(sk, VAR_FERTILIZER_LOOKUP))
     {
         m_fertilizerLookup = data;
         m_fertilizerNum = n;
+        initializeFertilizerLookup();
         if (col != (int) FERTILIZER_PARAM_COUNT)
             throw ModelException(MID_MGT_SWAT, "ReadFertilizerLookup", "The field number " + ValueToString(col) +
                                                                        "is not coincident with FERTILIZER_PARAM_COUNT: " +
                                                                        ValueToString((int) FERTILIZER_PARAM_COUNT));
         return;
-    }
-    else if (StringMatch(sk, VAR_TILLAGE_LOOKUP))
+    } else if (StringMatch(sk, VAR_TILLAGE_LOOKUP))
     {
         m_tillageLookup = data;
         m_tillageNum = n;
+        initializeTillageLookup();
         if (col != (int) TILLAGE_PARAM_COUNT)
             throw ModelException(MID_MGT_SWAT, "ReadTillageLookup", "The field number " + ValueToString(col) +
                                                                     "is not coincident with TILLAGE_PARAM_COUNT: " +
@@ -252,14 +303,15 @@ void MGTOpt_SWAT::SetScenario(Scenario *sce)
 {
     if (NULL != sce)
         m_scenario = sce;
-    map<int, BMPFactory *> tmpBMPFactories = m_scenario->GetBMPFactories();
+    map <int, BMPFactory* > *tmpBMPFactories = m_scenario->GetBMPFactories();
     if (!m_mgtFactory.empty())
         m_mgtFactory.clear();
-    for (map<int, BMPFactory *>::iterator it = tmpBMPFactories.begin(); it != tmpBMPFactories.end(); it++)
+    for (map<int, BMPFactory *>::iterator it = tmpBMPFactories->begin(); it != tmpBMPFactories->end(); it++)
     {
-        /// Key is uniqueBMPID, which is calculated by Landuse_ID * 100 + subScenario;
+        /// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
         if (it->first / 100000 == BMP_TYPE_PLANT_MGT)
         {
+            /// calculate unique index for the key of m_mgtFactory, using Landuse_ID * 100 + subScenario
             int uniqueIdx = ((BMPPlantMgtFactory *) it->second)->GetLUCCID() * 100 + it->second->GetSubScenarioId();
             m_mgtFactory[uniqueIdx] = (BMPPlantMgtFactory *) it->second;
         }
@@ -372,32 +424,25 @@ bool MGTOpt_SWAT::GetOperationCode(int i, int &factoryID, vector<int> &nOps)
     /// 1. Is there any plant management operations are suitable to current cell.
     for (map<int, BMPPlantMgtFactory *>::iterator it = m_mgtFactory.begin(); it != m_mgtFactory.end(); it++)
     {
-        /// Key is uniqueBMPID, which is calculated by Landuse_ID * 100 + subScenario;
+        /// Key is unique plant management Index, which is calculated by Landuse_ID * 100 + subScenario;
         if (curLanduseID == (it->first) / 100)
         {
             /// 2. If current cell located in the locations of this BMPPlantMgtFactory
-            if (ValueInVector(curMgtField, it->second->GetLocations()))
+            ///    locations is empty means this operation may be applied to all cells
+            if (it->second->GetLocations().empty() || ValueInVector(curMgtField, it->second->GetLocations()))
             {
                 factoryID = it->first;
                 break;
             }
-            // replaced by LJ, 2016-7-5
-            //vector<int> tmpLocations = it->second->GetLocations();
-            //vector<int>::iterator findIter = find(tmpLocations.begin(), tmpLocations.end(), curMgtField);
-            //if(findIter != tmpLocations.end())
-            //{
-            //	factoryID = it->first;
-            //	break;
-            //}
         }
     }
     if (factoryID < 0) return false;
     /// 3. Figure out if any management operation should be applied, i.e., find sequence IDs (nOps)
     vector<int> tmpOpSeqences = m_mgtFactory[factoryID]->GetOperationSequence();
-    map<int, PlantManagementOperation *> tmpOperations = m_mgtFactory[factoryID]->GetOperations();
+    map < int, PlantManagementOperation * > tmpOperations = m_mgtFactory[factoryID]->GetOperations();
     for (vector<int>::iterator seqIter = tmpOpSeqences.begin(); seqIter != tmpOpSeqences.end(); seqIter++)
     {
-        /// *seqIter is calculated by: index * 1000 + operationCode
+        /// *seqIter is calculated by: seqNo. * 1000 + operationCode
         bool dateDepent = false, huscDepent = false;
         /// If operation applied date (month and day) are defined
         if (tmpOperations[*seqIter]->GetMonth() != 0 && tmpOperations[*seqIter]->GetDay() != 0)
@@ -412,11 +457,11 @@ bool MGTOpt_SWAT::GetOperationCode(int i, int &factoryID, vector<int> &nOps)
         if (tmpOperations[*seqIter]->GetHUFraction() >= 0.f)
         {
             float aphu; /// fraction of total heat units accumulated
-            if (FloatEqual(m_igro[i], 0.))
+            if (FloatEqual(m_igro[i], 0.f))
                 aphu = m_phuBase[i];
             else
                 aphu = m_phuAcc[i];
-            if (m_dormFlag[i] == 1)
+            if (FloatEqual(m_dormFlag[i], 1.f))
                 aphu = NODATA_VALUE;
             if (aphu >= tmpOperations[*seqIter]->GetHUFraction())
                 huscDepent = true;
@@ -441,10 +486,9 @@ void MGTOpt_SWAT::initializeLanduseLookup()
     if (m_landuseNum <= 0)
         throw ModelException(MID_MGT_SWAT, "CheckInputData", "Landuse number must be greater than 0");
 
-    if (m_landuseLookup != NULL && m_landuseNum > 0)
+    // when m_landuseLookup != NULL && m_landuseNum > 0
+    if (m_landuseLookupMap.empty())
     {
-        if (!m_landuseLookupMap.empty())
-            m_landuseLookupMap.clear();
         for (int i = 0; i < m_landuseNum; i++)
             m_landuseLookupMap[(int) m_landuseLookup[i][1]] = m_landuseLookup[i];
     }
@@ -457,10 +501,9 @@ void MGTOpt_SWAT::initializeCropLookup()
         throw ModelException(MID_MGT_SWAT, "CheckInputData", "Crop lookup array must not be NULL");
     if (m_cropNum <= 0) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Crop number must be greater than 0");
 
-    if (m_cropLookup != NULL && m_cropNum > 0)
+    // when m_cropLookup != NULL && m_cropNum > 0
+    if (m_cropLookupMap.empty())
     {
-        if (!m_cropLookupMap.empty())
-            m_cropLookupMap.clear();
         for (int i = 0; i < m_cropNum; i++)
             m_cropLookupMap[(int) m_cropLookup[i][1]] = m_cropLookup[i];
     }
@@ -474,10 +517,9 @@ void MGTOpt_SWAT::initializeFertilizerLookup()
     if (m_fertilizerNum <= 0)
         throw ModelException(MID_MGT_SWAT, "CheckInputData", "Fertilizer number must be greater than 0");
 
-    if (m_fertilizerLookup != NULL && m_fertilizerNum > 0)
+    //when m_fertilizerLookup != NULL && m_fertilizerNum > 0
+    if (m_fertilizerLookupMap.empty())
     {
-        if (!m_fertilizerLookupMap.empty())
-            m_fertilizerLookupMap.clear();
         for (int i = 0; i < m_fertilizerNum; i++)
             m_fertilizerLookupMap[(int) m_fertilizerLookup[i][1]] = m_fertilizerLookup[i];
     }
@@ -491,10 +533,9 @@ void MGTOpt_SWAT::initializeTillageLookup()
     if (m_tillageNum <= 0)
         throw ModelException(MID_MGT_SWAT, "CheckInputData", "Tillage number must be greater than 0");
 
-    if (m_tillageLookup != NULL && m_tillageNum > 0)
+    // when m_tillageLookup != NULL && m_tillageNum > 0
+    if (m_tillageLookupMap.empty())
     {
-        if (!m_tillageLookupMap.empty())
-            m_tillageLookupMap.clear();
         for (int i = 0; i < m_tillageNum; i++)
             m_tillageLookupMap[(int) m_tillageLookup[i][1]] = m_tillageLookup[i];
     }
@@ -502,10 +543,10 @@ void MGTOpt_SWAT::initializeTillageLookup()
 
 void MGTOpt_SWAT::ExecutePlantOperation(int i, int &factoryID, int nOp)
 {
-    initializeLanduseLookup();
+    //initializeLanduseLookup();
     PlantOperation *curOperation = (PlantOperation *) m_mgtFactory[factoryID]->GetOperations()[nOp];
     /// initialize parameters
-    m_igro[i] = 1;
+    m_igro[i] = 1.f;
     m_HarvestIdxTarg[i] = curOperation->HITarg();
     m_BiomassTarg[i] = curOperation->BIOTarg(); /// kg/ha
     m_curYearMat[i] = curOperation->CurYearMaturity();
@@ -531,6 +572,11 @@ void MGTOpt_SWAT::ExecutePlantOperation(int i, int &factoryID, int nOp)
 
     /// compare maximum rooting depth in soil to maximum rooting depth of plant
     m_soilZMX[i] = m_soilDepth[i][(int) m_nSoilLayers[i] - 1];
+    /// if the land cover does existed, throw an exception.
+    if (m_landuseLookupMap.find(int(m_landCover[i])) == m_landuseLookupMap.end())
+        throw ModelException(MID_MGT_SWAT, "ExecutePlantOperation",
+                             "Land use ID: " + ValueToString(int(m_landCover[i])) +
+                             " does not existed in Landuse lookup table, please check and retry!");
     float pltRootDepth = m_landuseLookupMap[(int) m_landCover[i]][LANDUSE_PARAM_ROOT_DEPTH_IDX];
     m_soilZMX[i] = min(m_soilZMX[i], pltRootDepth);
 
@@ -560,7 +606,7 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
     m_irrApplyDepth = curOperation->IRRApplyDepth();
     m_irrEfficiency = curOperation->IRREfficiency();
     m_irrFlag[i] = 1;
-	int tmpSubbsnID = m_subBsnID[i];
+    int tmpSubbsnID = m_subBsnID[i];
     if (m_irrSource > IRR_SRC_RES) /// irrigation from reach and reservoir are irr_rch.f and irr_res.f, respectively
     {
         /// call irrsub.f
@@ -615,8 +661,7 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
             {
                 m_impoundVolume += vol / (10.f * m_impoundArea);
                 m_appliedWater[i] = vmm;  ///added rice irrigation 11/10/11
-            }
-            else
+            } else
             {
                 /// Call irrigate(i, vmm) /// irrigate.f
                 m_appliedWater[i] = vmm * (1.f - curOperation->IRRSQfrac());
@@ -663,7 +708,7 @@ void MGTOpt_SWAT::ExecuteIrrigationOperation(int i, int &factoryID, int nOp)
 void MGTOpt_SWAT::ExecuteFertilizerOperation(int i, int &factoryID, int nOp)
 {
     /// translate from fert.f, remains CSWAT = 1 and 2 to be done!!! by LJ
-    initializeFertilizerLookup();
+    //initializeFertilizerLookup();
     FertilizerOperation *curOperation = (FertilizerOperation *) m_mgtFactory[factoryID]->GetOperations()[nOp];
     /// initialize parameters
     int fertilizerID = curOperation->FertilizerID();
@@ -672,7 +717,9 @@ void MGTOpt_SWAT::ExecuteFertilizerOperation(int i, int &factoryID, int nOp)
     /// fraction of fertilizer which is applied to the top 10 mm of soil (the remaining
     /// fraction is applied to first soil layer)
     float fertilizerSurfFrac = curOperation->FertilizerSurfaceFrac();
-
+    /// if the fertilizerID is not existed in lookup table, then return without doing anything.
+    if (m_fertilizerLookupMap.find(fertilizerID) == m_fertilizerLookupMap.end())
+        return;
     /**fertilizer paramters derived from lookup table**/
     //!!    fminn(:)      |kg minN/kg frt|fraction of fertilizer that is mineral N (NO3 + NH4)
     float fertMinN = m_fertilizerLookupMap[fertilizerID][FERTILIZER_PARAM_FMINN_IDX];
@@ -720,11 +767,9 @@ void MGTOpt_SWAT::ExecuteFertilizerOperation(int i, int &factoryID, int nOp)
             m_soilActiveOrgN[i][l] += (1.f - rtof) * xx * fertilizerKg * fertOrgN;
             m_soilFreshOrgP[i][l] += rtof * xx * fertilizerKg * fertOrgP;
             m_soilActiveOrgN[i][l] += (1.f - rtof) * xx * fertilizerKg * fertOrgP;
-        }
-        else if (m_cswat == 1) /// C-FARM one carbon pool model /// TODO
+        } else if (m_cswat == 1) /// C-FARM one carbon pool model /// TODO
         {
-        }
-        else if (m_cswat == 2) /// CENTURY model /// TODO
+        } else if (m_cswat == 2) /// CENTURY model /// TODO
         {
             float X1 = 0.f, X8 = 0.f, X10 = 0.f, XXX = 0.f, YY = 0.f;
             float ZZ = 0.f, XZ = 0.f, YZ = 0.f, RLN = 0.f, orgc_f = 0.f;
@@ -780,6 +825,8 @@ void MGTOpt_SWAT::ExecuteHarvestKillOperation(int i, int &factoryID, int nOp)
     /// initialize parameters
     float cnop = curOperation->CNOP();
     float wur = 0.f, hiad1 = 0.f;
+    if (m_cropLookupMap.find(int(m_landCover[i])) == m_cropLookupMap.end())
+        return;
     /// Get some parameters of current crop / landcover
     float hvsti = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_HVSTI];
     float wsyf = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_WSYF];
@@ -810,23 +857,20 @@ void MGTOpt_SWAT::ExecuteHarvestKillOperation(int i, int &factoryID, int nOp)
     {
         yield = m_biomass[i] * hi_ovr;
         resnew = m_biomass[i] - yield;
-    }
-    else
+    } else
     {
         if (idc == CROP_IDC_TREES)
         {
             yield = m_biomass[i] * (1.f - bio_leaf);
             resnew = m_biomass[i] - yield;
-        }
-        else
+        } else
         {
             if (hvsti > 1.001f)
             {
                 yield = m_biomass[i] * (1.f - 1.f / (1.f + hiad1));
                 resnew = m_biomass[i] / (1.f + hiad1);
                 resnew *= (1.f - xx);
-            }
-            else
+            } else
             {
                 yield = (1.f - m_frRoot[i]) * m_biomass[i] * hiad1;
                 resnew = (1.f - m_frRoot[i]) * (1.f - hiad1) * m_biomass[i];
@@ -937,11 +981,13 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
 {
     /// newtillmix.f
     /// Mix residue and nutrients during tillage and biological mixing
-    initializeTillageLookup();
+    //initializeTillageLookup();
     TillageOperation *curOperation = (TillageOperation *) m_mgtFactory[factoryID]->GetOperations()[nOp];
     /// initialize parameters
     int tillID = curOperation->TillageID();
     float cnop = curOperation->CNOP();
+    if (m_tillageLookupMap.find(tillID) == m_tillageLookupMap.end())
+        return;
     float deptil = m_tillageLookupMap[tillID][TILLAGE_PARAM_DEPTIL_IDX];
     float effmix = m_tillageLookupMap[tillID][TILLAGE_PARAM_EFFMIX_IDX];
     float bmix = 0.f;
@@ -956,8 +1002,7 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
         /// biological mixing, TODO to find usage elsewhere
         emix = bmix;
         dtil = min(m_soilDepth[i][(int) m_nSoilLayers[i] - 1], 50.f);
-    }
-    else
+    } else
     {
         /// tillage operation
         emix = effmix;
@@ -1011,13 +1056,11 @@ void MGTOpt_SWAT::ExecuteTillageOperation(int i, int &factoryID, int nOp)
             {
                 soilMixedMass[l] = emix * soilMass[l];
                 soilNotMixedMass[l] = soilMass[l] - soilMixedMass[l];
-            }
-            else if (m_soilDepth[i][l] > dtil && m_soilDepth[i][l - 1] < dtil)
+            } else if (m_soilDepth[i][l] > dtil && m_soilDepth[i][l - 1] < dtil)
             {
                 soilMixedMass[l] = emix * soilMass[l] * (dtil - m_soilDepth[i][l - 1]) / m_soilThick[i][l];
                 soilNotMixedMass[l] = soilMass[l] - soilMixedMass[l];
-            }
-            else
+            } else
             {
                 soilMixedMass[l] = 0.f;
                 soilNotMixedMass[l] = soilMass[l];
@@ -1102,6 +1145,8 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
     float hi_bms = curOperation->HarvestIndexBiomass();
     float hi_rsd = curOperation->HarvestIndexResidue();
     float harveff = curOperation->HarvestEfficiency();
+    if (m_cropLookupMap.find(int(m_landCover[i])) == m_cropLookupMap.end())
+        return;
     /// Get some parameters of current crop / landcover
     float hvsti = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_HVSTI];
     float wsyf = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_WSYF];
@@ -1164,8 +1209,7 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
         clipPbms = min(clipBms * m_frPlantP[i], m_plantP[i] - yieldPbms);
         m_plantN[i] -= (yieldNbms + clipNbms);
         m_plantP[i] -= (yieldPbms + clipPbms);
-    }
-    else
+    } else
     {
         /// compute grain yields
         yieldGrn = (1.f - m_frRoot[i]) * m_biomass[i] * hiad1 * harveff;
@@ -1220,8 +1264,7 @@ void MGTOpt_SWAT::ExecuteHarvestOnlyOperation(int i, int &factoryID, int nOp)
             m_LAIDay[i] = alai_min;
         m_phuAcc[i] *= (1.f - ff3);
         m_frRoot[i] = 0.4f - 0.2f * m_phuAcc[i];
-    }
-    else
+    } else
     {
         m_biomass[i] = 0.f;
         m_LAIDay[i] = 0.f;
@@ -1312,6 +1355,8 @@ void MGTOpt_SWAT::ExecuteAutoFertilizerOperation(int i, int &factoryID, int nOp)
     m_autoAnnMaxAppliedMinN[i] = curOperation->MaxMineralNYearly();
     m_autoFertEfficiency[i] = curOperation->FertEfficiency();
     m_autoFertSurface[i] = curOperation->SurfaceFracApplied();
+    if (m_cropLookupMap.find(int(m_landCover[i])) == m_cropLookupMap.end())
+        return;
     float cnyld = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_CNYLD];
     float bio_e = m_cropLookupMap[(int) m_landCover[i]][CROP_PARAM_IDX_BIO_E];
     /// calculate modifier for auto fertilization target nitrogen content'
@@ -1326,7 +1371,7 @@ void MGTOpt_SWAT::ExecuteReleaseImpoundOperation(int i, int &factoryID, int nOp)
     /// No more executable code here.
     ReleaseImpoundOperation *curOperation = (ReleaseImpoundOperation *) m_mgtFactory[factoryID]->GetOperations()[nOp];
     m_impoundTriger[i] = curOperation->ImpoundTriger();
-    /// pothole.f and potholehr.f for sub-daily timestep simulation
+    /// pothole.f and potholehr.f for sub-daily timestep simulation, TODO
 }
 
 void MGTOpt_SWAT::ExecuteContinuousFertilizerOperation(int i, int &factoryID, int nOp)
@@ -1350,7 +1395,7 @@ void MGTOpt_SWAT::ExecuteBurningOperation(int i, int &factoryID, int nOp)
 
 void MGTOpt_SWAT::ScheduledManagement(int cellIdx, int &factoryID, int nOp)
 {
-    /// nOp is index * 1000 + operationCode
+    /// nOp is seqNo. * 1000 + operationCode
     int mgtCode = nOp % 1000;
     switch (mgtCode)
     {
@@ -1409,17 +1454,18 @@ int MGTOpt_SWAT::Execute()
 {
     CheckInputData();  /// essential input data, other inputs for specific management operation will be check separately.
     initialOutputs(); /// all possible outputs will be initialized to avoid NULL pointer problems.
-//#pragma omp parallel for
+#pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
         int curFactoryID;
         vector<int> curOps;
         if (GetOperationCode(i, curFactoryID, curOps))
         {
-            for (vector<int>::iterator it = curOps.begin(); it != curOps.end(); it++){
-				//cout<<curFactoryID<<","<<*it<<endl;
+            for (vector<int>::iterator it = curOps.begin(); it != curOps.end(); it++)
+            {
+                //cout<<curFactoryID<<","<<*it<<endl;
                 ScheduledManagement(i, curFactoryID, *it);
-			}
+            }
         }
     }
     return true;
@@ -1468,7 +1514,7 @@ void MGTOpt_SWAT::Get2DData(const char *key, int *n, int *col, float ***data)
 
 void MGTOpt_SWAT::initialOutputs()
 {
-    m_cellArea = m_cellWidth * m_cellWidth / 10000.f;
+    m_cellArea = m_cellWidth * m_cellWidth / 10000.f; // unit: ha
     if (m_nSub <= 0)
     {
 #pragma omp parallel for
@@ -1502,6 +1548,9 @@ void MGTOpt_SWAT::initialOutputs()
     if (m_autoAnnMaxAppliedMinN == NULL) Initialize1DArray(m_nCells, m_autoAnnMaxAppliedMinN, 0.f);
     if (m_autoFertEfficiency == NULL) Initialize1DArray(m_nCells, m_autoFertEfficiency, 0.f);
     if (m_autoFertSurface == NULL) Initialize1DArray(m_nCells, m_autoFertSurface, 0.f);
+    /// impound/release operation
+    if (m_impoundTriger == NULL) Initialize1DArray(m_nCells, m_impoundTriger, -1.f);
+    if (m_doneOpSequence == NULL) Initialize1DArray(m_nCells, m_doneOpSequence, -1);
 }
 
 float MGTOpt_SWAT::Erfc(float xx)

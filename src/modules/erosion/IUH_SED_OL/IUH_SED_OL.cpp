@@ -16,17 +16,14 @@ IUH_SED_OL::IUH_SED_OL(void) : m_TimeStep(-1), m_nCells(-1), m_CellWidth(NODATA_
 
 IUH_SED_OL::~IUH_SED_OL(void)
 {
-    //// cleanup
-	if(m_sedtoCh != NULL) 
-		Release1DArray(m_sedtoCh);
-
-	if(m_cellSed != NULL) 
-		Release2DArray(m_nCells, m_cellSed);
-
+	if(m_sedtoCh != NULL)Release1DArray(m_sedtoCh);
+	if(m_cellSed != NULL)Release2DArray(m_nCells, m_cellSed);
 }
 
 bool IUH_SED_OL::CheckInputData(void)
 {
+	if (m_date < 0)
+		throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_date has not been set.");
     if (m_nCells < 0)
         throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_nCells has not been set.");
     if (FloatEqual(m_CellWidth, NODATA_VALUE))
@@ -35,58 +32,23 @@ bool IUH_SED_OL::CheckInputData(void)
         throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_TimeStep has not been set.");
     if (m_subbasin == NULL)
         throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_subbasin has not been set.");
-
 	if (m_nSubbasins <= 0) throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The subbasins number must be greater than 0.");
 	if (m_subbasinIDs.empty()) throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The subbasin IDs can not be EMPTY.");
 	if (m_subbasinsInfo == NULL)
 		throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_subbasinsInfo has not been set.");
-
-    //if (m_uhmaxCell == NULL)
-    //{
-    //	throw ModelException(MID_IUH_SED_OL,"CheckInputData","The parameter: m_uhmax has not been set.");
-    //	return false;
-    //}
-    //if (m_uhminCell == NULL)
-    //{
-    //	throw ModelException(MID_IUH_SED_OL,"CheckInputData","The parameter: m_uhmin has not been set.");
-    //	return false;
-    //}
     if (m_iuhCell == NULL)
         throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_iuhCell has not been set.");
-    if (m_date < 0)
-        throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The parameter: m_date has not been set.");
     return true;
 }
 
 void IUH_SED_OL::initialOutputs()
 {
-	// This has been checked in CheckInputData, so deprecated!
-    //if (this->m_nCells <= 0 || this->m_subbasin == NULL)
-    //    throw ModelException(MID_IUH_SED_OL, "CheckInputData", "The dimension of the input data can not be less than zero.");
-    // allocate the output variables
-
-    //if (m_nSubbasins <= 0)
-    //{
-    //    map<int, int> subs;
-    //    for (int i = 0; i < this->m_nCells; i++)
-    //    {
-    //        subs[int(this->m_subbasin[i])] += 1;
-    //    }
-    //    this->m_nSubbasins = subs.size();
-    //}
-
-    //initial some variables
 	if(m_cellArea <= 0.f) m_cellArea = m_CellWidth * m_CellWidth;
     if (m_sedtoCh == NULL)
     {
 		Initialize1DArray(m_nSubbasins+1, m_sedtoCh, 0.f);
 		Initialize1DArray(m_nCells, m_sedOL, 0.f);
 
-        //m_Q_SBOF = new float[m_nSubbasins + 1];
-        //for (int i = 0; i <= m_nSubbasins; i++)
-        //{
-        //    m_Q_SBOF[i] = 0.f;
-        //}
         for (int i = 0; i < m_nCells; i++)
             m_cellFlowCols = max(int(m_iuhCell[i][1] + 1), m_cellFlowCols);
         //get m_cellFlowCols, i.e. the maximum of second column of OL_IUH plus 1.
@@ -99,7 +61,6 @@ void IUH_SED_OL::initialOutputs()
 int IUH_SED_OL::Execute()
 {
     CheckInputData();
-
     initialOutputs();
 	// delete value of last time step
 #pragma omp parallel for
@@ -108,7 +69,6 @@ int IUH_SED_OL::Execute()
 
     int nt = 0;
     float qs_cell = 0.f;
-    //float area = m_CellWidth * m_CellWidth;
 
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)

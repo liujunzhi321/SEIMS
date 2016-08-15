@@ -13,6 +13,7 @@ from text import *
 from util import *
 
 
+
 # SEQN              |None  : Unique identifier of soil
 # SNAME             |None  : soil name
 # SOILLAYERS        |None  : (nly) number of soil layers
@@ -57,7 +58,7 @@ from util import *
 # DET_SMAGG         |None  : (det_sag) detached sediment size distribution, small aggregation fraction
 # DET_LGAGG         |None  : (det_lag) detached sediment size distribution, large aggregation fraction
 # CRDEP             |mm    : (crdep) maximum or potential crack volume
-# 'VOLCR            |mm    : (volcr) crack volume for soil layer, should be calculated in SEIMS, using moist_ini
+# VOLCR            |mm    : (volcr) crack volume for soil layer, should be calculated in SEIMS, using moist_ini
 
 # SOL_NO3           |kg/ha : (sol_no3) concentration of nitrate in soil layers
 # SOL_NH3           |kg/ha : (sol_nh3) concentration of ammonium-N in soil layers
@@ -542,7 +543,7 @@ def GetProperties(s, c, om):
     awc = fc_df - wp
 
     # pore disconnectedness index
-    b = (log(1500.) - log(33.)) / (log(fc) - log(wp))
+    b = (math.log(1500.) - math.log(33.)) / (math.log(fc) - math.log(wp))
     lamda = 1.0 / b
 
     # saturated conductivity

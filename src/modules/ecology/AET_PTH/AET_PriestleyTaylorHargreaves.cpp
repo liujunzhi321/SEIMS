@@ -10,21 +10,17 @@ AET_PT_H::AET_PT_H(void) : m_nCells(-1), m_soilLayers(-1), m_esco(NULL), m_nSoil
 	                       m_soilThick(NULL), m_solAWC(NULL),
 						   /// input from other modules
                            m_tMean(NULL), m_lai(NULL), m_pet(NULL), m_snowAcc(NULL), m_snowSB(NULL),
-                           m_solCov(NULL), m_solNo3(NULL), m_somo(NULL),
+                           m_solCov(NULL), m_solNo3(NULL), m_soilStorage(NULL),m_soilStorageProfile(NULL),
 						   /// output
-                            m_ppt(NULL), m_soilESDay(NULL), m_no3Up(NODATA_VALUE), m_totSOMO(NULL)
+                           m_ppt(NULL), m_soilESDay(NULL), m_no3Up(0.f)
 {
 }
 
 AET_PT_H::~AET_PT_H(void)
 {
     /// clean up output variables
-	if(m_snowSB != NULL) Release1DArray(m_snowSB);
     if (m_ppt != NULL) Release1DArray(m_ppt);
 	if (m_soilESDay != NULL) Release1DArray(m_soilESDay);
-	if (m_snowAcc != NULL) Release1DArray(m_snowAcc);
-    if (m_somo != NULL) Release2DArray(m_nCells, m_somo);
-    if (m_totSOMO != NULL) Release1DArray(m_totSOMO);
 }
 
 void AET_PT_H::Set1DData(const char *key, int n, float *data)
@@ -39,6 +35,7 @@ void AET_PT_H::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_SNAC)) m_snowAcc = data;
     else if (StringMatch(sk, VAR_SNSB)) m_snowSB = data;
     else if (StringMatch(sk, VAR_SOL_COV)) m_solCov = data;
+	else if (StringMatch(sk, VAR_SOL_SW)) m_soilStorageProfile = data;
     else
         throw ModelException(MID_AET_PTH, "Set1DData", "Parameter " + sk +
                                                        " does not exist in current module. Please contact the module developer.");
@@ -53,7 +50,7 @@ void AET_PT_H::Set2DData(const char *key, int n, int col, float **data)
 	else if(StringMatch(sk, VAR_SOILTHICK)) m_soilThick = data;
     else if (StringMatch(sk, VAR_SOL_AWC)) m_solAWC = data;
     else if (StringMatch(sk, VAR_SOL_NO3)) m_solNo3 = data;
-    else if (StringMatch(sk, VAR_SOMO)) m_somo = data;
+    else if (StringMatch(sk, VAR_SOL_ST)) m_soilStorage = data;
     else
         throw ModelException(MID_AET_PTH, "Set2DData", "Parameter " + sk +
                                                        " does not exist in current module. Please contact the module developer.");
@@ -117,18 +114,19 @@ bool AET_PT_H::CheckInputData(void)
     if (this->m_solNo3 == NULL)
         throw ModelException(MID_AET_PTH, "CheckInputData",
                              "Nitrogen stored in the nitrate pool can not be NULL.");
-    if (this->m_somo == NULL)
+    if (this->m_soilStorage == NULL)
         throw ModelException(MID_AET_PTH, "CheckInputData",
-                             "The soil moisture can not be NULL.");
+                             "The soil storage can not be NULL.");
+	if (this->m_soilStorageProfile == NULL)
+		throw ModelException(MID_AET_PTH, "CheckInputData",
+		"The soil storage of soil profile can not be NULL.");
     return true;
 }
 void AET_PT_H::initialOutputs()
 {
 	/// initialize output variables
-	if(this->m_totSOMO == NULL) Initialize1DArray(m_nCells, m_totSOMO, 0.f);
 	if(this->m_ppt == NULL) Initialize1DArray(m_nCells, m_ppt, 0.f);
 	if(this->m_soilESDay == NULL) Initialize1DArray(m_nCells, m_soilESDay, 0.f);
-    if (m_no3Up == NODATA_VALUE) m_no3Up = 0.f;
 	if(this->m_snowSB == NULL) Initialize1DArray(m_nCells, m_snowSB, 0.f);
 }
 int AET_PT_H::Execute()
@@ -218,31 +216,31 @@ int AET_PT_H::Execute()
                     evz = eosl * m_soilDepth[i][ly] / (m_soilDepth[i][ly] + exp(2.374f - 0.00713f * m_soilDepth[i][ly]));
                     sev = evz - evzp * m_esco[i];
                     evzp = evz;
-                    if (m_somo[i][ly] < m_solAWC[i][ly])
+                    if (m_soilStorage[i][ly] < m_solAWC[i][ly])
                     {
-                        xx = 2.5f * (m_somo[i][ly] - m_solAWC[i][ly]) / m_solAWC[i][ly]; /// non dimension
+                        xx = 2.5f * (m_soilStorage[i][ly] - m_solAWC[i][ly]) / m_solAWC[i][ly]; /// non dimension
                         sev *= Expo(xx);
                     }
-                    sev = min(sev, m_somo[i][ly] * etco);
+                    sev = min(sev, m_soilStorage[i][ly] * etco);
                     if (sev < 0.f) sev = 0.f;
                     if (sev > esleft) sev = esleft;
                     /// adjust soil storage, potential evap
-                    if (m_somo[i][ly] > sev)
+                    if (m_soilStorage[i][ly] > sev)
                     {
                         esleft -= sev;
-                        m_somo[i][ly] = max(UTIL_ZERO, m_somo[i][ly] - sev);
+                        m_soilStorage[i][ly] = max(UTIL_ZERO, m_soilStorage[i][ly] - sev);
                     }
                     else
                     {
-                        esleft -= m_somo[i][ly];
-                        m_somo[i][ly] = 0.f;
+                        esleft -= m_soilStorage[i][ly];
+                        m_soilStorage[i][ly] = 0.f;
                     }
                 }
                 /// compute no3 flux from layer 2 to 1 by soil evaporation
                 if (ly == 1)  /// index of layer 2 is 1 (soil surface, 10mm)
                 {
                     no3up = 0.f;
-                    no3up = effnup * sev * m_solNo3[i][ly] / (m_somo[i][ly] + UTIL_ZERO);
+                    no3up = effnup * sev * m_solNo3[i][ly] / (m_soilStorage[i][ly] + UTIL_ZERO);
                     no3up = min(no3up, m_solNo3[i][ly]);
                     m_no3Up += no3up / m_nCells;
                     m_solNo3[i][ly] -= no3up;
@@ -250,9 +248,9 @@ int AET_PT_H::Execute()
                 }
             }
             /// update total soil water content
-            m_totSOMO[i] = 0.f;
+            m_soilStorageProfile[i] = 0.f;
             for (int ly = 0; ly < (int)m_nSoilLayers[i]; ly++)
-                m_totSOMO[i] += m_somo[i][ly];
+                m_soilStorageProfile[i] += m_soilStorage[i][ly];
             /// calculate actual amount of evaporation from soil
             m_soilESDay[i] = es_max - esleft;
             if (m_soilESDay[i] < 0.f) m_soilESDay[i] = 0.f;
@@ -261,7 +259,7 @@ int AET_PT_H::Execute()
     return true;
 }
 
-//m_ppt(NULL), m_solAET(NULL), m_no3Up(NODATA), m_totSOMO(NULL)
+//m_ppt(NULL), m_solAET(NULL), m_no3Up(NODATA), m_soilStorageProfile(NULL)
 void AET_PT_H::GetValue(const char *key, float *value)
 {
 	initialOutputs();
@@ -281,7 +279,6 @@ void AET_PT_H::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_SOET)) *data = this->m_soilESDay;
     else if (StringMatch(sk, VAR_SNAC)) *data = this->m_snowAcc;
 	else if (StringMatch(sk, VAR_SNSB)) *data = m_snowSB;
-    else if (StringMatch(sk, VAR_SOMO_TOT)) *data = this->m_totSOMO;
     else
         throw ModelException(MID_AET_PTH, "Get1DData", "Result " + sk
                                                        +
@@ -293,7 +290,7 @@ void AET_PT_H::Get1DData(const char *key, int *n, float **data)
 //{
 //	initialOutputs();
 //    string sk(key);
-//    if (StringMatch(sk, VAR_SOMO)) *data = this->m_somo;
+//    if (StringMatch(sk, VAR_SOMO)) *data = this->m_soilStorage;
 //    else
 //        throw ModelException(MID_AET_PTH, "Get2DData", "Result " + sk
 //                                                       +
