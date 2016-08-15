@@ -10,8 +10,6 @@
  */
 
 #pragma once
-#ifndef SEIMS_NutCHRout_PARAMS_INCLUDE
-#define SEIMS_NutCHRout_PARAMS_INCLUDE
 
 #include <string>
 #include <map>
@@ -55,14 +53,13 @@ public:
 
     virtual void Set1DData(const char *key, int n, float *data);
 
-    virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
+	virtual void SetReaches(clsReaches *reaches);
 
     virtual int Execute();
 
     virtual void GetValue(const char *key, float *value);
 
     virtual void Get1DData(const char *key, int *n, float **data);
-    //virtual void Get2DData(const char* key, int* nRows, int* nCols, float*** data);
 private:
 
     /// time step (hr)
@@ -72,7 +69,7 @@ private:
     /// upstream id (The value is -1 if there if no upstream reach)
     vector<vector<int> > m_reachUpStream;
     /// id the reaches
-    float *m_reachId;
+	vector<int> m_reachId;
     /// reaches number
     int m_nReaches;
     map<int, vector<int> > m_reachLayers;
@@ -128,8 +125,6 @@ private:
     float *m_qgSub;
 
     float *m_chOrder;
-    float *m_chWidth;
-    float *m_chDepth;
 
     /// channel outflow
     float *m_qsCh;
@@ -244,10 +239,3 @@ private:
 
     void initialOutputs();
 };
-
-#endif
-
-
-
-
-

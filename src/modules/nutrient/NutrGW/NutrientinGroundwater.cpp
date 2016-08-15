@@ -172,8 +172,8 @@ void NutrientinGroundwater::initialOutputs()
     // allocate the output variables
 	if (m_no3gwToCh == NULL)
 	{
-		Initialize1DArray(m_nCells, m_no3gwToCh, 0.f);
-		Initialize1DArray(m_nCells, m_minpgwToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_no3gwToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_minpgwToCh, 0.f);
 	}
 }
 
@@ -225,7 +225,7 @@ void NutrientinGroundwater::Get1DData(const char *key, int *n, float **data)
     {
         *data = m_no3gwToCh;
     }
-    if (StringMatch(sk, VAR_MINPGW_TOCH))
+    else if (StringMatch(sk, VAR_MINPGW_TOCH))
     {
         *data = m_minpgwToCh;
     }

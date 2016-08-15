@@ -176,8 +176,8 @@ public:
     /// Get reach number
     int GetReachNumber() { return this->m_reachNum; }
 
-    /// Get reach IDs
-    vector<int> GetReachIDs() { return this->m_reachIDs; }
+    /// Get reach IDs (vector)
+    vector<int>& GetReachIDs() { return this->m_reachIDs; }
 
 private:
     /// reaches number

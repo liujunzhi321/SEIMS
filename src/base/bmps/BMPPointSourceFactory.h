@@ -108,6 +108,10 @@ namespace MainBMP
         /// Output
         void Dump(ostream *fs);
 
+		/// Get start date of the current management operation
+		time_t GetStartDate(){return m_startDate;}
+		/// Get end date
+		time_t GetEndDate(){return m_endDate;}
         /// Get sequence number
         int GetSequence() { return m_seqence; }
 

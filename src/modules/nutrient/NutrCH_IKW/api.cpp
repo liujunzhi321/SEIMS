@@ -65,7 +65,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddParameter(VAR_VSF, UNIT_NON_DIM, DESC_VSF, Source_ParameterDB, DT_Single);
 
     mdi.AddParameter(VAR_WATTEMP, UNIT_TEMP_DEG, DESC_WATTEMP, Source_ParameterDB, DT_Array1D);
-
+	/// TODO, plz refers to MUSK_CH to add a function "SetReaches" to handle this datatype "DT_Reach". By LJ
     mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 
     mdi.AddParameter(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);

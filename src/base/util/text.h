@@ -173,7 +173,7 @@
 #define Tag_RchParam                                    "RchParam"
 /// Replaced Tag_ReachParameter and Tag_RchParam by VAR_REACH_PARAM
 #define VAR_REACH_PARAM                        "ReachParam"
-#define DESC_REACH_PARAM                        "Reach parameters such as stream order, manning's n and downstream subbasin id"
+#define DESC_REACH_PARAM                       "Reach parameters such as stream order, manning's n and downstream subbasin id"
 /// Add Subbasins as AddParameters for modules
 #define VAR_SUBBASIN_PARAM						"SubbasinParam"
 #define DESC_SUBBASIN_PARAM						"Statistics of subbasin related parameters"
@@ -909,7 +909,6 @@
 #define VAR_VP_SAT "svp"                            /// Saturated vapor pressure
 #define VAR_VPD "VPD"                                 /// vapor pressure deficit
 #define VAR_VPDFR "vpdfr"
-#define VAR_VPOINT "Vpoint"                         /// point source discharge
 #define VAR_VSEEP0 "Vseep0"                         ///  the initial volume of transmission loss to the deep aquifer over the time interval
 #define VAR_VSF "VelScaleFactor"                    /// flow velocity scaling factor for calibration
 #define VAR_WATTEMP "wattemp"
@@ -1300,7 +1299,7 @@
 #define DESC_S_FROZEN "Frozen moisture relative to porosity with no infiltration"
 #define DESC_SAND "Percent of sand content"
 #define DESC_SBGS "Groundwater storage of the subbasin"
-#define DESC_SBIF "Subsurface to streams from each subbasin"
+#define DESC_SBIF "Subsurface volume (m3) to streams from each subbasin"
 #define DESC_SBOF "overland flow to streams from each subbasin"
 #define DESC_SBPET "the potential evapotranspiration rate of the subbasin"
 #define DESC_SBQG "groundwater flow out of the subbasin"
@@ -1435,7 +1434,6 @@
 #define DESC_VP_SAT "Saturated vapor pressure"
 #define DESC_VPD "vapor pressure deficit"
 #define DESC_VPDFR "vapor pressure deficit(kPa) corresponding to the second point on the stomatal conductance curve"
-#define DESC_VPOINT "point source discharge"
 #define DESC_VSEEP0  "the initial volume of transmission loss to the deep aquifer over the time interval"
 #define DESC_VSF "flow velocity scaling factor for calibration"
 #define DESC_WATTEMP "temperature of water in reach"
