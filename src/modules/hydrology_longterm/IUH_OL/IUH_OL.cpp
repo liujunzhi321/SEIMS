@@ -101,16 +101,11 @@ int IUH_OL::Execute()
         //add today's flow
         int subi = (int) m_subbasin[i];
         if (m_nSubbasins == 1)
-        {
             subi = 1;
-        }
         else if (subi >= m_nSubbasins + 1)
-        {
-            ostringstream oss;
-            oss << subi;
-            throw ModelException(MID_IUH_OL, "Execute", "The subbasin " + oss.str() + " is invalid.");
-        }
-        m_Q_SBOF[subi] += m_cellFlow[i][0];    //get new value
+            throw ModelException(MID_IUH_OL, "Execute", "The subbasin " + ValueToString(subi) + " is invalid.");
+        
+		m_Q_SBOF[subi] += m_cellFlow[i][0];    //get new value
 
 		m_OL_Flow[i] = m_cellFlow[i][0];
 		m_OL_Flow[i] = m_OL_Flow[i] * m_TimeStep * 1000.f / m_cellArea;	 // m3/s -> mm
