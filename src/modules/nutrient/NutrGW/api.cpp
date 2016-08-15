@@ -60,8 +60,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddInput(VAR_PERCO_P_GW, UNIT_KG, DESC_PERCO_P, Source_Module, DT_Array1D);
 
     // set the output variables
-    mdi.AddOutput(VAR_NO3GW, UNIT_KG, DESC_NO3GW, DT_Raster1D);
-    mdi.AddOutput(VAR_MINPGW, UNIT_KG, DESC_MINPGW, DT_Raster1D);
+    mdi.AddOutput(VAR_NO3GW_CH, UNIT_KG, DESC_NO3GW, DT_Raster1D);
+    mdi.AddOutput(VAR_MINPGW_CH, UNIT_KG, DESC_MINPGW, DT_Raster1D);
 	//mdi.AddOutput(VAR_REVAP_NO3, UNIT_KG, )
 
     string res = mdi.GetXMLDocument();
