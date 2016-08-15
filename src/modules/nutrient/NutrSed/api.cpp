@@ -61,7 +61,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, Source_Module, DT_Raster2D);
 
-
     // set the output variables
 	// output surface runoff related variables
     mdi.AddOutput(VAR_SEDORGN, UNIT_CONT_KGHA, DESC_SEDORGN, DT_Raster1D);
@@ -70,10 +69,10 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_SEDMINPS, UNIT_CONT_KGHA, DESC_SEDMINPS, DT_Raster1D);
 
 	// to channel 
-	mdi.AddOutput(VAR_SEDORGN_CH, UNIT_KG, DESC_SEDORGN_CH, DT_Array1D);
-	mdi.AddOutput(VAR_SEDORGP_CH, UNIT_KG, DESC_SEDORGP_CH, DT_Array1D);
-	mdi.AddOutput(VAR_SEDMINPA_CH, UNIT_KG, DESC_SEDMINPA_CH, DT_Array1D);
-	mdi.AddOutput(VAR_SEDMINPS_CH, UNIT_KG, DESC_SEDMINPS_CH, DT_Array1D);
+	mdi.AddOutput(VAR_SEDORGN_TOCH, UNIT_KG, DESC_SEDORGN_CH, DT_Array1D);
+	mdi.AddOutput(VAR_SEDORGP_TOCH, UNIT_KG, DESC_SEDORGP_CH, DT_Array1D);
+	mdi.AddOutput(VAR_SEDMINPA_TOCH, UNIT_KG, DESC_SEDMINPA_CH, DT_Array1D);
+	mdi.AddOutput(VAR_SEDMINPS_TOCH, UNIT_KG, DESC_SEDMINPS_CH, DT_Array1D);
 
     string res = mdi.GetXMLDocument();
     char *tmp = new char[res.size() + 1];

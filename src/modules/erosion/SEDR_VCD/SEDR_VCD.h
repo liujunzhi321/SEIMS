@@ -150,10 +150,6 @@ private:
 
     void SedChannelRouting(int i);
 
-    float calOutletDischarge(float qs, float qi, float qg, int id);
-
-    float fSimple(float area1, float Qin, float depth, int id);
-
     void doChannelDowncuttingAndWidening(int id);
 };
 

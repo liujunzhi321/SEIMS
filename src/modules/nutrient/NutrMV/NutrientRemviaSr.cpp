@@ -655,17 +655,17 @@ void NutrientRemviaSr::NitrateLoss()
 					*data = this->m_chl_a; 
 					*n = m_nCells;
 				}
-				else if(StringMatch(sk, VAR_LATNO3_CH))
+				else if(StringMatch(sk, VAR_LATNO3_TOCH))
 				{
 					*data = m_latno3ToCh;
 					*n = m_nSubbasins + 1;
 				}
-				else if(StringMatch(sk, VAR_SUR_NO3_CH))
+				else if(StringMatch(sk, VAR_SUR_NO3_TOCH))
 				{
 					*data = m_sur_no3ToCh;
 					*n = m_nSubbasins + 1;
 				}
-				else if(StringMatch(sk, VAR_SUR_SOLP_CH))
+				else if(StringMatch(sk, VAR_SUR_SOLP_TOCH))
 				{
 					*data = m_sur_solpToCh;
 					*n = m_nSubbasins + 1;

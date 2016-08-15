@@ -95,10 +95,10 @@ private:
 
 	/// output to channel
 
-	float *m_sedorgnToCh;
-	float *m_sedorgpToCh;
-	float *m_sedminpaToCh;
-	float *m_sedminpsToCh;
+	float *m_sedorgnToCh;  // amount of organic N in surface runoff to channel
+	float *m_sedorgpToCh;  // amount of organic P in surface runoff to channel
+	float *m_sedminpaToCh; // amount of active mineral P in surface runoff to channel
+	float *m_sedminpsToCh; // amount of stable mineral P in surface runoff to channel
 
     ///input & output
     //amount of nitrogen stored in the active organic (humic) nitrogen pool
