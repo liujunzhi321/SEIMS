@@ -577,6 +577,7 @@ void MUSK_CH::ChannelFlow(int i)
         qgUp += m_qgCh[upReachId];
     }
     qIn += qsUp + qiUp + qgUp;
+	//qIn is equivalent to the wtrin variable in rtmusk.f of SWAT
     qIn += m_qUpReach; // m_qUpReach is zero for not-parallel program and qsUp, qiUp and qgUp are zero for parallel computing
 
     // 3. water from bank storage

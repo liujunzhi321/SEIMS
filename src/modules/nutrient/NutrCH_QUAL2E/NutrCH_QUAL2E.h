@@ -5,7 +5,7 @@
 /*!
  * \file NutrCH_QUAL2E.h
  * \ingroup NutrCH_QUAL2E
- * \author Huiran Gao
+ * \author Huiran Gao; Junzhi Liu
  * \date Jun 2016
  */
 
@@ -183,11 +183,6 @@ private:
     /// cod to reach in surface runoff (kg)
     float *m_codToCh;
 
-    //float m_vScalingFactor;
-    /// for muskingum
-    //float m_x;
-    //float m_co1;
-
     /// output data
     /// algal biomass concentration in reach (mg/L)
     float *m_algae;
@@ -248,8 +243,6 @@ private:
     float corTempc(float r20, float thk, float tmp);
 
     void initialOutputs();
-
-    //void GetCoefficients(float reachLength, float v0, MuskWeights& weights);
 };
 
 #endif

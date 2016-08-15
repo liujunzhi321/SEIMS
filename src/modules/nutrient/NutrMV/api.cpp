@@ -93,9 +93,9 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddOutput(VAR_PERCO_N_GW, UNIT_KG, DESC_PERCO_N, DT_Array1D);
 	mdi.AddOutput(VAR_PERCO_P_GW, UNIT_KG, DESC_PERCO_P, DT_Array1D);
 	//to channel
-	mdi.AddOutput(VAR_LATNO3_CH, UNIT_KG, DESC_LATNO3_CH, DT_Array1D);
-	mdi.AddOutput(VAR_SUR_NO3_CH, UNIT_KG, DESC_SUR_NO3_CH, DT_Array1D);
-	mdi.AddOutput(VAR_SUR_SOLP_CH, UNIT_KG, DESC_SUR_SOLP_CH, DT_Array1D);
+	mdi.AddOutput(VAR_LATNO3_TOCH, UNIT_KG, DESC_LATNO3_CH, DT_Array1D);
+	mdi.AddOutput(VAR_SUR_NO3_TOCH, UNIT_KG, DESC_SUR_NO3_CH, DT_Array1D);
+	mdi.AddOutput(VAR_SUR_SOLP_TOCH, UNIT_KG, DESC_SUR_SOLP_CH, DT_Array1D);
 
 	// currently not used
 	mdi.AddOutput(VAR_COD, UNIT_CONT_KGHA, DESC_COD, DT_Raster1D);

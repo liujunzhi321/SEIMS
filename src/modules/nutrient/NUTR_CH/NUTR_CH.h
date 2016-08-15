@@ -1,15 +1,14 @@
 /*!
- * \file SEDR_VCD.h
+ * \file NUTR_CH.h
  * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
  * \author Hui Wu
  * \date Jul. 2012
  * \revised LiangJun Zhu
  * \date May/ 2016
  */
+
 #pragma once
 #define DEPTH_INTERVAL 0.001f
-
-
 
 #include <string>
 #include <ctime>
@@ -19,25 +18,25 @@
 #include "SimulationModule.h"
 
 using namespace std;
-/** \defgroup SEDR_VCD
+/** \defgroup NUTR_CH
  * \ingroup Erosion
  * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
  */
 /*!
- * \class SEDR_VCD
- * \ingroup SEDR_VCD
+ * \class NUTR_CH
+ * \ingroup NUTR_CH
  *
  * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
  *
  */
-class SEDR_VCD : public SimulationModule
+class NUTR_CH : public SimulationModule
 {
 public:
     //! Constructor
-    SEDR_VCD(void);
+    NUTR_CH(void);
 
     //! Destructor
-    ~SEDR_VCD(void);
+    ~NUTR_CH(void);
 
     virtual int Execute();
 
@@ -71,39 +70,9 @@ private:
     /// The point source discharge, m_Vpoint[id], id is the reach id
     float *m_Vpoint;
 
-    /// the peak rate adjustment factor
-    float m_prf;
-    ///  Coefficient in sediment transport equation
-    float m_spcon;
-    /// Exponent in sediment transport equation
-    float m_spexp;
-    /// critical velocity for sediment deposition
-    float m_vcrit;
-    /// reach cover factor
-    float m_coverFactor;
-    /// channel erodibility factor (cm/hr/Pa)  TODO: this should be an input parameter from database, LJ
-    float m_erodibilityFactor;
-
-    /// inverse of flood plain side slope of channel, is a fixed number:  1/slope
-    float m_sideslopeFloodplain;
-    /// inverse of side slope of main channel, is a fixed number:  1/slope
-    float m_sideslopeMain;
-    /// width ratio
-    float m_w_ratio;
-    /// bank full water storage
-    float m_bankfullQ;
-    /// sediment from subbasin
-    float *m_sedtoCh;
-    /// the subbasin area (m2)  //add to the reach parameters file
-    //float* m_area;
-    /// cross-sectional area of flow in the channel (m2)
-    float *m_CrAreaCh;
     /// initial channel storage per meter of reach length (m3/m)
     float m_Chs0;
 
-    //temporary at routing time
-    /// reach storage (m3) at time t
-    //float* m_chStorage;
     /// channel outflow
     float *m_qchOut;
 
@@ -111,9 +80,7 @@ private:
     float *m_chWidth;
     float *m_chDepth;
     float *m_chLen;      //length of reach (m)
-    float *m_chVel;
-    float *m_chSlope;
-    float *m_chManning;
+
 
     /// downstream id (The value is 0 if there if no downstream reach)
     float *m_reachDownStream;
@@ -124,32 +91,28 @@ private:
     float *m_reachId;
     /// map from subbasin id to index of the array
     map<int, int> m_idToIndex;
+    map<int, vector<int> > m_reachLayers;
 
     /// reach storage (m3) at time t
     float *m_chStorage;
-    /// channel water depth m
-    float *m_chWTdepth;
 
-    // OUTPUT
-    /// initial reach sediment out (metrics ton) at time t
-    float *m_SedOut;
-    /// Channel sediment balance in a text format for each reach and at each time step
-    //float** m_T_CHSB;
-    /// channel sediment storage (ton)
-    float *m_sedStorage;
-    /// sediment of deposition
-    float *m_sedDep;
-    /// sediment of degradation
-    float *m_sedDeg;
-	/// sediment concentration
-	float *m_sedCon;
+	// input nutrient from hillslope
+	float *m_latno3ToCh;  // amount of nitrate transported with lateral flow to channel
+	float *m_sur_no3ToCh; // amount of nitrate transported with surface runoff to channel
+	float *m_sur_solpToCh;// amount of soluble phosphorus in surface runoff to channel
+	float *m_sedorgnToCh;  // amount of organic N in surface runoff to channel
+	float *m_sedorgpToCh;  // amount of organic P in surface runoff to channel
+	float *m_no3gwToCh;    // nitrate loading to reach in groundwater
+	float *m_minpgwToCh;   // soluble P loading to reach in groundwater
 
-    map<int, vector<int> > m_reachLayers;
+	//output
+	float *m_chOrgN;    // organic nitrogen concentration in stream (mg N/L)
+	float *m_chNo3;     // NO3 concentration in stream (mg/L)
+	float *m_chOrgP;    // organic P concentration in stream (mg/L)
+	float *m_chSolP;    // solute P concentration in stream (mg/L)
 
     void initialOutputs();
-
     void SedChannelRouting(int i);
 
-    void doChannelDowncuttingAndWidening(int id);
 };
 

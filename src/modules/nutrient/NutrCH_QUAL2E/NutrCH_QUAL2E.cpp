@@ -321,15 +321,15 @@ void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_CHST)) { this->m_chStorage = data; }
     else if (StringMatch(sk, VAR_CHWTDEPTH)) { this->m_chWTdepth = data; }
     else if (StringMatch(sk, VAR_WATTEMP)) { this->m_wattemp = data; }
-    else if (StringMatch(sk, VAR_LATNO3_CH)) { this->m_latno3ToCh = data; }
-    else if (StringMatch(sk, VAR_SUR_NO3_CH)) { this->m_surqno3ToCh = data; }
-    else if (StringMatch(sk, VAR_SUR_SOLP_CH)) { this->m_surqsolpToCh = data; }
-    else if (StringMatch(sk, VAR_NO3GW_CH)) { this->m_no3gwToCh = data; }
-    else if (StringMatch(sk, VAR_MINPGW_CH)) { this->m_minpgwToCh = data; }
-    else if (StringMatch(sk, VAR_SEDORGN_CH)) { this->m_sedorgnToCh = data; }
-    else if (StringMatch(sk, VAR_SEDORGP_CH)) { this->m_sedorgpToCh = data; }
-    else if (StringMatch(sk, VAR_SEDMINPA_CH)) { this->m_sedminpaToCh = data; }
-    else if (StringMatch(sk, VAR_SEDMINPS_CH)) { this->m_sedminpsToCh = data; }
+    else if (StringMatch(sk, VAR_LATNO3_TOCH)) { this->m_latno3ToCh = data; }
+    else if (StringMatch(sk, VAR_SUR_NO3_TOCH)) { this->m_surqno3ToCh = data; }
+    else if (StringMatch(sk, VAR_SUR_SOLP_TOCH)) { this->m_surqsolpToCh = data; }
+    else if (StringMatch(sk, VAR_NO3GW_TOCH)) { this->m_no3gwToCh = data; }
+    else if (StringMatch(sk, VAR_MINPGW_TOCH)) { this->m_minpgwToCh = data; }
+    else if (StringMatch(sk, VAR_SEDORGN_TOCH)) { this->m_sedorgnToCh = data; }
+    else if (StringMatch(sk, VAR_SEDORGP_TOCH)) { this->m_sedorgpToCh = data; }
+    else if (StringMatch(sk, VAR_SEDMINPA_TOCH)) { this->m_sedminpaToCh = data; }
+    else if (StringMatch(sk, VAR_SEDMINPS_TOCH)) { this->m_sedminpsToCh = data; }
     else if (StringMatch(sk, VAR_AMMO_CH)) { this->m_ammoToCh = data; }
     else if (StringMatch(sk, VAR_NITRITE_CH)) { this->m_nitriteToCh = data; }
     else
@@ -414,11 +414,12 @@ void  NutrCH_QUAL2E::initialOutputs()
 
 int NutrCH_QUAL2E::Execute()
 {
-    if (!this->CheckInputData())
+    if (!CheckInputData())
     {
         return false;
     }
-    this->initialOutputs();
+
+    initialOutputs();
     ///////////////////////////////////////Get reach information/////////////////////////////////////
     int nReaches = m_reaches->GetReachNumber();
     vector<int> reachIDs = m_reaches->GetReachIDs();
@@ -459,44 +460,9 @@ int NutrCH_QUAL2E::Execute()
             NutrientinChannel(reachIndex);
         }
     }
-    //return ??
+    
     return 0;
 }
-
-/*
-//! Get coefficients
-void NutrCH_QUAL2E::GetCoefficients(float reachLength, float v0, MuskWeights& weights)
-{
-	v0 = m_vScalingFactor * v0;
-	float K = (4.64f - 3.64f * m_co1) * reachLength / (5.f * v0 / 3.f);
-
-	float min = 2.0f * K * m_x;
-	float max = 2.0f * K * (1 - m_x);
-	float dt;
-	int n;
-	weights.dt = dt;
-
-	//get coefficient
-	float temp = max + dt;
-	weights.c1 = (dt - min)/temp;
-	weights.c2 = (dt + min)/temp;
-	weights.c3 = (max - dt)/temp;
-	weights.c4 = 2*dt/temp;
-	weights.n = n;
-
-	//make sure any coefficient is positive
-	if(weights.c1 < 0) 
-	{
-		weights.c2 += weights.c1;
-		weights.c1 = 0.0f;
-	}
-	if(weights.c3 < 0)
-	{
-		weights.c2 += weights.c1;
-		weights.c3 = 0.0f;
-	}
-}
-*/
 
 void NutrCH_QUAL2E::NutrientinChannel(int i)
 {
@@ -947,7 +913,8 @@ void NutrCH_QUAL2E::NutrientinChannel(int i)
         // calculate chlorophyll-a concentration at end of day
         m_chlora[i] = 0.f;
         m_chlora[i] = m_algae[i] * m_ai0 / 1000.f;
-    } else
+    }
+    else
     {
         // all water quality variables set to zero when no flow
         algin = 0.f;
