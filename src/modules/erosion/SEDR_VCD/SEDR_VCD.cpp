@@ -23,23 +23,16 @@ using namespace std;
 
 SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA_VALUE), m_widthbottom(NULL),
                            m_Vdiv(NULL), m_Vpoint(NULL), m_widthcurrent(NULL), m_depthcurrent(NULL),
-                           m_slopecurrent(NULL),
+                           m_slopecurrent(NULL), m_chStorage(NULL),
                            m_chOrder(NULL), m_qchOut(NULL), m_sideslopeMain(1.f), m_sideslopeFloodplain(1.f),
                            m_w_ratio(1.f), m_bankfullQ(5.f),
                            m_prf(NODATA_VALUE), m_spcon(NODATA_VALUE), m_spexp(NODATA_VALUE), m_vcrit(NODATA_VALUE), m_coverFactor(0.1f),
                            m_erodibilityFactor(0.2f) //0.1 for Lyg
 {
-    //this->m_T_CHSB = NULL;
     m_SedOut = NULL;
-    m_qsSub = NULL;
-    m_qiSub = NULL;
-    m_qgSub = NULL;
-    m_chStorage = NULL;
     m_chWTdepth = NULL;
     //output
     m_sedStorage = NULL;
-    m_sedSub = NULL;
-    m_sedUps = NULL;
     m_sedDep = NULL;
     m_sedDeg = NULL;
 }
@@ -53,8 +46,6 @@ SEDR_VCD::~SEDR_VCD(void)
     if (m_slopecurrent != NULL) delete[] m_slopecurrent;
     if (m_widthbottom != NULL) delete[] m_widthbottom;
     if (m_sedStorage != NULL) delete[] m_sedStorage;
-    if (m_sedSub != NULL) delete[] m_sedSub;
-    if (m_sedUps != NULL) delete[] m_sedUps;
     if (m_sedDeg != NULL) delete[] m_sedDeg;
     if (m_sedDep != NULL) delete[] m_sedDep;
 }
@@ -99,6 +90,7 @@ bool SEDR_VCD::CheckInputData(void)
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: ReachParameter has not been set.");
     }
+
     if (m_qgSub == NULL)
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_qgSub has not been set.");
@@ -111,6 +103,7 @@ bool SEDR_VCD::CheckInputData(void)
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_qgSub has not been set.");
     }
+>>>>>>> upstream/master
     if (m_chStorage == NULL)
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_chStorage has not been set.");
@@ -153,8 +146,6 @@ void  SEDR_VCD::initialOutputs()
         m_slopecurrent = new float[m_nreach + 1];
         m_widthbottom = new float[m_nreach + 1];
         m_sedStorage = new float[m_nreach + 1];
-        m_sedUps = new float[m_nreach + 1];
-        m_sedSub = new float[m_nreach + 1];
         m_sedDep = new float[m_nreach + 1];
         m_sedDeg = new float[m_nreach + 1];
         //m_T_CHSB = new float*[m_nreach+1];
@@ -170,12 +161,9 @@ void  SEDR_VCD::initialOutputs()
             //m_chStorage[i] = m_Chs0 * m_chLen[i];
             m_SedOut[i] = 0.0f;
             m_sedStorage[i] = m_Chs0 * m_chLen[i];
-            m_sedSub[i] = 0.0f;
             m_sedDep[i] = 0.0f;
             m_sedDeg[i] = 0.0f;
-            m_sedUps[i] = 0.0f;
-
-            m_qchOut[i] = m_qgSub[i] + m_qiSub[i] + m_qgSub[i];
+           
             /*m_T_CHSB[i] = new float[SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_COUNT];
             for (int j=0; j<SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_COUNT; j++)
             {
@@ -305,18 +293,6 @@ void SEDR_VCD::Set1DData(const char *key, int n, float *value)
     {
         m_qchOut = value;
     }
-    else if (StringMatch(sk, VAR_QS))
-    {
-        m_qsSub = value;
-    }
-    else if (StringMatch(sk, VAR_QI))
-    {
-        m_qiSub = value;
-    }
-    else if (StringMatch(sk, VAR_QG))
-    {
-        m_qgSub = value;
-    }
     else if (StringMatch(sk, VAR_CHST))
     {
         m_chStorage = value;
@@ -403,18 +379,6 @@ void SEDR_VCD::Set2DData(const char *key, int nrows, int ncols, float **data)
                                                         + " does not exist. Please contact the module developer.");
 }
 
-void SEDR_VCD::reset(int id)
-{
-    /*for(int j=0;j<SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_COUNT;j++)
-        this->m_T_CHSB[id][j] = 0.0f;
-    m_SedOut[id] = m_T_CHSB[id][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_OUT];*/
-    m_sedStorage[id] = 0.0f;
-    m_sedUps[id] = 0.0f;
-    m_sedSub[id] = 0.0f;
-    m_sedDeg[id] = 0.0f;
-    m_sedDep[id] = 0.0f;
-}
-
 float SEDR_VCD::Q(float waterDepth, int id)
 {
     if (waterDepth < DEPTH_INTERVAL) return 0.0f;
@@ -495,12 +459,10 @@ float SEDR_VCD::depth(float Q, int id)
 void SEDR_VCD::SedChannelRouting(int i)
 {
     // 1 .whether is no water in channel
-    //float storage = m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_STORAGE];
-    float sedstorage = m_sedStorage[i];
     if (m_qchOut[i] < 0.0001f)
     {
-        reset(i);
-        m_sedStorage[i] = sedstorage;
+		m_sedDeg[i] = 0.0f;
+		m_sedDep[i] = 0.0f;
         m_SedOut[i] = 0.f;
     }
     else
@@ -512,60 +474,49 @@ void SEDR_VCD::SedChannelRouting(int i)
             sedUp += m_SedOut[upReachId];
         }
         float allSediment = sedUp + m_sedtoCh[i] + m_sedStorage[i];
-        //cout<<i<<"\t"<<sedUp <<"\t"<<m_sedtoCh[i]<<"\t"<<sedstorage<<endl;
 
-        m_sedUps[i] = sedUp;
-        m_sedSub[i] = m_sedtoCh[i];
         //get peak channel velocity (m/s)
-        float peakVelocity = 0.0f;
-
         float peakFlowRate = m_qchOut[i] * m_prf;
-
         float crossarea = m_chStorage[i] / m_chLen[i];            // SWAT, eq. 7:1.2.3
-        peakVelocity = peakFlowRate / crossarea;
-
+        float peakVelocity = peakFlowRate / crossarea;
         if (peakVelocity > 5) peakVelocity = 5.0f;
-        //get tbase
-        float tbase = m_chLen[i] / (m_dt * peakVelocity);
-        if (tbase > 1) tbase = 1.0f;
         //max concentration
         float maxCon = m_spcon * pow(peakVelocity, m_spexp);
         //initial concentration,mix sufficiently
-        float qsub = m_qsSub[i];
-        float qinsub = m_qiSub[i];
-        float qgsub = m_qgSub[i];
-        float chstorage = m_chStorage[i];
-        float qOutV = m_qchOut[i] * m_dt;
 
-        float allWater = chstorage + qOutV;
+        float qOutV = m_qchOut[i] * m_dt;
+        float allWater = m_chStorage[i] + qOutV;
 
         if (allWater < 0.001f)
         {
-            reset(i);
+			m_sedDeg[i] = 0.0f;
+			m_sedDep[i] = 0.0f;
             m_SedOut[i] = 0.0f;
             return;
         }
+
+		//deposition and degradation
         float initCon = allSediment / allWater;
-        //cout << i <<" "<<allSediment<<" "<<peakVelocity << " "<<tbase<<" "<<initCon<<" "<<maxCon<<endl;
-        //deposition and degradation
-        float sedDeposition = 0.0f;
+        float sedDeposition = allWater * (initCon - maxCon);
+        //if (abs(sedDeposition) < 1.0e-6f)
+        //    sedDeposition = 0.0f;
+        if (peakVelocity < m_vcrit)
+            sedDeposition = 0.0f;
+
         float sedDegradation = 0.0f;
         float sedDegradation1 = 0.0f;
         float sedDegradation2 = 0.0f;
-
-        sedDeposition = allWater * (initCon - maxCon);
-        if (abs(sedDeposition) < 1.0e-6f)
-            sedDeposition = 0.0f;
-        if (peakVelocity < m_vcrit)
-            sedDeposition = 0.0f;
-        if (sedDeposition < 1.0e-6f)    //degradation
+		//get tbase
+		float tbase = m_chLen[i] / (m_dt * peakVelocity);
+		if (tbase > 1) tbase = 1.0f;
+        if (sedDeposition < 0.f)    //degradation
         {
             sedDegradation = -sedDeposition * tbase;
+			// first the deposited material will be degraded before channel bed
             if (sedDegradation >= m_sedDep[i])
             {
                 sedDegradation1 = m_sedDep[i];
-                sedDegradation2 =
-                        (sedDegradation - sedDegradation1) * m_erodibilityFactor * m_coverFactor;
+                sedDegradation2 = (sedDegradation - sedDegradation1) * m_erodibilityFactor * m_coverFactor;
             }
             else
             {
@@ -574,57 +525,20 @@ void SEDR_VCD::SedChannelRouting(int i)
 
             sedDeposition = 0.0f;
         }
-        else
-        {
-            sedDeposition = sedDeposition * tbase;
-        }
 
         //update sed deposition
-        /*m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_DEPOSITION] += sedDeposition - sedDegradation1;
-        if(m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_DEPOSITION] < 1.0e-6f)
-            m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_DEPOSITION] = 0.0f;*/
         m_sedDep[i] += sedDeposition - sedDegradation1;
-        if (m_sedDep[i] < 1.0e-6f)
-        {
-            m_sedDep[i] = 0.0f;
-        }
-        //update sed degradation
-        /*m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_DEGRADATION] += sedDegradation1 + sedDegradation2;
-        if(m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_DEGRADATION] < 1.0e-6f)
-            m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_DEGRADATION] = 0.0f;*/
         m_sedDeg[i] += sedDegradation1 + sedDegradation2;
-        if (m_sedDeg[i] < 1.0e-6f)
-        {
-            m_sedDeg[i] = 0.0f;
-        }
+
         //get sediment after deposition and degradation
         allSediment += sedDegradation1 + sedDegradation2 - sedDeposition;
-        if (allSediment < 1.0e-6f) allSediment = 0.0f;
 
         //get out flow water fraction
         float outFraction = qOutV / allWater;
-        if (outFraction < 1.0e-6f) outFraction = 0.0f;
-        if (outFraction > 1.0f) outFraction = 1.0f;
-        //update sed out
-        //m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_OUT] = allSediment * outFraction;
         m_SedOut[i] = allSediment * outFraction;
-        /*if(m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_OUT] < 1.0e-6f)
-            m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_OUT] = 0.0f;*/
-        if (m_SedOut[i] < 1.0e-6f)
-        {
-            m_SedOut[i] = 0.0f;
-        }
 
         //update sed storage
-        /*m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_STORAGE] =
-            allSediment - m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_OUT];
-        if(m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_STORAGE] < 1.0e-6f)
-            m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_STORAGE] = 0.0f;*/
         m_sedStorage[i] = allSediment - m_SedOut[i];
-        if (m_sedStorage[i] < 1.0e-6f)
-        {
-            m_sedStorage[i] = 0.0f;
-        }
 
         //get final sediment in water, cannot large than 0.848t/m3
         float maxSedinWt = 0.848f * qOutV;
@@ -633,13 +547,6 @@ void SEDR_VCD::SedChannelRouting(int i)
             m_sedDep[i] += m_SedOut[i] - maxSedinWt;
             m_SedOut[i] = maxSedinWt;
         }
-
-        /*if(i==37)
-        {
-            cout<<allWater <<" "<< m_qchOut[i] <<" "<<initCon << " "<< maxCon<<endl;
-            cout << i <<" "<<m_sedSub[i]<<" "<<allSediment<<" "<<m_sedDeg[i]<<" "<<m_sedDep[i]<<" "<<m_SedOut[i]<<" "<<m_sedStorage[i]<<endl;
-        }*/
-        //m_SedOut[i] = m_T_CHSB[i][SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_OUT];
 
         ////channel downcutting and widening
         //bool dodowncutting = false;

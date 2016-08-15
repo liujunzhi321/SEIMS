@@ -85,20 +85,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddOutput(VAR_RCH_DOX, UNIT_DENSITY_L, DESC_RCH_DOX, DT_Array1D);
     mdi.AddOutput(VAR_CHLORA, UNIT_DENSITY_L, DESC_CHLORA, DT_Array1D);
 
-
-    // set the output variables
-    mdi.AddOutput(VAR_SOXY, UNIT_DENSITY_L, DESC_SOXY, DT_Array1D);
-    mdi.AddOutput(VAR_ALGAE, UNIT_DENSITY_L, DESC_ALGAE, DT_Array1D);
-    mdi.AddOutput(VAR_ORGANICN, UNIT_DENSITY_L, DESC_ORGANICN, DT_Array1D);
-    mdi.AddOutput(VAR_ORGANICP, UNIT_DENSITY_L, DESC_ORGANICP, DT_Array1D);
-    mdi.AddOutput(VAR_AMMONIAN, UNIT_DENSITY_L, DESC_AMMONIAN, DT_Array1D);
-    mdi.AddOutput(VAR_NITRITEN, UNIT_DENSITY_L, DESC_NITRITEN, DT_Array1D);
-    mdi.AddOutput(VAR_NITRATEN, UNIT_DENSITY_L, DESC_NITRATEN, DT_Array1D);
-    mdi.AddOutput(VAR_DISOLVP, UNIT_DENSITY_L, DESC_DISOLVP, DT_Array1D);
-    mdi.AddOutput(VAR_RCH_COD, UNIT_DENSITY_L, DESC_RCH_COD, DT_Array1D);
-    mdi.AddOutput(VAR_RCH_DOX, UNIT_DENSITY_L, DESC_RCH_DOX, DT_Array1D);
-    mdi.AddOutput(VAR_CHLORA, UNIT_DENSITY_L, DESC_CHLORA, DT_Array1D);
-
     string res = mdi.GetXMLDocument();
     char *tmp = new char[res.size() + 1];
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
