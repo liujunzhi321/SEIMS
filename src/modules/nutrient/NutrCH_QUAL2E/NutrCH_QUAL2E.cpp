@@ -18,10 +18,10 @@ using namespace std;
 
 NutrCH_QUAL2E::NutrCH_QUAL2E(void) :
 //input
-        m_dt(-1), m_aBank(-1), m_qUpReach(-1), m_rnum1(-1), igropt(-1),
-        m_ai0(-1), m_ai1(-1), m_ai2(-1), m_ai3(-1), m_ai4(-1), m_ai5(-1), m_ai6(-1), m_lambda0(-1), m_lambda1(-1),
-        m_lambda2(-1),
-        m_k_l(-1), m_k_n(-1), m_k_p(-1), m_p_n(-1), tfact(-1), m_mumax(-1), m_rhoq(-1),
+        m_dt(-1), m_aBank(-1.f), m_qUpReach(-1.f), m_rnum1(-1.f), igropt(-1),
+        m_ai0(-1.f), m_ai1(-1.f), m_ai2(-1.f), m_ai3(-1.f), m_ai4(-1.f), m_ai5(-1.f), 
+		m_ai6(-1.f), m_lambda0(-1.f), m_lambda1(-1.f), m_lambda2(-1.f),
+        m_k_l(-1.f), m_k_n(-1.f), m_k_p(-1.f), m_p_n(-1.f), tfact(-1.f), m_mumax(-1.f), m_rhoq(-1.f),
         m_daylen(NULL), m_sra(NULL), m_bankStorage(NULL), m_qsSub(NULL), m_qiSub(NULL), m_qgSub(NULL),
         m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL), m_chStorage(NULL), m_chWTdepth(NULL), m_wattemp(NULL),
         m_latno3ToCh(NULL), m_surqno3ToCh(NULL), m_surqsolpToCh(NULL), m_no3gwToCh(NULL),
@@ -31,11 +31,26 @@ NutrCH_QUAL2E::NutrCH_QUAL2E(void) :
         m_algae(NULL), m_organicn(NULL), m_organicp(NULL), m_ammonian(NULL), m_nitriten(NULL), m_nitraten(NULL),
         m_disolvp(NULL), m_rch_cod(NULL), m_rch_dox(NULL), m_chlora(NULL), m_soxy(NULL)
 {
-
 }
 
 NutrCH_QUAL2E::~NutrCH_QUAL2E(void)
 {
+	/// reach parameters
+	if (m_reachDownStream != NULL) Release1DArray(m_reachDownStream);
+	if (m_chOrder != NULL) Release1DArray(m_chOrder);
+	if (m_bc1 != NULL) Release1DArray(m_bc1);
+	if (m_bc2 != NULL) Release1DArray(m_bc2);
+	if (m_bc3 != NULL) Release1DArray(m_bc3);
+	if (m_bc4 != NULL) Release1DArray(m_bc4);
+	if (m_rk1 != NULL) Release1DArray(m_rk1);
+	if (m_rk2 != NULL) Release1DArray(m_rk2);
+	if (m_rk3 != NULL) Release1DArray(m_rk3);
+	if (m_rk4 != NULL) Release1DArray(m_rk4);
+	if (m_rs1 != NULL) Release1DArray(m_rs1);
+	if (m_rs2 != NULL) Release1DArray(m_rs2);
+	if (m_rs3 != NULL) Release1DArray(m_rs3);
+	if (m_rs4 != NULL) Release1DArray(m_rs4);
+	if (m_rs5 != NULL) Release1DArray(m_rs5);
 
     if (m_algae != NULL) Release1DArray(m_algae);
     if (m_organicn != NULL) Release1DArray(m_organicn);
@@ -337,35 +352,63 @@ void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
         throw ModelException("NutCHRout", "SetValue", "Parameter " + sk + " does not exist.");
     }
 }
-
-void NutrCH_QUAL2E::Set2DData(const char *key, int nrows, int ncols, float **data)
+void NutrCH_QUAL2E::SetReaches(clsReaches *reaches)
 {
-    string sk(key);
-    if (StringMatch(sk, VAR_REACH_PARAM))
-    {
-        m_nReaches = ncols - 1;
-        m_reachId = data[0];
-        m_reachDownStream = data[1];
-        m_chOrder = data[2];
-        //m_chWidth = data[3];
-        //m_chLen = data[4];
-        //m_chDepth = data[5];
-        //m_chVel = data[6];
-        //m_area = data[7];
-        m_reachUpStream.resize(m_nReaches + 1);
-        if (m_nReaches > 1)
-        {
-            for (int i = 1; i <= m_nReaches; i++)// index of the reach is the equal to stream link ID(1 to nReaches)
-            {
-                int downStreamId = int(m_reachDownStream[i]);
-                if (downStreamId <= 0)
-                    continue;
-                m_reachUpStream[downStreamId].push_back(i);
-            }
-        }
-    }
-    else
-        throw ModelException("NutCHPout", "Set2DData","Parameter " + sk + " does not exist.");
+	if(reaches != NULL)
+	{
+		m_nReaches = reaches->GetReachNumber();
+		m_reachId = reaches->GetReachIDs();
+		Initialize1DArray(m_nReaches+1,m_reachDownStream, 0.f);
+		Initialize1DArray(m_nReaches+1,m_chOrder, 0.f);
+		/// initialize reach related parameters
+		Initialize1DArray(m_nReaches+1,m_bc1, 0.f);
+		Initialize1DArray(m_nReaches+1,m_bc2, 0.f);
+		Initialize1DArray(m_nReaches+1,m_bc3, 0.f);
+		Initialize1DArray(m_nReaches+1,m_bc4, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rk1, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rk2, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rk3, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rk4, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rs1, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rs2, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rs3, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rs4, 0.f);
+		Initialize1DArray(m_nReaches+1,m_rs5, 0.f);
+		for (vector<int>::iterator it = m_reachId.begin(); it != m_reachId.end(); it++)
+		{
+			int i = *it;
+			clsReach* tmpReach = reaches->GetReachByID(i);
+			m_reachDownStream[i] = (float)tmpReach->GetDownStream();
+			m_chOrder[i] = (float)tmpReach->GetUpDownOrder();
+			m_bc1[*it] = tmpReach->GetBc1();
+			m_bc2[*it] = tmpReach->GetBc2();
+			m_bc3[*it] = tmpReach->GetBc3();
+			m_bc4[*it] = tmpReach->GetBc4();
+			m_rk1[*it] = tmpReach->GetRk1();
+			m_rk2[*it] = tmpReach->GetRk2();
+			m_rk3[*it] = tmpReach->GetRk3();
+			m_rk4[*it] = tmpReach->GetRk4();
+			m_rs1[*it] = tmpReach->GetRs1();
+			m_rs2[*it] = tmpReach->GetRs2();
+			m_rs3[*it] = tmpReach->GetRs3();
+			m_rs4[*it] = tmpReach->GetRs4();
+			m_rs5[*it] = tmpReach->GetRs5();
+		}
+
+		m_reachUpStream.resize(m_nReaches + 1);
+		if (m_nReaches > 1)
+		{
+			for (int i = 1; i <= m_nReaches; i++)// index of the reach is the equal to streamlink ID(1 to nReaches)
+			{
+				int downStreamId = int(m_reachDownStream[i]);
+				if (downStreamId <= 0)
+					continue;
+				m_reachUpStream[downStreamId].push_back(i);
+			}
+		}
+	}
+	else
+		throw ModelException("NutCHPout", "SetReaches", "The reaches input can not to be NULL.");
 }
 
 void  NutrCH_QUAL2E::initialOutputs()
@@ -377,73 +420,33 @@ void  NutrCH_QUAL2E::initialOutputs()
     {
         CheckInputData();
         for (int i = 1; i <= m_nReaches; i++)
-        {
+		{
+			if (m_chOrder == NULL)
+				throw ModelException("NutCHPout", "initialOutputs", "Stream order is not loaded successful from Reach table.");
             int order = (int) m_chOrder[i];
             m_reachLayers[order].push_back(i);
         }
     }
     if (m_organicn == NULL)
     {
-        m_algae = new float[m_nReaches + 1];
-        m_organicn = new float[m_nReaches + 1];
-        m_organicp = new float[m_nReaches + 1];
-        m_ammonian = new float[m_nReaches + 1];
-        m_nitriten = new float[m_nReaches + 1];
-        m_nitraten = new float[m_nReaches + 1];
-        m_disolvp = new float[m_nReaches + 1];
-        m_rch_cod = new float[m_nReaches + 1];
-        m_rch_dox = new float[m_nReaches + 1];
-        m_chlora = new float[m_nReaches + 1];
+		Initialize1DArray(m_nReaches+1,m_algae,0.f);
+		Initialize1DArray(m_nReaches+1,m_organicn,0.f);
+		Initialize1DArray(m_nReaches+1,m_organicp,0.f);
+		Initialize1DArray(m_nReaches+1,m_ammonian,0.f);
+		Initialize1DArray(m_nReaches+1,m_nitriten,0.f);
+		Initialize1DArray(m_nReaches+1,m_nitraten,0.f);
+		Initialize1DArray(m_nReaches+1,m_disolvp,0.f);
+		Initialize1DArray(m_nReaches+1,m_rch_cod,0.f);
+		Initialize1DArray(m_nReaches+1,m_rch_dox,0.f);
+		Initialize1DArray(m_nReaches+1,m_chlora,0.f);
         m_soxy = 0.f;
-#pragma omp parallel for
-        for (int i = 1; i <= m_nReaches; i++)
-        {
-            m_algae[i] = 0.f;
-            m_organicn[i] = 0.f;
-            m_organicp[i] = 0.f;
-            m_ammonian[i] = 0.f;
-            m_nitriten[i] = 0.f;
-            m_nitraten[i] = 0.f;
-            m_disolvp[i] = 0.f;
-            m_rch_cod[i] = 0.f;
-            m_rch_dox[i] = 0.f;
-            m_chlora[i] = 0.f;
-        }
     }
 }
 
 int NutrCH_QUAL2E::Execute()
 {
-    if (!CheckInputData())
-    {
-        return false;
-    }
-
+    if (!CheckInputData())return false;
     initialOutputs();
-    ///////////////////////////////////////Get reach information/////////////////////////////////////
-    int nReaches = m_reaches->GetReachNumber();
-    vector<int> reachIDs = m_reaches->GetReachIDs();
-    /// Get reach information by subbasin ID
-    for (vector<int>::iterator it = reachIDs.begin(); it != reachIDs.end(); it++)
-    {
-        clsReach *reach = m_reaches->GetReachByID(*it);
-        /// Get fields of reach
-        m_bc1[*it] = reach->GetBc1();
-        m_bc2[*it] = reach->GetBc2();
-        m_bc3[*it] = reach->GetBc3();
-        m_bc4[*it] = reach->GetBc4();
-        m_rk1[*it] = reach->GetRk1();
-        m_rk2[*it] = reach->GetRk2();
-        m_rk3[*it] = reach->GetRk3();
-        m_rk4[*it] = reach->GetRk4();
-        m_rs1[*it] = reach->GetRs1();
-        m_rs2[*it] = reach->GetRs2();
-        m_rs3[*it] = reach->GetRs3();
-        m_rs4[*it] = reach->GetRs4();
-        m_rs5[*it] = reach->GetRs5();
-
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     map<int, vector<int> > ::iterator it;
     for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
@@ -460,7 +463,6 @@ int NutrCH_QUAL2E::Execute()
             NutrientinChannel(reachIndex);
         }
     }
-    
     return 0;
 }
 
