@@ -60,18 +60,18 @@ private:
     //float **m_porosity;
 
 	/// amount of water held in the soil layer at saturation (sat - wp water), mm
-	float **m_sat;
+	float **m_satmm;
 	/// porosity index
     float **m_poreIndex;
-	/// field capacity (mm/mm)
-    //float **m_fc;
 
 	/// amount of water available to plants in soil layer at field capacity (AWC=FC-WP), mm
-	float **m_fc;
+	float **m_fcmm;
 	/// water content of soil at -1.5 MPa (wilting point) mm H2O
-	float **m_wp;
-	/// soil moisture (mm)
-    float **m_somo;
+	float **m_wpmm;
+	/// soil water storage (mm)
+	float **m_soilStorage;
+	/// soil water storage in soil profile (mm)
+	float *m_soilStorageProfile;
 	/// soil temperature, deg C
     float *m_soilT;
 

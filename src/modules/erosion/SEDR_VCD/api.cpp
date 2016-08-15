@@ -32,8 +32,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 #ifdef STORM_MODEL
     mdi.AddParameter(Tag_ChannelTimeStep,UNIT_SECOND,DESC_TIMESTEP,File_Input,DT_Single);  //for long term model // this method is daily time interval based.
 #else
-    mdi.AddParameter(Tag_TimeStep, UNIT_SECOND, DESC_TIMESTEP, File_Input,
-                     DT_Single); /// in Module Settings: time_t SettingsInput::getDtDaily() const{return 86400;}
+	/// in Module Settings: time_t SettingsInput::getDtDaily() const{return 86400;}
+    mdi.AddParameter(Tag_TimeStep, UNIT_SECOND, DESC_TIMESTEP, File_Input, DT_Single); 
 #endif
     mdi.AddParameter(VAR_P_RF, UNIT_NON_DIM, DESC_P_RF, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_SPCON, UNIT_NON_DIM, DESC_SPCON, Source_ParameterDB, DT_Single);
@@ -42,8 +42,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_CHS0, UNIT_STRG_M3M, DESC_CHS0, Source_ParameterDB, DT_Single);
     mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 
-    mdi.AddInput(VAR_SED_TO_CH, UNIT_TONS, DESC_SED_TO_CH, Source_Module, DT_Array1D);  // for longterm model
-    //mdi.AddInput(VAR_SUB_SEDTOCH, UNIT_KG, DESC_SUB_SEDTOCH, Source_Module, DT_Array1D);   // for storm model
+    mdi.AddInput(VAR_SED_TO_CH, UNIT_TONS, DESC_SED_TO_CH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_QS, UNIT_FLOW_CMS, DESC_QS, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_QI, UNIT_FLOW_CMS, DESC_QI, Source_Module, DT_Array1D);
@@ -56,7 +55,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_SED_OUTLET, UNIT_TONS, DESC_SED_OUTLET, DT_Single);
     // set the dependencies
     mdi.AddDependency(MCLS_OL_EROSION, MCLSDESC_OL_EROSION);
-    mdi.AddDependency(MCLS_CH_ROUTING, MCLSDESC_CH_ROUTING);    //for module GWA_RE to update groundwater storage
+    mdi.AddDependency(MCLS_CH_ROUTING, MCLSDESC_CH_ROUTING); 
 
     res = mdi.GetXMLDocument();
 

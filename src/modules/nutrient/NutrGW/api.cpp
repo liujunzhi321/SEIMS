@@ -27,21 +27,19 @@ extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 //! function to return the XML Metadata document string
 extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 {
-
     MetadataInfo mdi;
     mdi.SetAuthor("Huiran Gao");
-    mdi.SetClass(MCLS_NutGW, MCLSDESC_NutGW);
-    mdi.SetDescription(MDESC_NutGW);
+    mdi.SetClass(MCLS_NUTRGW, MCLSDESC_NUTRGW);
+    mdi.SetDescription(MDESC_NUTRGW);
     mdi.SetEmail(SEIMS_EMAIL);
-    mdi.SetID(MDESC_NutGW);
-    mdi.SetName(MDESC_NutGW);
+    mdi.SetID(MDESC_NUTRGW);
+    mdi.SetName(MDESC_NUTRGW);
     mdi.SetVersion("1.0");
     mdi.SetWebsite(SEIMS_SITE);
     mdi.SetHelpfile("NutGW.html");
 
     // set the parameters
 	mdi.AddParameter(Tag_TimeStep, UNIT_TIMESTEP_SEC, DESC_TIMESTEP, File_Config, DT_Single);
-    mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
     mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
 	// parameters for subbasin sum
@@ -71,3 +69,5 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
     return tmp;
 }
+
+//mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);

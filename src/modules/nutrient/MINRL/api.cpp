@@ -52,7 +52,9 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_SOL_SORGN, UNIT_CONT_KGHA, DESC_SOL_SORGN, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_HORGP, UNIT_CONT_KGHA, DESC_SOL_HORGP, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
-	//mdi.AddParameter(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, Source_ParameterDB, DT_Raster2D);
+	
+	mdi.AddInput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, Source_Module_Optional, DT_Raster1D);
+	mdi.AddInput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, Source_Module_Optional, DT_Raster2D);
 
 	// from other modules
 	mdi.AddInput(VAR_SOTE, UNIT_TEMP_DEG, DESC_SOTE, Source_Module, DT_Raster1D);
@@ -61,7 +63,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
 	mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Raster2D);
     // set the output variables
-	/// watershed statistics, total 18
+	
     mdi.AddOutput(VAR_HMNTL, UNIT_CONT_KGHA, DESC_HMNTL, DT_Raster1D);
     mdi.AddOutput(VAR_HMPTL, UNIT_CONT_KGHA, DESC_HMPTL, DT_Raster1D);
     mdi.AddOutput(VAR_RMN2TL, UNIT_CONT_KGHA, DESC_RMN2TL, DT_Raster1D);
@@ -70,6 +72,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_WDNTL, UNIT_CONT_KGHA, DESC_WDNTL, DT_Raster1D);
     mdi.AddOutput(VAR_RMP1TL, UNIT_CONT_KGHA, DESC_RMP1TL, DT_Raster1D);
     mdi.AddOutput(VAR_ROCTL, UNIT_CONT_KGHA, DESC_ROCTL, DT_Raster1D);
+	/// watershed statistics, total 10
     mdi.AddOutput(VAR_WSHD_DNIT, UNIT_CONT_KGHA, DESC_WSHD_DNIT, DT_Single);
     mdi.AddOutput(VAR_WSHD_HMN, UNIT_CONT_KGHA, DESC_WSHD_HMN, DT_Single);
     mdi.AddOutput(VAR_WSHD_HMP, UNIT_CONT_KGHA, DESC_WSHD_HMP, DT_Single);
@@ -95,11 +98,11 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_SOL_ACTP, UNIT_CONT_KGHA, DESC_SOL_ACTP, DT_Raster2D);
 	mdi.AddOutput(VAR_SOL_STAP, UNIT_CONT_KGHA, DESC_SOL_STAP, DT_Raster2D);
 
-	//mdi.AddOutput(VAR_SOL_WPMM, UNIT_DEPTH_MM, DESC_SOL_WPMM, DT_Raster2D);
-	//mdi.AddOutput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, DT_Raster2D);
-
     string res = mdi.GetXMLDocument();
     char *tmp = new char[res.size() + 1];
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
     return tmp;
 }
+
+	//mdi.AddOutput(VAR_SOL_WPMM, UNIT_DEPTH_MM, DESC_SOL_WPMM, DT_Raster2D);
+	//mdi.AddOutput(VAR_ROOTDEPTH, UNIT_DEPTH_MM, DESC_ROOTDEPTH, DT_Raster2D);

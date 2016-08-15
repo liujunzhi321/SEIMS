@@ -43,6 +43,8 @@ public:
 
 	virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
 
+	virtual void SetSubbasins(clsSubbasins *subbasins);
+
     virtual void Get1DData(const char *key, int *n, float **data);
 
     bool CheckInputSize(const char *key, int n);
@@ -74,8 +76,9 @@ private:
     float *m_flowacc;
     //! stream link
     float *m_streamLink;
-	//! Subbasin map
-    float *m_subbasin;
+	////! Subbasin map
+ //   float *m_subbasin;
+
 	//! USLE LS factor
     float *m_usle_ls;
 	//! cell area (A, km^2)

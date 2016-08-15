@@ -428,7 +428,7 @@ void MUSK_CH::SetScenario(Scenario * sce)
 	/// test data in m_ptSrcFactory
 	for (map<int, BMPPointSrcFactory*>::iterator it = m_ptSrcFactory.begin(); it != m_ptSrcFactory.end(); it++)
 	{
-		cout<<"unique Point Source Factory ID: "<<it->first<<endl;
+		//cout<<"unique Point Source Factory ID: "<<it->first<<endl;
 		vector<int> m_ptSrcMgtSeqs = it->second->GetPointSrcMgtSeqs();
 		map<int, PointSourceMgtParams *>  m_pointSrcMgtMap = it->second->GetPointSrcMgtMap();
 		vector<int> m_ptSrcIDs = it->second->GetPointSrcIDs();

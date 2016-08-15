@@ -31,7 +31,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetWebsite(SEIMS_SITE);
 
     mdi.AddParameter(Tag_TimeStep, UNIT_TIMESTEP_SEC, DESC_TIMESTEP, File_Config, DT_Single);
-    //mdi.AddParameter(Tag_CellSize, UNIT_NON_DIM, DESC_CellSize, Source_ParameterDB, DT_Single);
     mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
 
 	/// add DT_Subbasin

@@ -13,14 +13,12 @@ ReservoirMethod::ReservoirMethod(void) : m_TimeStep(-1), m_nCells(-1), m_nSubbas
 	m_soilDepth(NULL), m_soilLayers(NULL), m_soilThick(NULL), m_Slope(NULL),  
 	m_VgroundwaterFromBankStorage(NULL),m_subbasinsInfo(NULL),
 	m_dp_co(NODATA_VALUE), m_Kg(NODATA_VALUE), m_Base_ex(NODATA_VALUE), 
-	m_perc(NULL), m_D_EI(NULL), m_D_ED(NULL), m_D_ES(NULL), m_D_PET(NULL), m_plantEP(NULL), m_soilMoisture(NULL),
+	m_perc(NULL), m_D_EI(NULL), m_D_ED(NULL), m_D_ES(NULL), m_D_PET(NULL), m_plantEP(NULL), m_soilStorage(NULL),
 	/// intermediate
 	m_petSubbasin(NULL), m_gwStore(NULL),
 	/// outputs
-	m_T_Perco(NULL),m_T_PerDep(NULL),m_T_RG(NULL),m_T_QG(NULL),m_D_Revap(NULL),m_T_Revap(NULL),m_firstRun(true), m_T_GWWB(NULL)
-                                         
+	m_T_Perco(NULL),m_T_PerDep(NULL),m_T_RG(NULL),m_T_QG(NULL),m_D_Revap(NULL),m_T_Revap(NULL),m_firstRun(true), m_T_GWWB(NULL)                                   
 {
-	
 }
 
 ReservoirMethod::~ReservoirMethod(void)
@@ -33,7 +31,7 @@ ReservoirMethod::~ReservoirMethod(void)
     if (m_T_QG != NULL) Release1DArray(m_T_QG);
     if (m_petSubbasin != NULL) Release1DArray(m_petSubbasin);
     if (m_gwStore != NULL) Release1DArray(m_gwStore);
-	if(m_T_GWWB != NULL) Release2DArray(m_nSubbasins+1, m_T_GWWB);
+	if (m_T_GWWB != NULL) Release2DArray(m_nSubbasins+1, m_T_GWWB);
 }
 void ReservoirMethod::initialOutputs()
 {
@@ -42,15 +40,15 @@ void ReservoirMethod::initialOutputs()
 		setSubbasinInfos();
 		m_firstRun = false;
 	}
-	if(m_T_Perco == NULL) Initialize1DArray(nLen,m_T_Perco,0.f);
-	if(m_T_Revap == NULL) Initialize1DArray(nLen,m_T_Revap,0.f);
-	if(m_T_PerDep == NULL) Initialize1DArray(nLen,m_T_PerDep,0.f);
+	if (m_T_Perco == NULL) Initialize1DArray(nLen,m_T_Perco,0.f);
+	if (m_T_Revap == NULL) Initialize1DArray(nLen,m_T_Revap,0.f);
+	if (m_T_PerDep == NULL) Initialize1DArray(nLen,m_T_PerDep,0.f);
 	if (m_T_RG == NULL) Initialize1DArray(nLen, m_T_RG, 0.f);
 	if (m_T_QG == NULL) Initialize1DArray(nLen, m_T_QG, 0.f);
 	if (m_petSubbasin == NULL) Initialize1DArray(nLen, m_petSubbasin, 0.f);
 	if (m_gwStore == NULL) Initialize1DArray(nLen, m_gwStore, m_GW0);
     if (m_D_Revap == NULL) Initialize1DArray(m_nCells, m_D_Revap, 0.f);
-	if(m_T_GWWB == NULL) Initialize2DArray(nLen, 6, m_T_GWWB, 0.f);
+	if (m_T_GWWB == NULL) Initialize2DArray(nLen, 6, m_T_GWWB, 0.f);
 }
 int ReservoirMethod::Execute()
 {
@@ -75,10 +73,10 @@ int ReservoirMethod::Execute()
 		perco /= curCellsNum;
 		curSub->setPerco(perco);
 
-		if (perco > 0.f)
-		{
-			cout << perco << endl;
-		}
+		//if (perco > 0.f)
+		//{
+		//	cout << perco << endl;
+		//}
 
 		//calculate EG, i.e. Revap
 		float revap = 0.0f;
@@ -195,7 +193,7 @@ int ReservoirMethod::Execute()
         for (int i = 0; i < nCells; i++)
         {
             index = cells[i];
-            m_soilMoisture[index][(int)m_soilLayers[index] - 1] += sub->getEG();
+            m_soilStorage[index][(int)m_soilLayers[index] - 1] += sub->getEG();
 			// TODO: Is it need to allocate revap to each soil layers??? By LJ
         }
     }
@@ -242,7 +240,7 @@ bool ReservoirMethod::CheckInputData()
         throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: m_D_PET has not been set.");
     if (m_Slope == NULL)
         throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: Slope has not been set.");
-    if (m_soilMoisture == NULL)
+    if (m_soilStorage == NULL)
 		throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: soil moisture has not been set.");
 	if (m_soilLayers == NULL)
 		throw ModelException(MID_GWA_RE, "CheckInputData", "The parameter: soil layers has not been set.");
@@ -336,7 +334,7 @@ void ReservoirMethod::Set2DData(const char *key, int nrows, int ncols, float **d
     if (StringMatch(sk, VAR_PERCO))
         m_perc = data;
     else if (StringMatch(sk, VAR_SOL_ST))
-        m_soilMoisture = data;
+        m_soilStorage = data;
 	else if (StringMatch(sk, VAR_SOILDEPTH))
 		m_soilDepth = data;
 	else if (StringMatch(sk, VAR_SOILTHICK))

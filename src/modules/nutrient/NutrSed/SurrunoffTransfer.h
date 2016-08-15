@@ -7,8 +7,6 @@
  */
 
 #pragma once
-#ifndef SEIMS_SurTra_PARAMS_INCLUDE
-#define SEIMS_SurTra_PARAMS_INCLUDE
 
 #include <string>
 #include "api.h"
@@ -40,11 +38,11 @@ public:
     virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
 
     virtual void SetValue(const char *key, float value);
+
 	virtual void SetSubbasins(clsSubbasins *);
 
     virtual int Execute();
 
-    //virtual void GetValue(const char* key, float* value);
     virtual void Get1DData(const char *key, int *n, float **data);
 
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
@@ -62,7 +60,8 @@ private:
 	/// enrichment ratio
 	float *m_enratio;
 
-    ///input data
+    ///inputs
+
     //distribution of soil loss caused by water erosion
     float *m_sedimentYield;
     //distribution of surface runoff generated
@@ -70,9 +69,9 @@ private:
     //bulk density of the soil
     float **m_sol_bd;
     //depth to bottom of soil layer
-    float **m_sol_z;
-    //??
-    float **m_sol_mp;
+    float **m_soilDepth;
+    ////??
+    //float **m_sol_mp;
 
 	/// subbasin related
 	/// the total number of subbasins
@@ -95,6 +94,7 @@ private:
     float *m_sedminps;
 
 	/// output to channel
+
 	float *m_sedorgnToCh;
 	float *m_sedorgpToCh;
 	float *m_sedminpaToCh;
@@ -150,10 +150,3 @@ private:
     void initialOutputs();
 
 };
-
-#endif
-
-
-
-
-

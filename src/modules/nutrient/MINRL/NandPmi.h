@@ -100,8 +100,8 @@ private:
 	/// percent organic carbon in soil layer (%)
 	float **m_sol_cbn;
     ///amount of water stored in the soil layer on current day(mm H2O)
-    float **m_somo;
-    ///Water content of soil profile at field capacity(mm H2O)
+    float **m_soilStorage;
+    ///Water content of soil profile at field capacity(mm H2O) (FC-WP)
     float **m_sol_awc;
     ///depth to bottom of soil layer
 	float **m_sol_z;
@@ -218,4 +218,3 @@ private:
 };
 
 #endif
-

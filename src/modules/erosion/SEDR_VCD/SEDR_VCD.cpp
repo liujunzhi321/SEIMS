@@ -47,17 +47,6 @@ SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODAT
 
 SEDR_VCD::~SEDR_VCD(void)
 {
-    /*if (m_T_CHSB != NULL)
-    {
-        for(int i=0; i<m_nreach; i++)
-        {
-            if(m_T_CHSB[i] != NULL) delete [] m_T_CHSB[i];
-        }
-        delete [] m_T_CHSB;
-    }*/
-
-    //if(m_area != NULL) delete [] m_area;
-    //if(m_chStorage != NULL) delete [] m_chStorage;
     if (m_SedOut != NULL) delete[] m_SedOut;
     if (m_widthcurrent != NULL) delete[] m_widthcurrent;
     if (m_depthcurrent != NULL) delete[] m_depthcurrent;
@@ -68,7 +57,6 @@ SEDR_VCD::~SEDR_VCD(void)
     if (m_sedUps != NULL) delete[] m_sedUps;
     if (m_sedDeg != NULL) delete[] m_sedDeg;
     if (m_sedDep != NULL) delete[] m_sedDep;
-    //if(m_CrAreaCh != NULL) delete [] m_CrAreaCh;
 }
 
 bool SEDR_VCD::CheckInputData(void)
@@ -111,10 +99,6 @@ bool SEDR_VCD::CheckInputData(void)
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: ReachParameter has not been set.");
     }
-    /*if (m_CrAreaCh == NULL)
-    {
-        throw ModelException(MID_SEDR_VCD,"CheckInputData","The parameter: m_CrAreaCh has not been set.");
-    }*/
     if (m_qgSub == NULL)
     {
         throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_qgSub has not been set.");

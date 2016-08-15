@@ -38,16 +38,12 @@ private:
     int m_nCells;
 	//! maximum soil layers number
     int m_nSoilLayers;
-    //time_t m_Date; there is no need to define date here. By LJ.
 	//! soil layers number of each cell
 	float *m_soilLayers;
 	//! soil thickness of each layer
 	float **m_soilThick; 
 	//! the maximum soil depth
 	float *m_soilZMX;
-	// previously, RootDepth (of plant) is confused with the sol_zmx, now change m_RootDepth to m_soilZMX
-    //float *m_RootDepth;
-    //float m_upSoilDepth; /// not needed any more. By LJ.
 
 	//! Net precipitation (include snow melt if stated) (mm)
     float *m_pNet;
@@ -61,8 +57,8 @@ private:
     float **m_RI;
 	//! percolation (mm)
     float **m_Perco;
-	//! soil moisture (mm)
-    float **m_somo;
+	//! soil storage (mm)
+    float **m_soilStorage;
 	// Outputs
     // used to output time series result for soil water balance
 
@@ -136,3 +132,9 @@ private:
     void setValueToSubbasins(void);
 };
 
+
+	// previously, RootDepth (of plant) is confused with the sol_zmx, now change m_RootDepth to m_soilZMX
+    //float *m_RootDepth;
+    //float m_upSoilDepth; /// not needed any more. By LJ.
+
+	//time_t m_Date; there is no need to define date here. By LJ.
