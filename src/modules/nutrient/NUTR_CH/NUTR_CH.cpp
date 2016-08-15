@@ -1,5 +1,5 @@
 /*!
- * \file SEDR_VCD.cpp
+ * \file NUTR_CH.cpp
  * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
  * \author Hui Wu
  * \date Jul. 2012
@@ -11,7 +11,7 @@
  * \date August / 2016
  */
 
-#include "SEDR_VCD.h"
+#include "NUTR_CH.h"
 #include "MetadataInfo.h"
 #include "ModelException.h"
 #include "util.h"
@@ -25,7 +25,7 @@
 
 using namespace std;
 
-SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA_VALUE), 
+NUTR_CH::NUTR_CH(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA_VALUE), 
                            m_Vdiv(NULL), m_Vpoint(NULL), m_chStorage(NULL), m_SedOut(NULL),
                            m_chOrder(NULL), m_qchOut(NULL), m_sideslopeMain(1.f), m_sideslopeFloodplain(1.f),
                            m_w_ratio(1.f), m_bankfullQ(5.f),
@@ -37,7 +37,7 @@ SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODAT
 }
 
 
-SEDR_VCD::~SEDR_VCD(void)
+NUTR_CH::~NUTR_CH(void)
 {
     if (m_SedOut != NULL) Release1DArray(m_SedOut);
     if (m_sedStorage != NULL) Release1DArray(m_sedStorage);
@@ -45,52 +45,52 @@ SEDR_VCD::~SEDR_VCD(void)
     if (m_sedDep != NULL) Release1DArray(m_sedDep);
 }
 
-bool SEDR_VCD::CheckInputData(void)
+bool NUTR_CH::CheckInputData(void)
 {
     if (m_dt < 0)
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_dt has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_dt has not been set.");
 
     if (m_nreach < 0)
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_nreach has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_nreach has not been set.");
 
     if (FloatEqual(m_Chs0, NODATA_VALUE))
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: Chs0 has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: Chs0 has not been set.");
 
     if (FloatEqual(m_prf, NODATA_VALUE))
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_prf has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_prf has not been set.");
 
     if (FloatEqual(m_spcon, NODATA_VALUE))
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_spcon has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_spcon has not been set.");
     
     if (FloatEqual(m_spexp, NODATA_VALUE))
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_spexp has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_spexp has not been set.");
     
     if (FloatEqual(m_vcrit, NODATA_VALUE))
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_vcrit has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_vcrit has not been set.");
     
     if (m_sedtoCh == NULL)
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_sedtoCh has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_sedtoCh has not been set.");
     
     if (m_chWidth == NULL)
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: ReachParameter has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: ReachParameter has not been set.");
     
     if (m_chStorage == NULL)
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_chStorage has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_chStorage has not been set.");
     
     if (m_chWTdepth == NULL)
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_chWTdepth has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_chWTdepth has not been set.");
     
     if (m_qchOut == NULL)
-        throw ModelException(MID_SEDR_VCD, "CheckInputData", "The parameter: m_qchOut has not been set.");
+        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_qchOut has not been set.");
     
     return true;
 }
 
-void  SEDR_VCD::initialOutputs()
+void  NUTR_CH::initialOutputs()
 {
 
     if (m_nreach <= 0)
-        throw ModelException(MID_SEDR_VCD, "initialOutputs", "The cell number of the input can not be less than zero.");
+        throw ModelException(MID_NUTR_CH, "initialOutputs", "The cell number of the input can not be less than zero.");
 
     if (m_reachLayers.empty())
     {
@@ -117,7 +117,7 @@ void  SEDR_VCD::initialOutputs()
     }
 }
 
-int SEDR_VCD::Execute()
+int NUTR_CH::Execute()
 {
     //check the data
     CheckInputData();
@@ -142,7 +142,7 @@ int SEDR_VCD::Execute()
     return 0;
 }
 
-bool SEDR_VCD::CheckInputSize(const char *key, int n)
+bool NUTR_CH::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
     {
@@ -158,14 +158,14 @@ bool SEDR_VCD::CheckInputSize(const char *key, int n)
             ostringstream oss;
             oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
             m_nreach << ".\n";
-            throw ModelException(MID_SEDR_VCD, "CheckInputSize", oss.str());
+            throw ModelException(MID_NUTR_CH, "CheckInputSize", oss.str());
         }
     }
 
     return true;
 }
 
-void SEDR_VCD::GetValue(const char *key, float *value)
+void NUTR_CH::GetValue(const char *key, float *value)
 {
     string sk(key);
     int iOutlet = m_reachLayers.rbegin()->second[0];
@@ -176,7 +176,7 @@ void SEDR_VCD::GetValue(const char *key, float *value)
 
 }
 
-void SEDR_VCD::SetValue(const char *key, float value)
+void NUTR_CH::SetValue(const char *key, float value)
 {
     string sk(key);
 
@@ -216,12 +216,12 @@ void SEDR_VCD::SetValue(const char *key, float value)
         m_Chs0 = value;
     }
     else
-        throw ModelException(MID_SEDR_VCD, "SetSingleData", "Parameter " + sk
+        throw ModelException(MID_NUTR_CH, "SetSingleData", "Parameter " + sk
                                                             + " does not exist. Please contact the module developer.");
 
 }
 
-void SEDR_VCD::Set1DData(const char *key, int n, float *value)
+void NUTR_CH::Set1DData(const char *key, int n, float *value)
 {
     string sk(key);
     //check the input data
@@ -250,12 +250,12 @@ void SEDR_VCD::Set1DData(const char *key, int n, float *value)
         m_CrAreaCh = value;
         }*/
     else
-        throw ModelException(MID_SEDR_VCD, "Set1DData", "Parameter " + sk
+        throw ModelException(MID_NUTR_CH, "Set1DData", "Parameter " + sk
                                                         + " does not exist. Please contact the module developer.");
 
 }
 
-void SEDR_VCD::Get1DData(const char *key, int *n, float **data)
+void NUTR_CH::Get1DData(const char *key, int *n, float **data)
 {
     string sk(key);
     *n = m_nreach + 1;
@@ -267,13 +267,13 @@ void SEDR_VCD::Get1DData(const char *key, int *n, float **data)
         *data = m_SedOut;
     }
     else
-        throw ModelException(MID_SEDR_VCD, "Get1DData", "Output " + sk
+        throw ModelException(MID_NUTR_CH, "Get1DData", "Output " + sk
                                                         +
                                                         " does not exist in current module. Please contact the module developer.");
 
 }
 
-void SEDR_VCD::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
+void NUTR_CH::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 {
     string sk(key);
     /*if (StringMatch(sk,"T_CHSB"))
@@ -283,12 +283,12 @@ void SEDR_VCD::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
     *nCols = SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_COUNT;
     }
     else
-        throw ModelException(MID_SEDR_VCD, "Get2DData", "Output " + sk
-        + " does not exist in the SEDR_VCD module. Please contact the module developer.");*/
+        throw ModelException(MID_NUTR_CH, "Get2DData", "Output " + sk
+        + " does not exist in the NUTR_CH module. Please contact the module developer.");*/
 
 }
 
-void SEDR_VCD::Set2DData(const char *key, int nrows, int ncols, float **data)
+void NUTR_CH::Set2DData(const char *key, int nrows, int ncols, float **data)
 {
     string sk(key);
 
@@ -319,11 +319,11 @@ void SEDR_VCD::Set2DData(const char *key, int nrows, int ncols, float **data)
         }
     }
     else
-        throw ModelException(MID_SEDR_VCD, "Set2DData", "Parameter " + sk
+        throw ModelException(MID_NUTR_CH, "Set2DData", "Parameter " + sk
                                                         + " does not exist. Please contact the module developer.");
 }
 
-void SEDR_VCD::SedChannelRouting(int i)
+void NUTR_CH::SedChannelRouting(int i)
 {
     // 1 .whether is no water in channel
     if (m_qchOut[i] < 0.0001f)
@@ -427,7 +427,7 @@ void SEDR_VCD::SedChannelRouting(int i)
 
 }
 
-void SEDR_VCD::doChannelDowncuttingAndWidening(int id)
+void NUTR_CH::doChannelDowncuttingAndWidening(int id)
 {
     //float additionalDepth = m_depthcurrent[id] - m_chDepth[m_idToIndex[id]];
     //if (additionalDepth < m_chSlope[m_idToIndex[id]] * m_chLen[m_idToIndex[id]])

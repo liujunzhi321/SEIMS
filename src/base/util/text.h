@@ -407,6 +407,9 @@
 #define MDESC_MUSLE_AS                        "use MUSLE method to calculate sediment yield of each cell"
 #define MID_IUH_SED_OL                "IUH_SED_OL"
 #define MDESC_IUH_SED_OL              "Overland routing of sediment using IUH"
+
+#define MID_NUTR_CH                   "NUTR_CH"
+#define MDESC_NUTR_CH                 "Channel routing of nutrients"
 /// Management
 #define MCLS_MGT                                        "Mangement practices"
 #define MCLSDESC_MGT                            "BMP related modules"

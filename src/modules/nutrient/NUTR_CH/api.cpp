@@ -2,7 +2,7 @@
 #include <string>
 #include "api.h"
 #include "util.h"
-#include "SEDR_VCD.h"
+#include "NUTR_CH.h"
 #include <iostream>
 #include "SimulationModule.h"
 #include "MetadataInfo.h"
@@ -10,7 +10,7 @@
 
 extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
-    return new SEDR_VCD();
+    return new NUTR_CH();
 }
 
 // function to return the XML Metadata document string
@@ -22,11 +22,11 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     // set the information properties
     mdi.SetAuthor("Wu Hui; Junzhi Liu");
     mdi.SetClass(MCLS_SED_ROUTING, MCLSDESC_SED_ROUTING);
-    mdi.SetDescription(MDESC_SEDR_VCD);
+    mdi.SetDescription(MDESC_NUTR_CH);
     mdi.SetEmail(SEIMS_EMAIL);
-    mdi.SetHelpfile("SEDR_VCD.chm");
-    mdi.SetID(MID_SEDR_VCD);
-    mdi.SetName(MID_SEDR_VCD);
+    mdi.SetHelpfile("NUTR_CH.chm");
+    mdi.SetID(MID_NUTR_CH);
+    mdi.SetName(MID_NUTR_CH);
     mdi.SetVersion("0.1");
     mdi.SetWebsite(SEIMS_SITE);
 #ifdef STORM_MODEL
