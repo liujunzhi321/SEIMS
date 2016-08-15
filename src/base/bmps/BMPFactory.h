@@ -1,7 +1,6 @@
 /*!
- * \file BMPFactory.h
- * \brief
- *
+ * \brief Base class of all kind of BMPs Factory.
+ * Read from BMP_SCENARIOS collection of MongoDB
  */
 #pragma once
 
@@ -9,7 +8,6 @@
 #include "BMPText.h"
 #include "ModelException.h"
 #include <iomanip>
-//#include "DBManager.h"
 //#include "BMPReachFlowDiversion.h"
 //#include "BMPReachPointSource.h"
 //#include "BMPReachReservoir.h"
@@ -38,7 +36,12 @@ namespace MainBMP
 
         /// Load BMP parameters from SQLite
         ///virtual void loadBMP(string bmpDatabasePath) = 0;
-        /// Get BMP type
+        /*  Get BMP type
+		    1 - reach BMPs which are attached to specific reaches and will change the character of the reach.
+			2 - areal structural BMPs which are corresponding to a specific structure in the watershed and will change the character of subbasins/cells.
+			3 - areal non-structure BMPs which are NOT corresponding to a specific structure in the watershed and will change the character of subbasins/cells.
+			4 ¨C point structural BMPs
+			*/
         int bmpType() { return m_bmpType; }
 
         /// Get BMP priority

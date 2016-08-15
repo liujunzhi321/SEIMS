@@ -34,7 +34,7 @@
 build
 build/*
 **build
-# PyCharm project files
+# PyCharm or CLion project files (JetBeans)
 .idea
 # Exclude SQLite Database, which will be reConstructor by preprocessing script
 *.db3

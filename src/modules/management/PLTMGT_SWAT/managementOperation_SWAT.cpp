@@ -129,14 +129,14 @@ void MGTOpt_SWAT::SetValue(const char *key, float data)
     else if (StringMatch(sk, VAR_CSWAT)) m_cswat = (int) data;
     else if (StringMatch(sk, Tag_CellWidth)) m_cellWidth = data;
     else
-        throw ModelException(MID_MGT_SWAT, "SetValue", "Parameter " + sk +
+        throw ModelException(MID_PLTMGT_SWAT, "SetValue", "Parameter " + sk +
                 " does not exist in current module. Please contact the module developer.");
 }
 
 bool MGTOpt_SWAT::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
-        throw ModelException(MID_MGT_SWAT, "CheckInputSize", "Input data for " + string(key) +
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputSize", "Input data for " + string(key) +
                                                              " is invalid. The size could not be less than zero.");
     if (m_nCells != n)
     {
@@ -144,7 +144,7 @@ bool MGTOpt_SWAT::CheckInputSize(const char *key, int n)
             m_nCells = n;
         else
         {
-            throw ModelException(MID_MGT_SWAT, "CheckInputSize", "Input data for " + string(key) +
+            throw ModelException(MID_PLTMGT_SWAT, "CheckInputSize", "Input data for " + string(key) +
                                                                  " is invalid. All the input raster data should have same size.");
             return false;
         }
@@ -199,7 +199,7 @@ void MGTOpt_SWAT::Set1DData(const char *key, int n, float *data)
         //else if (StringMatch(sk, VAR_DEEPST)) m_deepWaterDepth = data;
         //else if (StringMatch(sk, VAR_SHALLST)) m_shallowWaterDepth = data;
     else
-        throw ModelException(MID_MGT_SWAT, "Set1DData", "Parameter " + sk +
+        throw ModelException(MID_PLTMGT_SWAT, "Set1DData", "Parameter " + sk +
                                                         " does not exist. Please contact the module developer.");
 }
 
@@ -207,7 +207,7 @@ bool MGTOpt_SWAT::CheckInputSize2D(const char *key, int n, int col)
 {
     CheckInputSize(key, n);
     if (col <= 0)
-        throw ModelException(MID_MGT_SWAT, "CheckInputSize2D", "Input data for " + string(key) +
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputSize2D", "Input data for " + string(key) +
                                                                " is invalid. The layer number could not be less than zero.");
     if (m_soilLayers != col)
     {
@@ -215,7 +215,7 @@ bool MGTOpt_SWAT::CheckInputSize2D(const char *key, int n, int col)
             m_soilLayers = col;
         else
         {
-            throw ModelException(MID_MGT_SWAT, "CheckInputSize2D", "Input data for " + string(key) +
+            throw ModelException(MID_PLTMGT_SWAT, "CheckInputSize2D", "Input data for " + string(key) +
                                                                    " is invalid. All the layers of input 2D raster data should have same size of " +
                                                                    ValueToString(m_soilLayers) + " instead of " +
                                                                    ValueToString(col) + ".");
@@ -235,7 +235,7 @@ void MGTOpt_SWAT::Set2DData(const char *key, int n, int col, float **data)
         m_landuseNum = n;
         initializeLanduseLookup();
         if (col != (int) LANDUSE_PARAM_COUNT)
-            throw ModelException(MID_MGT_SWAT, "ReadLanduseLookup", "The field number " + ValueToString(col) +
+            throw ModelException(MID_PLTMGT_SWAT, "ReadLanduseLookup", "The field number " + ValueToString(col) +
                                                                     "is not coincident with LANDUSE_PARAM_COUNT: " +
                                                                     ValueToString((int) LANDUSE_PARAM_COUNT));
         return;
@@ -245,7 +245,7 @@ void MGTOpt_SWAT::Set2DData(const char *key, int n, int col, float **data)
         m_cropNum = n;
         initializeCropLookup();
         if (col != (int) CROP_PARAM_COUNT)
-            throw ModelException(MID_MGT_SWAT, "ReadCropLookup", "The field number " + ValueToString(col) +
+            throw ModelException(MID_PLTMGT_SWAT, "ReadCropLookup", "The field number " + ValueToString(col) +
                                                                  "is not coincident with CROP_PARAM_COUNT: " +
                                                                  ValueToString((int) CROP_PARAM_COUNT));
         return;
@@ -255,7 +255,7 @@ void MGTOpt_SWAT::Set2DData(const char *key, int n, int col, float **data)
         m_fertilizerNum = n;
         initializeFertilizerLookup();
         if (col != (int) FERTILIZER_PARAM_COUNT)
-            throw ModelException(MID_MGT_SWAT, "ReadFertilizerLookup", "The field number " + ValueToString(col) +
+            throw ModelException(MID_PLTMGT_SWAT, "ReadFertilizerLookup", "The field number " + ValueToString(col) +
                                                                        "is not coincident with FERTILIZER_PARAM_COUNT: " +
                                                                        ValueToString((int) FERTILIZER_PARAM_COUNT));
         return;
@@ -265,7 +265,7 @@ void MGTOpt_SWAT::Set2DData(const char *key, int n, int col, float **data)
         m_tillageNum = n;
         initializeTillageLookup();
         if (col != (int) TILLAGE_PARAM_COUNT)
-            throw ModelException(MID_MGT_SWAT, "ReadTillageLookup", "The field number " + ValueToString(col) +
+            throw ModelException(MID_PLTMGT_SWAT, "ReadTillageLookup", "The field number " + ValueToString(col) +
                                                                     "is not coincident with TILLAGE_PARAM_COUNT: " +
                                                                     ValueToString((int) TILLAGE_PARAM_COUNT));
         return;
@@ -295,7 +295,7 @@ void MGTOpt_SWAT::Set2DData(const char *key, int n, int col, float **data)
     else if (StringMatch(sk, VAR_SOL_STAP)) m_soilStableMinP = data;
     else if (StringMatch(sk, VAR_SOL_RSD)) m_soilRsd = data;
     else
-        throw ModelException(MID_MGT_SWAT, "Set2DData", "Parameter " + sk +
+        throw ModelException(MID_PLTMGT_SWAT, "Set2DData", "Parameter " + sk +
                                                         " does not exist in current module. Please contact the module developer.");
 }
 
@@ -321,96 +321,96 @@ void MGTOpt_SWAT::SetScenario(Scenario *sce)
 bool MGTOpt_SWAT::CheckInputData(void)
 {
     // DT_Single
-    if (m_date <= 0) throw ModelException(MID_MGT_SWAT, "CheckInputData", "You have not set the time.");
+    if (m_date <= 0) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "You have not set the time.");
     if (m_nCells <= 0)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData",
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
     if (m_cellWidth <= 0)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData",
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData",
                              "The cell width of the input data can not be less than zero.");
     if (m_soilLayers <= 0)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData",
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData",
                              "The layer number of the input 2D raster data can not be less than zero.");
-    if (m_cswat < 0) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Carbon modeling method must be 0, 1, or 2");
+    if (m_cswat < 0) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Carbon modeling method must be 0, 1, or 2");
     /// DT_Raster
-    if (m_subBsnID == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "SubBasin ID must not be NULL");
-    if (m_landUse == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Landuse must not be NULL");
-    if (m_landCover == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Landcover must not be NULL");
-    if (m_mgtFields == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Management fields must not be NULL");
+    if (m_subBsnID == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "SubBasin ID must not be NULL");
+    if (m_landUse == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Landuse must not be NULL");
+    if (m_landCover == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Landcover must not be NULL");
+    if (m_mgtFields == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Management fields must not be NULL");
     if (m_nSoilLayers == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil layeres number must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil layeres number must not be NULL");
     if (m_soilZMX == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Maximum soil root depth must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Maximum soil root depth must not be NULL");
     if (m_soilSumFC == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Summary amount water in field capacity must not be NULL");
-    if (m_CN2 == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "CN2 value must not be NULL");
-    if (m_igro == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Plant growth code must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Summary amount water in field capacity must not be NULL");
+    if (m_CN2 == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "CN2 value must not be NULL");
+    if (m_igro == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Plant growth code must not be NULL");
     if (m_curYearMat == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Current growth year must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Current growth year must not be NULL");
     if (m_wtrStrsYF == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Value of harvest index must not be NULL");
-    if (m_LAIDay == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "LAI in current day must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Value of harvest index must not be NULL");
+    if (m_LAIDay == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "LAI in current day must not be NULL");
     if (m_phuBase == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Base heat units fraction must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Base heat units fraction must not be NULL");
     if (m_phuAcc == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Accumulated heat units fraction must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Accumulated heat units fraction must not be NULL");
     if (m_phuPlant == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Heat units needed by plant to maturity must not be NULL");
-    if (m_dormFlag == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Dormancy flag must not be NULL");
-    if (m_havstIdx == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Harvest index must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Heat units needed by plant to maturity must not be NULL");
+    if (m_dormFlag == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Dormancy flag must not be NULL");
+    if (m_havstIdx == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Harvest index must not be NULL");
     if (m_havstIdxAdj == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Adjusted harvest index must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Adjusted harvest index must not be NULL");
     if (m_LAIMaxFr == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "LAI maximum fraction must not be NULL");
-    if (m_oLAI == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "oLAI must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "LAI maximum fraction must not be NULL");
+    if (m_oLAI == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "oLAI must not be NULL");
     if (m_frPlantN == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Fraction of biomass in nitrogen must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Fraction of biomass in nitrogen must not be NULL");
     if (m_frPlantP == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Fraction of biomass in phosphorus must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Fraction of biomass in phosphorus must not be NULL");
     if (m_pltET == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData",
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData",
                              "Actual ET simulated during life of plant must not be NULL");
     if (m_pltPET == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData",
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData",
                              "Potential ET simulated during life of plant must not be NULL");
     if (m_frRoot == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Fraction of total biomass in roots must not be NULL");
-    if (m_biomass == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Biomass must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Fraction of total biomass in roots must not be NULL");
+    if (m_biomass == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Biomass must not be NULL");
     if (m_lastSoilRootDepth == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Last root depth in soil must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Last root depth in soil must not be NULL");
     if (m_deepWaterDepth == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Depth of water in deep aquifer must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Depth of water in deep aquifer must not be NULL");
     if (m_shallowWaterDepth == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Depth of water in shallow aquifer must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Depth of water in shallow aquifer must not be NULL");
     /// DT_Raster2D
-    if (m_soilDepth == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil depth must not be NULL");
-    if (m_soilThick == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil thickness must not be NULL");
-    if (m_soilBD == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil bulk density must not be NULL");
-    if (m_soilN == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil nitrogen must not be NULL");
+    if (m_soilDepth == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil depth must not be NULL");
+    if (m_soilThick == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil thickness must not be NULL");
+    if (m_soilBD == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil bulk density must not be NULL");
+    if (m_soilN == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil nitrogen must not be NULL");
     if (m_soilCarbon == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil carbon content must not be NULL");
-    if (m_soilRock == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil rock content must not be NULL");
-    if (m_soilClay == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil clay content must not be NULL");
-    if (m_soilSand == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil sand content must not be NULL");
-    if (m_soilSilt == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil silt content must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil carbon content must not be NULL");
+    if (m_soilRock == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil rock content must not be NULL");
+    if (m_soilClay == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil clay content must not be NULL");
+    if (m_soilSand == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil sand content must not be NULL");
+    if (m_soilSilt == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil silt content must not be NULL");
     if (m_soilActiveOrgN == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil active organic N must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil active organic N must not be NULL");
     if (m_soilFreshOrgN == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil fresh organic N must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil fresh organic N must not be NULL");
     if (m_soilFreshOrgP == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil fresh organic P must not be NULL");
-    if (m_soilNH3 == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil NH3 must not be NULL");
-    if (m_soilNO3 == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil NO3 must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil fresh organic P must not be NULL");
+    if (m_soilNH3 == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil NH3 must not be NULL");
+    if (m_soilNO3 == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil NO3 must not be NULL");
     if (m_soilStableOrgN == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil stable organic N must not be NULL");
-    if (m_soilOrgP == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil organic P must not be NULL");
-    if (m_soilSolP == NULL) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil soluble P must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil stable organic N must not be NULL");
+    if (m_soilOrgP == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil organic P must not be NULL");
+    if (m_soilSolP == NULL) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil soluble P must not be NULL");
     if (m_soilActiveMinP == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil active mineral P must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil active mineral P must not be NULL");
     if (m_soilStableMinP == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Soil stable mineral P must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Soil stable mineral P must not be NULL");
     if (m_soilRsd == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData",
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData",
                              "OM classified as residue in soil layers must not be NULL");
     return true;
 }
@@ -482,9 +482,9 @@ void MGTOpt_SWAT::initializeLanduseLookup()
 {
     /// Check input data
     if (m_landuseLookup == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Landuse lookup array must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Landuse lookup array must not be NULL");
     if (m_landuseNum <= 0)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Landuse number must be greater than 0");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Landuse number must be greater than 0");
 
     // when m_landuseLookup != NULL && m_landuseNum > 0
     if (m_landuseLookupMap.empty())
@@ -498,8 +498,8 @@ void MGTOpt_SWAT::initializeCropLookup()
 {
     /// Check input data
     if (m_cropLookup == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Crop lookup array must not be NULL");
-    if (m_cropNum <= 0) throw ModelException(MID_MGT_SWAT, "CheckInputData", "Crop number must be greater than 0");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Crop lookup array must not be NULL");
+    if (m_cropNum <= 0) throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Crop number must be greater than 0");
 
     // when m_cropLookup != NULL && m_cropNum > 0
     if (m_cropLookupMap.empty())
@@ -513,9 +513,9 @@ void MGTOpt_SWAT::initializeFertilizerLookup()
 {
     /// Check input data
     if (m_fertilizerLookup == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Fertilizer lookup array must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Fertilizer lookup array must not be NULL");
     if (m_fertilizerNum <= 0)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Fertilizer number must be greater than 0");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Fertilizer number must be greater than 0");
 
     //when m_fertilizerLookup != NULL && m_fertilizerNum > 0
     if (m_fertilizerLookupMap.empty())
@@ -529,9 +529,9 @@ void MGTOpt_SWAT::initializeTillageLookup()
 {
     /// Check input data
     if (m_tillageLookup == NULL)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Tillage lookup array must not be NULL");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Tillage lookup array must not be NULL");
     if (m_tillageNum <= 0)
-        throw ModelException(MID_MGT_SWAT, "CheckInputData", "Tillage number must be greater than 0");
+        throw ModelException(MID_PLTMGT_SWAT, "CheckInputData", "Tillage number must be greater than 0");
 
     // when m_tillageLookup != NULL && m_tillageNum > 0
     if (m_tillageLookupMap.empty())
@@ -574,7 +574,7 @@ void MGTOpt_SWAT::ExecutePlantOperation(int i, int &factoryID, int nOp)
     m_soilZMX[i] = m_soilDepth[i][(int) m_nSoilLayers[i] - 1];
     /// if the land cover does existed, throw an exception.
     if (m_landuseLookupMap.find(int(m_landCover[i])) == m_landuseLookupMap.end())
-        throw ModelException(MID_MGT_SWAT, "ExecutePlantOperation",
+        throw ModelException(MID_PLTMGT_SWAT, "ExecutePlantOperation",
                              "Land use ID: " + ValueToString(int(m_landCover[i])) +
                              " does not existed in Landuse lookup table, please check and retry!");
     float pltRootDepth = m_landuseLookupMap[(int) m_landCover[i]][LANDUSE_PARAM_ROOT_DEPTH_IDX];

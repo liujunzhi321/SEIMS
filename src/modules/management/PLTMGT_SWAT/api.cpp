@@ -21,9 +21,9 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.SetAuthor("Liang-Jun Zhu");
     mdi.SetClass(MCLS_MGT, MCLSDESC_MGT);
-    mdi.SetDescription(MDESC_MGT_SWAT);
-    mdi.SetID(MID_MGT_SWAT);
-    mdi.SetName(MID_MGT_SWAT);
+    mdi.SetDescription(MDESC_PLTMGT_SWAT);
+    mdi.SetID(MID_PLTMGT_SWAT);
+    mdi.SetName(MID_PLTMGT_SWAT);
     mdi.SetVersion("0.1");
     mdi.SetEmail(SEIMS_EMAIL);
     mdi.SetWebsite(SEIMS_SITE);

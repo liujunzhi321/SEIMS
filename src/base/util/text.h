@@ -413,8 +413,10 @@
 /// Management
 #define MCLS_MGT                                        "Mangement practices"
 #define MCLSDESC_MGT                            "BMP related modules"
-#define MID_MGT_SWAT                            "MGT_SWAT"
-#define MDESC_MGT_SWAT                        "Mangement operation modeling method in SWAT"
+#define MID_PLTMGT_SWAT                            "PLTMGT_SWAT"
+#define MDESC_PLTMGT_SWAT                        "Plant mangement operation modeling method in SWAT"
+#define MID_NPSMGT								"NPSMGT"
+#define MDESC_NPSMGT							"Non-point source pollution management"
 /// Ecology
 #define MCLS_PG                                        "Plant growth"
 #define MCLSDESC_PG                                "Calculate the amount of plant growth."
