@@ -20,7 +20,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     MetadataInfo mdi;
 
     // set the information properties
-    mdi.SetAuthor("Wu Hui; Junzhi Liu");
+    mdi.SetAuthor("Junzhi Liu");
     mdi.SetClass(MCLS_SED_ROUTING, MCLSDESC_SED_ROUTING);
     mdi.SetDescription(MDESC_NUTR_CH);
     mdi.SetEmail(SEIMS_EMAIL);
@@ -35,17 +35,20 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	/// in Module Settings: time_t SettingsInput::getDtDaily() const{return 86400;}
     mdi.AddParameter(Tag_TimeStep, UNIT_SECOND, DESC_TIMESTEP, File_Input, DT_Single); 
 #endif
-    mdi.AddParameter(VAR_P_RF, UNIT_NON_DIM, DESC_P_RF, Source_ParameterDB, DT_Single);
-    mdi.AddParameter(VAR_SPCON, UNIT_NON_DIM, DESC_SPCON, Source_ParameterDB, DT_Single);
-    mdi.AddParameter(VAR_SPEXP, UNIT_NON_DIM, DESC_SPEXP, Source_ParameterDB, DT_Single);
-    mdi.AddParameter(VAR_VCRIT, UNIT_SPEED_MS, DESC_VCRIT, Source_ParameterDB, DT_Single);
-    mdi.AddParameter(VAR_CHS0, UNIT_STRG_M3M, DESC_CHS0, Source_ParameterDB, DT_Single);
+    
     mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
+
+    /// input from hillslope
+	mdi.AddInput(VAR_NO3GW_CH, UNIT_KG, DESC_NO3GW, Source_Module, DT_Array1D);
+	mdi.AddInput(VAR_MINPGW_CH, UNIT_KG, DESC_MINPGW, Source_Module, DT_Raster1D);
+
 
     mdi.AddInput(VAR_SED_TO_CH, UNIT_TONS, DESC_SED_TO_CH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_CHST, UNIT_VOL_M3, DESC_CHST, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_CHWTDEPTH, UNIT_LEN_M, DESC_CHWTDEPTH, Source_Module, DT_Array1D);
+
+
 
     mdi.AddOutput(VAR_SED_RECH, UNIT_TONS, DESC_SED_RECH, DT_Array1D);
     //mdi.AddOutput(VAR_CHSB, UNIT_NON_DIM, DESC_CHSB, DT_Array2D);
