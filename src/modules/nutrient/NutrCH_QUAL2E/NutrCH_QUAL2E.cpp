@@ -974,19 +974,14 @@ void NutrCH_QUAL2E::Get1DData(const char *key, int *n, float **data)
 {
     string sk(key);
     *n = m_nReaches + 1;
-    if (StringMatch(sk, VAR_ALGAE)) { *data = this->m_algae; }
-    else if (StringMatch(sk, VAR_ORGANICN)) { *data = this->m_organicn; }
-    else if (StringMatch(sk, VAR_ORGANICP)) { *data = this->m_organicp; }
-    else if (StringMatch(sk, VAR_AMMONIAN)) { *data = this->m_ammonian; }
-    else if (StringMatch(sk, VAR_NITRITEN)) { *data = this->m_nitriten; }
-    else if (StringMatch(sk, VAR_NITRATEN)) { *data = this->m_nitraten; }
-    else if (StringMatch(sk, VAR_DISOLVP)) { *data = this->m_disolvp; }
-    else if (StringMatch(sk, VAR_RCH_COD)) { *data = this->m_rch_cod; }
+    if (StringMatch(sk, VAR_CH_ALGAE)) { *data = this->m_algae; }
+    else if (StringMatch(sk, VAR_CH_NO2)) { *data = this->m_nitriten; }
+    else if (StringMatch(sk, VAR_CH_COD)) { *data = this->m_rch_cod; }
     //else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
-    else if (StringMatch(sk, VAR_CHLORA)) { *data = this->m_chlora; }
+    else if (StringMatch(sk, VAR_CH_CHLORA)) { *data = this->m_chlora; }
     else
     {
-        throw ModelException("NutCHRout", "GetValue",
+        throw ModelException("NutCH_QUAL2E", "GetValue",
                              "Parameter " + sk + " does not exist. Please contact the module developer.");
     }
 }
