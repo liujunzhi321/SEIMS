@@ -334,8 +334,7 @@ void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_NITRITE_CH)) { this->m_nitriteToCh = data; }
     else
     {
-        throw ModelException("NutCHRout", "SetValue", "Parameter " + sk +
-                                                      " does not exist in Nutrient module. Please contact the module developer.");
+        throw ModelException("NutCHRout", "SetValue", "Parameter " + sk + " does not exist.");
     }
 }
 
@@ -366,8 +365,7 @@ void NutrCH_QUAL2E::Set2DData(const char *key, int nrows, int ncols, float **dat
         }
     }
     else
-        throw ModelException("NutCHPout", "Set2DData",
-                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+        throw ModelException("NutCHPout", "Set2DData","Parameter " + sk + " does not exist.");
 }
 
 void  NutrCH_QUAL2E::initialOutputs()

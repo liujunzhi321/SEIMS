@@ -42,8 +42,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     // set the output variables
     mdi.AddOutput(VAR_SOWB, UNIT_DEPTH_MM, DESC_SOWB, DT_Array2D);
-    mdi.AddOutput(VAR_SBOF, UNIT_DEPTH_MM, DESC_SBOF, DT_Array1D);
-    mdi.AddOutput(VAR_SBIF, UNIT_DEPTH_MM, DESC_SBIF, DT_Array1D);
+    mdi.AddOutput(VAR_SBOF, UNIT_FLOW_CMS, DESC_SBOF, DT_Array1D);
+    mdi.AddOutput(VAR_SBIF, UNIT_FLOW_CMS, DESC_SBIF, DT_Array1D);
 
     string res = mdi.GetXMLDocument();
 

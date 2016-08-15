@@ -80,10 +80,10 @@ private:
     /// reach number (= subbasin number)
     int m_nreach;
 
-    /// diversion loss (Vdiv) of the river reach .. m_Vid[id], id is the reach id
-    float *m_Vdiv;
-    /// The point source discharge .. m_Vpoint[id], id is the reach id
-    float *m_Vpoint;
+    ///// diversion loss (Vdiv) of the river reach .. m_Vid[id], id is the reach id
+    //float *m_Vdiv;
+    ///// The point source discharge .. m_Vpoint[id], id is the reach id
+    //float *m_Vpoint;
 
     /// hydraulic conductivity of the channel bed (mm/h)
     float m_Kchb;

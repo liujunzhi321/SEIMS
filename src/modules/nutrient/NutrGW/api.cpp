@@ -62,6 +62,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     // set the output variables
     mdi.AddOutput(VAR_NO3GW_TOCH, UNIT_KG, DESC_NO3GW_CH, DT_Raster1D);
     mdi.AddOutput(VAR_MINPGW_TOCH, UNIT_KG, DESC_MINPGW_CH, DT_Raster1D);
+
 	//mdi.AddOutput(VAR_REVAP_NO3, UNIT_KG, )
 
     string res = mdi.GetXMLDocument();

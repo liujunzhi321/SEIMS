@@ -60,11 +60,13 @@ public:
 
     virtual void Get1DData(const char *key, int *n, float **data);
 
-    virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
+    //virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
 
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
 
 	virtual void SetScenario(Scenario *);
+
+	virtual void SetReaches(clsReaches *);
 
     bool CheckInputSize(const char *key, int n);
 
@@ -83,10 +85,8 @@ private:
     /// reach number (= subbasin number)
     int m_nreach;
 
-    /// diversion loss (Vdiv) of the river reach .. m_Vid[id], id is the reach id
-    float *m_Vdiv;
-    /// The point source discharge .. m_Vpoint[id], id is the reach id
-    float *m_Vpoint;
+    /// The point source discharge (m3/s), m_ptSub[id], id is the reach id, load from m_Scenario
+    float *m_ptSub;
 
     /// hydraulic conductivity of the channel bed (mm/h)
     float m_Kchb;
@@ -145,17 +145,15 @@ private:
     vector<vector<int> > m_reachUpStream;
 
     // the reaches id 
-    float *m_reachId;
-    /// map from subbasin id to index of the array
-    map<int, int> m_idToIndex;
-
+    //float *m_reachId;
+	vector<int> m_reachId;
     // for muskingum
     float m_x;
     float m_co1;
 
     float m_qUpReach;
-	/// scenario data
-	Scenario* m_scenario;
+	///// scenario data
+	//Scenario* m_scenario;
 	/* point source operations
 	 * key: unique index, BMPID * 100000 + subScenarioID
 	 * value: point source management factory instance
@@ -179,6 +177,8 @@ private:
     map<int, vector<int> > m_reachLayers;
 
     void initialOutputs();
+
+	void PointSourceLoading();
 
     void ChannelFlow(int i);
 

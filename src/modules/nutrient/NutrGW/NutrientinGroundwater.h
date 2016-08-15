@@ -80,10 +80,11 @@ private:
 	float *m_soilLayers;
 
 
-    /// output data
-    /// nitrate loading to reach in groundwater
+    /// outputs
+
+    /// nitrate loading to reach in groundwater to channel
     float *m_no3gwToCh;
-    /// soluble P loading to reach in groundwater
+    /// soluble P loading to reach in groundwater to channel
     float *m_minpgwToCh;
 
 	/// subbasin related
