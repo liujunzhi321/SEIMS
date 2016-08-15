@@ -23,11 +23,15 @@
 #include <algorithm> 
 #include <omp.h>
 
+#define CHECK_POINTER(moduleName, varName) if (varName == NULL) throw ModelException(moduleName, "CheckInputData", "The parameter: varName has not been set.");
+#define CHECK_POSITIVE(moduleName, varName) if (varName > 0) 	throw ModelException(moduleName, "CheckInputData", "The parameter: varName has not been set.");
+
 using namespace std;
 
-NUTR_CH::NUTR_CH(void) : m_dt(-1), m_nreach(-1), m_Chs0(NODATA_VALUE), 
-                           m_Vdiv(NULL), m_Vpoint(NULL), m_chStorage(NULL), 
-                           m_chOrder(NULL), m_qchOut(NULL)
+NUTR_CH::NUTR_CH(void) : m_dt(-1), m_nreach(-1), m_Chs0(NODATA_VALUE), m_Vdiv(NULL), m_Vpoint(NULL), m_chStorage(NULL), 
+                         m_chOrder(NULL), m_qchOut(NULL), m_latno3ToCh(NULL), m_sur_no3ToCh(NULL), m_sur_solpToCh(NULL),
+						 m_sedorgnToCh(NULL), m_sedorgpToCh(NULL), m_no3gwToCh(NULL), m_minpgwToCh(NULL),
+						 m_chOrgN(NULL), m_chNo3(NULL), m_chOrgP(NULL), m_chSolP(NULL)
 {
 
 }
@@ -35,30 +39,29 @@ NUTR_CH::NUTR_CH(void) : m_dt(-1), m_nreach(-1), m_Chs0(NODATA_VALUE),
 
 NUTR_CH::~NUTR_CH(void)
 {
-
+	if(m_chOrgN != NULL) Release1DArray(m_chSolP);
+	if(m_chNo3 != NULL)  Release1DArray(m_chSolP);
+	if(m_chOrgP != NULL) Release1DArray(m_chSolP);
+	if(m_chSolP != NULL) Release1DArray(m_chSolP);
 }
 
 bool NUTR_CH::CheckInputData(void)
 {
-    if (m_dt < 0)
-        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_dt has not been set.");
+	CHECK_POSITIVE(MID_NUTR_CH, m_dt)
+	CHECK_POSITIVE(MID_NUTR_CH, m_nreach)
+	CHECK_POSITIVE(MID_NUTR_CH, m_Chs0)
 
-    if (m_nreach < 0)
-        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_nreach has not been set.");
+    CHECK_POINTER(MID_NUTR_CH, m_chWidth)
+	CHECK_POINTER(MID_NUTR_CH, m_chStorage)
+    CHECK_POINTER(MID_NUTR_CH, m_qchOut)
+	CHECK_POINTER(MID_NUTR_CH, m_latno3ToCh)
+	CHECK_POINTER(MID_NUTR_CH, m_sur_no3ToCh)
+	CHECK_POINTER(MID_NUTR_CH, m_sur_solpToCh)
+	CHECK_POINTER(MID_NUTR_CH, m_sedorgnToCh)
+	CHECK_POINTER(MID_NUTR_CH, m_sedorgpToCh)
+	CHECK_POINTER(MID_NUTR_CH, m_no3gwToCh)
+	CHECK_POINTER(MID_NUTR_CH, m_minpgwToCh)
 
-    if (FloatEqual(m_Chs0, NODATA_VALUE))
-        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: Chs0 has not been set.");
-
-    
-    if (m_chWidth == NULL)
-        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: ReachParameter has not been set.");
-    
-    if (m_chStorage == NULL)
-        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_chStorage has not been set.");
-    
-    if (m_qchOut == NULL)
-        throw ModelException(MID_NUTR_CH, "CheckInputData", "The parameter: m_qchOut has not been set.");
-    
     return true;
 }
 
@@ -78,6 +81,14 @@ void  NUTR_CH::initialOutputs()
             //m_reachLayers[order].push_back(m_reachId[i]);
         }
     }
+
+	if (m_latno3ToCh == NULL)
+	{
+		Initialize1DArray(m_nreach+1, m_chOrgN, 0.f);
+		Initialize1DArray(m_nreach+1, m_chNo3, 0.f);
+		Initialize1DArray(m_nreach+1, m_chOrgP, 0.f);
+		Initialize1DArray(m_nreach+1, m_chSolP, 0.f);
+	}
 
 }
 
@@ -172,11 +183,16 @@ void NUTR_CH::SetValue(const char *key, float value)
 void NUTR_CH::Set1DData(const char *key, int n, float *value)
 {
     string sk(key);
+
     //check the input data
-    if (StringMatch(sk, VAR_CHST))
-    {
-        m_chStorage = value;
-    }
+    if (StringMatch(sk, VAR_CHST))              m_chStorage = value;
+	else if(StringMatch(sk, VAR_SUR_NO3_TOCH))  m_sur_no3ToCh = value;
+	else if(StringMatch(sk, VAR_SUR_SOLP_TOCH)) m_sur_solpToCh = value;
+	else if(StringMatch(sk, VAR_SEDORGN_TOCH))  m_sedorgnToCh = value;
+	else if(StringMatch(sk, VAR_SEDORGP_TOCH))  m_sedorgpToCh = value;
+	else if(StringMatch(sk, VAR_LATNO3_TOCH))   m_latno3ToCh = value;
+	else if(StringMatch(sk, VAR_NO3GW_TOCH))    m_no3gwToCh = value;
+	else if(StringMatch(sk, VAR_MINPGW_TOCH))   m_minpgwToCh = value;
     else
         throw ModelException(MID_NUTR_CH, "Set1DData", "Parameter " + sk
                                                         + " does not exist. Please contact the module developer.");
@@ -188,12 +204,12 @@ void NUTR_CH::Get1DData(const char *key, int *n, float **data)
     string sk(key);
     *n = m_nreach + 1;
     int iOutlet = m_reachLayers.rbegin()->second[0];
-    if (StringMatch(sk, VAR_SED_RECH))
-    {
-        ////m_SedOut[0] = m_SedOut[iOutlet] * 1000/24/3600;    // ton/day coverts to kg/s
-        //m_SedOut[0] = m_SedOut[iOutlet];    // ton
-        //*data = m_SedOut;
-    }
+
+	if (StringMatch(sk, VAR_CH_NO3))        *data = m_chNo3; 
+	else if (StringMatch(sk, VAR_CH_NH4))   *data = m_chNH4;
+	else if (StringMatch(sk, VAR_CH_SOLP))  *data = m_chSolP; 
+	else if (StringMatch(sk, VAR_CH_ORGN))  *data = m_chOrgN; 
+	else if (StringMatch(sk, VAR_CH_ORGP))  *data = m_chOrgP; 
     else
         throw ModelException(MID_NUTR_CH, "Get1DData", "Output " + sk
                                                         +

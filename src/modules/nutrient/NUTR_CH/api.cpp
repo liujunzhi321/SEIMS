@@ -52,13 +52,15 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddInput(VAR_NO3GW_TOCH, UNIT_KG, DESC_NO3GW_CH, Source_Module, DT_Array1D);
 	mdi.AddInput(VAR_MINPGW_TOCH, UNIT_KG, DESC_MINPGW_CH, Source_Module, DT_Raster1D);
 
-
 	///////////////////////////////
     mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_CHST, UNIT_VOL_M3, DESC_CHST, Source_Module, DT_Array1D);
     
-    mdi.AddOutput(VAR_SED_RECH, UNIT_TONS, DESC_SED_RECH, DT_Array1D);
-    mdi.AddOutput(VAR_SED_OUTLET, UNIT_TONS, DESC_SED_OUTLET, DT_Single);
+	// output
+    mdi.AddOutput(VAR_CH_NO3, UNIT_CONT_MGL, DESC_CH_NO3, DT_Array1D);
+    mdi.AddOutput(VAR_CH_SOLP, UNIT_CONT_MGL, DESC_CH_SOLP, DT_Array1D);
+	mdi.AddOutput(VAR_CH_ORGN, UNIT_CONT_MGL, DESC_CH_ORGN, DT_Array1D);
+	mdi.AddOutput(VAR_CH_ORGP, UNIT_CONT_MGL, DESC_CH_SOLP, DT_Array1D);
 
     res = mdi.GetXMLDocument();
 
