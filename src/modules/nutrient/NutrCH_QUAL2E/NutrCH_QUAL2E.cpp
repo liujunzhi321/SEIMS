@@ -321,15 +321,15 @@ void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_CHST)) { this->m_chStorage = data; }
     else if (StringMatch(sk, VAR_CHWTDEPTH)) { this->m_chWTdepth = data; }
     else if (StringMatch(sk, VAR_WATTEMP)) { this->m_wattemp = data; }
-    else if (StringMatch(sk, VAR_LATNO3_CH)) { this->m_latno3ToCh = data; }
-    else if (StringMatch(sk, VAR_SUR_NO3_CH)) { this->m_surqno3ToCh = data; }
-    else if (StringMatch(sk, VAR_SUR_SOLP_CH)) { this->m_surqsolpToCh = data; }
-    else if (StringMatch(sk, VAR_NO3GW_CH)) { this->m_no3gwToCh = data; }
-    else if (StringMatch(sk, VAR_MINPGW_CH)) { this->m_minpgwToCh = data; }
-    else if (StringMatch(sk, VAR_SEDORGN_CH)) { this->m_sedorgnToCh = data; }
-    else if (StringMatch(sk, VAR_SEDORGP_CH)) { this->m_sedorgpToCh = data; }
-    else if (StringMatch(sk, VAR_SEDMINPA_CH)) { this->m_sedminpaToCh = data; }
-    else if (StringMatch(sk, VAR_SEDMINPS_CH)) { this->m_sedminpsToCh = data; }
+    else if (StringMatch(sk, VAR_LATNO3_TOCH)) { this->m_latno3ToCh = data; }
+    else if (StringMatch(sk, VAR_SUR_NO3_TOCH)) { this->m_surqno3ToCh = data; }
+    else if (StringMatch(sk, VAR_SUR_SOLP_TOCH)) { this->m_surqsolpToCh = data; }
+    else if (StringMatch(sk, VAR_NO3GW_TOCH)) { this->m_no3gwToCh = data; }
+    else if (StringMatch(sk, VAR_MINPGW_TOCH)) { this->m_minpgwToCh = data; }
+    else if (StringMatch(sk, VAR_SEDORGN_TOCH)) { this->m_sedorgnToCh = data; }
+    else if (StringMatch(sk, VAR_SEDORGP_TOCH)) { this->m_sedorgpToCh = data; }
+    else if (StringMatch(sk, VAR_SEDMINPA_TOCH)) { this->m_sedminpaToCh = data; }
+    else if (StringMatch(sk, VAR_SEDMINPS_TOCH)) { this->m_sedminpsToCh = data; }
     else if (StringMatch(sk, VAR_AMMO_CH)) { this->m_ammoToCh = data; }
     else if (StringMatch(sk, VAR_NITRITE_CH)) { this->m_nitriteToCh = data; }
     else

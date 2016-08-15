@@ -39,24 +39,26 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 
     /// input from hillslope
-	mdi.AddInput(VAR_NO3GW_CH, UNIT_KG, DESC_NO3GW, Source_Module, DT_Array1D);
-	mdi.AddInput(VAR_MINPGW_CH, UNIT_KG, DESC_MINPGW, Source_Module, DT_Raster1D);
+	//nutrient from surface water
+	mdi.AddInput(VAR_SUR_NO3_TOCH, UNIT_KG, DESC_SUR_NO3_CH, Source_Module, DT_Array1D);
+	mdi.AddInput(VAR_SUR_SOLP_TOCH, UNIT_KG, DESC_SUR_SOLP_CH, Source_Module, DT_Array1D);
+	mdi.AddInput(VAR_SEDORGN_TOCH, UNIT_KG, DESC_SEDORGN_CH, Source_Module, DT_Array1D);
+	mdi.AddInput(VAR_SEDORGP_TOCH, UNIT_KG, DESC_SEDORGP_CH, Source_Module, DT_Array1D);
+	//mdi.AddInput(VAR_SEDMINPA_TOCH, UNIT_KG, DESC_SEDMINPA_CH, Source_Module, DT_Array1D);
+	//mdi.AddInput(VAR_SEDMINPS_TOCH, UNIT_KG, DESC_SEDMINPS_CH, Source_Module, DT_Array1D);
+	//nutrient from interflow
+	mdi.AddInput(VAR_LATNO3_TOCH, UNIT_KG, DESC_LATNO3_CH, Source_Module, DT_Array1D);
+	//nutrient from ground water
+	mdi.AddInput(VAR_NO3GW_TOCH, UNIT_KG, DESC_NO3GW_CH, Source_Module, DT_Array1D);
+	mdi.AddInput(VAR_MINPGW_TOCH, UNIT_KG, DESC_MINPGW_CH, Source_Module, DT_Raster1D);
 
 
-    mdi.AddInput(VAR_SED_TO_CH, UNIT_TONS, DESC_SED_TO_CH, Source_Module, DT_Array1D);
+	///////////////////////////////
     mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_CHST, UNIT_VOL_M3, DESC_CHST, Source_Module, DT_Array1D);
-    mdi.AddInput(VAR_CHWTDEPTH, UNIT_LEN_M, DESC_CHWTDEPTH, Source_Module, DT_Array1D);
-
-
-
+    
     mdi.AddOutput(VAR_SED_RECH, UNIT_TONS, DESC_SED_RECH, DT_Array1D);
-    //mdi.AddOutput(VAR_CHSB, UNIT_NON_DIM, DESC_CHSB, DT_Array2D);
     mdi.AddOutput(VAR_SED_OUTLET, UNIT_TONS, DESC_SED_OUTLET, DT_Single);
-
-    // set the dependencies
-    mdi.AddDependency(MCLS_OL_EROSION, MCLSDESC_OL_EROSION);
-    mdi.AddDependency(MCLS_CH_ROUTING, MCLSDESC_CH_ROUTING); 
 
     res = mdi.GetXMLDocument();
 

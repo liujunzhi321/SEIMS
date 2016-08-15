@@ -413,22 +413,22 @@ void SurrunoffTransfer::Get1DData(const char *key, int *n, float **data)
 		*data = this->m_sedminps; 
 		*n = m_nCells;
 	}
-	else if(StringMatch(sk, VAR_SEDORGN_CH))
+	else if(StringMatch(sk, VAR_SEDORGN_TOCH))
 	{
 		*data = m_sedorgnToCh; 
 		*n = m_nSubbasins + 1;
 	}
-	else if(StringMatch(sk, VAR_SEDORGP_CH))
+	else if(StringMatch(sk, VAR_SEDORGP_TOCH))
 	{
 		*data = m_sedorgpToCh; 
 		*n = m_nSubbasins + 1;
 	}
-	else if(StringMatch(sk, VAR_SEDMINPA_CH))
+	else if(StringMatch(sk, VAR_SEDMINPA_TOCH))
 	{
 		*data = m_sedminpaToCh; 
 		*n = m_nSubbasins + 1;
 	}
-	else if(StringMatch(sk, VAR_SEDMINPS_CH))
+	else if(StringMatch(sk, VAR_SEDMINPS_TOCH))
 	{
 		*data = m_sedminpsToCh; 
 		*n = m_nSubbasins + 1;

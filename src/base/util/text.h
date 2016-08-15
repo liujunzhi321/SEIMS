@@ -685,14 +685,13 @@
 #define VAR_LAP_RATE "LapseRate"                    /// Lapse rate
 #define VAR_LAST_SOILRD "lastSoilRD"
 #define VAR_LATNO3 "latno3"
-#define VAR_LATNO3_CH "latno3ToCh"
+#define VAR_LATNO3_TOCH "latno3ToCh"
 #define VAR_LCC "landcover"                             /// land cover code, idplt in SWAT
 #define VAR_LDRAIN "ldrain"
 #define VAR_MANNING "Manning"
 #define VAR_MAT_YRS "MAT_YRS"
 #define VAR_MGT_FIELD "mgt_fields"
-#define VAR_MINPGW "minpgw"
-#define VAR_MINPGW_CH "minpgwToCh"
+#define VAR_MINPGW_TOCH "minpgwToCh"
 #define VAR_MOIST_IN "Moist_in"
 #define VAR_MSF "ManningScaleFactor"                /// flow velocity scaling factor for calibration
 #define VAR_MSK_CO1 "MSK_co1"                       /// Weighting factor of bankful flow
@@ -706,7 +705,7 @@
 #define VAR_NITRITE_CH "nitriteToCh"
 #define VAR_NITRITEN "nitrite"
 #define VAR_NO3GW "no3gw"
-#define VAR_NO3GW_CH "no3gwToCh"
+#define VAR_NO3GW_TOCH "no3gwToCh"
 #define VAR_NPERCO "nperco"
 #define VAR_NUPDIS "n_updis"
 #define VAR_OL_DET "DETOverland"
@@ -796,13 +795,13 @@
 #define VAR_SED_TO_CH "SEDTOCH"
 #define VAR_SED_OL "SED_OL"
 #define VAR_SEDMINPA "sedminpa"                     /// amount of active mineral phosphorus adsorbed to sediment in surface runoff
-#define VAR_SEDMINPA_CH "sedminpaToCh"
+#define VAR_SEDMINPA_TOCH "sedminpaToCh"
 #define VAR_SEDMINPS "sedminps"                     /// amount of stable mineral phosphorus adsorbed to sediment in surface runoff
-#define VAR_SEDMINPS_CH "sedminpsToCh"
+#define VAR_SEDMINPS_TOCH "sedminpsToCh"
 #define VAR_SEDORGN "sedorgn"
-#define VAR_SEDORGN_CH "sedorgnToCh"
+#define VAR_SEDORGN_TOCH "sedorgnToCh"
 #define VAR_SEDORGP "sedorgp"                       /// amount of organic phosphorus in surface runoff
-#define VAR_SEDORGP_CH "sedorgpToCh"
+#define VAR_SEDORGP_TOCH "sedorgpToCh"
 #define VAR_SEEPAGE "SEEPAGE"                               /// seepage
 #define VAR_SHALLST "shallst"
 #define VAR_SILT "silt"
@@ -878,9 +877,9 @@
 #define VAR_SUBBSN "subbasin"                       /// The subbasin grid
 #define VAR_SUBBSNID_NUM "SUBBASINID_NUM"                /// number of subbasins
 #define VAR_SUR_NO3 "sur_no3"
-#define VAR_SUR_NO3_CH "sur_no3_ToCh"
+#define VAR_SUR_NO3_TOCH "sur_no3_ToCh"
 #define VAR_SUR_SOLP "sur_solp"
-#define VAR_SUR_SOLP_CH "sur_solp_ToCh"
+#define VAR_SUR_SOLP_TOCH "sur_solp_ToCh"
 #define VAR_SURU "SURU"                             /// surface runoff generated
 #define VAR_SWE "SWE"
 #define VAR_SWE0 "swe0"
@@ -1205,8 +1204,7 @@
 #define DESC_MEANTEMP "Mean Celsius degree of air temperature"
 #define DESC_METEOLAT "Latitude of MeteoClimate station"
 #define DESC_MGT_FIELD "Management fields"
-#define DESC_MINPGW "soluble P loading to reach in groundwater"
-#define DESC_MINPGW_CH "soluble P loading to reach in groundwater"
+#define DESC_MINPGW_CH "soluble P in groundwater to channel"
 #define DESC_MINTEMP "Minimum Celsius degree of air temperature"
 #define DESC_MOIST_IN "Initial soil moisture"
 #define DESC_MSF "flow velocity scaling factor for calibration"
@@ -1221,7 +1219,7 @@
 #define DESC_NITRITE_CH "amount of nitrite transported with lateral flow"
 #define DESC_NITRITEN "nitrite concentration in reach"
 #define DESC_NO3GW "nitrate loading to reach in groundwater"
-#define DESC_NO3GW_CH "nitrate loading to reach in groundwater"
+#define DESC_NO3GW_CH "nitrate in groundwater to channel"
 #define DESC_NONE "NO DESCRIPTION"
 #define DESC_NPERCO "nitrate percolation coefficient"
 #define DESC_NUPDIS "Nitrogen uptake distribution parameter"
