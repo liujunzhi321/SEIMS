@@ -234,6 +234,8 @@
 #define REACH_RK2                    "RK2"
 #define REACH_RK3                    "RK3"
 #define REACH_RK4                    "RK4"
+#define REACH_COVER					 "COVER"
+#define REACH_EROD					 "EROD"
 
 /// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
 #define SITELIST_TABLE_M        "SITELISTM"

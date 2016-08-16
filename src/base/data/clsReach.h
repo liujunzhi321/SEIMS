@@ -89,6 +89,9 @@ public:
 
     float GetRk4() { return this->rk4; }
 
+	float GetCover(){return this->cover;}
+
+	float GetErod(){return this->erod;}
 private:
     //! Subbasin area
     float Area;
@@ -144,6 +147,11 @@ private:
     float rk3;
     /// sediment oxygen demand rate in reach at 20 deg C (mg O2/ ((m**2)*day))
     float rk4;
+	/// erosion related
+	/// cover factoer
+	float cover;
+	/// erodibility factor
+	float erod;
 };
 
 /*!
