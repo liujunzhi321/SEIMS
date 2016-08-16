@@ -16,21 +16,21 @@
 
 using namespace std;
 
-#define CHECK_POINTER(moduleName, varName) if (varName == NULL) throw ModelException(moduleName, "CheckInputData", "The parameter: varName has not been set.");
-#define CHECK_POSITIVE(moduleName, varName) if (varName > 0) 	throw ModelException(moduleName, "CheckInputData", "The parameter: varName has not been set.");
+#define CHECK_POINTER(moduleName, varName, descStr) if (varName == NULL) throw ModelException(moduleName, "CheckInputData", string("parameter has not been set: ") + string(descStr));
+#define CHECK_POSITIVE(moduleName, varName, descStr) if (varName < 0) 	throw ModelException(moduleName, "CheckInputData", string("parameter has not been set: ") + string(descStr));
 
 
 NutrCH_QUAL2E::NutrCH_QUAL2E(void) :
 //input
-        m_nCells(-1), m_dt(-1), m_aBank(-1.f), m_qUpReach(0.f), m_rnum1(0.f), igropt(-1),
+        m_nCells(-1), m_dt(-1), m_qUpReach(0.f), m_rnum1(0.f), igropt(-1),
         m_ai0(-1.f), m_ai1(-1.f), m_ai2(-1.f), m_ai3(-1.f), m_ai4(-1.f), m_ai5(-1.f), 
 		m_ai6(-1.f), m_lambda0(-1.f), m_lambda1(-1.f), m_lambda2(-1.f),
-        m_k_l(-1.f), m_k_n(-1.f), m_k_p(-1.f), m_p_n(-1.f), tfact(-1.f), m_mumax(-1.f), m_rhoq(-1.f),
-        m_daylen(NULL), m_sra(NULL), m_bankStorage(NULL), m_qOutCh(NULL), m_chStorage(NULL), m_chWTdepth(NULL), m_wattemp(NULL),
+        m_k_l(-1.f), m_k_n(-1.f), m_k_p(-1.f), m_p_n(-1.f), tfact(-1.f), m_mumax(-1.f), m_rhoq(-1.f), m_streamLink(NULL),
+        m_daylen(NULL), m_sra(NULL), m_bankStorage(NULL), m_qOutCh(NULL), m_chStorage(NULL), m_chWTdepth(NULL), m_chTemp(NULL),
         m_latNO3ToCh(NULL), m_surNO3ToCh(NULL), m_surSolPToCh(NULL), m_gwNO3ToCh(NULL),
         m_gwSolPToCh(NULL), m_sedOrgNToCh(NULL), m_sedOrgPToCh(NULL), m_sedMinPAToCh(NULL),
-        m_sedMinPSToCh(NULL), m_nh4ToCh(NULL), m_chSr(NULL), m_chDaylen(NULL),
-		m_nSubbasins(-1), m_subbasin(NULL), m_subbasinsInfo(NULL),
+        m_sedMinPSToCh(NULL), m_nh4ToCh(NULL), m_no2ToCh(NULL), m_codToCh(NULL), 
+		m_chSr(NULL), m_chDaylen(NULL), m_chCellCount(NULL), m_soilTemp(NULL),
         //output
         m_chAlgae(NULL), m_chOrgN(NULL), m_chOrgP(NULL), m_chNH4(NULL), m_chNO2(NULL), m_chNO3(NULL),
         m_chSolP(NULL), m_chCOD(NULL), m_chDO(NULL), m_chChlora(NULL), m_chSatDO(NULL),
@@ -79,29 +79,31 @@ NutrCH_QUAL2E::~NutrCH_QUAL2E(void)
 	if(m_chOutSolP != NULL) Release1DArray(m_chOutSolP);
 	if(m_chOutDO != NULL) Release1DArray(m_chOutDO);
 	if(m_chOutCOD != NULL) Release1DArray(m_chOutCOD);
-}
 
-void NutrCH_QUAL2E::SetSubbasins(clsSubbasins *subbasins)
-{
-	if(m_subbasinsInfo == NULL)
-	{
-		m_subbasinsInfo = subbasins;
-		m_nSubbasins = m_subbasinsInfo->GetSubbasinNumber();
-		m_subbasinIDs = m_subbasinsInfo->GetSubbasinIDs();
-	}
+    if(m_chCellCount != NULL) Release1DArray(m_chCellCount);
 }
 
 void NutrCH_QUAL2E::rasterToSubbasin()
 {
+	for (int i = 1; i <= m_nReaches; i++)
+	{
+		m_chDaylen[i] = 0.f;
+		m_chSr[i] = 0.f;
+		m_chTemp[i] = 0.f;
+	}
+
 	for (int i = 0; i < m_nCells; i++)
 	{
+		if (m_streamLink[i] <= 0.f)
+			continue;
+
 		//add today's flow
-		int subi = (int) m_subbasin[i];
-		if (m_nSubbasins == 1)
+		int subi = (int) m_streamLink[i];
+		if (m_nReaches == 1)
 		{
 			subi = 1;
 		}
-		else if (subi >= m_nSubbasins + 1)
+		else if (subi >= m_nReaches + 1)
 		{
 			ostringstream oss;
 			oss << subi;
@@ -111,16 +113,45 @@ void NutrCH_QUAL2E::rasterToSubbasin()
 
 		m_chDaylen[subi] += m_daylen[i];
 		m_chSr[subi] += m_sra[i];
+		m_chTemp[subi] += m_soilTemp[i];
+		m_chCellCount[subi] += 1;
 	}
 
-	for (vector<int>::iterator it=m_subbasinIDs.begin(); it != m_subbasinIDs.end(); it++)
+	for (int i = 1; i <= m_nReaches; i++)
 	{
-		int cellCount = m_subbasinsInfo->GetSubbasinByID(*it)->getCellCount();
-		m_chDaylen[*it] /= cellCount;
-		m_chSr[*it] /= cellCount;
+		m_chDaylen[i] /= m_chCellCount[i];
+		m_chSr[i] /= m_chCellCount[i];
+		m_chTemp[i] /= m_chCellCount[i];
 	}
 
 }
+
+bool NutrCH_QUAL2E::CheckInputCellSize(const char *key, int n)
+{
+	if (n <= 0)
+	{
+		throw ModelException(MID_NutCHRout, "CheckInputSize",
+			"Input data for " + string(key) + " is invalid. The size could not be less than zero.");
+		return false;
+	}
+	if (m_nCells != n)
+	{
+		if (m_nCells <= 0)
+		{
+			m_nCells = n;
+		}
+		else
+		{
+			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
+			ostringstream oss;
+			oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
+				m_nReaches << ".\n";
+			throw ModelException(MID_NutCHRout, "CheckInputCellSize", oss.str());
+		}
+	}
+	return true;
+}
+
 
 bool NutrCH_QUAL2E::CheckInputSize(const char *key, int n)
 {
@@ -149,170 +180,46 @@ bool NutrCH_QUAL2E::CheckInputSize(const char *key, int n)
 
 bool NutrCH_QUAL2E::CheckInputData()
 {
-    if (m_dt < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The parameter: m_dt has not been set.");
-    }
-    if (m_nReaches < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The parameter: m_nReaches has not been set.");
-    }
-    if (m_aBank < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_qUpReach < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_rnum1 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (igropt < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_ai0 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_ai1 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_ai2 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_ai3 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_ai4 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_ai5 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_ai6 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_lambda0 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_lambda1 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_lambda2 < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_k_l < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_k_n < 0)
-    {
-        throw ModelException("NutCH_QUAL2E", "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_k_p < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_p_n < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (tfact < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_mumax < 0)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_rhoq < 0)
-    {
-        throw ModelException("NutCH_QUAL2E", "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_daylen == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_sra == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_bankStorage == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_qOutCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data:m_qOutCh can not be NULL.");
-    }
-    if (m_chStorage == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_chWTdepth == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_wattemp == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_latNO3ToCh == NULL)
-    {
-		throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_surNO3ToCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_surSolPToCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_gwNO3ToCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_gwSolPToCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_sedOrgNToCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_sedOrgPToCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_sedMinPAToCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    if (m_sedMinPSToCh == NULL)
-    {
-        throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    }
-    //if (m_ammoToCh == NULL)
-    //{
-    //    throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    //}
-    //if (m_no2ToCh == NULL)
-    //{
-    //    throw ModelException(MID_NutCHRout, "CheckInputData", "The input data can not be NULL.");
-    //}
+	CHECK_POSITIVE(MID_NutCHRout, m_dt, "m_dt")
+	CHECK_POSITIVE(MID_NutCHRout, m_nReaches, "m_nReaches")
+	CHECK_POSITIVE(MID_NutCHRout, m_qUpReach, "m_qUpReach")
+	CHECK_POSITIVE(MID_NutCHRout, m_rnum1, "m_rnum1")
+	CHECK_POSITIVE(MID_NutCHRout, igropt, "igropt")
+	CHECK_POSITIVE(MID_NutCHRout, m_ai0, "m_ai0")
+	CHECK_POSITIVE(MID_NutCHRout, m_ai1, "m_ai1")
+	CHECK_POSITIVE(MID_NutCHRout, m_ai2, "m_ai2")
+	CHECK_POSITIVE(MID_NutCHRout, m_ai3, "m_ai3")
+	CHECK_POSITIVE(MID_NutCHRout, m_ai4, "m_ai4")
+	CHECK_POSITIVE(MID_NutCHRout, m_ai5, "m_ai5")
+	CHECK_POSITIVE(MID_NutCHRout, m_ai6, "m_ai6")
+	CHECK_POSITIVE(MID_NutCHRout, m_lambda0, "m_lambda0")
+	CHECK_POSITIVE(MID_NutCHRout, m_lambda1, "m_lambda1")
+	CHECK_POSITIVE(MID_NutCHRout, m_lambda2, "m_lambda2")
+	CHECK_POSITIVE(MID_NutCHRout, m_k_l, "m_k_l")
+	CHECK_POSITIVE(MID_NutCHRout, m_k_n, "m_k_n")
+	CHECK_POSITIVE(MID_NutCHRout, m_k_p, "m_k_p")
+	CHECK_POSITIVE(MID_NutCHRout, m_p_n, "m_p_n")
+	CHECK_POSITIVE(MID_NutCHRout, tfact, "tfact")
+	CHECK_POSITIVE(MID_NutCHRout, m_mumax, "m_mumax")
+	//CHECK_POSITIVE(MID_NutCHRout, m_rhoqv, "m_rhoqv")
+
+    CHECK_POINTER(MID_NutCHRout, m_daylen, "m_daylen")
+    CHECK_POINTER(MID_NutCHRout, m_sra, "m_sra")
+    CHECK_POINTER(MID_NutCHRout, m_qOutCh, "m_qOutCh")
+    CHECK_POINTER(MID_NutCHRout, m_chStorage, "m_chStorage")
+    CHECK_POINTER(MID_NutCHRout, m_chWTdepth, "m_chWTdepth")
+    CHECK_POINTER(MID_NutCHRout, m_latNO3ToCh, "m_latNO3ToCh")
+    CHECK_POINTER(MID_NutCHRout, m_surNO3ToCh, "m_surNO3ToCh")
+    CHECK_POINTER(MID_NutCHRout, m_surSolPToCh, "m_surSolPToCh")
+    CHECK_POINTER(MID_NutCHRout, m_gwNO3ToCh, "m_gwNO3ToCh")
+	CHECK_POINTER(MID_NutCHRout, m_gwSolPToCh, "m_gwSolPToCh")
+	CHECK_POINTER(MID_NutCHRout, m_sedOrgNToCh, "m_sedOrgNToCh")
+	CHECK_POINTER(MID_NutCHRout, m_sedOrgPToCh, "m_sedOrgPToCh")
+	CHECK_POINTER(MID_NutCHRout, m_sedMinPAToCh, "m_sedMinPAToCh")
+	CHECK_POINTER(MID_NutCHRout, m_sedMinPSToCh, "m_sedMinPSToCh")
+	CHECK_POINTER(MID_NutCHRout, m_streamLink, "m_streamLink")
+	CHECK_POINTER(MID_NutCHRout, m_soilTemp, "m_soilTemp")
+    
     return true;
 }
 
@@ -323,8 +230,7 @@ void NutrCH_QUAL2E::SetValue(const char *key, float value)
     {
         omp_set_num_threads((int) value);
     }
-    else if (StringMatch(sk, Tag_ChannelTimeStep)) { m_dt = (int) value; }
-    else if (StringMatch(sk, VAR_A_BNK)) { m_aBank = value; }
+	else if (StringMatch(sk, Tag_ChannelTimeStep)) { m_dt = (int) value; }
     else if (StringMatch(sk, VAR_QUPREACH)) { m_qUpReach = value; }
     else if (StringMatch(sk, VAR_RNUM1)) { m_rnum1 = value; }
     else if (StringMatch(sk, VAR_IGROPT)) { igropt = (int) value; }
@@ -360,22 +266,39 @@ void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
     string sk(key);
     if (StringMatch(sk, VAR_DAYLEN))   
 	{ 
-		if (!CheckInputSize(key, m_nCells))
+		if (!CheckInputCellSize(key, n))
 			return;
 		m_daylen = data; 
+		return;
 	}
     else if (StringMatch(sk, DataType_SolarRadiation)) 
 	{
-		if (!CheckInputSize(key, m_nCells))
+		if (!CheckInputCellSize(key, n))
 			return;
 		m_sra = data; 
+		return;
+	}
+	else if (StringMatch(sk, VAR_STREAM_LINK)) 
+	{
+		if (!CheckInputCellSize(key, n))
+			return;
+		m_streamLink = data; 
+		return;
+	}
+	else if (StringMatch(sk, VAR_SOTE)) 
+	{
+		if (!CheckInputCellSize(key, n))
+			return;
+		m_soilTemp = data; 
+		return;
 	}
 
-    else if (StringMatch(sk, VAR_BKST)) { m_bankStorage = data; }
+	CheckInputSize(key, n);
+    if (StringMatch(sk, VAR_BKST)) { m_bankStorage = data; }
     else if (StringMatch(sk, VAR_QRECH)) { m_qOutCh = data; }
     else if (StringMatch(sk, VAR_CHST)) { m_chStorage = data; }
     else if (StringMatch(sk, VAR_CHWTDEPTH)) { m_chWTdepth = data; }
-    else if (StringMatch(sk, VAR_WATTEMP)) { m_wattemp = data; }
+    else if (StringMatch(sk, VAR_WATTEMP)) { m_chTemp = data; }
 
     else if (StringMatch(sk, VAR_LATNO3_TOCH))   { m_latNO3ToCh = data; }
     else if (StringMatch(sk, VAR_SUR_NO3_TOCH))  { m_surNO3ToCh = data; }
@@ -419,6 +342,7 @@ void NutrCH_QUAL2E::SetReaches(clsReaches *reaches)
 
 		Initialize1DArray(m_nReaches+1, m_chDaylen, 0.f);
 		Initialize1DArray(m_nReaches+1, m_chSr, 0.f);
+		Initialize1DArray(m_nReaches+1, m_chTemp, 0.f);
 
 		for (vector<int>::iterator it = m_reachId.begin(); it != m_reachId.end(); it++)
 		{
@@ -494,7 +418,12 @@ void  NutrCH_QUAL2E::initialOutputs()
 		Initialize1DArray(m_nReaches+1, m_chOutNO2, 0.f);
 		Initialize1DArray(m_nReaches+1, m_chOutNO3, 0.f);
 		Initialize1DArray(m_nReaches+1, m_chOutSolP, 0.f);
+		Initialize1DArray(m_nReaches+1, m_chOutDO, 0.f);
 		Initialize1DArray(m_nReaches+1, m_chOutCOD, 0.f);
+
+		m_chCellCount = new int(m_nReaches+1);
+		for (int i = 0; i <= m_nReaches; i++)
+		    m_chCellCount[i] = 0;
     }
 }
 
@@ -503,16 +432,19 @@ int NutrCH_QUAL2E::Execute()
     if (!CheckInputData())return false;
     initialOutputs();
 
+	//sum daylen and sr to channel scale
+	rasterToSubbasin();
+
     map<int, vector<int> > ::iterator it;
     for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
     {
         // There are not any flow relationship within each routing layer.
         // So parallelization can be done here.
-        m_nReaches = it->second.size();
-        // the size of m_reachLayers (map) is equal to the maximum stream order
-		#pragma omp parallel for
-        for (int i = 1; i <= m_nReaches; ++i)
-        {
+		int nReaches = it->second.size();
+		// the size of m_reachLayers (map) is equal to the maximum stream order
+//#pragma omp parallel for
+		for (int i = 0; i < nReaches; ++i)
+		{
             // index in the array
             int reachIndex = it->second[i];
             AddInputNutrient(reachIndex);
@@ -626,7 +558,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	float o2con = m_chDO[i]*1000.f / wtrTotal;
 
 	// temperature of water in reach (wtmp deg C)
-	float wtmp = max(m_wattemp[i], 0.1f);
+	float wtmp = max(m_chTemp[i], 0.1f);
 	// calculate effective concentration of available nitrogen (cinn)
 	float cinn = nh3con + no3con;
 
@@ -684,8 +616,8 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 
 	// calculate daylight average, photo synthetically active (algi)
 	float algi = 0.f;
-	if (m_daylen[i] > 0.f)
-		algi = m_sra[i] * tfact / m_daylen[i];
+	if (m_chDaylen[i] > 0.f)
+		algi = m_chSr[i] * tfact / m_chDaylen[i];
 	else
 		algi = 0.00001f;
 
@@ -694,7 +626,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	float fll = 0.f;
 	fl_1 = (1.f / (lambda * m_chWTdepth[i])) *
 		log((m_k_l * 24.f + algi) / (m_k_l * 24.f + algi * exp(-lambda * m_chWTdepth[i])));
-	fll = 0.92f * (m_daylen[i] / 24.f) * fl_1;
+	fll = 0.92f * (m_chDaylen[i] / 24.f) * fl_1;
 
 	// calculate local algal growth rate
 	float gra = 0.f;

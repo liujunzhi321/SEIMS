@@ -61,8 +61,7 @@ public:
 
     virtual void Get1DData(const char *key, int *n, float **data);
 
-	virtual void SetSubbasins(clsSubbasins *subbasins);
-
+	virtual TimeStepType GetTimeStepType() {return TIMESTEP_CHANNEL;};
 private:
 	// cell number
 	int m_nCells;
@@ -80,19 +79,7 @@ private:
     /// Reach information
     clsReaches *m_reaches;
 
-	/// subbasin related
-	/// the total number of subbasins
-	int m_nSubbasins;
-	//! subbasin IDs
-	vector<int> m_subbasinIDs;
-	/// subbasin grid (subbasins ID)
-	float *m_subbasin;
-	/// subbasins information
-	clsSubbasins *m_subbasinsInfo;
-
     /// input data
-    /// bank flow recession constant
-    float m_aBank;
     float m_qUpReach;
 
     float m_ai0;    /// ratio of chlorophyll-a to algal biomass (ug chla/mg alg)
@@ -141,7 +128,7 @@ private:
     /// channel water depth m
     float *m_chWTdepth;
     /// temperature of water in reach (deg C)
-    float *m_wattemp;
+    float *m_chTemp;
 
     float *m_bc1;        /// rate constant for biological oxidation of NH3 to NO2 in reach at 20 deg C
     float *m_bc2;        /// rate constant for biological oxidation of NO2 to NO3 in reach at 20 deg C
@@ -159,9 +146,6 @@ private:
     float *m_rk3;      /// rate of loss of CBOD due to settling in reach at 20 deg C (1/day)
     float *m_rk4;      /// sediment oxygen demand rate in reach at 20 deg C (mg O2/ ((m**2)*day))
 
-	//intermediate variables
-	float *m_chDaylen;
-	float *m_chSr;
 
     /// amount of nitrate transported with lateral flow
     float *m_latNO3ToCh;
@@ -232,6 +216,13 @@ private:
 	/// dissolved oxygen concentration in reach (kg)
 	float *m_chOutDO;
 
+	float *m_streamLink;
+	float *m_soilTemp;
+	//intermediate variables
+	float *m_chDaylen;
+	float *m_chSr;
+	int *m_chCellCount;
+
 private:
 
     /*!
@@ -248,6 +239,7 @@ private:
      * \return bool The validity of the dimension
      */
     bool CheckInputSize(const char *, int);
+	bool CheckInputCellSize(const char *key, int n);
 
     void AddInputNutrient(int);
 	void RouteOut(int i);
@@ -267,4 +259,6 @@ private:
 	void rasterToSubbasin();
 
     void initialOutputs();
+
+
 };
