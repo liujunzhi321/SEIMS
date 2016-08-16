@@ -133,15 +133,14 @@ int AET_PT_H::Execute()
 {
     CheckInputData();
 	initialOutputs();
-    
-    /// define intermediate variables
-    float esd = 0.f, etco = 0.f, effnup = 0.f;
-    float no3up = 0.f, es_max = 0.f, eos1 = 0.f, xx = 0.f;
-	float cej = 0.f, eaj = 0.f, pet = 0.f, esleft = 0.f;
-    float evzp = 0.f, eosl = 0.f, dep = 0.f, evz = 0.f, sev = 0.f;
-
+#pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
+		/// define intermediate variables
+		float esd = 0.f, etco = 0.f, effnup = 0.f;
+		float no3up = 0.f, es_max = 0.f, eos1 = 0.f, xx = 0.f;
+		float cej = 0.f, eaj = 0.f, pet = 0.f, esleft = 0.f;
+		float evzp = 0.f, eosl = 0.f, dep = 0.f, evz = 0.f, sev = 0.f;
         pet = m_pet[i];
         esd = 500.f;
         etco = 0.8f;
