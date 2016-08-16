@@ -478,7 +478,7 @@
 /// In-stream nutrient transformations
 #define MCLS_NutCHRout "Nutrient in reach"
 #define MCLSDESC_NutCHRout "In-stream nutrient transformations"
-#define MID_NutCHRout "NutCHRout"
+#define MID_NutCHRout "NutCH_QUAL2E"
 #define MDESC_NutCHRout "In-stream nutrient transformations"
 /// Nutrient transformations in overland flow
 #define MCLS_NutOLRout "Nutrient in overland flow"
@@ -702,7 +702,7 @@
 #define VAR_NFIXCO "nfixco"                     /// Nitrogen fixation coefficient, FIXCO in SWAT
 #define VAR_NFIXMX "nfixmx"                    /// Maximum daily-n fixation (kg/ha), NFIXMX in SWAT
 #define VAR_CH_NO3 "CH_NO3"
-#define VAR_NITRITE_CH "nitriteToCh"
+#define VAR_NO2_TOCH "nitriteToCh"
 #define VAR_CH_NO2 "CH_NO2"
 #define VAR_NO3GW "no3gw"
 #define VAR_NO3GW_TOCH "no3gwToCh"
@@ -878,6 +878,7 @@
 #define VAR_SUBBSNID_NUM "SUBBASINID_NUM"                /// number of subbasins
 #define VAR_SUR_NO3 "sur_no3"
 #define VAR_SUR_NO3_TOCH "sur_no3_ToCh"
+#define VAR_SUR_NH4_TOCH "SUR_NH4_TOCH"
 #define VAR_SUR_SOLP "sur_solp"
 #define VAR_SUR_SOLP_TOCH "sur_solp_ToCh"
 #define VAR_SURU "SURU"                             /// surface runoff generated
@@ -1398,6 +1399,7 @@
 #define DESC_SUBBSNID_NUM "number of subbasins"
 #define DESC_SUR_NO3 "amount of nitrate transported with surface runoff"
 #define DESC_SUR_NO3_CH "amount of nitrate transported with surface runoff to channel"
+#define DESC_SUR_NH4_CH "amount of NH4 transported with surface runoff to channel"
 #define DESC_SUR_SOLP "amount of solution phosphorus in surface runoff"
 #define DESC_SUR_SOLP_CH "amount of soluble phosphorus from surface runoff to channel"
 #define DESC_SURU "surface runoff generated"

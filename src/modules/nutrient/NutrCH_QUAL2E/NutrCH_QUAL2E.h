@@ -60,8 +60,12 @@ public:
     virtual void GetValue(const char *key, float *value);
 
     virtual void Get1DData(const char *key, int *n, float **data);
-private:
 
+	virtual void SetSubbasins(clsSubbasins *subbasins);
+
+private:
+	// cell number
+	int m_nCells;
     /// time step (hr)
     int m_dt;
     /// downstream id (The value is 0 if there if no downstream reach)
@@ -75,6 +79,16 @@ private:
     map<int, vector<int> > m_reachLayers;
     /// Reach information
     clsReaches *m_reaches;
+
+	/// subbasin related
+	/// the total number of subbasins
+	int m_nSubbasins;
+	//! subbasin IDs
+	vector<int> m_subbasinIDs;
+	/// subbasin grid (subbasins ID)
+	float *m_subbasin;
+	/// subbasins information
+	clsSubbasins *m_subbasinsInfo;
 
     /// input data
     /// bank flow recession constant
@@ -117,19 +131,11 @@ private:
     /// solar radiation for the day (MJ/m2)
     float *m_sra;
     float *m_bankStorage;
-    /// overland flow to streams from each subbasin (m3/s)
-    float *m_qsSub;
-    /// inter-flow to streams from each subbasin (m3/s)
-    float *m_qiSub;
-    /// groundwater flow out of the subbasin (m3/s)
-    float *m_qgSub;
 
     float *m_chOrder;
 
     /// channel outflow
-    float *m_qsCh;
-    float *m_qiCh;
-    float *m_qgCh;
+	float *m_qOutCh;
     /// reach storage (m3) at time t
     float *m_chStorage;
     /// channel water depth m
@@ -153,54 +159,78 @@ private:
     float *m_rk3;      /// rate of loss of CBOD due to settling in reach at 20 deg C (1/day)
     float *m_rk4;      /// sediment oxygen demand rate in reach at 20 deg C (mg O2/ ((m**2)*day))
 
+	//intermediate variables
+	float *m_chDaylen;
+	float *m_chSr;
+
     /// amount of nitrate transported with lateral flow
-    float *m_latno3ToCh;
+    float *m_latNO3ToCh;
     /// amount of nitrate transported with surface runoff
-    float *m_surqno3ToCh;
+    float *m_surNO3ToCh;
     /// amount of soluble phosphorus in surface runoff
-    float *m_surqsolpToCh;
+    float *m_surSolPToCh;
     /// nitrate loading to reach in groundwater
-    float *m_no3gwToCh;
+    float *m_gwNO3ToCh;
     /// soluble P loading to reach in groundwater
-    float *m_minpgwToCh;
+    float *m_gwSolPToCh;
     // amount of organic nitrogen in surface runoff
-    float *m_sedorgnToCh;
+    float *m_sedOrgNToCh;
     // amount of organic phosphorus in surface runoff
-    float *m_sedorgpToCh;
+    float *m_sedOrgPToCh;
     // amount of active mineral phosphorus absorbed to sediment in surface runoff
-    float *m_sedminpaToCh;
+    float *m_sedMinPAToCh;
     // amount of stable mineral phosphorus absorbed to sediment in surface runoff
-    float *m_sedminpsToCh;
+    float *m_sedMinPSToCh;
     /// amount of ammonium transported with lateral flow
-    float *m_ammoToCh;
+    float *m_nh4ToCh;
     /// amount of nitrite transported with lateral flow
-    float *m_nitriteToCh;
+    float *m_no2ToCh;
     /// cod to reach in surface runoff (kg)
     float *m_codToCh;
 
     /// output data
-    /// algal biomass concentration in reach (mg/L)
-    float *m_algae;
-    /// organic nitrogen concentration in reach (mg/L)
-    float *m_organicn;
-    /// organic phosphorus concentration in reach (mg/L)
-    float *m_organicp;
-    /// ammonia concentration in reach (mg/L)
-    float *m_ammonian;
-    /// nitrite concentration in reach (mg/L)
-    float *m_nitriten;
-    /// nitrate concentration in reach (mg/L)
-    float *m_nitraten;
-    /// dissolved phosphorus concentration in reach (mg/L)
-    float *m_disolvp;
-    /// carbonaceous oxygen demand in reach (mg/L)
-    float *m_rch_cod;
-    /// dissolved oxygen concentration in reach (mg/L)
-    float *m_rch_dox;
-    /// chlorophyll-a concentration in reach (mg chl-a/L)
-    float *m_chlora;
-    // saturation concentration of dissolved oxygen (mg/L)
-    float m_soxy;
+    /// algal biomass concentration in reach (kg)
+    float *m_chAlgae;
+    /// organic nitrogen concentration in reach (kg)
+    float *m_chOrgN;
+    /// organic phosphorus concentration in reach (kg)
+    float *m_chOrgP;
+    /// ammonia concentration in reach (kg)
+    float *m_chNH4;
+    /// nitrite concentration in reach (kg)
+    float *m_chNO2;
+    /// nitrate concentration in reach (kg)
+    float *m_chNO3;
+    /// dissolved phosphorus concentration in reach (kg)
+    float *m_chSolP;
+    /// carbonaceous oxygen demand in reach (kg)
+    float *m_chCOD;
+    /// dissolved oxygen concentration in reach (kg)
+    float *m_chDO;
+    /// chlorophyll-a concentration in reach (kg)
+    float *m_chChlora;
+    // saturation concentration of dissolved oxygen (kg)
+    float m_chSatDO;
+
+	//flow out
+	/// algal biomass concentration in reach (kg)
+	float *m_chOutAlgae;
+	/// organic nitrogen concentration in reach (kg)
+	float *m_chOutOrgN;
+	/// organic phosphorus concentration in reach (kg)
+	float *m_chOutOrgP;
+	/// ammonia concentration in reach (kg)
+	float *m_chOutNH4;
+	/// nitrite concentration in reach (kg)
+	float *m_chOutNO2;
+	/// nitrate concentration in reach (kg)
+	float *m_chOutNO3;
+	/// dissolved phosphorus concentration in reach (kg)
+	float *m_chOutSolP;
+	/// carbonaceous oxygen demand in reach (kg)
+	float *m_chOutCOD;
+	/// dissolved oxygen concentration in reach (kg)
+	float *m_chOutDO;
 
 private:
 
@@ -219,12 +249,9 @@ private:
      */
     bool CheckInputSize(const char *, int);
 
-    /*!
-    * \brief In-stream nutrient transformations and water quality calculations.
-     *
-     * \return void
-     */
-    void NutrientinChannel(int);
+    void AddInputNutrient(int);
+	void RouteOut(int i);
+	void NutrientTransform(int i);
 
     /*!
     * \brief Corrects rate constants for temperature.
@@ -236,6 +263,8 @@ private:
      * \return float
      */
     float corTempc(float r20, float thk, float tmp);
+
+	void rasterToSubbasin();
 
     void initialOutputs();
 };

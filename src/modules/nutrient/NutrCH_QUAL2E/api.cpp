@@ -66,10 +66,9 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
     mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Reach);
 
-    mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);
-
     // set the input variables
-    mdi.AddInput(VAR_SRA, UNIT_SR, DESC_SRA, Source_Module, DT_Array1D);
+    mdi.AddInput(DataType_SolarRadiation, UNIT_SR, DESC_SR, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_ParameterDB, DT_Raster1D);
 
 	/// input from hillslope
 	//nutrient from surface water
@@ -77,11 +76,15 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddInput(VAR_SUR_SOLP_TOCH, UNIT_KG, DESC_SUR_SOLP_CH, Source_Module, DT_Array1D);
 	mdi.AddInput(VAR_SEDORGN_TOCH, UNIT_KG, DESC_SEDORGN_CH, Source_Module, DT_Array1D);
 	mdi.AddInput(VAR_SEDORGP_TOCH, UNIT_KG, DESC_SEDORGP_CH, Source_Module, DT_Array1D);
+	
+	mdi.AddInput(VAR_SEDMINPA_TOCH, UNIT_KG, DESC_SEDMINPA_CH, Source_Module, DT_Array1D);
+	mdi.AddInput(VAR_SEDMINPS_TOCH, UNIT_KG, DESC_SEDMINPS_CH, Source_Module, DT_Array1D);
+	//mdi.AddInput(VAR_SUR_NH4_TOCH, UNIT_KG, DESC_SUR_NH4_CH, Source_Module, DT_Array1D);
 	//nutrient from interflow
 	mdi.AddInput(VAR_LATNO3_TOCH, UNIT_KG, DESC_LATNO3_CH, Source_Module, DT_Array1D);
 	//nutrient from ground water
 	mdi.AddInput(VAR_NO3GW_TOCH, UNIT_KG, DESC_NO3GW_CH, Source_Module, DT_Array1D);
-	mdi.AddInput(VAR_MINPGW_TOCH, UNIT_KG, DESC_MINPGW_CH, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_MINPGW_TOCH, UNIT_KG, DESC_MINPGW_CH, Source_Module, DT_Array1D);
 
     // set the output variables
     mdi.AddOutput(VAR_SOXY, UNIT_DENSITY_L, DESC_SOXY, DT_Array1D);
