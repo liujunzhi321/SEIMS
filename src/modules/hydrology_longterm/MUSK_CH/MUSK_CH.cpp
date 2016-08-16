@@ -44,6 +44,16 @@ MUSK_CH::~MUSK_CH(void)
     if (m_qgCh != NULL)Release1DArray(m_qgCh);
     if (m_chWTdepth != NULL)Release1DArray(m_chWTdepth);
 	if (m_ptSub != NULL) Release1DArray(m_ptSub);
+	if (!m_ptSrcFactory.empty())
+	{
+		for (map<int, BMPPointSrcFactory*>::iterator it = m_ptSrcFactory.begin(); it != m_ptSrcFactory.end();)
+		{
+			if(it->second != NULL)
+				delete it->second;
+			it = m_ptSrcFactory.erase(it);
+		}
+		m_ptSrcFactory.clear();
+	}
 }
 
 //! Check input data
@@ -155,7 +165,7 @@ void MUSK_CH::PointSourceLoading()
 		vector<int> m_ptSrcMgtSeqs = it->second->GetPointSrcMgtSeqs();
 		map<int, PointSourceMgtParams *>  m_pointSrcMgtMap = it->second->GetPointSrcMgtMap();
 		vector<int> m_ptSrcIDs = it->second->GetPointSrcIDs();
-		map<int, PointBMPLocations *> m_pointSrcLocsMap = it->second->GetPointSrcLocsMap();
+		map<int, PointSourceLocations *> m_pointSrcLocsMap = it->second->GetPointSrcLocsMap();
 		// 1. looking for management operations from m_pointSrcMgtMap
 		for (vector<int>::iterator seqIter = m_ptSrcMgtSeqs.begin(); seqIter != m_ptSrcMgtSeqs.end(); seqIter++)
 		{
@@ -172,7 +182,7 @@ void MUSK_CH::PointSourceLoading()
 			for (vector<int>::iterator locIter = m_ptSrcIDs.begin(); locIter != m_ptSrcIDs.end(); locIter++)
 			{
 				if (m_pointSrcLocsMap.find(*locIter) != m_pointSrcLocsMap.end()){
-					PointBMPLocations* curPtLoc = m_pointSrcLocsMap.at(*locIter);
+					PointSourceLocations* curPtLoc = m_pointSrcLocsMap.at(*locIter);
 					int curSubID = curPtLoc->GetSubbasinID();
 					m_ptSub[curSubID] += per_wtrVol * curPtLoc->GetSize() / 86400.f; /// m3/s
 				}
@@ -443,15 +453,19 @@ void MUSK_CH::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 //}
 void MUSK_CH::SetScenario(Scenario * sce)
 {
-	map <int, BMPFactory* > *tmpBMPFactories = sce->GetBMPFactories();
-	for (map<int, BMPFactory *>::iterator it = tmpBMPFactories->begin(); it != tmpBMPFactories->end(); it++)
-	{
-		/// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
-		if (it->first / 100000 == BMP_TYPE_POINTSOURCE)
+	if (sce != NULL){
+		map <int, BMPFactory* > *tmpBMPFactories = sce->GetBMPFactories();
+		for (map<int, BMPFactory *>::iterator it = tmpBMPFactories->begin(); it != tmpBMPFactories->end(); it++)
 		{
-			m_ptSrcFactory[it->first] = (BMPPointSrcFactory*)it->second;
+			/// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
+			if (it->first / 100000 == BMP_TYPE_POINTSOURCE)
+			{
+				m_ptSrcFactory[it->first] = (BMPPointSrcFactory*)it->second;
+			}
 		}
 	}
+	else
+		throw ModelException(MID_MUSK_CH, "SetScenario", "The scenario can not to be NULL.");
 }
 void MUSK_CH::SetReaches(clsReaches *reaches)
 {
