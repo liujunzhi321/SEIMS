@@ -154,7 +154,7 @@ void SEDR_VCD::PointSourceLoading()
 				if (m_pointSrcLocsMap.find(*locIter) != m_pointSrcLocsMap.end()){
 					PointSourceLocations* curPtLoc = m_pointSrcLocsMap.at(*locIter);
 					int curSubID = curPtLoc->GetSubbasinID();
-					m_ptSub[curSubID] += per_sed * curPtLoc->GetSize() / 1000.f; /// kg ==> ton
+					m_ptSub[curSubID] += per_sed * curPtLoc->GetSize(); /// kg
 				}
 			}
 		}

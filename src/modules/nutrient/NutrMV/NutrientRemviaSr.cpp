@@ -50,6 +50,16 @@ NutrientRemviaSr::~NutrientRemviaSr(void)
 
 void NutrientRemviaSr::SumBySubbasin()
 {
+	for(int subi = 1; subi <= m_nSubbasins; subi++)
+	{
+		m_sur_no3ToCh[subi] = 0.f;
+		m_sur_solpToCh[subi] = 0.f;
+		m_perco_n_gw[subi] = 0.f;
+		m_perco_p_gw[subi] = 0.f;
+
+		m_latno3ToCh[subi] = 0.f;
+	}
+
 	float cellArea = m_cellWidth * m_cellWidth * 0.0001f; //ha
 	// sum by subbasin
 	for (int i = 0; i < m_nCells; i++)
@@ -360,8 +370,11 @@ void NutrientRemviaSr::NitrateLoss()
 				//#pragma omp parallel for
 				//did not use parallel computing to avoid several cells flow into the same downstream cell
 
+				
                 for (int i = 0; i < m_nCells; i++)
                 {
+					m_latno3[i] = 0.f;
+
                     for (int k = 0; k < m_nSoilLayers[i]; k++)
                     {
                         //add nitrate moved from layer above
@@ -433,7 +446,7 @@ void NutrientRemviaSr::NitrateLoss()
                         else
                             ssfnlyr = con * m_flat[i][k];
                         ssfnlyr = min(ssfnlyr, m_sol_no3[i][k]);
-                        m_latno3[i] = m_latno3[i] + ssfnlyr;
+                        m_latno3[i] += ssfnlyr;
 						//move the lateral no3 flow to the downslope cell
                         m_sol_no3[i][k] = m_sol_no3[i][k] - ssfnlyr;
 						int idDownSlope = (int)m_flowOutIndex[i];

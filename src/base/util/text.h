@@ -234,8 +234,6 @@
 #define REACH_RK2                    "RK2"
 #define REACH_RK3                    "RK3"
 #define REACH_RK4                    "RK4"
-#define REACH_COVER					 "COVER"
-#define REACH_EROD					 "EROD"
 
 /// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
 #define SITELIST_TABLE_M        "SITELISTM"
@@ -523,9 +521,9 @@
 #define VAR_AIRRWTR_DEPTH "airrwtr_depth"
 #define VAR_ALAIMIN "alai_min"
 #define VAR_ALBDAY "ALBDAY"
-#define VAR_CH_ALGAE "algae"
+#define VAR_CH_ALGAE "ch_algae"
 #define VAR_AMMO_CH "ammoToCh"
-#define VAR_CH_NH4 "ammonian"
+#define VAR_CH_NH4 "ch_nh3"
 #define VAR_ANION_EXCL "anion_excl"
 #define VAR_AWTR_STRS_ID "awtr_strsID"
 #define VAR_AWTR_STRS_TRIG "awtr_strsTrig"
