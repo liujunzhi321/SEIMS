@@ -84,8 +84,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_WSHD_PAL, UNIT_CONT_KGHA, DESC_WSHD_PAL, DT_Single);
     mdi.AddOutput(VAR_WSHD_PAS, UNIT_CONT_KGHA, DESC_WSHD_PAS, DT_Single);
 
-
-
     mdi.AddOutput(VAR_SOL_AORGN, UNIT_CONT_KGHA, DESC_SOL_AORGN, DT_Raster2D);
     mdi.AddOutput(VAR_SOL_FON, UNIT_CONT_KGHA, DESC_SOL_FON, DT_Raster2D);
     mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);

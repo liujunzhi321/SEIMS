@@ -126,7 +126,18 @@
 #define BMP_PTSRC_FLD_SIZE                    "SIZE"
 #define BMP_PTSRC_FLD_DISTDOWN        "DIST2REACH"
 /// Areal source management fields
-
+#define BMP_ARSRC_FLD_CODE                "ARSRC"
+#define BMP_ARSRC_FLD_Q                        "Q"
+#define BMP_ARSRC_FLD_SED                    "SED"
+#define BMP_ARSRC_FLD_TN                        "TN"
+#define BMP_ARSRC_FLD_NO3                    "NO3"
+#define BMP_ARSRC_FLD_NH3                    "NH3"
+#define BMP_ARSRC_FLD_ORGN                "ORGN"
+#define BMP_ARSRC_FLD_TP                        "TP"
+#define BMP_ARSRC_FLD_MINP                    "MINP"
+#define BMP_ARSRC_FLD_ORGP                "ORGP"
+#define BMP_ARSRC_FLD_PTSRCID            "ARSRCID"
+#define BMP_ARSRC_FLD_SIZE                    "SIZE"
 /// Plant management code
 #define BMP_PLTOP_Plant                    1
 #define BMP_PLTOP_Irrigation            2

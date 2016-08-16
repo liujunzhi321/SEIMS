@@ -30,7 +30,7 @@ BMPPointSrcFactory::~BMPPointSrcFactory(void)
 {
     if (!m_pointSrcLocsMap.empty())
     {
-        for (map<int, PointBMPLocations *>::iterator it = m_pointSrcLocsMap.begin();
+        for (map<int, PointSourceLocations *>::iterator it = m_pointSrcLocsMap.begin();
              it != m_pointSrcLocsMap.end();)
         {
             if (it->second != NULL)
@@ -122,7 +122,7 @@ void BMPPointSrcFactory::ReadPointSourceLocations(mongoc_client_t *conn, string 
 
     while (mongoc_cursor_next(cursor, &bsonTable))
     {
-        PointBMPLocations *curPtSrcLoc = new PointBMPLocations(bsonTable, iter);
+        PointSourceLocations *curPtSrcLoc = new PointSourceLocations(bsonTable, iter);
         int curPtSrcID = curPtSrcLoc->GetPointSourceID();
         if (ValueInVector(curPtSrcID, m_pointSrcIDs))
             m_pointSrcLocsMap[curPtSrcID] = curPtSrcLoc;
@@ -147,7 +147,7 @@ void BMPPointSrcFactory::Dump(ostream *fs)
     }
     for (vector<int>::iterator it = m_pointSrcIDs.begin(); it != m_pointSrcIDs.end(); it++)
     {
-        map<int, PointBMPLocations *>::iterator findIdx = m_pointSrcLocsMap.find(*it);
+        map<int, PointSourceLocations *>::iterator findIdx = m_pointSrcLocsMap.find(*it);
         if (findIdx != m_pointSrcLocsMap.end())
             m_pointSrcLocsMap[*it]->Dump(fs);
     }
@@ -224,10 +224,11 @@ void PointSourceMgtParams::Dump(ostream *fs)
 
 
 /************************************************************************/
-/*                      PointBMPLocations                                           */
+/*                      PointSourceLocations                                           */
 /************************************************************************/
 
-PointBMPLocations::PointBMPLocations(const bson_t *&bsonTable, bson_iter_t &iter)
+PointSourceLocations::PointSourceLocations(const bson_t *&bsonTable, bson_iter_t &iter)
+	:m_size(0.f), m_distDown(0.f)
 {
     if (bson_iter_init_find(&iter, bsonTable, BMP_FLD_NAME))
         m_name = GetStringFromBSONITER(&iter);
@@ -249,11 +250,11 @@ PointBMPLocations::PointBMPLocations(const bson_t *&bsonTable, bson_iter_t &iter
         m_distDown = GetFloatFromBSONITER(&iter);
 }
 
-PointBMPLocations::~PointBMPLocations(void)
+PointSourceLocations::~PointSourceLocations(void)
 {
 }
 
-void PointBMPLocations::Dump(ostream *fs)
+void PointSourceLocations::Dump(ostream *fs)
 {
     if (fs == NULL) return;
     *fs << "      Point Source Location: " << endl <<

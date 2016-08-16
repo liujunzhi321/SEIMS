@@ -189,12 +189,12 @@ void ModuleFactory::Init(const string &configFileName)
         for (size_t j = 0; j < inputs.size(); j++)
         {
             ParamInfo &param = inputs[j];
-            if (!StringMatch(param.Source, Source_Module))
-                continue;
-
-            param.DependPara = FindDependentParam(param);
+            if (StringMatch(param.Source, Source_Module) || StringMatch(param.Source, Source_Module_Optional))
+                param.DependPara = FindDependentParam(param);
             //cout << "\t" << param.Name << "\t" << param.DependPara->ModuleID << ":" << param.DependPara->Name << endl;
-        }
+			else
+				continue;
+		}
     }
 }
 

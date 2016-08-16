@@ -18,7 +18,7 @@
 #include "BMPFactory.h"
 #include "BMPPlantMgtFactory.h"
 #include "BMPPointSourceFactory.h"
-
+#include "BMPArealSourceFactory.h"
 using namespace std;
 
 namespace MainBMP
