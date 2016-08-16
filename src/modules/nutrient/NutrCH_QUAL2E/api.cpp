@@ -101,7 +101,6 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_CH_NO3, UNIT_DENSITY_L, DESC_CH_NO3, DT_Array1D);
     mdi.AddOutput(VAR_CH_SOLP, UNIT_DENSITY_L, DESC_CH_SOLP, DT_Array1D);
     mdi.AddOutput(VAR_CH_COD, UNIT_DENSITY_L, DESC_CH_COD, DT_Array1D);
-    //mdi.AddOutput(VAR_RCH_DOX, UNIT_DENSITY_L, DESC_RCH_DOX, DT_Array1D);
     mdi.AddOutput(VAR_CH_CHLORA, UNIT_DENSITY_L, DESC_CH_CHLORA, DT_Array1D);
 
     string res = mdi.GetXMLDocument();
@@ -109,3 +108,5 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
     return tmp;
 }
+
+    //mdi.AddOutput(VAR_RCH_DOX, UNIT_DENSITY_L, DESC_RCH_DOX, DT_Array1D)
