@@ -481,13 +481,9 @@
 /// In-stream nutrient transformations
 #define MCLS_NutCHRout "Nutrient in reach"
 #define MCLSDESC_NutCHRout "In-stream nutrient transformations"
-#define MID_NutCHRout "NutCH_QUAL2E"
-#define MDESC_NutCHRout "In-stream nutrient transformations"
-/// Nutrient transformations in overland flow
-#define MCLS_NutOLRout "Nutrient in overland flow"
-#define MCLSDESC_NutOLRout "Nutrient transformations in overland flow"
-#define MID_NutOLRout "NutCHRout"
-#define MDESC_NutOLRout "Nutrient transformations in overland flow"
+#define MID_NUTRCH_QUAL2E "NutCH_QUAL2E"
+#define MDESC_NUTRCH_QUAL2E "In-stream nutrient transformations"
+
 
 //////////////////////////////////////////////////////////////////////////
 /// Define unit names common used in SEIMS, in case of inconsistency /////
@@ -524,7 +520,7 @@
 #define VAR_ALBDAY "ALBDAY"
 #define VAR_CH_ALGAE "ch_algae"
 #define VAR_AMMO_CH "ammoToCh"
-#define VAR_CH_NH4 "ch_nh3"
+#define VAR_CH_NH3 "ch_nh3"
 #define VAR_ANION_EXCL "anion_excl"
 #define VAR_AWTR_STRS_ID "awtr_strsID"
 #define VAR_AWTR_STRS_TRIG "awtr_strsTrig"
@@ -972,7 +968,7 @@
 #define UNIT_LONLAT_DEG "degree"                    /// Degree of longitude and latitude
 #define UNIT_MELT_FACTOR "mm/deg C/day"                 /// Melt factor
 #define UNIT_NON_DIM ""                             /// Non dimension  
-#define UNIT_NUT_RATIO "mg/mg"         /// mg H2O/mg Nutrient
+#define UNIT_NUTR_RATIO "mg/mg"         /// mg H2O/mg Nutrient
 #define UNIT_PER_DAY "1/day"               /// rate per day
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_PRESSURE "kPa"                         /// Vapor pressure
