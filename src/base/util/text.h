@@ -236,6 +236,17 @@
 #define REACH_RK4                    "RK4"
 #define REACH_COVER					 "COVER"
 #define REACH_EROD					 "EROD"
+#define REACH_DISOX					"DISOX"
+#define REACH_BOD					"BOD"
+#define REACH_ALGAE					"ALGAE"
+#define REACH_ORGN					"ORGN"
+#define REACH_NH3					"NH3"
+#define REACH_NO2					"NO2"
+#define REACH_NO3					"NO3"
+#define REACH_ORGP					"ORGP"
+#define REACH_SOLP					"SOLP"
+#define REACH_GWNO3					"GWNO3"
+#define REACH_GWSOLP				"GWSOLP"
 /// these four are defined in DB_TAB_SITELIST in Source_ParameterDB
 #define SITELIST_TABLE_M        "SITELISTM"
 #define SITELIST_TABLE_P        "SITELISTP"
@@ -481,7 +492,8 @@
 /// In-stream nutrient transformations
 #define MCLS_NutCHRout "Nutrient in reach"
 #define MCLSDESC_NutCHRout "In-stream nutrient transformations"
-#define MID_NUTRCH_QUAL2E "NutCH_QUAL2E"
+
+#define MID_NUTRCH_QUAL2E "NutrCH_QUAL2E"
 #define MDESC_NUTRCH_QUAL2E "In-stream nutrient transformations"
 
 

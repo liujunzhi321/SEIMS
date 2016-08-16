@@ -66,6 +66,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddParameter(VAR_WATTEMP, UNIT_TEMP_DEG, DESC_WATTEMP, Source_ParameterDB, DT_Array1D);
     mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Reach);
 	mdi.AddParameter(VAR_STREAM_LINK, UNIT_NON_DIM, DESC_STREAM_LINK, Source_ParameterDB, DT_Raster1D);
+	// add reach information
+	mdi.AddParameter(VAR_REACH_PARAM, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Reach);
 
     // set the input variables
     mdi.AddInput(DataType_SolarRadiation, UNIT_SR, DESC_SR, Source_Module, DT_Raster1D);

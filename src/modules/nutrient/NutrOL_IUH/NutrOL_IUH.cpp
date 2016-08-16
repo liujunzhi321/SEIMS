@@ -188,9 +188,9 @@ void NutrOL_IUH::Set1DData(const char *key, int n, float *data)
 	string sk(key);
 	if (StringMatch(sk, VAR_SUBBSN)) {m_subbasin = data;}
     else if (StringMatch(sk, VAR_LATNO3)) { this->m_latno3 = data; }
-    else if (StringMatch(sk, VAR_SURQNO3)) { this->m_surqno3 = data; }
+    else if (StringMatch(sk, VAR_SUR_NO3)) { this->m_surqno3 = data; }
     //else if(StringMatch(sk, VAR_AMMONIAN)) {this -> m_ammo = data;}
-    else if (StringMatch(sk, VAR_SURQSOLP)) { this->m_surqsolp = data; }
+    else if (StringMatch(sk, VAR_SUR_SOLP)) { this->m_surqsolp = data; }
     else if (StringMatch(sk, VAR_NO3GW)) { this->m_no3gw = data; }
     else if (StringMatch(sk, VAR_MINPGW)) { this->m_minpgw = data; }
     else if (StringMatch(sk, VAR_SEDORGN)) { this->m_sedorgn = data; }

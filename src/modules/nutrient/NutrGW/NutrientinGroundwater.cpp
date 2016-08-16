@@ -101,18 +101,13 @@ void NutrientinGroundwater::SetValue(const char *key, float value)
     {
         omp_set_num_threads((int) value);
     }
-    //else if (StringMatch(sk, Tag_CellSize))
-    //{
-    //    m_nCells = (int)value;
-    //}
     else if (StringMatch(sk, Tag_CellWidth))
     {
         m_cellWidth = value;
     }
     else
     {
-        throw ModelException(MID_NUTRGW, "SetValue", "Parameter " + sk +
-                                                  " does not exist in current method. Please contact the module developer.");
+        throw ModelException(MID_NUTRGW, "SetValue", "Parameter " + sk + " does not exist.");
     }
 }
 
@@ -124,10 +119,10 @@ void NutrientinGroundwater::Set1DData(const char *key, int n, float *data)
 		if (!CheckInputSize(key, n)) return;
 		m_subbasin = data;
 	}
-	else if (StringMatch(sk, VAR_GWNO3_CON))
-        m_gwno3Con = data;
-	else if (StringMatch(sk, VAR_GWMINP_CON))
-        m_gwminpCon = data;
+	//else if (StringMatch(sk, VAR_GWNO3_CON))
+ //       m_gwno3Con = data;
+	//else if (StringMatch(sk, VAR_GWMINP_CON))
+ //       m_gwminpCon = data;
     else if (StringMatch(sk, VAR_SBQG))
         m_gw_q = data;
 	else if (StringMatch(sk, VAR_SBGS))
@@ -137,10 +132,12 @@ void NutrientinGroundwater::Set1DData(const char *key, int n, float *data)
 	else if (StringMatch(sk, VAR_PERCO_P_GW))
 		m_perco_solp_gw = data;
 	else if (StringMatch(sk, VAR_SOILLAYERS))
+	{
+		if (!CheckInputSize(key, n)) return;
 		m_soilLayers = data;
+	}
     else
-        throw ModelException(MID_NUTRGW, "Set1DData", "Parameter " + sk +
-                                                  " does not exist in current module. Please contact the module developer.");
+        throw ModelException(MID_NUTRGW, "Set1DData", "Parameter " + sk + " does not exist.");
 }
 
 void NutrientinGroundwater::Set2DData(const char *key, int nRows, int nCols, float **data)
@@ -152,11 +149,27 @@ void NutrientinGroundwater::Set2DData(const char *key, int nRows, int nCols, flo
 	if (StringMatch(sk, VAR_SOL_NO3)) 
 		m_sol_no3 = data; 
 	else
-		throw ModelException(MID_NUTRGW, "Set2DData", "Parameter " + sk +
-		    " does not exist. Please contact the module developer.");
+		throw ModelException(MID_NUTRGW, "Set2DData", "Parameter " + sk + " does not exist.");
 }
 
-
+void NutrientinGroundwater::SetReaches(clsReaches *reaches)
+{
+	if(reaches != NULL)
+	{
+		m_nSubbasins = reaches->GetReachNumber();
+		vector<int> m_reachId = reaches->GetReachIDs();
+		Initialize1DArray(m_nSubbasins+1, m_gwminpCon, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_gwno3Con, 0.f);
+		for (vector<int>::iterator it = m_reachId.begin(); it != m_reachId.end(); it++)
+		{
+			clsReach* tmpReach = reaches->GetReachByID(*it);
+			m_gwno3Con[*it] = tmpReach->GetGWNO3();
+			m_gwminpCon[*it] = tmpReach->GetGWSolP();
+		}
+	}
+	else
+		throw ModelException(MID_NUTRGW, "SetReaches", "The reaches input can not to be NULL.");
+}
 void NutrientinGroundwater::initialOutputs()
 {
     if (this->m_nCells <= 0)
@@ -212,7 +225,6 @@ int NutrientinGroundwater::Execute()
 		float gwVol = subArea * m_gwStor[id]/1000.f;//m3
 		m_gwno3Con[id] += m_perco_no3_gw[id]*1000.f/gwVol;
 		m_gwminpCon[id] += m_perco_solp_gw[id]*1000.f/gwVol;
-        
     }
     return 0;
 }
