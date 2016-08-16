@@ -76,6 +76,27 @@ clsReach::clsReach(const bson_t *&bsonTable)
 		this->cover = GetFloatFromBSONITER(&iterator);
 	if (bson_iter_init_find(&iterator, bsonTable, REACH_EROD))
 		this->erod = GetFloatFromBSONITER(&iterator);
+	/// nutrient related
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_DISOX))
+		this->disox = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_BOD))
+		this->bod = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_NO3))
+		this->no3 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_NO2))
+		this->no2 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_NH3))
+		this->nh3 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_ORGN))
+		this->orgn = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_ORGP))
+		this->orgp = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_SOLP))
+		this->solp = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_GWNO3))
+		this->gwno3 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_GWSOLP))
+		this->gwsolp = GetFloatFromBSONITER(&iterator);
 }
 
 clsReach::~clsReach(void)

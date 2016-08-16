@@ -339,6 +339,16 @@ void NutrCH_QUAL2E::SetReaches(clsReaches *reaches)
 		Initialize1DArray(m_nReaches+1,m_rs4, 0.f);
 		Initialize1DArray(m_nReaches+1,m_rs5, 0.f);
 
+		Initialize1DArray(m_nReaches+1,m_chAlgae,0.f);
+		Initialize1DArray(m_nReaches+1,m_chOrgN,0.f);
+		Initialize1DArray(m_nReaches+1,m_chOrgP,0.f);
+		Initialize1DArray(m_nReaches+1,m_chNH4,0.f);
+		Initialize1DArray(m_nReaches+1,m_chNO2,0.f);
+		Initialize1DArray(m_nReaches+1,m_chNO3,0.f);
+		Initialize1DArray(m_nReaches+1,m_chSolP,0.f);
+		Initialize1DArray(m_nReaches+1,m_chCOD,0.f);
+		Initialize1DArray(m_nReaches+1,m_chDO,0.f);
+
 		Initialize1DArray(m_nReaches+1, m_chDaylen, 0.f);
 		Initialize1DArray(m_nReaches+1, m_chSr, 0.f);
 		Initialize1DArray(m_nReaches+1, m_chTemp, 0.f);
@@ -362,6 +372,15 @@ void NutrCH_QUAL2E::SetReaches(clsReaches *reaches)
 			m_rs3[*it] = tmpReach->GetRs3();
 			m_rs4[*it] = tmpReach->GetRs4();
 			m_rs5[*it] = tmpReach->GetRs5();
+			m_chAlgae[*it] = tmpReach->GetAlgae();
+			m_chOrgN[*it] = tmpReach->GetOrgN();
+			m_chOrgP[*it] = tmpReach->GetOrgP();
+			m_chNH4[*it] = tmpReach->GetNH3();
+			m_chNO2[*it] = tmpReach->GetNO2();
+			m_chNO3[*it] = tmpReach->GetNO3();
+			m_chSolP[*it] = tmpReach->GetSolP();
+			m_chDO[*it] = tmpReach->GetDisOxygen();
+			m_chCOD[*it] = tmpReach->GetBOD(); // this should be m_chBOD, need to be confirmed! by lj
 		}
 
 		m_reachUpStream.resize(m_nReaches + 1);
@@ -396,17 +415,18 @@ void  NutrCH_QUAL2E::initialOutputs()
             m_reachLayers[order].push_back(i);
         }
     }
-	if (m_chOrgN == NULL)
+	if (m_chOutAlgae == NULL)
 	{
-		Initialize1DArray(m_nReaches+1,m_chAlgae,0.f);
-		Initialize1DArray(m_nReaches+1,m_chOrgN,0.f);
-		Initialize1DArray(m_nReaches+1,m_chOrgP,0.f);
-		Initialize1DArray(m_nReaches+1,m_chNH4,0.f);
-		Initialize1DArray(m_nReaches+1,m_chNO2,0.f);
-		Initialize1DArray(m_nReaches+1,m_chNO3,0.f);
-		Initialize1DArray(m_nReaches+1,m_chSolP,0.f);
-		Initialize1DArray(m_nReaches+1,m_chCOD,0.f);
-		Initialize1DArray(m_nReaches+1,m_chDO,0.f);
+		// move to SetReaches, by lj
+		//Initialize1DArray(m_nReaches+1,m_chAlgae,0.f);
+		//Initialize1DArray(m_nReaches+1,m_chOrgN,0.f);
+		//Initialize1DArray(m_nReaches+1,m_chOrgP,0.f);
+		//Initialize1DArray(m_nReaches+1,m_chNH4,0.f);
+		//Initialize1DArray(m_nReaches+1,m_chNO2,0.f);
+		//Initialize1DArray(m_nReaches+1,m_chNO3,0.f);
+		//Initialize1DArray(m_nReaches+1,m_chSolP,0.f);
+		//Initialize1DArray(m_nReaches+1,m_chCOD,0.f);
+		//Initialize1DArray(m_nReaches+1,m_chDO,0.f);
 		Initialize1DArray(m_nReaches+1,m_chChlora,0.f);
 		m_chSatDO = 0.f;
 
@@ -498,7 +518,7 @@ void NutrCH_QUAL2E::RouteOut(int i)
 	m_chOutNH4[i]  = m_chNH4[i] * outFraction;
 	m_chOutCOD[i]  = m_chCOD[i] * outFraction;
 	m_chOutDO[i]   = m_chDO[i] * outFraction;
-	m_chOutCOD[i]  = m_chCOD[i] * outFraction;
+	//m_chOutCOD[i]  = m_chCOD[i] * outFraction;
 
 	m_chOrgN[i] -= m_chOutOrgN[i];
 	m_chOrgP[i] -= m_chOutOrgP[i];
@@ -508,7 +528,7 @@ void NutrCH_QUAL2E::RouteOut(int i)
 	m_chNH4[i]  -= m_chOutNH4[i];
 	m_chCOD[i]  -= m_chOutCOD[i];
 	m_chDO[i]   -= m_chOutDO[i];
-	m_chCOD[i]  -= m_chOutCOD[i];
+	//m_chCOD[i]  -= m_chOutCOD[i]; // in swat, this is BOD. need to be confirmed! by lj
 }
 
 void NutrCH_QUAL2E::NutrientTransform(int i)
