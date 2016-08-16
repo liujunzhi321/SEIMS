@@ -16,8 +16,8 @@
 ## 	NH3	Ammonium Nitrogen concentration	kg/'size'/day
 ## 	ORGN	Organic Nitrogen concentration	kg/'size'/day
 ## 	TP	Total phosphorus concentration	kg/'size'/day
-## 	MINP	Mineral phosphorus concentration	kg/'size'/day
+## 	SOLP	Dissolved (soluble) phosphorus concentration	kg/'size'/day
 ## 	ORGP	Organic phosphorus concentration	kg/'size'/day
 
-SUBSCENARIO	NAME	ARSRC	SEQUENCE	SYear	SMonth	SDay	EYear	EMonth	EDay	Q	SED	TN	NO3	NH3	ORGN	TP	MINP	ORGP
+SUBSCENARIO	NAME	ARSRC	SEQUENCE	SYear	SMonth	SDay	EYear	EMonth	EDay	Q	SED	TN	NO3	NH3	ORGN	TP	SOLP	ORGP
 10001	traditional	10000	0	-9999	-9999	-9999	-9999	-9999	-9999	0.0003	0	0.04	0.01	0.01	0.02	0.05	0.01	0.04

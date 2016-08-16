@@ -92,6 +92,28 @@ public:
 	float GetCover(){return this->cover;}
 
 	float GetErod(){return this->erod;}
+
+	float GetDisOxygen(){return this->disox;}
+
+	float GetBOD(){return this->bod;}
+
+	float GetAlgae(){return this->algae;}
+
+	float GetOrgN(){return this->orgn;}
+
+	float GetNH3(){return this->nh3;}
+
+	float GetNO2(){return this->no2;}
+
+	float GetNO3(){return this->no3;}
+
+	float GetOrgP(){return this->orgp;}
+
+	float GetSolP(){return this->solp;}
+
+	float GetGWNO3(){return this->gwno3;}
+
+	float GetGWSolP(){return this->gwsolp;}
 private:
     //! Subbasin area
     float Area;
@@ -152,6 +174,28 @@ private:
 	float cover;
 	/// erodibility factor
 	float erod;
+	/// Concentration of nitrate in groundwater contribution to streamflow from subbasin (mg N/l).
+	float gwno3;
+	/// Concentration of soluble phosphorus in groundwater contribution to streamflow from subbasin (mg P/l).
+	float gwsolp;
+	/// Initial dissolved oxygen concentration in the reach.	[mg /l]
+	float disox;
+	/// Initial carbonaceous biochemical oxygen demand in the reach .	[mg /l]
+	float bod;
+	/// Initial chlorophyll-a concentration in the reach.	[mg /l]
+	float algae;
+	/// Initial organic nitrogen concentration in the reach.	[mg /l]
+	float orgn;
+	/// Initial ammonia concentration in the reach.	[mg /l]
+	float nh3;
+	/// Initial nitrite concentration in the reach
+	float no2;
+	/// Initial nitrate concentration in the reach
+	float no3;
+	/// Initial organic phosphorus concentration in the reach.	[mg /l]
+	float orgp;
+	/// Initial dissolved phosphorus concentration in the reach.	[mg /l]
+	float solp;
 };
 
 /*!
