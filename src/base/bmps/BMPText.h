@@ -72,6 +72,7 @@
 #define BMP_TYPE_RESIDUAL                13
 #define BMP_TYPE_TILEDRAIN                14
 #define BMP_TYPE_URBAN                    15
+#define BMP_TYPE_AREALSOURCE				16
 ////the hydro climate data columns of pointsource, flowdiversion and reservoir
 //#define BMP_REACH_FLOW_NAME			"flow"
 //#define BMP_REACH_SEDIMENT_NAME		"sediment"
@@ -105,7 +106,7 @@
 #define BMP_FLD_EYEAR                                "EYEAR"
 #define BMP_FLD_EMONTH                            "EMONTH"
 #define BMP_FLD_EDAY                                "EDAY"
-/// Point source management
+/// Point source management fields
 #define BMP_PTSRC_FLD_CODE                "PTSRC"
 #define BMP_PTSRC_FLD_Q                        "Q"
 #define BMP_PTSRC_FLD_SED                    "SED"
@@ -124,6 +125,7 @@
 #define BMP_PTSRC_FLD_SUBBSN            "SUBBASIN"
 #define BMP_PTSRC_FLD_SIZE                    "SIZE"
 #define BMP_PTSRC_FLD_DISTDOWN        "DIST2REACH"
+/// Areal source management fields
 
 /// Plant management code
 #define BMP_PLTOP_Plant                    1

@@ -1,5 +1,4 @@
 /*!
- * \file BMPPlantMgtFactory.cpp
  * \brief Plant management operations factory
  * \author Liang-Jun Zhu
  * \date June 2016
