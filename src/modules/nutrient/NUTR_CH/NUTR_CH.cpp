@@ -206,7 +206,7 @@ void NUTR_CH::Get1DData(const char *key, int *n, float **data)
     int iOutlet = m_reachLayers.rbegin()->second[0];
 
 	if (StringMatch(sk, VAR_CH_NO3))        *data = m_chNo3; 
-	else if (StringMatch(sk, VAR_CH_NH4))   *data = m_chNH4;
+	//else if (StringMatch(sk, VAR_CH_NH4))   *data = m_chNH4;
 	else if (StringMatch(sk, VAR_CH_SOLP))  *data = m_chSolP; 
 	else if (StringMatch(sk, VAR_CH_ORGN))  *data = m_chOrgN; 
 	else if (StringMatch(sk, VAR_CH_ORGP))  *data = m_chOrgP; 

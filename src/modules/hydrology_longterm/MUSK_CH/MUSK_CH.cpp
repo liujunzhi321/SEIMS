@@ -355,6 +355,9 @@ void MUSK_CH::GetValue(const char *key, float *value)
 //! Get 1D data
 void MUSK_CH::Get1DData(const char *key, int *n, float **data)
 {
+	if(m_reachLayers.empty())
+		initialOutputs();
+
     string sk(key);
     *n = m_nreach + 1;
     int iOutlet = m_reachLayers.rbegin()->second[0];

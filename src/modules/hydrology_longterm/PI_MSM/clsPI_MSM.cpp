@@ -58,7 +58,9 @@ void clsPI_MSM::SetValue(const char *key, float data)
 
 void clsPI_MSM::Get1DData(const char *key, int *nRows, float **data)
 {
-    string s(key);
+	initialOutputs();
+
+    string s = key;
     if (StringMatch(s, VAR_INLO))
         *data = m_interceptionLoss;
     else if (StringMatch(s, VAR_INET))

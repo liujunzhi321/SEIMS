@@ -354,7 +354,7 @@ void SEDR_VCD::SedChannelRouting(int i)
         float qOutV = m_qchOut[i] * m_dt;
         float allWater = m_chStorage[i] + qOutV;
 
-        if (allWater < 0.001f)
+        if (allWater < 0.000001f)
         {
 			m_sedDeg[i] = 0.0f;
 			m_sedDep[i] = 0.0f;
