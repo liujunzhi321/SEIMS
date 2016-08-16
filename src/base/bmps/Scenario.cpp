@@ -2,8 +2,6 @@
 #include "ModelException.h"
 #include "utils.h"
 #include <fstream>
-//#include "BMPReach.h"
-//#include "BMPArealNonStructuralFactory.h"
 
 namespace MainBMP
 {
@@ -227,11 +225,11 @@ namespace MainBMP
                     this->m_bmpFactories[uniqueBMPID] = new BMPPlantMgtFactory(m_id, BMPID, subScenario, BMPType,
                                                                                BMPPriority, distribution,
                                                                                collectionName, location);
-                /*if(BMPType == BMP_TYPE_REACH)
-                this->m_bmpFactories[BMPID] = new BMPReachFactory(m_id,BMPID,BMPType,distribution,parameter);
-                if(BMPType == BMP_TYPE_AREAL_NON_STRUCTURAL)
-                this->m_bmpFactories[BMPID] = new BMPArealNonStructuralFactory(m_id,BMPID,BMPType,distribution,parameter);*/
-            }
+				if (BMPID == BMP_TYPE_AREALSOURCE)
+					this->m_bmpFactories[uniqueBMPID] = new BMPArealSrcFactory(m_id, BMPID, subScenario, BMPType,
+																			  BMPPriority, distribution,
+																			  collectionName, location);
+			}
         }
         bson_destroy(query);
         mongoc_cursor_destroy(cursor);
