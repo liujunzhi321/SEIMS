@@ -188,16 +188,16 @@ int NutrientinGroundwater::Execute()
 		int id = *iter;
 		
 		// gw no3 to channel
-		float xx = m_gw_q[id] * m_TimeStep;
-		m_no3gwToCh[id] = m_gwno3Con[id] * xx; //kg
-		m_minpgwToCh[id] = m_gwminpCon[id] * xx;
+		float xx = m_gw_q[id] * m_TimeStep; //m3
+		m_no3gwToCh[id] = m_gwno3Con[id] * xx / 1000.f; // g/m3 * m3 / 1000 = kg
+		m_minpgwToCh[id] = m_gwminpCon[id] * xx / 1000.f;
 
 		// gw no3 loss through revep
 		Subbasin *subbasin = m_subbasinsInfo->GetSubbasinByID(id);
 		float subArea = subbasin->getCellCount() * m_cellWidth * m_cellWidth; //m2
 		float revap = subbasin->getEG();
-		float no3ToSoil = revap/1000.f * subArea * m_gwno3Con[id];
-		float solpToSoil = revap/1000.f * subArea * m_gwminpCon[id];//kg
+		float no3ToSoil = revap/1000.f * m_gwno3Con[id] * 10.f;// kg/ha  (10*g/m3=kg/ha)
+		float solpToSoil = revap/1000.f * m_gwminpCon[id] * 10.f;
 		// update no3 in the bottom soil layer due to revap
 		int *cells = subbasin->getCells();
 		int nCells = subbasin->getCellCount();
@@ -205,13 +205,13 @@ int NutrientinGroundwater::Execute()
 		for (int i = 0; i < nCells; i++)
 		{
 			index = cells[i];
-			m_sol_no3[index][(int)m_soilLayers[index] - 1] += no3ToSoil/nCells;
+			m_sol_no3[index][(int)m_soilLayers[index] - 1] += no3ToSoil;
 		}
 
 		// update concentration
 		float gwVol = subArea * m_gwStor[id]/1000.f;//m3
-		m_gwno3Con[id] += m_perco_no3_gw[id]/gwVol;
-		m_gwminpCon[id] += m_perco_solp_gw[id]/gwVol;
+		m_gwno3Con[id] += m_perco_no3_gw[id]*1000.f/gwVol;
+		m_gwminpCon[id] += m_perco_solp_gw[id]*1000.f/gwVol;
         
     }
     return 0;

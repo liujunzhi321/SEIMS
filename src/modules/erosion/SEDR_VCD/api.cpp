@@ -44,13 +44,13 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddParameter(Tag_RchParam, UNIT_NON_DIM, DESC_REACH_PARAM, Source_ParameterDB, DT_Array2D);
 	/// load point source loading sediment from Scenario
 	mdi.AddParameter(VAR_SCENARIO, UNIT_NON_DIM, DESC_SCENARIO, Source_ParameterDB, DT_Scenario);
-    mdi.AddInput(VAR_SED_TO_CH, UNIT_TONS, DESC_SED_TO_CH, Source_Module, DT_Array1D);
+    mdi.AddInput(VAR_SED_TO_CH, UNIT_KG, DESC_SED_TO_CH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_QRECH, UNIT_FLOW_CMS, DESC_QRECH, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_CHST, UNIT_VOL_M3, DESC_CHST, Source_Module, DT_Array1D);
     mdi.AddInput(VAR_CHWTDEPTH, UNIT_LEN_M, DESC_CHWTDEPTH, Source_Module, DT_Array1D);
 
-    mdi.AddOutput(VAR_SED_RECH, UNIT_TONS, DESC_SED_RECH, DT_Array1D);
-    mdi.AddOutput(VAR_SED_OUTLET, UNIT_TONS, DESC_SED_OUTLET, DT_Single);
+    mdi.AddOutput(VAR_SED_RECH, UNIT_KG, DESC_SED_RECH, DT_Array1D);
+    mdi.AddOutput(VAR_SED_OUTLET, UNIT_KG, DESC_SED_OUTLET, DT_Single);
 
     // set the dependencies
     mdi.AddDependency(MCLS_OL_EROSION, MCLSDESC_OL_EROSION);
