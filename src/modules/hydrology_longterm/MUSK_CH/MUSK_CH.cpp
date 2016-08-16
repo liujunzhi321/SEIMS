@@ -16,8 +16,10 @@ using namespace std;
 MUSK_CH::MUSK_CH(void) : m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE),
                          m_Kbank(NODATA_VALUE), m_Epch(NODATA_VALUE), m_Bnk0(NODATA_VALUE), m_Chs0(NODATA_VALUE), m_aBank(NODATA_VALUE),
                          m_bBank(NODATA_VALUE), m_subbasin(NULL), m_qsSub(NULL),
-                         m_ptSub(NULL), m_qiSub(NULL), m_qgSub(NULL), m_petCh(NULL), m_gwStorage(NULL), m_area(NULL), m_Vseep0(0.f),
-                         m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL),
+						 m_reachDownStream(NULL), m_chOrder(NULL), m_chWidth(NULL), 
+						 m_chLen(NULL), m_chDepth(NULL), m_chVel(NULL), m_area(NULL),
+                         m_ptSub(NULL), m_qiSub(NULL), m_qgSub(NULL), m_petCh(NULL), m_gwStorage(NULL), m_Vseep0(0.f),
+                         m_bankStorage(NULL), m_seepage(NULL),
                          m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL),
                          m_x(NODATA_VALUE), m_co1(NODATA_VALUE), m_qIn(NULL), m_chStorage(NULL), m_vScalingFactor(1.0f),
                          m_qUpReach(0.f), m_deepGroundwater(0.f),m_chWTdepth(NULL)

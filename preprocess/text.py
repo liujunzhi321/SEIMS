@@ -186,6 +186,9 @@ REACH_RS2 = 'RS2'
 REACH_RS3 = 'RS3'
 REACH_RS4 = 'RS4'
 REACH_RS5 = 'RS5'
+# reach erosion related parameters, 2016-8-16, LJ
+REACH_COVER = 'COVER' # -0.05 - 0.6
+REACH_EROD = 'EROD'   # -0.001 - 1
 
 # Field in SiteList table or other tables, such as subbasin.shp
 FLD_SUBBASINID = 'SUBBASINID'

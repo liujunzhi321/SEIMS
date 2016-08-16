@@ -71,7 +71,11 @@ clsReach::clsReach(const bson_t *&bsonTable)
     if (bson_iter_init_find(&iterator, bsonTable, REACH_RK3))
         this->rk3 = GetFloatFromBSONITER(&iterator);
     if (bson_iter_init_find(&iterator, bsonTable, REACH_RK4))
-        this->rk4 = GetFloatFromBSONITER(&iterator);
+		this->rk4 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_COVER))
+		this->cover = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_EROD))
+		this->erod = GetFloatFromBSONITER(&iterator);
 }
 
 clsReach::~clsReach(void)
