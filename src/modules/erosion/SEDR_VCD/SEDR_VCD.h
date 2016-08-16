@@ -4,13 +4,10 @@
  * \author Hui Wu
  * \date Jul. 2012
  * \revised LiangJun Zhu
- * \date May/ 2016
+ * \date May 2016
  */
 #pragma once
 #define DEPTH_INTERVAL 0.001f
-
-
-
 #include <string>
 #include <ctime>
 #include <cmath>
@@ -49,9 +46,13 @@ public:
 
     virtual void Get1DData(const char *key, int *n, float **data);
 
-    virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
+    //virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
 
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
+
+	virtual void SetReaches(clsReaches *reaches);
+
+	virtual void SetScenario(Scenario *sce);
 
     bool CheckInputSize(const char *key, int n);
 
@@ -66,10 +67,13 @@ private:
     /// reach number (= subbasin number)
     int m_nreach;
 
-    /// diversion loss (Vdiv) of the river reach, m_Vid[id], id is the reach id
-    float *m_Vdiv;
-    /// The point source discharge, m_Vpoint[id], id is the reach id
-    float *m_Vpoint;
+    ///// diversion loss (Vdiv) of the river reach, m_Vid[id], id is the reach id
+    //float *m_Vdiv;
+    ///// The point source discharge, m_Vpoint[id], id is the reach id
+    //float *m_Vpoint;
+
+	/// The point source loading (kg), m_ptSub[id], id is the reach id, load from m_Scenario
+	float *m_ptSub;
 
     /// the peak rate adjustment factor
     float m_prf;
@@ -84,14 +88,11 @@ private:
     /// channel erodibility factor (cm/hr/Pa)  TODO: this should be an input parameter from database, LJ
     float m_erodibilityFactor;
 
-    /// inverse of flood plain side slope of channel, is a fixed number:  1/slope
-    float m_sideslopeFloodplain;
-    /// inverse of side slope of main channel, is a fixed number:  1/slope
-    float m_sideslopeMain;
-    /// width ratio
-    float m_w_ratio;
-    /// bank full water storage
-    float m_bankfullQ;
+    ///// inverse of flood plain side slope of channel, is a fixed number:  1/slope
+    //float m_sideslopeFloodplain;
+    ///// inverse of side slope of main channel, is a fixed number:  1/slope
+    //float m_sideslopeMain;
+
     /// sediment from subbasin
     float *m_sedtoCh;
     /// the subbasin area (m2)  //add to the reach parameters file
@@ -114,6 +115,8 @@ private:
     float *m_chVel;
     float *m_chSlope;
     float *m_chManning;
+	float *m_chCover;
+	float *m_chErod;
 
     /// downstream id (The value is 0 if there if no downstream reach)
     float *m_reachDownStream;
@@ -121,10 +124,16 @@ private:
     vector<vector<int> > m_reachUpStream;
 
     // id the reaches
-    float *m_reachId;
-    /// map from subbasin id to index of the array
-    map<int, int> m_idToIndex;
+    //float *m_reachId;
+    vector<int> m_reachId;
+	/// map from subbasin id to index of the array
+    //map<int, int> m_idToIndex;
 
+	/* point source operations
+	 * key: unique index, BMPID * 100000 + subScenarioID
+	 * value: point source management factory instance
+	 */
+	map<int, BMPPointSrcFactory*> m_ptSrcFactory;
     /// reach storage (m3) at time t
     float *m_chStorage;
     /// channel water depth m
@@ -147,6 +156,8 @@ private:
     map<int, vector<int> > m_reachLayers;
 
     void initialOutputs();
+
+	void PointSourceLoading();
 
     void SedChannelRouting(int i);
 

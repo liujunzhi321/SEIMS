@@ -256,8 +256,7 @@ void NutrCH_QUAL2E::SetValue(const char *key, float value)
         //else if (StringMatch(sk, VAR_MSK_CO1)) {m_co1 = value;}
     else
     {
-        throw ModelException(MID_NutCHRout, "SetValue", "Parameter " + sk +
-                                                      " does not exist in CLIMATE method. Please contact the module developer.");
+        throw ModelException(MID_NutCHRout, "SetValue", "Parameter " + sk +" does not exist.");
     }
 }
 
@@ -313,7 +312,7 @@ void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_NO2_TOCH))      { m_no2ToCh = data; }
     else
     {
-        throw ModelException(MID_NutCHRout, "SetValue", "Parameter " + sk + " does not exist.");
+        throw ModelException(MID_NutCHRout, "Set1DData", "Parameter " + sk + " does not exist.");
     }
 }
 
@@ -384,7 +383,7 @@ void NutrCH_QUAL2E::SetReaches(clsReaches *reaches)
 void  NutrCH_QUAL2E::initialOutputs()
 {
     if (m_nReaches <= 0)
-        throw ModelException("NutCHPout", "initialOutputs", "The cell number of the input can not be less than zero.");
+        throw ModelException(MID_NutCHRout, "initialOutputs", "The cell number of the input can not be less than zero.");
 
     if (m_reachLayers.empty())
     {
@@ -392,7 +391,7 @@ void  NutrCH_QUAL2E::initialOutputs()
         for (int i = 1; i <= m_nReaches; i++)
 		{
 			if (m_chOrder == NULL)
-				throw ModelException("NutCHPout", "initialOutputs", "Stream order is not loaded successful from Reach table.");
+				throw ModelException(MID_NutCHRout, "initialOutputs", "Stream order is not loaded successful from Reach table.");
             int order = (int) m_chOrder[i];
             m_reachLayers[order].push_back(i);
         }
@@ -799,22 +798,6 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	m_chDO[i]    = ddisox * wtrTotal / 1000.f;
 
 	m_chChlora[i] = m_chAlgae[i] * m_ai0;
-
-
-
-        // all water quality variables set to zero when no flow
-
-        //m_chAlgae[i] = 0.f;
-        //m_chChlora[i] = 0.f;
-        //m_chOrgN[i] = 0.f;
-        //m_chNH4[i] = 0.f;
-        //m_chNO2[i] = 0.f;
-        //m_chNO3[i] = 0.f;
-        //m_chOrgP[i] = 0.f;
-        //m_chSolP[i] = 0.f;
-        //m_chCOD[i] = 0.f;
-        //m_chDO[i] = 0.f;
-
 }
 
 float NutrCH_QUAL2E::corTempc(float r20, float thk, float tmp)
@@ -845,7 +828,6 @@ void NutrCH_QUAL2E::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_CH_CHLORA)) { *data = m_chChlora; }
     else
     {
-        throw ModelException("NutCH_QUAL2E", "GetValue",
-                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+        throw ModelException(MID_NutCHRout, "Get1DData", "Parameter " + sk + " does not exist.");
     }
 }

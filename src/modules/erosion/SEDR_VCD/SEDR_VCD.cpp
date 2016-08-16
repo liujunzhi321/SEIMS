@@ -6,6 +6,8 @@
 
  * \revised LiangJun Zhu
  * \date May / 2016
+ * \description: 1. move m_erodibilityFactor, m_coverFactor, to reach collection of MongoDB as inputs, and is DT_Array1D
+ *               2. add point source loadings from Scenario database
 
  * \revised Junzhi Liu
  * \date August / 2016
@@ -26,19 +28,26 @@
 using namespace std;
 
 SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA_VALUE), 
-                           m_Vdiv(NULL), m_Vpoint(NULL), m_chStorage(NULL), m_SedOut(NULL),
-                           m_chOrder(NULL), m_qchOut(NULL), m_sideslopeMain(1.f), m_sideslopeFloodplain(1.f),
-                           m_w_ratio(1.f), m_bankfullQ(5.f),
-                           m_prf(NODATA_VALUE), m_spcon(NODATA_VALUE), m_spexp(NODATA_VALUE), m_vcrit(NODATA_VALUE), m_coverFactor(0.1f),
-                           m_erodibilityFactor(0.2f), 
+                           m_ptSub(NULL), m_chStorage(NULL), m_SedOut(NULL),
+                           m_reachDownStream(NULL), m_chOrder(NULL), m_chWidth(NULL), 
+						   m_chLen(NULL), m_chDepth(NULL), m_chVel(NULL), m_chCover(NULL), m_chErod(NULL), m_qchOut(NULL),
+                           m_prf(NODATA_VALUE), m_spcon(NODATA_VALUE), m_spexp(NODATA_VALUE), m_vcrit(NODATA_VALUE), 
+                           //m_coverFactor(0.1f), m_erodibilityFactor(0.2f), 
 						   m_sedStorage(NULL), m_sedDep(NULL), m_sedDeg(NULL), m_sedCon(NULL)
 {
-
 }
-
 
 SEDR_VCD::~SEDR_VCD(void)
 {
+	if (m_reachDownStream != NULL) Release1DArray(m_reachDownStream);
+	if (m_chOrder != NULL) Release1DArray(m_chOrder);
+	if (m_chWidth != NULL) Release1DArray(m_chWidth);
+	if (m_chLen != NULL) Release1DArray(m_chLen);
+	if (m_chDepth != NULL) Release1DArray(m_chDepth);
+	if (m_chVel != NULL) Release1DArray(m_chVel);
+	if (m_chCover != NULL) Release1DArray(m_chCover);
+	if (m_chErod != NULL) Release1DArray(m_chErod);
+	if (m_ptSub != NULL) Release1DArray(m_ptSub);
     if (m_SedOut != NULL) Release1DArray(m_SedOut);
     if (m_sedStorage != NULL) Release1DArray(m_sedStorage);
     if (m_sedDeg != NULL) Release1DArray(m_sedDeg);
@@ -88,7 +97,6 @@ bool SEDR_VCD::CheckInputData(void)
 
 void  SEDR_VCD::initialOutputs()
 {
-
     if (m_nreach <= 0)
         throw ModelException(MID_SEDR_VCD, "initialOutputs", "The cell number of the input can not be less than zero.");
 
@@ -99,7 +107,6 @@ void  SEDR_VCD::initialOutputs()
         {
             int order = (int) m_chOrder[i];
             m_reachLayers[order].push_back(i);
-            //m_reachLayers[order].push_back(m_reachId[i]);
         }
     }
 
@@ -111,10 +118,47 @@ void  SEDR_VCD::initialOutputs()
 		Initialize1DArray(m_nreach+1, m_sedDep, 0.f);
 		Initialize1DArray(m_nreach+1, m_sedDeg, 0.f);
 
-//#pragma omp parallel for
         for (int i = 1; i <= m_nreach; i++)
             m_sedStorage[i] = m_Chs0 * m_chLen[i];
     }
+	/// initialize point source loadings
+	if (m_ptSub == NULL)
+		Initialize1DArray(m_nreach+1,m_ptSub,0.f);
+}
+
+void SEDR_VCD::PointSourceLoading()
+{
+	/// load point source water discharge (m3/s) on current day from Scenario
+	for (map<int, BMPPointSrcFactory*>::iterator it = m_ptSrcFactory.begin(); it != m_ptSrcFactory.end(); it++)
+	{
+		//cout<<"unique Point Source Factory ID: "<<it->first<<endl;
+		vector<int> m_ptSrcMgtSeqs = it->second->GetPointSrcMgtSeqs();
+		map<int, PointSourceMgtParams *>  m_pointSrcMgtMap = it->second->GetPointSrcMgtMap();
+		vector<int> m_ptSrcIDs = it->second->GetPointSrcIDs();
+		map<int, PointSourceLocations *> m_pointSrcLocsMap = it->second->GetPointSrcLocsMap();
+		// 1. looking for management operations from m_pointSrcMgtMap
+		for (vector<int>::iterator seqIter = m_ptSrcMgtSeqs.begin(); seqIter != m_ptSrcMgtSeqs.end(); seqIter++)
+		{
+			PointSourceMgtParams* curPtMgt = m_pointSrcMgtMap.at(*seqIter);
+			// 1.1 If current day is beyond the date range, then continue to next management
+			if(curPtMgt->GetStartDate() != 0 && curPtMgt->GetEndDate() != 0)
+			{
+				if (m_date < curPtMgt->GetStartDate() || m_date > curPtMgt->GetEndDate())
+					continue;
+			}
+			// 1.2 Otherwise, get the water volume
+			float per_sed = curPtMgt->GetSedment(); /// kg/'size'/day 
+			// 1.3 Sum up all point sources
+			for (vector<int>::iterator locIter = m_ptSrcIDs.begin(); locIter != m_ptSrcIDs.end(); locIter++)
+			{
+				if (m_pointSrcLocsMap.find(*locIter) != m_pointSrcLocsMap.end()){
+					PointSourceLocations* curPtLoc = m_pointSrcLocsMap.at(*locIter);
+					int curSubID = curPtLoc->GetSubbasinID();
+					m_ptSub[curSubID] += per_sed * curPtLoc->GetSize() / 1000.f; /// kg ==> ton
+				}
+			}
+		}
+	}
 }
 
 int SEDR_VCD::Execute()
@@ -122,7 +166,8 @@ int SEDR_VCD::Execute()
     //check the data
     CheckInputData();
     initialOutputs();
-
+	/// load point source water volume from m_ptSrcFactory
+	PointSourceLoading();
     map<int, vector<int> >::iterator it;
     for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
     {
@@ -245,14 +290,8 @@ void SEDR_VCD::Set1DData(const char *key, int n, float *value)
     {
         m_chWTdepth = value;
     }
-        /*else if (StringMatch(sk, "CROSS_AREA"))
-        {
-        m_CrAreaCh = value;
-        }*/
     else
-        throw ModelException(MID_SEDR_VCD, "Set1DData", "Parameter " + sk
-                                                        + " does not exist. Please contact the module developer.");
-
+        throw ModelException(MID_SEDR_VCD, "Set1DData", "Parameter " + sk + " does not exist");
 }
 
 void SEDR_VCD::Get1DData(const char *key, int *n, float **data)
@@ -262,66 +301,113 @@ void SEDR_VCD::Get1DData(const char *key, int *n, float **data)
     int iOutlet = m_reachLayers.rbegin()->second[0];
     if (StringMatch(sk, VAR_SED_RECH))
     {
-        //m_SedOut[0] = m_SedOut[iOutlet] * 1000/24/3600;    // ton/day coverts to kg/s
         m_SedOut[0] = m_SedOut[iOutlet];    // ton
         *data = m_SedOut;
     }
     else
-        throw ModelException(MID_SEDR_VCD, "Get1DData", "Output " + sk
-                                                        +
-                                                        " does not exist in current module. Please contact the module developer.");
-
+        throw ModelException(MID_SEDR_VCD, "Get1DData", "Output " + sk+" does not exist.");
 }
 
 void SEDR_VCD::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 {
     string sk(key);
-    /*if (StringMatch(sk,"T_CHSB"))
-    {
-    *data = this->m_T_CHSB;
-    *nRows = this->m_nreach;
-    *nCols = SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_COUNT;
-    }
-    else
-        throw ModelException(MID_SEDR_VCD, "Get2DData", "Output " + sk
-        + " does not exist in the SEDR_VCD module. Please contact the module developer.");*/
-
 }
 
-void SEDR_VCD::Set2DData(const char *key, int nrows, int ncols, float **data)
+void SEDR_VCD::SetScenario(Scenario *sce)
 {
-    string sk(key);
-
-    if (StringMatch(sk, Tag_RchParam))
-    {
-        m_nreach = ncols - 1;
-
-        m_reachId = data[0];
-        m_reachDownStream = data[1];
-        m_chOrder = data[2];
-        m_chWidth = data[3];
-        m_chLen = data[4];
-        m_chDepth = data[5];
-        m_chVel = data[6];
-        //m_area = data[7];
-        m_chSlope = data[9];
-
-        m_reachUpStream.resize(m_nreach + 1);
-        if (m_nreach > 1)
-        {
-            for (int i = 1; i <= m_nreach; i++)// index of the reach is the equal to streamlink ID(1 to nReaches)
-            {
-                int downStreamId = int(m_reachDownStream[i]);
-                if (downStreamId <= 0)
-                    continue;
-                m_reachUpStream[downStreamId].push_back(i);
-            }
-        }
-    }
-    else
-        throw ModelException(MID_SEDR_VCD, "Set2DData", "Parameter " + sk
-                                                        + " does not exist. Please contact the module developer.");
+	if (sce != NULL){
+		map <int, BMPFactory* > *tmpBMPFactories = sce->GetBMPFactories();
+		for (map<int, BMPFactory *>::iterator it = tmpBMPFactories->begin(); it != tmpBMPFactories->end(); it++)
+		{
+			/// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
+			if (it->first / 100000 == BMP_TYPE_POINTSOURCE)
+			{
+				m_ptSrcFactory[it->first] = (BMPPointSrcFactory*)it->second;
+			}
+		}
+	}
+	else
+		throw ModelException(MID_SEDR_VCD, "SetScenario", "The scenario can not to be NULL.");
 }
+
+void SEDR_VCD::SetReaches(clsReaches *reaches)
+{
+	if(reaches != NULL)
+	{
+		m_nreach = reaches->GetReachNumber();
+		m_reachId = reaches->GetReachIDs();
+		Initialize1DArray(m_nreach+1,m_reachDownStream, 0.f);
+		Initialize1DArray(m_nreach+1,m_chOrder, 0.f);
+		Initialize1DArray(m_nreach+1,m_chWidth, 0.f);
+		Initialize1DArray(m_nreach+1,m_chLen, 0.f);
+		Initialize1DArray(m_nreach+1,m_chDepth, 0.f);
+		Initialize1DArray(m_nreach+1,m_chVel, 0.f);
+		Initialize1DArray(m_nreach+1,m_chSlope, 0.f);
+		Initialize1DArray(m_nreach+1,m_chCover, 0.f);
+		Initialize1DArray(m_nreach+1,m_chErod, 0.f);
+		for (vector<int>::iterator it = m_reachId.begin(); it != m_reachId.end(); it++)
+		{
+			int i = *it;
+			clsReach* tmpReach = reaches->GetReachByID(i);
+			m_reachDownStream[i] = (float)tmpReach->GetDownStream();
+			m_chOrder[i] = (float)tmpReach->GetUpDownOrder();
+			m_chWidth[i] = (float)tmpReach->GetWidth();
+			m_chLen[i] = (float)tmpReach->GetLength();
+			m_chDepth[i] = (float)tmpReach->GetDepth();
+			m_chVel[i] = (float)tmpReach->GetV0();
+			m_chCover[i] = (float)tmpReach->GetCover();
+			m_chErod[i] = (float)tmpReach->GetErod();
+		}
+		m_reachUpStream.resize(m_nreach + 1);
+		if (m_nreach > 1)
+		{
+			for (int i = 1; i <= m_nreach; i++)// index of the reach is the equal to streamlink ID(1 to nReaches)
+			{
+				int downStreamId = int(m_reachDownStream[i]);
+				if (downStreamId <= 0)
+					continue;
+				m_reachUpStream[downStreamId].push_back(i);
+			}
+		}
+	}
+	else
+		throw ModelException(MID_SEDR_VCD, "SetReaches", "The reaches input can not to be NULL.");
+}
+
+//void SEDR_VCD::Set2DData(const char *key, int nrows, int ncols, float **data)
+//{
+//    string sk(key);
+//
+//    if (StringMatch(sk, Tag_RchParam))
+//    {
+//        m_nreach = ncols - 1;
+//
+//        m_reachId = data[0];
+//        m_reachDownStream = data[1];
+//        m_chOrder = data[2];
+//        m_chWidth = data[3];
+//        m_chLen = data[4];
+//        m_chDepth = data[5];
+//        m_chVel = data[6];
+//        //m_area = data[7];
+//        m_chSlope = data[9];
+//
+//        m_reachUpStream.resize(m_nreach + 1);
+//        if (m_nreach > 1)
+//        {
+//            for (int i = 1; i <= m_nreach; i++)// index of the reach is the equal to streamlink ID(1 to nReaches)
+//            {
+//                int downStreamId = int(m_reachDownStream[i]);
+//                if (downStreamId <= 0)
+//                    continue;
+//                m_reachUpStream[downStreamId].push_back(i);
+//            }
+//        }
+//    }
+//    else
+//        throw ModelException(MID_SEDR_VCD, "Set2DData", "Parameter " + sk
+//                                                        + " does not exist. Please contact the module developer.");
+//}
 
 void SEDR_VCD::SedChannelRouting(int i)
 {
@@ -340,7 +426,10 @@ void SEDR_VCD::SedChannelRouting(int i)
             int upReachId = m_reachUpStream[i][j];
             sedUp += m_SedOut[upReachId];
         }
-        float allSediment = sedUp + m_sedtoCh[i] + m_sedStorage[i];
+		float allSediment = sedUp + m_sedtoCh[i] + m_sedStorage[i];
+		if (m_ptSub != NULL && m_ptSub[i] > 0.f)
+			allSediment += m_ptSub[i];
+
 
         //get peak channel velocity (m/s)
         float peakFlowRate = m_qchOut[i] * m_prf;
@@ -383,7 +472,8 @@ void SEDR_VCD::SedChannelRouting(int i)
             if (sedDegradation >= m_sedDep[i])
             {
                 sedDegradation1 = m_sedDep[i];
-                sedDegradation2 = (sedDegradation - sedDegradation1) * m_erodibilityFactor * m_coverFactor;
+				sedDegradation2 = (sedDegradation - sedDegradation1) * m_chErod[i] * m_chCover[i];
+                //sedDegradation2 = (sedDegradation - sedDegradation1) * m_erodibilityFactor * m_coverFactor;
             }
             else
             {
