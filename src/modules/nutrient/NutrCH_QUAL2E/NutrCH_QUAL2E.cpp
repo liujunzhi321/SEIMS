@@ -107,7 +107,7 @@ void NutrCH_QUAL2E::rasterToSubbasin()
 		{
 			ostringstream oss;
 			oss << subi;
-			throw ModelException(MID_NutCHRout, "Execute", "The subbasin " + oss.str() + " is invalid.");
+			throw ModelException(MID_NUTRCH_QUAL2E, "Execute", "The subbasin " + oss.str() + " is invalid.");
 		}
 
 
@@ -130,7 +130,7 @@ bool NutrCH_QUAL2E::CheckInputCellSize(const char *key, int n)
 {
 	if (n <= 0)
 	{
-		throw ModelException(MID_NutCHRout, "CheckInputSize",
+		throw ModelException(MID_NUTRCH_QUAL2E, "CheckInputSize",
 			"Input data for " + string(key) + " is invalid. The size could not be less than zero.");
 		return false;
 	}
@@ -146,7 +146,7 @@ bool NutrCH_QUAL2E::CheckInputCellSize(const char *key, int n)
 			ostringstream oss;
 			oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
 				m_nReaches << ".\n";
-			throw ModelException(MID_NutCHRout, "CheckInputCellSize", oss.str());
+			throw ModelException(MID_NUTRCH_QUAL2E, "CheckInputCellSize", oss.str());
 		}
 	}
 	return true;
@@ -157,7 +157,7 @@ bool NutrCH_QUAL2E::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
     {
-        throw ModelException(MID_NutCHRout, "CheckInputSize",
+        throw ModelException(MID_NUTRCH_QUAL2E, "CheckInputSize",
                              "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
         return false;
     }
@@ -172,7 +172,7 @@ bool NutrCH_QUAL2E::CheckInputSize(const char *key, int n)
             ostringstream oss;
             oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
             m_nReaches << ".\n";
-            throw ModelException(MID_NutCHRout, "CheckInputSize", oss.str());
+            throw ModelException(MID_NUTRCH_QUAL2E, "CheckInputSize", oss.str());
         }
     }
     return true;
@@ -180,45 +180,45 @@ bool NutrCH_QUAL2E::CheckInputSize(const char *key, int n)
 
 bool NutrCH_QUAL2E::CheckInputData()
 {
-	CHECK_POSITIVE(MID_NutCHRout, m_dt, "m_dt")
-	CHECK_POSITIVE(MID_NutCHRout, m_nReaches, "m_nReaches")
-	CHECK_POSITIVE(MID_NutCHRout, m_qUpReach, "m_qUpReach")
-	CHECK_POSITIVE(MID_NutCHRout, m_rnum1, "m_rnum1")
-	CHECK_POSITIVE(MID_NutCHRout, igropt, "igropt")
-	CHECK_POSITIVE(MID_NutCHRout, m_ai0, "m_ai0")
-	CHECK_POSITIVE(MID_NutCHRout, m_ai1, "m_ai1")
-	CHECK_POSITIVE(MID_NutCHRout, m_ai2, "m_ai2")
-	CHECK_POSITIVE(MID_NutCHRout, m_ai3, "m_ai3")
-	CHECK_POSITIVE(MID_NutCHRout, m_ai4, "m_ai4")
-	CHECK_POSITIVE(MID_NutCHRout, m_ai5, "m_ai5")
-	CHECK_POSITIVE(MID_NutCHRout, m_ai6, "m_ai6")
-	CHECK_POSITIVE(MID_NutCHRout, m_lambda0, "m_lambda0")
-	CHECK_POSITIVE(MID_NutCHRout, m_lambda1, "m_lambda1")
-	CHECK_POSITIVE(MID_NutCHRout, m_lambda2, "m_lambda2")
-	CHECK_POSITIVE(MID_NutCHRout, m_k_l, "m_k_l")
-	CHECK_POSITIVE(MID_NutCHRout, m_k_n, "m_k_n")
-	CHECK_POSITIVE(MID_NutCHRout, m_k_p, "m_k_p")
-	CHECK_POSITIVE(MID_NutCHRout, m_p_n, "m_p_n")
-	CHECK_POSITIVE(MID_NutCHRout, tfact, "tfact")
-	CHECK_POSITIVE(MID_NutCHRout, m_mumax, "m_mumax")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_dt, "m_dt")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_nReaches, "m_nReaches")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_qUpReach, "m_qUpReach")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_rnum1, "m_rnum1")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, igropt, "igropt")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_ai0, "m_ai0")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_ai1, "m_ai1")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_ai2, "m_ai2")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_ai3, "m_ai3")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_ai4, "m_ai4")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_ai5, "m_ai5")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_ai6, "m_ai6")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_lambda0, "m_lambda0")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_lambda1, "m_lambda1")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_lambda2, "m_lambda2")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_k_l, "m_k_l")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_k_n, "m_k_n")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_k_p, "m_k_p")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_p_n, "m_p_n")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, tfact, "tfact")
+	CHECK_POSITIVE(MID_NUTRCH_QUAL2E, m_mumax, "m_mumax")
 	//CHECK_POSITIVE(MID_NutCHRout, m_rhoqv, "m_rhoqv")
 
-    CHECK_POINTER(MID_NutCHRout, m_daylen, "m_daylen")
-    CHECK_POINTER(MID_NutCHRout, m_sra, "m_sra")
-    CHECK_POINTER(MID_NutCHRout, m_qOutCh, "m_qOutCh")
-    CHECK_POINTER(MID_NutCHRout, m_chStorage, "m_chStorage")
-    CHECK_POINTER(MID_NutCHRout, m_chWTdepth, "m_chWTdepth")
-    CHECK_POINTER(MID_NutCHRout, m_latNO3ToCh, "m_latNO3ToCh")
-    CHECK_POINTER(MID_NutCHRout, m_surNO3ToCh, "m_surNO3ToCh")
-    CHECK_POINTER(MID_NutCHRout, m_surSolPToCh, "m_surSolPToCh")
-    CHECK_POINTER(MID_NutCHRout, m_gwNO3ToCh, "m_gwNO3ToCh")
-	CHECK_POINTER(MID_NutCHRout, m_gwSolPToCh, "m_gwSolPToCh")
-	CHECK_POINTER(MID_NutCHRout, m_sedOrgNToCh, "m_sedOrgNToCh")
-	CHECK_POINTER(MID_NutCHRout, m_sedOrgPToCh, "m_sedOrgPToCh")
-	CHECK_POINTER(MID_NutCHRout, m_sedMinPAToCh, "m_sedMinPAToCh")
-	CHECK_POINTER(MID_NutCHRout, m_sedMinPSToCh, "m_sedMinPSToCh")
-	CHECK_POINTER(MID_NutCHRout, m_streamLink, "m_streamLink")
-	CHECK_POINTER(MID_NutCHRout, m_soilTemp, "m_soilTemp")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_daylen, "m_daylen")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_sra, "m_sra")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_qOutCh, "m_qOutCh")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_chStorage, "m_chStorage")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_chWTdepth, "m_chWTdepth")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_latNO3ToCh, "m_latNO3ToCh")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_surNO3ToCh, "m_surNO3ToCh")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_surSolPToCh, "m_surSolPToCh")
+    CHECK_POINTER(MID_NUTRCH_QUAL2E, m_gwNO3ToCh, "m_gwNO3ToCh")
+	CHECK_POINTER(MID_NUTRCH_QUAL2E, m_gwSolPToCh, "m_gwSolPToCh")
+	CHECK_POINTER(MID_NUTRCH_QUAL2E, m_sedOrgNToCh, "m_sedOrgNToCh")
+	CHECK_POINTER(MID_NUTRCH_QUAL2E, m_sedOrgPToCh, "m_sedOrgPToCh")
+	CHECK_POINTER(MID_NUTRCH_QUAL2E, m_sedMinPAToCh, "m_sedMinPAToCh")
+	CHECK_POINTER(MID_NUTRCH_QUAL2E, m_sedMinPSToCh, "m_sedMinPSToCh")
+	CHECK_POINTER(MID_NUTRCH_QUAL2E, m_streamLink, "m_streamLink")
+	CHECK_POINTER(MID_NUTRCH_QUAL2E, m_soilTemp, "m_soilTemp")
     
     return true;
 }
@@ -256,7 +256,7 @@ void NutrCH_QUAL2E::SetValue(const char *key, float value)
         //else if (StringMatch(sk, VAR_MSK_CO1)) {m_co1 = value;}
     else
     {
-        throw ModelException(MID_NutCHRout, "SetValue", "Parameter " + sk +" does not exist.");
+        throw ModelException(MID_NUTRCH_QUAL2E, "SetValue", "Parameter " + sk +" does not exist.");
     }
 }
 
@@ -312,7 +312,7 @@ void NutrCH_QUAL2E::Set1DData(const char *key, int n, float *data)
     else if (StringMatch(sk, VAR_NO2_TOCH))      { m_no2ToCh = data; }
     else
     {
-        throw ModelException(MID_NutCHRout, "Set1DData", "Parameter " + sk + " does not exist.");
+        throw ModelException(MID_NUTRCH_QUAL2E, "Set1DData", "Parameter " + sk + " does not exist.");
     }
 }
 
@@ -402,7 +402,7 @@ void NutrCH_QUAL2E::SetReaches(clsReaches *reaches)
 void  NutrCH_QUAL2E::initialOutputs()
 {
     if (m_nReaches <= 0)
-        throw ModelException(MID_NutCHRout, "initialOutputs", "The cell number of the input can not be less than zero.");
+        throw ModelException(MID_NUTRCH_QUAL2E, "initialOutputs", "The cell number of the input can not be less than zero.");
 
     if (m_reachLayers.empty())
     {
@@ -410,7 +410,7 @@ void  NutrCH_QUAL2E::initialOutputs()
         for (int i = 1; i <= m_nReaches; i++)
 		{
 			if (m_chOrder == NULL)
-				throw ModelException(MID_NutCHRout, "initialOutputs", "Stream order is not loaded successful from Reach table.");
+				throw ModelException(MID_NUTRCH_QUAL2E, "initialOutputs", "Stream order is not loaded successful from Reach table.");
             int order = (int) m_chOrder[i];
             m_reachLayers[order].push_back(i);
         }
@@ -505,6 +505,7 @@ void NutrCH_QUAL2E::AddInputNutrient(int i)
 
 void NutrCH_QUAL2E::RouteOut(int i)
 {
+
 	//get out flow water fraction
 	float wtrOut = m_qOutCh[i]*m_dt; 
 	float wtrTotal = wtrOut + m_chStorage[i];
@@ -592,6 +593,9 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 
 	// O2 impact calculations
 	// calculate nitrification rate correction factor for low (cordo)
+	if(o2con != o2con)
+		cout << o2con;
+
 	float cordo = 0.f;
 	float o2con2 = 0.f;
 	o2con2 = o2con;
@@ -607,7 +611,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 		o2con = 30.f;
 
 	cordo = 1.f - exp(-0.6f * o2con);
-
+	
 	// modify ammonia and nitrite oxidation rates to account for low oxygen
 	// rate constant for biological oxidation of NH3 to NO2 modified to reflect impact of low oxygen concentration (bc1mod)
 	float bc1mod = 0.f;
@@ -626,7 +630,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 		lambda = m_lambda0 + (m_lambda1 * m_ai0 * algcon) + m_lambda2 * pow((m_ai0 * algcon), 0.6666667f);
 	else
 		lambda = m_lambda0;
-
+	
 	// calculate algal growth limitation factors for nitrogen and phosphorus
 	float fnn = 0.f;
 	float fpp = 0.f;
@@ -639,14 +643,14 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 		algi = m_chSr[i] * tfact / m_chDaylen[i];
 	else
 		algi = 0.00001f;
-
+	
 	// calculate growth attenuation factor for light, based on daylight average light intensity
 	float fl_1 = 0.f;
 	float fll = 0.f;
 	fl_1 = (1.f / (lambda * m_chWTdepth[i])) *
 		log((m_k_l * 24.f + algi) / (m_k_l * 24.f + algi * exp(-lambda * m_chWTdepth[i])));
 	fll = 0.92f * (m_chDaylen[i] / 24.f) * fl_1;
-
+	
 	// calculate local algal growth rate
 	float gra = 0.f;
 	float dchla = 0.f;
@@ -673,7 +677,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 		else
 			gra = 0.f;
 	}
-
+	
 	// calculate algal biomass concentration at end of day (phytoplanktonic algae)
 	float dalgae = 0.f;
 	float setl = min(1.f, corTempc(m_rs1[i], thrs1, wtmp) / m_chWTdepth[i]);
@@ -684,7 +688,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	// calculate chlorophyll-a concentration at end of day
 	dchla = 0.f;
 	dchla = dalgae * m_ai0 / 1000.f;
-
+	
 	// oxygen calculations
 	// calculate carbonaceous biological oxygen demand at end of day (dbod)
 	float yyy = 0.f;     // variable to hold intermediate calculation result
@@ -695,7 +699,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	dbod = cbodcon - (yyy + zzz) * tday;
 	if (dbod < 0.00001f)
 		dbod = 0.00001f;
-
+	
 	// calculate dissolved oxygen concentration if reach at end of day (ddisox)
 	float uu = 0.f;     // variable to hold intermediate calculation result
 	float vv = 0.f;      // variable to hold intermediate calculation result
@@ -709,7 +713,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 		vv = (m_ai3 * corTempc(gra, thgra, wtmp) - m_ai4 * corTempc(m_rhoq, thrho, wtmp)) * algcon;
 	else
 		algcon = 0.001f;
-
+	
 	ww = corTempc(m_rk1[i], thm_rk1, wtmp) * cbodcon;
 	if (m_chWTdepth[i] > 0.001f)
 		xx = corTempc(m_rk4[i], thm_rk4, wtmp) / (m_chWTdepth[i] * 1000.f);
@@ -718,7 +722,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 		yy = m_ai5 * corTempc(bc1mod, thbc1, wtmp) * nh3con;
 	else
 		nh3con = 0.001f;
-
+	
 	if (no2con > 0.001f)
 		zz = m_ai6 * corTempc(bc2mod, thbc2, wtmp) * no2con;
 	else
@@ -729,7 +733,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	//o2proc = o2con - ddisox;   // not found variable "o2proc"
 	if (ddisox < 0.00001f)
 		ddisox = 0.00001f;
-
+	
 	// nitrogen calculations
 	// calculate organic N concentration at end of day (dorgn)
 	xx = 0.f;
@@ -742,7 +746,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	dorgn = orgncon + (xx - yy - zz) * tday;
 	if (dorgn < 0.00001f)
 		dorgn = 0.00001f;
-
+	
 	// calculate fraction of algal nitrogen uptake from ammonia pool
 	float f1 = 0.f;
 	f1 = m_p_n * nh3con / (m_p_n * nh3con + (1.f - m_p_n) * no3con + 1.e-6f);
@@ -760,7 +764,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	dnh4 = nh3con + (ww - xx + yy - zz) * tday;
 	if (dnh4 < 1.e-6f)
 		dnh4 = 0.f;
-
+	
 	// calculate concentration of nitrite at end of day (dno2)
 	yy = 0.f;
 	zz = 0.f;
@@ -780,7 +784,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	dno3 = no3con + (yy - zz) * tday;
 	if (dno3 < 1.e-6)
 		dno3 = 0.f;
-
+	
 	// phosphorus calculations
 	// calculate organic phosphorus concentration at end of day
 	xx = 0.f;
@@ -818,6 +822,9 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	m_chDO[i]    = ddisox * wtrTotal / 1000.f;
 
 	m_chChlora[i] = m_chAlgae[i] * m_ai0;
+
+	if(o2con != o2con)
+		cout << o2con;
 }
 
 float NutrCH_QUAL2E::corTempc(float r20, float thk, float tmp)
@@ -846,8 +853,12 @@ void NutrCH_QUAL2E::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_CH_COD)) { *data = m_chCOD; }
     //else if (StringMatch(sk, VAR_RCH_DOX)) {*data = this -> m_rch_dox;}
     else if (StringMatch(sk, VAR_CH_CHLORA)) { *data = m_chChlora; }
+	else if (StringMatch(sk, VAR_CH_NO3))   *data = m_chNO3; 
+	else if (StringMatch(sk, VAR_CH_SOLP))  *data = m_chSolP; 
+	else if (StringMatch(sk, VAR_CH_ORGN))  *data = m_chOrgN; 
+	else if (StringMatch(sk, VAR_CH_ORGP))  *data = m_chOrgP; 
+	else if(StringMatch(sk, VAR_CH_NH3))    *data = m_chNH4;
     else
-    {
-        throw ModelException(MID_NutCHRout, "Get1DData", "Parameter " + sk + " does not exist.");
-    }
+        throw ModelException(MID_NUTRCH_QUAL2E, "Get1DData", "Parameter " + sk + " does not exist.");
+    
 }

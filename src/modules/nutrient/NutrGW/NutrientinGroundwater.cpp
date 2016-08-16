@@ -178,8 +178,8 @@ void NutrientinGroundwater::initialOutputs()
 
 	if (m_gwno3Con == NULL)
 	{
-		Initialize1DArray(m_nSubbasins+1, m_gwno3Con, 10.f);
-		Initialize1DArray(m_nSubbasins+1, m_gwminpCon, 10.f);
+		Initialize1DArray(m_nSubbasins+1, m_gwno3Con, 6.f);
+		Initialize1DArray(m_nSubbasins+1, m_gwminpCon, 0.2f);
 	}
 
     // allocate the output variables
