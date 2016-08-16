@@ -15,7 +15,7 @@ Climate	D_SR	Solar radiation	MJ/m2/d	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:5
 Climate	D_WS	Wind speed	m/s	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WS.tif	0
 Climate	D_RM	Relative humidity	%	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	RM.tif	0
 SoilTemperature	SOTE	Soil temperature	deg C	AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOTE.tif	0
-Interception	NEPR	Net Precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	NEPR.tif	0
+Interception	NEPR	Net Precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	NEPR.tif	1
 Interception	INET	Evaporation from the interception storage	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INET.tif	0
 Interception	INLO	Interception loss	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INLO.tif	0
 PET	PET	Potential Evapotranspiration	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PET.tif	0
@@ -25,16 +25,16 @@ Snow melt	SNME	Snow melt	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9
 Snow melt	SNAC	Snow accumulation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SNAC.tif	0
 Infiltration	INFIL	Infiltration	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	INFIL.tif	0
 Surface Runoff	EXCP	Excess precipitation	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	EXCP.tif	0
-Surface Runoff	SOLST	Soil storage of each soil layer	mm/mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOLST.tif	0
+Surface Runoff	SOLST	Soil storage of each soil layer	mm/mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOLST.tif	1
 Surface Runoff	SOLSW	Soil storage of soil profile	mm/mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOLSW.tif	0
 Surface Runoff	SURU	Surface Runoff	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SURU.tif	0
 Depression	DPST	Depression storage	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	DPST.tif	0
 Depression	DEET	Depression ET	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	DEET.tif	0
-Percolation	PERCO	Percolation	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PERCO.tif	0
-Erosion	SOER	soil loss caused by water erosion	kg	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOER.tif	0
+Percolation	PERCO	Percolation	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PERCO.tif	1
+Erosion	SOER	soil loss caused by water erosion	kg	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOER.tif	1
 Erosion	USLE_LS	USLE LS factor	None	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	USLE_LS.tif	0
-Erosion	SEDTOCH	Sediment to reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDtoCH.txt	0
-Erosion	SED_OL	sediment transported to channel at each cell	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SED_OL.tif	0
+Erosion	SEDTOCH	Sediment to reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SEDtoCH.txt	1
+Erosion	SED_OL	sediment transported to channel at each cell	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SED_OL.tif	1
 Plant growth	SOL_COV	Residue on soil surface	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_COV.tif	0
 Plant growth	SOL_RSD	Organic matter in soil classified as residue	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOL_RSD.tif	0
 Plant growth	ALBDAY	Albedo of current day	None	AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	ALBDAY.tif	0
@@ -61,49 +61,64 @@ Nutrient	RWNTL	nitrogen moving from active organic to stable organic pool in soi
 Nutrient	WDNTL	nitrogen lost from nitrate pool by denitrification in soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WDNTL.tif	0
 Nutrient	RMP1TL	phosphorus moving from the labile mineral pool to the active mineral pool in the soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	RMP1TL.tif	0
 Nutrient	ROCTL	phosphorus moving from the active mineral pool to the stable mineral pool in the soil profile	kg/ha	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	ROCTL.tif	0
-Nutrient	WSHD_DNIT	nitrogen lost from nitrate pool due to denitrification in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_DNIT.txt	0
-Nutrient	WSHD_HMN	nitrogen moving from active organic to nitrate pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_HMN.txt	0
-Nutrient	WSHD_HMP	phosphorus moving from organic to labile pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_HMP.txt	0
-Nutrient	WSHD_RMN	nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RMN.txt	0
-Nutrient	WSHD_RMP	phosphorus moving from fresh organic (residue) to labile and organic pools in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RMP.txt	0
-Nutrient	WSHD_RWN	nitrogen moving from active organic to stable organic pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RWN.txt	0
-Nutrient	WSHD_NITN	nitrogen moving from the NH3 to the NO3 pool by nitrification in the watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_NITN.txt	0
-Nutrient	WSHD_VOLN	average annual amount if nitrogen lost by ammonia volatilization in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_VOLN.txt	0
-Nutrient	WSHD_PAL	phosphorus moving from labile mineral to active mineral pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_PAL.txt	0
-Nutrient	WSHD_PAS	phosphorus moving from active mineral to stable mineral pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_PAS.txt	0
-Atmosphere deposition	WSHD_RNO3	average annual amount of NO3 added to soil by rainfall in watershed	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	WSHD_RNO3.txt	0
-Subsurface runoff	SSRU	Subsurface runoff	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SSRU.tif	0
+Nutrient	WSHD_DNIT	nitrogen lost from nitrate pool due to denitrification in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_DNIT.txt	0
+Nutrient	WSHD_HMN	nitrogen moving from active organic to nitrate pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_HMN.txt	0
+Nutrient	WSHD_HMP	phosphorus moving from organic to labile pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_HMP.txt	0
+Nutrient	WSHD_RMN	nitrogen moving from fresh organic (residue) to nitrate and active organic pools in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_RMN.txt	0
+Nutrient	WSHD_RMP	phosphorus moving from fresh organic (residue) to labile and organic pools in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_RMP.txt	0
+Nutrient	WSHD_RWN	nitrogen moving from active organic to stable organic pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_RWN.txt	0
+Nutrient	WSHD_NITN	nitrogen moving from the NH3 to the NO3 pool by nitrification in the watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_NITN.txt	0
+Nutrient	WSHD_VOLN	average annual amount if nitrogen lost by ammonia volatilization in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_VOLN.txt	0
+Nutrient	WSHD_PAL	phosphorus moving from labile mineral to active mineral pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_PAL.txt	0
+Nutrient	WSHD_PAS	phosphorus moving from active mineral to stable mineral pool in watershed	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_PAS.txt	0
+Atmosphere deposition	WSHD_RNO3	average annual amount of NO3 added to soil by rainfall in watershed	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	WSHD_RNO3.txt	0
+Subsurface runoff	SSRU	Subsurface runoff	mm	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SSRU.tif	1
 Subsurface runoff	SSRUVOL	Subsurface runoff volume	m3	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SSRUVOL.tif	0
-Subsurface runoff	SBIF	Subsurface runoff discharge to streams from each subbasin	m2/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBIF.txt	0
-Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	Q.txt	0
-Sediment	QSED	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	0
+Subsurface runoff	SBIF	Subsurface runoff discharge to streams from each subbasin	m2/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBIF.txt	1
+Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	Q.txt	1
+Sediment	SEDRECH	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	1
 Groundwater	REVAP	revaporization from groundwater	mm	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	REVAP.tif	0
-Groundwater	RG	groundwater runoff	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	RG.txt	0
-Groundwater	SBQG	groundwater flow out of the subbasin	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBQG.txt	0
+Groundwater	RG	groundwater runoff	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	RG.txt	1
+Groundwater	SBQG	groundwater flow out of the subbasin	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBQG.txt	1
 Groundwater	SBPET	potential evapotranspiration rate of the subbasin	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBPET.txt	0
-Groundwater	SBGS	Groundwater storage of the subbasin	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBGS.txt	0
-WaterBalance	GWWB	Groundwater water balance statistics	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	GWWB.txt	0
-WaterBalance	SOWB	Soil water balance statistics	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SOWB.txt	0
-Overland Routing	SBOF	overland flow to streams from each subbasin	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SBOF.txt	0
-Overland Routing	OL_FLOW	overland flow to streams	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	OL_FLOW.tif	0
-NutrientTransport	SEDORGN	organic nitrogen in surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDORGN.tif	0
-NutrientTransport	SEDORGP	organic phosphorus in surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDORGP.tif	0
-NutrientTransport	SEDMINPA	active mineral phosphorus sorbed to sediment in surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDMINPA.tif	0
-NutrientTransport	SEDMINPS	stable mineral phosphorus sorbed to sediment in surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDMINPS.tif	0
-NutrientTransport	SEDORGNTOCH	organic nitrogen in surface runoff moved to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDORGNTOCH.txt	0
-NutrientTransport	SEDORGPTOCH	organic phosphorus in surface runoff moved to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDORGPTOCH.txt	0
-NutrientTransport	SEDMINPATOCH	active mineral phosphorus sorbed to sediment in surface runoff moved to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDMINPATOCH.txt	0
-NutrientTransport	SEDMINPSTOCH	stable mineral phosphorus sorbed to sediment in surface runoff moved to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDMINPSTOCH.txt	0
-NutrientTransport	COD	carbonaceous oxygen demand of surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	COD.tif	0
-NutrientTransport	SUR_NO3	nitrate transported with surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SUR_NO3.tif	0
-NutrientTransport	SUR_SOLP	phosphorus stored in solution with surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SUR_SOLP.tif	0
-NutrientTransport	LATNO3	nitrate transported with lateral flow	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	LATNO3.tif	0
-NutrientTransport	PERCO_N_GW	nitrate percolating past bottom of soil profile	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PERCO_N_GW.tif	0
-NutrientTransport	PERCO_P_GW	soluble P percolating past bottom of soil profile	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	PERCO_P_GW.tif	0
-NutrientTransport	LATNO3TOCH	nitrate transported with lateral flow to channel	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	LATNO3TOCH.txt	0
-NutrientTransport	SUR_NO3_TOCH	nitrate transported with surface runoff to channel	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SUR_NO3_TOCH.txt	0
-NutrientTransport	SUR_SOLP_TOCH	soluble phosphorus from surface runoff to channel	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SUR_SOLP_TOCH.txt	0
-NutrientTransport	NO3GWTOCH	nitrate loading to reach in groundwater	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	NO3GWTOCH.txt	0
-NutrientTransport	MINPGWTOCH	soluble P loading to reach in groundwater	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	MINPGWTOCH.txt	0
-Erosion	SEDRECH	Sediment at each reach outlet at each time step	ton	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDRECH.txt	0
-Erosion	SEDOUTLET	Sediment concentration at the watershed outlet	ton	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDOUTLET.txt	0
+Groundwater	SBGS	Groundwater storage of the subbasin	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBGS.txt	1
+WaterBalance	GWWB	Groundwater water balance statistics	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	GWWB.txt	1
+WaterBalance	SOWB	Soil water balance statistics	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SOWB.txt	1
+Overland Routing	SBOF	overland flow to streams from each subbasin	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBOF.txt	1
+Overland Routing	OL_FLOW	overland flow to streams	mm	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	OL_FLOW.tif	1
+NutrientTransport	SEDORGN	organic nitrogen in surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDORGN.tif	1
+NutrientTransport	SEDORGP	organic phosphorus in surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDORGP.tif	1
+NutrientTransport	SEDMINPA	active mineral phosphorus sorbed to sediment in surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDMINPA.tif	1
+NutrientTransport	SEDMINPS	stable mineral phosphorus sorbed to sediment in surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SEDMINPS.tif	1
+NutrientTransport	SEDORGNTOCH	organic nitrogen in surface runoff moved to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SEDORGNTOCH.txt	1
+NutrientTransport	SEDORGPTOCH	organic phosphorus in surface runoff moved to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SEDORGPTOCH.txt	1
+NutrientTransport	SEDMINPATOCH	active mineral phosphorus sorbed to sediment in surface runoff moved to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SEDMINPATOCH.txt	1
+NutrientTransport	SEDMINPSTOCH	stable mineral phosphorus sorbed to sediment in surface runoff moved to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SEDMINPSTOCH.txt	1
+NutrientTransport	COD	carbonaceous oxygen demand of surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	COD.tif	1
+NutrientTransport	SUR_NO3	nitrate transported with surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SUR_NO3.tif	1
+NutrientTransport	SUR_SOLP	phosphorus stored in solution with surface runoff	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SUR_SOLP.tif	1
+NutrientTransport	LATNO3	nitrate transported with lateral flow	kg/ha	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	LATNO3.tif	1
+NutrientTransport	PERCO_N_GW	nitrate percolating past bottom of soil profile	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	PERCO_N_GW.txt	1
+NutrientTransport	PERCO_P_GW	soluble P percolating past bottom of soil profile	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	PERCO_P_GW.txt	1
+NutrientTransport	LATNO3TOCH	nitrate transported with lateral flow to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	LATNO3TOCH.txt	1
+NutrientTransport	SUR_NO3_TOCH	nitrate transported with surface runoff to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SUR_NO3_TOCH.txt	1
+NutrientTransport	SUR_SOLP_TOCH	soluble phosphorus from surface runoff to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SUR_SOLP_TOCH.txt	1
+NutrientTransport	NO3GWTOCH	nitrate loading to reach in groundwater	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	NO3GWTOCH.tif	1
+NutrientTransport	MINPGWTOCH	soluble P loading to reach in groundwater	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	MINPGWTOCH.tif	1
+NutrientTransport	CH_CHLORA	chlorophyll-a concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_CHLORA.txt	1
+NutrientTransport	CH_COD	carbonaceous oxygen demand in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_COD.txt	1
+NutrientTransport	CH_SOLP	dissolved phosphorus concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_SOLP.txt	1
+NutrientTransport	CH_NO3	nitrate concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NO3.txt	1
+NutrientTransport	CH_NO2	nitrite concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NO2.txt	1
+NutrientTransport	CH_NH3	ammonia concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NH3.txt	1
+NutrientTransport	CH_ORGP	organic phosphorus concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ORGP.txt	1
+NutrientTransport	CH_ORGN	organic nitrogen concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ORGN.txt	1
+NutrientTransport	CH_ALGAE	algal biomass concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ALGAE.txt	1
+NutrientTransport	CH_SOXY	saturation concentration of dissolved oxygen	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_SOXY.txt	1
+ChannelRouting	QS	Overland discharge at each reach outlet	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	QS.txt	1
+ChannelRouting	QI	Interflow at each reach outlet	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	QI.txt	1
+ChannelRouting	QG	Groundwater discharge at each reach outlet	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	QG.txt	1
+ChannelRouting	CHST	hannel storage	m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CHST.txt	1
+ChannelRouting	BKST	bank storage	m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	BKST.txt	1
+ChannelRouting	SEEPAGE	seepage	m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SEEPAGE.txt	1
+ChannelRouting	CHWTDEPTH	channel water depth	m	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CHWTDEPTH.txt	1
