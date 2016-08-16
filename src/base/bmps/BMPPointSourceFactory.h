@@ -14,13 +14,13 @@ using namespace MainBMP;
 namespace MainBMP
 {
     /*!
-     * \class PointBMPLocations
+     * \class PointSourceLocations
      * \ingroup MainBMP
      *
      * \brief Base class of point BMP, mainly store location related parameters
      *
      */
-    class PointBMPLocations
+    class PointSourceLocations
     {
     public:
         /*!
@@ -28,10 +28,10 @@ namespace MainBMP
          * \param[in] bsonTab Query result from MongoDB
          * \param[in] iter Iterator of bsonTab
          */
-        PointBMPLocations(const bson_t *&bsonTab, bson_iter_t &iter);
+        PointSourceLocations(const bson_t *&bsonTab, bson_iter_t &iter);
 
         /// Destructor
-        ~PointBMPLocations(void);
+        ~PointSourceLocations(void);
 
         /// Output
         void Dump(ostream *fs);
@@ -214,7 +214,7 @@ namespace MainBMP
 		vector<int>& GetPointSrcMgtSeqs(){return m_pointSrcMgtSeqs;}
 		map<int, PointSourceMgtParams *>& GetPointSrcMgtMap(){return m_pointSrcMgtMap;}
 		vector<int>& GetPointSrcIDs(){return m_pointSrcIDs;}
-		map<int, PointBMPLocations *>& GetPointSrcLocsMap(){return m_pointSrcLocsMap;}
+		map<int, PointSourceLocations *>& GetPointSrcLocsMap(){return m_pointSrcLocsMap;}
     private:
         /// Code of point source
         int m_pointSrc;
@@ -235,6 +235,6 @@ namespace MainBMP
          * Key: PTSRCID, unique
          * Value: Pointer of PointBMPParamters instance
          */
-        map<int, PointBMPLocations *> m_pointSrcLocsMap;
+        map<int, PointSourceLocations *> m_pointSrcLocsMap;
     };
 }

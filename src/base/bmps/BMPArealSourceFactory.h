@@ -14,26 +14,25 @@ using namespace MainBMP;
 namespace MainBMP
 {
     /*!
-     * \class ArealBMPLocations
+     * \class ArealSourceLocations
      * \ingroup MainBMP
      *
      * \brief Base class of point BMP, mainly store location related parameters
      *
      */
-    class ArealBMPLocations
+    class ArealSourceLocations
     {
     public:
         /*!
          * \brief Constructor, read and calculate areal BMP locations related parameters from Raster
-		 * \param[in] locations Field IDs, vector<int>
-		 * \param[in] luccID Landuse/Landcover ID
-         * \param[in] fieldRaster Management fields partitioned in preprocessing
-         * \param[in] luccRaster Landuse/Landcover type of current areal source region
          */
-        ArealBMPLocations(vector<int>& locations, int luccID, clsRasterData* fieldRaster, clsRasterData* luccRaster);
+        ArealSourceLocations(const bson_t *&bsonTab, bson_iter_t &iter);
 
         /// Destructor
-        ~ArealBMPLocations(void);
+        ~ArealSourceLocations(void);
+
+		/// load valid cells index
+		void SetValidCells(int n, float* mgtFieldIDs);
 
         /// Output
         void Dump(ostream *fs);
@@ -185,21 +184,23 @@ namespace MainBMP
          * \param[in] bmpDBName BMP Scenario database
          */
         void ReadArealSourceManagements(mongoc_client_t *conn, string &bmpDBName);
-
-        /*!
-         * \brief Load point BMP location related parameters from MongoDB
+		/*!
+         * \brief Load areal BMP location related parameters from MongoDB
          * \param[in] conn mongoc client instance
          * \param[in] bmpDBName BMP Scenario database
          */
         void ReadArealSourceLocations(mongoc_client_t *conn, string &bmpDBName);
 
-		vector<int>& GetPointSrcMgtSeqs(){return m_arealSrcMgtSeqs;}
-		map<int, ArealSourceMgtParams *>& GetPointSrcMgtMap(){return m_pointSrcMgtMap;}
-		vector<int>& GetPointSrcIDs(){return m_arealSrcIDs;}
-		map<int, ArealBMPLocations *>& GetPointSrcLocsMap(){return m_arealSrcLocsMap;}
+		string GetArealSrcDistName(){return m_arealSrcDistName;}
+		vector<int>& GetArealSrcMgtSeqs(){return m_arealSrcMgtSeqs;}
+		map<int, ArealSourceMgtParams *>& GetArealSrcMgtMap(){return m_arealSrcMgtMap;}
+		vector<int>& GetArealSrcIDs(){return m_arealSrcIDs;}
+		bool GetLocationLoadStatus(){return m_loadedMgtFieldIDs;}
+		void SetArealSrcLocsMap(int n, float* mgtField);
+		map<int, ArealSourceLocations *>& GetArealSrcLocsMap(){return m_arealSrcLocsMap;}
     private:
-        /// Code of point source
-        int m_arealSrc;
+		/// areal source code
+		int m_arealSrc;
         /// Collection of point source management parameters
         string m_arealSrcMgtTab;
         /// Sequences of point source managements
@@ -208,15 +209,19 @@ namespace MainBMP
          * Key: Scheduled sequence number, unique
          * Value: Pointer of ArealSourceMgtParams instance
          */
-        map<int, ArealSourceMgtParams *> m_pointSrcMgtMap;
+        map<int, ArealSourceMgtParams *> m_arealSrcMgtMap;
         /// core file name of areal source locations, such as MGT_FIELDS
         string m_arealSrcDistName;
+		/// areal source distribution table
+		string m_arealSrcDistTab;
         /// Field IDs of areal source of current subScenario
         vector<int> m_arealSrcIDs;
+		/// flag 
+		bool m_loadedMgtFieldIDs;
         /* Map of areal source location related parameters
          * Key: ARSRCID, unique
          * Value: Pointer of ArealBMPLocations instance
          */
-        map<int, ArealBMPLocations *> m_arealSrcLocsMap;
+        map<int, ArealSourceLocations *> m_arealSrcLocsMap;
     };
 }
