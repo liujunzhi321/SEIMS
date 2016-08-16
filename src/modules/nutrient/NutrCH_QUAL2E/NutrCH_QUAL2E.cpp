@@ -80,7 +80,7 @@ NutrCH_QUAL2E::~NutrCH_QUAL2E(void)
 	if(m_chOutDO != NULL) Release1DArray(m_chOutDO);
 	if(m_chOutCOD != NULL) Release1DArray(m_chOutCOD);
 
-    if(m_chCellCount != NULL) Release1DArray(m_chCellCount);
+    if(m_chCellCount != NULL) delete[] m_chCellCount;
 }
 
 void NutrCH_QUAL2E::rasterToSubbasin()
@@ -397,8 +397,8 @@ void  NutrCH_QUAL2E::initialOutputs()
             m_reachLayers[order].push_back(i);
         }
     }
-    if (m_chOrgN == NULL)
-    {
+	if (m_chOrgN == NULL)
+	{
 		Initialize1DArray(m_nReaches+1,m_chAlgae,0.f);
 		Initialize1DArray(m_nReaches+1,m_chOrgN,0.f);
 		Initialize1DArray(m_nReaches+1,m_chOrgP,0.f);
@@ -409,7 +409,7 @@ void  NutrCH_QUAL2E::initialOutputs()
 		Initialize1DArray(m_nReaches+1,m_chCOD,0.f);
 		Initialize1DArray(m_nReaches+1,m_chDO,0.f);
 		Initialize1DArray(m_nReaches+1,m_chChlora,0.f);
-        m_chSatDO = 0.f;
+		m_chSatDO = 0.f;
 
 		Initialize1DArray(m_nReaches+1, m_chOutAlgae, 0.f);
 		Initialize1DArray(m_nReaches+1, m_chOutOrgN, 0.f);
@@ -421,10 +421,10 @@ void  NutrCH_QUAL2E::initialOutputs()
 		Initialize1DArray(m_nReaches+1, m_chOutDO, 0.f);
 		Initialize1DArray(m_nReaches+1, m_chOutCOD, 0.f);
 
-		m_chCellCount = new int(m_nReaches+1);
+		m_chCellCount = new int[m_nReaches+1];
 		for (int i = 0; i <= m_nReaches; i++)
-		    m_chCellCount[i] = 0;
-    }
+			m_chCellCount[i] = 0;
+	}
 }
 
 int NutrCH_QUAL2E::Execute()
@@ -442,7 +442,7 @@ int NutrCH_QUAL2E::Execute()
         // So parallelization can be done here.
 		int nReaches = it->second.size();
 		// the size of m_reachLayers (map) is equal to the maximum stream order
-//#pragma omp parallel for
+#pragma omp parallel for
 		for (int i = 0; i < nReaches; ++i)
 		{
             // index in the array
