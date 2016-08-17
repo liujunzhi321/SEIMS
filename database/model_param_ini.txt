@@ -124,7 +124,7 @@ Sediment	decay	dacay constant	1/day	ChannelRouting	0.184	0	NC	1	0	Y
 Sediment	spcon	 Coefficient in sediment transport equation	none	ChannelRouting	0.0001	0.0001	AC	0.01	0.0001	Y
 Sediment	p_rf	 Peak rate adjustment factor 	none	ChannelRouting	1	0.1	AC	3	1	Y
 Sediment	spexp	Exponent in sediment transport equation	none	ChannelRouting	1.5	0.1	AC	2	1	Y
-Sediment	sed_chi	Initial channel sediment concentration	ton/m^3	ChannelRouting	0.03	0.01	AC	1	0	Y
+Sediment	sed_chi	Initial channel sediment concentration	ton/m^3	ChannelRouting	0.03	0.01	AC	0.848	0	Y
 Sediment	vcrit	critical veldeg Ctiy for sediment deposition	m/s	ChannelRouting	0.01	0.01	AC	1	0	Y
 Sediment	downcut	 whether do the channel downcutting and widening	none	ChannelRouting	1	0	NC	1	0	Y
 Sediment	rsd_covco	residue cover factor for computing fraction of cover	none	MUSLEC_LAI	0.3	0.1	AC	0.5	0.1	Y
