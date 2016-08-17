@@ -198,7 +198,7 @@ Nutrient	k_l	Half-saturation coefficient for light	MJ/(m2*hr)	NutCHRout	0.75	1	R
 Nutrient	k_n	Michaelis-Menton half-saturation constant for nitrogen	mg/L	NutCHRout	0.02	1	RC	0.3	0.01	Y
 Nutrient	k_p	Michaelis-Menton half-saturation constant for phosphorus	mg/L	NutCHRout	0.025	1	RC	0.05	0.001	Y
 Nutrient	p_n	Algal preference factor for ammonia	mg/L	NutCHRout	0.5	1	RC	1	0	Y
-Nutrient	igropt	Qual2E algae growth limiting option	none	NutCHRout	5	0	AC	10	0	Y
+Nutrient	igropt	Qual2E algae growth limiting option	none	NutCHRout	3	0	AC	3	1	Y
 Nutrient	mumax	Maximum specific algal growth rate at 20 deg C	none	NutCHRout	2	1	RC	3	1	Y
 Nutrient	rhoq	Algal respiration rate at 20 deg C	1/day	NutCHRout	0.3	1	RC	0.05	0.5	Y
 Nutrient	tfact	Fraction of solar radiation that is photosynthetically active	none	NutCHRout	0.3	1	RC	1	0	Y
