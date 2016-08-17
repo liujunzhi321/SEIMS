@@ -160,7 +160,8 @@ void BMPPointSrcFactory::Dump(ostream *fs)
 
 PointSourceMgtParams::PointSourceMgtParams(const bson_t *&bsonTable, bson_iter_t &iter)
         : m_startDate(0), m_endDate(0), m_waterVolume(0.f), m_sedimentConc(0.f), m_TNConc(0.f), m_NO3Conc(0.f),
-          m_NH3Conc(0.f), m_OrgNConc(0.f), m_TPConc(0.f), m_MinPConc(0.f), m_OrgPConc(0.f), m_name(""), m_seqence(-1)
+          m_NH3Conc(0.f), m_OrgNConc(0.f), m_TPConc(0.f), m_SolPConc(0.f), m_OrgPConc(0.f), m_COD(0.f),
+		  m_name(""), m_seqence(-1)
 {
     if (bson_iter_init_find(&iter, bsonTable, BMP_FLD_NAME))
         m_name = GetStringFromBSONITER(&iter);
@@ -180,10 +181,12 @@ PointSourceMgtParams::PointSourceMgtParams(const bson_t *&bsonTable, bson_iter_t
         m_OrgNConc = GetFloatFromBSONITER(&iter);
     if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_TP))
         m_TPConc = GetFloatFromBSONITER(&iter);
-    if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_MINP))
-        m_MinPConc = GetFloatFromBSONITER(&iter);
+    if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_SOLP))
+        m_SolPConc = GetFloatFromBSONITER(&iter);
     if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_ORGP))
-        m_OrgPConc = GetFloatFromBSONITER(&iter);
+		m_OrgPConc = GetFloatFromBSONITER(&iter);
+	if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_COD))
+		m_COD = GetFloatFromBSONITER(&iter);
     int sYear, sMonth, sDay, eYear, eMonth, eDay;
     if (bson_iter_init_find(&iter, bsonTable, BMP_FLD_SYEAR))
         sYear = GetIntFromBSONITER(&iter);
@@ -218,7 +221,7 @@ void PointSourceMgtParams::Dump(ostream *fs)
     *fs << "      WaterVolume: " << m_waterVolume << ", Sediment: " << m_sedimentConc <<
     ", TN: " << m_TNConc << ", NO3: " << m_NO3Conc <<
     ", NH3: " << m_NH3Conc << ", OrgN: " << m_OrgNConc <<
-    ", TP: " << m_TPConc << ", MinP: " << m_MinPConc <<
+    ", TP: " << m_TPConc << ", MinP: " << m_SolPConc <<
     ", OrgP: " << m_OrgPConc << endl;
 }
 

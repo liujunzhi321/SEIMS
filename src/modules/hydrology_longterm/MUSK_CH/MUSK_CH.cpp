@@ -186,7 +186,7 @@ void MUSK_CH::PointSourceLoading()
 				if (m_pointSrcLocsMap.find(*locIter) != m_pointSrcLocsMap.end()){
 					PointSourceLocations* curPtLoc = m_pointSrcLocsMap.at(*locIter);
 					int curSubID = curPtLoc->GetSubbasinID();
-					m_ptSub[curSubID] += per_wtrVol * curPtLoc->GetSize() / 86400.f; /// m3/s
+					m_ptSub[curSubID] += per_wtrVol * curPtLoc->GetSize() / 86400.f; /// m3/'size'/day ==> m3/s
 				}
 			}
 		}

@@ -33,7 +33,6 @@ NUTR_CH::NUTR_CH(void) : m_dt(-1), m_nreach(-1), m_Chs0(NODATA_VALUE), m_Vdiv(NU
 						 m_sedorgnToCh(NULL), m_sedorgpToCh(NULL), m_no3gwToCh(NULL), m_minpgwToCh(NULL),
 						 m_chOrgN(NULL), m_chNo3(NULL), m_chOrgP(NULL), m_chSolP(NULL)
 {
-
 }
 
 
@@ -78,7 +77,6 @@ void  NUTR_CH::initialOutputs()
         {
             int order = (int) m_chOrder[i];
             m_reachLayers[order].push_back(i);
-            //m_reachLayers[order].push_back(m_reachId[i]);
         }
     }
 
@@ -89,7 +87,6 @@ void  NUTR_CH::initialOutputs()
 		Initialize1DArray(m_nreach+1, m_chOrgP, 0.f);
 		Initialize1DArray(m_nreach+1, m_chSolP, 0.f);
 	}
-
 }
 
 int NUTR_CH::Execute()
@@ -146,9 +143,7 @@ void NUTR_CH::GetValue(const char *key, float *value)
     int iOutlet = m_reachLayers.rbegin()->second[0];
     if (StringMatch(sk, VAR_SED_OUTLET))
     {
-        
     }
-
 }
 
 void NUTR_CH::SetValue(const char *key, float value)
@@ -175,9 +170,7 @@ void NUTR_CH::SetValue(const char *key, float value)
         m_Chs0 = value;
     }
     else
-        throw ModelException(MID_NUTR_CH, "SetSingleData", "Parameter " + sk
-                                                            + " does not exist. Please contact the module developer.");
-
+        throw ModelException(MID_NUTR_CH, "SetValue", "Parameter " + sk + " does not exist.");
 }
 
 void NUTR_CH::Set1DData(const char *key, int n, float *value)
@@ -194,9 +187,7 @@ void NUTR_CH::Set1DData(const char *key, int n, float *value)
 	else if(StringMatch(sk, VAR_NO3GW_TOCH))    m_no3gwToCh = value;
 	else if(StringMatch(sk, VAR_MINPGW_TOCH))   m_minpgwToCh = value;
     else
-        throw ModelException(MID_NUTR_CH, "Set1DData", "Parameter " + sk
-                                                        + " does not exist. Please contact the module developer.");
-
+        throw ModelException(MID_NUTR_CH, "Set1DData", "Parameter " + sk + " does not exist.");
 }
 
 void NUTR_CH::Get1DData(const char *key, int *n, float **data)
@@ -211,10 +202,7 @@ void NUTR_CH::Get1DData(const char *key, int *n, float **data)
 	else if (StringMatch(sk, VAR_CH_ORGN))  *data = m_chOrgN; 
 	else if (StringMatch(sk, VAR_CH_ORGP))  *data = m_chOrgP; 
     else
-        throw ModelException(MID_NUTR_CH, "Get1DData", "Output " + sk
-                                                        +
-                                                        " does not exist in current module. Please contact the module developer.");
-
+        throw ModelException(MID_NUTR_CH, "Get1DData", "Output " + sk + " does not exist.");
 }
 
 void NUTR_CH::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
@@ -229,7 +217,6 @@ void NUTR_CH::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
     else
         throw ModelException(MID_NUTR_CH, "Get2DData", "Output " + sk
         + " does not exist in the NUTR_CH module. Please contact the module developer.");*/
-
 }
 
 void NUTR_CH::Set2DData(const char *key, int nrows, int ncols, float **data)
@@ -263,8 +250,7 @@ void NUTR_CH::Set2DData(const char *key, int nrows, int ncols, float **data)
         }
     }
     else
-        throw ModelException(MID_NUTR_CH, "Set2DData", "Parameter " + sk
-                                                        + " does not exist. Please contact the module developer.");
+        throw ModelException(MID_NUTR_CH, "Set2DData", "Parameter " + sk + " does not exist.");
 }
 
 void NUTR_CH::SedChannelRouting(int i)

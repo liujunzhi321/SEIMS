@@ -30,7 +30,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetHelpfile("PER_STR.chm");
 
 
-    mdi.AddParameter(Tag_TimeStep, UNIT_TIMESTEP_SEC, UNIT_NON_DIM, File_Input, DT_Single);
+    mdi.AddParameter(Tag_TimeStep, UNIT_SECOND, UNIT_NON_DIM, File_Input, DT_Single);
     mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);
 	mdi.AddParameter(VAR_SOILLAYERS, UNIT_NON_DIM, DESC_SOILLAYERS, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_SOILTHICK, UNIT_LEN_M, DESC_SOILTHICK, Source_ParameterDB, DT_Raster2D);

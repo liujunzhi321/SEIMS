@@ -64,9 +64,9 @@ public:
 
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
 
-	virtual void SetScenario(Scenario *);
+	virtual void SetScenario(Scenario *sce);
 
-	virtual void SetReaches(clsReaches *);
+	virtual void SetReaches(clsReaches *reaches);
 
     bool CheckInputSize(const char *key, int n);
 
@@ -152,8 +152,8 @@ private:
     float m_co1;
 
     float m_qUpReach;
-	///// scenario data
-	//Scenario* m_scenario;
+	/// scenario data
+
 	/* point source operations
 	 * key: unique index, BMPID * 100000 + subScenarioID
 	 * value: point source management factory instance

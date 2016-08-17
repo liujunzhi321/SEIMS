@@ -964,15 +964,15 @@
 #define UNIT_CONT_KGKM2 "kg/km2"                    /// Kilograms per Square kilometers of nutrient content
 #define UNIT_CONT_RATIO "(kg/ha)/(kg/ha)"
 #define UNIT_CONT_TONHA "tons/ha"
-#define UNIT_CONT_MGL   "mg/L"
-#define UNIT_DENSITY "Mg/m3"                        /// density
-#define UNIT_DENSITY_L "mg/L"                        /// density
+#define UNIT_DENSITY "Mg/m3"                        /// density, equal to g/cm3
+#define UNIT_CONCENTRATION "mg/L"                        /// concentration
 #define UNIT_DEPTH_MM "mm"                          /// Depth related unit, mm
 #define UNIT_FLOW_CMS "m3/s"                        /// Cubic meters per second of flow discharge
 #define UNIT_GAS_CON "uL/L"   /// e.g., uL CO2/L air, IS this same with ppmv? LJ
 #define UNIT_GAS_PPMV "ppmv"                        /// Concentration of gas, e.g., CO2
 #define UNIT_HEAT_UNIT "hr"
 #define UNIT_KG "kg"                                /// mass Kg
+#define UNIT_TONS "t"                               /// metric tons
 #define UNIT_KG_S "kg/s"
 #define UNIT_KGM3 "kg/m3"
 #define UNIT_LAP_RATE "/100m"                       /// Lapse rate
@@ -985,22 +985,21 @@
 #define UNIT_PERCENT "%"                            /// Percent
 #define UNIT_PRESSURE "kPa"                         /// Vapor pressure
 #define UNIT_RAD_USE_EFFI "(kg/ha)/(MJ/m2)"
-#define UNIT_SECOND "sec"
 #define UNIT_SPEED_MS "m/s"                         /// Speed related
 #define UNIT_SR "MJ/m2/d"                           /// Solar Radiation
 #define UNIT_STRG_M3M "m3/m"                       /// storage per meter of reach length
 #define UNIT_TEMP_DEG "deg C"                       /// Celsius degree of air temperature 
 #define UNIT_TEMP_FACTOR "mm/deg C"                 /// temperature factor
-#define UNIT_TIMESTEP_DAY "day"                    /// Time step (day)
-#define UNIT_TIMESTEP_HOUR "hr"                     /// Time step (h)
-#define UNIT_TIMESTEP_SEC "sec"                      /// Time step (sec)
-#define UNIT_TONS "t"                               /// metric tons
+#define UNIT_YEAR "yr"
+#define UNIT_DAY "day"                    /// Time step (day)
+#define UNIT_HOUR "hr"                     /// Time step (h)
+#define UNIT_SECOND "sec"                      /// Time step (sec)
 #define UNIT_VOL_FRA_M3M3 "m3/m3"
 #define UNIT_VOL_M3 "m3"                           /// volume
 #define UNIT_WAT_RATIO "mm/mm"         /// mm H2O/mm Soil
 #define UNIT_WTRDLT_MMD "mm/d"                      /// Millimeter per day of water changes
 #define UNIT_WTRDLT_MMH "mm/h"                      /// Millimeter per hour of water changes
-#define UNIT_YEAR "yr"
+
 
 
 

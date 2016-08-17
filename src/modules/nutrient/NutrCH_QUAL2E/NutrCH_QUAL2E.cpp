@@ -1,10 +1,3 @@
-/*//
- * \file NutrCH_QUAL2E.cpp
- * \ingroup NutCHRout
- * \author Huiran Gao
- * \date Jun 2016
- */
-
 #include <iostream>
 #include "NutrCH_QUAL2E.h"
 #include "MetadataInfo.h"
@@ -31,6 +24,9 @@ NutrCH_QUAL2E::NutrCH_QUAL2E(void) :
         m_gwSolPToCh(NULL), m_sedOrgNToCh(NULL), m_sedOrgPToCh(NULL), m_sedMinPAToCh(NULL),
         m_sedMinPSToCh(NULL), m_nh4ToCh(NULL), m_no2ToCh(NULL), m_codToCh(NULL), 
 		m_chSr(NULL), m_chDaylen(NULL), m_chCellCount(NULL), m_soilTemp(NULL),
+		// point source loadings to channel
+		m_ptNO3ToCh(NULL), m_ptNH4ToCh(NULL), m_ptOrgNToCh(NULL), 
+		m_ptSolPToCh(NULL), m_ptOrgPToCh(NULL), m_ptCODToCh(NULL), 
         //output
         m_chAlgae(NULL), m_chOrgN(NULL), m_chOrgP(NULL), m_chNH4(NULL), m_chNO2(NULL), m_chNO3(NULL),
         m_chSolP(NULL), m_chCOD(NULL), m_chDO(NULL), m_chChlora(NULL), m_chSatDO(NULL),
@@ -57,6 +53,13 @@ NutrCH_QUAL2E::~NutrCH_QUAL2E(void)
 	if (m_rs3 != NULL) Release1DArray(m_rs3);
 	if (m_rs4 != NULL) Release1DArray(m_rs4);
 	if (m_rs5 != NULL) Release1DArray(m_rs5);
+
+	if (m_ptNO3ToCh != NULL) Release1DArray(m_ptNO3ToCh);
+	if (m_ptNH4ToCh != NULL) Release1DArray(m_ptNH4ToCh);
+	if (m_ptOrgNToCh != NULL) Release1DArray(m_ptOrgNToCh);
+	if (m_ptSolPToCh != NULL) Release1DArray(m_ptSolPToCh);
+	if (m_ptOrgPToCh != NULL) Release1DArray(m_ptOrgPToCh);
+	if (m_ptCODToCh != NULL) Release1DArray(m_ptCODToCh);
 
     if (m_chAlgae != NULL) Release1DArray(m_chAlgae);
     if (m_chOrgN != NULL) Release1DArray(m_chOrgN);
@@ -100,16 +103,9 @@ void NutrCH_QUAL2E::rasterToSubbasin()
 		//add today's flow
 		int subi = (int) m_streamLink[i];
 		if (m_nReaches == 1)
-		{
 			subi = 1;
-		}
 		else if (subi >= m_nReaches + 1)
-		{
-			ostringstream oss;
-			oss << subi;
-			throw ModelException(MID_NUTRCH_QUAL2E, "Execute", "The subbasin " + oss.str() + " is invalid.");
-		}
-
+			throw ModelException(MID_NUTRCH_QUAL2E, "Execute", "The subbasin " + ValueToString(subi) + " is invalid.");
 
 		m_chDaylen[subi] += m_daylen[i];
 		m_chSr[subi] += m_sra[i];
@@ -123,7 +119,6 @@ void NutrCH_QUAL2E::rasterToSubbasin()
 		m_chSr[i] /= m_chCellCount[i];
 		m_chTemp[i] /= m_chCellCount[i];
 	}
-
 }
 
 bool NutrCH_QUAL2E::CheckInputCellSize(const char *key, int n)
@@ -137,17 +132,10 @@ bool NutrCH_QUAL2E::CheckInputCellSize(const char *key, int n)
 	if (m_nCells != n)
 	{
 		if (m_nCells <= 0)
-		{
 			m_nCells = n;
-		}
 		else
-		{
-			//StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
-			ostringstream oss;
-			oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
-				m_nReaches << ".\n";
-			throw ModelException(MID_NUTRCH_QUAL2E, "CheckInputCellSize", oss.str());
-		}
+			throw ModelException(MID_NUTRCH_QUAL2E, "CheckInputCellSize", "Input data for " + string(key) +
+				" is invalid with size: " +ValueToString(n)+ ". The origin size is " + ValueToString(m_nCells) + ".\n");
 	}
 	return true;
 }
@@ -164,16 +152,10 @@ bool NutrCH_QUAL2E::CheckInputSize(const char *key, int n)
     if (m_nReaches != n - 1)
     {
         if (m_nReaches <= 0)
-        {
             m_nReaches = n - 1;
-        } else
-        {
-            //StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
-            ostringstream oss;
-            oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
-            m_nReaches << ".\n";
-            throw ModelException(MID_NUTRCH_QUAL2E, "CheckInputSize", oss.str());
-        }
+        else
+			throw ModelException(MID_NUTRCH_QUAL2E, "CheckInputSize", "Input data for " + string(key) +
+				" is invalid with size: " +ValueToString(n)+ ". The origin size is " + ValueToString(m_nReaches) + ".\n");
     }
     return true;
 }
@@ -398,7 +380,22 @@ void NutrCH_QUAL2E::SetReaches(clsReaches *reaches)
 	else
 		throw ModelException("NutCHPout", "SetReaches", "The reaches input can not to be NULL.");
 }
-
+void NutrCH_QUAL2E::SetScenario(Scenario * sce)
+{
+	if (sce != NULL){
+		map <int, BMPFactory* > *tmpBMPFactories = sce->GetBMPFactories();
+		for (map<int, BMPFactory *>::iterator it = tmpBMPFactories->begin(); it != tmpBMPFactories->end(); it++)
+		{
+			/// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
+			if (it->first / 100000 == BMP_TYPE_POINTSOURCE)
+			{
+				m_ptSrcFactory[it->first] = (BMPPointSrcFactory*)it->second;
+			}
+		}
+	}
+	else
+		throw ModelException(MID_NUTRCH_QUAL2E, "SetScenario", "The scenario can not to be NULL.");
+}
 void  NutrCH_QUAL2E::initialOutputs()
 {
     if (m_nReaches <= 0)
@@ -445,12 +442,79 @@ void  NutrCH_QUAL2E::initialOutputs()
 			m_chCellCount[i] = 0;
 	}
 }
-
+void NutrCH_QUAL2E::PointSourceLoading()
+{
+	/// initialization and reset to 0.f
+	if (m_ptNO3ToCh == NULL)
+	{
+		Initialize1DArray(m_nReaches+1,m_ptNO3ToCh,0.f);
+		Initialize1DArray(m_nReaches+1,m_ptNH4ToCh,0.f);
+		Initialize1DArray(m_nReaches+1,m_ptOrgNToCh,0.f);
+		Initialize1DArray(m_nReaches+1,m_ptSolPToCh,0.f);
+		Initialize1DArray(m_nReaches+1,m_ptOrgPToCh,0.f);
+		Initialize1DArray(m_nReaches+1,m_ptCODToCh,0.f);
+	}
+	else
+	{
+		for (int i =0;i<=m_nReaches;i++)
+		{
+			m_ptNO3ToCh[i] = 0.f;
+			m_ptNH4ToCh[i] = 0.f;
+			m_ptOrgNToCh[i] = 0.f;
+			m_ptSolPToCh[i] = 0.f;
+			m_ptOrgPToCh[i] = 0.f;
+			m_ptCODToCh[i] = 0.f;
+		}
+	}
+	/// load point source nutrient (kg) on current day from Scenario
+	for (map<int, BMPPointSrcFactory*>::iterator it = m_ptSrcFactory.begin(); it != m_ptSrcFactory.end(); it++)
+	{
+		//cout<<"unique Point Source Factory ID: "<<it->first<<endl;
+		vector<int> m_ptSrcMgtSeqs = it->second->GetPointSrcMgtSeqs();
+		map<int, PointSourceMgtParams *>  m_pointSrcMgtMap = it->second->GetPointSrcMgtMap();
+		vector<int> m_ptSrcIDs = it->second->GetPointSrcIDs();
+		map<int, PointSourceLocations *> m_pointSrcLocsMap = it->second->GetPointSrcLocsMap();
+		// 1. looking for management operations from m_pointSrcMgtMap
+		for (vector<int>::iterator seqIter = m_ptSrcMgtSeqs.begin(); seqIter != m_ptSrcMgtSeqs.end(); seqIter++)
+		{
+			PointSourceMgtParams* curPtMgt = m_pointSrcMgtMap.at(*seqIter);
+			// 1.1 If current day is beyond the date range, then continue to next management
+			if(curPtMgt->GetStartDate() != 0 && curPtMgt->GetEndDate() != 0)
+			{
+				if (m_date < curPtMgt->GetStartDate() || m_date > curPtMgt->GetEndDate())
+					continue;
+			}
+			// 1.2 Otherwise, get the water volume
+			float per_no3 = curPtMgt->GetNO3();
+			float per_nh4 = curPtMgt->GetNH3();
+			float per_orgn = curPtMgt->GetOrgN();
+			float per_solp = curPtMgt->GetSolP();
+			float per_orgP = curPtMgt->GetOrgP();
+			float per_cod = curPtMgt->GetCOD();
+			// 1.3 Sum up all point sources
+			for (vector<int>::iterator locIter = m_ptSrcIDs.begin(); locIter != m_ptSrcIDs.end(); locIter++)
+			{
+				if (m_pointSrcLocsMap.find(*locIter) != m_pointSrcLocsMap.end()){
+					PointSourceLocations* curPtLoc = m_pointSrcLocsMap.at(*locIter);
+					int curSubID = curPtLoc->GetSubbasinID();
+					float cvt = curPtLoc->GetSize() * m_dt / 86400.f;/// kg/'size'/day ==> kg of each timestep 
+					m_ptNO3ToCh[curSubID] += per_no3 * cvt;
+					m_ptNH4ToCh[curSubID] += per_nh4 * cvt;
+					m_ptOrgNToCh[curSubID] += per_orgn * cvt;
+					m_ptOrgPToCh[curSubID] += per_orgP * cvt;
+					m_ptSolPToCh[curSubID] += per_solp * cvt;
+					m_ptCODToCh[curSubID] += per_cod * cvt;
+				}
+			}
+		}
+	}
+}
 int NutrCH_QUAL2E::Execute()
 {
     if (!CheckInputData())return false;
     initialOutputs();
-
+	// load point source loadings from Scenarios
+	PointSourceLoading();
 	//sum daylen and sr to channel scale
 	rasterToSubbasin();
 
@@ -501,6 +565,13 @@ void NutrCH_QUAL2E::AddInputNutrient(int i)
 	if(m_nh4ToCh != NULL) m_chNH4[i] += m_nh4ToCh[i];
 	if(m_no2ToCh != NULL) m_chNO2[i] += m_no2ToCh[i];
 	if(m_codToCh != NULL) m_chCOD[i] += m_codToCh[i];
+	/// add point source loadings to channel
+	if(m_ptNO3ToCh != NULL && m_ptNO3ToCh[i] > 0.f) m_chNO3[i] += m_ptNO3ToCh[i];
+	if(m_ptNH4ToCh != NULL && m_ptNH4ToCh[i] > 0.f) m_chNH4[i] += m_ptNH4ToCh[i];
+	if(m_ptOrgNToCh != NULL && m_ptOrgNToCh[i] > 0.f) m_chOrgN[i] += m_ptOrgNToCh[i];
+	if(m_ptSolPToCh != NULL && m_ptSolPToCh[i] > 0.f) m_chSolP[i] += m_ptSolPToCh[i];
+	if(m_ptOrgPToCh != NULL && m_ptOrgPToCh[i] > 0.f) m_chOrgP[i] += m_ptOrgPToCh[i];
+	if(m_ptCODToCh != NULL && m_ptCODToCh[i] > 0.f) m_chCOD[i] += m_ptCODToCh[i];
 }
 
 void NutrCH_QUAL2E::RouteOut(int i)
@@ -841,7 +912,6 @@ void NutrCH_QUAL2E::GetValue(const char *key, float *value)
     {
         *value = m_chSatDO;
     }
-
 }
 
 void NutrCH_QUAL2E::Get1DData(const char *key, int *n, float **data)
@@ -860,5 +930,4 @@ void NutrCH_QUAL2E::Get1DData(const char *key, int *n, float **data)
 	else if(StringMatch(sk, VAR_CH_NH3))    *data = m_chNH4;
     else
         throw ModelException(MID_NUTRCH_QUAL2E, "Get1DData", "Parameter " + sk + " does not exist.");
-    
 }
