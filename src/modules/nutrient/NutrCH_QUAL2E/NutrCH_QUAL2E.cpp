@@ -664,8 +664,6 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 
 	// O2 impact calculations
 	// calculate nitrification rate correction factor for low (cordo)
-	if(o2con != o2con)
-		cout << o2con;
 
 	float cordo = 0.f;
 	float o2con2 = 0.f;
@@ -894,8 +892,6 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 
 	m_chChlora[i] = m_chAlgae[i] * m_ai0;
 
-	if(o2con != o2con)
-		cout << o2con;
 }
 
 float NutrCH_QUAL2E::corTempc(float r20, float thk, float tmp)
