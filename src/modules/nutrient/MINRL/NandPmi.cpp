@@ -576,7 +576,7 @@ void NandPim::CalculateMinerandVolati(int i)
                 kk = 0.f;
             } else
             {
-                kk = m_sol_z[k - 1][i];
+                kk = m_sol_z[i][k - 1];
             }
             //depth from the soil surface to the middle of the layer (dmidl/mm)
             float dmidl = 0.f;
@@ -632,8 +632,8 @@ void NandPim::CalculateMinerandVolati(int i)
                 m_sol_nh3[i][k] = 0.f;
             }
             //summary calculations
-            m_wshd_voln = m_wshd_voln + rvol * (1.f / m_nCells);
-            m_wshd_nitn = m_wshd_nitn + rnit * (1.f / m_nCells);
+            m_wshd_voln += rvol * (1.f / m_nCells);
+            m_wshd_nitn += rnit * (1.f / m_nCells);
         }
     }
 }
@@ -672,14 +672,6 @@ void NandPim::CalculatePflux(int i)
 void NandPim::GetValue(const char *key, float *value)
 {
     string sk(key);
-    //if (StringMatch(sk, VAR_HMNTL)) { *value = this->m_hmntl; }
-    //else if (StringMatch(sk, VAR_HMPTL)) { *value = this->m_hmptl; }
-    //else if (StringMatch(sk, VAR_RMN2TL)) { *value = this->m_rmn2tl; }
-    //else if (StringMatch(sk, VAR_RMPTL)) { *value = this->m_rmptl; }
-    //else if (StringMatch(sk, VAR_RWNTL)) { *value = this->m_rwntl; }
-    //else if (StringMatch(sk, VAR_WDNTL)) { *value = this->m_wdntl; }
-    //else if (StringMatch(sk, VAR_RMP1TL)) { *value = this->m_rmp1tl; }
-    //else if (StringMatch(sk, VAR_ROCTL)) { *value = this->m_roctl; }
     if (StringMatch(sk, VAR_WSHD_DNIT)) { *value = this->m_wshd_dnit; }
     else if (StringMatch(sk, VAR_WSHD_HMN)) { *value = this->m_wshd_hmn; }
     else if (StringMatch(sk, VAR_WSHD_HMP)) { *value = this->m_wshd_hmp; }
@@ -691,8 +683,7 @@ void NandPim::GetValue(const char *key, float *value)
     else if (StringMatch(sk, VAR_WSHD_PAL)) { *value = this->m_wshd_pal; }
     else if (StringMatch(sk, VAR_WSHD_PAS)) { *value = this->m_wshd_pas; }
     else
-        throw ModelException(MID_MINRL, "GetValue",
-                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+        throw ModelException(MID_MINRL, "GetValue", "Parameter " + sk + " does not exist.");
 }
 
 void NandPim::Get1DData(const char *key, int *n, float **data)
@@ -709,8 +700,7 @@ void NandPim::Get1DData(const char *key, int *n, float **data)
 	else if (StringMatch(sk, VAR_ROCTL)) { *data = this->m_roctl; }
 	else if (StringMatch(sk, VAR_SOL_COV)){*data = this->m_sol_cov;}
 	else
-		throw ModelException(MID_MINRL, "Get1DData", "Output " + sk +
-		" does not exist in current module. Please contact the module developer.");
+		throw ModelException(MID_MINRL, "Get1DData", "Parameter " + sk + " does not exist.");
 	*n = this->m_nCells;
 }
 
@@ -732,6 +722,5 @@ void NandPim::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
     else if (StringMatch(sk, VAR_SOL_STAP)) { *data = this->m_sol_stap; }
 	else if (StringMatch(sk, VAR_SOL_RSD)) {*data = this->m_sol_rsd;}
     else
-        throw ModelException(MID_MINRL, "Get2DData", "Output " + sk +
-                                                     " does not exist in the current module. Please contact the module developer.");
+        throw ModelException(MID_MINRL, "Get2DData", "Parameter " + sk + " does not exist.");
 }

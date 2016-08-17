@@ -10,6 +10,7 @@ import sqlite3
 from gridfs import *
 from struct import pack
 from config import *
+from gen_subbasins import ImportSubbasinStatistics
 from util import *
 
 
@@ -193,7 +194,8 @@ if __name__ == "__main__":
     db = conn[SpatialDBName]
     from txt2db3 import reConstructSQLiteDB
     reConstructSQLiteDB()
-    #ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
+    ImportParameters(TXT_DB_DIR + os.sep + sqliteFile, db)
     ## IMPORT LOOKUP TABLES AS GRIDFS, DT_Array2D
     ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
     ImportModelConfiguration(db)
+    ImportSubbasinStatistics()

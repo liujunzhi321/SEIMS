@@ -143,7 +143,7 @@ def GenerateSubbasins():
     fStatus.close()
 
 
-def importSubbasinStatistics():
+def ImportSubbasinStatistics():
     '''
     Import subbasin numbers, outlet ID, etc. to MongoDB.
     :return:
@@ -240,4 +240,4 @@ def importSubbasinStatistics():
 if __name__ == "__main__":
     LoadConfiguration(GetINIfile())
     # GenerateSubbasins()
-    importSubbasinStatistics()
+    ImportSubbasinStatistics()

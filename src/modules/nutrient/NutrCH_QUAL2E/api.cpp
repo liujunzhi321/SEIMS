@@ -79,22 +79,30 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddInput(VAR_MINPGW_TOCH, UNIT_KG, DESC_MINPGW_CH, Source_Module, DT_Array1D);
 
     // set the output variables
-    mdi.AddOutput(VAR_SOXY, UNIT_CONCENTRATION, DESC_SOXY, DT_Array1D);
-    mdi.AddOutput(VAR_CH_ALGAE, UNIT_CONCENTRATION, DESC_CH_ALGAE, DT_Array1D);
-    mdi.AddOutput(VAR_CH_ORGN, UNIT_CONCENTRATION, DESC_CH_ORGN, DT_Array1D);
-    mdi.AddOutput(VAR_CH_ORGP, UNIT_CONCENTRATION, DESC_CH_ORGP, DT_Array1D);
-    mdi.AddOutput(VAR_CH_NH3, UNIT_CONCENTRATION, DESC_CH_NH4, DT_Array1D);
-    mdi.AddOutput(VAR_CH_NO2, UNIT_CONCENTRATION, DESC_CH_NO2, DT_Array1D);
-    mdi.AddOutput(VAR_CH_NO3, UNIT_CONCENTRATION, DESC_CH_NO3, DT_Array1D);
-    mdi.AddOutput(VAR_CH_SOLP, UNIT_CONCENTRATION, DESC_CH_SOLP, DT_Array1D);
-    mdi.AddOutput(VAR_CH_COD, UNIT_CONCENTRATION, DESC_CH_COD, DT_Array1D);
-    mdi.AddOutput(VAR_CH_CHLORA, UNIT_CONCENTRATION, DESC_CH_CHLORA, DT_Array1D);
-
+	/// 1. Amount (kg) outputs
+    mdi.AddOutput(VAR_CH_ALGAE, UNIT_KG, DESC_CH_ALGAE, DT_Array1D);
+    mdi.AddOutput(VAR_CH_ORGN, UNIT_KG, DESC_CH_ORGN, DT_Array1D);
+    mdi.AddOutput(VAR_CH_ORGP, UNIT_KG, DESC_CH_ORGP, DT_Array1D);
+    mdi.AddOutput(VAR_CH_NH3, UNIT_KG, DESC_CH_NH4, DT_Array1D);
+    mdi.AddOutput(VAR_CH_NO2, UNIT_KG, DESC_CH_NO2, DT_Array1D);
+    mdi.AddOutput(VAR_CH_NO3, UNIT_KG, DESC_CH_NO3, DT_Array1D);
+    mdi.AddOutput(VAR_CH_SOLP, UNIT_KG, DESC_CH_SOLP, DT_Array1D);
+    mdi.AddOutput(VAR_CH_COD, UNIT_KG, DESC_CH_COD, DT_Array1D);
+	mdi.AddOutput(VAR_CH_CHLORA, UNIT_KG, DESC_CH_CHLORA, DT_Array1D);
+	mdi.AddOutput(VAR_CH_DOX, UNIT_CONCENTRATION, DESC_CH_DOX, DT_Array1D);
+	/// 2. Concentration (mg/L) outputs
+	mdi.AddOutput(VAR_CH_ALGAEConc, UNIT_CONCENTRATION, DESC_CH_ALGAE, DT_Array1D);
+	mdi.AddOutput(VAR_CH_ORGNConc, UNIT_CONCENTRATION, DESC_CH_ORGN, DT_Array1D);
+	mdi.AddOutput(VAR_CH_ORGPConc, UNIT_CONCENTRATION, DESC_CH_ORGP, DT_Array1D);
+	mdi.AddOutput(VAR_CH_NH3Conc, UNIT_CONCENTRATION, DESC_CH_NH4, DT_Array1D);
+	mdi.AddOutput(VAR_CH_NO2Conc, UNIT_CONCENTRATION, DESC_CH_NO2, DT_Array1D);
+	mdi.AddOutput(VAR_CH_NO3Conc, UNIT_CONCENTRATION, DESC_CH_NO3, DT_Array1D);
+	mdi.AddOutput(VAR_CH_SOLPConc, UNIT_CONCENTRATION, DESC_CH_SOLP, DT_Array1D);
+	mdi.AddOutput(VAR_CH_CODConc, UNIT_CONCENTRATION, DESC_CH_COD, DT_Array1D);
+	mdi.AddOutput(VAR_CH_CHLORAConc, UNIT_CONCENTRATION, DESC_CH_CHLORA, DT_Array1D);
+	mdi.AddOutput(VAR_CH_DOXConc, UNIT_CONCENTRATION, DESC_CH_DOX, DT_Array1D);
     string res = mdi.GetXMLDocument();
     char *tmp = new char[res.size() + 1];
     strprintf(tmp, res.size() + 1, "%s", res.c_str());
     return tmp;
 }
-
-
-//mdi.AddParameter(VAR_WATTEMP, UNIT_TEMP_DEG, DESC_WATTEMP, Source_ParameterDB, DT_Array1D);

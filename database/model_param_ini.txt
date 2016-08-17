@@ -81,10 +81,10 @@ Discharge	Ol_iuh	Overland flow IUH	none	ALL	-9999		NC	-9999	-9999	Y
 Discharge	Ch_iuh	Channel flow IUH	none	ChannelRouting	-9999		NC	-9999	-9999	Y
 Discharge	Reach	Reach properties	none	ALL	-9999	0	NC	-9999	-9999	Y
 Discharge	Ki	Interflow scaling factor	none	SSR_DA	3	0	AC	10	0	Y
-Discharge	Kg	Baseflow recession coefficient	none	GW_RSVR	5.00E-03	0	AC	0.1	0.001	Y
+Discharge	Kg	Baseflow recession coefficient	none	GW_RSVR	0.002	0	AC	0.1	0.001	Y
 Discharge	Base_ex	Baseflow exponent	none	GW_RSVR	1	1	AC	4	1	Y
 Discharge	df_coef	Deep percolation coefficient	mm	GW_RSVR	0	0	AC	1	0	Y
-Discharge	gw0	Initial groundwater storage	mm	GW_RSVR	100	0	AC	1000	0	Y
+Discharge	gw0	Initial groundwater storage	mm	GW_RSVR	20	0	AC	1000	0	Y
 Discharge	gwmax	Maximum groundwater storage	mm	GW_RSVR	300	0	AC	1000	0	Y
 Discharge	k_chb	channel bottom hydraulic conductivity	mm/hr	ALL	0.5	0	AC	150	0	Y
 Discharge	k_bank	channel bank hydraulic conductivity	mm/hr	ALL	20	0	AC	150	0	Y
@@ -124,7 +124,7 @@ Sediment	decay	dacay constant	1/day	ChannelRouting	0.184	0	NC	1	0	Y
 Sediment	spcon	 Coefficient in sediment transport equation	none	ChannelRouting	0.0001	0.0001	AC	0.01	0.0001	Y
 Sediment	p_rf	 Peak rate adjustment factor 	none	ChannelRouting	1	0.1	AC	3	1	Y
 Sediment	spexp	Exponent in sediment transport equation	none	ChannelRouting	1.5	0.1	AC	2	1	Y
-Sediment	sed_chi	Initial channel sediment concentration	ton/m^3	ChannelRouting	0.03	0.01	AC	1	0	Y
+Sediment	sed_chi	Initial channel sediment concentration	ton/m^3	ChannelRouting	0.03	0.01	AC	0.848	0	Y
 Sediment	vcrit	critical veldeg Ctiy for sediment deposition	m/s	ChannelRouting	0.01	0.01	AC	1	0	Y
 Sediment	downcut	 whether do the channel downcutting and widening	none	ChannelRouting	1	0	NC	1	0	Y
 Sediment	rsd_covco	residue cover factor for computing fraction of cover	none	MUSLEC_LAI	0.3	0.1	AC	0.5	0.1	Y
@@ -149,9 +149,6 @@ InstreamWQ	algae	Algal biomass concentration in reach on the first day	mg alg/L	
 InstreamWQ	nh3	Ammonia concentration in reach on the first day	mg N/L	ChannelRouting	0	0	AC	50	0	Y
 InstreamWQ	chlora	ChlorophyII-a concentration in reach on the first day	mg chla/L	ChannelRouting	0	0	AC	200	0	Y
 InstreamWQ	disp	Dissolved P concentration in reach on the first day	mg P/L	ChannelRouting	0	0	AC	25	0	Y
-InstreamWQ	k_l	Half saturation coefficient for light	kJ/(m2-min)	ChannelRouting	0.75	1	RC	1.135	0.2227	Y
-InstreamWQ	k_n	Michaelis-mention half-saturation constant for nitrogen	mg N/L	ChannelRouting	0.02	1	RC	0.03	0.01	Y
-InstreamWQ	k_p	Michaelis-mention half-saturation constant for P	mg P/L	ChannelRouting	0.025	1	RC	0.05	0.001	Y
 InstreamWQ	lambda0	Non-algal portion of hte light extinction coefficient	1/m	NutCHRout	1	0	AC	10	0	Y
 InstreamWQ	lambda1	Linear algal self-shading coefficient	(1/m)1/(ug chla/L)	NutCHRout	0.03	1	RC	0.065	0.0065	Y
 InstreamWQ	lambda2	Nonlinear alga self-shading coefficient	(1/m)(ug chla/L)^(-2/3)	NutCHRout	0.05	1	RC	1	0	Y
@@ -194,11 +191,11 @@ Nutrient	ai6	Rate of oxygen uptake per unit NO2-N oxidation	mg/mg	NutCHRout	1.07
 Nutrient	lambda0	Non-algal portion of hte light extinction coefficient	1/m	NutCHRout	1	0	AC	10	0	Y
 Nutrient	lambda1	Linear algal self-shading coefficient	(1/m)1/(ug chla/L)	NutCHRout	0.03	1	RC	0.065	0.0065	Y
 Nutrient	lambda2	Nonlinear alga self-shading coefficient	(1/m)(ug chla/L)^(-2/3)	NutCHRout	0.0541	1	RC	1	0	Y
-Nutrient	k_l	Half-saturation coefficient for light	MJ/(m2*hr)	NutCHRout	0.75	1	RC	1.135	0.223	Y
-Nutrient	k_n	Michaelis-Menton half-saturation constant for nitrogen	mg/L	NutCHRout	0.02	1	RC	0.3	0.01	Y
-Nutrient	k_p	Michaelis-Menton half-saturation constant for phosphorus	mg/L	NutCHRout	0.025	1	RC	0.05	0.001	Y
+InstreamWQ	k_l	Half saturation coefficient for light	kJ/(m2*min)	ChannelRouting	0.75	1	RC	1.135	0.223	Y
+InstreamWQ	k_n	Michaelis-mention half-saturation constant for nitrogen	mg N/L	ChannelRouting	0.02	1	RC	0.03	0.01	Y
+InstreamWQ	k_p	Michaelis-mention half-saturation constant for P	mg P/L	ChannelRouting	0.025	1	RC	0.05	0.001	Y
 Nutrient	p_n	Algal preference factor for ammonia	mg/L	NutCHRout	0.5	1	RC	1	0	Y
-Nutrient	igropt	Qual2E algae growth limiting option	none	NutCHRout	5	0	AC	10	0	Y
+Nutrient	igropt	Qual2E algae growth limiting option	none	NutCHRout	3	0	AC	3	1	Y
 Nutrient	mumax	Maximum specific algal growth rate at 20 deg C	none	NutCHRout	2	1	RC	3	1	Y
 Nutrient	rhoq	Algal respiration rate at 20 deg C	1/day	NutCHRout	0.3	1	RC	0.05	0.5	Y
 Nutrient	tfact	Fraction of solar radiation that is photosynthetically active	none	NutCHRout	0.3	1	RC	1	0	Y

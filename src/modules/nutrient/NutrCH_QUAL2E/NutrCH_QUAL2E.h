@@ -101,8 +101,8 @@ private:
     float m_lambda0;     /// non-algal portion of the light extinction coefficient
     float m_lambda1;     /// linear algal self-shading coefficient
     float m_lambda2;     /// nonlinear algal self-shading coefficient
-
-    float m_k_l;        /// half saturation coefficient for light (MJ/(m2*hr))
+	/// half saturation coefficient for light (MJ/(m2*hr))
+    float m_k_l;        
     float m_k_n;        /// half-saturation constant for nitrogen (mg N/L)
     float m_k_p;        /// half saturation constant for phosphorus (mg P/L)
     /// algal preference factor for ammonia
@@ -120,7 +120,10 @@ private:
     float m_mumax;
     /// algal respiration rate at 20 deg C (1/day)
     float m_rhoq;
-
+	/// stream link
+	float *m_streamLink;
+	/// soil temperature (deg C)
+	float *m_soilTemp;
     /// day length for current day (h)
     float *m_daylen;
     /// solar radiation for the day (MJ/m2)
@@ -194,55 +197,81 @@ private:
 	/// COD
 	float *m_ptCODToCh;
 
-    /// output data
-    /// algal biomass concentration in reach (kg)
+    /// nutrient amount stored in reach
+    /// algal biomass storage in reach (kg)
     float *m_chAlgae;
-    /// organic nitrogen concentration in reach (kg)
+    /// organic nitrogen storage in reach (kg)
     float *m_chOrgN;
-    /// organic phosphorus concentration in reach (kg)
+    /// organic phosphorus storage in reach (kg)
     float *m_chOrgP;
-    /// ammonia concentration in reach (kg)
+    /// ammonia storage in reach (kg)
     float *m_chNH4;
-    /// nitrite concentration in reach (kg)
+    /// nitrite storage in reach (kg)
     float *m_chNO2;
-    /// nitrate concentration in reach (kg)
+    /// nitrate storage in reach (kg)
     float *m_chNO3;
-    /// dissolved phosphorus concentration in reach (kg)
+    /// dissolved phosphorus storage in reach (kg)
     float *m_chSolP;
-    /// carbonaceous oxygen demand in reach (kg)
-    float *m_chCOD;
-    /// dissolved oxygen concentration in reach (kg)
-    float *m_chDO;
-    /// chlorophyll-a concentration in reach (kg)
+    /// carbonaceous biochemical oxygen demand in reach (kg)
+    float *m_chCBOD;
+    /// dissolved oxygen storage in reach (kg)
+    float *m_chDOx;
+    /// chlorophyll-a storage in reach (kg)
     float *m_chChlora;
-    // saturation concentration of dissolved oxygen (kg)
-    float m_chSatDO;
+    // saturation storage of dissolved oxygen (kg)
+    float m_chSatDOx;
 
-	//flow out
-	/// algal biomass concentration in reach (kg)
+	/// Outputs, both amount (kg) and concentration (mg/L)
+	/// algal biomass amount in reach (kg)
 	float *m_chOutAlgae;
-	/// organic nitrogen concentration in reach (kg)
+	/// algal biomass concentration in reach (mg/L)
+	float *m_chOutAlgaeConc;
+	/// chlorophyll-a biomass amount in reach (kg)
+	float *m_chOutChlora;
+	/// chlorophyll-a biomass concentration in reach (mg/L)
+	float *m_chOutChloraConc;
+	/// organic nitrogen amount in reach (kg)
 	float *m_chOutOrgN;
-	/// organic phosphorus concentration in reach (kg)
+	/// organic nitrogen concentration in reach (mg/L)
+	float *m_chOutOrgNConc;
+	/// organic phosphorus amount in reach (kg)
 	float *m_chOutOrgP;
-	/// ammonia concentration in reach (kg)
+	/// organic phosphorus concentration in reach (mg/L)
+	float *m_chOutOrgPConc;
+	/// ammonia amount in reach (kg)
 	float *m_chOutNH4;
-	/// nitrite concentration in reach (kg)
+	/// ammonia concentration in reach (mg/L)
+	float *m_chOutNH4Conc;
+	/// nitrite amount in reach (kg)
 	float *m_chOutNO2;
-	/// nitrate concentration in reach (kg)
+	/// nitrite concentration in reach (mg/L)
+	float *m_chOutNO2Conc;
+	/// nitrate amount in reach (kg)
 	float *m_chOutNO3;
-	/// dissolved phosphorus concentration in reach (kg)
+	/// nitrate concentration in reach (mg/L)
+	float *m_chOutNO3Conc;
+	/// dissolved phosphorus amount in reach (kg)
 	float *m_chOutSolP;
+	/// dissolved phosphorus concentration in reach (mg/L)
+	float *m_chOutSolPConc;
 	/// carbonaceous oxygen demand in reach (kg)
 	float *m_chOutCOD;
-	/// dissolved oxygen concentration in reach (kg)
-	float *m_chOutDO;
+	/// carbonaceous oxygen demand concentration in reach (mg/L)
+	float *m_chOutCODConc;
+	/// dissolved oxygen amount in reach (kg)
+	float *m_chOutDOx;
+	/// dissolved oxygen concentration in reach (mg/L)
+	float *m_chOutDOxConc;
 
-	float *m_streamLink;
-	float *m_soilTemp;
+	
+
 	//intermediate variables
+
+	/// mean day length of each channel (hr) 
 	float *m_chDaylen;
+	/// mean solar radiation of each channel
 	float *m_chSr;
+	/// valid cell numbers of each channel
 	int *m_chCellCount;
 
 private:
@@ -277,8 +306,8 @@ private:
      * \return float
      */
     float corTempc(float r20, float thk, float tmp);
-
-	void rasterToSubbasin();
+	/// Calculate average day length, solar radiation, and temperature for each channel
+	void ParametersSubbasinForChannel();
 
     void initialOutputs();
 

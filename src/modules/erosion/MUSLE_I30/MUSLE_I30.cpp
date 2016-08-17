@@ -137,7 +137,8 @@ float MUSLE_I30::getPeakRunoffRate(int cell)
 	else			p = 0.0f;
 
 	struct tm datestruture;
-	localtime_s(&datestruture,&m_Date);			//get month
+	LocalTime(m_Date, &datestruture);
+	//localtime_s(&datestruture,&m_Date);			//get month
 	float max = 1.0f - exp(-125.0f / (p + 5));	//eq.1:3.2.3 p66
 	float a15 = triangularDistribution(0.02083f,m_alpha_month[datestruture.tm_mon],max,&m_rndseed); //eq.1:3.2.4-5 p67
 
