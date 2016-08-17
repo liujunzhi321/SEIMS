@@ -576,7 +576,7 @@ void NandPim::CalculateMinerandVolati(int i)
                 kk = 0.f;
             } else
             {
-                kk = m_sol_z[k - 1][i];
+                kk = m_sol_z[i][k - 1];
             }
             //depth from the soil surface to the middle of the layer (dmidl/mm)
             float dmidl = 0.f;
