@@ -29,7 +29,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetVersion("1.5");
     mdi.SetWebsite(SEIMS_SITE);
 
-    mdi.AddParameter(Tag_HillSlopeTimeStep, UNIT_TIMESTEP_SEC, DESC_DT_HS, File_Input, DT_Single);
+    mdi.AddParameter(Tag_HillSlopeTimeStep, UNIT_SECOND, DESC_DT_HS, File_Input, DT_Single);
 	//mdi.AddParameter(VAR_T_SNOW, UNIT_TEMP_DEG, DESC_T_SNOW, Source_ParameterDB, DT_Single);
 	//mdi.AddParameter(VAR_T0, UNIT_TEMP_DEG, DESC_T0, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_T_SOIL, UNIT_TEMP_DEG, DESC_T_SOIL, Source_ParameterDB, DT_Single);

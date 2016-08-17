@@ -48,7 +48,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_GSI, UNIT_SPEED_MS, DESC_GSI, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_VPDFR, UNIT_PRESSURE, DESC_VPDFR, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_FRGMAX, UNIT_NON_DIM, DESC_FRGMAX, Source_ParameterDB, DT_Raster1D);
-    mdi.AddParameter(VAR_PHUTOT, UNIT_TIMESTEP_HOUR, DESC_PHUTOT, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_PHUTOT, UNIT_HOUR, DESC_PHUTOT, Source_ParameterDB, DT_Raster1D);
     //Now, grow code is prepared as an input parameters, together with LAI_INTI, BIO_INIT, CURYR_INIT, etc.
     mdi.AddParameter(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, Source_ParameterDB, DT_Raster1D);
 
@@ -66,7 +66,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_ALBDAY, UNIT_NON_DIM, DESC_ALBDAY, Source_Module, DT_Array1D);
 
     // set the output variables
-    mdi.AddOutput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, DT_Raster1D);
+    mdi.AddOutput(VAR_DAYLEN, UNIT_HOUR, DESC_DAYLEN, DT_Raster1D);
     mdi.AddOutput(VAR_PHUBASE, UNIT_NON_DIM, DESC_PHUBASE, DT_Raster1D);
     mdi.AddOutput(VAR_VPD, UNIT_PRESSURE, DESC_VPD, DT_Raster1D);
     mdi.AddOutput(VAR_PET, UNIT_WTRDLT_MMD, DESC_PET, DT_Raster1D);

@@ -1,12 +1,10 @@
-/** \defgroup NutCHRout
- * \ingroup Nutrient
- * \brief Calculates in-stream nutrient transformations with QUAL2E method.
- */
 /*!
- * \file NutrCH_QUAL2E.h
- * \ingroup NutrCH_QUAL2E
+ * \brief Calculates in-stream nutrient transformations with QUAL2E method.
  * \author Huiran Gao; Junzhi Liu
  * \date Jun 2016
+ *
+ * \revision LiangJun Zhu
+ * \description 1. Add point source loadings nutrients from Scenario.
  */
 
 #pragma once
@@ -18,19 +16,12 @@
 #include "SimulationModule.h"
 
 using namespace std;
-/*!
- * \class NutrCH_QUAL2E
- * \ingroup NutrCH_QUAL2E
- *
- * \brief Calculates the concentration of nutrient in reach.
- *
+/** \defgroup NutrCH_QUAL2E
+ * \ingroup Nutrient
+ * \brief Calculates in-stream nutrient transformations with QUAL2E method.
  */
-
-/*!
- * \class NutrCH_QUAL2E
- * \ingroup NutrCH_QUAL2E
- * \brief Overland routing using QUAL2E method
- * 
+/*
+ *\breif Musking weight struct
  */
 struct MuskWeights
 {
@@ -41,7 +32,13 @@ struct MuskWeights
     float dt;
     int n;  ///< number of division of the origin time step
 };
-
+/*!
+ * \class NutrCH_QUAL2E
+ * \ingroup NutrCH_QUAL2E
+ *
+ * \brief Calculates the concentration of nutrient in reach using QUAL2E method.
+ *
+ */
 class NutrCH_QUAL2E : public SimulationModule
 {
 public:
@@ -54,6 +51,8 @@ public:
     virtual void Set1DData(const char *key, int n, float *data);
 
 	virtual void SetReaches(clsReaches *reaches);
+
+	virtual void SetScenario(Scenario *sce);
 
     virtual int Execute();
 
@@ -75,9 +74,18 @@ private:
 	vector<int> m_reachId;
     /// reaches number
     int m_nReaches;
+	/* reach up-down layering
+	 * key: stream order
+	 * value: reach ID of current stream order
+	 */
     map<int, vector<int> > m_reachLayers;
-    /// Reach information
-    clsReaches *m_reaches;
+	/// scenario data
+
+	/* point source operations
+	 * key: unique index, BMPID * 100000 + subScenarioID
+	 * value: point source management factory instance
+	 */
+	map<int, BMPPointSrcFactory*> m_ptSrcFactory;
 
     /// input data
     float m_qUpReach;
@@ -172,6 +180,20 @@ private:
     /// cod to reach in surface runoff (kg)
     float *m_codToCh;
 
+	/// point source loadings (kg) to channel of each timestep
+	/// nitrate
+	float *m_ptNO3ToCh;
+	/// ammonia nitrogen
+	float *m_ptNH4ToCh;
+	/// Organic nitrogen
+	float *m_ptOrgNToCh;
+	/// soluble (dissolved) phosphorus
+	float *m_ptSolPToCh;
+	/// Organic phosphorus 
+	float *m_ptOrgPToCh;
+	/// COD
+	float *m_ptCODToCh;
+
     /// output data
     /// algal biomass concentration in reach (kg)
     float *m_chAlgae;
@@ -260,5 +282,5 @@ private:
 
     void initialOutputs();
 
-
+	void PointSourceLoading();
 };

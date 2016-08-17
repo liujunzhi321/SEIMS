@@ -30,7 +30,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetVersion("0.1");
     mdi.SetWebsite(SEIMS_SITE);
 
-    mdi.AddParameter(Tag_ChannelTimeStep, UNIT_TIMESTEP_SEC, DESC_TIMESTEP, File_Input, DT_Single);
+    mdi.AddParameter(Tag_ChannelTimeStep, UNIT_SECOND, DESC_TIMESTEP, File_Input, DT_Single);
     mdi.AddParameter(VAR_K_CHB, UNIT_WTRDLT_MMH, DESC_K_CHB, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_K_BANK, UNIT_WTRDLT_MMH, DESC_K_BANK, Source_ParameterDB, DT_Single);
     mdi.AddParameter(VAR_EP_CH, UNIT_WTRDLT_MMH, DESC_EP_CH, Source_ParameterDB, DT_Single);

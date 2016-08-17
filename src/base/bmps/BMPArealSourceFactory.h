@@ -120,11 +120,13 @@ namespace MainBMP
         float GetTP() { return m_TPConc; }
 
         /// Get MinP concentration
-        float GetMinP() { return m_MinPConc; }
+        float GetMinP() { return m_SolPConc; }
 
         /// Get OrgP concentration
         float GetOrgP() { return m_OrgPConc; }
 
+		/// Get COD concentrantion
+		float GetCOD(){return m_COD;}
     private:
         /// subSecenario name
         string m_name;
@@ -149,9 +151,11 @@ namespace MainBMP
         ///	TP	Total phosphorus concentration	kg/'size'/day
         float m_TPConc;
         ///	MINP	Mineral phosphorus concentration	kg/'size'/day
-        float m_MinPConc;
+        float m_SolPConc;
         ///	ORGP	Organic phosphorus concentration	kg/'size'/day
         float m_OrgPConc;
+		/// cod
+		float m_COD;
     };
 
     /*!

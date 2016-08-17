@@ -29,8 +29,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetWebsite(SEIMS_SITE);
     mdi.SetHelpfile("");
     /// climate parameters
-    mdi.AddParameter(VAR_DAYLEN_MIN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN_MIN, Source_ParameterDB, DT_Raster1D);
-    mdi.AddParameter(VAR_DORMHR, UNIT_TIMESTEP_HOUR, DESC_DORMHR, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_DAYLEN_MIN, UNIT_HOUR, DESC_DAYLEN_MIN, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_DORMHR, UNIT_HOUR, DESC_DORMHR, Source_ParameterDB, DT_Raster1D);
     /// Single values
     /// in SWAT, CO2 is assigned by subbasin
     mdi.AddParameter(VAR_CO2, UNIT_GAS_PPMV, DESC_CO2, Source_ParameterDB, DT_Single);
@@ -93,7 +93,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(DataType_MeanTemperature, UNIT_TEMP_DEG, DESC_MEANTEMP, Source_Module, DT_Raster1D);
     mdi.AddInput(DataType_MinimumTemperature, UNIT_TEMP_DEG, DESC_MINTEMP, Source_Module, DT_Raster1D);
     mdi.AddInput(DataType_SolarRadiation, UNIT_SR, DESC_SR, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_Module, DT_Raster1D);  /// from PET modules
+    mdi.AddInput(VAR_DAYLEN, UNIT_HOUR, DESC_DAYLEN, Source_Module, DT_Raster1D);  /// from PET modules
     /// water related INPUT
     mdi.AddInput(VAR_SOL_ST, UNIT_DEPTH_MM, DESC_SOL_ST, Source_Module, DT_Raster2D);
     mdi.AddInput(VAR_SOL_SW, UNIT_DEPTH_MM, DESC_SOL_SW, Source_Module, DT_Raster1D);

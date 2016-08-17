@@ -98,7 +98,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddOutput(VAR_SUR_SOLP_TOCH, UNIT_KG, DESC_SUR_SOLP_CH, DT_Array1D);
 
 	mdi.AddOutput(VAR_COD, UNIT_CONT_KGHA, DESC_COD, DT_Raster1D);
-    mdi.AddOutput(VAR_CHL_A, UNIT_DENSITY_L, DESC_CHL_A, DT_Raster1D);
+    mdi.AddOutput(VAR_CHL_A, UNIT_CONCENTRATION, DESC_CHL_A, DT_Raster1D);
 
     string res = mdi.GetXMLDocument();
     char *tmp = new char[res.size() + 1];

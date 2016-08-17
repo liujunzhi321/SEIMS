@@ -87,8 +87,8 @@ private:
     /// reaches number
     int m_nReaches;
     map<int, vector<int> > m_reachLayers;
-    /// Reach information
-    clsReaches *m_reaches;
+    ///// Reach information
+    //clsReaches *m_reaches;
 	/// id of source cells of reaches
 	int *m_sourceCellIds;
 	/// channel number
