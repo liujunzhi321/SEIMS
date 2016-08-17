@@ -163,6 +163,9 @@ void MUSK_CH::PointSourceLoading()
 	/// load point source water discharge (m3/s) on current day from Scenario
 	for (map<int, BMPPointSrcFactory*>::iterator it = m_ptSrcFactory.begin(); it != m_ptSrcFactory.end(); it++)
 	{
+		/// reset point source loading water to 0.f
+		for(int i = 0; i <= m_nreach; i++)
+			m_ptSub[i] = 0.f;
 		//cout<<"unique Point Source Factory ID: "<<it->first<<endl;
 		vector<int> m_ptSrcMgtSeqs = it->second->GetPointSrcMgtSeqs();
 		map<int, PointSourceMgtParams *>  m_pointSrcMgtMap = it->second->GetPointSrcMgtMap();

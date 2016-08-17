@@ -8,7 +8,7 @@
  * \date May / 2016
  * \description: 1. move m_erodibilityFactor, m_coverFactor, to reach collection of MongoDB as inputs, and is DT_Array1D
  *               2. add point source loadings from Scenario database
-
+ *               3. add SEDRECHConc output with the unit g/cm3 (i.e., Mg/m3)
  * \revised Junzhi Liu
  * \date August / 2016
  */
@@ -27,13 +27,13 @@
 
 using namespace std;
 
-SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA_VALUE), 
-                           m_ptSub(NULL), m_chStorage(NULL), m_SedOut(NULL),
+SEDR_VCD::SEDR_VCD(void) : m_dt(-1), m_nreach(-1), m_sedtoCh(NULL), m_Chs0(NODATA_VALUE), m_sedChi0(NODATA_VALUE),
+                           m_ptSub(NULL), m_chStorage(NULL), m_sedOut(NULL),
                            m_reachDownStream(NULL), m_chOrder(NULL), m_chWidth(NULL), 
 						   m_chLen(NULL), m_chDepth(NULL), m_chVel(NULL), m_chCover(NULL), m_chErod(NULL), m_qchOut(NULL),
                            m_prf(NODATA_VALUE), m_spcon(NODATA_VALUE), m_spexp(NODATA_VALUE), m_vcrit(NODATA_VALUE), 
                            //m_coverFactor(0.1f), m_erodibilityFactor(0.2f), 
-						   m_sedStorage(NULL), m_sedDep(NULL), m_sedDeg(NULL), m_sedCon(NULL)
+						   m_sedStorage(NULL), m_sedDep(NULL), m_sedDeg(NULL), m_sedConc(NULL)
 {
 }
 
@@ -48,7 +48,8 @@ SEDR_VCD::~SEDR_VCD(void)
 	if (m_chCover != NULL) Release1DArray(m_chCover);
 	if (m_chErod != NULL) Release1DArray(m_chErod);
 	if (m_ptSub != NULL) Release1DArray(m_ptSub);
-    if (m_SedOut != NULL) Release1DArray(m_SedOut);
+    if (m_sedOut != NULL) Release1DArray(m_sedOut);
+	if (m_sedConc != NULL) Release1DArray(m_sedConc);
     if (m_sedStorage != NULL) Release1DArray(m_sedStorage);
     if (m_sedDeg != NULL) Release1DArray(m_sedDeg);
     if (m_sedDep != NULL) Release1DArray(m_sedDep);
@@ -111,15 +112,18 @@ void  SEDR_VCD::initialOutputs()
     }
 
     //initial channel storage
-    if (m_SedOut == NULL)
+    if (m_sedOut == NULL)
     {       
-		Initialize1DArray(m_nreach+1, m_SedOut, 0.f);
+		Initialize1DArray(m_nreach+1, m_sedOut, 0.f);
+		Initialize1DArray(m_nreach+1, m_sedConc, 0.f);
 		Initialize1DArray(m_nreach+1, m_sedStorage, 0.f);
 		Initialize1DArray(m_nreach+1, m_sedDep, 0.f);
 		Initialize1DArray(m_nreach+1, m_sedDeg, 0.f);
 
-        for (int i = 1; i <= m_nreach; i++)
-            m_sedStorage[i] = m_Chs0 * m_chLen[i];
+        for (int i = 1; i <= m_nreach; i++){
+            //m_sedStorage[i] = m_Chs0 * m_chLen[i]; // m_Chs0 is initial channel storage per meter, not sediment! By LJ
+			m_sedStorage[i] = m_sedChi0 * m_Chs0 * m_chLen[i] * 1000.f; /// ton/m3 * m3/m * m * 1000 = kg
+		}
     }
 	/// initialize point source loadings
 	if (m_ptSub == NULL)
@@ -214,11 +218,9 @@ void SEDR_VCD::GetValue(const char *key, float *value)
 {
     string sk(key);
     int iOutlet = m_reachLayers.rbegin()->second[0];
-    if (StringMatch(sk, VAR_SED_OUTLET))
-    {
-        *value = m_SedOut[iOutlet];
-    }
-
+    if (StringMatch(sk, VAR_SED_OUTLET))*value = m_sedOut[iOutlet];
+	else
+		throw ModelException(MID_SEDR_VCD, "GetValue", "Parameter " + sk + " does not exist.");
 }
 
 void SEDR_VCD::SetValue(const char *key, float value)
@@ -260,10 +262,9 @@ void SEDR_VCD::SetValue(const char *key, float value)
     {
         m_Chs0 = value;
     }
+	else if (StringMatch(sk, VAR_SED_CHI0)) m_sedChi0 = value;
     else
-        throw ModelException(MID_SEDR_VCD, "SetSingleData", "Parameter " + sk
-                                                            + " does not exist. Please contact the module developer.");
-
+        throw ModelException(MID_SEDR_VCD, "SetSingleData", "Parameter " + sk + " does not exist.");
 }
 
 void SEDR_VCD::Set1DData(const char *key, int n, float *value)
@@ -301,11 +302,16 @@ void SEDR_VCD::Get1DData(const char *key, int *n, float **data)
     int iOutlet = m_reachLayers.rbegin()->second[0];
     if (StringMatch(sk, VAR_SED_RECH))
     {
-        m_SedOut[0] = m_SedOut[iOutlet];    // ton
-        *data = m_SedOut;
+        m_sedOut[0] = m_sedOut[iOutlet];    // kg
+        *data = m_sedOut;
     }
+	else if (StringMatch(sk, VAR_SED_RECHConc))
+	{
+		m_sedConc[0] = m_sedConc[iOutlet];    // kg/m3, i.e., g/L
+		*data = m_sedConc;
+	}
     else
-        throw ModelException(MID_SEDR_VCD, "Get1DData", "Output " + sk+" does not exist.");
+        throw ModelException(MID_SEDR_VCD, "Get1DData", "Output " + sk + " does not exist.");
 }
 
 void SEDR_VCD::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
@@ -414,17 +420,18 @@ void SEDR_VCD::SedChannelRouting(int i)
     // 1 .whether is no water in channel
     if (m_qchOut[i] < 0.0001f)
     {
-		m_sedDeg[i] = 0.0f;
-		m_sedDep[i] = 0.0f;
-        m_SedOut[i] = 0.f;
+		m_sedDeg[i] = 0.f;
+		m_sedDep[i] = 0.f;
+        m_sedOut[i] = 0.f;
+		m_sedConc[i] = 0.f;
     }
     else
     {   // 2. sediment from upstream reaches
-        float sedUp = 0;
+        float sedUp = 0.f;
         for (size_t j = 0; j < m_reachUpStream[i].size(); ++j)
         {
             int upReachId = m_reachUpStream[i][j];
-            sedUp += m_SedOut[upReachId];
+            sedUp += m_sedOut[upReachId];
         }
 		float allSediment = sedUp + m_sedtoCh[i] + m_sedStorage[i];
 		if (m_ptSub != NULL && m_ptSub[i] > 0.f)
@@ -435,7 +442,7 @@ void SEDR_VCD::SedChannelRouting(int i)
         float peakFlowRate = m_qchOut[i] * m_prf;
         float crossarea = m_chStorage[i] / m_chLen[i];            // SWAT, eq. 7:1.2.3
         float peakVelocity = peakFlowRate / crossarea;
-        if (peakVelocity > 5) peakVelocity = 5.0f;
+        if (peakVelocity > 5.f) peakVelocity = 5.f;
         //max concentration
         float maxCon = m_spcon * pow(peakVelocity, m_spexp);
         //initial concentration,mix sufficiently
@@ -445,17 +452,16 @@ void SEDR_VCD::SedChannelRouting(int i)
 
         if (allWater < 0.000001f)
         {
-			m_sedDeg[i] = 0.0f;
-			m_sedDep[i] = 0.0f;
-            m_SedOut[i] = 0.0f;
+			m_sedDeg[i] = 0.f;
+			m_sedDep[i] = 0.f;
+            m_sedOut[i] = 0.f;
+			m_sedConc[i] = 0.f;
             return;
         }
 
 		//deposition and degradation
         float initCon = allSediment / allWater;
         float sedDeposition = allWater * (initCon - maxCon);
-        //if (abs(sedDeposition) < 1.0e-6f)
-        //    sedDeposition = 0.0f;
         if (peakVelocity < m_vcrit)
             sedDeposition = 0.0f;
 
@@ -473,13 +479,11 @@ void SEDR_VCD::SedChannelRouting(int i)
             {
                 sedDegradation1 = m_sedDep[i];
 				sedDegradation2 = (sedDegradation - sedDegradation1) * m_chErod[i] * m_chCover[i];
-                //sedDegradation2 = (sedDegradation - sedDegradation1) * m_erodibilityFactor * m_coverFactor;
             }
             else
             {
                 sedDegradation1 = sedDegradation;
             }
-
             sedDeposition = 0.0f;
         }
 
@@ -492,18 +496,19 @@ void SEDR_VCD::SedChannelRouting(int i)
 
         //get out flow water fraction
         float outFraction = qOutV / allWater;
-        m_SedOut[i] = allSediment * outFraction;
-
+        m_sedOut[i] = allSediment * outFraction;
         //update sed storage
-        m_sedStorage[i] = allSediment - m_SedOut[i];
+        m_sedStorage[i] = allSediment - m_sedOut[i];
 
-        //get final sediment in water, cannot large than 0.848t/m3
-        float maxSedinWt = 0.848f * qOutV;
-        if (m_SedOut[i] > maxSedinWt)
+        //get final sediment in water, cannot large than 0.848 ton/m3
+        float maxSedinWt = 0.848f * qOutV * 1000.f; /// kg
+        if (m_sedOut[i] > maxSedinWt)
         {
-            m_sedDep[i] += m_SedOut[i] - maxSedinWt;
-            m_SedOut[i] = maxSedinWt;
+            m_sedDep[i] += m_sedOut[i] - maxSedinWt;
+            m_sedOut[i] = maxSedinWt;
         }
+		/// calculate sediment concentration
+		m_sedConc[i] = m_sedOut[i] / qOutV; /// kg/m3, i.e., g/L
 
         ////channel downcutting and widening
         //bool dodowncutting = false;
@@ -512,9 +517,7 @@ void SEDR_VCD::SedChannelRouting(int i)
         //	doChannelDowncuttingAndWidening(i);
         //}
         //}
-
     }
-
 }
 
 void SEDR_VCD::doChannelDowncuttingAndWidening(int id)

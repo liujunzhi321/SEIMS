@@ -19,7 +19,7 @@
 #include "text.h"
 #include <cmath>
 #include <sstream>
-
+#include <float.h>
 using namespace std;
 /**
  * \def NODATA_VALUE

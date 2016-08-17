@@ -264,9 +264,9 @@ void ModelMain::Output()
 			remove((*it).c_str());
 	}
 #else
-	if(access(projectPath.c_str(), F_OK) != 0)
+	if(access(outputPath.c_str(), F_OK) != 0)
 	{
-		mkdir(projectPath.c_str(), 0777);
+		mkdir(outputPath.c_str(), 0777);
 	}
 	else
 	{

@@ -79,8 +79,12 @@ clsReach::clsReach(const bson_t *&bsonTable)
 	/// nutrient related
 	if (bson_iter_init_find(&iterator, bsonTable, REACH_DISOX))
 		this->disox = GetFloatFromBSONITER(&iterator);
-	if (bson_iter_init_find(&iterator, bsonTable, REACH_BOD))
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_BOD)){
 		this->bod = GetFloatFromBSONITER(&iterator);
+		if (this->bod <= 1.e-6f) this->bod = 1.e-6f;
+	}
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_ALGAE))
+		this->algae = GetFloatFromBSONITER(&iterator);
 	if (bson_iter_init_find(&iterator, bsonTable, REACH_NO3))
 		this->no3 = GetFloatFromBSONITER(&iterator);
 	if (bson_iter_init_find(&iterator, bsonTable, REACH_NO2))

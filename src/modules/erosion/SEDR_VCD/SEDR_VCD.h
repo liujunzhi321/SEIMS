@@ -66,18 +66,10 @@ private:
     int m_dt;
     /// reach number (= subbasin number)
     int m_nreach;
-
-    ///// diversion loss (Vdiv) of the river reach, m_Vid[id], id is the reach id
-    //float *m_Vdiv;
-    ///// The point source discharge, m_Vpoint[id], id is the reach id
-    //float *m_Vpoint;
-
-	/// The point source loading (kg), m_ptSub[id], id is the reach id, load from m_Scenario
-	float *m_ptSub;
-
+	
     /// the peak rate adjustment factor
     float m_prf;
-    ///  Coefficient in sediment transport equation
+    /// Coefficient in sediment transport equation
     float m_spcon;
     /// Exponent in sediment transport equation
     float m_spexp;
@@ -88,11 +80,6 @@ private:
     /// channel erodibility factor (cm/hr/Pa)  TODO: this should be an input parameter from database, LJ
     float m_erodibilityFactor;
 
-    ///// inverse of flood plain side slope of channel, is a fixed number:  1/slope
-    //float m_sideslopeFloodplain;
-    ///// inverse of side slope of main channel, is a fixed number:  1/slope
-    //float m_sideslopeMain;
-
     /// sediment from subbasin
     float *m_sedtoCh;
     /// the subbasin area (m2)  //add to the reach parameters file
@@ -101,17 +88,16 @@ private:
     float *m_CrAreaCh;
     /// initial channel storage per meter of reach length (m3/m)
     float m_Chs0;
-
-    //temporary at routing time
-    /// reach storage (m3) at time t
-    //float* m_chStorage;
+	/// Initial channel sediment concentration
+	float m_sedChi0;
     /// channel outflow
     float *m_qchOut;
 
     float *m_chOrder;
     float *m_chWidth;
     float *m_chDepth;
-    float *m_chLen;      //length of reach (m)
+	//length of reach (m)
+    float *m_chLen;      
     float *m_chVel;
     float *m_chSlope;
     float *m_chManning;
@@ -124,34 +110,31 @@ private:
     vector<vector<int> > m_reachUpStream;
 
     // id the reaches
-    //float *m_reachId;
     vector<int> m_reachId;
-	/// map from subbasin id to index of the array
-    //map<int, int> m_idToIndex;
 
 	/* point source operations
 	 * key: unique index, BMPID * 100000 + subScenarioID
 	 * value: point source management factory instance
 	 */
 	map<int, BMPPointSrcFactory*> m_ptSrcFactory;
+	/// The point source loading (kg), m_ptSub[id], id is the reach id, load from m_Scenario
+	float *m_ptSub;
     /// reach storage (m3) at time t
     float *m_chStorage;
     /// channel water depth m
     float *m_chWTdepth;
 
     // OUTPUT
-    /// initial reach sediment out (metrics ton) at time t
-    float *m_SedOut;
-    /// Channel sediment balance in a text format for each reach and at each time step
-    //float** m_T_CHSB;
-    /// channel sediment storage (ton)
+    /// initial reach sediment out (kg) at time t
+    float *m_sedOut;
+    /// channel sediment storage (kg)
     float *m_sedStorage;
     /// sediment of deposition
     float *m_sedDep;
     /// sediment of degradation
     float *m_sedDeg;
-	/// sediment concentration
-	float *m_sedCon;
+	/// sediment concentration (g/L, i.e., kg/m3)
+	float *m_sedConc;
 
     map<int, vector<int> > m_reachLayers;
 
@@ -163,4 +146,11 @@ private:
 
     void doChannelDowncuttingAndWidening(int id);
 };
-
+///// inverse of flood plain side slope of channel, is a fixed number:  1/slope
+//float m_sideslopeFloodplain;
+///// inverse of side slope of main channel, is a fixed number:  1/slope
+//float m_sideslopeMain;
+/// reach storage (m3) at time t
+//float* m_chStorage;
+/// Channel sediment balance in a text format for each reach and at each time step
+//float** m_T_CHSB;

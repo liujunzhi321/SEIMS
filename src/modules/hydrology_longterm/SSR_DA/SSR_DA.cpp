@@ -206,18 +206,12 @@ void SSR_DA::SetValue(const char *key, float data)
         m_frozenT = data;
     else if (StringMatch(s, VAR_KI))
         m_ki = data;
-    //else if (StringMatch(s, Tag_CellSize))
-    //    m_nCells = int(data);
-	else if (StringMatch(s, VAR_SUBBSNID_NUM))
-		m_nSubbasin = (int)data;
     else if (StringMatch(s, Tag_CellWidth))
         m_CellWidth = data;
     else if (StringMatch(s, Tag_TimeStep))
         m_dt = int(data);
     else
-        throw ModelException(MID_SSR_DA, "SetValue",
-                             "Parameter " + s +
-                             " does not exist in current method. Please contact the module developer.");
+        throw ModelException(MID_SSR_DA, "SetValue","Parameter " + s +" does not exist.");
 }
 
 void SSR_DA::Set1DData(const char *key, int nRows, float *data)
@@ -239,9 +233,7 @@ void SSR_DA::Set1DData(const char *key, int nRows, float *data)
 	else if (StringMatch(s, VAR_SOL_SW))
 		m_soilStorageProfile = data;
     else
-        throw ModelException(MID_SSR_DA, "SetValue",
-                             "Parameter " + s +
-                             " does not exist in current method. Please contact the module developer.");
+        throw ModelException(MID_SSR_DA, "SetValue","Parameter " + s +" does not exist.");
 }
 
 void SSR_DA::Set2DData(const char *key, int nrows, int ncols, float **data)
@@ -300,10 +292,19 @@ void SSR_DA::Set2DData(const char *key, int nrows, int ncols, float **data)
         m_flowInIndex = data;
     }
     else
-        throw ModelException(MID_SSR_DA, "Set2DData",
-                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+        throw ModelException(MID_SSR_DA, "Set2DData", "Parameter " + sk + " does not exist.");
 }
 
+void SSR_DA::SetSubbasins(clsSubbasins *subbasins)
+{
+	if (subbasins != NULL)
+	{
+		if (m_nSubbasin < 0)
+			m_nSubbasin = subbasins->GetSubbasinNumber();
+	}
+	else
+		throw ModelException(MID_SSR_DA, "SetSubbasins", "Subbasins data does not exist.");
+}
 
 void SSR_DA::Get1DData(const char *key, int *n, float **data)
 {

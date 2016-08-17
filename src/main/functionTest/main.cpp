@@ -48,7 +48,7 @@ int main(int argc, const char *argv[])
     clsRasterData *mask = new clsRasterData(gfs, "1_MASK", NULL);
 	int row = 0, col =0;
 	float **data;
-	Read2DArrayFromMongoDB(gfs, string("LANDUSELOOKUP"),row,col,data);
+	//Read2DArrayFromMongoDB(gfs, string("LANDUSELOOKUP"),row,col,data);
 	//clsRasterData *raster1d = new clsRasterData(outgfs, "1_INLO_SUM", mask);
 	//string rs1dtiffile = "G:/1_INLO_SUM.tif";
 	//raster1d->outputGTiff(rs1dtiffile);

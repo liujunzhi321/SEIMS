@@ -27,11 +27,13 @@
 #include <direct.h>
 
 #else
-#include <stdio.h>
+#include <dirent.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <stdio.h>
+#include <dlfcn.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #endif
 

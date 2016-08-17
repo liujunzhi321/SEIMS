@@ -160,9 +160,9 @@ private:
 	 */
 	map<int, BMPPointSrcFactory*> m_ptSrcFactory;
     //temporary at routing time
+
     /// reach storage (m3) at time t
     float *m_chStorage;
-
     /// reach outflow (m3/s) at time t
     float *m_qOut;
     /// flowin discharge at the last time step

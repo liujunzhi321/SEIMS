@@ -76,7 +76,8 @@ Subsurface runoff	SSRU	Subsurface runoff	mm	SUM	2014-01-01 00:00:00	2014-12-31 2
 Subsurface runoff	SSRUVOL	Subsurface runoff volume	m3	SUM	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	SSRUVOL.tif	0
 Subsurface runoff	SBIF	Subsurface runoff discharge to streams from each subbasin	m2/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBIF.txt	1
 Discharge	QRECH	Discharge at reach outlet of each time step	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	Q.txt	1
-Sediment	SEDRECH	Sediment concentration	kg/m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	1
+Sediment	SEDRECH	Sediment concentration	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	1
+Sediment	SEDRECHConc	Sediment concentration	g/cm3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	1	DAY	OUTLET	SED.txt	1
 Groundwater	REVAP	revaporization from groundwater	mm	MAX	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	REVAP.tif	0
 Groundwater	RG	groundwater runoff	mm	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	RG.txt	1
 Groundwater	SBQG	groundwater flow out of the subbasin	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SBQG.txt	1
@@ -105,16 +106,15 @@ NutrientTransport	SUR_NO3_TOCH	nitrate transported with surface runoff to channe
 NutrientTransport	SUR_SOLP_TOCH	soluble phosphorus from surface runoff to channel	kg/ha	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SUR_SOLP_TOCH.txt	1
 NutrientTransport	NO3GWTOCH	nitrate loading to reach in groundwater	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	NO3GWTOCH.tif	1
 NutrientTransport	MINPGWTOCH	soluble P loading to reach in groundwater	kg	SUM,AVE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	ALL	MINPGWTOCH.tif	1
-NutrientTransport	CH_CHLORA	chlorophyll-a concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_CHLORA.txt	1
-NutrientTransport	CH_COD	carbonaceous oxygen demand in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_COD.txt	1
-NutrientTransport	CH_SOLP	dissolved phosphorus concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_SOLP.txt	1
-NutrientTransport	CH_NO3	nitrate concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NO3.txt	1
-NutrientTransport	CH_NO2	nitrite concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NO2.txt	1
-NutrientTransport	CH_NH3	ammonia concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NH3.txt	1
-NutrientTransport	CH_ORGP	organic phosphorus concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ORGP.txt	1
-NutrientTransport	CH_ORGN	organic nitrogen concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ORGN.txt	1
-NutrientTransport	CH_ALGAE	algal biomass concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ALGAE.txt	1
-NutrientTransport	CH_SOXY	saturation concentration of dissolved oxygen	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_SOXY.txt	1
+NutrientTransport	CH_CHLORA	chlorophyll-a concentration in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_CHLORA.txt	1
+NutrientTransport	CH_COD	carbonaceous oxygen demand in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_COD.txt	1
+NutrientTransport	CH_SOLP	dissolved phosphorus concentration in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_SOLP.txt	1
+NutrientTransport	CH_NO3	nitrate concentration in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NO3.txt	1
+NutrientTransport	CH_NO2	nitrite concentration in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NO2.txt	1
+NutrientTransport	CH_NH3	ammonia concentration in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NH3.txt	1
+NutrientTransport	CH_ORGP	organic phosphorus concentration in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ORGP.txt	1
+NutrientTransport	CH_ORGN	organic nitrogen concentration in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ORGN.txt	1
+NutrientTransport	CH_ALGAE	algal biomass concentration in reach	kg	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ALGAE.txt	1
 ChannelRouting	QS	Overland discharge at each reach outlet	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	QS.txt	1
 ChannelRouting	QI	Interflow at each reach outlet	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	QI.txt	1
 ChannelRouting	QG	Groundwater discharge at each reach outlet	m3/s	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	QG.txt	1
@@ -122,3 +122,12 @@ ChannelRouting	CHST	hannel storage	m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:
 ChannelRouting	BKST	bank storage	m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	BKST.txt	1
 ChannelRouting	SEEPAGE	seepage	m3	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	SEEPAGE.txt	1
 ChannelRouting	CHWTDEPTH	channel water depth	m	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CHWTDEPTH.txt	1
+NutrientTransport	CH_CHLORAConc	chlorophyll-a concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_CHLORAConc.txt	1
+NutrientTransport	CH_CODConc	carbonaceous oxygen demand in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_CODConc.txt	1
+NutrientTransport	CH_SOLPConc	dissolved phosphorus concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_SOLPConc.txt	1
+NutrientTransport	CH_NO3Conc	nitrate concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NO3Conc.txt	1
+NutrientTransport	CH_NO2Conc	nitrite concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NO2Conc.txt	1
+NutrientTransport	CH_NH3Conc	ammonia concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_NH3Conc.txt	1
+NutrientTransport	CH_ORGPConc	organic phosphorus concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ORGPConc.txt	1
+NutrientTransport	CH_ORGNConc	organic nitrogen concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ORGNConc.txt	1
+NutrientTransport	CH_ALGAEConc	algal biomass concentration in reach	mg/L	NONE	2014-01-01 00:00:00	2014-12-31 23:59:59	-9999	-9999	OUTLET	CH_ALGAEConc.txt	1
