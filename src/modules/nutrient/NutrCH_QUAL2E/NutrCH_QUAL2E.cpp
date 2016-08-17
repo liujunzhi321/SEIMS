@@ -756,8 +756,10 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 
 	// O2 impact calculations
 	// calculate nitrification rate correction factor for low (cordo)
-	if(o2con != o2con)
-		cout << "first "<<o2con;
+
+	//if(o2con != o2con)
+	//	cout << "first "<<o2con;
+
 
 	float cordo = 0.f;
 	if (o2con <= 0.001f || o2con != o2con)
