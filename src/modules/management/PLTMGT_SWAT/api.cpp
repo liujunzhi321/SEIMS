@@ -33,6 +33,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddParameter(VAR_BACT_SWF, UNIT_NON_DIM, DESC_BACT_SWF, Source_ParameterDB, DT_Single); ///TODO
     mdi.AddParameter(Tag_CellWidth, UNIT_LEN_M, DESC_CellWidth, Source_ParameterDB, DT_Single);
     /// basic parameters
+	mdi.AddParameter(VAR_SUBBASIN_PARAM, UNIT_NON_DIM, DESC_SUBBASIN_PARAM, Source_ParameterDB, DT_Subbasin);
     mdi.AddParameter(VAR_SUBBSN, UNIT_NON_DIM, DESC_SUBBSN, Source_ParameterDB, DT_Raster1D);
     mdi.AddParameter(VAR_MGT_FIELD, UNIT_NON_DIM, DESC_MGT_FIELD, Source_ParameterDB, DT_Raster1D);
     /// soil
@@ -105,6 +106,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     //mdi.AddInput(VAR_SHALLST, UNIT_DEPTH_MM, DESC_SHALLST, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SBGS, UNIT_DEPTH_MM, DESC_SBGS, Source_Module, DT_Array1D);
     /// set the output variables
+
     ///// outputs of plant operation. NO NEED TO OUTPUT?
     mdi.AddOutput(VAR_BIOTARG, UNIT_CONT_KGHA, DESC_BIOTARG, DT_Raster1D);
     mdi.AddOutput(VAR_HVSTI_TARG, UNIT_NON_DIM, DESC_HVSTI_TARG, DT_Raster1D);
