@@ -132,16 +132,16 @@ float *NotRegularMeasurement::GetSiteDataByTime(time_t t)
             curIndex++;
         curIndex--;
 
-        if (curIndex < 0)
-        {
-            pData[iSite] = 0.f;
-            m_curIndexList[iSite] = 0;
-        }
-        else
-        {
+        //if (curIndex < 0)
+        //{
+        //    pData[iSite] = 0.f;
+        //    m_curIndexList[iSite] = 0;
+        //}
+        //else
+        //{
             pData[iSite] = vlist[curIndex];
             m_curIndexList[iSite] = curIndex;
-        }
+        //}
     }
     return pData;
 }

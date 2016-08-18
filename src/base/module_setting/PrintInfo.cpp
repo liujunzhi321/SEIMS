@@ -6,24 +6,19 @@
  * \version 1.1
  * \date June 2010
  */
-#include "PrintInfo.h"
-#include "utils.h"
-#include "util.h"
-#include <time.h>
 #include "ModelException.h"
-#include <iomanip>
-#include <fstream>
+#include "PrintInfo.h"
 
-#ifndef linux
 
-#include <WinSock2.h>
-#include <windows.h>
-
-#else
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#endif
+//#ifndef linux
+////#include "WinSock2i.h"
+//#include <WinSock2.h>
+//#include <windows.h>
+//#else
+//#include <unistd.h>
+//#include <sys/types.h>
+//#include <sys/stat.h>
+//#endif
 //////////////////////////////////////////////
 ///////////PrintInfoItem Class//////////////// 
 //////////////////////////////////////////////

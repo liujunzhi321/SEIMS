@@ -1,5 +1,4 @@
 /*!
- * \file DiffusiveWave.h
  * \brief routing in the channel cells using 4-point implicit finite difference method
  * \author Junzhi Liu
  * \version 1.0

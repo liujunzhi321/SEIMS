@@ -1,5 +1,4 @@
 /*!
- * \file NotRegularMeasurement.h
  * \brief Not Regular hydroclimate data
  *
  * \author Junzhi Liu, LiangJun Zhu

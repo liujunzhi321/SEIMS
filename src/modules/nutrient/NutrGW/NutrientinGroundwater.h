@@ -1,6 +1,4 @@
-
 /*!
- * \file NutrientinGroundwater.h
  * \brief Calculates the nitrate and soluble phosphorus loading contributed by groundwater flow.
  * \author Huiran Gao
  * \date Jun 2016

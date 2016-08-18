@@ -46,7 +46,7 @@ ModelMain::ModelMain(mongoc_client_t *conn, string dbName, string projectPath, S
                                                m_templateRasterData, m_input, m_simulationModules);
     //cout << "Read file time: " << m_readFileTime << endl;
     size_t n = m_simulationModules.size();
-    m_executeTime.resize(n, 0);
+    m_executeTime.resize(n, 0.f);
     for (size_t i = 0; i < n; i++)
     {
         SimulationModule *pModule = m_simulationModules[i];
@@ -160,7 +160,8 @@ void ModelMain::StepHillSlope(time_t t, int yearIdx, int subIndex)
     {
         int index = m_hillslopeModules[i];
         SimulationModule *pModule = m_simulationModules[index];
-        clock_t sub_t1 = clock();
+        //clock_t sub_t1 = clock();
+		double sub_t1 = TimeCounting();
         if (m_firstRunOverland)
             m_factory->GetValueFromDependencyModule(index, m_simulationModules);
         if (subIndex == 0)
@@ -169,8 +170,8 @@ void ModelMain::StepHillSlope(time_t t, int yearIdx, int subIndex)
         //cout << "\tHillslope process:" << i << endl;
         pModule->Execute();
 
-        clock_t sub_t2 = clock();
-
+        //clock_t sub_t2 = clock();
+		double sub_t2 = TimeCounting();
         m_executeTime[index] += (sub_t2 - sub_t1);
     }
 
@@ -191,9 +192,11 @@ void ModelMain::StepOverall(time_t startT, time_t endT)
     {
         int index = m_overallModules[i];
         SimulationModule *pModule = m_simulationModules[index];
-        clock_t sub_t1 = clock();
+        //clock_t sub_t1 = clock();
+		double sub_t1 = TimeCounting();
         pModule->Execute();
-        clock_t sub_t2 = clock();
+        //clock_t sub_t2 = clock();
+		double sub_t2 = TimeCounting();
         m_executeTime[index] += (sub_t2 - sub_t1);
     }
 }
@@ -208,11 +211,12 @@ void ModelMain::Step(time_t t, int yearIdx, vector<int> &moduleIndex, bool first
         if (firstRun)
             m_factory->GetValueFromDependencyModule(index, m_simulationModules);
 
-        clock_t sub_t1 = clock();
+        //clock_t sub_t1 = clock();
+		double sub_t1 = TimeCounting();
         pModule->SetDate(t, yearIdx);
         pModule->Execute();
-        clock_t sub_t2 = clock();
-
+        //clock_t sub_t2 = clock();
+		double sub_t2 = TimeCounting();
         m_executeTime[index] += (sub_t2 - sub_t1);
     }
 }
@@ -220,7 +224,8 @@ void ModelMain::Step(time_t t, int yearIdx, vector<int> &moduleIndex, bool first
 void ModelMain::Execute()
 {
     utils util;
-    clock_t t1 = clock();
+    //clock_t t1 = clock();
+	double t1 = TimeCounting();
     time_t startTime = m_input->getStartTime();
     time_t endTime = m_input->getEndTime();
     int startYear = GetYear(startTime);
@@ -239,15 +244,17 @@ void ModelMain::Execute()
         Output(t);
     }
     StepOverall(startTime, endTime);
-    clock_t t2 = clock();
+    //clock_t t2 = clock();
+	double t2 = TimeCounting();
     //cout << "time(ms):  " << t2-t1 << endl;
-    cout << "[TIMESPAN][COMPUTING]\tALL\t" << fixed << setprecision(3) << (t2 - t1) / (float) CLOCKS_PER_SEC << endl;
+    cout << "[TIMESPAN][COMPUTING]\tALL\t" << fixed << setprecision(3) << (t2 - t1) << endl;
     OutputExecuteTime();
 }
 
 void ModelMain::Output()
 {
-	clock_t t1 = clock();
+	//clock_t t1 = clock();
+	double t1 = TimeCounting();
 	string outputPath = m_projectPath + DB_TAB_OUT_SPATIAL;
 #ifndef linux
 	if (::GetFileAttributes(outputPath.c_str()) == INVALID_FILE_ATTRIBUTES)
@@ -285,8 +292,9 @@ void ModelMain::Output()
             item->Flush(m_projectPath, m_templateRasterData, (*it)->getOutputTimeSeriesHeader());
         }
     }
-	clock_t t2 = clock();
-	cout << "[TIMESPAN][OUTPUTING]\tALL\t" << fixed << setprecision(3) << (t2 - t1) / (float) CLOCKS_PER_SEC << endl;
+	//clock_t t2 = clock();
+	double t2 = TimeCounting();
+	cout << "[TIMESPAN][OUTPUTING]\tALL\t" << fixed << setprecision(3) << (t2 - t1) << endl;
 }
 
 void ModelMain::CheckOutput(mongoc_gridfs_t *gfs)
@@ -310,7 +318,7 @@ void ModelMain::OutputExecuteTime()
     for (size_t i = 0; i < m_simulationModules.size(); i++)
     {
         cout << "[TIMESPAN][COMPUTING]\t" << m_factory->GetModuleID(i) << "\t" << fixed << setprecision(3) <<
-        m_executeTime[i] / (float) CLOCKS_PER_SEC << endl;
+        m_executeTime[i] << endl;
     }
 }
 

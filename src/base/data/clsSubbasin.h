@@ -229,7 +229,7 @@ public:
     int GetSubbasinNumber() { return this->m_nSubbasins; }
 
     /// Get subbasin IDs
-    vector<int> GetSubbasinIDs() { return this->m_subbasinIDs; }
+    vector<int>& GetSubbasinIDs() { return this->m_subbasinIDs; }
 
 	/// Set slope coefficient of each subbasin
 	void SetSlopeCoefficient();

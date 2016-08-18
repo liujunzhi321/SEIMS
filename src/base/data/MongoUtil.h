@@ -1,6 +1,4 @@
 /*!
- * \ingroup base
- * \file MongoUtil.h
  * \brief Utility functions of mongoDB
  * \author Junzhi Liu, LiangJun Zhu
  * \date May 2016
@@ -13,7 +11,7 @@
 #include <vector>
 #include <set>
 #include "clsRasterData.h"
-#include <ModelException.h>
+#include "ModelException.h"
 
 using namespace std;
 

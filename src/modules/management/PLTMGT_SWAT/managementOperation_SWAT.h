@@ -1,5 +1,4 @@
 /*!
- * \file managementOperation_SWAT.h
  * \brief All management operation in SWAT, e.g., plantop, killop, harvestop, etc.
  * \author Liang-Jun Zhu
  * \date June 2016
@@ -18,13 +17,13 @@
 
 using namespace std;
 using namespace MainBMP;
-/** \defgroup MGT_SWAT
+/** \defgroup PLTMGT_SWAT
  * \ingroup Ecology
  * \brief All management operation in SWAT, e.g., plantop, killop, harvestop, etc.
  */
 /*!
  * \class MGTOpt_SWAT
- * \ingroup MGT_SWAT
+ * \ingroup PLTMGT_SWAT
  *
  * \brief All management operation in SWAT, e.g., plantop, killop, harvestop, etc.
  * 
@@ -32,10 +31,8 @@ using namespace MainBMP;
 class MGTOpt_SWAT : public SimulationModule
 {
 private:
-    /// BMPs Scenario
-    Scenario *m_scenario;
     /*
-    * Plant management factory derived from m_scenario
+    * Plant management factory derived from BMPs Scenario
     * Key is  uniqueBMPID, which is calculated by Landuse_ID * 100 + subScenario;
     * Value is a series of plant management operations
     */
@@ -68,15 +65,15 @@ private:
     float *m_nSoilLayers;
     /// maximum soil layers
     int m_soilLayers;
-    /// soil depth of all layers, sol_z(:,:)    |mm            |depth to bottom of soil layer
+    /// depth to bottom of soil layer, sol_z, mm
     float **m_soilDepth;
     /// soil thick
     float **m_soilThick;
     /// maximum root depth of soil
     float *m_soilZMX;
-    //!!    sol_bd(1,:)   |Mg/m^3        |bulk density of top soil layer in cell
+    /// bulk density of top soil layer in cell, sol_bd, Mg/m^3, i.e., g/cm3        |
     float **m_soilBD;
-    /// sol_sumfc(:)   |mm H2O        |amount of water held in the soil profile at field capacity
+    /// sol_sumfc(:)   |mm H2O        |amount of water held in the soil profile at field capacity (FC-WP)
     float *m_soilSumFC;
     /// sol_n, initialized by sol_cbn / 11.0 according to readsol.f in SWAT
     float **m_soilN;
@@ -84,28 +81,29 @@ private:
     float **m_soilCarbon;
     /// soil rock (%)
     float **m_soilRock;
-    /// soil clay
+    /// soil clay (%)
     float **m_soilClay;
-    /// soil sand
+    /// soil sand (%)
     float **m_soilSand;
-    /// soil silt
+    /// soil silt (%)
     float **m_soilSilt;
     /**soil properties, both as input and ouput**/
-    //!!    sol_aorgn(:,:)|kg N/ha       |amount of nitrogen stored in the active organic (humic) nitrogen pool
+
+    ///    sol_aorgn(:,:)|kg N/ha       |amount of nitrogen stored in the active organic (humic) nitrogen pool
     float **m_soilActiveOrgN;
-    //!!    sol_fon(:,:)  |kg N/ha       |amount of nitrogen stored in the fresh organic (residue) pool
+    ///    sol_fon(:,:)  |kg N/ha       |amount of nitrogen stored in the fresh organic (residue) pool
     float **m_soilFreshOrgN;
-    //!!    sol_fop(:,:)  |kg P/ha       |amount of phosphorus stored in the fresh organic (residue) pool
+    ///    sol_fop(:,:)  |kg P/ha       |amount of phosphorus stored in the fresh organic (residue) pool
     float **m_soilFreshOrgP;
-    //!!    sol_nh3(:,:)  |kg N/ha       |amount of nitrogen stored in the ammonium pool in soil layer
+    ///    sol_nh3(:,:)  |kg N/ha       |amount of nitrogen stored in the ammonium pool in soil layer
     float **m_soilNH3;
-    //!!    sol_no3(:,:)  |kg N/ha       |amount of nitrogen stored in the nitrate pool in soil layer
+    ///    sol_no3(:,:)  |kg N/ha       |amount of nitrogen stored in the nitrate pool in soil layer
     float **m_soilNO3;
-    //!! sol_orgn(:,:) |kg N/ha       |amount of nitrogen stored in the stable organic N pool
+    /// sol_orgn(:,:) |kg N/ha       |amount of nitrogen stored in the stable organic N pool
     float **m_soilStableOrgN;
-    //!!    sol_orgp(:,:) |kg P/ha       |amount of phosphorus stored in the organic P pool
+    ///    sol_orgp(:,:) |kg P/ha       |amount of phosphorus stored in the organic P pool
     float **m_soilOrgP;
-    //!!    sol_solp(:,:) |kg P/ha       |amount of inorganic phosphorus stored in solution
+    ///    sol_solp(:,:) |kg P/ha       |amount of inorganic phosphorus stored in solution
     float **m_soilSolP;
 
     /** Temporary parameters**/
@@ -201,13 +199,14 @@ private:
     int m_fertilizerNum;
     /// map for m_fertilizerLookup
     map<int, float *> m_fertilizerLookupMap;
-    /// carbon modeling method
+    /// carbon modeling method. TODO
     ///   = 0 Static soil carbon (old mineralization routines)
     ///   = 1 C-FARM one carbon pool model
     ///   = 2 Century model
     int m_cswat;
 
     /** Irrigation operation related **/
+
     /// irrigation flag
     float *m_irrFlag;
     /// aird(:)        |mm H2O        |amount of water applied to cell on current day
@@ -262,10 +261,12 @@ private:
     //float* m_bactPersistParticle;
 
     /** HarvestKill, Harvest, and Kill operation related  **/
+
     /// stsol_rd(:) |mm            |storing last soil root depth for use in harvestkillop/killop /// defined in swu.f
     float *m_lastSoilRootDepth;
 
     /** tillage operation related **/
+
     /// tillage lookup table
     float **m_tillageLookup;
     /// tillage number
@@ -280,6 +281,7 @@ private:
     //float* m_minResidue;
 
     /**auto fertilizer operation**/
+
     /// fertilizer ID from fertilizer database
     float *m_fertilizerID;
     /* Code for approach used to determine amount of nitrogen to Cell
@@ -308,11 +310,13 @@ private:
     float *m_grzFlag;
     /** Release or Impound Operation **/
 
-    /* |release/impound action code:
+    /* |release/impound action code:  TODO
            |0 begin impounding water
            |1 release impounded water*/
     float *m_impoundTriger;
 
+	/// flag to identify the initialization
+	bool m_initialized;
 public:
     //! Constructor
     MGTOpt_SWAT(void);
@@ -330,9 +334,9 @@ public:
 
     void Set2DData(const char *key, int n, int col, float **data);
 
-    void Get2DData(const char *key, int *n, int *col, float ***data);
-
     void SetScenario(Scenario *sce);
+
+	void SetSubbasins(clsSubbasins *subbasins);
 
 private:
     /*!
@@ -396,7 +400,15 @@ private:
      * \return bool The validity of the dimension
      */
     bool CheckInputSize(const char *, int);
-
+	/*!
+     * \brief check the input size of 2D data. Make sure all the input data have same dimension.
+     *
+     *
+     * \param[in] key The key of the input data
+     * \param[in] n The first dimension input data 
+	 * \param[in] col The second dimension of input data 
+     * \return bool The validity of the dimension
+     */
     bool CheckInputSize2D(const char *key, int n, int col);
 
     /// initialize all possible outputs
@@ -422,4 +434,3 @@ private:
     /// distributes dead root mass through the soil profile
     void rootFraction(int i, float *&root_fr);
 };
-

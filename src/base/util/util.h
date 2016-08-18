@@ -1,5 +1,4 @@
 /*!
- * \file util.h
  * \ingroup util
  * \brief Utility functions to handle numeric, string and file
  * \author Junzhi Liu, LiangJun Zhu
@@ -8,8 +7,6 @@
  *
  * 
  */
-#ifndef SEIMS_UTIL_INCLUDE
-#define SEIMS_UTIL_INCLUDE
 #pragma once
 
 #include <string>
@@ -21,6 +18,27 @@
 #include <sstream>
 #include <iostream>
 #include <float.h>
+#include <cmath>
+#include <fstream>
+#include <cstring>
+#ifndef linux
+#define _WINSOCKAPI_    // stops windows.h including winsock.h
+#include <windows.h>
+#include <winsock2.h>
+//#include <WinSock2.h>
+//#include <Windows.h>
+#include <direct.h>
+#else
+#include <dirent.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <dlfcn.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <fcntl.h>
+#endif
 using namespace std;
 /**
  * \def NODATA_VALUE
@@ -385,7 +403,6 @@ extern string &trim(string &s);
  */
 extern int copyfile_linux(const char* srcfile, const char* dstfile);
 #endif
-#endif
 
 /*!
 * \brief Convert value to string
@@ -436,3 +453,8 @@ void RemoveValueInVector(T &val, vector<T> &vec)
             break;
     }
 }
+/*
+ *\brief Counting time for program
+ * Cross-platform
+*/
+double TimeCounting();

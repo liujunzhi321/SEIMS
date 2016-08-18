@@ -8,7 +8,7 @@
 
 #include <stdlib.h>
 #include "BMPFactory.h"
-
+#include "utils.h"
 using namespace MainBMP;
 
 namespace MainBMP
