@@ -1,5 +1,4 @@
 /*!
- * \file invoke.cpp
  * \brief Implementation of invoking SEIMS
  * \author Junzhi Liu
  * \date May 2010
@@ -7,19 +6,6 @@
  * 
  */
 #include "invoke.h"
-//#include "clsRasterData.h"
-////#include "clsWgnData.h"
-//#include "util.h"
-//#include "clsSimpleTxtData.h"
-////#include "clsSiteData.h"
-//#include "clsInterpolationWeightData.h"
-////#include "clsSpecificOutput.h"
-//#include "Scenario.h"
-//#include "SettingsInput.h"
-//#include "SettingsOutput.h"
-//#include "MongoUtil.h"
-//#include <sys/types.h>
-//#include <sys/stat.h>
 
 #define BUFSIZE 255
 

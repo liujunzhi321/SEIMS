@@ -8,6 +8,7 @@
 #include "BMPText.h"
 #include "ModelException.h"
 #include <iomanip>
+#include "util.h"
 //#include "BMPReachFlowDiversion.h"
 //#include "BMPReachPointSource.h"
 //#include "BMPReachReservoir.h"
@@ -28,8 +29,8 @@ namespace MainBMP
         BMPFactory(int scenarioId, int bmpId, int subScenario, int bmpType, int bmpPriority, string distribution,
                    string parameter, string location);
 
-        /// Destructor
-        ~BMPFactory(void);
+        /// virtual Destructor
+        virtual ~BMPFactory(void);
 
         /// Load BMP parameters from MongoDB
         virtual void loadBMP(mongoc_client_t *conn, string &bmpDBName) = 0;

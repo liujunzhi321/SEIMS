@@ -1,6 +1,4 @@
-/*//
- * \file NutrientRemviaSr.cpp
- * \ingroup NutRemv
+/*
  * \author Huiran Gao
  * \date May 2016
  */

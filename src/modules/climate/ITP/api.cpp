@@ -1,10 +1,7 @@
 /*!
- * \file api.cpp
  * \author Junzhi Liu, LiangJun Zhu
  * \date Jan. 2010
  * \revised date Apr. 2016
- *
- * 
  */
 #include <stdio.h>
 #include <string>

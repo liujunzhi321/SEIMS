@@ -1,5 +1,4 @@
 /*!
- * \file PlantManagementOperation.cpp
  * \brief
  * \author Liang-Jun Zhu
  * \date June 2016
@@ -23,6 +22,8 @@ PlantManagementOperation::PlantManagementOperation(int mgtOp, float husc, int ye
 
 PlantManagementOperation::~PlantManagementOperation()
 {
+	/// This destruct function should not be executed!
+	cout<<"The destruct function of PlantManagementOperation class should not be executed!"<<endl;
 }
 
 /// Plant

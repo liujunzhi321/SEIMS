@@ -133,8 +133,8 @@ int IUH_IF::Execute()
     }
 
 
-    int nt = 0;
-    float qs_cell = 0.0f;
+    //int nt = 0;
+    //float qs_cell = 0.0f;
     float area = m_CellWidth * m_CellWidth;
 
     //#pragma omp parallel for
@@ -158,13 +158,11 @@ int IUH_IF::Execute()
         }
         else if (subi >= m_nsub + 1)
         {
-            ostringstream oss;
-            oss << subi;
-            throw ModelException("IUH_IF", "Execute", "The subbasin " + oss.str() + " is invalid.");
+            throw ModelException("IUH_IF", "Execute", "The subbasin " + ValueToString(subi) + " is invalid.");
         }
 
         float v_rs = m_ssru[i];
-        if (v_rs > 0.0f)
+        if (v_rs > 0.f)
         {
             int min = int(this->m_iuhCell[i][0]);
             int max = int(this->m_iuhCell[i][1]);

@@ -1,5 +1,4 @@
 /*!
- * \file Interception.cpp
  * \brief
  * \author Alex Storey, Junzhi Liu
  * \date May 2013

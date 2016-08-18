@@ -19,6 +19,7 @@
 #include "text.h"
 #include <cmath>
 #include <sstream>
+#include <iostream>
 #include <float.h>
 using namespace std;
 /**

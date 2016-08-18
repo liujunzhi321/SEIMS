@@ -301,7 +301,7 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
         /// Special operation for ITP module
         if (id.find(MID_ITP) != string::npos)
         {
-            modules[i]->SetDataType(m_settings[id]->dataType());
+            modules[i]->SetClimateDataType(m_settings[id]->dataType());
             for (size_t j = 0; j < parameters.size(); j++)
             {
                 ParamInfo &param = parameters[j];
@@ -1230,7 +1230,7 @@ void ModuleFactory::Set2DData(string &dbName, string &paraName, int nSubbasin, s
         }
         else if (StringMatch(paraName, TAG_OUT_OL_IUH))
         {
-            ReadIUHFromMongoDB(m_spatialData, remoteFileName, templateRaster, nRows, data);
+            ReadIUHFromMongoDB(m_spatialData, remoteFileName, nRows, data);
         }
         else if (StringMatch(paraName, Tag_ReachParameter))
         {

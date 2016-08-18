@@ -1,5 +1,4 @@
 /*!
- * \file util.cpp
  * \brief Utility functions to handle numeric, string and file
  *
  * Utility functions for all SEIMS modules
@@ -82,7 +81,6 @@ int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFil
 
 	} while (::FindNextFile(hFind, &findFileData));
 #else
-	char ch,infile[1024],outfile[1024];
 	struct dirent *ptr;
 	DIR *dir;
 	dir = opendir(lpPath);
@@ -296,6 +294,7 @@ void Read2DArrayFromString(const char *s, int &nRows, float **&data)
 
 void StatusMessage(const char *msg)
 {
+	/// Just for debugging ///
     //cout << msg << endl;
 }
 

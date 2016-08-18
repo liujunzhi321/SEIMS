@@ -1,5 +1,4 @@
 /*!
- * \file Muskingum.cpp
  * \brief Routing in the channel cells using 4-point implicit finite difference method
  * \author Junzhi Liu
  * \date Feb. 2011

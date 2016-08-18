@@ -1,5 +1,4 @@
 /*!
- * \file StringList.cpp
  * \brief Methods for the StringList utility class
  * \author Junzhi Liu
  * \version 1.1

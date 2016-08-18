@@ -1,5 +1,4 @@
 /*!
- * \file SettingsInput.cpp
  * \brief Setting Inputs for SEIMS
  *
  * \author Junzhi Liu, LiangJun Zhu
@@ -156,7 +155,6 @@ bool SettingsInput::LoadSettingsInputFromMongoDB()
     mongoc_cursor_t *cursor;
     const bson_t *bsonTable;
     mongoc_collection_t *collection;
-    bson_error_t *err = NULL;
 
     collection = mongoc_client_get_collection(m_conn, m_dbName.c_str(), DB_TAB_FILEIN);
     cursor = mongoc_collection_find(collection, MONGOC_QUERY_NONE, 0, 0, 0, b, NULL, NULL);

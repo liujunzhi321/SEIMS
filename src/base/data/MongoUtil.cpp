@@ -1,5 +1,4 @@
 /*!
- * \file MongoUtil.cpp
  * \brief Implementation of utility functions of mongoDB
  * \author Junzhi Liu, LiangJun Zhu
  * \date May 2016
@@ -154,7 +153,8 @@ void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename
     mongoc_iovec_t iov;
     iov.iov_base = (char *) data;
     iov.iov_len = length;
-    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+    //ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+	mongoc_stream_readv(stream, &iov, 1, -1, 0);
     mongoc_stream_destroy(stream);
     mongoc_gridfs_file_destroy(gfile);
     bson_destroy(b);
@@ -177,7 +177,8 @@ void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename
     mongoc_iovec_t iov;
     iov.iov_base = (char *) floatValues;
     iov.iov_len = length;
-    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+	//ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+	mongoc_stream_readv(stream, &iov, 1, -1, 0);
 
     int nRows = (int) floatValues[0];
 	int nCols = -1;
@@ -209,8 +210,7 @@ void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename
     free(floatValues);
 }
 
-void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, clsRasterData *templateRaster, int &n,
-                        float **&data)
+void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &n, float **&data)
 {
     mongoc_gridfs_file_t *gfile;
     bson_t *b;
@@ -227,8 +227,8 @@ void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, cl
     mongoc_iovec_t iov;
     iov.iov_base = (char *) floatValues;
     iov.iov_len = length;
-    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
-
+    //ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+	mongoc_stream_readv(stream, &iov, 1, -1, 0);
     n = (int) floatValues[0];
     data = new float *[n];
 
@@ -282,6 +282,8 @@ void ReadLongTermMutltiReachInfo(mongoc_client_t *conn, string &dbName, int &nr,
     for (int i = 0; i < nReaches; i++)
     {
         tmpData[i] = new float[nAttr];
+		for (int j = 0; j < nAttr; j++)
+			tmpData[i][j] = 0.f;
     }
     bson_iter_t itertor;
     int i = 0;
@@ -338,7 +340,7 @@ void ReadLongTermReachInfo(mongoc_client_t *conn, string &dbName, int subbasinID
     bson_t *b = bson_new();
     bson_t *child1 = bson_new();
     BSON_APPEND_DOCUMENT_BEGIN(b, "$query", child1);
-    BSON_APPEND_INT32(child1, REACH_SUBBASIN, 1);
+    BSON_APPEND_INT32(child1, REACH_SUBBASIN, subbasinID); /// find the subbasin by given subbasinID
     BSON_APPEND_INT32(child1, REACH_GROUPDIVIDED, 1);
     bson_append_document_end(b, child1);
     bson_destroy(child1);
@@ -360,6 +362,8 @@ void ReadLongTermReachInfo(mongoc_client_t *conn, string &dbName, int subbasinID
     for (int i = 0; i < nReaches; i++)
     {
         tmpData[i] = new float[nAttr];
+		for (int j = 0; j < nAttr; j++)
+			tmpData[i][j] = 0.f;
     }
 
     bson_iter_t itertor;
@@ -439,7 +443,7 @@ void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client
                              "Failed to get document number of collection: " + string(DB_TAB_REACH) + ".\n");
     cursor = mongoc_collection_find(collection, MONGOC_QUERY_NONE, 0, 0, 0, b, NULL, NULL);
     vector<vector<float> > vecReaches;
-    float id, upDownOrder, downUpOrder, downStreamID, manning, v0;
+    float id = 0.f, upDownOrder = 0.f, downUpOrder = 0.f, downStreamID = 0.f, manning = 0.f, v0 = 0.f;
 
     bson_iter_t itertor;
 
@@ -492,13 +496,13 @@ void ReadMutltiReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client
     mongoc_cursor_destroy(cursor);
 }
 
-void ReadReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *conn, string &dbName, int nSubbasin,
+void ReadReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *conn, string &dbName, int subbasinID,
                               int &nr, int &nc, float **&data)
 {
     bson_t *b = bson_new();
     bson_t *child1 = bson_new();
     BSON_APPEND_DOCUMENT_BEGIN(b, "$query", child1);
-    BSON_APPEND_INT32(child1, REACH_SUBBASIN, 1);
+    BSON_APPEND_INT32(child1, REACH_SUBBASIN, subbasinID);
     BSON_APPEND_INT32(child1, REACH_GROUPDIVIDED, 1);
     bson_append_document_end(b, child1);
     bson_destroy(child1);
@@ -522,7 +526,7 @@ void ReadReachInfoFromMongoDB(LayeringMethod layeringMethod, mongoc_client_t *co
         data[i] = new float[nReaches];
     }
 
-    float id, upDownOrder, downUpOrder, downStreamID, manning, v0;
+    float id = 0.f, upDownOrder = 0.f, downUpOrder = 0.f, downStreamID = 0.f, manning = 0.f, v0 = 0.f;
     bson_iter_t itertor;
 
     if (mongoc_cursor_next(cursor, &bsonTable))

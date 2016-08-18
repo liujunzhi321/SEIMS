@@ -1,14 +1,9 @@
 /*!
- * \file main.cpp
  * \brief Generate parameters, inputs, and outputs lists of SEIMS Modules
- *
- *
  *
  * \author Liangjun Zhu
  * \version 1.0
  * \date July 2015
- *
- * 
  */
 
 #include <iostream>

@@ -57,7 +57,7 @@ void SOL_WB::setValueToSubbasins()
 			float ri = 0.f; // total subsurface runoff of soil profile (mm)
 			float sm = 0.f; // total soil moisture of soil profile (mm)
 			float pcp = 0.f, netPcp = 0.f, depET = 0.f, infil = 0.f;
-			float itpET = 0.f, netPerc = 0.f, r = 0.f, revap = 0.f, ms = 0.f;
+			float itpET = 0.f, netPerc = 0.f, r = 0.f, revap = 0.f;
 			float rs = 0.f, meanT = 0.f, soilT = 0.f, es = 0.f, totalET = 0.f;
 			
 			for(int i = 0; i < cellsNum; i++) // loop cells of current subbasin

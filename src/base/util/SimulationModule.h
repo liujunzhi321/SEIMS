@@ -1,6 +1,4 @@
 /*!
- * \file SimulationModule.h
- * \ingroup util
  * \brief Parent class for all modules in SEIMS
  *
  * \author Junzhi Liu
@@ -62,86 +60,86 @@ public:
     };
 
     //! Set climate data type, P, M, PET etc.
-    virtual void SetDataType(float value)
+    virtual void SetClimateDataType(float value)
     {
     };
 
     //! Set data, DT_Single
     virtual void SetValue(const char *key, float data)
     {
-        throw ModelException("SimulationModule", "SetValue", "This function is not implemented.");
+        throw ModelException("SimulationModule", "SetValue", "Set function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Set 1D data, by default, DT_Raster1D
     virtual void Set1DData(const char *key, int n, float *data)
     {
-        throw ModelException("SimulationModule", "Set1DData", "This function is not implemented.");
+        throw ModelException("SimulationModule", "Set1DData", "Set function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Set 2D data, by default, DT_Raster2D
     virtual void Set2DData(const char *key, int nRows, int nCols, float **data)
     {
-        throw ModelException("SimulationModule", "Set2DData", "This function is not implemented.");
+        throw ModelException("SimulationModule", "Set2DData", "Set function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Set 1D array data, DT_Array1D
     virtual void Set1DArrayData(const char *key, int n, float *data)
     {
-        throw ModelException("SimulationModule", "Set1DArrayData", "This function is not implemented.");
+        throw ModelException("SimulationModule", "Set1DArrayData", "Set function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Set 2D array data, by default, DT_Array2D
     virtual void Set2DArrayData(const char *key, int nRows, int nCols, float **data)
     {
-        throw ModelException("SimulationModule", "Set2DArrayData", "This function is not implemented.");
+        throw ModelException("SimulationModule", "Set2DArrayData", "Set function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Get value, DT_Single
     virtual void GetValue(const char *key, float *value)
     {
-        throw ModelException("SimulationModule", "GetValue", "This function is not implemented.");
+        throw ModelException("SimulationModule", "GetValue", "Get function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Get 1D data, by default, DT_Raster1D
     virtual void Get1DData(const char *key, int *n, float **data)
     {
-        throw ModelException("SimulationModule", "Get1DData", "This function is not implemented.");
+        throw ModelException("SimulationModule", "Get1DData", "Get function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Get 2D data, by default, DT_Raster2D
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data)
     {
-        throw ModelException("SimulationModule", "Get2DData", "This function is not implemented.");
+        throw ModelException("SimulationModule", "Get2DData", "Get function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Get 1D Array data, by default, DT_Array1D
     virtual void Get1DArrayData(const char *key, int *n, float **data)
     {
-        throw ModelException("SimulationModule", "Get1DArrayData", "This function is not implemented.");
+        throw ModelException("SimulationModule", "Get1DArrayData", "Get function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Get 2D Array data, by default, DT_Array2D
     virtual void Get2DArrayData(const char *key, int *nRows, int *nCols, float ***data)
     {
-        throw ModelException("SimulationModule", "Get2DArrayData", "This function is not implemented.");
+        throw ModelException("SimulationModule", "Get2DArrayData", "Get function of parameter " + string(key) + " is not implemented.");
     };
 
     //! Set pointer of Scenario class which contains all BMP information. Added by LJ, 2016-6-14
     virtual void SetScenario(Scenario *)
     {
-        throw ModelException("SimulationModule", "SetScenario", "This function is not implemented.");
+        throw ModelException("SimulationModule", "SetScenario", "Set scenario function is not implemented.");
     }
 
     //! Set pointer of clsReaches class which contains all reaches information. Added by LJ, 2016-7-2
     virtual void SetReaches(clsReaches *)
     {
-        throw ModelException("SimulationModule", "SetReaches", "This function is not implemented.");
+        throw ModelException("SimulationModule", "SetReaches", "Set reaches function is not implemented.");
     }
 
 	//! Set pointer of clsSubbasins class which contains all subbasins information. Added by LJ, 2016-7-28
 	virtual void SetSubbasins(clsSubbasins *)
 	{
-		throw ModelException("SimulationModule", "SetSubbasins", "This function is not implemented.");
+		throw ModelException("SimulationModule", "SetSubbasins", "Set subbasins function is not implemented.");
 	}
     //! Get time step type
     virtual TimeStepType GetTimeStepType()

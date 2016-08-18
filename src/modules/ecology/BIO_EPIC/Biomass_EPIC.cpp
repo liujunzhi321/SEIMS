@@ -1,5 +1,3 @@
-#pragma once
-
 #include <iostream>
 #include "Biomass_EPIC.h"
 #include "MetadataInfo.h"
@@ -723,48 +721,49 @@ void Biomass_EPIC::PlantNitrogenUptake(int i)
     m_NO3Defic[i] = min(4.f * m_frPlantN3[i] * m_biomassDelta[i], m_NO3Defic[i]);
     m_frStrsN[i] = 1.f;
     int ir = 0;
-    if (m_NO3Defic[i] >= UTIL_ZERO)
+    if (m_NO3Defic[i] < UTIL_ZERO)
+		return;
+    for (int l = 0; l < m_nSoilLayers[i]; l++)
     {
-        for (int l = 0; l < m_nSoilLayers[i]; l++)
+		if (ir > 0)
+			return;
+        float gx = 0.f;
+        if (m_soilRD <= m_soilDepth[i][l])
         {
-            float gx = 0.f;
-            if (m_soilRD <= m_soilDepth[i][l])
-            {
-                gx = m_soilRD;
-                ir = 1;
-            }
-            else
-                gx = m_soilDepth[i][l];
-            float unmx = 0.f;
-            float uno3l = 0.f; /// plant nitrogen demand (kg/ha)
-            unmx = m_NO3Defic[i] * (1.f - exp(-m_NUpDis * gx / m_soilRD)) / uobn;
-            uno3l = min(unmx - m_plantUpTkN[i], m_soilNO3[i][l]);
-            m_plantUpTkN[i] += uno3l;
-            m_soilNO3[i][l] -= uno3l;
+            gx = m_soilRD;
+            ir = 1;
         }
-        if (m_plantUpTkN[i] < 0.f) m_plantUpTkN[i] = 0.f;
-        /// If crop is a legume, call nitrogen fixation routine
-        if (FloatEqual(m_landCoverCls[i], 1.f) || FloatEqual(m_landCoverCls[i], 2.f) ||
-            FloatEqual(m_landCoverCls[i], 3.f))
-            PlantNitrogenFixed(i);
-        m_plantUpTkN[i] += m_fixN[i];
-        m_plantN[i] += m_plantUpTkN[i];
-
-        /// compute nitrogen stress
-        if (FloatEqual(m_landCoverCls[i], 1.f) || FloatEqual(m_landCoverCls[i], 2.f) ||
-            FloatEqual(m_landCoverCls[i], 3.f))
-            m_frStrsN[i] = 1.f;
         else
-        {
-            PGCommon::calPlantStressByLimitedNP(m_plantN[i], un2, &m_frStrsN[i]);
-            float xx = 0.f;
-            if (m_NO3Defic[i] > 1.e-5f)
-                xx = m_plantUpTkN[i] / m_NO3Defic[i];
-            else
-                xx = 1.f;
-            m_frStrsN[i] = max(m_frStrsN[i], xx);
-            m_frStrsN[i] = min(m_frStrsN[i], 1.f);
-        }
+            gx = m_soilDepth[i][l];
+        float unmx = 0.f;
+        float uno3l = 0.f; /// plant nitrogen demand (kg/ha)
+        unmx = m_NO3Defic[i] * (1.f - exp(-m_NUpDis * gx / m_soilRD)) / uobn;
+        uno3l = min(unmx - m_plantUpTkN[i], m_soilNO3[i][l]);
+        m_plantUpTkN[i] += uno3l;
+        m_soilNO3[i][l] -= uno3l;
+    }
+    if (m_plantUpTkN[i] < 0.f) m_plantUpTkN[i] = 0.f;
+    /// If crop is a legume, call nitrogen fixation routine
+    if (FloatEqual(m_landCoverCls[i], 1.f) || FloatEqual(m_landCoverCls[i], 2.f) ||
+        FloatEqual(m_landCoverCls[i], 3.f))
+        PlantNitrogenFixed(i);
+    m_plantUpTkN[i] += m_fixN[i];
+    m_plantN[i] += m_plantUpTkN[i];
+
+    /// compute nitrogen stress
+    if (FloatEqual(m_landCoverCls[i], 1.f) || FloatEqual(m_landCoverCls[i], 2.f) ||
+        FloatEqual(m_landCoverCls[i], 3.f))
+        m_frStrsN[i] = 1.f;
+    else
+    {
+        PGCommon::calPlantStressByLimitedNP(m_plantN[i], un2, &m_frStrsN[i]);
+        float xx = 0.f;
+        if (m_NO3Defic[i] > 1.e-5f)
+            xx = m_plantUpTkN[i] / m_NO3Defic[i];
+        else
+            xx = 1.f;
+        m_frStrsN[i] = max(m_frStrsN[i], xx);
+        m_frStrsN[i] = min(m_frStrsN[i], 1.f);
     }
 }
 

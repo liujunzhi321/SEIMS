@@ -1,11 +1,9 @@
 /*!
- * \file DiffusiveWave.cpp
  * \brief routing in the channel cells using 4-point implicit finite difference method
  * \author Junzhi Liu
  * \version 1.0
  * \date Feb. 2011
  */
-#pragma once
 
 #include "DiffusiveWave.h"
 #include "MetadataInfo.h"
@@ -263,7 +261,7 @@ void DiffusiveWave::ChannelFlow(int iReach, int iCell, int id)
         hUp = m_hCh[iReach][iCell - 1];
     }
 
-    float b = 0.6f;
+    //float b = 0.6f;
     float h = m_hCh[iReach][iCell];
     float dx = m_flowLen[iReach][iCell];
 

@@ -1,14 +1,3 @@
-/*!
- * \file api.cpp
- * \brief Define MetadataInfo of NutGW module.
-/*!
- * \file api.cpp
- * \ingroup NutrGW
- * \author Huiran Gao
- * \date Jun 2016
- */
-
-
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -54,6 +43,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 	mdi.AddInput(VAR_SBGS, UNIT_DEPTH_MM, DESC_SBGS, Source_Module, DT_Array1D);
 	
 	mdi.AddInput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
+	mdi.AddInput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_Module, DT_Raster2D);
 
 	mdi.AddInput(VAR_PERCO_N_GW, UNIT_KG, DESC_PERCO_N, Source_Module, DT_Array1D);
 	mdi.AddInput(VAR_PERCO_P_GW, UNIT_KG, DESC_PERCO_P, Source_Module, DT_Array1D);

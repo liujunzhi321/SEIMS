@@ -1,10 +1,3 @@
-/*!
- * \file api.cpp
- * \author Zhiqiang Yu
- * \date Apr. 2010
- *
- * 
- */
 #include <stdio.h>
 #include <string>
 #include "util.h"

@@ -38,8 +38,8 @@ namespace MainBMP
              */
             PlantManagementOperation(int mgtOp, float husc, int year, int month, int day, float *parameters);
 
-            //! Destructor
-            ~PlantManagementOperation(void);
+            //! virtual Destructor
+            virtual ~PlantManagementOperation(void);
 
             //! Output
             virtual void dump(ostream *fs) = 0;

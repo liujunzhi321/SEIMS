@@ -1,14 +1,8 @@
 /*!
- * \file ModulesIOList.cpp
  * \brief 
- *
- *
- *
  * \author Liangjun Zhu
  * \version 1.0
  * \date July 2015
- *
- * 
  */
 #ifndef linux
 #include <WinSock2.h>

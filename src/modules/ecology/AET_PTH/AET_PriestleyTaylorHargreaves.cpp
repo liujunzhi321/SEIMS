@@ -145,7 +145,12 @@ int AET_PT_H::Execute()
         esd = 500.f;
         etco = 0.8f;
         effnup = 0.1f;
-        if (pet > UTIL_ZERO)
+		if (pet < UTIL_ZERO)
+		{
+			m_ppt[i] = 0.f;
+			es_max = 0.f;
+		}
+        if (pet >= UTIL_ZERO)
         {
             /// compute potential plant evapotranspiration (PPT) other than Penman-Monteith method
             if (m_lai[i] <= 3.f)
@@ -169,12 +174,12 @@ int AET_PT_H::Execute()
             es_max = min(es_max, eos1);
             es_max = max(es_max, 0.f);
             /// make sure maximum plant and soil ET doesn't exceed potential ET
-            if (m_pet[i] < es_max + m_ppt[i])
+            if (m_pet[i] < es_max + m_ppt[i] && FloatEqual(es_max + m_ppt[i], 0.f))
             {
                 es_max = m_pet[i] * es_max / (es_max + m_ppt[i]);
                 m_ppt[i] = m_pet[i] * m_ppt[i] / (es_max + m_ppt[i]);
             }
-            if (m_pet[i] < es_max + m_ppt[i])
+            if (m_pet[i] < es_max + m_ppt[i] && FloatEqual(es_max + m_ppt[i], 0.f))
                 es_max = m_pet[i] - m_ppt[i] - UTIL_ZERO;
 
             /// initialize soil evaporation variables
@@ -197,10 +202,12 @@ int AET_PT_H::Execute()
                     m_snowAcc[i] = 0.f;
                 }
             }
+			// take soil evap from each soil layer
             evzp = 0.f;
             eosl = esleft;
             for (int ly = 0; ly < (int)m_nSoilLayers[i]; ly++)
             {
+				dep = 0.f;
                 /// depth exceeds max depth for soil evap (esd, by default 500 mm)
                 if (ly == 0)
                     dep = m_soilDepth[i][ly];
@@ -221,7 +228,7 @@ int AET_PT_H::Execute()
                         sev *= Expo(xx);
                     }
                     sev = min(sev, m_soilStorage[i][ly] * etco);
-                    if (sev < 0.f) sev = 0.f;
+                    if (sev < 0.f || sev != sev) sev = 0.f;
                     if (sev > esleft) sev = esleft;
                     /// adjust soil storage, potential evap
                     if (m_soilStorage[i][ly] > sev)
@@ -251,8 +258,12 @@ int AET_PT_H::Execute()
             for (int ly = 0; ly < (int)m_nSoilLayers[i]; ly++)
                 m_soilStorageProfile[i] += m_soilStorage[i][ly];
             /// calculate actual amount of evaporation from soil
-            m_soilESDay[i] = es_max - esleft;
-            if (m_soilESDay[i] < 0.f) m_soilESDay[i] = 0.f;
+			//if (esleft != esleft || es_max != es_max)
+			//	cout<<"esleft: "<<esleft<<", es_max: "<<es_max<<endl;
+			if (es_max > esleft)
+				m_soilESDay[i] = es_max - esleft;
+			else
+				m_soilESDay[i] = 0.f;
         }
     }
     return true;
@@ -265,9 +276,7 @@ void AET_PT_H::GetValue(const char *key, float *value)
     string sk(key);
     if (StringMatch(sk, VAR_SNO3UP)) *value = this->m_no3Up;
     else
-        throw ModelException(MID_AET_PTH, "GetValue", "Result " + sk
-                                                      +
-                                                      " does not exist in current module. Please contact the module developer.");
+        throw ModelException(MID_AET_PTH, "GetValue", "Result " + sk + " does not exist.");
 }
 
 void AET_PT_H::Get1DData(const char *key, int *n, float **data)
@@ -279,9 +288,7 @@ void AET_PT_H::Get1DData(const char *key, int *n, float **data)
     else if (StringMatch(sk, VAR_SNAC)) *data = this->m_snowAcc;
 	else if (StringMatch(sk, VAR_SNSB)) *data = m_snowSB;
     else
-        throw ModelException(MID_AET_PTH, "Get1DData", "Result " + sk
-                                                       +
-                                                       " does not exist in current module. Please contact the module developer.");
+        throw ModelException(MID_AET_PTH, "Get1DData", "Result " + sk + " does not exist.");
     *n = this->m_nCells;
 }
 

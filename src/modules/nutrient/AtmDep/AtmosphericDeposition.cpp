@@ -1,6 +1,4 @@
 /*!
- * \file AtmosphericDeposition.cpp
- * \ingroup ATMDEP
  * \author Huiran Gao
  * \date April 2016
  */

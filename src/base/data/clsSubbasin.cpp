@@ -6,8 +6,8 @@
 
 using namespace std;
 
-Subbasin::Subbasin(int id) : m_id(id), m_isRevapChanged(true), 
-	m_nCells(-1), m_cells(NULL), m_cellArea(-1.f),m_Area(-1.f), 
+Subbasin::Subbasin(int id) : m_id(id), m_nCells(-1), m_cells(NULL), m_isRevapChanged(true), 
+	m_cellArea(-1.f), m_Area(-1.f), 
 	m_slope(-1.f), m_slopeCoefficient(1.f), 
 	m_GWMAX(-1.f),m_kg(-1.f),m_dp_co(-1.f),m_base_ex(-1.f),m_QGConvert(-1.f),
 	m_Revap(-1.f), m_GW(-1.f), m_PERCO(-1.f),m_PERDE(-1.f), 

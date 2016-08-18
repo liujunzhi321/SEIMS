@@ -74,6 +74,8 @@ private:
 	// soil related
 	/// amount of nitrogen stored in the nitrate pool in soil layer
 	float **m_sol_no3;
+	/// amount of soluble phosphorus stored in the soil layer
+	float **m_sol_solp;
 	/// max number of soil layers
 	int m_nSoilLayers;
 	/// number of soil layers of each cell

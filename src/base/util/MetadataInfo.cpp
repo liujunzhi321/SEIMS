@@ -1,5 +1,4 @@
 /*!
- * \file MetadataInfo.cpp
  * \brief methods for MetadataInfo class
  *
  * \author Junzhi Liu

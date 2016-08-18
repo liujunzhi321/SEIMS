@@ -1,5 +1,4 @@
 /*!
- * \file KinWavSed_CH.cpp
  * \brief Kinematic wave method for channel flow erosion and deposition
  * \author Hui Wu
  * \date Feb. 2012

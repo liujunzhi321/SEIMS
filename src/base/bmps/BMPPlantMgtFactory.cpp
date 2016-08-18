@@ -61,8 +61,8 @@ void BMPPlantMgtFactory::loadBMP(mongoc_client_t *conn, string &bmpDBName)
     while (mongoc_cursor_next(cursor, &bsonTable))
     {
         //int seqNo;
-        int mgtCode, year, month, day;
-        float husc;
+        int mgtCode = -1, year = -9999, month = -9999, day = -9999;
+        float husc = 0.f;
         if (bson_iter_init_find(&itertor, bsonTable, BMP_FLD_NAME))
             m_name = GetStringFromBSONITER(&itertor);
         if (bson_iter_init_find(&itertor, bsonTable, BMP_PLTOP_FLD_LUCC))
