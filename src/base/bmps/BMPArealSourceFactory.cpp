@@ -5,7 +5,6 @@
  *
  */
 #include "BMPArealSourceFactory.h"
-#include "utils.h"
 
 using namespace MainBMP;
 

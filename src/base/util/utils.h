@@ -11,8 +11,6 @@
  * 
  */
 
-#ifndef SEIMS_UTILS_INCLUDE
-#define SEIMS_UTILS_INCLUDE
 #pragma once
 
 #include <vector>
@@ -22,7 +20,17 @@
 #include <iterator> 
 #include <iostream>
 #include <time.h>
-
+#include <fstream>
+#include <ctime>
+#ifndef linux
+#include <io.h>
+#define _WINSOCKAPI_    // stops windows.h including winsock.h
+#include <windows.h>
+#include <winsock2.h>
+#else
+#include <unistd.h>
+#include <fcntl.h>
+#endif
 using namespace std;
 
 /*!
@@ -169,6 +177,6 @@ public:
      * \return The trimmed string
      */
     static void TrimSpaces(string &str);
+	
 };
 
-#endif

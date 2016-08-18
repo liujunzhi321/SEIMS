@@ -9,20 +9,19 @@
  * 
  */
 #pragma once
-#ifndef linux
-#include <WinSock2.h>
-#include <Windows.h>
-#else
-#include <unistd.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <dlfcn.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#endif
-
-#include <fcntl.h>
+//#ifndef linux
+//#include "WinSock2i.h"
+////#include <WinSock2.h>
+////#include <Windows.h>
+//#else
+//#include <unistd.h>
+//#include <sys/types.h>
+//#include <stdio.h>
+//#include <dlfcn.h>
+//#include <stdlib.h>
+//#include <sys/stat.h>
+//#include <fcntl.h>
+//#endif
 #include <map>
 #include <string>
 #include <vector>

@@ -11,18 +11,6 @@
  */
 
 #include "utils.h"
-#include <fstream>
-//#include <cstdio>
-#include <ctime>
-
-#ifndef linux
-
-#include <io.h>
-
-#else
-#include <unistd.h>
-#include <fcntl.h>
-#endif
 
 using namespace std;
 

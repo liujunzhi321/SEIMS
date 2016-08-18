@@ -7,34 +7,8 @@
  * \version 1.0
  * \date Jul. 2010
  */
-
-#include <cmath>
 #include "util.h"
 #include "utils.h"
-#include <fstream>
-#include <cstring>
-//#include <iostream>
-//#include <string>
-//#include <vector>
-//#include <algorithm>
-//#include <functional>
-
-#ifndef linux
-
-#include <WinSock2.h>
-#include <Windows.h>
-#include <direct.h>
-
-#else
-#include <dirent.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <dlfcn.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#endif
 
 using namespace std;
 
@@ -338,7 +312,23 @@ string &trim(string &s)
     return s.erase(s.find_last_not_of(" \n\r\t") + 1);
 }
 
-
+double TimeCounting()
+{
+#ifndef linux
+	LARGE_INTEGER li;
+	if (QueryPerformanceFrequency(&li)) /// CPU supported
+	{
+		double PCFreq = 0.;
+		PCFreq = double(li.QuadPart);
+		QueryPerformanceCounter(&li);
+		return (double)li.QuadPart / PCFreq; // seconds
+	} 
+#else
+	struct timeval tv;
+	gettimeofday(&tv, NULL); 
+	return (double)tv.tv_sec + (double)tv.tv_usec / 1000000.;
+#endif
+}
 
 
 
