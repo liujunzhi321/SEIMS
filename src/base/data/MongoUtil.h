@@ -1,6 +1,4 @@
 /*!
- * \ingroup base
- * \file MongoUtil.h
  * \brief Utility functions of mongoDB
  * \author Junzhi Liu, LiangJun Zhu
  * \date May 2016

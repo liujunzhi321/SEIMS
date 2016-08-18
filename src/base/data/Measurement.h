@@ -1,5 +1,4 @@
 /*!
- * \file Measurement.h
  * \brief Measurement class to store HydroClimate site data
  *
  *

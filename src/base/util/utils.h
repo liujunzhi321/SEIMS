@@ -1,5 +1,4 @@
 /*!
- * \file utils.h
  * \ingroup util
  * \brief Utilities class to handle string, date time and file
  *

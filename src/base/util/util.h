@@ -1,5 +1,4 @@
 /*!
- * \file util.h
  * \ingroup util
  * \brief Utility functions to handle numeric, string and file
  * \author Junzhi Liu, LiangJun Zhu

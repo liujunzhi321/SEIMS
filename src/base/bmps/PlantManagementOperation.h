@@ -1,6 +1,4 @@
 /*!
- * \file PlantManagementOperation.h
- * \brief
  * \author Liang-Jun Zhu
  * \date June 2016
  */

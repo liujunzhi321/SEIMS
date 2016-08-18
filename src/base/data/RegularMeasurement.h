@@ -1,5 +1,4 @@
 /*!
- * \file RegularMeasurement.h
  * \brief Regular hydroclimate data, e.g., daily data
  *
  * \author Junzhi Liu, LiangJun Zhu

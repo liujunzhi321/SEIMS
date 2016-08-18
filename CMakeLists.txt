@@ -63,7 +63,7 @@ ELSE ()
     SET(CMAKE_CXX_COMPILER "/home/zhulj/gcc4.8.4/bin/g++")
     # Set pthreads
     SET (CMAKE_THREAD_PREFER_PTHREAD TRUE)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O3 -std=c++11 -ldl -fopenmp -fPIC -static-libstdc++ -static-libgcc -lpthread")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -ldl -fopenmp -fPIC -static-libstdc++ -static-libgcc -lpthread")
     # Warning messages
     #  -Wno-reorder -Wno-unused-parameter
     SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wfatal-errors -Wno-reorder -Wno-unused-parameter")

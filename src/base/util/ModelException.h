@@ -1,6 +1,4 @@
 /*!
- * \file ModelException.h
- * \ingroup util
  * \brief Define ModelException class
  * \author Junzhi Liu
  * \version 1.1

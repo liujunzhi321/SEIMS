@@ -1,5 +1,4 @@
 /*!
- * \file Scenario.h
  * \brief Scenario class in BMP database
  * \revised Liang-Jun Zhu
  * \date 2016-6-16

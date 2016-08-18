@@ -1,5 +1,4 @@
 /*!
- * \file ModelMain.h
  * \brief Control the simulation of SEIMS
  * \author Junzhi Liu, LiangJun Zhu
  * \version 1.1

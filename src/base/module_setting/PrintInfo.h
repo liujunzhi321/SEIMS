@@ -1,5 +1,4 @@
 /*!
- * \file PrintInfo.h
  * \brief Class to store and manage the PRINT information from the file.out file
  *
  * \author Junzhi Liu, LiangJun Zhu
