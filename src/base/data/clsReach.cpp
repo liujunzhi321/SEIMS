@@ -1,5 +1,4 @@
 /*!
- * \file clsReach.cpp
  * \brief Class to store reach related parameters from REACHES table
  *
  * \author LiangJun Zhu

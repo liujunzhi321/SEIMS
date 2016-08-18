@@ -1,5 +1,4 @@
 /*!
- * \file main.cpp
  * \brief Functional test
  * \author LiangJun Zhu
  * \date May 2016

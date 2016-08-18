@@ -1,5 +1,4 @@
 /*!
- * \file SEDR_VCD.cpp
  * \brief Sediment routing using variable channel dimension(VCD) method at daily time scale
  * \author Hui Wu
  * \date Jul. 2012

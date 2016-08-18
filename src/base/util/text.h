@@ -1,5 +1,4 @@
 /*!
- * \file text.h
  * \brief Predefined string constants used in the code
  
  * \author Junzhi Liu, LiangJun Zhu, Huiran Gao

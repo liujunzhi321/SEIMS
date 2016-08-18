@@ -1,5 +1,4 @@
 /*!
- * \file InterFlow_IKW.cpp
  * \brief Interflow routing using implicit finite difference method
  * kinematic wave method in LISEM model
  * \author Junzhi Liu

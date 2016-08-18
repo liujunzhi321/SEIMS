@@ -67,9 +67,6 @@ int IUH_SED_OL::Execute()
     for (int i = 0; i < m_nSubbasins + 1; i++)
         m_sedtoCh[i] = 0.f;
 
-    int nt = 0;
-    float qs_cell = 0.f;
-
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {

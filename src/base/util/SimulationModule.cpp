@@ -1,5 +1,4 @@
 /*!
- * \file SimulationModule.cpp
  * \brief Initialization of SimulationModule class
  *
  * \author Junzhi Liu

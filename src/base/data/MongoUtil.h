@@ -144,12 +144,10 @@ extern void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteF
  * Not sure the different with \sa Read2DArrayFromMongoDB
  * \param[in] spatialData \a mongoc_gridfs_t
  * \param[in] remoteFilename \string data file name
- * \param[in] templateRaster \clsRasterData*
  * \param[out] n \int&, valid cell number
  * \param[out] data \float*&, returned data
  */
-extern void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, clsRasterData *templateRaster,
-                               int &n, float **&data);
+extern void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &n, float **&data);
 
 /*!
  * \brief Read Longterm multi reach information from MongoDB database

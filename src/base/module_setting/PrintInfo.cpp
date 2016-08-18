@@ -1,5 +1,4 @@
 /*!
- * \file PrintInfo.cpp
  * \brief Class to store and manage the PRINT information 
  * From the file.out file or FILE_OUT collection in MongoDB
  *

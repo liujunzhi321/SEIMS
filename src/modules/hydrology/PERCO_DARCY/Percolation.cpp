@@ -1,5 +1,4 @@
 /*!
- * \file Percolation.cpp
  * \brief Calculate percolation using Darcy law
  * \author Junzhi Liu
  * \date May 2013

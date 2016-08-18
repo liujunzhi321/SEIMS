@@ -1,5 +1,4 @@
 /*!
- * \file Interpolate.cpp
  * \author Junzhi Liu, LiangJun Zhu
  * \date Jan. 2010
  * \revised date Apr. 2016
@@ -24,7 +23,7 @@ Interpolate::Interpolate() : m_nCells(-1), m_nStatioins(-1),
 {
 }
 
-void Interpolate::SetDataType(float value)
+void Interpolate::SetClimateDataType(float value)
 {
     if (FloatEqual(value, 1.0f))
         m_dataType = 0; /// Precipitation
@@ -75,8 +74,7 @@ int Interpolate::Execute()
             {
                 float delta = m_dem[i] - m_hStations[j];
                 float factor = m_lapseRate[m_month][m_dataType];
-                float adjust =
-                        m_weights[index] * (m_dem[i] - m_hStations[j]) * m_lapseRate[m_month][m_dataType] / 100.0f;
+                float adjust = m_weights[index] * delta * factor / 100.f;
                 value += adjust;
             }
         }
@@ -94,11 +92,12 @@ void Interpolate::SetDate(time_t date, int yearIdx)
     m_date = date;
 	m_yearIdx = yearIdx;
     struct tm t;
-#ifndef linux
-    localtime_s(&t, &m_date);
-#else
-    localtime_r(&m_date, &t);
-#endif
+	LocalTime(date, &t);
+//#ifndef linux
+//    localtime_s(&t, &m_date);
+//#else
+//    localtime_r(&m_date, &t);
+//#endif
     m_month = t.tm_mon;
 }
 
@@ -112,7 +111,7 @@ void Interpolate::SetValue(const char *key, float value)
     }
     else if (StringMatch(sk, VAR_TSD_DT))
     {
-		this->SetDataType(value);
+		this->SetClimateDataType(value);
         //if (value == 1.0f) m_dataType = 0;
         //if (value == 2.0f || value == 3.0f || value == 4.0f) m_dataType = 1;
         //if (value == 5.0f) m_dataType = 2;
@@ -126,8 +125,7 @@ void Interpolate::SetValue(const char *key, float value)
     }
     else
     {
-        throw ModelException(MID_ITP, "SetValue", "Parameter " + sk
-                + " does not exist in the Interpolate module. Please contact the module developer.");
+        throw ModelException(MID_ITP, "SetValue", "Parameter " + sk + " does not exist.");
     }
 
 }
@@ -147,10 +145,8 @@ void Interpolate::Set2DData(const char *key, int nRows, int nCols, float **data)
     }
     else
     {
-        throw ModelException(MID_ITP, "Set2DData", "Parameter " + sk
-           + " does not exist in the Interpolate module. Please contact the module developer.");
+        throw ModelException(MID_ITP, "Set2DData", "Parameter " + sk + " does not exist.");
     }
-
 }
 
 void Interpolate::Set1DData(const char *key, int n, float *data)
@@ -192,8 +188,7 @@ void Interpolate::Set1DData(const char *key, int n, float *data)
         }
         else
         {
-            throw ModelException(MID_ITP, "Set1DData", "Parameter " + sk
-             + " does not exist in the Interpolate module. Please contact the module developer.");
+            throw ModelException(MID_ITP, "Set1DData", "Parameter " + sk + " does not exist.");
         }
     }
 }
@@ -211,11 +206,9 @@ bool Interpolate::CheckInputSize(string &key, int n, int &m_n)
             m_n = n;
         else
         {
-            ostringstream oss;
-            oss << n;
             throw ModelException(MID_ITP, "CheckInputSize",
                                  "Input data for " + key + " is invalid." + " The size of input data is " +
-                                 oss.str() +
+                                 ValueToString(n) +
                                  ". The number of columns in weight file and the number of stations should be same.");
         }
     }

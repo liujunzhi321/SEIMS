@@ -1,5 +1,4 @@
 /*!
- * \file StormGreenAmpt.cpp
  * \brief Green Ampt Method to calculate infiltration and excess precipitation
  * \author Junzhi Liu
  * \date Oct. 2011

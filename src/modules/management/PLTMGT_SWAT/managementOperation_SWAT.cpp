@@ -1530,7 +1530,7 @@ void MGTOpt_SWAT::initialOutputs()
     if (m_BiomassTarg == NULL) Initialize1DArray(m_nCells, m_BiomassTarg, 0.f);
     /// irrigation / auto irrigation operations
     if (m_appliedWater == NULL) Initialize1DArray(m_nCells, m_appliedWater, 0.f);
-    if (m_irrSurfQWater = NULL) Initialize1DArray(m_nCells, m_irrSurfQWater, 0.f);
+    if (m_irrSurfQWater == NULL) Initialize1DArray(m_nCells, m_irrSurfQWater, 0.f);
     if (m_irrFlag == NULL) Initialize1DArray(m_nCells, m_irrFlag, 0.f);
     if (m_autoIrrSource == NULL) Initialize1DArray(m_nCells, m_autoIrrSource, (float) IRR_SRC_OUTWTSD);
     if (m_autoIrrNo == NULL) Initialize1DArray(m_nCells, m_autoIrrNo, -1.f);

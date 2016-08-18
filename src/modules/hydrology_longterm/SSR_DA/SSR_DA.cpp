@@ -106,11 +106,10 @@ void SSR_DA::FlowInSoil(int id)
             if (j == 0 && m_soilT[id] <= m_frozenT && qUp <= UTIL_ZERO)
                 continue;
 
-            float k= 0.f, maxSoilWater= 0.f, soilWater= 0.f, fcSoilWater= 0.f, wpSoilWater= 0.f;
+            float k= 0.f, maxSoilWater= 0.f, soilWater= 0.f, fcSoilWater= 0.f;
 			soilWater = m_soilStorage[id][j];
 			maxSoilWater = m_satmm[id][j];
 			fcSoilWater = m_fcmm[id][j];
-			wpSoilWater = m_wpmm[id][j];
             //the moisture content can exceed the porosity in the way the algorithm is implemented
             if (m_soilStorage[id][j] > maxSoilWater)
                 k = m_ks[id][j];

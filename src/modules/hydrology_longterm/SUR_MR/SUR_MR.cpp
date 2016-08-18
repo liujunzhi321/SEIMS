@@ -9,7 +9,7 @@
 SUR_MR::SUR_MR(void) : m_nCells(-1), m_dt(-1), m_nSoilLayers(-1), m_tFrozen(NODATA_VALUE), 
 					   m_kRunoff(NODATA_VALUE),m_pMax(NODATA_VALUE),
                        //m_tSnow(NODATA_VALUE), m_t0(NODATA_VALUE), m_snowAccu(NULL), m_snowMelt(NULL),
-                       m_sFrozen(NULL), m_runoffCo(NULL), m_initSoilStorage(NULL), m_tMean(NULL), 
+                       m_sFrozen(NODATA_VALUE), m_runoffCo(NULL), m_initSoilStorage(NULL), m_tMean(NULL), 
 					   // m_soilThick(NULL) ,m_fieldCap(NULL),m_wiltingPoint(NULL), m_porosity(NULL), 
 					   m_sol_awc(NULL), m_sol_sumsat(NULL), m_soilLayers(NULL),
                        m_pNet(NULL), m_sd(NULL), m_soilTemp(NULL), 

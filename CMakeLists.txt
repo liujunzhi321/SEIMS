@@ -69,7 +69,8 @@ ELSE ()
     ENDIF()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11 -ldl -fopenmp -fPIC -static-libstdc++ -static-libgcc")
     # Warning messages
-    SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wfatal-errors")
+    #  -Wno-reorder -Wno-unused-parameter
+    SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wfatal-errors -Wno-reorder -Wno-unused-parameter")
     ADD_DEFINITIONS(-Dlinux)
 ENDIF (WIN32)
 # Add support for OpenMP

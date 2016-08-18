@@ -193,8 +193,8 @@ namespace MainBMP
             if (bson_iter_init_find(&iter, info, FLD_SCENARIO_TABLE)) collectionName = GetStringFromBSONITER(&iter);
             if (bson_iter_init_find(&iter, info, FLD_SCENARIO_LOCATION)) location = GetStringFromBSONITER(&iter);
 
-            int BMPType;
-            int BMPPriority;
+            int BMPType = -1;
+            int BMPPriority = -1;
             bson_t *queryBMP = bson_new();
             BSON_APPEND_INT32(queryBMP, FLD_BMP_ID, BMPID);
             mongoc_cursor_t *cursor2 = mongoc_collection_find(collbmpidx, MONGOC_QUERY_NONE, 0, 0, 0, queryBMP, NULL,

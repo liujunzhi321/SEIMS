@@ -1,5 +1,4 @@
 /*!
- * \file utils.cpp
  * \brief methods of utils class
  *
  * Implementation of the methods for the utils class

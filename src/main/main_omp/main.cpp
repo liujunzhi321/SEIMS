@@ -1,5 +1,4 @@
 /*!
- * \file main.cpp
  * \brief Entry point for SEIMS application.
  * \author Junzhi Liu
  * \date May 2010
@@ -8,9 +7,7 @@
  */
 #include <iostream>
 #include "invoke.h"
-//#include "util.h"
 #include "gdal_priv.h"
-//#include "omp.h"
 
 #define MAIN
 #ifndef USE_MONGODB

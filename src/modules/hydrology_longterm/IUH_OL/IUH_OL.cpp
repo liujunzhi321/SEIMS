@@ -67,8 +67,8 @@ int IUH_OL::Execute()
 #pragma omp parallel for
     for (int n = 0; n < m_nSubbasins + 1; n++)
         m_Q_SBOF[n] = 0.f;     
-    int nt = 0;
-    float qs_cell = 0.f;
+    //int nt = 0;
+    //float qs_cell = 0.f;
 
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)

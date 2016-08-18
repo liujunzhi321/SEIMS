@@ -1,9 +1,6 @@
 /*!
- * \file clsTSD_RD.cpp
  * \author Zhiqiang Yu
  * \date Apr. 2010
- *
- * 
  */
 #include "api.h"
 #include <iostream>

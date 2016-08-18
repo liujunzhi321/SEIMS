@@ -1,11 +1,3 @@
-/*!
- * \file api.cpp
- *
- * \author Junzhi Liu
- * \date Nov. 2010
- * \revised LiangJun Zhu
- * \date May. 2016
- */
 #include <stdio.h>
 #include <string>
 #include "api.h"
@@ -15,11 +7,7 @@
 #include "MetadataInfo.h"
 #include "MetadataInfoConst.h"
 #include "PETPriestleyTaylor.h"
-/** \defgroup PET_PT
- * \ingroup Hydrology_longterm
- * \brief Calculate potential evapotranspiration using PriestleyTaylor method
- *
- */
+
 extern "C" SEIMS_MODULE_API SimulationModule *GetInstance()
 {
     return new PETPriestleyTaylor();

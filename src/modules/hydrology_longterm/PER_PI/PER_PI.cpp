@@ -37,7 +37,7 @@ int PER_PI::Execute()
     for (int i = 0; i < m_nCells; i++)
     {
         float k = 0.f, maxSoilWater = 0.f, fcSoilWater = 0.f;
-		float swater = 0.f, wpSoilWater = 0.f;        
+		float swater = 0.f;//, wpSoilWater = 0.f;        
         /// firstly, assume all infiltrated water is added to the first soil layer.
 		m_soilStorage[i][0] += m_infil[i];
 		/// secondly, model water percolation across layers
@@ -50,7 +50,7 @@ int PER_PI::Execute()
 			swater = m_soilStorage[i][j];
 			maxSoilWater = m_sat[i][j];
 			fcSoilWater = m_fc[i][j];
-			wpSoilWater = m_wp[i][j];
+			//wpSoilWater = m_wp[i][j];
 
             if (swater > fcSoilWater)
             {

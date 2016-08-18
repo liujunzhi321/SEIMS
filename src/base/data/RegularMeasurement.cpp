@@ -1,6 +1,5 @@
 /*!
- * \file RegularMeasurement.cpp
- * \brief
+ * \brief Regular measurements
  *
  * \author Junzhi Liu, LiangJun Zhu
  * \version 1.1
@@ -70,7 +69,8 @@ RegularMeasurement::RegularMeasurement(mongoc_client_t *conn, string hydroDBName
     int stationIDLast = -1;
     int stationID = -1;
     int iSite = -1;
-    int index = 0;
+    //int index = 0;
+	vector<int>::size_type index = 0;
     while (mongoc_cursor_more(cursor) && mongoc_cursor_next(cursor, &doc))
     {
 //		record = bson_as_json(doc,NULL);
@@ -133,13 +133,15 @@ RegularMeasurement::RegularMeasurement(mongoc_client_t *conn, string hydroDBName
 
 RegularMeasurement::~RegularMeasurement(void)
 {
-    for (int i = 0; i < m_siteData.size(); i++)
-	for (vector<float *>::iterator it = m_siteData.begin(); it != m_siteData.end(); it++){
-        delete[] *it;
-		*it = NULL;
+	for (vector<float *>::iterator it = m_siteData.begin(); it != m_siteData.end();){
+        if (*it != NULL){
+			delete[] *it;
+			*it = NULL;
+		}
+		it = m_siteData.erase(it);
 	}
     m_siteData.clear();
-    if(pData != NULL)    Release1DArray(pData);
+    if(pData != NULL) Release1DArray(pData);
 }
 
 float *RegularMeasurement::GetSiteDataByTime(time_t t)

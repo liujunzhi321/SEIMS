@@ -880,7 +880,7 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 	yy = 0.f;     // variable to hold intermediate calculation result
 	zz = 0.f;     // variable to hold intermediate calculation result
 	m_rk2[i] =1.f;
-	float hh = corTempc(m_rk2[i], thm_rk2, wtmp);
+	//float hh = corTempc(m_rk2[i], thm_rk2, wtmp);
 	uu = corTempc(m_rk2[i], thm_rk2, wtmp) * (m_chSatDOx - o2con);
 	vv = (m_ai3 * corTempc(gra, thgra, wtmp) - m_ai4 * corTempc(m_rhoq, thrho, wtmp)) * algcon;
 	//if (algcon > 0.001f)

@@ -1,14 +1,3 @@
-/*!
- * \file api.cpp
- * \brief Define MetadataInfo of NutRemv module.
-/*!
- * \file api.cpp
- * \ingroup NutRemv
- * \author Huiran Gao
- * \date May 2016
- */
-
-
 #include <stdio.h>
 #include <string>
 #include "api.h"

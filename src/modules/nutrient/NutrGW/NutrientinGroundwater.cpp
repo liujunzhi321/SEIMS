@@ -1,6 +1,4 @@
-/*//
- * \file NutrientinGroundwater.cpp
- * \ingroup NutGW
+/*
  * \author Huiran Gao
  * \date Jun 2016
  */
@@ -147,7 +145,9 @@ void NutrientinGroundwater::Set2DData(const char *key, int nRows, int nCols, flo
 
 	m_nSoilLayers = nCols;
 	if (StringMatch(sk, VAR_SOL_NO3)) 
-		m_sol_no3 = data; 
+		m_sol_no3 = data;
+	else if (StringMatch(sk, VAR_SOL_SOLP))
+		m_sol_solp = data;
 	else
 		throw ModelException(MID_NUTRGW, "Set2DData", "Parameter " + sk + " does not exist.");
 }
@@ -199,7 +199,6 @@ int NutrientinGroundwater::Execute()
 	for(vector<int>::iterator iter=m_subbasinIDs.begin(); iter != m_subbasinIDs.end(); iter++)
     {
 		int id = *iter;
-		
 		// gw no3 to channel
 		float xx = m_gw_q[id] * m_TimeStep; //m3
 		m_no3gwToCh[id] = m_gwno3Con[id] * xx / 1000.f; // g/m3 * m3 / 1000 = kg
@@ -219,6 +218,7 @@ int NutrientinGroundwater::Execute()
 		{
 			index = cells[i];
 			m_sol_no3[index][(int)m_soilLayers[index] - 1] += no3ToSoil;
+			m_sol_solp[index][(int)m_soilLayers[index] - 1] += solpToSoil;
 		}
 
 		// update concentration
