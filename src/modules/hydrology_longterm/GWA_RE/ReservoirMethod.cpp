@@ -79,11 +79,11 @@ int ReservoirMethod::Execute()
 		//}
 
 		//calculate EG, i.e. Revap
-		float revap = 0.0f;
-		float fPET = 0.0f;
-		float fEI = 0.0f;
-		float fED = 0.0f;
-		float fES = 0.0f;
+		float revap = 0.f;
+		float fPET = 0.f;
+		float fEI = 0.f;
+		float fED = 0.f;
+		float fES = 0.f;
 		float plantEP = 0.f;
 		for (int i = 0; i < curCellsNum; i++)
 		{
@@ -106,6 +106,9 @@ int ReservoirMethod::Execute()
 		//if (perco >= 0.01f)
 		//{
 			revap = (fPET - fEI - fED - fES - plantEP) * m_gwStore[subID] / m_GWMAX;
+			if (revap != revap)
+				cout <<"fPET: "<<fPET<<", fEI: "<<fEI<<", fED: "<<fED<<", fES: "<<fES<<", plantEP: "<<plantEP
+				<<"gwStore: "<<m_gwStore[subID]<<endl;
 			revap = max(revap, 0.f);
 			revap = min(revap, perco);
 		//}

@@ -84,9 +84,10 @@ void SSR_DA::FlowInSoil(int id)
         // add upstream water to the current cell
         //float soilVolumn = m_soilThick[id][j] / 1000.f * m_CellWidth * flowWidth; //m3
         //m_soilStorage[id][j] += qUp / soilVolumn;
+		if (qUp < 0.f) qUp = 0.f;
 		m_soilStorage[id][j] += qUp; // mm
         //TEST
-        if (m_soilStorage[id][j] != m_soilStorage[id][j] || m_soilStorage[id][j] < UTIL_ZERO)
+        if (m_soilStorage[id][j] != m_soilStorage[id][j] || m_soilStorage[id][j] < 0.f)
         {
             ostringstream oss;
             oss << "cell id: " << id << "\t layer: " << j << "\nmoisture is less than zero: " << m_soilStorage[id][j] << "\t"
@@ -103,7 +104,7 @@ void SSR_DA::FlowInSoil(int id)
         {
             // for the upper two layers, soil may be frozen
             // also check if there are upstream inflow
-            if (j == 0 && m_soilT[id] <= m_frozenT && qUp <= UTIL_ZERO)
+            if (j == 0 && m_soilT[id] <= m_frozenT && qUp <= 0.f)
                 continue;
 
             float k= 0.f, maxSoilWater= 0.f, soilWater= 0.f, fcSoilWater= 0.f;
@@ -117,26 +118,28 @@ void SSR_DA::FlowInSoil(int id)
             {
                 float dcIndex = 2.f / m_poreIndex[id][j] + 3.f; // pore disconnectedness index
                 k = m_ks[id][j] * pow(m_soilStorage[id][j] / maxSoilWater, dcIndex);
-				if(k<UTIL_ZERO) k = 0.f;
+				if(k < 0.f) k = 0.f;
             }
             m_qi[id][j] = m_ki * s0 * k * m_dt / 3600.f * m_soilThick[id][j] / 1000.f / flowWidth; // the unit is mm
 
-			if (m_qi[id][j] < UTIL_ZERO)
+			if (m_qi[id][j] < 0.f)
 				m_qi[id][j] = 0.f;
 			else if (soilWater - m_qi[id][j]> maxSoilWater)
 				m_qi[id][j] = soilWater - maxSoilWater;
 			else if (soilWater - m_qi[id][j] < fcSoilWater)
 				m_qi[id][j] = soilWater - fcSoilWater;
 
-			if(m_qi[id][j] < UTIL_ZERO)
+			if(m_qi[id][j] < 0.f)
+				m_qi[id][j] = 0.f;
+			if (m_qi[id][j] >= m_soilStorage[id][j])
 				m_qi[id][j] = 0.f;
             m_qiVol[id][j] = m_qi[id][j] / 1000.f * m_CellWidth * flowWidth; //m3
-			if(m_qiVol[id][j] < UTIL_ZERO)
+			if(m_qiVol[id][j] < 0.f)
 				m_qiVol[id][j] = 0.f;
             //Adjust the moisture content in the current layer, and the layer immediately below it
 			m_soilStorage[id][j] -= m_qi[id][j];
 			m_soilStorageProfile[id] += m_soilStorage[id][j];
-            if (m_soilStorage[id][j] != m_soilStorage[id][j] || m_soilStorage[id][j] < UTIL_ZERO)
+            if (m_soilStorage[id][j] != m_soilStorage[id][j] || m_soilStorage[id][j] < 0.f)
             {
                 ostringstream oss;
                 oss << id << "\t" << j << "\nmoisture is less than zero: " << m_soilStorage[id][j] << "\t" << m_soilThick[id][j];
