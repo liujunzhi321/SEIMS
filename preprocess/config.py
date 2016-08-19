@@ -117,9 +117,9 @@ if 'SPATIAL' in cf.sections():
     landcoverInitFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'landcoverInitFile'.lower())
     soilSEQNFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'soilSEQNFile'.lower())
     soilSEQNText = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'soilSEQNText'.lower())
-    mgtFiedlFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'mgtFiedlFile'.lower())
-    if not os.path.exists(mgtFiedlFile):
-        mgtFiedlFile = None
+    mgtFieldFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'mgtFieldFile'.lower())
+    if not os.path.exists(mgtFieldFile) or StringMatch(mgtFieldFile, 'none'):
+        mgtFieldFile = None
 else:
     raise ValueError("Spatial input file names MUST be provided in [SPATIAL]!")
 

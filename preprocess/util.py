@@ -326,18 +326,12 @@ def RMSE(list1, list2):
 
 
 def GetRasterStat(rasterFile):
-    dataset = gdal.Open(rasterFile, GA_ReadOnly)
-    if not dataset is None:
-        band = dataset.GetRasterBand(1)
-        max = band.GetMaximum()
-        min = band.GetMinimum()
-        if max is None or min is None:
-            (min, max) = band.ComputeRasterMinMax(1)
-        mean, std = band.ComputeBandStats()
-        band = None
-        dataset = None
-        return (max, min, mean, std)
-    dataset = None
+    rs = ReadRaster(rasterFile)
+    max = rs.GetMax()
+    min = rs.GetMin()
+    mean = rs.GetAverage()
+    std = rs.GetSTD()
+    return max, min, mean, std
 
 
 def WriteAscFile(filename, data, xsize, ysize, geotransform, noDataValue):
