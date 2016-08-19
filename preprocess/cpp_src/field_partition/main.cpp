@@ -250,6 +250,7 @@ void DoFieldsPartition(map<string, string>&rstFilePaths, FlowDirectionMethod flo
 		rsStrLink.ReadFromArcAsc(streamLinkName.c_str());
 	else
 		rsStrLink.ReadFromGDAL(streamLinkName.c_str());
+	//cout<<"xll: "<<rsMask.GetXllCenter()<<", yll: "<<rsMask.GetYllCenter()<<endl;
 	Raster<float> rsDEM;
 	if(GetSuffix(demName) == "ASC")
 		rsDEM.ReadFromArcAsc(demName.c_str());

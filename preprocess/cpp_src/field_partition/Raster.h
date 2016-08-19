@@ -34,10 +34,10 @@ public:
 	void SetValue(int i, int j, T val) { m_data[i][j] = val; }
 	int GetNumberOfRows() { return m_nRows; }
 	int GetNumberofColumns() { return m_nCols; }
-	float GetXllCenter() { return m_xllCenter; }
-	float GetYllCenter() { return m_yllCenter; }
-	float GetXCellSize() { return m_dx; }
-	float GetYCellSize() { return m_dy; }
+	double GetXllCenter() { return m_xllCenter; }
+	double GetYllCenter() { return m_yllCenter; }
+	double GetXCellSize() { return m_dx; }
+	double GetYCellSize() { return m_dy; }
 	T GetNoDataValue() { return m_noDataValue; }
 	T** GetData() { return m_data; }
 	string GetSRS() {return m_srs;}
@@ -46,8 +46,8 @@ private:
 	T **m_data;
 	T m_noDataValue;
 	int m_nRows, m_nCols;
-	float m_xllCenter, m_yllCenter;
-	float m_dx, m_dy;
+	double m_xllCenter, m_yllCenter;
+	double m_dx, m_dy;
 	/// OGRSpatialReference
 	string m_srs;
 

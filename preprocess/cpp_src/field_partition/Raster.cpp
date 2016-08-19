@@ -193,8 +193,8 @@ int Raster<T>::ReadFromGDAL(const char* filename)
 	poDataset->GetGeoTransform(adfGeoTransform);
 	m_dx = adfGeoTransform[1];
 	m_dy = -adfGeoTransform[5];
-	m_xllCenter = adfGeoTransform[0] + 0.5f*m_dx;
-	m_yllCenter = adfGeoTransform[3] - (m_nRows - 0.5f)*m_dy;
+	m_xllCenter = adfGeoTransform[0];
+	m_yllCenter = adfGeoTransform[3] - (m_nRows)*m_dy;
 	m_srs = string(poDataset->GetProjectionRef());
 	//allocate memory
 	DeleteExistingData();
