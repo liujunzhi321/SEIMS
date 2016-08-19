@@ -1,5 +1,7 @@
 ## 店埠河小流域SEIMS模型准备数据
 
+> 以下教程中文件路径可能包含了Windows服务器（6.57）和Linux服务器（6.55）
+
 ### 1 气候数据
 
 #### 1.1 数据来源
@@ -65,21 +67,58 @@
 
 ### 2 空间数据
 #### 2.1 土壤
-+ (Deprecated)soil_SEQN_bsn1_old_10m.tif、soil_SEQN_bsn1_old_30m.tif为1号小流域，安徽1:100万土壤图
-+ soil_SEQN_10m.tif、soil_SEQN_10m.tif为1、2、3号小流域，肥东土肥站绘制土壤图
-####2.2 土地利用
-+ landuse_10m.tif、landuse_30m.tif为1、2、3号小流域
-+ landuse_bsn1_10m.tif、landuse_bsn1_30m.tif为1号小流域
+
++ soil_SEQN_30m.tif，肥东土肥站绘制土壤类型图，野外采样得到土壤属性数据
+
+#### 2.2 土地利用
++ landuse_30m.tif
 
 
-### 建模过程
+### 3 建模过程
 
-#### .1 子流域划分
+#### 3.1 子流域划分
 
-设置`mgtFieldFile = None（line 42 in *.ini file）`，并利用命令`python G:\code_zhulj\SEIMS\preprocess\subbasin_delineation.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu2_30m_longterm_omp_zhulj_winserver.ini`进行子流域划分，结合DEM分析，最终确定一个合适的汇流累积量阈值，即`D8AccThreshold（line 47 in *.ini file）`。
++ 设置`mgtFieldFile = None（line 42 in *.ini file）`
++ 运行程序`python G:\code_zhulj\SEIMS\preprocess\subbasin_delineation.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu_30m_longterm_omp_zhulj_winserver.ini`进行子流域划分，结合DEM分析，最终确定一个合适的汇流累积量阈值，即`D8AccThreshold（line 47 in *.ini file）`。
++ 运行程序`python G:\code_zhulj\SEIMS\preprocess\parameters_extraction.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu_30m_longterm_omp_zhulj_winserver.ini`
 
-#### .2 管理单元划分
+#### 3.2 管理单元划分
 
-利用流向、土地利用、子流域等进行管理单元划分，目前可以利用吴辉博士开发的考虑上下游关系地块划分方法，即预处理程序中的`fieldpartition`。
++ 利用流向、土地利用、子流域等进行管理单元划分，目前可以利用吴辉博士开发的考虑上下游关系地块划分方法，即预处理程序中的`fieldpartition`。
 
++ 详细使用说明参见[这里](https://github.com/lreis2415/FieldPartition)。
+
++ 地块划分结果为一个地块栅格文件，用于设置*.ini文件中的mgtFieldFile，以及一个txt文件，文件中记录了每个地块编号、下游地块编号以及主要土地利用类型等。
+
+#### 3.3 管理措施情景设置
+
+#### 3.3.1 输入文件组织
+
++ BMP_index.txt：SEIMS模型支持的BMP类型编号 （目前多数尚未实现）
++ BMP_scenarios.txt：情景分析设置的主文件，包含以下属性列：
+	+ ID：唯一标识情景ID
+	+ NAME：情景名称
+	+ BMPID：BMP类型，如12为作物管理，1为点源污染
+	+ SUBSCENARIO：子情景唯一标识ID，某一BMP类型可能存在多个子情景，如作物管理下可分为0传统施肥方式和1生态种植技术
+	+ DISTRIBUTION：定义该BMP的分布，多个字段用‘|’分割，第一个可为RASTER和ARRAY，分别意为栅格数据和列表；如为栅格数据，则第二个为栅格名（如MGT_FIELDS），如果为列表，第二个则为MongoDB表明，其中存储点状要素列表（如point_source_distribution）；如果为列表，第三个数为点状要素类别（如10000为养牛厂）
+	+ COLLECTION：管理措施参数表，如点源污染措施表为point_source_management
+	+ LOCATION：用于定义该措施实施位置，如果DISTRIBUTION中为RASTER，则LOCATION定义栅格值，多个值之间用‘，’分割，如“1,3,4”，如果作用于整个流域，则输入“ALL”；同理，如果DISTRIBUTION为ARRAY，LOCATION中输入COLLECTION中定义的点编号，如“20001,20003”等
++ point_source_distribution.txt：如上所述，定义点源污染位置，包括
+	+ PTSRC：点源类型，包括养牛厂（10000），养猪厂（20000），上游水库放水点（30000），居民生活污水排放口（40000）
+	+ PTSRCID：具体点源编号，支持1~9999
+	+ Name：点源名称
+	+ Lon，Lat：经纬度
+	+ LocalX，LocalY：投影坐标值，用于判断该点源所在子流域
+	+ Size：规模，用于计算排放总量，如10001养牛厂养殖300头牛
++ point_source_management.txt：点源管理，用于确定排放量及排放日期等，详见该文件头中注释（#开头）
++ areal_source_distribution.txt 与 areal_source_management.txt 同上，不再赘述。
+
+#### 3.3.2 管理措施数据
+
+> 有关管理措施更新之后，可以用`python import_bmp_scenario.py -ini *.ini`程序重新导入数据库。
+
+
+|ScenarioID|基本介绍|
+|----|----|
+|0|基准情景：养殖场不采取措施、农田采用传统施肥、生活污水直接排放|
 
