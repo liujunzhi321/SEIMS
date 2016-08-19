@@ -21,7 +21,7 @@ UTIL_ZERO = 1.e-6
 MINI_SLOPE = 0.0001
 DEFAULT_NODATA = -9999.
 SQ2 = math.sqrt(2.)
-shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx']
+shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx', 'cpg']
 
 
 class C(object):
@@ -188,7 +188,8 @@ class Raster:
 
     def GetValueByXY(self, x, y):
         if x < self.xMin or x > self.xMax or y < self.yMin or y > self.yMax:
-            raise ValueError("The x or y value must be within the Min and Max!")
+            return None
+            # raise ValueError("The x or y value must be within the Min and Max!")
         else:
             row = self.nRows - int(numpy.ceil((y - self.yMin) / self.dx))
             col = int(numpy.floor((x - self.xMin) / self.dx))
