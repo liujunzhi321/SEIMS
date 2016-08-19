@@ -77,7 +77,7 @@ Communication(vector<RasterLayer<elemType> *> *pComVec)
         _pMetadata = this->_pComVec->at(0)->_pMetaData;
         cout << "_pMetadata =  this->_pComVec->at(0)->_pMetaData;" << endl;
     }
-    cout << "ok!" << endl;
+    //cout << "ok!" << endl;
 
 }
 

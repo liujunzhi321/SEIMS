@@ -7,6 +7,7 @@
 
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+
 from config import *
 from util import *
 
@@ -50,29 +51,29 @@ def ImportBMPTables():
         for item in dataArray:
             dic = {}
             for i in range(len(fieldArray)):
-                if (isNumericValue(item[i])):
+                if isNumericValue(item[i]):
                     dic[fieldArray[i].upper()] = float(item[i])
                 else:
                     dic[fieldArray[i].upper()] = str(item[i]).upper()
             if StringInList(Tag_ST_LocalX, dic.keys()) and StringInList(Tag_ST_LocalY, dic.keys()):
                 subbsnID = subbasinR.GetValueByXY(dic[Tag_ST_LocalX.upper()], dic[Tag_ST_LocalY.upper()])
                 distance = dist2StreamR.GetValueByXY(dic[Tag_ST_LocalX.upper()], dic[Tag_ST_LocalY.upper()])
-                if subbsnID != None and distance != None:
+                if subbsnID is not None and distance is not None:
                     dic[REACH_SUBBASIN.upper()] = float(subbsnID)
                     dic[BMP_FLD_PT_DISTDOWN.upper()] = float(distance)
-                    db[bmpTabName.upper()].find_one_and_replace(dic, dic, upsert = True)
+                    db[bmpTabName.upper()].find_one_and_replace(dic, dic, upsert=True)
             else:
-                db[bmpTabName.upper()].find_one_and_replace(dic, dic, upsert = True)
+                db[bmpTabName.upper()].find_one_and_replace(dic, dic, upsert=True)
     # print 'BMP tables are imported.'
-    ## Write BMP database name into Model main database
+    # Write BMP database name into Model main database
     mainDB = conn[SpatialDBName]
     cList = mainDB.collection_names()
     if not StringInList(DB_TAB_BMP_DB.upper(), cList):
         mainDB.create_collection(DB_TAB_BMP_DB.upper())
 
-    bmpInfoDic = {}
+    bmpInfoDic = dict()
     bmpInfoDic[FLD_DB.upper()] = BMPScenarioDBName
-    mainDB[DB_TAB_BMP_DB.upper()].find_one_and_replace(bmpInfoDic, bmpInfoDic, upsert = True)
+    mainDB[DB_TAB_BMP_DB.upper()].find_one_and_replace(bmpInfoDic, bmpInfoDic, upsert=True)
     conn.close()
 
 

@@ -115,7 +115,10 @@ int NPS_Management::Execute()
 			{
 				float deltaWtrMM = 0.f, deltaNH3 = 0.f, deltaNO3 = 0.f, deltaOrgN = 0.f;
 				float deltaMinP = 0.f, deltaOrgP = 0.f;
-				ArealSourceLocations* tmpLoc = it->second->GetArealSrcLocsMap().at(*fIDIter);
+				map<int, ArealSourceLocations*> tmpLocMap = it->second->GetArealSrcLocsMap();
+				if (tmpLocMap.find(*fIDIter) == tmpLocMap.end())
+					continue;
+				ArealSourceLocations* tmpLoc = tmpLocMap.at(*fIDIter);
 				float tmpSize = tmpLoc->GetSize();
 				int tmpNCells = tmpLoc->GetValidCells();
 				if (tmpMgtParams->GetWaterVolume() > 0.f) /// m3/'size'/day ==> mm

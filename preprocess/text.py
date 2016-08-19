@@ -288,7 +288,7 @@ chwidthName = "chwidth.tif"
 landuseMFile = "landuse.tif"
 cropMFile = "landcover.tif"  ### added by LJ.
 soiltypeMFile = "soiltype.tif"
-mgtFiedlMFile = "mgt_fields.tif"
+mgtFieldMFile = "mgt_fields.tif"
 
 soilTexture = "SOIL_TEXTURE.tif"
 hydroGroup = "HYDRO_GROUP.tif"

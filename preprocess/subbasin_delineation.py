@@ -142,12 +142,6 @@ def SubbasinDelineation():
                        exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 
-    status = "Generating stream skeleton..."
-    fStatus.write("%d,%s\n" % (30, status))
-    fStatus.flush()
-    print StreamSkeleton(np, tauDir, filledDem, streamSkeleton, mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
-    print "[Output], %s, %s" % (WORKING_DIR, status)
-
     status = "D8 flow accumulation..."
     fStatus.write("%d,%s\n" % (40, status))
     fStatus.flush()
@@ -174,17 +168,24 @@ def SubbasinDelineation():
                      exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 
-    status = "Flow accumulation with outlet..."
-    fStatus.write("%d,%s\n" % (70, status))
-    fStatus.flush()
-    print FlowAccD8(np, tauDir, flowDir, accWithWeight, modifiedOutlet, streamSkeleton, mpiexeDir = MPIEXEC_DIR,
-                    exeDir = CPP_PROGRAM_DIR)
-    print "[Output], %s, %s" % (WORKING_DIR, status)
+
 
     if D8AccThreshold <= 0:
+        status = "Generating stream skeleton..."
+        fStatus.write("%d,%s\n" % (30, status))
+        fStatus.flush()
+        print StreamSkeleton(np, tauDir, filledDem, streamSkeleton, mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
+        status = "Flow accumulation with outlet..."
+        fStatus.write("%d,%s\n" % (70, status))
+        fStatus.flush()
+        print FlowAccD8(np, tauDir, flowDir, accWithWeight, modifiedOutlet, streamSkeleton, mpiexeDir = MPIEXEC_DIR,
+                        exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
         status = "Drop analysis to select optimal threshold..."
         fStatus.write("%d,%s\n" % (75, status))
         fStatus.flush()
+        maxAccum, minAccum, meanAccum, STDAccum = GetRasterStat(accWithWeight)
         if meanAccum - STDAccum < 0:
             minthresh = meanAccum
         else:
@@ -209,11 +210,27 @@ def SubbasinDelineation():
         print StreamRaster(np, tauDir, accWithWeight, streamRaster, float(Threshold), mpiexeDir = MPIEXEC_DIR,
                            exeDir = CPP_PROGRAM_DIR)
         print "[Output], %s, %s" % (WORKING_DIR, status)
-
+    else:
+        status = "Flow accumulation with outlet..."
+        fStatus.write("%d,%s\n" % (70, status))
+        fStatus.flush()
+        print FlowAccD8(np, tauDir, flowDir, acc, modifiedOutlet, streamSkeleton = None,
+                        mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
+        status = "Generating stream raster..."
+        fStatus.write("%d,%s\n" % (80, status))
+        fStatus.flush()
+        print StreamRaster(np, tauDir, acc, streamRaster, D8AccThreshold, mpiexeDir = MPIEXEC_DIR,
+                           exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
     status = "Generating stream net..."
     fStatus.write("%d,%s\n" % (90, status))
     fStatus.flush()
-    print StreamNet(np, tauDir, filledDem, flowDir, accWithWeight, streamRaster, modifiedOutlet, streamOrder, chNetwork,
+    if D8AccThreshold <= 0:
+        tmpAcc = accWithWeight
+    else:
+        tmpAcc = acc
+    print StreamNet(np, tauDir, filledDem, flowDir, tmpAcc, streamRaster, modifiedOutlet, streamOrder, chNetwork,
                     chCoord, streamNet, subbasin, mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 

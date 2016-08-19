@@ -12,8 +12,16 @@ from util import *
 cf = ConfigParser.ConfigParser()
 cf.read(GetINIfile())
 # 1. Directories
+CLIMATE_DATA_DIR = None
+SPATIAL_DATA_DIR = None
+BMP_DATA_DIR = None
+MEASUREMENT_DATA_DIR = None
 if 'PATH' in cf.sections():
     BASE_DATA_DIR = cf.get('PATH', 'BASE_DATA_DIR'.lower())
+    CLIMATE_DATA_DIR = cf.get('PATH', 'CLIMATE_DATA_DIR'.lower())
+    SPATIAL_DATA_DIR = cf.get('PATH', 'SPATIAL_DATA_DIR'.lower())
+    MEASUREMENT_DATA_DIR = cf.get('PATH', 'MEASUREMENT_DATA_DIR'.lower())
+    BMP_DATA_DIR = cf.get('PATH', 'BMP_DATA_DIR'.lower())
     MODEL_DIR = cf.get('PATH', 'MODEL_DIR'.lower())
     TXT_DB_DIR = cf.get('PATH', 'TXT_DB_DIR'.lower())
     PREPROC_SCRIPT_DIR = cf.get('PATH', 'PREPROC_SCRIPT_DIR'.lower())
@@ -34,12 +42,8 @@ if os.path.isdir(WORKING_DIR):
 else:
     WORKING_DIR = MODEL_DIR + os.sep + 'preprocess_output'
     os.mkdir(WORKING_DIR)
-CLIMATE_DATA_DIR = BASE_DATA_DIR + os.sep + 'climate'
-SPATIAL_DATA_DIR = BASE_DATA_DIR + os.sep + 'spatial'
-MEASUREMENT_DATA_DIR = BASE_DATA_DIR + os.sep + 'observed'
-BMP_DATA_DIR = BASE_DATA_DIR + os.sep + 'management'
 
-if not (isPathExists(CLIMATE_DATA_DIR) and isPathExists(CLIMATE_DATA_DIR)):
+if not (isPathExists(CLIMATE_DATA_DIR) and isPathExists(SPATIAL_DATA_DIR)):
     raise IOError("Directories named 'climate' and 'spatial' MUST BE located in [BASE_DATA_DIR]!")
 useObserved = True
 if not isPathExists(MEASUREMENT_DATA_DIR):
@@ -117,9 +121,9 @@ if 'SPATIAL' in cf.sections():
     landcoverInitFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'landcoverInitFile'.lower())
     soilSEQNFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'soilSEQNFile'.lower())
     soilSEQNText = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'soilSEQNText'.lower())
-    mgtFiedlFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'mgtFiedlFile'.lower())
-    if not os.path.exists(mgtFiedlFile):
-        mgtFiedlFile = None
+    mgtFieldFile = SPATIAL_DATA_DIR + os.sep + cf.get('SPATIAL', 'mgtFieldFile'.lower())
+    if not os.path.exists(mgtFieldFile) or StringMatch(mgtFieldFile, 'none'):
+        mgtFieldFile = None
 else:
     raise ValueError("Spatial input file names MUST be provided in [SPATIAL]!")
 
