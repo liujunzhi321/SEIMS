@@ -234,4 +234,6 @@ void OutputLayersToMongoDB(const char *layeringTxtFile, const char *dataType, in
     ifs.close();
 
     WriteStringToMongoDB(gfs, id, dataType, n, (const char *) pLayers);
+	delete[] pLayers;
+	pLayers = NULL;
 }

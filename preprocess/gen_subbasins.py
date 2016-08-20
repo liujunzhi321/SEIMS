@@ -145,7 +145,7 @@ def GenerateSubbasins():
         convert2GeoJson(jsonName, proj_srs, wgs84_srs, geoJson_dict.get(jsonName))
     fStatus.write("%d,%s\n" % (100, "Finished!"))
     fStatus.close()
-
+    ImportSubbasinStatistics()
 
 def ImportSubbasinStatistics():
     '''
@@ -243,5 +243,5 @@ def ImportSubbasinStatistics():
 
 if __name__ == "__main__":
     LoadConfiguration(GetINIfile())
-    # GenerateSubbasins()
-    ImportSubbasinStatistics()
+    GenerateSubbasins()
+

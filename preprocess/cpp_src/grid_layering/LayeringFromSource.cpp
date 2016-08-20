@@ -51,11 +51,16 @@ string LayeringFromSourceD8(const char *outputDir, gridfs *gfs, int id, int nVal
     ofs.close();
 
 
-    delete reverseDirMatrix;
-    delete inDegreeMatrix;
-    delete layeringGrid;
-    delete flowInOutput;
+    delete[] reverseDirMatrix;
+    delete[] inDegreeMatrix;
+    delete[] layeringGrid;
+    delete[] flowInOutput;
+	reverseDirMatrix = NULL;
+	inDegreeMatrix = NULL;
+	layeringGrid = NULL;
+	flowInOutput = NULL;
 
+	cout<< "OutputD8FlowInIndexes done!" <<endl;
     return oss.str();
 }
 
@@ -105,11 +110,16 @@ string LayeringFromSourceDinf(const char *outputDir, gridfs *gfs, int id, int nV
     ofstream ofs(oss.str().c_str());
     ofs << outputStr;
 
-    delete reverseDirMatrix;
-    delete inDegreeMatrix;
-    delete layeringGrid;
-    delete flowInOutput;
-    delete percentage;
+    delete[] reverseDirMatrix;
+    delete[] inDegreeMatrix;
+    delete[] layeringGrid;
+    delete[] flowInOutput;
+    delete[] percentage;
+	reverseDirMatrix = NULL;
+	inDegreeMatrix = NULL;
+	layeringGrid = NULL;
+	flowInOutput = NULL;
+	percentage = NULL;
 
     return oss.str();
 }
@@ -326,13 +336,14 @@ string GridLayeringFromSource(int nValidGrids, const int *dirMatrix, const int *
         nextLayer = tmp;
     }
 
-    delete lastLayer;
-    delete nextLayer;
+    delete[] lastLayer;
+    delete[] nextLayer;
+	lastLayer = NULL;
+	nextLayer = NULL;
 
     ostringstream outputOss;
     outputOss << nValidGrids << "\t" << curNum << oss.str();
 
     return outputOss.str();
-
 }
 

@@ -50,6 +50,7 @@ int main(int argc, char **argv)
 
     for (int i = 1; i <= nSubbasins; i++)
     {
+		// read D8 flow direction
         ostringstream oss;
         oss << i << "_FLOW_DIR";
         RasterHeader header;
@@ -63,16 +64,18 @@ int main(int argc, char **argv)
         int n = nRows * nCols;
         int *compressedIndex = new int[n];
         int nValidGrids = CalCompressedIndex(n, dirMatrix, header.noDataValue, compressedIndex);
-
+		// if it is TauDEM flow code, then convert it to ArcGIS
 		TauDEM2ArcGIS(nRows, nCols, dirMatrix);
+		// Output flow out index to MongoDB (D8)
         OutputFlowOutD8(gfs, i, nRows, nCols, nValidGrids, dirMatrix, header.noDataValue, compressedIndex);
-
+		// Output flow in indexes to MongoDB (D8), and write ROUTING_LAYERS from up to down
         string layeringFile = LayeringFromSourceD8(outputDir, gfs, i, nValidGrids, dirMatrix, compressedIndex, header,
                                                    outputNoDataValue);
-        cout << layeringFile << endl;
+        //cout << layeringFile << endl;
+		// Output ROUTING_LAYERS_UP_DOWN (D8) to MongoDB
         OutputLayersToMongoDB(layeringFile.c_str(), "ROUTING_LAYERS_UP_DOWN", i, gfs);
 
-        // The following code is for d-infinite algorithm
+        // The following code is for D-infinite algorithm
         ostringstream ossDinf;
         ossDinf << i << "_FLOW_DIR_DINF";
         int *dirMatrixDinf;
@@ -91,15 +94,20 @@ int main(int argc, char **argv)
 
         string layeringFileDinf = LayeringFromSourceDinf(outputDir, gfs, i, nValidGrids, angle, dirMatrixDinf,
                                                          compressedIndex, header, outputNoDataValue);
-        cout << layeringFileDinf << endl;
+        // cout << layeringFileDinf << endl;
         OutputLayersToMongoDB(layeringFileDinf.c_str(), "ROUTING_LAYERS_DINF", i, gfs);
 
 
-        delete dirMatrix;
-        delete compressedIndex;
-
-        delete dirMatrixDinf;
-        delete outDegreeMatrixDinf;
+        delete[] dirMatrix;
+        delete[] compressedIndex;
+        delete[] dirMatrixDinf;
+        delete[] outDegreeMatrixDinf;
+		delete[] angle;
+		dirMatrix = NULL;
+		compressedIndex = NULL;
+		dirMatrixDinf = NULL;
+		outDegreeMatrixDinf = NULL;
+		angle = NULL;
     }
 
     clock_t t2 = clock();
