@@ -25,6 +25,9 @@ mpiexec -n 4 E:\github-zlj\SEIMS_VS\Debug\seims ..\model_data\cluster_model_fenk
 + + G:\compile\SEIMS\Release\seims_omp G:\code_zhulj\SEIMS\model_data\dianbu\model_dianbu_30m_longterm 8 0 192.168.6.55 27017 0
 + python G:\code_zhulj\SEIMS\preprocess\main.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu_30m_longterm_omp_zhulj_winserver.ini
 + python G:\code_zhulj\SEIMS\preprocess\subbasin_delineation.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu2_30m_longterm_omp_zhulj_winserver.ini
++ python G:\code_zhulj\SEIMS\preprocess\import_bmp_scenario.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu2_30m_longterm_omp_zhulj_winserver.ini
+
++ G:\compile\SEIMS_Preprocess\Release\grid_layering 192.168.6.55 27017 G:\data_m\SEIMS_dataprepare\model_dianbu2_30m_longterm\layering_info model_dianbu2_30m_longterm SPATIAL 1
 
 ## TEST COMMAND ON DGPM-cluster:
 + python /home/zhulj/SEIMS/SEIMS/preprocess/main.py /home/zhulj/SEIMS/SEIMS/preprocess/dianbu_30m_longterm_omp_dgpm.ini
