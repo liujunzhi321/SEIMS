@@ -91,8 +91,9 @@ void OutputFlowOutD8(gridfs *gfs, int id, int nRows, int nCols, int validCount, 
     }
 
     WriteStringToMongoDB(gfs, id, "FLOWOUT_INDEX_D8", validCount, (const char *) pOutput);
-
-    delete pOutput;
+	delete[] pOutput;
+	pOutput = NULL;
+	cout<< "OutputD8FlowOutIndex done, n:" << validCount <<endl;
 }
 
 int OutputMultiFlowOut(int nRows, int nCols, int validCount,
