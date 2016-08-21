@@ -20,45 +20,15 @@ SEDOL_IUH::SEDOL_IUH(void): m_TimeStep(-1), m_cellSize(-1), m_CellWidth(NODATA_V
 SEDOL_IUH::~SEDOL_IUH(void)
 {
 	//// cleanup
-	if(m_DETOverland!=NULL)
-		delete [] m_DETOverland;
-	if(this->m_cellSedKg != NULL)
-	{
-		for(int i=0;i<this->m_cellSize;i++)
-		{
-			if(this->m_cellSedKg[i] != NULL) delete [] this->m_cellSedKg[i];
-		}
-		delete [] this->m_cellSedKg;
-	}
-	if (this->m_DETOverland != NULL)   
-	{
-		delete [] this->m_DETOverland;   
-	}
-	if (this->m_Sed_Flow != NULL)   
-	{
-		delete [] this->m_Sed_Flow;   
-	}
-	if (this->m_sedimentch != NULL)   
-	{
-		delete [] this->m_sedimentch;   
-	}
-	if (m_Ctrans != NULL)
-	{
-		delete[] m_Ctrans;
-	}
-	if (m_SedDep != NULL)
-	{
-		delete[] m_SedDep;
-	}
-	if (m_Vol != NULL)
-	{
-		delete[] m_Vol;
-	}
-	if (m_V != NULL)
-	{
-		delete[] m_V;
-	}
+	if (this->m_DETOverland!=NULL) Release1DArray(m_DETOverland);
+	if (this->m_Sed_Flow != NULL) Release1DArray(m_Sed_Flow);
+	if (this->m_sedimentch != NULL) Release1DArray(m_sedimentch);
+	if (this->m_Ctrans != NULL) Release1DArray(m_Ctrans);
+	if (this->m_SedDep != NULL) Release1DArray(m_SedDep);
+	if (this->m_Vol != NULL) Release1DArray(m_Vol);
+	if (this->m_V != NULL) Release1DArray(m_V);
 
+	if (this->m_cellSedKg != NULL) Release2DArray(m_cellSize, m_cellSedKg);
 }
 
 bool SEDOL_IUH::CheckInputData(void)
@@ -66,63 +36,58 @@ bool SEDOL_IUH::CheckInputData(void)
 	if (m_cellSize < 0)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_cellSize has not been set.");
-		return false;
 	}
 	if (FloatEqual(m_CellWidth, NODATA_VALUE))
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_CellWidth has not been set.");
-		return false;
 	}
 	if (m_TimeStep <= 0)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_TimeStep has not been set.");
-		return false;
 	}
-
 	if (m_subbasin == NULL)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_subbasin has not been set.");
-		return false;
 	}
 	if (m_ManningN == NULL)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_ManningN has not been set.");
-		return false;
 	}
 	if (m_DETSplash == NULL)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_DETSplash has not been set.");
-		return false;
 	}
 	if (m_WH == NULL)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: water depth has not been set.");
-		return false;
 	}
 	if(this->m_Ccoe < 0)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","You have not set the calibration coefficient of overland erosion.");
-		return false;
+	}
+	if (m_eco1 < 0)
+	{
+		throw ModelException(MID_KINWAVSED_OL, "CheckInputData", "You have not set the calibration coefficient 1.");
+	}
+	if (m_eco2 < 0)
+	{
+		throw ModelException(MID_KINWAVSED_OL, "CheckInputData", "You have not set the calibration coefficient 2.");
 	}
 	if (this->m_USLE_K == NULL)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","You have not set the USLE K (Erosion factor).");
-		return false;
 	}
 	if (this->m_USLE_C == NULL)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter of USLE_C can not be NULL.");
-		return false;
 	}
 	if (m_Slope == NULL)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: slope has not been set.");
-		return false;
 	}
 	if (m_iuhCell == NULL)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_iuhCell has not been set.");
-		return false;
 	}
 	/*if (m_rs == NULL)
 	{
@@ -132,7 +97,6 @@ bool SEDOL_IUH::CheckInputData(void)
 	if (m_date < 0)
 	{
 		throw ModelException("SEDOL_IUH","CheckInputData","The parameter: m_date has not been set.");
-		return false;
 	}
 
 	return true;

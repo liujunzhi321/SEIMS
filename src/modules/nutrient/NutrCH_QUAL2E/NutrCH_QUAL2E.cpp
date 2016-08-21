@@ -86,179 +86,179 @@ bool NutrCH_QUAL2E::CheckInputData()
     }
     if (this->m_aBank < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_aBank can not be NULL.");
     }
     if (this->m_qUpReach < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_qUpReach can not be NULL.");
     }
     if (this->m_rnum1 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_rnum1 can not be NULL.");
     }
     if (this->igropt < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: igropt can not be NULL.");
     }
     if (this->m_ai0 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_ai0 can not be NULL.");
     }
     if (this->m_ai1 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_ai1 can not be NULL.");
     }
     if (this->m_ai2 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_ai2 can not be NULL.");
     }
     if (this->m_ai3 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_ai3 can not be NULL.");
     }
     if (this->m_ai4 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_ai4 can not be NULL.");
     }
     if (this->m_ai5 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_ai5 can not be NULL.");
     }
     if (this->m_ai6 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_ai6 can not be NULL.");
     }
     if (this->m_lambda0 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_lambda0 can not be NULL.");
     }
     if (this->m_lambda1 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_lambda1 can not be NULL.");
     }
     if (this->m_lambda2 < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_lambda2 can not be NULL.");
     }
     if (this->m_k_l < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_k_l can not be NULL.");
     }
     if (this->m_k_n < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_k_n can not be NULL.");
     }
     if (this->m_k_p < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_k_p can not be NULL.");
     }
     if (this->m_p_n < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_p_n can not be NULL.");
     }
     if (this->tfact < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: tfact can not be NULL.");
     }
     if (this->m_mumax < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_mumax can not be NULL.");
     }
     if (this->m_rhoq < 0)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_rhoq can not be NULL.");
     }
     if (this->m_daylen == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_daylen can not be NULL.");
     }
     if (this->m_sra == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The parameter: m_sra can not be NULL.");
     }
     if (this->m_bankStorage == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_bankStorage can not be NULL.");
     }
     if (this->m_qsSub == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_qsSub can not be NULL.");
     }
     if (this->m_qiSub == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_qiSub can not be NULL.");
     }
     if (this->m_qgSub == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_qgSub can not be NULL.");
     }
     if (this->m_qsCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_qsCh can not be NULL.");
     }
     if (this->m_qiCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_qiCh can not be NULL.");
     }
     if (this->m_qgCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_qgCh can not be NULL.");
     }
     if (this->m_chStorage == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_chStorage can not be NULL.");
     }
     if (this->m_chWTdepth == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_chWTdepth can not be NULL.");
     }
     if (this->m_wattemp == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_wattemp can not be NULL.");
     }
     if (this->m_latno3ToCh == NULL)
     {
-		throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+		throw ModelException("NutCHRout", "CheckInputData", "The input: m_latno3ToCh can not be NULL.");
     }
     if (this->m_surqno3ToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_surqno3ToCh can not be NULL.");
     }
     if (this->m_surqsolpToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_surqsolpToCh can not be NULL.");
     }
     if (this->m_no3gwToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_no3gwToCh can not be NULL.");
     }
     if (this->m_minpgwToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_minpgwToCh can not be NULL.");
     }
     if (this->m_sedorgnToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_sedorgnToCh can not be NULL.");
     }
     if (this->m_sedorgpToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_sedorgpToCh can not be NULL.");
     }
     if (this->m_sedminpaToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_sedminpaToCh can not be NULL.");
     }
     if (this->m_sedminpsToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_sedminpsToCh can not be NULL.");
     }
     if (this->m_ammoToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_ammoToCh can not be NULL.");
     }
     if (this->m_nitriteToCh == NULL)
     {
-        throw ModelException("NutCHRout", "CheckInputData", "The input data can not be NULL.");
+        throw ModelException("NutCHRout", "CheckInputData", "The input: m_nitriteToCh can not be NULL.");
     }
     return true;
 }

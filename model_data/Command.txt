@@ -31,3 +31,13 @@ python G:\code_zhulj\SEIMS\preprocess\import_parameters.py -ini G:\code_zhulj\SE
 python G:\code_zhulj\SEIMS\preprocess\import_bmp_scenario.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu_30m_longterm_omp_zhulj_winserver.ini
 python G:\code_zhulj\SEIMS\preprocess\parameters_extraction.py -ini G:\code_zhulj\SEIMS\preprocess\dianbu_30m_longterm_omp_zhulj_winserver.ini
 
+## TEST COMMAND BY Huiran Gao:
+
++ D:\SEIMS_model\SEIMS\Release\seims_omp D:\SEIMS_model\Model_data\model_dianbu_30m_longterm 8 0 192.168.6.55 27017 0
+
+
+
+
+
+
+
