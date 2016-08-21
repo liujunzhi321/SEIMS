@@ -354,11 +354,13 @@ void SurrunoffTransfer::OrgpAttachedtoSed(int i)
         m_sedminpa[i] = sedp * sol_attp_a;
         m_sedminps[i] = sedp * sol_attp_s;
         //modify phosphorus pools
-        //total amount of P in mineral sediment pools prior to sediment removal (psedd)
-        float psedd = 0.f;
+
+        //total amount of P in mineral sediment pools prior to sediment removal (psedd)		// Not used
+        //float psedd = 0.f;
+        //psedd = m_sol_actp[i][0] + m_sol_stap[i][0];
+
         //total amount of P in organic pools prior to sediment removal (porgg)
         float porgg = 0.f;
-        psedd = m_sol_actp[i][0] + m_sol_stap[i][0];
         porgg = m_sol_orgp[i][0] + m_sol_fop[i][0];
         if (porgg > 1e-3f)
         {
