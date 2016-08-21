@@ -60,18 +60,18 @@ private:
     //float **m_porosity;
 
 	/// amount of water held in the soil layer at saturation (sat - wp water), mm
-	float **m_sat;
+	float **m_satmm;
 	/// porosity index
     float **m_poreIndex;
-	/// field capacity (mm/mm)
-    //float **m_fc;
 
 	/// amount of water available to plants in soil layer at field capacity (AWC=FC-WP), mm
-	float **m_fc;
+	float **m_fcmm;
 	/// water content of soil at -1.5 MPa (wilting point) mm H2O
-	float **m_wp;
-	/// soil moisture (mm)
-    float **m_somo;
+	float **m_wpmm;
+	/// soil water storage (mm)
+	float **m_soilStorage;
+	/// soil water storage in soil profile (mm)
+	float *m_soilStorageProfile;
 	/// soil temperature, deg C
     float *m_soilT;
 
@@ -110,11 +110,11 @@ private:
 
     // outputs
 
-	/// subsurface runoff (mm)
+	/// subsurface runoff (mm), VAR_SSRU
     float **m_qi;
-	/// subsurface runoff volume (m3)
+	/// subsurface runoff volume (m3), VAR_SSRUVOL
     float **m_qiVol;
-	/// subsurface to streams from each subbasin, the first element is the whole watershed
+	/// subsurface to streams from each subbasin, the first element is the whole watershed, m3, VAR_SBIF
     float *m_qiSubbasin;
 
 public:
@@ -130,6 +130,8 @@ public:
     virtual void Set1DData(const char *key, int nRows, float *data);
 
     virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
+
+	virtual void SetSubbasins(clsSubbasins *subbasins);
 
     virtual void Get1DData(const char *key, int *n, float **data);
 

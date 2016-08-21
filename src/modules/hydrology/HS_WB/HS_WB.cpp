@@ -1,5 +1,4 @@
 /*!
- * \file HS_WB.cpp
  * \brief
  * \author Junzhi Liu
  * \date May 2011

@@ -144,6 +144,8 @@ private:
     float *m_D_ED;
     //! evaporation from the soil water storage (mm) from the soil ET module
     float *m_D_ES;
+	//! actual amount of transpiration (mm H2O)
+	float *m_plantEP;
     //! PET(mm) from the PET modules
     float *m_D_PET;
     //! initial ground water storage (or at time t-1)
@@ -158,8 +160,8 @@ private:
     /// slope (percent, or drop/distance, or tan) of each cell
     float *m_Slope;
     
-	//! soil moisture
-    float **m_soilMoisture;
+	//! soil storage
+    float **m_soilStorage;
 	//! soil depth of each layer, the maximum soil depth is used here, i.e., m_soilDepth[i][(int)m_soilLayers[i]]
     float **m_soilDepth;
 	//! ground water from bank storage, passed from channel routing module

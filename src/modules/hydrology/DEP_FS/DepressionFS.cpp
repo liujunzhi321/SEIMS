@@ -1,5 +1,4 @@
 /*!
- * \file DepressionFS.cpp
  * \brief A simple fill and spill method method to calculate depression storage
  * \author Junzhi Liu
  * \date Feb. 2011

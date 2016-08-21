@@ -62,7 +62,7 @@ def GenerateLandcoverInitialParameters(landuseFile, dstdir):
                     replaceDicts[fieldNames[i].upper()] = {float(item[LUID]): float(item[i])}
                 else:
                     replaceDicts[fieldNames[i].upper()][float(item[LUID])] = float(item[i])
-    print replaceDicts
+    # print replaceDicts
 
     ## Generate GTIFF
     for item in replaceDicts.keys():
@@ -130,7 +130,7 @@ def ReclassCrop(landuseFile, dstdir):
     # print(len(dstCropTifs))
     ## Generate GTIFF
     for i in range(len(dstCropTifs)):
-        print dstCropTifs[i]
+        # print dstCropTifs[i]
         replaceByDict(dstdir + os.sep + cropMFile, replaceDicts[i], dstCropTifs[i])
 
 

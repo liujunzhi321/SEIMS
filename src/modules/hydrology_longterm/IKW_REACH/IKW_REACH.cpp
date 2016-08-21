@@ -35,7 +35,7 @@ IKW_REACH::IKW_REACH(void) : m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE),
                              m_bBank(NODATA_VALUE), m_subbasin(NULL), m_qsSub(NULL),
                              m_qiSub(NULL), m_qgSub(NULL), m_petCh(NULL), m_gwStorage(NULL), m_area(NULL),
                              m_Vseep0(0.f), m_chManning(NULL), m_chSlope(NULL),
-                             m_Vdiv(NULL), m_Vpoint(NULL), m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL),
+                              m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL),
                              m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL),
                              m_x(0.2f), m_co1(0.7f), m_qIn(NULL), m_chStorage(NULL), m_manningScalingFactor(1.0f),
                              m_qUpReach(0.f), m_deepGroudwater(0.f)  //90.f for fenkeng; 0 for Lyg;
@@ -43,6 +43,7 @@ IKW_REACH::IKW_REACH(void) : m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE),
     m_chWTdepth = NULL;
 
     //m_vScalingFactor(2.5f)
+	//m_Vdiv(NULL), m_Vpoint(NULL),
 }
 
 
@@ -386,10 +387,6 @@ void IKW_REACH::Set1DData(const char *key, int n, float *value)
     else if (StringMatch(sk, VAR_SBGS))
     {
         m_gwStorage = value;
-    }
-    else if (StringMatch(sk, VAR_VPOINT))
-    {
-        m_Vpoint = value;
     }
     else
         throw ModelException("IKW_REACH", "Set1DData", "Parameter " + sk

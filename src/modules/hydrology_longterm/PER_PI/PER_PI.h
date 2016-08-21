@@ -32,9 +32,9 @@ class PER_PI : public SimulationModule
 {
 private:
     /// maximum number of soil layers
-    int m_nSoilLayers;
+    int m_soilLayers;
 	/// soil layers
-	float *m_soilLayers;
+	float *m_nSoilLayers;
     ///// soil depth
     //float **m_soilDepth;
 	/// soil thickness
@@ -66,8 +66,10 @@ private:
 	float **m_wp;
     /// pore index
     float **m_poreIndex;
-    /// soil moisture  (mm H2O/ mm Soil)
-    float **m_somo;
+	/// amount of water stored in soil layers on current day, sol_st in SWAT
+	float **m_soilStorage;
+	/// amount of water stored in soil profile on current day, sol_sw in SWAT
+	float *m_soilStorageProfile;
     /// soil temperature
     float *m_soilT;
     /// infiltration (mm)

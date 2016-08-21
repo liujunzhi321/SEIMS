@@ -1,5 +1,4 @@
 /*!
- * \file BMPPointSourceFactory.h
  * \brief Point source pollution and BMP factory
  * \author Liang-Jun Zhu
  * \date July 2016
@@ -15,13 +14,13 @@ using namespace MainBMP;
 namespace MainBMP
 {
     /*!
-     * \class PointBMPLocations
+     * \class PointSourceLocations
      * \ingroup MainBMP
      *
      * \brief Base class of point BMP, mainly store location related parameters
      *
      */
-    class PointBMPLocations
+    class PointSourceLocations
     {
     public:
         /*!
@@ -29,10 +28,10 @@ namespace MainBMP
          * \param[in] bsonTab Query result from MongoDB
          * \param[in] iter Iterator of bsonTab
          */
-        PointBMPLocations(const bson_t *&bsonTab, bson_iter_t &iter);
+        PointSourceLocations(const bson_t *&bsonTab, bson_iter_t &iter);
 
         /// Destructor
-        ~PointBMPLocations(void);
+        ~PointSourceLocations(void);
 
         /// Output
         void Dump(ostream *fs);
@@ -108,6 +107,10 @@ namespace MainBMP
         /// Output
         void Dump(ostream *fs);
 
+		/// Get start date of the current management operation
+		time_t GetStartDate(){return m_startDate;}
+		/// Get end date
+		time_t GetEndDate(){return m_endDate;}
         /// Get sequence number
         int GetSequence() { return m_seqence; }
 
@@ -135,12 +138,14 @@ namespace MainBMP
         /// Get TP concentration
         float GetTP() { return m_TPConc; }
 
-        /// Get MinP concentration
-        float GetMinP() { return m_MinPConc; }
+        /// Get SolP concentration
+        float GetSolP() { return m_SolPConc; }
 
         /// Get OrgP concentration
         float GetOrgP() { return m_OrgPConc; }
 
+		/// Get COD concentration
+		float GetCOD(){return m_COD;}
     private:
         /// subSecenario name
         string m_name;
@@ -164,10 +169,12 @@ namespace MainBMP
         float m_OrgNConc;
         ///	TP	Total phosphorus concentration	kg/'size'/day
         float m_TPConc;
-        ///	MINP	Mineral phosphorus concentration	kg/'size'/day
-        float m_MinPConc;
+        ///	SOLP	Soluble phosphorus concentration	kg/'size'/day
+        float m_SolPConc;
         ///	ORGP	Organic phosphorus concentration	kg/'size'/day
         float m_OrgPConc;
+		/// COD
+		float m_COD;
     };
 
     /*!
@@ -206,8 +213,12 @@ namespace MainBMP
          * \param[in] conn mongoc client instance
          * \param[in] bmpDBName BMP Scenario database
          */
-        void ReadPointBMPLocations(mongoc_client_t *conn, string &bmpDBName);
+        void ReadPointSourceLocations(mongoc_client_t *conn, string &bmpDBName);
 
+		vector<int>& GetPointSrcMgtSeqs(){return m_pointSrcMgtSeqs;}
+		map<int, PointSourceMgtParams *>& GetPointSrcMgtMap(){return m_pointSrcMgtMap;}
+		vector<int>& GetPointSrcIDs(){return m_pointSrcIDs;}
+		map<int, PointSourceLocations *>& GetPointSrcLocsMap(){return m_pointSrcLocsMap;}
     private:
         /// Code of point source
         int m_pointSrc;
@@ -228,6 +239,6 @@ namespace MainBMP
          * Key: PTSRCID, unique
          * Value: Pointer of PointBMPParamters instance
          */
-        map<int, PointBMPLocations *> m_pointSrcLocsMap;
+        map<int, PointSourceLocations *> m_pointSrcLocsMap;
     };
 }

@@ -4,46 +4,10 @@
  * \author Hui Wu
  * \date Jul. 2012
  * \revised LiangJun Zhu
- * \date May/ 2016
+ * \date May 2016
  */
-
-#ifndef REACH_SEDIMENT_ROUTING_CONST
-#define REACH_SEDIMENT_ROUTING_CONST
-
-#define SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_NAME                                "T_CHSB"
-
-#define SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_COUNT                        6
-
-#define SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_UPSTREAM                0
-#define SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_SUBBASIN                1
-#define SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_DEPOSITION            2
-#define SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_DEGRADATION            3
-#define SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_STORAGE                4
-#define SEDIMENT_CHANNEL_ROUTING_RESULT_DISCHARGE_COLUMN_INDEX_OUT                    5
-
-#endif
-
-#ifndef REACH_FLOW_ROUTING_CONST
-#define REACH_FLOW_ROUTING_CONST
-
-#define FLOW_CHANNEL_WB_NAME                                "T_CHSB"
-
-#define FLOW_CHANNEL_WB_COLUMN_COUNT                        7
-
-#define FLOW_CHANNEL_WB_COLUMN_INDEX_QOVERLAND                0
-#define FLOW_CHANNEL_WB_COLUMN_INDEX_QINTERL                1
-#define FLOW_CHANNEL_WB_COLUMN_INDEX_QGROUND                2
-#define FLOW_CHANNEL_WB_COLUMN_INDEX_CHSTORAGE                3
-#define FLOW_CHANNEL_WB_COLUMN_INDEX_BKSTORAGE                4
-#define FLOW_CHANNEL_WB_COLUMN_INDEX_SEEPAGE                5
-#define FLOW_CHANNEL_WB_COLUMN_INDEX_WTDEPTH                6
-
-#endif
-
-#define DEPTH_INTERVAL 0.001f
-
 #pragma once
-
+#define DEPTH_INTERVAL 0.001f
 #include <string>
 #include <ctime>
 #include <cmath>
@@ -82,9 +46,13 @@ public:
 
     virtual void Get1DData(const char *key, int *n, float **data);
 
-    virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
+    //virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
 
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
+
+	virtual void SetReaches(clsReaches *reaches);
+
+	virtual void SetScenario(Scenario *sce);
 
     bool CheckInputSize(const char *key, int n);
 
@@ -98,15 +66,10 @@ private:
     int m_dt;
     /// reach number (= subbasin number)
     int m_nreach;
-
-    /// diversion loss (Vdiv) of the river reach, m_Vid[id], id is the reach id
-    float *m_Vdiv;
-    /// The point source discharge, m_Vpoint[id], id is the reach id
-    float *m_Vpoint;
-
+	
     /// the peak rate adjustment factor
     float m_prf;
-    ///  Coefficient in sediment transport equation
+    /// Coefficient in sediment transport equation
     float m_spcon;
     /// Exponent in sediment transport equation
     float m_spexp;
@@ -117,23 +80,6 @@ private:
     /// channel erodibility factor (cm/hr/Pa)  TODO: this should be an input parameter from database, LJ
     float m_erodibilityFactor;
 
-    /// inverse of flood plain side slope of channel, is a fixed number:  1/slope
-    float m_sideslopeFloodplain;
-    /// inverse of side slope of main channel, is a fixed number:  1/slope
-    float m_sideslopeMain;
-    /// width ratio
-    float m_w_ratio;
-    /// bank full water storage
-    float m_bankfullQ;
-    //temp var
-    /// bottom width of the channel(m)
-    float *m_widthbottom;
-    /// current width of channel
-    float *m_widthcurrent;
-    /// current depth of channel
-    float *m_depthcurrent;
-    /// current slope of channel
-    float *m_slopecurrent;
     /// sediment from subbasin
     float *m_sedtoCh;
     /// the subbasin area (m2)  //add to the reach parameters file
@@ -142,20 +88,21 @@ private:
     float *m_CrAreaCh;
     /// initial channel storage per meter of reach length (m3/m)
     float m_Chs0;
-
-    //temporary at routing time
-    /// reach storage (m3) at time t
-    //float* m_chStorage;
+	/// Initial channel sediment concentration
+	float m_sedChi0;
     /// channel outflow
     float *m_qchOut;
 
     float *m_chOrder;
     float *m_chWidth;
     float *m_chDepth;
-    float *m_chLen;      //length of reach (m)
+	//length of reach (m)
+    float *m_chLen;      
     float *m_chVel;
     float *m_chSlope;
     float *m_chManning;
+	float *m_chCover;
+	float *m_chErod;
 
     /// downstream id (The value is 0 if there if no downstream reach)
     float *m_reachDownStream;
@@ -163,57 +110,47 @@ private:
     vector<vector<int> > m_reachUpStream;
 
     // id the reaches
-    float *m_reachId;
-    /// map from subbasin id to index of the array
-    map<int, int> m_idToIndex;
+    vector<int> m_reachId;
 
-    /// overland flow to streams from each subbasin (m3/s)
-    float *m_qsSub;
-    /// interflow to streams from each subbasin (m3/s)
-    float *m_qiSub;
-    /// groundwater flow out of the subbasin (m3/s)
-    float *m_qgSub;
+	/* point source operations
+	 * key: unique index, BMPID * 100000 + subScenarioID
+	 * value: point source management factory instance
+	 */
+	map<int, BMPPointSrcFactory*> m_ptSrcFactory;
+	/// The point source loading (kg), m_ptSub[id], id is the reach id, load from m_Scenario
+	float *m_ptSub;
     /// reach storage (m3) at time t
     float *m_chStorage;
     /// channel water depth m
     float *m_chWTdepth;
 
     // OUTPUT
-    /// initial reach sediment out (metrics ton) at time t
-    float *m_SedOut;
-    /// Channel sediment balance in a text format for each reach and at each time step
-    //float** m_T_CHSB;
-    /// channel sediment storage (ton)
+    /// initial reach sediment out (kg) at time t
+    float *m_sedOut;
+    /// channel sediment storage (kg)
     float *m_sedStorage;
-    /// total sediment from upstream
-    float *m_sedUps;
-    /// sediment from current subbasin
-    float *m_sedSub;
     /// sediment of deposition
     float *m_sedDep;
     /// sediment of degradation
     float *m_sedDeg;
+	/// sediment concentration (g/L, i.e., kg/m3)
+	float *m_sedConc;
 
     map<int, vector<int> > m_reachLayers;
 
     void initialOutputs();
 
+	void PointSourceLoading();
+
     void SedChannelRouting(int i);
-
-    void reset(int id);
-
-    float Q(float watDepth, int id);
-
-    float crossSectionalArea(float waterDepth, int id);
-
-    float wettedPerimeter(float waterDepth, int id);
-
-    float depth(float Q, int id);
-
-    float calOutletDischarge(float qs, float qi, float qg, int id);
-
-    float fSimple(float area1, float Qin, float depth, int id);
 
     void doChannelDowncuttingAndWidening(int id);
 };
-
+///// inverse of flood plain side slope of channel, is a fixed number:  1/slope
+//float m_sideslopeFloodplain;
+///// inverse of side slope of main channel, is a fixed number:  1/slope
+//float m_sideslopeMain;
+/// reach storage (m3) at time t
+//float* m_chStorage;
+/// Channel sediment balance in a text format for each reach and at each time step
+//float** m_T_CHSB;

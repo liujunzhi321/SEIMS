@@ -16,8 +16,10 @@ using namespace std;
 MUSK_CH::MUSK_CH(void) : m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE),
                          m_Kbank(NODATA_VALUE), m_Epch(NODATA_VALUE), m_Bnk0(NODATA_VALUE), m_Chs0(NODATA_VALUE), m_aBank(NODATA_VALUE),
                          m_bBank(NODATA_VALUE), m_subbasin(NULL), m_qsSub(NULL),
-                         m_qiSub(NULL), m_qgSub(NULL), m_petCh(NULL), m_gwStorage(NULL), m_area(NULL), m_Vseep0(0.f),
-                         m_Vdiv(NULL), m_Vpoint(NULL), m_bankStorage(NULL), m_seepage(NULL), m_chOrder(NULL),
+						 m_reachDownStream(NULL), m_chOrder(NULL), m_chWidth(NULL), 
+						 m_chLen(NULL), m_chDepth(NULL), m_chVel(NULL), m_area(NULL),
+                         m_ptSub(NULL), m_qiSub(NULL), m_qgSub(NULL), m_petCh(NULL), m_gwStorage(NULL), m_Vseep0(0.f),
+                         m_bankStorage(NULL), m_seepage(NULL),
                          m_qsCh(NULL), m_qiCh(NULL), m_qgCh(NULL),
                          m_x(NODATA_VALUE), m_co1(NODATA_VALUE), m_qIn(NULL), m_chStorage(NULL), m_vScalingFactor(1.0f),
                          m_qUpReach(0.f), m_deepGroundwater(0.f),m_chWTdepth(NULL)
@@ -27,23 +29,33 @@ MUSK_CH::MUSK_CH(void) : m_dt(-1), m_nreach(-1), m_Kchb(NODATA_VALUE),
 //! Destructor
 MUSK_CH::~MUSK_CH(void)
 {
-    if (m_area != NULL) delete[] m_area;
-    if (m_chStorage != NULL) delete[] m_chStorage;
-    if (m_qOut != NULL) delete[] m_qOut;
-    if (m_bankStorage != NULL)
-        delete[] m_bankStorage;
-    if (m_seepage != NULL)
-        delete[] m_seepage;
-    if (m_chStorage != NULL)
-        delete[] m_chStorage;
-    if (m_qsCh != NULL)
-        delete[] m_qsCh;
-    if (m_qiCh != NULL)
-        delete[] m_qiCh;
-    if (m_qgCh != NULL)
-        delete[] m_qgCh;
-    if (m_chWTdepth != NULL)
-        delete[] m_chWTdepth;
+	if (m_reachDownStream != NULL) Release1DArray(m_reachDownStream);
+	if (m_chOrder != NULL) Release1DArray(m_chOrder);
+	if (m_chWidth != NULL) Release1DArray(m_chWidth);
+	if (m_chLen != NULL) Release1DArray(m_chLen);
+	if (m_chDepth != NULL) Release1DArray(m_chDepth);
+	if (m_chVel != NULL) Release1DArray(m_chVel);
+    if (m_area != NULL) Release1DArray(m_area);
+    if (m_chStorage != NULL) Release1DArray(m_chStorage);
+    if (m_qOut != NULL) Release1DArray(m_qOut);
+    if (m_bankStorage != NULL)Release1DArray(m_bankStorage);
+    if (m_seepage != NULL)Release1DArray(m_seepage);
+    if (m_chStorage != NULL)Release1DArray(m_chStorage);
+    if (m_qsCh != NULL)Release1DArray(m_qsCh);
+    if (m_qiCh != NULL)Release1DArray(m_qiCh);
+    if (m_qgCh != NULL)Release1DArray(m_qgCh);
+    if (m_chWTdepth != NULL)Release1DArray(m_chWTdepth);
+	if (m_ptSub != NULL) Release1DArray(m_ptSub);
+	if (!m_ptSrcFactory.empty())
+	{
+		for (map<int, BMPPointSrcFactory*>::iterator it = m_ptSrcFactory.begin(); it != m_ptSrcFactory.end();)
+		{
+			if(it->second != NULL)
+				delete it->second;
+			it = m_ptSrcFactory.erase(it);
+		}
+		m_ptSrcFactory.clear();
+	}
 }
 
 //! Check input data
@@ -100,9 +112,10 @@ void  MUSK_CH::initialOutputs()
 
     if (m_reachLayers.empty())
     {
-        //CheckInputData();
         for (int i = 1; i <= m_nreach; i++)
         {
+			if (m_chOrder == NULL)
+				throw ModelException(MID_MUSK_CH, "initialOutputs", "Stream order is not loaded successful from Reach table.");
             int order = (int) m_chOrder[i];
             m_reachLayers[order].push_back(i);
         }
@@ -126,9 +139,9 @@ void  MUSK_CH::initialOutputs()
         {
             float qiSub = 0.f;
             float qgSub = 0.f;
-            if (m_qiSub != NULL)
+            if (m_qiSub != NULL) // interflow (subsurface flow)
                 qiSub = m_qiSub[i];
-            if (m_qgSub != NULL)
+            if (m_qgSub != NULL) // groundwater
                 qgSub = m_qgSub[i];
             m_seepage[i] = 0.f;
             m_bankStorage[i] = m_Bnk0 * m_chLen[i];
@@ -141,14 +154,54 @@ void  MUSK_CH::initialOutputs()
             m_chWTdepth[i] = 0.f;
         }
     }
+	/// initialize point source loadings
+	if (m_ptSub == NULL)
+		Initialize1DArray(m_nreach+1,m_ptSub,0.f);
 }
-
+void MUSK_CH::PointSourceLoading()
+{
+	/// load point source water discharge (m3/s) on current day from Scenario
+	for (map<int, BMPPointSrcFactory*>::iterator it = m_ptSrcFactory.begin(); it != m_ptSrcFactory.end(); it++)
+	{
+		/// reset point source loading water to 0.f
+		for(int i = 0; i <= m_nreach; i++)
+			m_ptSub[i] = 0.f;
+		//cout<<"unique Point Source Factory ID: "<<it->first<<endl;
+		vector<int> m_ptSrcMgtSeqs = it->second->GetPointSrcMgtSeqs();
+		map<int, PointSourceMgtParams *>  m_pointSrcMgtMap = it->second->GetPointSrcMgtMap();
+		vector<int> m_ptSrcIDs = it->second->GetPointSrcIDs();
+		map<int, PointSourceLocations *> m_pointSrcLocsMap = it->second->GetPointSrcLocsMap();
+		// 1. looking for management operations from m_pointSrcMgtMap
+		for (vector<int>::iterator seqIter = m_ptSrcMgtSeqs.begin(); seqIter != m_ptSrcMgtSeqs.end(); seqIter++)
+		{
+			PointSourceMgtParams* curPtMgt = m_pointSrcMgtMap.at(*seqIter);
+			// 1.1 If current day is beyond the date range, then continue to next management
+			if(curPtMgt->GetStartDate() != 0 && curPtMgt->GetEndDate() != 0)
+			{
+				if (m_date < curPtMgt->GetStartDate() || m_date > curPtMgt->GetEndDate())
+					continue;
+			}
+			// 1.2 Otherwise, get the water volume
+			float per_wtrVol = curPtMgt->GetWaterVolume(); /// m3/'size'/day 
+			// 1.3 Sum up all point sources
+			for (vector<int>::iterator locIter = m_ptSrcIDs.begin(); locIter != m_ptSrcIDs.end(); locIter++)
+			{
+				if (m_pointSrcLocsMap.find(*locIter) != m_pointSrcLocsMap.end()){
+					PointSourceLocations* curPtLoc = m_pointSrcLocsMap.at(*locIter);
+					int curSubID = curPtLoc->GetSubbasinID();
+					m_ptSub[curSubID] += per_wtrVol * curPtLoc->GetSize() / 86400.f; /// m3/'size'/day ==> m3/s
+				}
+			}
+		}
+	}
+}
 //! Execute function
 int MUSK_CH::Execute()
 {
 	CheckInputData();
     initialOutputs();
-
+	/// load point source water volume from m_ptSrcFactory
+	PointSourceLoading();
     map<int, vector<int> >::iterator it;
     for (it = m_reachLayers.begin(); it != m_reachLayers.end(); it++)
     {
@@ -293,10 +346,6 @@ void MUSK_CH::Set1DData(const char *key, int n, float *value)
     {
         m_gwStorage = value;
     }
-    else if (StringMatch(sk, VAR_VPOINT))
-    {
-        m_Vpoint = value;
-    }
     else
         throw ModelException(MID_MUSK_CH, "Set1DData", "Parameter " + sk + " does not exist in current module.");
 }
@@ -321,6 +370,9 @@ void MUSK_CH::GetValue(const char *key, float *value)
 //! Get 1D data
 void MUSK_CH::Get1DData(const char *key, int *n, float **data)
 {
+	if(m_reachLayers.empty())
+		initialOutputs();
+
     string sk(key);
     *n = m_nreach + 1;
     int iOutlet = m_reachLayers.rbegin()->second[0];
@@ -366,54 +418,104 @@ void MUSK_CH::Get1DData(const char *key, int *n, float **data)
     }
     else
         throw ModelException(MID_MUSK_CH, "Get1DData", "Output " + sk+" does not exist in the current module.");
-
 }
 
 //! Get 2D data
 void MUSK_CH::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 {
     string sk(key);
-    throw ModelException(MID_MUSK_CH, "Get2DData", "Output " + sk
-                                                 +
-                                                 " does not exist in the MUSK_CH module. Please contact the module developer.");
-
+    throw ModelException(MID_MUSK_CH, "Get2DData", "Parameter " + sk + " does not exist.");
 }
 
-//! Set 2D data
-void MUSK_CH::Set2DData(const char *key, int nrows, int ncols, float **data)
+////! Set 2D data
+//void MUSK_CH::Set2DData(const char *key, int nrows, int ncols, float **data)
+//{
+//    string sk(key);
+//    if (StringMatch(sk, Tag_RchParam))
+//    {
+//        m_nreach = ncols - 1;
+//
+//        m_reachId = data[0];
+//        m_reachDownStream = data[1];
+//        m_chOrder = data[2];
+//        m_chWidth = data[3];
+//        m_chLen = data[4];
+//        m_chDepth = data[5];
+//        m_chVel = data[6];
+//        m_area = data[7];
+//
+//        m_reachUpStream.resize(m_nreach + 1);
+//        if (m_nreach > 1)
+//        {
+//            for (int i = 1; i <= m_nreach; i++)// index of the reach is the equal to streamlink ID(1 to nReaches)
+//            {
+//                int downStreamId = int(m_reachDownStream[i]);
+//                if (downStreamId <= 0)
+//                    continue;
+//                m_reachUpStream[downStreamId].push_back(i);
+//            }
+//        }
+//    }
+//    else
+//        throw ModelException(MID_MUSK_CH, "Set2DData", "Parameter " + sk + " does not exist.");
+//}
+void MUSK_CH::SetScenario(Scenario * sce)
 {
-    string sk(key);
-
-    if (StringMatch(sk, Tag_RchParam))
-    {
-        m_nreach = ncols - 1;
-
-        m_reachId = data[0];
-        m_reachDownStream = data[1];
-        m_chOrder = data[2];
-        m_chWidth = data[3];
-        m_chLen = data[4];
-        m_chDepth = data[5];
-        m_chVel = data[6];
-        m_area = data[7];
-
-        m_reachUpStream.resize(m_nreach + 1);
-        if (m_nreach > 1)
-        {
-            for (int i = 1; i <= m_nreach; i++)// index of the reach is the equal to streamlink ID(1 to nReaches)
-            {
-                int downStreamId = int(m_reachDownStream[i]);
-                if (downStreamId <= 0)
-                    continue;
-                m_reachUpStream[downStreamId].push_back(i);
-            }
-        }
-    }
-    else
-        throw ModelException(MID_MUSK_CH, "Set2DData", "Parameter " + sk + " does not exist.");
-
+	if (sce != NULL){
+		map <int, BMPFactory* > *tmpBMPFactories = sce->GetBMPFactories();
+		for (map<int, BMPFactory *>::iterator it = tmpBMPFactories->begin(); it != tmpBMPFactories->end(); it++)
+		{
+			/// Key is uniqueBMPID, which is calculated by BMP_ID * 100000 + subScenario;
+			if (it->first / 100000 == BMP_TYPE_POINTSOURCE)
+			{
+				m_ptSrcFactory[it->first] = (BMPPointSrcFactory*)it->second;
+			}
+		}
+	}
+	else
+		throw ModelException(MID_MUSK_CH, "SetScenario", "The scenario can not to be NULL.");
 }
-
+void MUSK_CH::SetReaches(clsReaches *reaches)
+{
+	if(reaches != NULL)
+	{
+		m_nreach = reaches->GetReachNumber();
+		m_reachId = reaches->GetReachIDs();
+		Initialize1DArray(m_nreach+1,m_reachDownStream, 0.f);
+		Initialize1DArray(m_nreach+1,m_chOrder, 0.f);
+		Initialize1DArray(m_nreach+1,m_chWidth, 0.f);
+		Initialize1DArray(m_nreach+1,m_chLen, 0.f);
+		Initialize1DArray(m_nreach+1,m_chDepth, 0.f);
+		Initialize1DArray(m_nreach+1,m_chVel, 0.f);
+		Initialize1DArray(m_nreach+1,m_area, 0.f);
+		for (vector<int>::iterator it = m_reachId.begin(); it != m_reachId.end(); it++)
+		{
+			int i = *it;
+			clsReach* tmpReach = reaches->GetReachByID(i);
+			m_reachDownStream[i] = (float)tmpReach->GetDownStream();
+			m_chOrder[i] = (float)tmpReach->GetUpDownOrder();
+			m_chWidth[i] = (float)tmpReach->GetWidth();
+			m_chLen[i] = (float)tmpReach->GetLength();
+			m_chDepth[i] = (float)tmpReach->GetDepth();
+			m_chVel[i] = (float)tmpReach->GetV0();
+			m_area[i] = (float)tmpReach->GetArea();
+		}
+		
+		m_reachUpStream.resize(m_nreach + 1);
+		if (m_nreach > 1)
+		{
+			for (int i = 1; i <= m_nreach; i++)// index of the reach is the equal to streamlink ID(1 to nReaches)
+			{
+				int downStreamId = int(m_reachDownStream[i]);
+				if (downStreamId <= 0)
+					continue;
+				m_reachUpStream[downStreamId].push_back(i);
+			}
+		}
+	}
+	else
+		throw ModelException(MID_MUSK_CH, "SetReaches", "The reaches input can not to be NULL.");
+}
 //! Get date time
 void MUSK_CH::GetDt(float timeStep, float fmin, float fmax, float &dt, int &n)
 {
@@ -473,17 +575,18 @@ void MUSK_CH::ChannelFlow(int i)
 {
     float st0 = m_chStorage[i];
     float qiSub = 0.f;
-    if (m_qiSub != NULL)
+    if (m_qiSub != NULL && m_qiSub[i] >= 0.f)
         qiSub = m_qiSub[i];
     float qgSub = 0.f;
-    if (m_qgSub != NULL)
+    if (m_qgSub != NULL && m_qgSub[i] >= 0.f)
         qgSub = m_qgSub[i];
-
+	float ptSub = 0.f;
+	if (m_ptSub != NULL && m_ptSub[i] >= 0.f)
+		ptSub = m_ptSub[i];
     //////////////////////////////////////////////////////////////////////////
     // first add all the inflow water
     // 1. water from this subbasin
-    float qIn = m_qsSub[i] + qiSub + qgSub;
-
+    float qIn = m_qsSub[i] + qiSub + qgSub + ptSub;
     // 2. water from upstream reaches
     float qsUp = 0.f;
     float qiUp = 0.f;
@@ -496,6 +599,7 @@ void MUSK_CH::ChannelFlow(int i)
         qgUp += m_qgCh[upReachId];
     }
     qIn += qsUp + qiUp + qgUp;
+	//qIn is equivalent to the wtrin variable in rtmusk.f of SWAT
     qIn += m_qUpReach; // m_qUpReach is zero for not-parallel program and qsUp, qiUp and qgUp are zero for parallel computing
 
     // 3. water from bank storage

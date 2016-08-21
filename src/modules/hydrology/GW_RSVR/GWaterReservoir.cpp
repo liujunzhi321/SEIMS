@@ -1,5 +1,4 @@
 /*!
- * \file GWaterReservoir.cpp
  * \brief Calculate groundwater using reservoir method
  * \author Junzhi Liu
  * \date Oct. 2011

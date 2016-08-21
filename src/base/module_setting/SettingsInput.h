@@ -1,5 +1,4 @@
 /*!
- * \file SettingsInput.h
  * \brief Setting Inputs for SEIMS
  *
  * \author Junzhi Liu, LiangJun Zhu

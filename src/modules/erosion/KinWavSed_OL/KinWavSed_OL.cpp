@@ -1,5 +1,4 @@
 /*!
- * \file KinWavSed_OL.cpp
  * \brief Kinematic wave routing method for overland erosion and deposition
  * \author Hui Wu
  * \date Feb. 2012

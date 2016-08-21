@@ -80,11 +80,15 @@ def MaskDEMFiles(workingDir, exeDir=None):
                      slope, filledDem, acc, streamOrder,
                      flowDirDinf, dirCodeDinf, slopeDinf, weightDinf, cellLat, daylMin, dormhr, dist2StreamD8]
     originalFiles = [(tauDir + os.sep + item) for item in originalFiles]
-    originalFiles.append(mgtFiedlFile)
     maskedFiles = [subbasinM, flowDirM, streamRasterM]
     maskedFiles = [(tauDir + os.sep + item) for item in maskedFiles]
     outputList = [slopeM, filldemM, accM, streamOrderM, flowDirDinfM,
-                  dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM, daylMinM, dormhrM, dist2StreamD8M, mgtFiedlMFile]
+                  dirCodeDinfM, slopeDinfM, weightDinfM, cellLatM, daylMinM, dormhrM, dist2StreamD8M]
+
+    if mgtFieldFile is not None:
+        originalFiles.append(mgtFieldFile)
+        outputList.append(mgtFieldMFile)
+
     for output in outputList:
         maskedFiles.append(workingDir + os.sep + output)
 
@@ -141,9 +145,9 @@ def GenerateSubbasins():
         convert2GeoJson(jsonName, proj_srs, wgs84_srs, geoJson_dict.get(jsonName))
     fStatus.write("%d,%s\n" % (100, "Finished!"))
     fStatus.close()
+    ImportSubbasinStatistics()
 
-
-def importSubbasinStatistics():
+def ImportSubbasinStatistics():
     '''
     Import subbasin numbers, outlet ID, etc. to MongoDB.
     :return:
@@ -239,5 +243,5 @@ def importSubbasinStatistics():
 
 if __name__ == "__main__":
     LoadConfiguration(GetINIfile())
-    # GenerateSubbasins()
-    importSubbasinStatistics()
+    GenerateSubbasins()
+

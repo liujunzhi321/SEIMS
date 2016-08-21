@@ -3,6 +3,9 @@
  * \author Junzhi Liu
  * \version 1.0
  * \date 26-Jule-2012
+ * 
+ * \revision Liangjun Zhu
+ * \description: 1. Add point source loadings from Scenario.
  */
 #pragma once
 
@@ -12,15 +15,17 @@
 #include <map>
 #include <vector>
 #include "SimulationModule.h"
-
+#include "Scenario.h"
 using namespace std;
-
+using namespace MainBMP;
 /** \defgroup MUSK_CH
  * \ingroup Hydrology_longterm
  * \brief channel flow routing using Muskingum method
  *
  */
-/* MuskWeights coefficients
+
+/* 
+ * \struct MuskWeights coefficients
  */
 struct MuskWeights
 {
@@ -55,9 +60,13 @@ public:
 
     virtual void Get1DData(const char *key, int *n, float **data);
 
-    virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
+    //virtual void Set2DData(const char *key, int nrows, int ncols, float **data);
 
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
+
+	virtual void SetScenario(Scenario *sce);
+
+	virtual void SetReaches(clsReaches *reaches);
 
     bool CheckInputSize(const char *key, int n);
 
@@ -76,10 +85,8 @@ private:
     /// reach number (= subbasin number)
     int m_nreach;
 
-    /// diversion loss (Vdiv) of the river reach .. m_Vid[id], id is the reach id
-    float *m_Vdiv;
-    /// The point source discharge .. m_Vpoint[id], id is the reach id
-    float *m_Vpoint;
+    /// The point source discharge (m3/s), m_ptSub[id], id is the reach id, load from m_Scenario
+    float *m_ptSub;
 
     /// hydraulic conductivity of the channel bed (mm/h)
     float m_Kchb;
@@ -137,21 +144,25 @@ private:
     /// upstream id (The value is -1 if there if no upstream reach)
     vector<vector<int> > m_reachUpStream;
 
-    // id the reaches
-    float *m_reachId;
-    /// map from subbasin id to index of the array
-    map<int, int> m_idToIndex;
-
+    // the reaches id 
+    //float *m_reachId;
+	vector<int> m_reachId;
     // for muskingum
     float m_x;
     float m_co1;
 
     float m_qUpReach;
+	/// scenario data
 
+	/* point source operations
+	 * key: unique index, BMPID * 100000 + subScenarioID
+	 * value: point source management factory instance
+	 */
+	map<int, BMPPointSrcFactory*> m_ptSrcFactory;
     //temporary at routing time
+
     /// reach storage (m3) at time t
     float *m_chStorage;
-
     /// reach outflow (m3/s) at time t
     float *m_qOut;
     /// flowin discharge at the last time step
@@ -166,6 +177,8 @@ private:
     map<int, vector<int> > m_reachLayers;
 
     void initialOutputs();
+
+	void PointSourceLoading();
 
     void ChannelFlow(int i);
 

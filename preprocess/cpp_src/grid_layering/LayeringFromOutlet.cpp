@@ -46,8 +46,10 @@ void LayeringFromOutlet(int nValidGrids, const int *dirMatrix, const int *compre
     ofs << outputStr;
     ofs.close();
 
-    delete outDegreeMatrix;
-    delete layeringNum;
+    delete[] outDegreeMatrix;
+    delete[] layeringNum;
+	outDegreeMatrix = NULL;
+	layeringNum = NULL;
 }
 
 int *GetOutDegreeMatrix(const int *dirMatrix, int nRows, int nCols, int dirNoDataValue)
@@ -97,7 +99,6 @@ int *GetOutDegreeMatrix(const int *dirMatrix, int nRows, int nCols, int dirNoDat
     }
 
     return outDegreeMatrix;
-
 }
 
 void UpdateUpStream(int i, int j, int nRows, int nCols, const int *dirMatrix, int *outDegreeMatrix,
@@ -257,8 +258,10 @@ string GridLayeringFromOutlet(int nValidGrids, const int *dirMatrix, const int *
             layeringNum[i] = curNum - layeringNum[i] + 1;
     }
 
-    delete lastLayer;
-    delete nextLayer;
+    delete[] lastLayer;
+    delete[] nextLayer;
+	lastLayer = NULL;
+	nextLayer = NULL;
 
     return outputOss.str();
 }

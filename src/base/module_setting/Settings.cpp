@@ -1,5 +1,4 @@
 /*!
- * \file Settings.cpp
  * \brief Settings class to store the settings information from Configuration files
  * \author Junzhi Liu, LiangJun Zhu
  * \version 1.1

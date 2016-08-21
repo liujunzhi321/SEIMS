@@ -1,5 +1,4 @@
 /*!
- * \file BMPPointSourceFactory.cpp
  * \brief Implementation of BMPPointSrcFactory class.
  * \author Liang-Jun Zhu
  * \date July 2016
@@ -31,7 +30,7 @@ BMPPointSrcFactory::~BMPPointSrcFactory(void)
 {
     if (!m_pointSrcLocsMap.empty())
     {
-        for (map<int, PointBMPLocations *>::iterator it = m_pointSrcLocsMap.begin();
+        for (map<int, PointSourceLocations *>::iterator it = m_pointSrcLocsMap.begin();
              it != m_pointSrcLocsMap.end();)
         {
             if (it->second != NULL)
@@ -62,7 +61,7 @@ BMPPointSrcFactory::~BMPPointSrcFactory(void)
 void BMPPointSrcFactory::loadBMP(mongoc_client_t *conn, string &bmpDBName)
 {
     ReadPointSourceManagements(conn, bmpDBName);
-    ReadPointBMPLocations(conn, bmpDBName);
+    ReadPointSourceLocations(conn, bmpDBName);
 }
 
 void BMPPointSrcFactory::ReadPointSourceManagements(mongoc_client_t *conn, string &bmpDBName)
@@ -92,9 +91,8 @@ void BMPPointSrcFactory::ReadPointSourceManagements(mongoc_client_t *conn, strin
     int count = 1; /// Use count to counting sequence number, in case of discontinuous or repeat of SEQUENCE in database.
     while (mongoc_cursor_next(cursor, &bsonTable))
     {
-        PointSourceMgtParams *curPtSrcMgt = new PointSourceMgtParams(bsonTable, iter);
         m_pointSrcMgtSeqs.push_back(count);
-        m_pointSrcMgtMap[count] = curPtSrcMgt;
+        m_pointSrcMgtMap[count] = new PointSourceMgtParams(bsonTable, iter);
         count++;
     }
     bson_destroy(b);
@@ -102,7 +100,7 @@ void BMPPointSrcFactory::ReadPointSourceManagements(mongoc_client_t *conn, strin
     mongoc_cursor_destroy(cursor);
 }
 
-void BMPPointSrcFactory::ReadPointBMPLocations(mongoc_client_t *conn, string &bmpDBName)
+void BMPPointSrcFactory::ReadPointSourceLocations(mongoc_client_t *conn, string &bmpDBName)
 {
     bson_t *b = bson_new();
     bson_t *child1 = bson_new();
@@ -124,7 +122,7 @@ void BMPPointSrcFactory::ReadPointBMPLocations(mongoc_client_t *conn, string &bm
 
     while (mongoc_cursor_next(cursor, &bsonTable))
     {
-        PointBMPLocations *curPtSrcLoc = new PointBMPLocations(bsonTable, iter);
+        PointSourceLocations *curPtSrcLoc = new PointSourceLocations(bsonTable, iter);
         int curPtSrcID = curPtSrcLoc->GetPointSourceID();
         if (ValueInVector(curPtSrcID, m_pointSrcIDs))
             m_pointSrcLocsMap[curPtSrcID] = curPtSrcLoc;
@@ -149,7 +147,7 @@ void BMPPointSrcFactory::Dump(ostream *fs)
     }
     for (vector<int>::iterator it = m_pointSrcIDs.begin(); it != m_pointSrcIDs.end(); it++)
     {
-        map<int, PointBMPLocations *>::iterator findIdx = m_pointSrcLocsMap.find(*it);
+        map<int, PointSourceLocations *>::iterator findIdx = m_pointSrcLocsMap.find(*it);
         if (findIdx != m_pointSrcLocsMap.end())
             m_pointSrcLocsMap[*it]->Dump(fs);
     }
@@ -162,7 +160,8 @@ void BMPPointSrcFactory::Dump(ostream *fs)
 
 PointSourceMgtParams::PointSourceMgtParams(const bson_t *&bsonTable, bson_iter_t &iter)
         : m_startDate(0), m_endDate(0), m_waterVolume(0.f), m_sedimentConc(0.f), m_TNConc(0.f), m_NO3Conc(0.f),
-          m_NH3Conc(0.f), m_OrgNConc(0.f), m_TPConc(0.f), m_MinPConc(0.f), m_OrgPConc(0.f), m_name(""), m_seqence(-1)
+          m_NH3Conc(0.f), m_OrgNConc(0.f), m_TPConc(0.f), m_SolPConc(0.f), m_OrgPConc(0.f), m_COD(0.f),
+		  m_name(""), m_seqence(-1)
 {
     if (bson_iter_init_find(&iter, bsonTable, BMP_FLD_NAME))
         m_name = GetStringFromBSONITER(&iter);
@@ -182,10 +181,12 @@ PointSourceMgtParams::PointSourceMgtParams(const bson_t *&bsonTable, bson_iter_t
         m_OrgNConc = GetFloatFromBSONITER(&iter);
     if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_TP))
         m_TPConc = GetFloatFromBSONITER(&iter);
-    if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_MINP))
-        m_MinPConc = GetFloatFromBSONITER(&iter);
+    if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_SOLP))
+        m_SolPConc = GetFloatFromBSONITER(&iter);
     if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_ORGP))
-        m_OrgPConc = GetFloatFromBSONITER(&iter);
+		m_OrgPConc = GetFloatFromBSONITER(&iter);
+	if (bson_iter_init_find(&iter, bsonTable, BMP_PTSRC_FLD_COD))
+		m_COD = GetFloatFromBSONITER(&iter);
     int sYear, sMonth, sDay, eYear, eMonth, eDay;
     if (bson_iter_init_find(&iter, bsonTable, BMP_FLD_SYEAR))
         sYear = GetIntFromBSONITER(&iter);
@@ -220,16 +221,17 @@ void PointSourceMgtParams::Dump(ostream *fs)
     *fs << "      WaterVolume: " << m_waterVolume << ", Sediment: " << m_sedimentConc <<
     ", TN: " << m_TNConc << ", NO3: " << m_NO3Conc <<
     ", NH3: " << m_NH3Conc << ", OrgN: " << m_OrgNConc <<
-    ", TP: " << m_TPConc << ", MinP: " << m_MinPConc <<
+    ", TP: " << m_TPConc << ", MinP: " << m_SolPConc <<
     ", OrgP: " << m_OrgPConc << endl;
 }
 
 
 /************************************************************************/
-/*                      PointBMPLocations                                           */
+/*                      PointSourceLocations                                           */
 /************************************************************************/
 
-PointBMPLocations::PointBMPLocations(const bson_t *&bsonTable, bson_iter_t &iter)
+PointSourceLocations::PointSourceLocations(const bson_t *&bsonTable, bson_iter_t &iter)
+	:m_size(0.f), m_distDown(0.f)
 {
     if (bson_iter_init_find(&iter, bsonTable, BMP_FLD_NAME))
         m_name = GetStringFromBSONITER(&iter);
@@ -251,11 +253,11 @@ PointBMPLocations::PointBMPLocations(const bson_t *&bsonTable, bson_iter_t &iter
         m_distDown = GetFloatFromBSONITER(&iter);
 }
 
-PointBMPLocations::~PointBMPLocations(void)
+PointSourceLocations::~PointSourceLocations(void)
 {
 }
 
-void PointBMPLocations::Dump(ostream *fs)
+void PointSourceLocations::Dump(ostream *fs)
 {
     if (fs == NULL) return;
     *fs << "      Point Source Location: " << endl <<

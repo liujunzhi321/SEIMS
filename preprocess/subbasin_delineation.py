@@ -131,60 +131,61 @@ def SubbasinDelineation():
     status = "Fill DEM..."
     fStatus.write("%d,%s\n" % (10, status))
     fStatus.flush()
-    print Fill(np, tauDir, dem, filledDem, mpiexeDir=MPIEXEC_DIR, exeDir=CPP_PROGRAM_DIR)
+    print Fill(np, tauDir, dem, filledDem, mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 
     status = "Calculating D8 and Dinf flow direction..."
     fStatus.write("%d,%s\n" % (20, status))
     fStatus.flush()
-    print FlowDirD8(np, tauDir, filledDem, flowDir, slope, mpiexeDir=MPIEXEC_DIR, exeDir=CPP_PROGRAM_DIR)
-    print GenerateDinf(np, tauDir, filledDem, flowDirDinf, slopeDinf, dirCodeDinf, weightDinf, mpiexeDir=MPIEXEC_DIR,
-                       exeDir=CPP_PROGRAM_DIR)
-    print "[Output], %s, %s" % (WORKING_DIR, status)
-
-    status = "Generating stream skeleton..."
-    fStatus.write("%d,%s\n" % (30, status))
-    fStatus.flush()
-    print StreamSkeleton(np, tauDir, filledDem, streamSkeleton, mpiexeDir=MPIEXEC_DIR, exeDir=CPP_PROGRAM_DIR)
+    print FlowDirD8(np, tauDir, filledDem, flowDir, slope, mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
+    print GenerateDinf(np, tauDir, filledDem, flowDirDinf, slopeDinf, dirCodeDinf, weightDinf, mpiexeDir = MPIEXEC_DIR,
+                       exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 
     status = "D8 flow accumulation..."
     fStatus.write("%d,%s\n" % (40, status))
     fStatus.flush()
-    print FlowAccD8(np, tauDir, flowDir, acc, outlet=None, streamSkeleton=None, mpiexeDir=MPIEXEC_DIR,
-                    exeDir=CPP_PROGRAM_DIR)
+    print FlowAccD8(np, tauDir, flowDir, acc, outlet = None, streamSkeleton = None, mpiexeDir = MPIEXEC_DIR,
+                    exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 
     status = "Generating stream raster initially..."
     fStatus.write("%d,%s\n" % (50, status))
     fStatus.flush()
     if D8AccThreshold > 0:
-        print StreamRaster(np, tauDir, acc, streamRaster, D8AccThreshold, mpiexeDir=MPIEXEC_DIR,
-                           exeDir=CPP_PROGRAM_DIR)
+        print StreamRaster(np, tauDir, acc, streamRaster, D8AccThreshold, mpiexeDir = MPIEXEC_DIR,
+                           exeDir = CPP_PROGRAM_DIR)
     else:
         accD8 = tauDir + os.sep + acc
         maxAccum, minAccum, meanAccum, STDAccum = GetRasterStat(accD8)
-        print StreamRaster(np, tauDir, acc, streamRaster, meanAccum, mpiexeDir=MPIEXEC_DIR, exeDir=CPP_PROGRAM_DIR)
+        print StreamRaster(np, tauDir, acc, streamRaster, meanAccum, mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
         print "[Output], %s, %s" % (WORKING_DIR, status)
 
     status = "Moving outlet to stream..."
     fStatus.write("%d,%s\n" % (60, status))
     fStatus.flush()
-    print MoveOutlet(np, tauDir, flowDir, streamRaster, outlet_file, modifiedOutlet, mpiexeDir=MPIEXEC_DIR,
-                     exeDir=CPP_PROGRAM_DIR)
+    print MoveOutlet(np, tauDir, flowDir, streamRaster, outlet_file, modifiedOutlet, mpiexeDir = MPIEXEC_DIR,
+                     exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 
-    status = "Flow accumulation with outlet..."
-    fStatus.write("%d,%s\n" % (70, status))
-    fStatus.flush()
-    print FlowAccD8(np, tauDir, flowDir, accWithWeight, modifiedOutlet, streamSkeleton, mpiexeDir=MPIEXEC_DIR,
-                    exeDir=CPP_PROGRAM_DIR)
-    print "[Output], %s, %s" % (WORKING_DIR, status)
+
 
     if D8AccThreshold <= 0:
+        status = "Generating stream skeleton..."
+        fStatus.write("%d,%s\n" % (30, status))
+        fStatus.flush()
+        print StreamSkeleton(np, tauDir, filledDem, streamSkeleton, mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
+        status = "Flow accumulation with outlet..."
+        fStatus.write("%d,%s\n" % (70, status))
+        fStatus.flush()
+        print FlowAccD8(np, tauDir, flowDir, accWithWeight, modifiedOutlet, streamSkeleton, mpiexeDir = MPIEXEC_DIR,
+                        exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
         status = "Drop analysis to select optimal threshold..."
         fStatus.write("%d,%s\n" % (75, status))
         fStatus.flush()
+        maxAccum, minAccum, meanAccum, STDAccum = GetRasterStat(accWithWeight)
         if meanAccum - STDAccum < 0:
             minthresh = meanAccum
         else:
@@ -193,8 +194,9 @@ def SubbasinDelineation():
         numthresh = 20
         logspace = 'true'
         drpFile = 'drp.txt'
-        print DropAnalysis(np, tauDir, filledDem, flowDir, accWithWeight, accWithWeight, modifiedOutlet, minthresh, maxthresh, numthresh,
-                           logspace, drpFile, mpiexeDir=MPIEXEC_DIR, exeDir=CPP_PROGRAM_DIR)
+        print DropAnalysis(np, tauDir, filledDem, flowDir, accWithWeight, accWithWeight, modifiedOutlet, minthresh,
+                           maxthresh, numthresh, logspace, drpFile,
+                           mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
         drpf = open(drpFile, "r")
         tempContents = drpf.read()
         (beg, Threshold) = tempContents.rsplit(' ', 1)
@@ -202,25 +204,41 @@ def SubbasinDelineation():
         drpf.close()
         print "[Output], %s, %s" % (WORKING_DIR, status)
 
-    status = "Generating stream raster..."
-    fStatus.write("%d,%s\n" % (80, status))
-    fStatus.flush()
-    print StreamRaster(np, tauDir, accWithWeight, streamRaster, float(Threshold), mpiexeDir=MPIEXEC_DIR,
-                       exeDir=CPP_PROGRAM_DIR)
-    print "[Output], %s, %s" % (WORKING_DIR, status)
-
+        status = "Generating stream raster..."
+        fStatus.write("%d,%s\n" % (80, status))
+        fStatus.flush()
+        print StreamRaster(np, tauDir, accWithWeight, streamRaster, float(Threshold), mpiexeDir = MPIEXEC_DIR,
+                           exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
+    else:
+        status = "Flow accumulation with outlet..."
+        fStatus.write("%d,%s\n" % (70, status))
+        fStatus.flush()
+        print FlowAccD8(np, tauDir, flowDir, acc, modifiedOutlet, streamSkeleton = None,
+                        mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
+        status = "Generating stream raster..."
+        fStatus.write("%d,%s\n" % (80, status))
+        fStatus.flush()
+        print StreamRaster(np, tauDir, acc, streamRaster, D8AccThreshold, mpiexeDir = MPIEXEC_DIR,
+                           exeDir = CPP_PROGRAM_DIR)
+        print "[Output], %s, %s" % (WORKING_DIR, status)
     status = "Generating stream net..."
     fStatus.write("%d,%s\n" % (90, status))
     fStatus.flush()
-    print StreamNet(np, tauDir, filledDem, flowDir, accWithWeight, streamRaster, modifiedOutlet, streamOrder, chNetwork, chCoord,
-                    streamNet, subbasin, mpiexeDir=MPIEXEC_DIR, exeDir=CPP_PROGRAM_DIR)
+    if D8AccThreshold <= 0:
+        tmpAcc = accWithWeight
+    else:
+        tmpAcc = acc
+    print StreamNet(np, tauDir, filledDem, flowDir, tmpAcc, streamRaster, modifiedOutlet, streamOrder, chNetwork,
+                    chCoord, streamNet, subbasin, mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 
     status = "Calculating distance to stream (D8)..."
     fStatus.write("%d,%s\n" % (95, status))
     fStatus.flush()
     print D8DistDownToStream(np, tauDir, flowDir, filledDem, streamRaster, dist2StreamD8, D8DownMethod, 1,
-                             mpiexeDir=MPIEXEC_DIR, exeDir=CPP_PROGRAM_DIR)
+                             mpiexeDir = MPIEXEC_DIR, exeDir = CPP_PROGRAM_DIR)
     print "[Output], %s, %s" % (WORKING_DIR, status)
 
     fStatus.write("100,subbasin delineation is finished!")

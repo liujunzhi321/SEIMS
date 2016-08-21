@@ -1,5 +1,4 @@
 /*!
- * \file util.cpp
  * \brief Utility functions to handle numeric, string and file
  *
  * Utility functions for all SEIMS modules
@@ -8,32 +7,8 @@
  * \version 1.0
  * \date Jul. 2010
  */
-
-#include <cmath>
 #include "util.h"
 #include "utils.h"
-#include <fstream>
-#include <cstring>
-//#include <iostream>
-//#include <string>
-//#include <vector>
-//#include <algorithm>
-//#include <functional>
-
-#ifndef linux
-
-#include <WinSock2.h>
-#include <Windows.h>
-#include <direct.h>
-
-#else
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#endif
 
 using namespace std;
 
@@ -58,9 +33,9 @@ int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFil
 {
 #ifndef linux
 	char szFind[MAX_PATH];
-	strcpy(szFind, lpPath);
-	strcat(szFind, "\\");
-	strcat(szFind, expression);
+	stringcpy(szFind, lpPath);
+	stringcat(szFind, "\\");
+	stringcat(szFind, expression);
 
 	WIN32_FIND_DATA findFileData;
 	HANDLE hFind = ::FindFirstFile(szFind, &findFileData);
@@ -72,15 +47,14 @@ int FindFiles(const char *lpPath, const char *expression, vector<string> &vecFil
 			continue;
 
 		char fullpath[MAX_PATH];
-		strcpy(fullpath, lpPath);
-		strcat(fullpath, "\\");
-		strcat(fullpath, findFileData.cFileName);
+		stringcpy(fullpath, lpPath);
+		stringcat(fullpath, "\\");
+		stringcat(fullpath, findFileData.cFileName);
 
 		vecFiles.push_back(fullpath);
 
 	} while (::FindNextFile(hFind, &findFileData));
 #else
-	char ch,infile[1024],outfile[1024];
 	struct dirent *ptr;
 	DIR *dir;
 	dir = opendir(lpPath);
@@ -294,6 +268,7 @@ void Read2DArrayFromString(const char *s, int &nRows, float **&data)
 
 void StatusMessage(const char *msg)
 {
+	/// Just for debugging ///
     //cout << msg << endl;
 }
 
@@ -337,7 +312,23 @@ string &trim(string &s)
     return s.erase(s.find_last_not_of(" \n\r\t") + 1);
 }
 
-
+double TimeCounting()
+{
+#ifndef linux
+	LARGE_INTEGER li;
+	if (QueryPerformanceFrequency(&li)) /// CPU supported
+	{
+		double PCFreq = 0.;
+		PCFreq = double(li.QuadPart);
+		QueryPerformanceCounter(&li);
+		return (double)li.QuadPart / PCFreq; // seconds
+	} 
+#else
+	struct timeval tv;
+	gettimeofday(&tv, NULL); 
+	return (double)tv.tv_sec + (double)tv.tv_usec / 1000000.;
+#endif
+}
 
 
 

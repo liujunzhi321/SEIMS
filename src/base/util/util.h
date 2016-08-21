@@ -1,5 +1,4 @@
 /*!
- * \file util.h
  * \ingroup util
  * \brief Utility functions to handle numeric, string and file
  * \author Junzhi Liu, LiangJun Zhu
@@ -8,8 +7,6 @@
  *
  * 
  */
-#ifndef SEIMS_UTIL_INCLUDE
-#define SEIMS_UTIL_INCLUDE
 #pragma once
 
 #include <string>
@@ -19,7 +16,29 @@
 #include "text.h"
 #include <cmath>
 #include <sstream>
-
+#include <iostream>
+#include <float.h>
+#include <cmath>
+#include <fstream>
+#include <cstring>
+#ifndef linux
+#define _WINSOCKAPI_    // stops windows.h including winsock.h
+#include <windows.h>
+#include <winsock2.h>
+//#include <WinSock2.h>
+//#include <Windows.h>
+#include <direct.h>
+#else
+#include <dirent.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <dlfcn.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <fcntl.h>
+#endif
 using namespace std;
 /**
  * \def NODATA_VALUE
@@ -28,7 +47,8 @@ using namespace std;
 #define NODATA_VALUE    -9999.0f
 // TODO, replace NODATA by NODATA_VALUE thoroughly
 #define NODATA          -99.0f
-
+const float MISSINGFLOAT = -1 * FLT_MAX;
+const float MAXFLOAT  = FLT_MAX;
 /**
  * \def ZERO
  * \brief zero value used in numeric calculation
@@ -352,6 +372,15 @@ extern double Sum(double *a, int n);
  */
 extern string &trim(string &s);
 
+// define some macro for string related built-in functions, by Liangjun
+#ifdef MSVC
+#define stringcat strcat_s
+#define stringcpy strcpy_s
+#else
+#define stringcat strcat
+#define stringcpy strcpy
+#endif
+
 #ifndef linux
 #define strprintf sprintf_s
 #define StringTok strtok_s
@@ -373,7 +402,6 @@ extern string &trim(string &s);
  * \param[in] dstfile \a char destination file path
  */
 extern int copyfile_linux(const char* srcfile, const char* dstfile);
-#endif
 #endif
 
 /*!
@@ -425,3 +453,8 @@ void RemoveValueInVector(T &val, vector<T> &vec)
             break;
     }
 }
+/*
+ *\brief Counting time for program
+ * Cross-platform
+*/
+double TimeCounting();

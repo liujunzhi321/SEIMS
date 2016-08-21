@@ -189,12 +189,12 @@ void ModuleFactory::Init(const string &configFileName)
         for (size_t j = 0; j < inputs.size(); j++)
         {
             ParamInfo &param = inputs[j];
-            if (!StringMatch(param.Source, Source_Module))
-                continue;
-
-            param.DependPara = FindDependentParam(param);
+            if (StringMatch(param.Source, Source_Module) || StringMatch(param.Source, Source_Module_Optional))
+                param.DependPara = FindDependentParam(param);
             //cout << "\t" << param.Name << "\t" << param.DependPara->ModuleID << ":" << param.DependPara->Name << endl;
-        }
+			else
+				continue;
+		}
     }
 }
 
@@ -301,7 +301,7 @@ int ModuleFactory::CreateModuleList(string dbName, int subbasinID, int numThread
         /// Special operation for ITP module
         if (id.find(MID_ITP) != string::npos)
         {
-            modules[i]->SetDataType(m_settings[id]->dataType());
+            modules[i]->SetClimateDataType(m_settings[id]->dataType());
             for (size_t j = 0; j < parameters.size(); j++)
             {
                 ParamInfo &param = parameters[j];
@@ -362,7 +362,7 @@ ParamInfo *ModuleFactory::FindDependentParam(ParamInfo &paramInfo)
     //      this throw sentence should be uncommented by then. By LJ.
     if(!StringMatch(paramInfo.Source, Source_Module_Optional))
 		throw ModelException("ModuleFactory", "FindDependentParam",
-                         "Can not find input for " + paraName + " from other Modules.\n");
+                         "Can not find input for " + paraName + " of " + paramInfo.ModuleID +  " from other Modules.\n");
     return NULL;
 }
 
@@ -956,7 +956,11 @@ void ModuleFactory::SetData(string &dbName, int nSubbasin, SEIMSModuleSetting *s
     //clock_t start = clock();
     //const char *paramName = name.c_str(); // not used variable. LJ
     ostringstream oss;
-    oss << nSubbasin << "_" << name;
+	int tmp = name.find("LOOKUP");
+	if(tmp < 0)
+		oss << nSubbasin << "_" << name;
+	else
+		oss << name;
     if (StringMatch(name, Tag_Weight))
     {
         if (setting->dataTypeString() == DataType_Precipitation)
@@ -1213,7 +1217,7 @@ void ModuleFactory::Set2DData(string &dbName, string &paraName, int nSubbasin, s
                 remoteFileName = oss.str();
             }
 #ifdef USE_MONGODB
-            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
+            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, nCols, data);
 #endif
         }
         else if (StringMatch(paraName, Tag_FLOWIN_INDEX_D8) || StringMatch(paraName, Tag_FLOWIN_INDEX_DINF)
@@ -1221,12 +1225,12 @@ void ModuleFactory::Set2DData(string &dbName, string &paraName, int nSubbasin, s
                  || StringMatch(paraName, Tag_ROUTING_LAYERS_DINF))
         {
 #ifdef USE_MONGODB
-            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
+            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, nCols, data);
 #endif
         }
         else if (StringMatch(paraName, TAG_OUT_OL_IUH))
         {
-            ReadIUHFromMongoDB(m_spatialData, remoteFileName, templateRaster, nRows, data);
+            ReadIUHFromMongoDB(m_spatialData, remoteFileName, nRows, data);
         }
         else if (StringMatch(paraName, Tag_ReachParameter))
         {
@@ -1266,7 +1270,7 @@ void ModuleFactory::Set2DData(string &dbName, string &paraName, int nSubbasin, s
         else
         {
 #ifdef USE_MONGODB
-            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, data);
+            Read2DArrayFromMongoDB(m_spatialData, remoteFileName, nRows, nCols, data);
 #endif
             //throw ModelException("ModuleFactory", "Set2DData", "Failed reading file " + remoteFileName);
         }

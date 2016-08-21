@@ -1,5 +1,4 @@
-/*!
- * \file PETHargreaves.h
+/*
  *
  * \author Junzhi Liu
  * \date Nov. 2010
@@ -18,7 +17,11 @@
 #include "SimulationModule.h"
 
 using namespace std;
-
+/* \defgroup PET_PT
+ * \ingroup Hydrology_longterm
+ * \brief Calculate potential evapotranspiration using PriestleyTaylor method
+ *
+ */
 /*!
  * \class PETPriestleyTaylor
  * \ingroup PET_PT

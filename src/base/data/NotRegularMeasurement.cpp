@@ -1,5 +1,4 @@
 /*!
- * \file NotRegularMeasurement.cpp
  * \brief Not Regular hydroclimate data
  *
  * \author Junzhi Liu, LiangJun Zhu
@@ -10,8 +9,6 @@
  */
 #include "NotRegularMeasurement.h"
 #include "utils.h"
-//#include "bson.h"
-//#include "util.h"
 #include "ModelException.h"
 
 //! Constructor
@@ -123,11 +120,11 @@ NotRegularMeasurement::~NotRegularMeasurement(void)
 //! Get site data by time
 float *NotRegularMeasurement::GetSiteDataByTime(time_t t)
 {
-    for (size_t iSite = 0; iSite < m_siteIDList.size(); iSite++)
+    for (vector<int>::size_type iSite = 0; iSite < m_siteIDList.size(); iSite++)
     {
         vector<time_t> &tlist = m_timeList[iSite];
         vector<float> &vlist = m_valueList[iSite];
-        int curIndex = m_curIndexList[iSite];
+        size_t curIndex = m_curIndexList[iSite];
 
         // find the index for current time
         // the nearest record before t
@@ -135,17 +132,16 @@ float *NotRegularMeasurement::GetSiteDataByTime(time_t t)
             curIndex++;
         curIndex--;
 
-        if (curIndex < 0)
-        {
-            pData[iSite] = 0.f;
-            m_curIndexList[iSite] = 0;
-        }
-        else
-        {
+        //if (curIndex < 0)
+        //{
+        //    pData[iSite] = 0.f;
+        //    m_curIndexList[iSite] = 0;
+        //}
+        //else
+        //{
             pData[iSite] = vlist[curIndex];
             m_curIndexList[iSite] = curIndex;
-        }
-
+        //}
     }
     return pData;
 }

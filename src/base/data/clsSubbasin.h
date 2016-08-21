@@ -35,23 +35,15 @@ private:
     int m_nCells;
 	//! index of valid cells
     int *m_cells;
-	////! soil layers number of valid cells
-	//int *m_nSoilLayers;
-
-    //inputs
-
-	//! PET
-    float m_PET;
-    //float m_EI;
-    //float m_ED;
-    //float m_ES;
-    
-	//! average percolation (mm) of each valid cells 
-    float m_PERCO;
 	//! area of one cell
     float m_cellArea;    
 	//! area of current Subbasin
     float m_Area; 
+
+	//! PET
+    float m_PET;
+	//! average percolation (mm) of each valid cells 
+    float m_PERCO;
 
     // Subbasin scale parameters' mean value
     
@@ -237,7 +229,7 @@ public:
     int GetSubbasinNumber() { return this->m_nSubbasins; }
 
     /// Get subbasin IDs
-    vector<int> GetSubbasinIDs() { return this->m_subbasinIDs; }
+    vector<int>& GetSubbasinIDs() { return this->m_subbasinIDs; }
 
 	/// Set slope coefficient of each subbasin
 	void SetSlopeCoefficient();

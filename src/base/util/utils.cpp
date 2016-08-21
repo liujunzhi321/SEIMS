@@ -1,5 +1,4 @@
 /*!
- * \file utils.cpp
  * \brief methods of utils class
  *
  * Implementation of the methods for the utils class
@@ -12,18 +11,6 @@
  */
 
 #include "utils.h"
-#include <fstream>
-//#include <cstdio>
-#include <ctime>
-
-#ifndef linux
-
-#include <io.h>
-
-#else
-#include <unistd.h>
-#include <fcntl.h>
-#endif
 
 using namespace std;
 

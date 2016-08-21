@@ -7,8 +7,6 @@
  */
 
 #pragma once
-#ifndef SEIMS_SurTra_PARAMS_INCLUDE
-#define SEIMS_SurTra_PARAMS_INCLUDE
 
 #include <string>
 #include "api.h"
@@ -41,9 +39,10 @@ public:
 
     virtual void SetValue(const char *key, float value);
 
+	virtual void SetSubbasins(clsSubbasins *);
+
     virtual int Execute();
 
-    //virtual void GetValue(const char* key, float* value);
     virtual void Get1DData(const char *key, int *n, float **data);
 
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
@@ -61,7 +60,8 @@ private:
 	/// enrichment ratio
 	float *m_enratio;
 
-    ///input data
+    ///inputs
+
     //distribution of soil loss caused by water erosion
     float *m_sedimentYield;
     //distribution of surface runoff generated
@@ -69,9 +69,19 @@ private:
     //bulk density of the soil
     float **m_sol_bd;
     //depth to bottom of soil layer
-    float **m_sol_z;
-    //??
-    float **m_sol_mp;
+    float **m_soilDepth;
+    ////??
+    //float **m_sol_mp;
+
+	/// subbasin related
+	/// the total number of subbasins
+	int m_nSubbasins;
+	//! subbasin IDs
+	vector<int> m_subbasinIDs;
+	/// subbasin grid (subbasins ID)
+	float *m_subbasin;
+	/// subbasins information
+	clsSubbasins *m_subbasinsInfo;
 
     ///output data
     //amount of organic nitrogen in surface runoff
@@ -82,6 +92,13 @@ private:
     float *m_sedminpa;
     //amount of stable mineral phosphorus sorbed to sediment in surface runoff
     float *m_sedminps;
+
+	/// output to channel
+
+	float *m_sedorgnToCh;  // amount of organic N in surface runoff to channel
+	float *m_sedorgpToCh;  // amount of organic P in surface runoff to channel
+	float *m_sedminpaToCh; // amount of active mineral P in surface runoff to channel
+	float *m_sedminpsToCh; // amount of stable mineral P in surface runoff to channel
 
     ///input & output
     //amount of nitrogen stored in the active organic (humic) nitrogen pool
@@ -133,10 +150,3 @@ private:
     void initialOutputs();
 
 };
-
-#endif
-
-
-
-
-

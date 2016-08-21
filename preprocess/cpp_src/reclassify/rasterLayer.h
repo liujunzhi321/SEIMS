@@ -738,7 +738,7 @@ writeFile(const char *outputfile)
     }
     GDALDataset *poDataset = NULL;
     poDataset = (GDALDataset *) GDALOpen(outputfile, GA_Update);
-    if (poDataset == NULL /*����Ƿ��������ļ�*/)
+    if (poDataset == NULL)
     {
         //do something
         cout << "data file is not open correct" << endl;

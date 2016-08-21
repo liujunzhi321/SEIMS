@@ -1,5 +1,4 @@
 /*!
- * \file Muskingum.cpp
  * \brief Routing in the channel cells using 4-point implicit finite difference method
  * \author Junzhi Liu
  * \date Feb. 2011
@@ -531,12 +530,10 @@ void Muskingum::Set1DData(const char *key, int n, float *data)
         m_direction = data;
     else if (StringMatch(sk, VAR_PCP))
         m_prec = data;
-
     else if (StringMatch(sk, VAR_QSOIL))
         m_qi = data;
     else if (StringMatch(sk, VAR_QOVERLAND))
         m_qs = data;
-
     else if (StringMatch(sk, VAR_CHWIDTH))
         m_chWidth = data;
     else if (StringMatch(sk, VAR_STREAM_LINK))

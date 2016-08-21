@@ -33,22 +33,16 @@ class NutrientRemviaSr : public SimulationModule
 {
 public:
     NutrientRemviaSr(void);
-
     ~NutrientRemviaSr(void);
 
     virtual void Set1DData(const char *key, int n, float *data);
-
     virtual void Set2DData(const char *key, int nRows, int nCols, float **data);
-
     virtual void SetValue(const char *key, float value);
-
     virtual int Execute();
-
     virtual void GetValue(const char *key, float *value);
-
     virtual void Get1DData(const char *key, int *n, float **data);
-
     virtual void Get2DData(const char *key, int *nRows, int *nCols, float ***data);
+	virtual void SetSubbasins(clsSubbasins *subbasins);
 
 private:
 
@@ -60,6 +54,8 @@ private:
     float *m_nSoilLayers;
     /// maximum soil layers
     int m_soiLayers;
+	/// stream link
+	float *m_streamLink;
 
     /// input data
     /// drainage tile flow in soil profile
@@ -83,7 +79,7 @@ private:
     /// crack volume potential of soil
     float *m_sol_crk;
     /// amount of water held in the soil layer at saturation
-    float *m_sol_wsatur;
+    float **m_sol_wsatur;
 
     /// lateral flow in soil layer
     float **m_flat;
@@ -94,15 +90,13 @@ private:
     /// depth to bottom of soil layer
     float **m_sol_z;
 
+	/// flow out index
+	float *m_flowOutIndex;
 
     /// amount of organic nitrogen in surface runoff
     float *m_sedorgn;
-    /// amount of organic phosphorus in surface runoff
-    float *m_sedorgp;
     /// average air temperature
     float *m_tmean;
-    /// groundwater contribution to stream flow
-	float *m_gw_q;
 	///percent organic matter in soil layer (%)
 	float **m_sol_om;
 	/// soil thick of each layer (mm)
@@ -112,7 +106,9 @@ private:
     /// amount of nitrate transported with lateral flow
     float *m_latno3;
     /// amount of nitrate percolating past bottom of soil profile
-    float *m_percn;
+    float *m_perco_n;
+	/// amount of solute P percolating past bottom of soil profile
+	float *m_perco_p;
     /// amount of nitrate transported with surface runoff
     float *m_surqno3;
     /// amount of soluble phosphorus in surface runoff
@@ -126,6 +122,23 @@ private:
     /// dissolved oxygen saturation concentration
     //float* m_soxy;
 
+	// N and P to channel
+	float *m_latno3ToCh;  // amount of nitrate transported with lateral flow to channel
+	float *m_sur_no3ToCh; // amount of nitrate transported with surface runoff to channel
+	float *m_sur_solpToCh;// amount of soluble phosphorus in surface runoff to channel
+	float *m_perco_n_gw;  // amount of nitrate percolating past bottom of soil profile sum by sub-basin
+	float *m_perco_p_gw;  // amount of solute P percolating past bottom of soil profile sum by sub-basin
+
+	/// subbasin related
+	/// the total number of subbasins
+	int m_nSubbasins;
+	//! subbasin IDs
+	vector<int> m_subbasinIDs;
+	/// subbasin grid (subbasins ID)
+	float *m_subbasin;
+	/// subbasins information
+	clsSubbasins *m_subbasinsInfo;
+
     /// input & output
     /// average annual amount of phosphorus leached into second soil layer
     float m_wshd_plch;
@@ -134,6 +147,8 @@ private:
     float **m_sol_no3;
     /// amount of phosphorus stored in solution
     float **m_sol_solp;
+
+
 
 private:
 
@@ -157,7 +172,7 @@ private:
     *
     * \return void
     */
-    void Nitrateloss();
+    void NitrateLoss();
 
     /*!
     * \brief Calculates the amount of phosphorus lost from the soil
@@ -166,7 +181,7 @@ private:
     *
     * \return void
     */
-    void Phosphorusloss();
+    void PhosphorusLoss();
 
     /*!
     * \brief Calculate enrichment ratio.
@@ -176,6 +191,8 @@ private:
     float *CalculateEnrRatio();
 
     void initialOutputs();
+
+	void SumBySubbasin();
 };
 
 #endif

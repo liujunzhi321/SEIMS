@@ -1,6 +1,4 @@
-/*//
- * \file NutrientRemviaSr.cpp
- * \ingroup NutRemv
+/*
  * \author Huiran Gao
  * \date May 2016
  */
@@ -22,9 +20,10 @@ NutrientRemviaSr::NutrientRemviaSr(void) :
         m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_sedimentYield(NULL), m_nperco(-1), m_phoskd(-1), m_pperco(-1),
         m_qtile(-1), m_nSoilLayers(NULL), m_anion_excl(NULL), m_isep_opt(-1), m_ldrain(NULL), m_surfr(NULL), m_flat(NULL),
         m_sol_perco(NULL), m_sol_wsatur(NULL), m_sol_crk(NULL), m_sol_bd(NULL), m_sol_z(NULL), m_sol_thick(NULL),
-        m_sol_om(NULL), m_gw_q(NULL),
+        m_sol_om(NULL), m_flowOutIndex(NULL), m_nSubbasins(-1), m_subbasin(NULL), m_subbasinsInfo(NULL), m_streamLink(NULL),
         //output
-        m_latno3(NULL), m_percn(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(-1),
+        m_latno3(NULL), m_perco_n(NULL),m_perco_p(NULL), m_surqno3(NULL), m_sol_no3(NULL), m_surqsolp(NULL), m_wshd_plch(-1),
+		m_latno3ToCh(NULL), m_sur_no3ToCh(NULL), m_sur_solpToCh(NULL), m_perco_n_gw(NULL), m_perco_p_gw(NULL),
         m_sol_solp(NULL), m_cod(NULL), m_chl_a(NULL) //,m_doxq(), m_soxy()
 {
 
@@ -33,18 +32,76 @@ NutrientRemviaSr::NutrientRemviaSr(void) :
 NutrientRemviaSr::~NutrientRemviaSr(void)
 {
 	if (m_latno3 != NULL) Release1DArray(m_latno3);
-	if (m_percn != NULL) Release1DArray(m_percn);
+	if (m_perco_n != NULL) Release1DArray(m_perco_n);
+	if (m_perco_p != NULL) Release1DArray(m_perco_p);
 	if (m_surqno3 != NULL) Release1DArray(m_surqno3);
 	if (m_surqsolp != NULL) Release1DArray(m_surqsolp);
 	if (m_cod != NULL) Release1DArray(m_cod);
 	if (m_chl_a != NULL) Release1DArray(m_chl_a);
+
+	if(m_latno3ToCh != NULL) Release1DArray(m_latno3ToCh);
+	if(m_sur_no3ToCh != NULL) Release1DArray(m_sur_no3ToCh);
+	if(m_sur_solpToCh != NULL) Release1DArray(m_sur_solpToCh);
+	if(m_perco_n_gw != NULL) Release1DArray(m_perco_n_gw);
+	if(m_perco_p_gw != NULL) Release1DArray(m_perco_p_gw);
+}
+
+void NutrientRemviaSr::SumBySubbasin()
+{
+	for(int subi = 1; subi <= m_nSubbasins; subi++)
+	{
+		m_sur_no3ToCh[subi] = 0.f;
+		m_sur_solpToCh[subi] = 0.f;
+		m_perco_n_gw[subi] = 0.f;
+		m_perco_p_gw[subi] = 0.f;
+
+		m_latno3ToCh[subi] = 0.f;
+	}
+
+	float cellArea = m_cellWidth * m_cellWidth * 0.0001f; //ha
+	// sum by subbasin
+	for (int i = 0; i < m_nCells; i++)
+	{
+		//add today's flow
+		int subi = (int) m_subbasin[i];
+		if (m_nSubbasins == 1)
+		{
+			subi = 1;
+		}
+		else if (subi >= m_nSubbasins + 1)
+		{
+			ostringstream oss;
+			oss << subi;
+			throw ModelException(MID_NUTRSED, "Execute", "The subbasin " + oss.str() + " is invalid.");
+		}
+
+
+		m_sur_no3ToCh[subi] += m_surqno3[i] * cellArea;
+		m_sur_solpToCh[subi] += m_surqsolp[i] * cellArea;
+		m_perco_n_gw[subi] += m_perco_n[i] * cellArea;
+		m_perco_p_gw[subi] += m_perco_p[i] * cellArea;
+
+		if(m_streamLink[i] > 0)
+			m_latno3ToCh[subi] += m_latno3[i];
+	}
+
+
+	// sum all the subbasins and put the sum value in the zero-index of the array
+	for (int i = 1; i < m_nSubbasins + 1; i++)
+	{
+		m_sur_no3ToCh[0] += m_sur_no3ToCh[i];
+		m_sur_solpToCh[0] += m_sur_solpToCh[i];
+		m_latno3ToCh[0] += m_latno3ToCh[i];
+		m_perco_n_gw[0] += m_perco_n_gw[i];
+		m_perco_p_gw[0] += m_perco_p_gw[i];
+	}
 }
 
 bool NutrientRemviaSr::CheckInputSize(const char *key, int n)
 {
     if (n <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputSize",
+        throw ModelException(MID_NUTRMV, "CheckInputSize",
                              "Input data for " + string(key) + " is invalid. The size could not be less than zero.");
         return false;
     }
@@ -59,7 +116,7 @@ bool NutrientRemviaSr::CheckInputSize(const char *key, int n)
             ostringstream oss;
             oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
             m_nCells << ".\n";
-            throw ModelException(MID_NutRemv, "CheckInputSize", oss.str());
+            throw ModelException(MID_NUTRMV, "CheckInputSize", oss.str());
         }
     }
     return true;
@@ -69,89 +126,103 @@ bool NutrientRemviaSr::CheckInputData()
 {
     if (this->m_nCells <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The cells number can not be less than zero.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The cells number can not be less than zero.");
     }
     if (this->m_cellWidth <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The cell width can not be less than zero.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The cell width can not be less than zero.");
     }
     if (this->m_soiLayers <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The layer number of the input 2D raster data can not be less than zero.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The layer number of the input 2D raster data can not be less than zero.");
     }
     if (this->m_nSoilLayers == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "Soil layers number must not be NULL");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "Soil layers number must not be NULL");
     }
     if (this->m_sedimentYield == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The distribution of soil loss caused by water erosion can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The distribution of soil loss caused by water erosion can not be NULL.");
     }
     if (this->m_sol_om == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The percent organic matter in soil layer can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The percent organic matter in soil layer can not be NULL.");
     }
     if (this->m_anion_excl == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The fraction of porosity from which anions are excluded can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The fraction of porosity from which anions are excluded can not be NULL.");
     }
     if (this->m_isep_opt <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The septic operational condition code can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The septic operational condition code can not be NULL.");
     }
-    if (this->m_ldrain == NULL)
-    {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The soil layer where drainage tile is located can not be NULL.");
-    }
+    //if (this->m_ldrain == NULL)
+    //{
+    //    throw ModelException(MID_NUTRMV, "CheckInputData", "The soil layer where drainage tile is located can not be NULL.");
+    //}
     if (this->m_surfr == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The distribution of surface runoff generated data can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The distribution of surface runoff generated data can not be NULL.");
     }
     if (this->m_nperco <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The nitrate percolation coefficient can not be less than zero.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The nitrate percolation coefficient can not be less than zero.");
     }
     if (this->m_flat == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The lateral flow in soil layer data can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The lateral flow in soil layer data can not be NULL.");
     }
     if (this->m_sol_perco == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "percolation from soil layer can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "percolation from soil layer can not be NULL.");
     }
     if (this->m_sol_wsatur == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The amount of water held in the soil layer at saturation data can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The amount of water held in the soil layer at saturation data can not be NULL.");
     }
     if (this->m_phoskd <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "Phosphorus soil partitioning coefficient can not be less than zero.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "Phosphorus soil partitioning coefficient can not be less than zero.");
     }
 	if (this->m_sol_thick == NULL)
 	{
-		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_thick can not be NULL.");
+		throw ModelException(MID_NUTRMV, "CheckInputData", "The m_sol_thick can not be NULL.");
 	}
     if (this->m_sol_crk == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The crack volume potential of soil data can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The crack volume potential of soil data can not be NULL.");
     }
     if (this->m_pperco <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "Phosphorus percolation coefficient can not be less than zero.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "Phosphorus percolation coefficient can not be less than zero.");
     }
     if (this->m_sol_bd == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The bulk density of the soil data can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The bulk density of the soil data can not be NULL.");
     }
     if (this->m_sol_z == NULL)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The depth to bottom of soil layer can not be NULL.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The depth to bottom of soil layer can not be NULL.");
     }
-    if (this->m_gw_q == NULL)
-    {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The groundwater contribution to stream flow data can not be NULL.");
-    }
+	if (m_flowOutIndex == NULL)
+		throw ModelException(MID_NUTRMV, "CheckInputData", "The parameter: flow out index has not been set.");
+	if (m_nSubbasins <= 0) 
+		throw ModelException(MID_NUTRMV, "CheckInputData", "The subbasins number must be greater than 0.");
+	if (m_subbasinIDs.empty()) 
+		throw ModelException(MID_NUTRMV, "CheckInputData", "The subbasin IDs can not be EMPTY.");
+	if (m_subbasinsInfo == NULL)
+		throw ModelException(MID_NUTRMV, "CheckInputData", "The parameter: m_subbasinsInfo has not been set.");
+
     return true;
+}
+
+void NutrientRemviaSr::SetSubbasins(clsSubbasins *subbasins)
+{
+	if(m_subbasinsInfo == NULL){
+		m_subbasinsInfo = subbasins;
+		m_nSubbasins = m_subbasinsInfo->GetSubbasinNumber();
+		m_subbasinIDs = m_subbasinsInfo->GetSubbasinIDs();
+	}
 }
 
 void NutrientRemviaSr::SetValue(const char *key, float value)
@@ -168,10 +239,11 @@ void NutrientRemviaSr::SetValue(const char *key, float value)
     else if (StringMatch(sk, VAR_PPERCO)) { this->m_pperco = value; }
     else if (StringMatch(sk, VAR_PHOSKD)) { this->m_phoskd = value; }
     else if (StringMatch(sk, VAR_ISEP_OPT)) { this->m_isep_opt = value; }
+	else if (StringMatch(sk, VAR_WSHD_PLCH)) m_wshd_plch = value;
     else
     {
-        throw ModelException(MID_NutRemv, "SetValue", "Parameter " + sk +
-                                                    " does not exist in CLIMATE method. Please contact the module developer.");
+        throw ModelException(MID_NUTRMV, "SetValue", "Parameter " + sk +
+                                                    " does not exist. Please contact the module developer.");
     }
 }
 
@@ -179,69 +251,84 @@ void NutrientRemviaSr::Set1DData(const char *key, int n, float *data)
 {
     if (!this->CheckInputSize(key, n)) return;
     string sk(key);
-    if (StringMatch(sk, VAR_SURU)) { this->m_surfr = data; }
-    else if (StringMatch(sk, VAR_ANION_EXCL)) { this->m_anion_excl = data; }
-    else if (StringMatch(sk, VAR_LDRAIN)) { this->m_ldrain = data; }
-    else if (StringMatch(sk, VAR_SOL_CRK)) { this->m_sol_crk = data; }
-    else if (StringMatch(sk, VAR_SOL_UL)) { this->m_sol_wsatur = data; }
-    else if (StringMatch(sk, VAR_SOER)) { this->m_sedimentYield = data; }
-    else if (StringMatch(sk, VAR_SEDORGN)) { this->m_sedorgn = data; }
-    else if (StringMatch(sk, VAR_SEDORGP)) { this->m_sedorgp = data; }
-    else if (StringMatch(sk, VAR_TMEAN)) { this->m_tmean = data; }
-    else if (StringMatch(sk, VAR_GW_Q)) { this->m_gw_q = data; }
+    if (StringMatch(sk, VAR_FLOW_OL)) 
+		m_surfr = data; 
+	else if (StringMatch(sk, VAR_SUBBSN))
+		m_subbasin = data;
+	else if(StringMatch(sk, VAR_STREAM_LINK))
+		m_streamLink = data;
+    else if (StringMatch(sk, VAR_ANION_EXCL)) 
+		m_anion_excl = data; 
+    else if (StringMatch(sk, VAR_LDRAIN)) 
+		m_ldrain = data; 
+    else if (StringMatch(sk, VAR_SOL_CRK)) 
+		m_sol_crk = data; 
+	else if (StringMatch(sk, VAR_SOILLAYERS)) 
+		m_nSoilLayers = data; 
+    else if (StringMatch(sk, VAR_SED_OL)) 
+	{ 
+		this->m_sedimentYield = data; 
+		// convert kg to ton
+		for (int i = 0; i < n; i++)
+			m_sedimentYield[i] /= 1000.f;
+	}
+	else if (StringMatch(sk, Tag_FLOWOUT_INDEX_D8))
+		m_flowOutIndex = data;
+    else if (StringMatch(sk, VAR_SEDORGN)) 
+		m_sedorgn = data; 
+    else if (StringMatch(sk, VAR_TMEAN)) 
+		m_tmean = data;
     else
-    {
         throw ModelException("NutRemv", "SetValue", "Parameter " + sk +
-                                                    " does not exist in CLIMATE module. Please contact the module developer.");
-    }
+                                                    " does not exist. Please contact the module developer.");
 }
 
 void NutrientRemviaSr::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
     if (!this->CheckInputSize(key, nRows)) return;
     string sk(key);
-    m_soiLayers = nCols;
-    if (StringMatch(sk, VAR_FLAT)) { this->m_flat = data; }
-    else if (StringMatch(sk, VAR_SOL_NO3)) { this->m_sol_no3 = data; }
-    else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
-    else if (StringMatch(sk, VAR_SOL_SOLP)) { this->m_sol_solp = data; }
-    else if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
-    else if (StringMatch(sk, VAR_SOL_PERCO)) { this->m_sol_perco = data; }
-	else if (StringMatch(sk, VAR_SOL_OM)) { this->m_sol_om = data; }
-	else if (StringMatch(sk, VAR_SOILTHICK)) { this->m_sol_thick = data; }
+
+	m_soiLayers = nCols;
+    if (StringMatch(sk, VAR_SSRU)) { m_flat = data; }
+    else if (StringMatch(sk, VAR_SOL_NO3)) { m_sol_no3 = data; }
+    else if (StringMatch(sk, VAR_SOL_BD)) { m_sol_bd = data; }
+    else if (StringMatch(sk, VAR_SOL_SOLP)) { m_sol_solp = data; }
+    else if (StringMatch(sk, VAR_SOILDEPTH)) { m_sol_z = data; }
+    else if (StringMatch(sk, VAR_PERCO)) { m_sol_perco = data; }
+	else if (StringMatch(sk, VAR_SOL_OM)) { m_sol_om = data; }
+	else if (StringMatch(sk, VAR_SOILTHICK)) { m_sol_thick = data; }
+	else if (StringMatch(sk, VAR_SOL_UL)) { m_sol_wsatur = data; }
     else
-    {
         throw ModelException("NutRemv", "SetValue", "Parameter " + sk +
-                                                    " does not exist in CLIMATE module. Please contact the module developer.");
-    }
+                                                    " does not exist. Please contact the module developer.");
 }
 
 void NutrientRemviaSr::initialOutputs()
 {
     if (this->m_nCells <= 0)
     {
-        throw ModelException(MID_NutRemv, "CheckInputData", "The dimension of the input data can not be less than zero.");
+        throw ModelException(MID_NUTRMV, "CheckInputData", "The dimension of the input data can not be less than zero.");
     }
     // allocate the output variables
     if (m_latno3 == NULL)
     {
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_latno3[i] = 0.f;
-            m_percn[i] = 0.f;
-            m_surqno3[i] = 0.f;
-            m_surqsolp[i] = 0.f;
-        }
+		Initialize1DArray(m_nCells, m_latno3, 0.f);
+		Initialize1DArray(m_nCells, m_perco_n, 0.f);
+		Initialize1DArray(m_nCells, m_perco_p, 0.f);
+		Initialize1DArray(m_nCells, m_surqno3, 0.f);
+		Initialize1DArray(m_nCells, m_surqsolp, 0.f);
+
+		Initialize1DArray(m_nSubbasins+1, m_latno3ToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_sur_no3ToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_sur_solpToCh, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_perco_n_gw, 0.f);
+		Initialize1DArray(m_nSubbasins+1, m_perco_p_gw, 0.f);
+
     }
     if (m_cod == NULL)
     {
-        for (int i = 0; i < m_nCells; i++)
-        {
-            m_cod[i] = 0.f;
-            m_chl_a[i] = 0.f;
-            //m_doxq[i] = 0.f;
-            //m_soxy[i] = 0.f;
-        }
+		Initialize1DArray(m_nCells, m_cod, 0.f);
+		Initialize1DArray(m_nCells, m_chl_a, 0.f);
     }
     if (m_wshd_plch < 0)
     {
@@ -256,44 +343,43 @@ void NutrientRemviaSr::initialOutputs()
 
 int NutrientRemviaSr::Execute()
 {
-    if (!this->CheckInputData())
+    if (!CheckInputData())
     {
         return false;
     }
-    this->initialOutputs();
-    // Calculate total no3
-    float total_no3 = 0.f;
-    for (int i = 0; i < m_nCells; i++)
-    {
-        for (int k = 0; k < m_nSoilLayers[i]; k++)
-        {
-            total_no3 += m_sol_no3[i][k];
-        }
-    }
+    initialOutputs();
+
     //Calculate the loss of nitrate via surface runoff, lateral flow, tile flow, and percolation out of the profile.
-    Nitrateloss();
+    NitrateLoss();
     // Calculates the amount of phosphorus lost from the soil.
-    Phosphorusloss();
-    //return ??
+    PhosphorusLoss();
+	// sum by sub-basin
+	SumBySubbasin();
+
     return 0;
 }
 
-void NutrientRemviaSr::Nitrateloss()
+void NutrientRemviaSr::NitrateLoss()
             {
                 //percnlyr nitrate moved to next lower layer with percolation (kg/ha)
                 float percnlyr = 0.f;
-                float *tileno3;
-				#pragma omp parallel for
+				float ssfnlyr = 0.f;
+                //float *tileno3;
+				//#pragma omp parallel for
+				//did not use parallel computing to avoid several cells flow into the same downstream cell
+
+				
                 for (int i = 0; i < m_nCells; i++)
                 {
+					m_latno3[i] = 0.f;
+
                     for (int k = 0; k < m_nSoilLayers[i]; k++)
                     {
                         //add nitrate moved from layer above
                         m_sol_no3[i][k] = m_sol_no3[i][k] + percnlyr;
                         if (m_sol_no3[i][k] < 1e-6f)
-                        {
                             m_sol_no3[i][k] = 0.f;
-                        }
+
                         // determine concentration of nitrate in mobile water
                         // surface runoff generated (sro)
                         float sro = 0.f;
@@ -304,36 +390,28 @@ void NutrientRemviaSr::Nitrateloss()
                         float ww = 0.f;
 
                         if (k == 0)
-                        {
                             sro = m_surfr[i];
-                        } else
-                        {
+                        else
                             sro = 0.f;
-                        }
                         if (m_ldrain[i] == k)
-                        {
                             mw = mw + m_qtile;
-                        }
+
                         // Calculate the concentration of nitrate in the mobile water (con),
                         // equation 4:2.1.2, 4:2.1.3 and 4:2.1.4 in SWAT Theory 2009, p269
                         mw = m_sol_perco[i][k] + sro + m_flat[i][k] + 1.e-10f;
-                        ww = -mw / ((1.f - m_anion_excl[i]) * m_sol_wsatur[i]);
+                        ww = -mw / ((1.f - m_anion_excl[i]) * m_sol_wsatur[i][k]);
                         vno3 = m_sol_no3[i][k] * (1.f - exp(ww));
                         if (mw > 1.e-10f)
-                        {
                             con = max(vno3 / mw, 0.f);
-                        }
 
                         // calculate nitrate in surface runoff
                         // concentration of nitrate in surface runoff (cosurf)
                         float cosurf = 0.f;
                         if (m_isep_opt == 2)
-                        {
                             cosurf = 1.f * con; // N percolation does not apply to failing septic place;
-                        } else
-                        {
+                        else
                             cosurf = m_nperco * con;
-                        }
+
                         if (k == 0)
                         {
                             m_surqno3[i] = m_surfr[i] * cosurf;
@@ -354,33 +432,34 @@ void NutrientRemviaSr::Nitrateloss()
                             // }
                             // vno3_c = tno3ln * (1. - Exp(ww1))
                             // co_p[i] = co_p[i] * (1. - alph_e[i]) + vno3_c * alph_e[i]
-                            tileno3[i] = con * m_qtile;
-                            tileno3[i] = min(tileno3[i], m_sol_no3[i][k]);
-                            m_sol_no3[i][k] = m_sol_no3[i][k] - tileno3[i];
+                            //tileno3[i] = con * m_qtile;
+                            //tileno3[i] = min(tileno3[i], m_sol_no3[i][k]);
+                            //m_sol_no3[i][k] = m_sol_no3[i][k] - tileno3[i];
                         }
                         // calculate nitrate in lateral flow
                         // nitrate transported in lateral flow from layer (ssfnlyr)
-                        float ssfnlyr = 0.f;
+                        
                         if (k == 1)
-                        {
                             ssfnlyr = cosurf * m_flat[i][k];
-                        } else
-                        {
+                        else
                             ssfnlyr = con * m_flat[i][k];
-                        }
                         ssfnlyr = min(ssfnlyr, m_sol_no3[i][k]);
-                        m_latno3[i] = m_latno3[i] + ssfnlyr;
+                        m_latno3[i] += ssfnlyr;
+						//move the lateral no3 flow to the downslope cell
                         m_sol_no3[i][k] = m_sol_no3[i][k] - ssfnlyr;
+						int idDownSlope = (int)m_flowOutIndex[i];
+						if (idDownSlope >= 0)
+							m_sol_no3[idDownSlope][k] += ssfnlyr;
 
                         // calculate nitrate in percolate
-                        float percnlyr = 0.f;
+                        percnlyr = 0.f;
                         percnlyr = con * m_sol_perco[i][k];
                         percnlyr = min(percnlyr, m_sol_no3[i][k]);
                         m_sol_no3[i][k] = m_sol_no3[i][k] - percnlyr;
                     }
 
                     // calculate nitrate leaching from soil profile
-                    m_percn[i] = percnlyr;
+                    m_perco_n[i] = percnlyr;
                     float nloss = 0.f;
                     // average distance to the stream(m), default is 35m.
                     float dis_stream = 35.f;
@@ -400,7 +479,8 @@ void NutrientRemviaSr::Nitrateloss()
                     wtmp = wtmp + 273.15f;    // deg C to deg K
                     // water in cell
                     float qdr = 0.f;
-                    qdr = m_surfr[i] + m_flat[i][0] + m_qtile + m_gw_q[i];
+                    //qdr = m_surfr[i] + m_flat[i][0] + m_qtile + m_gw_q[i];
+					qdr = m_surfr[i] + m_flat[i][0] + m_qtile;
                     if (qdr > 1.e-4f)
                     {
                         // kilo moles of phosphorus in nutrient loading to main channel (tp)
@@ -434,11 +514,9 @@ void NutrientRemviaSr::Nitrateloss()
                         }
 
                         // calculate organic carbon loading to main channel
-                        float org_c = 0.f;
-                        org_c = (m_sol_om[i][0] * 0.58f / 100.f) * enratio * m_sedimentYield[i] * 1000.f;
+                        float org_c = (m_sol_om[i][0] * 0.58f / 100.f) * enratio * m_sedimentYield[i] * 1000.f;
                         // calculate carbonaceous biological oxygen demand (CBOD) and COD(transform from CBOD)
-                        float cbod = 0.f;
-                        cbod = 2.7f * org_c / (qdr * m_cellWidth * m_cellWidth);
+                        float cbod  = 2.7f * org_c / (qdr * m_cellWidth * m_cellWidth);
                         // calculate COD
                         float n = 3.f; // Conversion factor 1~6.5
                         float k = 0.15f; // Reaction coefficient 0.1~0.2
@@ -478,7 +556,7 @@ void NutrientRemviaSr::Nitrateloss()
                 }
             }
 
-            void NutrientRemviaSr::Phosphorusloss()
+            void NutrientRemviaSr::PhosphorusLoss()
             {
 
                 for (int i = 0; i < m_nCells; i++)
@@ -491,7 +569,7 @@ void NutrientRemviaSr::Nitrateloss()
 //                         sol_thick[k] = m_sol_z[k] - m_sol_z[k - 1];
 //                     }
                     float wt1 = m_sol_bd[i][0] * m_sol_thick[i][0] / 100.f;
-                    float conv_wt = 1.e6 * wt1;
+                    float conv_wt = 1.e6f * wt1;
 
                     // amount of P leached from soil layer (vap)
                     float vap = 0.f;
@@ -516,7 +594,7 @@ void NutrientRemviaSr::Nitrateloss()
                         vap_tile = xx * vap;
                         vap = vap - vap_tile;
                     }
-                    if (m_nSoilLayers[i] >= 1)
+                    if (m_nSoilLayers[i] >= 2)
                     {
                         m_sol_solp[i][1] = m_sol_solp[i][1] + vap;
                     }
@@ -527,6 +605,11 @@ void NutrientRemviaSr::Nitrateloss()
                         vap = m_sol_solp[i][k] * m_sol_perco[i][k] / ((conv_wt / 1000.f) * m_pperco);
                         vap = min(vap, 0.2f * m_sol_solp[i][k]);
                         m_sol_solp[i][k] = m_sol_solp[i][k] - vap;
+
+						if(k < m_nSoilLayers[i] - 1)
+							m_sol_solp[i][k+1] += vap;//leach to next layer
+						else
+							m_perco_p[i] = vap;//leach to groundwater
                         //}
                     }
                     //m_percp[i] = vap
@@ -547,19 +630,61 @@ void NutrientRemviaSr::Nitrateloss()
             void NutrientRemviaSr::Get1DData(const char *key, int *n, float **data)
             {
                 string sk(key);
-                *n = m_nCells;
-                if (StringMatch(sk, VAR_LATNO3)) { *data = this->m_latno3; }
-                if (StringMatch(sk, VAR_PERCN)) { *data = this->m_percn; }
-                if (StringMatch(sk, VAR_SURQNO3)) { *data = this->m_surqno3; }
-                if (StringMatch(sk, VAR_SURQSOLP)) { *data = this->m_surqsolp; }
-                if (StringMatch(sk, VAR_COD)) { *data = this->m_cod; }
-                if (StringMatch(sk, VAR_CHL_A)) { *data = this->m_chl_a; }
-
+                
+                if (StringMatch(sk, VAR_LATNO3)) 
+				{
+					*data = this->m_latno3;
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_PERCO_N_GW)) 
+				{
+					*data = m_perco_n_gw; 
+					*n = m_nSubbasins + 1;
+				}
+				else if (StringMatch(sk, VAR_PERCO_P_GW)) 
+				{
+					*data = m_perco_p_gw; 
+					*n = m_nSubbasins + 1;
+				}
+                else if (StringMatch(sk, VAR_SUR_NO3)) 
+				{
+					*data = this->m_surqno3; 
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_SUR_SOLP)) 
+				{
+					*data = this->m_surqsolp; 
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_COD)) 
+				{
+					*data = this->m_cod; 
+					*n = m_nCells;
+				}
+                else if (StringMatch(sk, VAR_CHL_A)) 
+				{
+					*data = this->m_chl_a; 
+					*n = m_nCells;
+				}
+				else if(StringMatch(sk, VAR_LATNO3_TOCH))
+				{
+					*data = m_latno3ToCh;
+					*n = m_nSubbasins + 1;
+				}
+				else if(StringMatch(sk, VAR_SUR_NO3_TOCH))
+				{
+					*data = m_sur_no3ToCh;
+					*n = m_nSubbasins + 1;
+				}
+				else if(StringMatch(sk, VAR_SUR_SOLP_TOCH))
+				{
+					*data = m_sur_solpToCh;
+					*n = m_nSubbasins + 1;
+				}
                 else
-                {
                     throw ModelException("NutRemv", "GetValue",
                                          "Parameter " + sk + " does not exist. Please contact the module developer.");
-                }
+                
             }
             void NutrientRemviaSr::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
             {
@@ -570,7 +695,7 @@ void NutrientRemviaSr::Nitrateloss()
                 {
                     *data = this->m_sol_no3;
                 }
-                if (StringMatch(sk, VAR_SOL_SOLP))
+                else if (StringMatch(sk, VAR_SOL_SOLP))
                 {
                     *data = this->m_sol_solp;
                 }

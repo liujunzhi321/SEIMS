@@ -1,24 +1,24 @@
 /*!
- * \file Scenario.h
  * \brief Scenario class in BMP database
  * \revised Liang-Jun Zhu
  * \date 2016-6-16
  *            1. Replaced SQLite by MongoDB to manager BMP scenario data.
  */
 #pragma once
-
+#include <fstream>
 #include <string>
-#include <map>
 #include <map>
 #include <vector>
 #include <ostream>
 #include <iomanip>
+#include "utils.h"
+#include "ModelException.h"
 #include "MongoUtil.h"
 #include "BMPText.h"
 #include "BMPFactory.h"
 #include "BMPPlantMgtFactory.h"
 #include "BMPPointSourceFactory.h"
-
+#include "BMPArealSourceFactory.h"
 using namespace std;
 
 namespace MainBMP
@@ -32,8 +32,8 @@ namespace MainBMP
      * Scenario contains a collection of BMPFactory.
      * Each \sa BMPFactory is corresponding to one type of BMP.
      *
-     * Usage:		(1) instantiate the class
-     * 					(2) load time series data using function loadTimeSeriesData for reach related BMP
+     * Usage:		    (1) instantiate the class
+     * 					(2) 
      * Revised:
      *                  (1) Replaced SQLite by MongoDB, 2016-6-16
      */
@@ -56,7 +56,7 @@ namespace MainBMP
         string Name();
 
         //! Get BMPs Factories
-        map<int, BMPFactory *> GetBMPFactories() { return m_bmpFactories; }
+        map<int, BMPFactory *> *GetBMPFactories() { return &m_bmpFactories; }
 
         //! Write all BMPs information of this scenario to a text file
         void Dump(string fileName);

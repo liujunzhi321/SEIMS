@@ -2,21 +2,22 @@
 # coding=utf-8
 ## @Extract parameters from landuse, soil properties etc.
 #
-from gen_lookup_table import CreateLanduseLookupTable
-from soil_param import *
-from init_moisture import InitMoisture
-from reclass_crop import ReclassCrop
-from depression import DepressionCap
-from cn2 import GenerateCN2
-from radius import GenerateRadius
-from velocity import GenerateVelocity
-from t0_s import GenerateT0_s
-from delta_s import GenerateDelta_s
-from runoff_coef import RunoffCoefficent
-from util import *
-from config import *
-import numpy
 import types
+
+import numpy
+
+from cn2 import GenerateCN2
+from config import *
+from delta_s import GenerateDelta_s
+from depression import DepressionCap
+from gen_lookup_table import CreateLanduseLookupTable
+from init_moisture import InitMoisture
+from radius import GenerateRadius
+from reclass_crop import ReclassCrop
+from runoff_coef import RunoffCoefficent
+from soil_param import *
+from t0_s import GenerateT0_s
+from velocity import GenerateVelocity
 
 
 def soil_parameters2(dstdir, maskFile, soilSEQNTif, soilSEQNTxt):
@@ -143,7 +144,9 @@ def soil_parameters2(dstdir, maskFile, soilSEQNTif, soilSEQNTxt):
         print dstSoilTifs[i]
         replaceByDict(soiltypeFile, replaceDicts[i], dstSoilTifs[i])
 
+
 def landuse_parameters(dstdir, maskFile, inputLanduse, landuseFile, sqliteFile, defaultLanduse):
+    #  TODO, this function should be replaced by replaceByDict() function! By LJ
     ## mask landuse map using the mask_raster program
     configFile = "%s%s%s" % (dstdir, os.sep, FN_STATUS_MASKLANDUSE)
     fMask = open(configFile, 'w')
@@ -152,6 +155,7 @@ def landuse_parameters(dstdir, maskFile, inputLanduse, landuseFile, sqliteFile, 
     s = "%s\t%d\t%s\n" % (inputLanduse, defaultLanduse, landuseFile)
     fMask.write(s)
     fMask.close()
+
     s = "%s/mask_raster %s" % (CPP_PROGRAM_DIR, configFile)
     os.system(s)
 
@@ -166,8 +170,12 @@ def landuse_parameters(dstdir, maskFile, inputLanduse, landuseFile, sqliteFile, 
     fReclassLu.write("%d\n" % (n))
     fReclassLu.write("\n".join(landuseAttrList))
     fReclassLu.close()
-
     s = "%s/reclassify %s %s/cpp_src/reclassify/neigh.nbr" % (CPP_PROGRAM_DIR, reclassLuFile, PREPROC_SCRIPT_DIR)
+    # MPI version is problematic, do not know why, By LJ
+    # s = "mpiexec -n %d %s/reclassify %s %s/cpp_src/reclassify/neigh.nbr" % (
+    # np, CPP_PROGRAM_DIR, reclassLuFile, PREPROC_SCRIPT_DIR)
+    # if MPIEXEC_DIR is not None:
+    #     s = MPIEXEC_DIR + os.sep + s
     os.system(s)
     # ReclassLanduse(landuseFile, sqliteFile, dstdir)
 
@@ -271,5 +279,5 @@ def ExtractParameters():
 if __name__ == "__main__":
     LoadConfiguration(GetINIfile())
     maskFile = WORKING_DIR + os.sep + mask_to_ext
-    soil_parameters2(WORKING_DIR, maskFile, soilSEQNFile, soilSEQNText)
-    # ExtractParameters()
+    # soil_parameters2(WORKING_DIR, maskFile, soilSEQNFile, soilSEQNText)
+    ExtractParameters()

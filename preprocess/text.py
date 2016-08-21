@@ -186,7 +186,22 @@ REACH_RS2 = 'RS2'
 REACH_RS3 = 'RS3'
 REACH_RS4 = 'RS4'
 REACH_RS5 = 'RS5'
-
+# reach erosion related parameters, 2016-8-16, LJ
+REACH_COVER = 'COVER' # -0.05 - 0.6
+REACH_EROD = 'EROD'   # -0.001 - 1
+# nutrient routing related parameters
+REACH_DISOX = 'DISOX' # 0-50 mg/L
+REACH_BOD = 'BOD'     # 0-1000 mg/L
+REACH_ALGAE = 'ALGAE' # 0-200 mg/L
+REACH_ORGN = 'ORGN'   # 0-100 mg/L
+REACH_NH3 = 'NH3'     # 0-50 mg/L
+REACH_NO2 = 'NO2'     # 0-100 mg/L
+REACH_NO3 = 'NO3'     # 0-50 mg/L
+REACH_ORGP = 'ORGP'   # 0-25 mg/L
+REACH_SOLP = 'SOLP'   # 0-25 mg/L
+# groundwater related parameters
+REACH_GWNO3 = 'GWNO3' # 0-1000 mg/L
+REACH_GWSOLP = 'GWSOLP' # 0-1000 mg/L
 # Field in SiteList table or other tables, such as subbasin.shp
 FLD_SUBBASINID = 'SUBBASINID'
 FLD_BASINID = 'BASIN'
@@ -273,7 +288,7 @@ chwidthName = "chwidth.tif"
 landuseMFile = "landuse.tif"
 cropMFile = "landcover.tif"  ### added by LJ.
 soiltypeMFile = "soiltype.tif"
-mgtFiedlMFile = "mgt_fields.tif"
+mgtFieldMFile = "mgt_fields.tif"
 
 soilTexture = "SOIL_TEXTURE.tif"
 hydroGroup = "HYDRO_GROUP.tif"

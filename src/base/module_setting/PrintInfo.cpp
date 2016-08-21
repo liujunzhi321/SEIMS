@@ -1,5 +1,4 @@
 /*!
- * \file PrintInfo.cpp
  * \brief Class to store and manage the PRINT information 
  * From the file.out file or FILE_OUT collection in MongoDB
  *
@@ -7,24 +6,19 @@
  * \version 1.1
  * \date June 2010
  */
-#include "PrintInfo.h"
-#include "utils.h"
-#include "util.h"
-#include <time.h>
 #include "ModelException.h"
-#include <iomanip>
-#include <fstream>
+#include "PrintInfo.h"
 
-#ifndef linux
 
-#include <WinSock2.h>
-#include <windows.h>
-
-#else
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#endif
+//#ifndef linux
+////#include "WinSock2i.h"
+//#include <WinSock2.h>
+//#include <windows.h>
+//#else
+//#include <unistd.h>
+//#include <sys/types.h>
+//#include <sys/stat.h>
+//#endif
 //////////////////////////////////////////////
 ///////////PrintInfoItem Class//////////////// 
 //////////////////////////////////////////////
@@ -96,6 +90,7 @@ void PrintInfoItem::add1DTimeSeriesResult(time_t t, int n, float *data)
 
 void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, string header)
 {
+/// removed by lj
 //#ifndef linux
 //    projectPath = projectPath + DB_TAB_OUT_SPATIAL + SEP;
 //    if (::GetFileAttributes(projectPath.c_str()) == INVALID_FILE_ATTRIBUTES)
@@ -161,6 +156,7 @@ void PrintInfoItem::Flush(string projectPath, clsRasterData *templateRaster, str
         fs.open(filename.c_str(), ios::out|ios::app);
         if (fs.is_open())
         {
+			fs << endl;
 			if(SubbasinID == 0)
 				fs << "Watershed: "<< endl;
 			else
@@ -266,14 +262,7 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
             // create the aggregate array
             m_nRows = nRows;
             m_nLayers = nCols;
-			Initialize2DArray(m_nRows, m_nLayers, m_2DData, 0.f);
-            //m_2DData = new float *[m_nRows];
-            //for (int i = 0; i < m_nRows; i++)
-            //{
-            //    m_2DData[i] = new float[m_nLayers];
-            //    for (int j = 0; j < m_nLayers; j++)
-            //        m_2DData[i][j] = 0.0f;
-            //}
+			Initialize2DArray(m_nRows, m_nLayers, m_2DData, NODATA_VALUE);
             m_Counter = 0;
         }
 
@@ -283,10 +272,11 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
 				#pragma omp parallel for
                 for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++){
-						if(!FloatEqual(data[i][j], NODATA_VALUE))
+						if(!FloatEqual(data[i][j], NODATA_VALUE)){
+							if(FloatEqual(m_2DData[i][j], NODATA_VALUE))
+								m_2DData[i][j] = 0.f;
 							m_2DData[i][j] = (m_2DData[i][j] * m_Counter + data[i][j]) / (m_Counter + 1.f);
-						else
-							m_2DData[i][j] = NODATA_VALUE;
+						}
 					}
 				}
                 break;
@@ -294,10 +284,11 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
 				#pragma omp parallel for
                 for (int i = 0; i < m_nRows; i++){
 					for (int j = 0; j < m_nLayers; j++){
-						if(!FloatEqual(data[i][j], NODATA_VALUE))
+						if(!FloatEqual(data[i][j], NODATA_VALUE)){
+							if(FloatEqual(m_2DData[i][j], NODATA_VALUE))
+								m_2DData[i][j] = 0.f;
 							m_2DData[i][j] += data[i][j];
-						else
-							m_2DData[i][j] = NODATA_VALUE;
+						}
 					}
 				}
                 break;
@@ -306,12 +297,13 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
                 for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++)
                     {
-                        if (!FloatEqual(data[i][j], NODATA_VALUE) && 
-							data[i][j] < m_2DData[i][j])
-                            m_2DData[i][j] = data[i][j];
-						else
-							m_2DData[i][j] = NODATA_VALUE;
-                    }
+                        if (!FloatEqual(data[i][j], NODATA_VALUE)){
+							if(FloatEqual(m_2DData[i][j], NODATA_VALUE))
+								m_2DData[i][j] = MAXFLOAT;
+							if(data[i][j] <= m_2DData[i][j])
+								m_2DData[i][j] = data[i][j];
+						}
+					}
 				}
                 break;
             case AT_Maximum:
@@ -319,12 +311,13 @@ void PrintInfoItem::AggregateData2D(time_t time, int nRows, int nCols, float **d
                 for (int i = 0; i < m_nRows; i++){
                     for (int j = 0; j < m_nLayers; j++)
                     {
-                        if (!FloatEqual(data[i][j], NODATA_VALUE) && 
-							data[i][j] > m_2DData[i][j])
-                            m_2DData[i][j] = data[i][j];
-						else
-							m_2DData[i][j] = NODATA_VALUE;
-                    }
+                        if (!FloatEqual(data[i][j], NODATA_VALUE)){
+							if(FloatEqual(m_2DData[i][j], NODATA_VALUE))
+								m_2DData[i][j] = MISSINGFLOAT;
+							if(data[i][j] >= m_2DData[i][j])
+								m_2DData[i][j] = data[i][j];
+						}
+					}
 				}
                 break;
             default:
@@ -351,12 +344,7 @@ void PrintInfoItem::AggregateData(time_t time, int numrows, float *data)
         {
             // create the aggregate array
             m_nRows = numrows;
-			Initialize1DArray(m_nRows, m_1DData, 0.f);
-            //m_1DData = new float[m_nRows];
-            //for (int i = 0; i < m_nRows; i++)
-            //{
-            //    m_1DData[i] = 0.0f;
-            //}
+			Initialize1DArray(m_nRows, m_1DData, NODATA_VALUE);
             m_Counter = 0;
         }
 
@@ -368,29 +356,34 @@ void PrintInfoItem::AggregateData(time_t time, int numrows, float *data)
             {
                 case AT_Average:
 					if(!FloatEqual(data[rw], NODATA_VALUE))
+					{
+						if(FloatEqual(m_1DData[rw], NODATA_VALUE))
+							m_1DData[rw] = 0.f;
 						m_1DData[rw] = (m_1DData[rw] * m_Counter + data[rw]) / (m_Counter + 1.f);
-					else
-						m_1DData[rw] = NODATA_VALUE;
+					}
                     break;
                 case AT_Sum:
-					if(!FloatEqual(data[rw], NODATA_VALUE))
+					if(!FloatEqual(data[rw], NODATA_VALUE)){
+						if(FloatEqual(m_1DData[rw], NODATA_VALUE))
+							m_1DData[rw] = 0.f;
 						m_1DData[rw] += data[rw];
-					else
-						m_1DData[rw] = NODATA_VALUE;
+					}
                     break;
                 case AT_Minimum:
 					if(!FloatEqual(data[rw], NODATA_VALUE)){
-						if (m_1DData[rw] > data[rw])
-							m_1DData[rw] = data[rw];}
-					else
-						m_1DData[rw] = NODATA_VALUE;
+						if(FloatEqual(m_1DData[rw], NODATA_VALUE))
+							m_1DData[rw] = MAXFLOAT;
+						if (m_1DData[rw] >= data[rw])
+							m_1DData[rw] = data[rw];
+					}
                     break;
                 case AT_Maximum:
 					if(!FloatEqual(data[rw], NODATA_VALUE)){
-						if (m_1DData[rw] < data[rw]) 
-							m_1DData[rw] = data[rw];}
-					else
-						m_1DData[rw] = NODATA_VALUE;
+						if(FloatEqual(m_1DData[rw], NODATA_VALUE))
+							m_1DData[rw] = MISSINGFLOAT;
+						if (m_1DData[rw] <= data[rw]) 
+							m_1DData[rw] = data[rw];
+					}
                     break;
                 default:
                     break;
@@ -472,7 +465,7 @@ void PrintInfoItem::AggregateData(int numrows, float **data, AggregationType typ
                     m_1DDataWithRowCol[rw][0] = data[rw][0];
                     m_1DDataWithRowCol[rw][1] = data[rw][1];
                     // if the next value is smaller than the current value
-                    if (data[rw][2] < m_1DDataWithRowCol[rw][2])
+                    if (data[rw][2] <= m_1DDataWithRowCol[rw][2])
                     {
                         // set the current value to the next (smaller) value
                         m_1DDataWithRowCol[rw][2] = data[rw][2];
@@ -491,7 +484,7 @@ void PrintInfoItem::AggregateData(int numrows, float **data, AggregationType typ
                     m_1DDataWithRowCol[rw][0] = data[rw][0];
                     m_1DDataWithRowCol[rw][1] = data[rw][1];
                     // if the next value is larger than the current value
-                    if (data[rw][2] > m_1DDataWithRowCol[rw][2])
+                    if (data[rw][2] >= m_1DDataWithRowCol[rw][2])
                     {
                         // set the current value to the next (larger) value
                         m_1DDataWithRowCol[rw][2] = data[rw][2];

@@ -21,12 +21,11 @@ UTIL_ZERO = 1.e-6
 MINI_SLOPE = 0.0001
 DEFAULT_NODATA = -9999.
 SQ2 = math.sqrt(2.)
-shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx']
+shp_ext_list = ['.shp', '.dbf', '.shx', '.prj', 'sbn', 'sbx', 'cpg']
 
 
 class C(object):
     pass
-
 
 def GetINIfile():
     # Get model configuration file name
@@ -189,7 +188,8 @@ class Raster:
 
     def GetValueByXY(self, x, y):
         if x < self.xMin or x > self.xMax or y < self.yMin or y > self.yMax:
-            raise ValueError("The x or y value must be within the Min and Max!")
+            return None
+            # raise ValueError("The x or y value must be within the Min and Max!")
         else:
             row = self.nRows - int(numpy.ceil((y - self.yMin) / self.dx))
             col = int(numpy.floor((x - self.xMin) / self.dx))
@@ -327,18 +327,12 @@ def RMSE(list1, list2):
 
 
 def GetRasterStat(rasterFile):
-    dataset = gdal.Open(rasterFile, GA_ReadOnly)
-    if not dataset is None:
-        band = dataset.GetRasterBand(1)
-        max = band.GetMaximum()
-        min = band.GetMinimum()
-        if max is None or min is None:
-            (min, max) = band.ComputeRasterMinMax(1)
-        mean, std = band.ComputeBandStats()
-        band = None
-        dataset = None
-        return (max, min, mean, std)
-    dataset = None
+    rs = ReadRaster(rasterFile)
+    max = rs.GetMax()
+    min = rs.GetMin()
+    mean = rs.GetAverage()
+    std = rs.GetSTD()
+    return max, min, mean, std
 
 
 def WriteAscFile(filename, data, xsize, ysize, geotransform, noDataValue):

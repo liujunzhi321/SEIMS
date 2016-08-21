@@ -1,6 +1,4 @@
 /*!
- * \ingroup base
- * \file MongoUtil.h
  * \brief Utility functions of mongoDB
  * \author Junzhi Liu, LiangJun Zhu
  * \date May 2016
@@ -13,7 +11,7 @@
 #include <vector>
 #include <set>
 #include "clsRasterData.h"
-#include <ModelException.h>
+#include "ModelException.h"
 
 using namespace std;
 
@@ -99,6 +97,7 @@ extern void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteF
 /*!
  * \brief Read 2D array data from MongoDB database
  * The matrix format is as follows:
+ *                                     5                 (Row number)
  *          RowIdx\ColIdx	0	1 2	3	4
 					0					1	9.
 					1					2	8.	1.
@@ -109,10 +108,11 @@ extern void Read1DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteF
             
  * \param[in] spatialData \a mongoc_gridfs_t
  * \param[in] remoteFilename \string data file name
- * \param[out] n \int&, first dimension of the 2D Array, i.e., Rows
+ * \param[out] rows \int&, first dimension of the 2D Array, i.e., Rows
+ * \param[out] cols \int&, second dimension of the 2D Array, i.e., Cols. If each col are different, set cols to 1.
  * \param[out] data \float**&, returned data
  */
-extern void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &n, float **&data);
+extern void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &rows, int& cols, float **&data);
 ///*!
 // * \brief Read 2D raster data from MongoDB database
 // *
@@ -142,12 +142,10 @@ extern void Read2DArrayFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteF
  * Not sure the different with \sa Read2DArrayFromMongoDB
  * \param[in] spatialData \a mongoc_gridfs_t
  * \param[in] remoteFilename \string data file name
- * \param[in] templateRaster \clsRasterData*
  * \param[out] n \int&, valid cell number
  * \param[out] data \float*&, returned data
  */
-extern void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, clsRasterData *templateRaster,
-                               int &n, float **&data);
+extern void ReadIUHFromMongoDB(mongoc_gridfs_t *spatialData, string &remoteFilename, int &n, float **&data);
 
 /*!
  * \brief Read Longterm multi reach information from MongoDB database

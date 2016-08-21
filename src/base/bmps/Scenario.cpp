@@ -1,10 +1,4 @@
 #include "Scenario.h"
-#include "ModelException.h"
-#include "utils.h"
-//#include <sstream>
-#include <fstream>
-//#include "BMPReach.h"
-//#include "BMPArealNonStructuralFactory.h"
 
 namespace MainBMP
 {
@@ -25,9 +19,9 @@ namespace MainBMP
         for (it = this->m_bmpFactories.begin(); it != this->m_bmpFactories.end();)
         {
             if (it->second != NULL) delete (it->second);
-            it = m_bmpFactories.erase(it);              /// added by Liangjun
+            it = m_bmpFactories.erase(it);
         }
-        m_bmpFactories.clear();                     /// added by Liangjun
+        m_bmpFactories.clear();
     }
 
     void Scenario::loadScenario()
@@ -196,8 +190,8 @@ namespace MainBMP
             if (bson_iter_init_find(&iter, info, FLD_SCENARIO_TABLE)) collectionName = GetStringFromBSONITER(&iter);
             if (bson_iter_init_find(&iter, info, FLD_SCENARIO_LOCATION)) location = GetStringFromBSONITER(&iter);
 
-            int BMPType;
-            int BMPPriority;
+            int BMPType = -1;
+            int BMPPriority = -1;
             bson_t *queryBMP = bson_new();
             BSON_APPEND_INT32(queryBMP, FLD_BMP_ID, BMPID);
             mongoc_cursor_t *cursor2 = mongoc_collection_find(collbmpidx, MONGOC_QUERY_NONE, 0, 0, 0, queryBMP, NULL,
@@ -228,11 +222,11 @@ namespace MainBMP
                     this->m_bmpFactories[uniqueBMPID] = new BMPPlantMgtFactory(m_id, BMPID, subScenario, BMPType,
                                                                                BMPPriority, distribution,
                                                                                collectionName, location);
-                /*if(BMPType == BMP_TYPE_REACH)
-                this->m_bmpFactories[BMPID] = new BMPReachFactory(m_id,BMPID,BMPType,distribution,parameter);
-                if(BMPType == BMP_TYPE_AREAL_NON_STRUCTURAL)
-                this->m_bmpFactories[BMPID] = new BMPArealNonStructuralFactory(m_id,BMPID,BMPType,distribution,parameter);*/
-            }
+				if (BMPID == BMP_TYPE_AREALSOURCE)
+					this->m_bmpFactories[uniqueBMPID] = new BMPArealSrcFactory(m_id, BMPID, subScenario, BMPType,
+																			  BMPPriority, distribution,
+																			  collectionName, location);
+			}
         }
         bson_destroy(query);
         mongoc_cursor_destroy(cursor);

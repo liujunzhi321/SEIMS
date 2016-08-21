@@ -1,5 +1,4 @@
 /*!
- * \file clsReach.cpp
  * \brief Class to store reach related parameters from REACHES table
  *
  * \author LiangJun Zhu
@@ -71,7 +70,36 @@ clsReach::clsReach(const bson_t *&bsonTable)
     if (bson_iter_init_find(&iterator, bsonTable, REACH_RK3))
         this->rk3 = GetFloatFromBSONITER(&iterator);
     if (bson_iter_init_find(&iterator, bsonTable, REACH_RK4))
-        this->rk4 = GetFloatFromBSONITER(&iterator);
+		this->rk4 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_COVER))
+		this->cover = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_EROD))
+		this->erod = GetFloatFromBSONITER(&iterator);
+	/// nutrient related
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_DISOX))
+		this->disox = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_BOD)){
+		this->bod = GetFloatFromBSONITER(&iterator);
+		if (this->bod <= 1.e-6f) this->bod = 1.e-6f;
+	}
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_ALGAE))
+		this->algae = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_NO3))
+		this->no3 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_NO2))
+		this->no2 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_NH3))
+		this->nh3 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_ORGN))
+		this->orgn = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_ORGP))
+		this->orgp = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_SOLP))
+		this->solp = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_GWNO3))
+		this->gwno3 = GetFloatFromBSONITER(&iterator);
+	if (bson_iter_init_find(&iterator, bsonTable, REACH_GWSOLP))
+		this->gwsolp = GetFloatFromBSONITER(&iterator);
 }
 
 clsReach::~clsReach(void)
@@ -145,6 +173,7 @@ clsReaches::clsReaches(mongoc_client_t *conn, string &dbName, string collectionN
         this->m_reachIDs.push_back(curReach->GetSubbasinID());
     }
     vector<int>(m_reachIDs).swap(m_reachIDs);
+
     bson_destroy(b);
     mongoc_collection_destroy(collection);
     mongoc_cursor_destroy(cursor);

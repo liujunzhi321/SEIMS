@@ -11,14 +11,13 @@ MUSLE_AS::MUSLE_AS(void) : m_nCells(-1), m_cellWidth(-1.f), m_nsub(-1), m_nSoilL
 	                       m_usle_c(NULL), m_usle_p(NULL), m_usle_k(NULL), m_usle_ls(NULL),
                            m_flowacc(NULL), m_slope(NULL), m_streamLink(NULL), m_slopeForPq(NULL),
                            m_snowAccumulation(NULL), m_surfaceRunoff(NULL),
-                           m_sedimentYield(NULL), m_sedtoCh(NULL), m_sedtoCh_T(0.f), m_depRatio(NODATA_VALUE)
+                           m_sedimentYield(NULL)
 {
 }
 
 MUSLE_AS::~MUSLE_AS(void)
 {
     if (m_sedimentYield != NULL) Release1DArray(m_sedimentYield);
-    if (m_sedtoCh != NULL) Release1DArray(m_sedtoCh);
     if (m_usle_ls != NULL) Release1DArray(m_usle_ls);
     if (m_slopeForPq != NULL) Release1DArray(m_slopeForPq);
 }
@@ -53,17 +52,15 @@ void MUSLE_AS::initialOutputs()
         throw ModelException(MID_MUSLE_AS, "CheckInputData",
                              "The dimension of the input data can not be less than zero.");
     // allocate the output variables
-    if (m_nsub <= 0)// TODO prepared in parameter tables.
-    {
-        map<int, int> subs;
-        for (int i = 0; i < m_nCells; i++)
-        {
-            subs[int(m_subbasin[i])] += 1;
-        }
-        m_nsub = subs.size();
-    }
-    if (m_sedtoCh == NULL) // i=0 not used for index coincident
-		Initialize1DArray(m_nsub+1, m_sedtoCh, 0.f);
+    //if (m_nsub <= 0)// TODO prepared in parameter tables.
+    //{
+    //    map<int, int> subs;
+    //    for (int i = 0; i < m_nCells; i++)
+    //    {
+    //        subs[int(m_subbasin[i])] += 1;
+    //    }
+    //    m_nsub = subs.size();
+    //}
    
     if (m_sedimentYield == NULL)
 		Initialize1DArray(m_nCells, m_sedimentYield, 0.f);
@@ -92,15 +89,9 @@ void MUSLE_AS::initialOutputs()
             m_slopeForPq[i] = pow(m_slope[i] * 1000.f, 0.16f);
         }
     }
-    m_cellAreaKM = pow(m_cellWidth / 1000.f, 2.0f);
+    m_cellAreaKM = pow(m_cellWidth / 1000.f, 2.f);
     m_cellAreaKM1 = 3.79f * pow(m_cellAreaKM, 0.7f);
     m_cellAreaKM2 = 0.903f * pow(m_cellAreaKM, 0.017f);
-
-    m_sedtoCh_T = 0.f;  // for every time step
-    for (int i = 0; i <= m_nsub; i++)
-    {
-        m_sedtoCh[i] = 0.f;
-    }
 }
 
 float MUSLE_AS::getPeakRunoffRate(int cell)
@@ -112,14 +103,12 @@ float MUSLE_AS::getPeakRunoffRate(int cell)
 int MUSLE_AS::Execute()
 {
     CheckInputData();
-
     initialOutputs();
-
 #pragma omp parallel for
     for (int i = 0; i < m_nCells; i++)
     {
         if (m_surfaceRunoff[i] < 0.0001f || m_streamLink[i] > 0)
-            m_sedimentYield[i] = 0.0f;
+            m_sedimentYield[i] = 0.f;
         else
         {
             float q = getPeakRunoffRate(i); //equation 2 in memo, peak flow
@@ -127,22 +116,10 @@ int MUSLE_AS::Execute()
                       * m_usle_k[i][0] * m_usle_ls[i] * m_usle_c[i] * m_usle_p[i];    //equation 1 in memo, sediment yield
 
             if (m_snowAccumulation[i] > 0.0001f)
-                Y /= exp(3.0f * m_snowAccumulation[i] / 25.4f);  //equation 4 in memo, the snow pack effect
+                Y /= exp(3.f * m_snowAccumulation[i] / 25.4f);  //equation 4 in memo, the snow pack effect
             m_sedimentYield[i] = Y * 1000.f; /// kg
         }
     }
-
-    for (int i = 0; i < m_nCells; i++)
-    {
-        // add each subbasin's sediment yield to channel
-        if (m_nsub > 1)
-            m_sedtoCh[int(m_subbasin[i])] += m_sedimentYield[i] * (1 - m_depRatio);
-        else
-            m_sedtoCh[1] += m_sedimentYield[i] * (1 - m_depRatio);
-
-        m_sedtoCh_T += m_sedimentYield[i];
-    }
-
     return 0;
 }
 
@@ -185,16 +162,13 @@ void MUSLE_AS::Set1DData(const char *key, int n, float *data)
 {
 
     CheckInputSize(key, n);
-
-    //set the value
     string s(key);
-
     if (StringMatch(s, VAR_USLE_C)) m_usle_c = data;
     else if (StringMatch(s, VAR_USLE_P)) m_usle_p = data;
     else if (StringMatch(s, VAR_ACC)) m_flowacc = data;
     else if (StringMatch(s, VAR_SLOPE)) m_slope = data;
-    else if (StringMatch(s, VAR_SUBBSN)) m_subbasin = data;
-    else if (StringMatch(s, VAR_SURU)) m_surfaceRunoff = data;
+    //else if (StringMatch(s, VAR_SUBBSN)) m_subbasin = data;
+    else if (StringMatch(s, VAR_FLOW_OL)) m_surfaceRunoff = data;
     else if (StringMatch(s, VAR_SNAC)) m_snowAccumulation = data;
     else if (StringMatch(s, VAR_STREAM_LINK))
         m_streamLink = data;
@@ -215,15 +189,15 @@ void MUSLE_AS::Set2DData(const char *key, int nRows, int nCols, float **data)
 		throw ModelException(MID_MUSLE_AS, "Set2DData", "Parameter " + s +
 		" does not exist in current module. Please contact the module developer.");
 }
+void MUSLE_AS::SetSubbasins(clsSubbasins *subbasins)
+{
+	if (m_nsub < 0)
+		m_nsub = subbasins->GetSubbasinNumber();
+}
 void MUSLE_AS::GetValue(const char *key, float *value)
 {
-    string s(key);
-    if (StringMatch(s, VAR_SED_TO_CH_T))
-    {
-        *value = m_sedtoCh_T;
-    }
-    else
-        throw ModelException(MID_MUSLE_AS, "GetValue",
+	string s(key);
+    throw ModelException(MID_MUSLE_AS, "GetValue",
                              "Result " + s + " does not exist in current module. Please contact the module developer.");
 }
 
@@ -232,12 +206,6 @@ void MUSLE_AS::Get1DData(const char *key, int *n, float **data)
     string sk(key);
     if (StringMatch(sk, VAR_SOER)) *data = m_sedimentYield;
     else if (StringMatch(sk, VAR_USLE_LS)) *data = m_usle_ls;
-    else if (StringMatch(sk, VAR_SED_TO_CH))
-    {
-        *data = m_sedtoCh;   // from each subbasin to channel
-        *n = m_nsub + 1;
-		return;
-    }
     else
         throw ModelException(MID_MUSLE_AS, "Get1DData", "Result " + sk +
                                                         " does not exist in current module. Please contact the module developer.");

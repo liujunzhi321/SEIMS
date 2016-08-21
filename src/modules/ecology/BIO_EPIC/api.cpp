@@ -29,8 +29,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetWebsite(SEIMS_SITE);
     mdi.SetHelpfile("");
     /// climate parameters
-    mdi.AddParameter(VAR_DAYLEN_MIN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN_MIN, Source_ParameterDB, DT_Raster1D);
-    mdi.AddParameter(VAR_DORMHR, UNIT_TIMESTEP_HOUR, DESC_DORMHR, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_DAYLEN_MIN, UNIT_HOUR, DESC_DAYLEN_MIN, Source_ParameterDB, DT_Raster1D);
+    mdi.AddParameter(VAR_DORMHR, UNIT_HOUR, DESC_DORMHR, Source_ParameterDB, DT_Raster1D);
     /// Single values
     /// in SWAT, CO2 is assigned by subbasin
     mdi.AddParameter(VAR_CO2, UNIT_GAS_PPMV, DESC_CO2, Source_ParameterDB, DT_Single);
@@ -88,44 +88,41 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     /// nutrient
     mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
     mdi.AddParameter(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, Source_ParameterDB, DT_Raster2D);
-    /// lookup table as 2D array, such as crop, management, landuse, tillage, etc.
-
+    
     /// climate parameters INPUT
     mdi.AddInput(DataType_MeanTemperature, UNIT_TEMP_DEG, DESC_MEANTEMP, Source_Module, DT_Raster1D);
     mdi.AddInput(DataType_MinimumTemperature, UNIT_TEMP_DEG, DESC_MINTEMP, Source_Module, DT_Raster1D);
     mdi.AddInput(DataType_SolarRadiation, UNIT_SR, DESC_SR, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_DAYLEN, UNIT_TIMESTEP_HOUR, DESC_DAYLEN, Source_Module, DT_Raster1D);  /// from PET modules
+    mdi.AddInput(VAR_DAYLEN, UNIT_HOUR, DESC_DAYLEN, Source_Module, DT_Raster1D);  /// from PET modules
     /// water related INPUT
-    mdi.AddInput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, Source_Module, DT_Raster2D);
-    mdi.AddInput(VAR_SOMO_TOT, UNIT_DEPTH_MM, DESC_SOMO_TOT, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_SOL_ST, UNIT_DEPTH_MM, DESC_SOL_ST, Source_Module, DT_Raster2D);
+    mdi.AddInput(VAR_SOL_SW, UNIT_DEPTH_MM, DESC_SOL_SW, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_PET, UNIT_DEPTH_MM, DESC_PET, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_VPD, UNIT_PRESSURE, DESC_VPD, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_PPT, UNIT_DEPTH_MM, DESC_PPT, Source_Module, DT_Raster1D);/// maximum plant et
     mdi.AddInput(VAR_SOET, UNIT_DEPTH_MM, DESC_SOET, Source_Module, DT_Raster1D);/// actual soil evaporation
     mdi.AddInput(VAR_SNAC, UNIT_DEPTH_MM, DESC_SNAC, Source_Module, DT_Raster1D);
 	mdi.AddParameter(VAR_SOL_RSDIN, UNIT_CONT_KGHA, DESC_SOL_RSDIN, Source_ParameterDB, DT_Raster1D);
-	/// residue cover should be output of plant growth module.
-	mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Raster2D);
-	mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
-    // set the output variables
-    //mdi.AddOutput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOMO, DT_Raster2D);
-    //mdi.AddOutput(VAR_SOMO_TOT, UNIT_DEPTH_MM, DESC_SOMO_TOT, DT_Raster1D);
-    //mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);
-    //mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, DT_Raster2D);
-    //mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
-    //mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Array2D);
 
-    //mdi.AddOutput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, DT_Raster1D);
+	mdi.AddInput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, Source_Module_Optional, DT_Raster1D);
+	mdi.AddInput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, Source_Module_Optional, DT_Raster2D);
+
+	/// residue cover should be output of plant growth module.
+	mdi.AddOutput(VAR_SOL_COV, UNIT_CONT_KGHA, DESC_SOL_COV, DT_Raster1D);
+	mdi.AddOutput(VAR_SOL_RSD, UNIT_CONT_KGHA, DESC_SOL_RSD, DT_Raster2D);
+    // set the output variables
+    mdi.AddOutput(VAR_IGRO, UNIT_NON_DIM, DESC_IGRO, DT_Raster1D);
     mdi.AddOutput(VAR_HVSTI_ADJ, UNIT_CONT_RATIO, DESC_HVSTI_ADJ, DT_Raster1D);
-    //mdi.AddOutput(VAR_CHT, UNIT_LEN_M, DESC_CHT, DT_Raster1D);
+    mdi.AddOutput(VAR_CHT, UNIT_LEN_M, DESC_CHT, DT_Raster1D);
     mdi.AddOutput(VAR_ALBDAY, UNIT_NON_DIM, DESC_ALBDAY, DT_Raster1D);
-    //mdi.AddOutput(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, DT_Raster1D);
+    mdi.AddOutput(VAR_DORMI, UNIT_NON_DIM, DESC_DORMI, DT_Raster1D);
 
     mdi.AddOutput(VAR_LAST_SOILRD, UNIT_DEPTH_MM, DESC_LAST_SOILRD, DT_Raster1D);
     mdi.AddOutput(VAR_LAIYRMAX, UNIT_AREA_RATIO, DESC_LAIYRMAX, DT_Raster1D);
     mdi.AddOutput(VAR_LAIDAY, UNIT_AREA_RATIO, DESC_LAIDAY, DT_Raster1D);
 
-    ///mdi.AddOutput(VAR_LAIPRE, UNIT_AREA_RATIO, DESC_LAIPRE,DT_Raster1D);
+	mdi.AddOutput(VAR_LAIMAXFR, UNIT_NON_DIM, DESC_LAIMAXFR , DT_Raster1D);
+	mdi.AddOutput(VAR_OLAI, UNIT_AREA_RATIO, DESC_OLAI, DT_Raster1D);
     mdi.AddOutput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC, DT_Raster1D);
     mdi.AddOutput(VAR_PLTET_TOT, UNIT_DEPTH_MM, DESC_PLTET_TOT, DT_Raster1D);
     mdi.AddOutput(VAR_PLTPET_TOT, UNIT_DEPTH_MM, DESC_PLTPET_TOT, DT_Raster1D);
@@ -134,6 +131,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddOutput(VAR_PLANT_P, UNIT_CONT_KGHA, DESC_PLANT_P, DT_Raster1D);
     mdi.AddOutput(VAR_FR_PLANT_N, UNIT_NON_DIM, DESC_FR_PLANT_N, DT_Raster1D);
     mdi.AddOutput(VAR_FR_PLANT_P, UNIT_NON_DIM, DESC_FR_PLANT_P, DT_Raster1D);
+	mdi.AddOutput(VAR_FR_ROOT, UNIT_NON_DIM, DESC_FR_ROOT, DT_Raster1D);
+	mdi.AddOutput(VAR_FR_STRSWTR, UNIT_NON_DIM, DESC_FR_STRSWTR, DT_Raster1D);
     mdi.AddOutput(VAR_BIOMASS, UNIT_CONT_KGHA, DESC_BIOMASS, DT_Raster1D);
 
     // write out the XML file.
@@ -144,6 +143,11 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 }
 
 
+    //mdi.AddOutput(VAR_SOMO, UNIT_DEPTH_MM, DESC_SOL_ST, DT_Raster2D);
+    //mdi.AddOutput(VAR_SOL_SW, UNIT_DEPTH_MM, DESC_SOL_SW, DT_Raster1D);
+    //mdi.AddOutput(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, DT_Raster2D);
+    //mdi.AddOutput(VAR_SOL_SOLP, UNIT_CONT_KGHA, DESC_SOL_SOLP, DT_Raster2D);
+    ///mdi.AddOutput(VAR_LAIPRE, UNIT_AREA_RATIO, DESC_LAIPRE,DT_Raster1D);
 /// variables need to be initialized in this module, and also as OUTPUT
 /*mdi.AddInput(VAR_LAIDAY,UNIT_AREA_RATIO, DESC_LAIDAY,Source_Module,DT_Raster1D);  /// initialized by LAI_INIT in the first run
 mdi.AddInput(VAR_FR_PHU_ACC, UNIT_HEAT_UNIT, DESC_FR_PHU_ACC,Source_Module,DT_Raster1D);

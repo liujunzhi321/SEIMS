@@ -24,8 +24,8 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.SetClass(MCLS_ATMDEP, MCLSDESC_ATMDEP);
     mdi.SetDescription(MDESC_ATMDEP);
     mdi.SetEmail(SEIMS_EMAIL);
-    mdi.SetID(MDESC_ATMDEP);
-    mdi.SetName(MDESC_ATMDEP);
+    mdi.SetID(MID_ATMDEP);
+    mdi.SetName(MID_ATMDEP);
     mdi.SetVersion("0.1");
     mdi.SetWebsite(SEIMS_SITE);
 
@@ -36,7 +36,7 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddParameter(VAR_DRYDEP_NH4, UNIT_CONT_KGHA, DESC_DRYDEP_NH4, Source_ParameterDB, DT_Single);
 
 	mdi.AddParameter(VAR_SOL_NH3, UNIT_CONT_KGHA, DESC_SOL_NH3, Source_ParameterDB, DT_Raster2D);
-	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_Module, DT_Raster2D);
+	mdi.AddParameter(VAR_SOL_NO3, UNIT_CONT_KGHA, DESC_SOL_NO3, Source_ParameterDB, DT_Raster2D);
 
     // set input from other modules
     mdi.AddInput(VAR_PCP, UNIT_DEPTH_MM, DESC_PCP, Source_Module, DT_Raster1D);

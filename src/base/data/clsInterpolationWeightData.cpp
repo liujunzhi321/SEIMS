@@ -1,8 +1,5 @@
 /*!
- * \file clsInterpolationWeightData.cpp
  * \brief Methods for clsInterpolationWeightData class
- *
- *
  *
  * \author Junzhi Liu, LiangJun Zhu
  * \version 2.0
@@ -88,7 +85,7 @@ void clsInterpolationWeightData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const cha
         string filename = remoteFilename;
         int index = filename.find_last_of('_');
         string type = filename.substr(index + 1);
-        bool flag = true;
+        //bool flag = true;
         if (StringMatch(type, DataType_PotentialEvapotranspiration) || StringMatch(type, DataType_SolarRadiation)
             || StringMatch(type, DataType_RelativeAirMoisture) || StringMatch(type, DataType_MeanTemperature)
             || StringMatch(type, DataType_MaximumTemperature) || StringMatch(type, DataType_MinimumTemperature))
@@ -110,7 +107,8 @@ void clsInterpolationWeightData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const cha
     iov.iov_len = length;
     mongoc_stream_t *stream;
     stream = mongoc_stream_gridfs_new(gfile);
-    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0); /// m_weightData read completed!
+	//ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0); /// m_weightData read completed!
+	mongoc_stream_readv(stream, &iov, 1, -1, 0); /// m_weightData read completed!
     /// Get metadata
     const bson_t *md;
     md = mongoc_gridfs_file_get_metadata(gfile);

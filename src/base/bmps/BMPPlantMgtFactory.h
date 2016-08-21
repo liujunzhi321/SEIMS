@@ -50,6 +50,8 @@ namespace MainBMP
         /// Get operations
         map<int, PlantManagementOperation *> &GetOperations() { return m_bmpPlantOps; }
 
+		/// Get operation by ID
+		PlantManagementOperation* GetOperation(int ID){return m_bmpPlantOps.at(ID);}
     private:
         /// subSecenario name
         string m_name;

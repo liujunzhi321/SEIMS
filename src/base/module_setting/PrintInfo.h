@@ -1,5 +1,4 @@
 /*!
- * \file PrintInfo.h
  * \brief Class to store and manage the PRINT information from the file.out file
  *
  * \author Junzhi Liu, LiangJun Zhu
@@ -12,11 +11,16 @@
 #include <string>
 #include <vector>
 #include <time.h>
-#include "ParamInfo.h"
+#include <iomanip>
+#include <fstream>
 #include <map>
-//#include "clsSpecificOutput.h"
 #include "mongoc.h"
+#include "ParamInfo.h"
 #include "clsRasterData.h"
+#include "util.h"
+#include "utils.h"
+//#include "clsSpecificOutput.h"
+
 
 using namespace std;
 

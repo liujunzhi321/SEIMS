@@ -10,6 +10,7 @@ import sqlite3
 from gridfs import *
 from struct import pack
 from config import *
+from gen_subbasins import ImportSubbasinStatistics
 from util import *
 
 
@@ -91,6 +92,8 @@ def ImportLookupTables(sqlite_file, db):
                 if (nCol != len(itemValues[i])):
                     raise ValueError(
                             "Please check %s to make sure each item has the same numeric dimension." % tablename)
+                else:
+                    itemValues[i].insert(0, nCol)
             ### import to mongoDB as GridFS
             spatial = GridFS(db, DB_TAB_SPATIAL.upper())
             ### delete if the tablename file existed already.
@@ -99,7 +102,11 @@ def ImportLookupTables(sqlite_file, db):
                 spatial.delete(x._id)
             metadic = {META_LOOKUP_ITEM_COUNT.upper(): nRow, META_LOOKUP_FIELD_COUNT.upper(): nCol}
             curLookupGridFS = spatial.new_file(filename=tablename.upper(), metadata=metadic)
-            fmt = '%df' % (nCol)
+            header = [nRow]
+            fmt = '%df' % (1)
+            s = pack(fmt, *header)
+            curLookupGridFS.write(s)
+            fmt = '%df' % (nCol + 1)
             for i in range(nRow):
                 s = pack(fmt, *itemValues[i])
                 curLookupGridFS.write(s)
@@ -191,3 +198,4 @@ if __name__ == "__main__":
     ## IMPORT LOOKUP TABLES AS GRIDFS, DT_Array2D
     ImportLookupTables(TXT_DB_DIR + os.sep + sqliteFile, db)
     ImportModelConfiguration(db)
+    ImportSubbasinStatistics()

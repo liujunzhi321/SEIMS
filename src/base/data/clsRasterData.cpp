@@ -1,5 +1,4 @@
 /*!
- * \file clsRasterData.cpp
  * \brief Implementation of clsRasterData class
  *
  * 1. Using GDAL and MongoDB (currently, mongo-c-driver 1.3.5)
@@ -581,7 +580,7 @@ void clsRasterData::outputToMongoDB(map<string, float> header, string &srs, int 
     BSON_APPEND_DOUBLE(p, HEADER_RS_NODATA, NODATA_VALUE);
     BSON_APPEND_UTF8(p, HEADER_RS_SRS, srs.c_str());
     mongoc_gridfs_file_t *gfile;
-    mongoc_gridfs_file_opt_t gopt = {0};
+	mongoc_gridfs_file_opt_t gopt = {0};
     gopt.filename = remoteFilename.c_str();
     gopt.content_type = "float";
     gopt.metadata = p;
@@ -589,7 +588,8 @@ void clsRasterData::outputToMongoDB(map<string, float> header, string &srs, int 
     mongoc_iovec_t ovec;
     ovec.iov_base = (char *) data;
     ovec.iov_len = rows * cols * sizeof(float);
-	ssize_t r = mongoc_gridfs_file_writev(gfile, &ovec, 1, 0);
+	//ssize_t r = mongoc_gridfs_file_writev(gfile, &ovec, 1, 0);
+	mongoc_gridfs_file_writev(gfile, &ovec, 1, 0);
     mongoc_gridfs_file_save(gfile);
     mongoc_gridfs_file_destroy(gfile);
     bson_destroy(p);
@@ -653,7 +653,8 @@ void clsRasterData::outputToMongoDB(map<string, float> header, string &srs, int 
     mongoc_iovec_t ovec;
     ovec.iov_base = (char *) data;
     ovec.iov_len = rows * cols * nLyrs * sizeof(float);
-//    ssize_t r = mongoc_gridfs_file_writev(gfile, &ovec, 1, 0);
+    //ssize_t r = mongoc_gridfs_file_writev(gfile, &ovec, 1, 0);
+	mongoc_gridfs_file_writev(gfile, &ovec, 1, 0);
     mongoc_gridfs_file_save(gfile);
     mongoc_gridfs_file_destroy(gfile);
     bson_destroy(p);
@@ -1012,7 +1013,8 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char *remoteFilen
     iov.iov_len = length;
     mongoc_stream_t *stream;
     stream = mongoc_stream_gridfs_new(gfile);
-    ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+	//ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+	mongoc_stream_readv(stream, &iov, 1, -1, 0);
     float *data = (float *) buf;
     /// Get metadata
     const bson_t *bmeta;
@@ -1156,7 +1158,8 @@ int clsRasterData::ReadFromMongoDB(mongoc_gridfs_t *gfs, const char *remoteFilen
         iov.iov_len = length;
         mongoc_stream_t *stream;
         stream = mongoc_stream_gridfs_new(gfile);
-        ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+		//ssize_t r = mongoc_stream_readv(stream, &iov, 1, -1, 0);
+		mongoc_stream_readv(stream, &iov, 1, -1, 0);
         float *data = (float *) buf;
         /// Get the valid raster data positions from mask
         int nRows;

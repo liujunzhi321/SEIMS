@@ -1,18 +1,10 @@
-/** \defgroup ITP
- * \ingroup Climate
- * \brief Interpolation Module
- *  
- */
 /*!
- * \file Interpolate.h
- * \ingroup ITP
  * \author Junzhi Liu
  * \date Jan. 2010
  *
  * 
  */
-#ifndef SEIMS_INTERPOLATE_INCLUDE
-#define SEIMS_INTERPOLATE_INCLUDE
+#pragma once
 
 #include <string>
 #include <ctime>
@@ -20,7 +12,11 @@
 #include "SimulationModule.h"
 
 using namespace std;
-
+/** \defgroup ITP
+ * \ingroup Climate
+ * \brief Interpolation Module
+ *  
+ */
 /*!
  * \class Interpolate
  * \ingroup ITP
@@ -36,7 +32,7 @@ public:
 	//! Destructor
     ~Interpolate(void);
 	//! Set data type
-    void SetDataType(float value);
+    void SetClimateDataType(float value);
 
     int Execute();
 
@@ -90,5 +86,3 @@ private:
     /// interpolation result
     float *m_output;
 };
-
-#endif

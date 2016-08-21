@@ -18,21 +18,21 @@ using namespace std;
 
 NandPim::NandPim(void) :
 		//input
-        m_nCells(-1), m_cellWidth(-1), m_soiLayers(-1), m_cmn(-1), m_cdn(-1), m_sdnco(-1),m_nactfr(-1), m_psp(-1),
+        m_nCells(-1), m_cellWidth(-1.f), m_soilLayers(-1), m_cmn(-1.f), m_cdn(-1.f), m_sdnco(-1.f),m_nactfr(-1.f), m_psp(-1.f),
         m_nSoilLayers(NULL), m_sol_z(NULL), m_sol_thick(NULL), m_sol_clay(NULL), m_sol_bd(NULL),
         m_landcover(NULL), m_rsdco_pl(NULL), m_sol_cbn(NULL), 
         m_sol_wpmm(NULL),  m_sol_awc(NULL),
         m_sol_solp(NULL), m_sol_orgp(NULL),m_sol_actp(NULL), m_sol_stap(NULL),  m_sol_fop(NULL), 
         m_sol_no3(NULL),m_sol_nh3(NULL),m_sol_orgn(NULL), m_sol_aorgn(NULL), m_sol_fon(NULL),
+		m_sol_cov(NULL),m_sol_rsd(NULL), 
 		/// from other modules
-		m_sol_cov(NULL),m_sol_rsd(NULL), m_somo(NULL),m_sote(NULL),
+		m_soilStorage(NULL),m_sote(NULL),
 		/// cell scale output
 		m_hmntl(NULL), m_hmptl(NULL), m_rmn2tl(NULL),
 		m_rmptl(NULL), m_rwntl(NULL), m_wdntl(NULL), m_rmp1tl(NULL), m_roctl(NULL),
 		/// watershed scale statistics
-		m_wshd_dnit(-1), m_wshd_hmn(-1), m_wshd_hmp(-1), m_wshd_rmn(-1), m_wshd_rmp(-1), m_wshd_rwn(-1),
-        m_wshd_nitn(-1), m_wshd_voln(-1), m_wshd_pal(-1), m_wshd_pas(-1)
-		
+		m_wshd_dnit(-1.f), m_wshd_hmn(-1.f), m_wshd_hmp(-1.f), m_wshd_rmn(-1.f), m_wshd_rmp(-1.f), 
+        m_wshd_rwn(-1.f), m_wshd_nitn(-1.f), m_wshd_voln(-1.f), m_wshd_pal(-1.f), m_wshd_pas(-1.f)	
 {
 }
 
@@ -59,11 +59,8 @@ bool NandPim::CheckInputSize(const char *key, int n)
             m_nCells = n;
         else
         {
-            //StatusMsg("Input data for "+string(key) +" is invalid. All the input data should have same size.");
-            ostringstream oss;
-            oss << "Input data for " + string(key) << " is invalid with size: " << n << ". The origin size is " <<
-            m_nCells << ".\n";
-            throw ModelException(MID_MINRL, "CheckInputSize", oss.str());
+			throw ModelException(MID_MINRL, "CheckInputSize", "Input data for " + string(key) + " is invalid with size: "+ ValueToString(n) +
+				". The origin size is " + ValueToString(m_nCells) + ".\n");
         }
     }
     return true;
@@ -73,7 +70,7 @@ bool NandPim::CheckInputData()
 {
     if (this->m_nCells <= 0)
         throw ModelException(MID_MINRL, "CheckInputData", "The input data can not be less than zero.");
-    if (this->m_soiLayers < 0)
+    if (this->m_soilLayers < 0)
         throw ModelException(MID_MINRL, "CheckInputData", "The maximum soil layers number can not be NULL.");
     if (this->m_cellWidth < 0)
         throw ModelException(MID_MINRL, "CheckInputData", "The cell width can not be less than 0.");
@@ -95,12 +92,12 @@ bool NandPim::CheckInputData()
 		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_clay can not be NULL.");
     if (this->m_sol_z == NULL)
         throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_z can not be NULL.");
-	//if (this->m_sol_rsdin == NULL)
-	//	throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_rsdin can not be NULL.");
-	if (m_sol_cov == NULL)
-		throw ModelException(MID_BIO_EPIC, "CheckInputData", "The residue on soil surface can not be NULL.");
-	if (m_sol_rsd == NULL)
-		throw ModelException(MID_BIO_EPIC, "CheckInputData", "The organic matter in soil classified as residue can not be NULL.");
+	if (this->m_sol_rsdin == NULL)
+		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_rsdin can not be NULL.");
+	//if (m_sol_cov == NULL)
+	//	throw ModelException(MID_MINRL, "CheckInputData", "The residue on soil surface can not be NULL.");
+	//if (m_sol_rsd == NULL)
+	//	throw ModelException(MID_MINRL, "CheckInputData", "The organic matter in soil classified as residue can not be NULL.");
 	if (this->m_sol_thick == NULL)
 		throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_thick can not be NULL.");
 	if (this->m_sol_bd == NULL)
@@ -123,8 +120,8 @@ bool NandPim::CheckInputData()
         throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_orgp can not be NULL.");
     if (this->m_sol_solp == NULL)
         throw ModelException(MID_MINRL, "CheckInputData", "The m_sol_solp can not be NULL.");
-    if (this->m_somo == NULL)
-        throw ModelException(MID_MINRL, "CheckInputData", "The m_somo can not be NULL.");
+    if (this->m_soilStorage == NULL)
+        throw ModelException(MID_MINRL, "CheckInputData", "The m_soilStorage can not be NULL.");
     if (this->m_sote == NULL)
         throw ModelException(MID_MINRL, "CheckInputData", "The m_sote can not be NULL.");
     return true;
@@ -142,7 +139,7 @@ void NandPim::SetValue(const char *key, float value)
     else if (StringMatch(sk, VAR_PSP)) { this->m_psp = value; }
     else
         throw ModelException(MID_MINRL, "SetValue", "Parameter " + sk +
-                                                    " does not exist in CLIMATE method. Please contact the module developer.");
+                                                    " does not exist. Please contact the module developer.");
 }
 
 void NandPim::Set1DData(const char *key, int n, float *data)
@@ -151,29 +148,29 @@ void NandPim::Set1DData(const char *key, int n, float *data)
     string sk(key);
     if (StringMatch(sk, VAR_LCC)) { this->m_landcover = data; }
 	else if (StringMatch(sk, VAR_PL_RSDCO)) { this->m_rsdco_pl = data; }
-	//else if (StringMatch(sk, VAR_SOL_RSDIN)) { this->m_sol_rsdin = data; }
+	else if (StringMatch(sk, VAR_SOL_RSDIN)) { this->m_sol_rsdin = data; }
 	else if (StringMatch(sk, VAR_SOL_COV)) { this->m_sol_cov = data; }
 	else if (StringMatch(sk, VAR_SOILLAYERS)) { this->m_nSoilLayers = data; }
 	else if (StringMatch(sk, VAR_SOTE)) { this->m_sote = data; }
     else
         throw ModelException(MID_MINRL, "Set1DData", "Parameter " + sk +
-                                                    " does not exist in current module. Please contact the module developer.");
+                                                    " does not exist. Please contact the module developer.");
 }
 
 void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
 {
     if (!this->CheckInputSize(key, nRows)) return;
     string sk(key);
-    m_soiLayers = nCols;
+    m_soilLayers = nCols;
 	if (StringMatch(sk, VAR_SOL_CBN)) { this->m_sol_cbn = data; }
 	else if (StringMatch(sk, VAR_SOL_BD)) { this->m_sol_bd = data; }
 	else if (StringMatch(sk, VAR_CLAY)) { this->m_sol_clay = data; }
-    else if (StringMatch(sk, VAR_SOMO)) { this->m_somo = data; }
+    else if (StringMatch(sk, VAR_SOL_ST)) { this->m_soilStorage = data; }
     else if (StringMatch(sk, VAR_SOL_AWC)) { this->m_sol_awc = data; }
 	else if (StringMatch(sk, VAR_SOL_NO3)) { this->m_sol_no3 = data; }
 	else if (StringMatch(sk, VAR_SOL_NH3)) { this->m_sol_nh3 = data; }
-    else if (StringMatch(sk, VAR_SOL_ORGN)) { this->m_sol_orgn = data; }
-    else if (StringMatch(sk, VAR_SOL_ORGP)) { this->m_sol_orgp = data; }
+    else if (StringMatch(sk, VAR_SOL_SORGN)) { this->m_sol_orgn = data; }
+    else if (StringMatch(sk, VAR_SOL_HORGP)) { this->m_sol_orgp = data; }
     else if (StringMatch(sk, VAR_SOL_SOLP)) { this->m_sol_solp = data; }
     else if (StringMatch(sk, VAR_SOL_WPMM)) { this->m_sol_wpmm = data; }
 	else if (StringMatch(sk, VAR_SOILDEPTH)) { this->m_sol_z = data; }
@@ -181,7 +178,7 @@ void NandPim::Set2DData(const char *key, int nRows, int nCols, float **data)
 	else if (StringMatch(sk, VAR_SOL_RSD)) this->m_sol_rsd = data;
     else
         throw ModelException(MID_MINRL, "Set2DData", "Parameter " + sk +
-                                                    " does not exist in current module. Please contact the module developer.");
+                                                    " does not exist. Please contact the module developer.");
 }
 
 void NandPim::initialOutputs()
@@ -194,34 +191,32 @@ void NandPim::initialOutputs()
 	if(m_wdntl == NULL) Initialize1DArray(m_nCells, m_wdntl, 0.f);
 	if(m_rmp1tl == NULL) Initialize1DArray(m_nCells, m_rmp1tl, 0.f);
 	if(m_roctl == NULL) Initialize1DArray(m_nCells, m_roctl, 0.f);
+	if(m_sol_cov == NULL || m_sol_rsd == NULL)
+	{
+		Initialize1DArray(m_nCells, m_sol_cov, m_sol_rsdin);
+		Initialize2DArray(m_nCells, m_soilLayers, m_sol_rsd, 0.f);
+#pragma omp parallel for
+		for (int i = 0; i < m_nCells; i++)
+			m_sol_rsd[i][0] = m_sol_cov[i];
+	}
 	// initial input soil chemical in first run
 	if(m_sol_fon == NULL || m_sol_fop == NULL || m_sol_aorgn == NULL || 
 		m_sol_actp == NULL || m_sol_stap == NULL) 
 	{
-		Initialize2DArray(m_nCells, m_soiLayers, m_sol_fon, 0.f);
-		Initialize2DArray(m_nCells, m_soiLayers, m_sol_fop, 0.f);
-		Initialize2DArray(m_nCells, m_soiLayers, m_sol_aorgn, 0.f);
-		Initialize2DArray(m_nCells, m_soiLayers, m_sol_actp, 0.f);
-		Initialize2DArray(m_nCells, m_soiLayers, m_sol_stap, 0.f);
+		Initialize2DArray(m_nCells, m_soilLayers, m_sol_fon, 0.f);
+		Initialize2DArray(m_nCells, m_soilLayers, m_sol_fop, 0.f);
+		Initialize2DArray(m_nCells, m_soilLayers, m_sol_aorgn, 0.f);
+		Initialize2DArray(m_nCells, m_soilLayers, m_sol_actp, 0.f);
+		Initialize2DArray(m_nCells, m_soilLayers, m_sol_stap, 0.f);
 				
 #pragma omp parallel for
-	// calculate sol_cbn for lower layers if only have upper layer's data
 	 for (int i = 0; i < m_nCells; i++)
 	 {
-		 /// NO NEED. this is already done in preprocess code. By LJ
-		 // calculate sol_cbn for lower layers if only have upper layer's data
-		 //if(m_nSoilLayers[i] >= 3 && (m_sol_cbn[i][2]) <= 0)
-		 //{
-			// for (int k = 2; k < (int)m_nSoilLayers[i]; k++)
-			//	 m_sol_cbn[i][k] = m_sol_cbn[i - 1][k] * exp(-.001f * m_sol_thick[i][k]);
-		 //}
-		 
 		 // fresh organic P / N
 		 m_sol_fop[i][0] = m_sol_cov[i] * .0010f;
 		 m_sol_fon[i][0] = m_sol_cov[i] * .0055f;
-		 
 
-		 for (int k = 0; k < m_nSoilLayers[i]; k++)
+		 for (int k = 0; k < (int)m_nSoilLayers[i]; k++)
 		 {
 			float wt1 = 0.f;
 			float conv_wt = 0.f;
@@ -253,10 +248,6 @@ void NandPim::initialOutputs()
 
 			// currently not used
 			//sumorgn = sumorgn + m_sol_aorgn[i][k] + m_sol_orgn[i][k] + m_sol_fon[i][k];
-
-			// NO NEED. this is already done in preprocess code. By LJ
-			//m_sol_orgp[i][k] = m_sol_orgp[i][k] * wt1;
-			//m_sol_solp[i][k] = m_sol_solp[i][k] * wt1;
 
 			if (m_sol_orgp[i][k] <= 0.f)
 			{
@@ -315,12 +306,9 @@ void NandPim::initialOutputs()
 			//m_sol_hum[i][k] = m_sol_cbn[i][k] * wt1 * 17200.f;
 			//summinp = summinp + m_sol_solp[i][k] + m_sol_actp[i][k] + m_sol_stap[i][k];
 			//sumorgp = sumorgp + m_sol_orgp[i][k] + m_sol_fop[i][k];
-
-			/// NO NEED since m_sol_rsd is initialized as 0.f
-			//if(k > 0) m_sol_rsd[i][k] = 0.f;
 		 }
 	 }
-		}
+	}
     // allocate the output variables
 	if(!FloatEqual(m_wshd_dnit, 0.f))
     {
@@ -334,14 +322,6 @@ void NandPim::initialOutputs()
         m_wshd_voln = 0.f;
         m_wshd_pal = 0.f;
         m_wshd_pas = 0.f;
-        //m_hmntl = 0.f;
-        //m_hmptl = 0.f;
-        //m_rmn2tl = 0.f;
-        //m_rmptl = 0.f;
-        //m_rwntl = 0.f;
-        //m_wdntl = 0.f;
-        //m_rmp1tl = 0.f;
-        //m_roctl = 0.f;
     }
 }
 
@@ -382,11 +362,11 @@ void NandPim::CalculateMinerandImmobi(int i)
         {
             // compute soil water factor (sut)
             sut = 0.f;
-            if (m_somo[i][kk] < 0)
+            if (m_soilStorage[i][kk] < 0)
             {
-                m_somo[i][kk] = 0.0000001f;
+                m_soilStorage[i][kk] = 0.0000001f;
             }
-            sut = 0.1f + 0.9f * sqrt(m_somo[i][kk] / m_sol_awc[i][kk]);
+            sut = 0.1f + 0.9f * sqrt(m_soilStorage[i][kk] / m_sol_awc[i][kk]);
             sut = max(0.05f, sut);
 
             //compute soil temperature factor
@@ -582,7 +562,7 @@ void NandPim::CalculateMinerandVolati(int i)
             float swf = 0.f;
             //Calculate nvtf, equation 3:1.3.2 and 3:1.3.3 in SWAT Theory 2009, p192
             sw25 = m_sol_wpmm[i][k] + 0.25f * m_sol_awc[i][k];
-            swwp = m_sol_wpmm[i][k] + m_somo[i][k];
+            swwp = m_sol_wpmm[i][k] + m_soilStorage[i][k];
             if (swwp < sw25)
             {
                 swf = (swwp - m_sol_wpmm[i][k]) / (sw25 - m_sol_wpmm[i][k]);
@@ -596,7 +576,7 @@ void NandPim::CalculateMinerandVolati(int i)
                 kk = 0.f;
             } else
             {
-                kk = m_sol_z[k - 1][i];
+                kk = m_sol_z[i][k - 1];
             }
             //depth from the soil surface to the middle of the layer (dmidl/mm)
             float dmidl = 0.f;
@@ -652,8 +632,8 @@ void NandPim::CalculateMinerandVolati(int i)
                 m_sol_nh3[i][k] = 0.f;
             }
             //summary calculations
-            m_wshd_voln = m_wshd_voln + rvol * (1.f / m_nCells);
-            m_wshd_nitn = m_wshd_nitn + rnit * (1.f / m_nCells);
+            m_wshd_voln += rvol * (1.f / m_nCells);
+            m_wshd_nitn += rnit * (1.f / m_nCells);
         }
     }
 }
@@ -692,14 +672,6 @@ void NandPim::CalculatePflux(int i)
 void NandPim::GetValue(const char *key, float *value)
 {
     string sk(key);
-    //if (StringMatch(sk, VAR_HMNTL)) { *value = this->m_hmntl; }
-    //else if (StringMatch(sk, VAR_HMPTL)) { *value = this->m_hmptl; }
-    //else if (StringMatch(sk, VAR_RMN2TL)) { *value = this->m_rmn2tl; }
-    //else if (StringMatch(sk, VAR_RMPTL)) { *value = this->m_rmptl; }
-    //else if (StringMatch(sk, VAR_RWNTL)) { *value = this->m_rwntl; }
-    //else if (StringMatch(sk, VAR_WDNTL)) { *value = this->m_wdntl; }
-    //else if (StringMatch(sk, VAR_RMP1TL)) { *value = this->m_rmp1tl; }
-    //else if (StringMatch(sk, VAR_ROCTL)) { *value = this->m_roctl; }
     if (StringMatch(sk, VAR_WSHD_DNIT)) { *value = this->m_wshd_dnit; }
     else if (StringMatch(sk, VAR_WSHD_HMN)) { *value = this->m_wshd_hmn; }
     else if (StringMatch(sk, VAR_WSHD_HMP)) { *value = this->m_wshd_hmp; }
@@ -711,8 +683,7 @@ void NandPim::GetValue(const char *key, float *value)
     else if (StringMatch(sk, VAR_WSHD_PAL)) { *value = this->m_wshd_pal; }
     else if (StringMatch(sk, VAR_WSHD_PAS)) { *value = this->m_wshd_pas; }
     else
-        throw ModelException(MID_MINRL, "GetValue",
-                             "Parameter " + sk + " does not exist. Please contact the module developer.");
+        throw ModelException(MID_MINRL, "GetValue", "Parameter " + sk + " does not exist.");
 }
 
 void NandPim::Get1DData(const char *key, int *n, float **data)
@@ -727,9 +698,9 @@ void NandPim::Get1DData(const char *key, int *n, float **data)
 	else if (StringMatch(sk, VAR_WDNTL)) { *data = this->m_wdntl; }
 	else if (StringMatch(sk, VAR_RMP1TL)) { *data = this->m_rmp1tl; }
 	else if (StringMatch(sk, VAR_ROCTL)) { *data = this->m_roctl; }
+	else if (StringMatch(sk, VAR_SOL_COV)){*data = this->m_sol_cov;}
 	else
-		throw ModelException(MID_MINRL, "Get1DData", "Output " + sk +
-		" does not exist in current module. Please contact the module developer.");
+		throw ModelException(MID_MINRL, "Get1DData", "Parameter " + sk + " does not exist.");
 	*n = this->m_nCells;
 }
 
@@ -738,19 +709,18 @@ void NandPim::Get2DData(const char *key, int *nRows, int *nCols, float ***data)
 	initialOutputs();
     string sk(key);
     *nRows = m_nCells;
-    *nCols = m_soiLayers;
+    *nCols = m_soilLayers;
     if (StringMatch(sk, VAR_SOL_AORGN)) { *data = this->m_sol_aorgn; }
     else if (StringMatch(sk, VAR_SOL_FON)) { *data = this->m_sol_fon; }
     else if (StringMatch(sk, VAR_SOL_FOP)) { *data = this->m_sol_fop; }
     else if (StringMatch(sk, VAR_SOL_NO3)) { *data = this->m_sol_no3; }
     else if (StringMatch(sk, VAR_SOL_NH3)) { *data = this->m_sol_nh3; }
-    else if (StringMatch(sk, VAR_SOL_ORGN)) { *data = this->m_sol_orgn; }
-    else if (StringMatch(sk, VAR_SOL_ORGP)) { *data = this->m_sol_orgp; }
+    else if (StringMatch(sk, VAR_SOL_SORGN)) { *data = this->m_sol_orgn; }
+    else if (StringMatch(sk, VAR_SOL_HORGP)) { *data = this->m_sol_orgp; }
     else if (StringMatch(sk, VAR_SOL_SOLP)) { *data = this->m_sol_solp; }
     else if (StringMatch(sk, VAR_SOL_ACTP)) { *data = this->m_sol_actp; }
     else if (StringMatch(sk, VAR_SOL_STAP)) { *data = this->m_sol_stap; }
-    //else if (StringMatch(sk, VAR_SOL_RSD)) { *data = this->m_sol_rsd; }
+	else if (StringMatch(sk, VAR_SOL_RSD)) {*data = this->m_sol_rsd;}
     else
-        throw ModelException(MID_MINRL, "Get2DData", "Output " + sk +
-                                                     " does not exist in the current module. Please contact the module developer.");
+        throw ModelException(MID_MINRL, "Get2DData", "Parameter " + sk + " does not exist.");
 }

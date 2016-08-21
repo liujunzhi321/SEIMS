@@ -1,5 +1,4 @@
 /*!
- * \file ImplicitKinematicWave.cpp
  * \brief Routing in the overland cells using implicit finite difference method
  * kinematic wave method in LISEM model
  * \author Junzhi Liu
@@ -402,9 +401,7 @@ void ImplicitKinematicWave_OL::Set1DData(const char *key, int n, float *data)
     if (StringMatch(sk, VAR_SLOPE))
         m_s0 = data;
     else if (StringMatch(sk, VAR_MANNING))
-    {
         m_n = data;
-    }
     else if (StringMatch(sk, VAR_FLOWDIR))
         m_direction = data;
     else if (StringMatch(sk, VAR_SURU))

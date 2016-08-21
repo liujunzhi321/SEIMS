@@ -1,5 +1,4 @@
 /*!
- * \file ModelMain.h
  * \brief Control the simulation of SEIMS
  * \author Junzhi Liu, LiangJun Zhu
  * \version 1.1
@@ -17,6 +16,7 @@
 #include "clsRasterData.h"
 #include "mongoc.h"
 #include "ModuleFactory.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -77,7 +77,7 @@ public:
     string GetModuleID(int i) { return m_factory->GetModuleID(i); }
 
     //! Get module execute time by index in ModuleFactory
-    int GetModuleExecuteTime(int i) { return m_executeTime[i]; }
+    float GetModuleExecuteTime(int i) { return m_executeTime[i]; }
 
     //! Get time consuming of read files
     int GetReadDataTime() { return m_readFileTime; }
@@ -145,7 +145,7 @@ private:
     //! Whole simulation scale modules index list
     vector<int> m_overallModules;
     //! Execute time list of each module
-    vector<int> m_executeTime;
+    vector<double> m_executeTime;
     //! Time consuming for read files
     int m_readFileTime;
     //! Layering method

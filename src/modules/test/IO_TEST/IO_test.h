@@ -46,7 +46,7 @@ public:
 
     void Get2DData(const char *key, int *n, int *col, float ***data);
 
-    void SetScenario(MainBMP::Scenario *sce);
+    void SetScenario(Scenario *sce);
 
     void SetReaches(clsReaches *reaches);
 

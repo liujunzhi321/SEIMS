@@ -56,14 +56,14 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
 
 
 	mdi.AddInput(VAR_SURU, UNIT_DEPTH_MM, DESC_SURU, Source_Module, DT_Raster1D);
-	mdi.AddInput(VAR_OLFLOW, UNIT_DEPTH_MM, DESC_OLFLOW, Source_Module, DT_Raster1D);
+	mdi.AddInput(VAR_FLOW_OL, UNIT_DEPTH_MM, DESC_OLFLOW, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SOER, UNIT_KG, DESC_SOER, Source_Module, DT_Raster1D);
 	mdi.AddInput(VAR_SED_FLOW, UNIT_KG, DESC_SED_FLOW, Source_Module, DT_Raster1D);
 
     mdi.AddInput(VAR_LATNO3, UNIT_CONT_KGHA, DESC_LATNO3, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_SURQNO3, UNIT_CONT_KGHA, DESC_SURQNO3, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_SUR_NO3, UNIT_CONT_KGHA, DESC_SUR_NO3, Source_Module, DT_Raster1D);
     //mdi.AddInput(VAR_AMMONIAN, UNIT_CONT_KGha, DESC_AMMONIAN, Source_Module, DT_Raster1D);
-    mdi.AddInput(VAR_SURQSOLP, UNIT_CONT_KGHA, DESC_SURQSOLP, Source_Module, DT_Raster1D);
+    mdi.AddInput(VAR_SUR_SOLP, UNIT_CONT_KGHA, DESC_SUR_SOLP, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_NO3GW, UNIT_CONT_KGHA, DESC_NO3GW, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_MINPGW, UNIT_CONT_KGHA, DESC_MINPGW, Source_Module, DT_Raster1D);
     mdi.AddInput(VAR_SEDORGN, UNIT_CONT_KGHA, DESC_SEDORGN, Source_Module, DT_Raster1D);
@@ -73,10 +73,10 @@ extern "C" SEIMS_MODULE_API const char *MetadataInformation()
     mdi.AddInput(VAR_COD, UNIT_DENSITY_L, DESC_COD, Source_Module, DT_Raster1D);
 
     // set the output variables
-    mdi.AddOutput(VAR_SURQNO3_CH, UNIT_KG, DESC_SURQNO3_CH, DT_Raster1D);
+    mdi.AddOutput(VAR_SUR_NO3_CH, UNIT_KG, DESC_SUR_NO3_CH, DT_Raster1D);
     mdi.AddOutput(VAR_LATNO3_CH, UNIT_KG, DESC_LATNO3_CH, DT_Raster1D);
     mdi.AddOutput(VAR_NO3GW_CH, UNIT_KG, DESC_NO3GW_CH, DT_Raster1D);
-    mdi.AddOutput(VAR_SURQSOLP_CH, UNIT_KG, DESC_SURQSOLP_CH, DT_Raster1D);
+    mdi.AddOutput(VAR_SUR_SOLP_CH, UNIT_KG, DESC_SUR_SOLP_CH, DT_Raster1D);
     mdi.AddOutput(VAR_MINPGW_CH, UNIT_KG, DESC_MINPGW_CH, DT_Raster1D);
     mdi.AddOutput(VAR_SEDORGN_CH, UNIT_KG, DESC_SEDORGN_CH, DT_Raster1D);
     mdi.AddOutput(VAR_SEDORGP_CH, UNIT_KG, DESC_SEDORGP_CH, DT_Raster1D);
