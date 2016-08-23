@@ -230,7 +230,7 @@ void NandPim::initialOutputs()
 			{
 				m_sol_no3[i][k] = 0.f;
 				float zdst = 0.f;
-				zdst = exp(-m_sol_z[i][k] );
+				zdst = exp(-m_sol_z[i][k] / 1000.f);
 				m_sol_no3[i][k] = 10.f * zdst * 0.7f;
 				m_sol_no3[i][k] *= wt1;// mg/kg => kg/ha
 			}

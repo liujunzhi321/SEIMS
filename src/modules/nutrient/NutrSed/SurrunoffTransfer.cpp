@@ -269,8 +269,8 @@ int SurrunoffTransfer::Execute()
 		}
 		m_sedorgnToCh[subi] += m_sedorgn[i];
 		m_sedorgpToCh[subi] += m_sedorgp[i];
-		m_sedminpaToCh[subi] = m_sedminpa[i];
-		m_sedminpsToCh[subi] = m_sedminps[i];
+		m_sedminpaToCh[subi] += m_sedminpa[i];
+		m_sedminpsToCh[subi] += m_sedminps[i];
 	}
 	// sum all the subbasins and put the sum value in the zero-index of the array
 	float cellArea = m_cellWidth * m_cellWidth * 0.0001f; //ha
@@ -279,8 +279,8 @@ int SurrunoffTransfer::Execute()
 	{
 		m_sedorgnToCh[0] += m_sedorgnToCh[*it] * cellArea;
 		m_sedorgpToCh[0] += m_sedorgpToCh[*it] * cellArea;
-		m_sedminpaToCh[0] = m_sedminpaToCh[*it] * cellArea;
-		m_sedminpsToCh[0] = m_sedminpsToCh[*it] * cellArea;
+		m_sedminpaToCh[0] += m_sedminpaToCh[*it] * cellArea;
+		m_sedminpsToCh[0] += m_sedminpsToCh[*it] * cellArea;
 	}
     return 0;
 }

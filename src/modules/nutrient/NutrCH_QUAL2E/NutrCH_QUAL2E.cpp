@@ -104,9 +104,6 @@ void NutrCH_QUAL2E::ParametersSubbasinForChannel()
 {
 	if (m_chCellCount == NULL)
 		Initialize1DArray(m_nReaches+1, m_chCellCount, 0);
-	//m_chCellCount = new int[m_nReaches+1];
-	//for (int i = 0; i <= m_nReaches; i++)
-	//	m_chCellCount[i] = 0;
 	if (m_chDaylen == NULL)
 	{
 		Initialize1DArray(m_nReaches+1, m_chDaylen, 0.f);
@@ -115,12 +112,6 @@ void NutrCH_QUAL2E::ParametersSubbasinForChannel()
 	}
 	else
 		return;
-	//for (int i = 1; i <= m_nReaches; i++)
-	//{
-	//	m_chDaylen[i] = 0.f;
-	//	m_chSr[i] = 0.f;
-	//	m_chTemp[i] = 0.f;
-	//}
 #pragma omp parallel for
 	for (int i = 0; i < m_nCells; i++)
 	{
@@ -491,6 +482,7 @@ void NutrCH_QUAL2E::PointSourceLoading()
 	}
 	else
 	{
+		/// reset to zero for the current timestep
 		for (int i = 0;i <= m_nReaches; i++)
 		{
 			m_ptNO3ToCh[i] = 0.f;
@@ -519,7 +511,7 @@ void NutrCH_QUAL2E::PointSourceLoading()
 				if (m_date < curPtMgt->GetStartDate() || m_date > curPtMgt->GetEndDate())
 					continue;
 			}
-			// 1.2 Otherwise, get the water volume
+			// 1.2 Otherwise, get the nutrient amount
 			float per_no3 = curPtMgt->GetNO3();
 			float per_nh4 = curPtMgt->GetNH3();
 			float per_orgn = curPtMgt->GetOrgN();
@@ -532,7 +524,7 @@ void NutrCH_QUAL2E::PointSourceLoading()
 				if (m_pointSrcLocsMap.find(*locIter) != m_pointSrcLocsMap.end()){
 					PointSourceLocations* curPtLoc = m_pointSrcLocsMap.at(*locIter);
 					int curSubID = curPtLoc->GetSubbasinID();
-					float cvt = curPtLoc->GetSize() * m_dt / 86400.f;/// kg/'size'/day ==> kg of each timestep 
+					float cvt = curPtLoc->GetSize() * m_dt / 86400.f;/// kg/'size'/day ==> kg / timestep 
 					m_ptNO3ToCh[curSubID] += per_no3 * cvt;
 					m_ptNH4ToCh[curSubID] += per_nh4 * cvt;
 					m_ptOrgNToCh[curSubID] += per_orgn * cvt;
@@ -655,16 +647,17 @@ void NutrCH_QUAL2E::RouteOut(int i)
 	m_chOutChlora[i] = m_chChlora[i] * outFraction;
 
 	// kg ==> mg/L
-	m_chOutOrgNConc[i] = m_chOutOrgN[i] * wtrOut / 1000.f;
-	m_chOutOrgPConc[i] = m_chOutOrgP[i] * wtrOut / 1000.f;
-	m_chOutNO3Conc[i] = m_chOutNO3[i] * wtrOut / 1000.f;
-	m_chOutSolPConc[i] = m_chOutSolP[i] * wtrOut / 1000.f;
-	m_chOutNO2Conc[i] = m_chOutNO2[i] * wtrOut / 1000.f;
-	m_chOutNH4Conc[i] = m_chOutNH4[i] * wtrOut / 1000.f;
-	m_chOutCODConc[i] = m_chOutCOD[i] * wtrOut / 1000.f;
-	m_chOutDOxConc[i] = m_chOutDOx[i] * wtrOut / 1000.f;
-	m_chOutAlgaeConc[i] = m_chOutAlgae[i] * wtrOut / 1000.f;
-	m_chOutChloraConc[i] = m_chOutChlora[i] * wtrOut / 1000.f;
+	float cvt = 1000.f / wtrOut;
+	m_chOutOrgNConc[i] = m_chOutOrgN[i] * cvt;
+	m_chOutOrgPConc[i] = m_chOutOrgP[i] * cvt;
+	m_chOutNO3Conc[i] = m_chOutNO3[i] * cvt;
+	m_chOutSolPConc[i] = m_chOutSolP[i] * cvt;
+	m_chOutNO2Conc[i] = m_chOutNO2[i] * cvt;
+	m_chOutNH4Conc[i] = m_chOutNH4[i] * cvt;
+	m_chOutCODConc[i] = m_chOutCOD[i] * cvt;
+	m_chOutDOxConc[i] = m_chOutDOx[i] * cvt;
+	m_chOutAlgaeConc[i] = m_chOutAlgae[i] * cvt;
+	m_chOutChloraConc[i] = m_chOutChlora[i] * cvt;
 
 	m_chOrgN[i] -= m_chOutOrgN[i];
 	m_chOrgP[i] -= m_chOutOrgP[i];
@@ -720,23 +713,24 @@ void NutrCH_QUAL2E::NutrientTransform(int i)
 		return;
 	}
 	// initial algal biomass concentration in reach (algcon mg/L, i.e. g/m3)   kg ==> mg/L
-	float algcon = m_chAlgae[i] * 1000.f / wtrTotal;
+	float cvt_amout2conc = 1000.f / wtrTotal;
+	float algcon = cvt_amout2conc * m_chAlgae[i];
 	// initial organic N concentration in reach (orgncon mg/L)
-	float orgncon = m_chOrgN[i]*1000.f / wtrTotal;
+	float orgncon = cvt_amout2conc * m_chOrgN[i];
 	// initial ammonia concentration in reach (nh3con mg/L)
-	float nh3con = m_chNH4[i]*1000.f / wtrTotal;
+	float nh3con = cvt_amout2conc * m_chNH4[i];
 	// initial nitrite concentration in reach (no2con mg/L)
-	float no2con = m_chNO2[i]*1000.f / wtrTotal;
+	float no2con = cvt_amout2conc * m_chNO2[i];
 	// initial nitrate concentration in reach (no3con mg/L)
-	float no3con = m_chNO3[i]*1000.f / wtrTotal;
+	float no3con = cvt_amout2conc * m_chNO3[i];
 	// initial organic P concentration in reach (orgpcon  mg/L)
-	float orgpcon = m_chOrgP[i]*1000.f / wtrTotal;
+	float orgpcon = cvt_amout2conc * m_chOrgP[i];
 	// initial soluble P concentration in reach (solpcon mg/L)
-	float solpcon = m_chSolP[i]*1000.f / wtrTotal;
+	float solpcon = cvt_amout2conc * m_chSolP[i];
 	// initial carbonaceous biological oxygen demand (cbodcon mg/L)
-	float cbodcon = m_chCBOD[i]*1000.f / wtrTotal;
+	float cbodcon = cvt_amout2conc * m_chCBOD[i];
 	// initial dissolved oxygen concentration in reach (o2con mg/L)
-	float o2con = m_chDOx[i]*1000.f / wtrTotal;
+	float o2con = cvt_amout2conc * m_chDOx[i];
 
 	// temperature of water in reach (wtmp deg C)
 	float wtmp = max(m_chTemp[i], 0.1f);
