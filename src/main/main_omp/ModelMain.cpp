@@ -325,7 +325,7 @@ void ModelMain::OutputExecuteTime()
 void ModelMain::CheckOutput()
 {
     vector<PrintInfo *>::iterator it;
-    for (it = m_output->m_printInfos.begin(); it < m_output->m_printInfos.end(); it++)
+    for (it = m_output->m_printInfos.begin(); it < m_output->m_printInfos.end();)
     {
         string outputid = (*it)->getOutputID();
         outputid = trim(outputid);
@@ -333,9 +333,15 @@ void ModelMain::CheckOutput()
         //try to find module output which match the outputid
         m_factory->FindOutputParameter(outputid, (*it)->m_moduleIndex, (*it)->m_param);
 
-        if ((*it)->m_moduleIndex < 0)
-            throw ModelException("ModelMain", "CheckOutput", "Can't find output variable for output id " + outputid +
-                                                             ". Please check config.fig, file.out and module's metadata.");
+        if ((*it)->m_moduleIndex < 0){
+			// Don't throw the exception, just print the WARNING message, and delete the printInfos. By LJ
+			cout<<"WARNING: Can't find output variable for output id : "<<outputid<<"."<<endl;
+			it = m_output->m_printInfos.erase(it);
+            //throw ModelException("ModelMain", "CheckOutput", "Can't find output variable for output id " + outputid +
+            //                                                 ". Please check config.fig, file.out and module's metadata.");
+		}
+		else
+			it++;
 
         //find site index
         //if((*it)->m_param->Dimension == DT_Array1D)
@@ -396,9 +402,10 @@ void ModelMain::Output(time_t time)
 
         //find the corresponding output variable and module
         ParamInfo *param = (*it)->m_param;
-        if (param == NULL)
-            throw ModelException("ModelMain", "Output",
-                                 "Output id " + (*it)->getOutputID() + " does not have corresponding output variable.");
+        if (param == NULL){
+			throw ModelException("ModelMain", "Output",
+				"Output id " + (*it)->getOutputID() + " does not have corresponding output variable.");
+		}
 
         SimulationModule *module = m_simulationModules[iModule];
         if (module == NULL)
