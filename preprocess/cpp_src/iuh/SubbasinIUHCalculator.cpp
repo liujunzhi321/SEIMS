@@ -8,13 +8,14 @@
 
 using namespace std;
 
-SubbasinIUHCalculator::SubbasinIUHCalculator(int t, Raster<int> &rsMask, Raster<float> &rsTime, Raster<float> &rsDelta,
+SubbasinIUHCalculator::SubbasinIUHCalculator(int t, Raster<int> &rsMask, Raster<int> &rsLanduse, Raster<float> &rsTime, Raster<float> &rsDelta,
                                              gridfs *grdfs)
         : dt(t), gfs(grdfs), mt(30)
 {
     nRows = rsMask.GetNumberOfRows();
     nCols = rsMask.GetNumberofColumns();
     mask = rsMask.GetData();
+	landuse = rsLanduse.GetData();
     noDataValue = rsMask.GetNoDataValue();
 
     nCells = 0;
@@ -180,6 +181,10 @@ int SubbasinIUHCalculator::calCell(int id)
                 maxt0 = maxt;
             }
 
+			// if landuse if rice paddy, adjust the iuh according to experience
+			//if(landuse[i][j] == rice)
+			    adjustRiceField(mint0, maxt0, uh1[nc]);
+
             int nTemp = maxt0 - mint0 + 3;
             float *pTemp = new float[nTemp];
             pTemp[0] = mint0;
@@ -228,4 +233,20 @@ double SubbasinIUHCalculator::IUHti(double delta0, double t00, double ti)
     double tmp1 = 1 / (delta0 * sqrt(2 * 3.1416 * pow(ti, 3.0) / pow(t00, 3.0)));
     double tmp2 = pow(ti - t00, 2.0) / (2.0 * pow(delta0, 2.0) * ti / t00);
     return tmp1 * exp(-tmp2);
+}
+
+void SubbasinIUHCalculator::adjustRiceField(int& mint0, int& maxt0, vector<double>& iuhRow)
+{
+	if(maxt0 - mint0 == 0) // if water will flow to channel within one day
+    {
+		maxt0 = 1;
+		iuhRow[0] = 0.2f;
+		iuhRow[1] = 0.8f; //must make sure m_iuhCell has at least 4 columns in the readin codes
+	}
+	else
+	{
+		iuhRow[1] += 0.8f*iuhRow[0];
+		iuhRow[0] = 0.2f*iuhRow[0];
+	}
+
 }

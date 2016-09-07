@@ -32,7 +32,7 @@ void MainMongoDB(const char *modelStr, const char *gridFSName, int nSubbasins, c
         //cout << "subbasin: " << i << endl;
         //input
         ostringstream oss;
-        string deltaName, streamLinkName, tName, maskName;
+        string deltaName, streamLinkName, tName, maskName, landuseName;
         oss << i << "_DELTA_S";
         deltaName = oss.str();
 
@@ -44,14 +44,19 @@ void MainMongoDB(const char *modelStr, const char *gridFSName, int nSubbasins, c
         oss << i << "_MASK";
         maskName = oss.str();
 
-        Raster<int> rsMask;
+		oss.str("");
+        oss << i << "_IDC";
+        landuseName = oss.str();
+
+        Raster<int> rsMask, rsLanduse;
         rsMask.ReadFromMongoDB(gfs, maskName.c_str());
+		rsLanduse.ReadFromMongoDB(gfs, landuseName.c_str());
 
         Raster<float> rsTime, rsDelta;
         rsTime.ReadFromMongoDB(gfs, tName.c_str());
         rsDelta.ReadFromMongoDB(gfs, deltaName.c_str());
 
-        SubbasinIUHCalculator iuh(dt, rsMask, rsTime, rsDelta, gfs);
+        SubbasinIUHCalculator iuh(dt, rsMask, rsLanduse, rsTime, rsDelta, gfs);
         iuh.calCell(i);
     }
 
